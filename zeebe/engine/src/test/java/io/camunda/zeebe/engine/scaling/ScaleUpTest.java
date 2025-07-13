@@ -30,7 +30,9 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public class ScaleUpTest {
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(2);
+
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(2);
 
   @Before
   public void beforeEach() {
@@ -72,14 +74,14 @@ public class ScaleUpTest {
 
     // then
     assertThat(
-            RecordingExporter.scaleRecords()
-                .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
-                .map(Record::getIntent))
+        RecordingExporter.scaleRecords()
+            .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
+            .map(Record::getIntent))
         .containsExactly(
             ScaleIntent.SCALE_UP,
             ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
             ScaleIntent.SCALING_UP,
-            ScaleIntent.PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALED_UP);
   }
 
@@ -251,7 +253,7 @@ public class ScaleUpTest {
     // then
     final var finalResponse =
         RecordingExporter.scaleRecords()
-            .skipUntil(r -> r.getIntent() == ScaleIntent.PARTITIONS_BOOTSTRAPPED)
+            .skipUntil(r -> r.getIntent() == ScaleIntent.PARTITION_BOOTSTRAPPED)
             .limit(r -> r.getIntent() == ScaleIntent.STATUS_RESPONSE)
             .getLast();
     assertThat(finalResponse.getValue().getDesiredPartitionCount()).isEqualTo(4);
@@ -276,15 +278,15 @@ public class ScaleUpTest {
 
     // then
     assertThat(
-            RecordingExporter.scaleRecords()
-                .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
-                .map(Record::getIntent))
+        RecordingExporter.scaleRecords()
+            .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
+            .map(Record::getIntent))
         .hasSize(5)
         .containsSequence(
             ScaleIntent.SCALE_UP,
             ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
             ScaleIntent.SCALING_UP,
-            ScaleIntent.PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALED_UP);
 
     RecordingExporter.reset();
@@ -302,15 +304,15 @@ public class ScaleUpTest {
 
     // then
     assertThat(
-            RecordingExporter.scaleRecords()
-                .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
-                .map(Record::getIntent))
+        RecordingExporter.scaleRecords()
+            .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
+            .map(Record::getIntent))
         .hasSize(5)
         .containsSequence(
             ScaleIntent.SCALE_UP,
             ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
             ScaleIntent.SCALING_UP,
-            ScaleIntent.PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALED_UP);
   }
 }
