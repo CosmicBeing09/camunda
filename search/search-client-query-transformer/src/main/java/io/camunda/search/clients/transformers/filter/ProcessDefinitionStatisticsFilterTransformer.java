@@ -110,26 +110,26 @@ public class ProcessDefinitionStatisticsFilterTransformer
     ofNullable(longOperations(KEY, filter.processInstanceKeyOperations()))
         .ifPresent(queries::addAll);
     ofNullable(
-            longOperations(
-                PARENT_PROCESS_INSTANCE_KEY, filter.parentProcessInstanceKeyOperations()))
+        longOperations(
+            PARENT_PROCESS_INSTANCE_KEY, filter.parentProcessInstanceKeyOperations()))
         .ifPresent(queries::addAll);
     ofNullable(
-            longOperations(
-                PARENT_FLOW_NODE_INSTANCE_KEY, filter.parentFlowNodeInstanceKeyOperations()))
+        longOperations(
+            PARENT_FLOW_NODE_INSTANCE_KEY, filter.parentFlowNodeInstanceKeyOperations()))
         .ifPresent(queries::addAll);
     ofNullable(dateTimeOperations(START_DATE, filter.startDateOperations()))
         .ifPresent(queries::addAll);
     ofNullable(dateTimeOperations(END_DATE, filter.endDateOperations())).ifPresent(queries::addAll);
-    ofNullable(stringOperations(STATE, filter.stateOperations())).ifPresent(queries::addAll);
+    ofNullable(stringOperations(STATE, filter.statesOperations())).ifPresent(queries::addAll);
     ofNullable(filter.hasIncident()).ifPresent(value -> queries.add(term(INCIDENT, value)));
     ofNullable(stringOperations(TENANT_ID, filter.tenantIdOperations())).ifPresent(queries::addAll);
     ofNullable(getProcessVariablesQuery(filter.variableFilters())).ifPresent(queries::add);
     ofNullable(
-            stringMatchWithHasChildOperations(
-                ERROR_MSG,
-                filter.errorMessageOperations(),
-                ACTIVITIES_JOIN_RELATION,
-                SearchMatchQueryOperator.AND))
+        stringMatchWithHasChildOperations(
+            ERROR_MSG,
+            filter.errorMessageOperations(),
+            ACTIVITIES_JOIN_RELATION,
+            SearchMatchQueryOperator.AND))
         .ifPresent(queries::addAll);
     ofNullable(stringOperations(BATCH_OPERATION_IDS, filter.batchOperationIdOperations()))
         .ifPresent(queries::addAll);

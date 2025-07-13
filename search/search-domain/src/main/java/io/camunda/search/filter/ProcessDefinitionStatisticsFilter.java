@@ -7,7 +7,8 @@
  */
 package io.camunda.search.filter;
 
-import static io.camunda.util.CollectionUtil.*;
+import static io.camunda.util.CollectionUtil.addValuesToList;
+import static io.camunda.util.CollectionUtil.collectValues;
 
 import io.camunda.util.FilterUtil;
 import io.camunda.util.ObjectBuilder;
@@ -24,7 +25,7 @@ public record ProcessDefinitionStatisticsFilter(
     List<Operation<Long>> parentFlowNodeInstanceKeyOperations,
     List<Operation<OffsetDateTime>> startDateOperations,
     List<Operation<OffsetDateTime>> endDateOperations,
-    List<Operation<String>> stateOperations,
+    List<Operation<String>> statesOperations,
     Boolean hasIncident,
     List<Operation<String>> tenantIdOperations,
     List<VariableValueFilter> variableFilters,
@@ -45,7 +46,7 @@ public record ProcessDefinitionStatisticsFilter(
         .parentFlowNodeInstanceKeyOperations(parentFlowNodeInstanceKeyOperations)
         .startDateOperations(startDateOperations)
         .endDateOperations(endDateOperations)
-        .stateOperations(stateOperations)
+        .statesOperations(statesOperations)
         .hasIncident(hasIncident)
         .tenantIdOperations(tenantIdOperations)
         .variables(variableFilters)
@@ -60,7 +61,7 @@ public record ProcessDefinitionStatisticsFilter(
     private List<Operation<Long>> parentFlowNodeInstanceKeyOperations;
     private List<Operation<OffsetDateTime>> startDateOperations;
     private List<Operation<OffsetDateTime>> endDateOperations;
-    private List<Operation<String>> stateOperations;
+    private List<Operation<String>> statesOperations;
     private Boolean hasIncident;
     private List<Operation<String>> tenantIdOperations;
     private List<VariableValueFilter> variableFilters;
@@ -151,8 +152,8 @@ public record ProcessDefinitionStatisticsFilter(
       return endDateOperations(collectValues(operation, operations));
     }
 
-    public Builder stateOperations(final List<Operation<String>> operations) {
-      stateOperations = addValuesToList(stateOperations, operations);
+    public Builder statesOperations(final List<Operation<String>> operations) {
+      statesOperations = addValuesToList(statesOperations, operations);
       return this;
     }
 
@@ -163,7 +164,7 @@ public record ProcessDefinitionStatisticsFilter(
     @SafeVarargs
     public final Builder stateOperations(
         final Operation<String> operation, final Operation<String>... operations) {
-      return stateOperations(collectValues(operation, operations));
+      return statesOperations(collectValues(operation, operations));
     }
 
     public Builder hasIncident(final Boolean value) {
@@ -288,7 +289,7 @@ public record ProcessDefinitionStatisticsFilter(
           Objects.requireNonNullElse(parentFlowNodeInstanceKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(startDateOperations, Collections.emptyList()),
           Objects.requireNonNullElse(endDateOperations, Collections.emptyList()),
-          Objects.requireNonNullElse(stateOperations, Collections.emptyList()),
+          Objects.requireNonNullElse(statesOperations, Collections.emptyList()),
           hasIncident,
           Objects.requireNonNullElse(tenantIdOperations, Collections.emptyList()),
           Objects.requireNonNullElse(variableFilters, Collections.emptyList()),

@@ -47,6 +47,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Tag("rdbms")
 @ExtendWith(CamundaRdbmsInvocationContextProviderExtension.class)
 public class BatchOperationIT {
+
   public static final OffsetDateTime NOW = OffsetDateTime.now();
 
   @TestTemplate
@@ -96,14 +97,14 @@ public class BatchOperationIT {
     final BatchOperationEntity batchOperationEntity = updatedBatchOperation.items().getFirst();
     assertThat(batchOperationEntity.endDate()).isNull();
     assertThat(batchOperationEntity.operationsTotalCount()).isEqualTo(3);
-    assertThat(batchOperationEntity.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperationEntity.states()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and items are there
     final var updatedItems =
         getBatchOperationItems(rdbmsService, batchOperation.batchOperationId());
     assertThat(updatedItems).isNotNull();
     assertThat(updatedItems.items()).hasSize(3);
-    assertThat(updatedItems.items().stream().map(BatchOperationItemEntity::state))
+    assertThat(updatedItems.items().stream().map(BatchOperationItemEntity::states))
         .containsOnly(BatchOperationItemState.ACTIVE);
   }
 
@@ -144,7 +145,7 @@ public class BatchOperationIT {
     assertThat(batchOperationEntity.endDate()).isNull();
     assertThat(batchOperationEntity.operationsTotalCount()).isEqualTo(2);
     assertThat(batchOperationEntity.operationsCompletedCount()).isEqualTo(1);
-    assertThat(batchOperationEntity.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperationEntity.states()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and items have correct state
     final var updatedItems =
@@ -156,7 +157,7 @@ public class BatchOperationIT {
             .filter(i -> Objects.equals(i.itemKey(), items.getFirst()))
             .findFirst()
             .get();
-    assertThat(firstItem.state()).isEqualTo(BatchOperationItemState.COMPLETED);
+    assertThat(firstItem.states()).isEqualTo(BatchOperationItemState.COMPLETED);
     assertThat(firstItem.processedDate())
         .isCloseTo(NOW, new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
     assertThat(firstItem.errorMessage()).isNull();
@@ -166,7 +167,7 @@ public class BatchOperationIT {
             .filter(i -> Objects.equals(i.itemKey(), items.getLast()))
             .findFirst()
             .get();
-    assertThat(lastItem.state()).isEqualTo(BatchOperationItemState.ACTIVE);
+    assertThat(lastItem.states()).isEqualTo(BatchOperationItemState.ACTIVE);
   }
 
   @TestTemplate
@@ -206,7 +207,7 @@ public class BatchOperationIT {
     assertThat(batchOperationEntity.endDate()).isNull();
     assertThat(batchOperationEntity.operationsTotalCount()).isEqualTo(2);
     assertThat(batchOperationEntity.operationsFailedCount()).isEqualTo(1);
-    assertThat(batchOperationEntity.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperationEntity.states()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and items have correct state
     final var updatedItems =
@@ -218,7 +219,7 @@ public class BatchOperationIT {
             .filter(i -> Objects.equals(i.itemKey(), items.getFirst()))
             .findFirst()
             .get();
-    assertThat(firstItem.state()).isEqualTo(BatchOperationItemState.FAILED);
+    assertThat(firstItem.states()).isEqualTo(BatchOperationItemState.FAILED);
     assertThat(firstItem.processedDate())
         .isCloseTo(NOW, new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
     assertThat(firstItem.errorMessage()).isEqualTo("error");
@@ -228,7 +229,7 @@ public class BatchOperationIT {
             .filter(i -> Objects.equals(i.itemKey(), items.getLast()))
             .findFirst()
             .get();
-    assertThat(lastItem.state()).isEqualTo(BatchOperationItemState.ACTIVE);
+    assertThat(lastItem.states()).isEqualTo(BatchOperationItemState.ACTIVE);
   }
 
   @TestTemplate
@@ -265,7 +266,7 @@ public class BatchOperationIT {
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate())
         .isCloseTo(endDate, new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().states())
         .isEqualTo(BatchOperationState.CANCELED);
   }
 
@@ -289,7 +290,7 @@ public class BatchOperationIT {
 
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate()).isNull();
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().states())
         .isEqualTo(BatchOperationState.SUSPENDED);
   }
 
@@ -316,7 +317,7 @@ public class BatchOperationIT {
 
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate()).isNull();
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().states())
         .isEqualTo(BatchOperationState.ACTIVE);
   }
 
@@ -342,7 +343,7 @@ public class BatchOperationIT {
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate())
         .isCloseTo(endDate, new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().states())
         .isEqualTo(BatchOperationState.COMPLETED);
   }
 
@@ -415,7 +416,7 @@ public class BatchOperationIT {
             .search(
                 new BatchOperationQuery(
                     new BatchOperationFilter.Builder()
-                        .state(BatchOperationState.ACTIVE.name())
+                        .states(BatchOperationState.ACTIVE.name())
                         .build(),
                     BatchOperationSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -423,7 +424,7 @@ public class BatchOperationIT {
     assertThat(searchResult).isNotNull();
     assertThat(searchResult.items()).isNotEmpty();
     assertThat(searchResult.items())
-        .allSatisfy(i -> assertThat(i.state()).isEqualTo(BatchOperationState.ACTIVE));
+        .allSatisfy(i -> assertThat(i.states()).isEqualTo(BatchOperationState.ACTIVE));
     assertThat(searchResult.items()).anySatisfy(i -> assertBatchOperationEntity(i, batchOperation));
   }
 

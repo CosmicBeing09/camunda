@@ -88,7 +88,7 @@ public record FlowNodeInstanceFilter(
       return processDefinitionIds(collectValuesAsList(values));
     }
 
-    public FlowNodeInstanceFilter.Builder stateOperations(
+    public FlowNodeInstanceFilter.Builder statesOperations(
         final List<Operation<String>> operations) {
       stateOperations = addValuesToList(stateOperations, operations);
       return this;
@@ -101,7 +101,7 @@ public record FlowNodeInstanceFilter(
     @SafeVarargs
     public final FlowNodeInstanceFilter.Builder stateOperations(
         final Operation<String> operation, final Operation<String>... operations) {
-      return stateOperations(collectValues(operation, operations));
+      return statesOperations(collectValues(operation, operations));
     }
 
     public FlowNodeInstanceFilter.Builder types(final List<FlowNodeType> values) {

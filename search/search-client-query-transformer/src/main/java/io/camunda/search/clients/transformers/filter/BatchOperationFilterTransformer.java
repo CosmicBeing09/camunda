@@ -7,8 +7,11 @@
  */
 package io.camunda.search.clients.transformers.filter;
 
-import static io.camunda.search.clients.query.SearchQueryBuilders.*;
-import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.*;
+import static io.camunda.search.clients.query.SearchQueryBuilders.and;
+import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
+import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.ID;
+import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.STATE;
+import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.TYPE;
 
 import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.filter.BatchOperationFilter;
@@ -28,7 +31,7 @@ public final class BatchOperationFilterTransformer
     final var queries = new ArrayList<SearchQuery>();
 
     Optional.ofNullable(stringTerms(ID, filter.batchOperationIds())).ifPresent(queries::add);
-    Optional.ofNullable(stringTerms(STATE, filter.state())).ifPresent(queries::add);
+    Optional.ofNullable(stringTerms(STATE, filter.states())).ifPresent(queries::add);
     Optional.ofNullable(stringTerms(TYPE, filter.operationTypes())).ifPresent(queries::add);
 
     return and(queries);
