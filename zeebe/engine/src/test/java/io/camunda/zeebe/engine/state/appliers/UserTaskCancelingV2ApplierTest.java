@@ -33,16 +33,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskCancelingV2ApplierTest {
 
-  /** Injected by {@link ProcessingStateExtension} */
+  /**
+   * Injected by {@link ProcessingStateExtension}
+   */
   private MutableProcessingState processingState;
 
-  /** The class under test. */
+  /**
+   * The class under test.
+   */
   private UserTaskCancelingV2Applier userTaskCancelingApplier;
 
-  /** Used for state assertions. */
+  /**
+   * Used for state assertions.
+   */
   private MutableUserTaskState userTaskState;
 
-  /** For setting up the state before testing the applier. */
+  /**
+   * For setting up the state before testing the applier.
+   */
   private AppliersTestSetupHelper testSetup;
 
   @BeforeEach
@@ -69,7 +77,7 @@ public class UserTaskCancelingV2ApplierTest {
     assertThat(userTaskState.getLifecycleState(userTaskKey))
         .describedAs("Expected user task to be in CREATED state before applying CANCELING")
         .isEqualTo(LifecycleState.CREATED);
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findAsyncRequest(userTaskKey))
         .describedAs("Expected no record request metadata before canceling")
         .isEmpty();
 
@@ -120,7 +128,7 @@ public class UserTaskCancelingV2ApplierTest {
     assertThat(processingState.getVariableState().findVariableDocumentState(elementInstanceKey))
         .describedAs("Expected variable document state to exist before user task cancellation")
         .isPresent();
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findAsyncRequest(userTaskKey))
         .describedAs("Expected no record request metadata before canceling")
         .isEmpty();
     assertThat(userTaskState.getIntermediateState(userTaskKey))
@@ -165,7 +173,7 @@ public class UserTaskCancelingV2ApplierTest {
     testSetup.applyEventToState(
         userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord.copy().setAssignee("john"));
     // persist request metadata
-    userTaskState.storeRecordRequestMetadata(
+    userTaskState.storeAsyncRequest(
         userTaskKey,
         new UserTaskTransitionTriggerRequestMetadata()
             .setIntent(UserTaskIntent.CLAIMING)
@@ -187,7 +195,7 @@ public class UserTaskCancelingV2ApplierTest {
                 Assertions.assertThat(state.getRecord())
                     .describedAs("Expected record in intermediate to have previous transition data")
                     .hasAssignee("john"));
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findAsyncRequest(userTaskKey))
         .hasValueSatisfying(
             metadata -> assertThat(metadata.getIntent()).isEqualTo(UserTaskIntent.CLAIMING));
 
@@ -202,7 +210,7 @@ public class UserTaskCancelingV2ApplierTest {
         .describedAs("Expected new intermediate state to be related to 'cancel' transition")
         .extracting(UserTaskIntermediateStateValue::getLifecycleState)
         .isEqualTo(LifecycleState.CANCELING);
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findAsyncRequest(userTaskKey))
         .describedAs("Expected record request metadata to be removed on canceling")
         .isEmpty();
   }

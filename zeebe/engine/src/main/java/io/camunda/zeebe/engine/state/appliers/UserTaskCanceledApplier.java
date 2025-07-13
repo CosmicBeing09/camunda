@@ -29,7 +29,7 @@ public final class UserTaskCanceledApplier
   @Override
   public void applyState(final long key, final UserTaskRecord value) {
     userTaskState.deleteIntermediateStateIfExists(key);
-    userTaskState.deleteRecordRequestMetadata(key);
+    userTaskState.deleteAsyncRequest(key);
     userTaskState.delete(key);
     resetCancelingTaskListenerIndex(value);
   }
