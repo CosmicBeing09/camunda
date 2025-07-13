@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record SearchQueryResult<T>(
-    long total, List<T> items, String searchBeforeCursor, String searchAfterCursor) {
+    long total, List<T> items, String searchBeforeCursor, String after) {
 
   public static <T> SearchQueryResult<T> empty() {
     return new SearchQueryResult<>(0, Collections.emptyList(), null, null);

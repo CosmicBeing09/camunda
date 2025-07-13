@@ -143,7 +143,7 @@ public class BatchOperationItemProvider {
       final Supplier<Boolean> shouldAbort) {
     final var items = new LinkedHashSet<Item>();
 
-    String searchAfter = null;
+    String after = null;
     while (true) {
       // Check if the batch operation is still present, could be canceled in the meantime
       if (shouldAbort.get()) {
@@ -153,9 +153,9 @@ public class BatchOperationItemProvider {
 
       metrics.recordQueryAgainstSecondaryDatabase();
 
-      final var result = itemPageFetcher.fetchItems(filter, searchAfter, authentication);
+      final var result = itemPageFetcher.fetchItems(filter, after, authentication);
       items.addAll(result.items);
-      searchAfter = result.searchAfter();
+      after = result.searchAfter();
 
       // the result.total count can be incorrect when using elasticsearch and could be capped at
       // 10_000. If the result.total is smaller than the queryPageSize, we can assume that we have
@@ -192,7 +192,9 @@ public class BatchOperationItemProvider {
     return incidents;
   }
 
-  public record Item(long itemKey, long processInstanceKey) {}
+  public record Item(long itemKey, long processInstanceKey) {
+
+  }
 
   /**
    * Internal abstraction to hold the result of a page of entity items.
@@ -201,7 +203,9 @@ public class BatchOperationItemProvider {
    * @param searchAfter cursor to fetch the next page of items
    * @param total the total amount of found items
    */
-  private record ItemPage(List<Item> items, String searchAfter, long total) {}
+  private record ItemPage(List<Item> items, String searchAfter, long total) {
+
+  }
 
   /**
    * Internal abstraction interface to get a single page of entity items of a specific type. This is
@@ -216,17 +220,17 @@ public class BatchOperationItemProvider {
      * Fetches a page of entity items based on the provided filter and search values.
      *
      * @param filter the filter to apply
-     * @param searchAfter the current searchAfter
+     * @param after the current searchAfter
      * @return the fetched items and pagination information
      */
-    ItemPage fetchItems(F filter, String searchAfter, Authentication authentication);
+    ItemPage fetchItems(F filter, String after, Authentication authentication);
 
     /**
      * Creates a security context for the given authentication and authorization.
      *
      * @param authentication the authentication of the user which started the batch operation
      * @param authorization the same authorization is needed, that is normally used in
-     *     ProcessInstanceServices / IncidentServices
+     * ProcessInstanceServices / IncidentServices
      * @return the security context
      */
     default SecurityContext createSecurityContext(
@@ -237,16 +241,17 @@ public class BatchOperationItemProvider {
   }
 
   private final class ProcessInstancePageFetcher implements ItemPageFetcher<ProcessInstanceFilter> {
+
     @Override
     public ItemPage fetchItems(
         final ProcessInstanceFilter filter,
-        final String searchAfter,
+        final String after,
         final Authentication authentication) {
       final var securityContext =
           createSecurityContext(
               authentication, Authorization.of(a -> a.processDefinition().readProcessInstance()));
       final var page =
-          SearchQueryPageBuilders.page().size(queryPageSize).searchAfter(searchAfter).build();
+          SearchQueryPageBuilders.page().size(queryPageSize).after(after).build();
       final var query =
           SearchQueryBuilders.processInstanceSearchQuery()
               .filter(filter)
@@ -261,22 +266,23 @@ public class BatchOperationItemProvider {
           result.items().stream()
               .map(pi -> new Item(pi.processInstanceKey(), pi.processInstanceKey()))
               .collect(Collectors.toList()),
-          result.searchAfterCursor(),
+          result.after(),
           result.total());
     }
   }
 
   private final class IncidentPageFetcher implements ItemPageFetcher<IncidentFilter> {
+
     @Override
     public ItemPage fetchItems(
         final IncidentFilter filter,
-        final String searchAfter,
+        final String after,
         final Authentication authentication) {
       final var securityContext =
           createSecurityContext(
               authentication, Authorization.of(a -> a.processDefinition().readProcessInstance()));
       final var page =
-          SearchQueryPageBuilders.page().size(queryPageSize).searchAfter(searchAfter).build();
+          SearchQueryPageBuilders.page().size(queryPageSize).after(after).build();
       final var query = SearchQueryBuilders.incidentSearchQuery().filter(filter).page(page).build();
 
       final var result =
@@ -286,7 +292,7 @@ public class BatchOperationItemProvider {
           result.items().stream()
               .map(pi -> new Item(pi.incidentKey(), pi.processInstanceKey()))
               .collect(Collectors.toList()),
-          result.searchAfterCursor(),
+          result.after(),
           result.total());
     }
   }
