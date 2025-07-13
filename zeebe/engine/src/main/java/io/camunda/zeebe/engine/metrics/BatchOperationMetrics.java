@@ -77,12 +77,12 @@ public class BatchOperationMetrics {
     batchOperationEvent(BatchOperationAction.COMPLETED, batchOperationType);
   }
 
-  public void startTotalLatencyMeasure(
+  public void startTotalDurationMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
     createLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey, batchOperationType);
   }
 
-  public void stopTotalLatencyMeasure(final Long batchOperationKey) {
+  public void stopTotalDurationMeasure(final Long batchOperationKey) {
     closeAndRemoveLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey);
   }
 
@@ -109,9 +109,6 @@ public class BatchOperationMetrics {
   /**
    * Measures the time from the creation of the first execution command until the first execution in
    * the processor
-   *
-   * @param batchOperationKey
-   * @param batchOperationType
    */
   public void startStartExecuteLatencyMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
@@ -258,7 +255,7 @@ public class BatchOperationMetrics {
       final Long batchOperationKey,
       final BatchOperationLatency batchOperationLatency,
       final BatchOperationType batchOperationType) {
-    final var meterDoc = BatchOperationMetricsDoc.BATCH_OPERATION_LATENCY;
+    final var meterDoc = BatchOperationMetricsDoc.BATCH_OPERATION_DURATION;
     return Timer.resource(registry, meterDoc.getName())
         .description(meterDoc.getDescription())
         .tag(
