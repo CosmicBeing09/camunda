@@ -289,7 +289,7 @@ public final class OAuthCredentialsProviderBuilder {
     return entraCertificatePath;
   }
 
-  public OAuthCredentialsProviderBuilder entraCertificatePassword(
+  public OAuthCredentialsProviderBuilder sslClientCertPassword(
       final String entraCertificatePassword) {
     this.entraCertificatePassword = entraCertificatePassword;
     return this;
@@ -328,7 +328,7 @@ public final class OAuthCredentialsProviderBuilder {
 
   private void applyMSEntraConfiguration() {
     applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
-    applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
+    applyEnvironmentValueIfNotNull(this::sslClientCertPassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
   private void checkEnvironmentOverrides() {
