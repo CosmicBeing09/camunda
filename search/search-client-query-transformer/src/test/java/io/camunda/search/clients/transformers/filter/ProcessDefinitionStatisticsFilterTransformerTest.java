@@ -191,7 +191,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     assertThat(processInstanceFilter.parentFlowNodeInstanceKeyOperations()).isEmpty();
     assertThat(processInstanceFilter.startDateOperations()).isEmpty();
     assertThat(processInstanceFilter.endDateOperations()).isEmpty();
-    assertThat(processInstanceFilter.stateOperations()).isEmpty();
+    assertThat(processInstanceFilter.statesOperations()).isEmpty();
     assertThat(processInstanceFilter.hasIncident()).isNull();
     assertThat(processInstanceFilter.tenantIdOperations()).isEmpty();
   }
