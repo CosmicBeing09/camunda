@@ -79,7 +79,8 @@ import java.util.Objects;
 public final class EventAppliers implements EventApplier {
 
   public static final TypedEventApplier<Intent, RecordValue> NOOP_EVENT_APPLIER =
-      (key, value) -> {};
+      (key, value) -> {
+      };
 
   private final Map<Intent, Map<Integer, TypedEventApplier>> mapping = new HashMap<>();
 
@@ -570,7 +571,7 @@ public final class EventAppliers implements EventApplier {
     register(ScaleIntent.SCALING_UP, new ScalingUpApplier(state.getRoutingState()));
     register(ScaleIntent.SCALED_UP, new ScaledUpApplier(state.getRoutingState()));
     register(ScaleIntent.STATUS_RESPONSE, new ScaleUpStatusResponseApplier());
-    register(ScaleIntent.PARTITIONS_BOOTSTRAPPED, new PartitionsBootstrappedApplier(state));
+    register(ScaleIntent.PARTITION_BOOTSTRAPPED, new PartitionsBootstrappedApplier(state));
   }
 
   private void registerTenantAppliers(final MutableProcessingState state) {
