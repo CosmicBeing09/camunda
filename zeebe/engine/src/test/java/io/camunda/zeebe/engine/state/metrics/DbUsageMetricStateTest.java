@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.metrics;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import io.camunda.zeebe.db.TransactionContext;
@@ -26,6 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 public class DbUsageMetricStateTest {
+
   private ZeebeDb<ZbColumnFamilies> zeebeDb;
   private TransactionContext transactionContext;
 
@@ -50,7 +51,7 @@ public class DbUsageMetricStateTest {
     state.recordRPIMetric(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
-    final var actual = state.getRollingBucket();
+    final var actual = state.getActiveBucket();
     assertThat(actual.getFromTime()).isEqualTo(eventTime);
     assertThat(actual.getToTime()).isEqualTo(eventTime + 1000);
     assertThat(actual.getTenantRPIMap())
@@ -72,7 +73,7 @@ public class DbUsageMetricStateTest {
     state.recordRPIMetric("tenant2");
 
     // then
-    final var actual = state.getRollingBucket();
+    final var actual = state.getActiveBucket();
     assertThat(actual.getFromTime()).isEqualTo(eventTime);
     assertThat(actual.getToTime()).isEqualTo(eventTime + 1000);
     assertThat(actual.getTenantRPIMap())
@@ -86,7 +87,7 @@ public class DbUsageMetricStateTest {
     final var eventTime = InstantSource.system().millis();
     when(mockClock.millis()).thenReturn(eventTime);
     state.recordRPIMetric(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    final var bucket = state.getRollingBucket();
+    final var bucket = state.getActiveBucket();
     assertThat(bucket.getTenantRPIMap())
         .containsExactlyInAnyOrderEntriesOf(Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, 1L));
 
@@ -94,7 +95,7 @@ public class DbUsageMetricStateTest {
     state.deleteRollingBucket();
 
     // then
-    final var actual = state.getRollingBucket();
+    final var actual = state.getActiveBucket();
     assertThat(actual).isNull();
   }
 }
