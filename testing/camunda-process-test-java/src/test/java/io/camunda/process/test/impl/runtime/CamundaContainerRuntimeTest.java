@@ -51,7 +51,8 @@ public class CamundaContainerRuntimeTest {
     EXPECTED_ENV_VARS.put(ADDITIONAL_ENV_VAR_KEY, ADDITIONAL_ENV_VAR_VALUE);
   }
 
-  @Mock private ContainerFactory containerFactory;
+  @Mock
+  private ContainerFactory containerFactory;
 
   @Mock(answer = Answers.RETURNS_SELF)
   private CamundaContainer camundaContainer;
@@ -68,8 +69,8 @@ public class CamundaContainerRuntimeTest {
   @Test
   void shouldCreateContainers() {
     // given/when
-    final CamundaContainerRuntime runtime =
-        CamundaContainerRuntime.newBuilder().withContainerFactory(containerFactory).build();
+    final CamundaRuntime runtime =
+        CamundaRuntime.newBuilder().withContainerFactory(containerFactory).build();
 
     // then
     assertThat(runtime).isNotNull();
@@ -83,8 +84,8 @@ public class CamundaContainerRuntimeTest {
   @Test
   void shouldStartAndStopContainers() throws Exception {
     // given
-    final CamundaContainerRuntime runtime =
-        CamundaContainerRuntime.newBuilder().withContainerFactory(containerFactory).build();
+    final CamundaRuntime runtime =
+        CamundaRuntime.newBuilder().withContainerFactory(containerFactory).build();
 
     // when
     runtime.start();
@@ -104,7 +105,7 @@ public class CamundaContainerRuntimeTest {
   @Test
   void shouldCreateWithDefaults() {
     // given/when
-    CamundaContainerRuntime.newBuilder().withContainerFactory(containerFactory).build();
+    CamundaRuntime.newBuilder().withContainerFactory(containerFactory).build();
 
     // then
     verify(containerFactory)
@@ -124,7 +125,7 @@ public class CamundaContainerRuntimeTest {
     final String dockerImageVersion = "8.6.0-custom";
 
     // when
-    CamundaContainerRuntime.newBuilder()
+    CamundaRuntime.newBuilder()
         .withContainerFactory(containerFactory)
         .withCamundaDockerImageName(dockerImageName)
         .withCamundaDockerImageVersion(dockerImageVersion)
@@ -152,7 +153,7 @@ public class CamundaContainerRuntimeTest {
     final String dockerImageVersion = "8.13.0-custom";
 
     // when
-    CamundaContainerRuntime.newBuilder()
+    CamundaRuntime.newBuilder()
         .withContainerFactory(containerFactory)
         .withElasticsearchDockerImageName(dockerImageName)
         .withElasticsearchDockerImageVersion(dockerImageVersion)
@@ -170,8 +171,8 @@ public class CamundaContainerRuntimeTest {
   @Test
   void shouldEnableConnectors() throws Exception {
     // given
-    final CamundaContainerRuntime runtime =
-        CamundaContainerRuntime.newBuilder()
+    final CamundaRuntime runtime =
+        CamundaRuntime.newBuilder()
             .withContainerFactory(containerFactory)
             .withConnectorsEnabled(true)
             .build();
@@ -206,7 +207,7 @@ public class CamundaContainerRuntimeTest {
     expectedConnectorSecrets.put(additionalConnectorSecretKey, additionalConnectorSecretValue);
 
     // when
-    CamundaContainerRuntime.newBuilder()
+    CamundaRuntime.newBuilder()
         .withContainerFactory(containerFactory)
         .withConnectorsDockerImageName(dockerImageName)
         .withConnectorsDockerImageVersion(dockerImageVersion)

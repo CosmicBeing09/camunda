@@ -34,9 +34,9 @@ import org.testcontainers.containers.Network;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
-public class CamundaContainerRuntime implements AutoCloseable {
+public class CamundaRuntime implements AutoCloseable {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(CamundaContainerRuntime.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(CamundaRuntime.class);
 
   private static final String NETWORK_ALIAS_CAMUNDA = "camunda";
   private static final String NETWORK_ALIAS_ELASTICSEARCH = "elasticsearch";
@@ -58,8 +58,8 @@ public class CamundaContainerRuntime implements AutoCloseable {
 
   private final boolean connectorsEnabled;
 
-  CamundaContainerRuntime(
-      final CamundaContainerRuntimeBuilder builder, final ContainerFactory containerFactory) {
+  CamundaRuntime(
+      final CamundaRuntimeBuilder builder, final ContainerFactory containerFactory) {
     this.containerFactory = containerFactory;
     connectorsEnabled = builder.isConnectorsEnabled();
     network = Network.newNetwork();
@@ -75,7 +75,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
    * {@see https://github.com/camunda/camunda/issues/29854}
    */
   private ElasticsearchContainer createElasticsearchContainer(
-      final Network network, final CamundaContainerRuntimeBuilder builder) {
+      final Network network, final CamundaRuntimeBuilder builder) {
     final ElasticsearchContainer container =
         containerFactory
             .createElasticsearchContainer(
@@ -93,7 +93,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
   }
 
   private CamundaContainer createCamundaContainer(
-      final Network network, final CamundaContainerRuntimeBuilder builder) {
+      final Network network, final CamundaRuntimeBuilder builder) {
     final CamundaContainer container =
         containerFactory
             .createCamundaContainer(
@@ -110,7 +110,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
   }
 
   private ConnectorsContainer createConnectorsContainer(
-      final Network network, final CamundaContainerRuntimeBuilder builder) {
+      final Network network, final CamundaRuntimeBuilder builder) {
     final ConnectorsContainer container =
         containerFactory
             .createConnectorsContainer(
@@ -187,11 +187,11 @@ public class CamundaContainerRuntime implements AutoCloseable {
     return new Slf4jJsonLogConsumer(logger, logEntryType);
   }
 
-  public static CamundaContainerRuntimeBuilder newBuilder() {
-    return new CamundaContainerRuntimeBuilder();
+  public static CamundaRuntimeBuilder newBuilder() {
+    return new CamundaRuntimeBuilder();
   }
 
-  public static CamundaContainerRuntime newDefaultRuntime() {
+  public static CamundaRuntime newDefaultRuntime() {
     return newBuilder().build();
   }
 }
