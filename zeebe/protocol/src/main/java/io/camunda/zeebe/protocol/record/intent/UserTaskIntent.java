@@ -110,7 +110,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
    * completed or any related incidents have been resolved.
    *
    * @apiNote The engine manages this command internally. Writing this command directly won't
-   *     trigger user task creation. It shouldn't be used via client APIs.
+   * trigger user task creation. It shouldn't be used via client APIs.
    */
   CREATE(22),
 
@@ -120,7 +120,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
    * been completed or any related incidents have been resolved.
    *
    * @apiNote The engine manages this command internally. Writing this command directly won't
-   *     trigger user task cancellation. It shouldn't be used via client APIs.
+   * trigger user task cancellation. It shouldn't be used via client APIs.
    */
   CANCEL(23);
 
@@ -136,7 +136,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
     this.shouldBanInstance = shouldBanInstance;
   }
 
-  public short getIntent() {
+  public short getIntentToWrite() {
     return value;
   }
 
@@ -232,7 +232,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
 
   public static Set<UserTaskIntent> commands() {
     return Stream.of(UserTaskIntent.values())
-        .filter(intent -> !intent.isEvent())
+        .filter(intentToWrite -> !intentToWrite.isEvent())
         .collect(Collectors.toSet());
   }
 }
