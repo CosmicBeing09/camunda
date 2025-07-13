@@ -28,6 +28,7 @@ import io.camunda.zeebe.stream.api.state.KeyGenerator;
 import java.time.Instant;
 
 public final class ClockProcessor implements DistributedTypedRecordProcessor<ClockRecord> {
+
   private final SideEffectWriter sideEffectWriter;
   private final StateWriter stateWriter;
   private final KeyGenerator keyGenerator;
@@ -83,7 +84,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequest()) {
       responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord, command);
     }
 
@@ -127,11 +128,10 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
           return true;
         };
       }
-      case RESET ->
-          () -> {
-            clock.reset();
-            return true;
-          };
+      case RESET -> () -> {
+        clock.reset();
+        return true;
+      };
       case RESETTED, PINNED ->
           throw new IllegalStateException("Expected a command intent, but got " + intent.name());
     };
