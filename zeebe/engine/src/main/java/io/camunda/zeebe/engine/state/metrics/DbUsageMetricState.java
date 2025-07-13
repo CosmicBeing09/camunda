@@ -45,12 +45,12 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public UsageMetricStateValue getRollingBucket() {
+  public UsageMetricStateValue getActiveBucket() {
     setRollingBucketKeys();
     return metricsBucketColumnFamily.get(metricsBucketKey);
   }
 
-  public void updateRollingBucket(final UsageMetricStateValue bucket) {
+  public void updateActiveBucket(final UsageMetricStateValue bucket) {
     setRollingBucketKeys();
     metricsBucketColumnFamily.update(metricsBucketKey, bucket);
   }
@@ -61,17 +61,17 @@ public class DbUsageMetricState implements MutableUsageMetricState {
 
   @Override
   public void recordRPIMetric(final String tenantId) {
-    updateRollingBucket(getOrCreateRollingBucket().recordRPI(tenantId));
+    updateActiveBucket(getOrCreateRollingBucket().recordRPI(tenantId));
   }
 
   @Override
-  public void deleteRollingBucket() {
+  public void deleteActiveBucket() {
     setRollingBucketKeys();
     metricsBucketColumnFamily.deleteExisting(metricsBucketKey);
   }
 
   private UsageMetricStateValue getOrCreateRollingBucket() {
-    var bucket = getRollingBucket();
+    var bucket = getActiveBucket();
     if (bucket == null) {
       final long millis = clock.millis();
       bucket =
