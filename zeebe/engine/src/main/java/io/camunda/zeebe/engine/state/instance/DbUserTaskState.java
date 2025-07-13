@@ -165,17 +165,11 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
-  public void storeRecordRequestMetadata(
+  public void storeRecordTrigger(
       final long key, final UserTaskTransitionTriggerRequestMetadata recordRequestMetadata) {
     userTaskKey.wrapLong(key);
     userTasksTransitionTriggerRequestMetadataColumnFamily.insert(
         userTaskKey, recordRequestMetadata);
-  }
-
-  @Override
-  public void deleteRecordRequestMetadata(final long key) {
-    userTaskKey.wrapLong(key);
-    userTasksTransitionTriggerRequestMetadataColumnFamily.deleteIfExists(userTaskKey);
   }
 
   @Override
@@ -191,6 +185,12 @@ public class DbUserTaskState implements MutableUserTaskState {
   public void deleteInitialAssignee(final long key) {
     userTaskKey.wrapLong(key);
     userTasksInitialAssigneeColumnFamily.deleteIfExists(userTaskKey);
+  }
+
+  @Override
+  public void deleteRecordRequestMetadata(final long key) {
+    userTaskKey.wrapLong(key);
+    userTasksTransitionTriggerRequestMetadataColumnFamily.deleteIfExists(userTaskKey);
   }
 
   @Override
@@ -227,17 +227,17 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
+  public Optional<String> findInitialAssignee(final long key) {
+    userTaskKey.wrapLong(key);
+    final var initialAssignee = userTasksInitialAssigneeColumnFamily.get(userTaskKey);
+    return initialAssignee == null ? Optional.empty() : Optional.of(initialAssignee.toString());
+  }
+
+  @Override
   public Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequestMetadata(
       final long key) {
     userTaskKey.wrapLong(key);
     return Optional.ofNullable(
         userTasksTransitionTriggerRequestMetadataColumnFamily.get(userTaskKey));
-  }
-
-  @Override
-  public Optional<String> findInitialAssignee(final long key) {
-    userTaskKey.wrapLong(key);
-    final var initialAssignee = userTasksInitialAssigneeColumnFamily.get(userTaskKey);
-    return initialAssignee == null ? Optional.empty() : Optional.of(initialAssignee.toString());
   }
 }

@@ -32,7 +32,7 @@ public class UserTaskUpdateDeniedApplier
   public void applyState(final long key, final UserTaskRecord value) {
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
     userTaskState.deleteIntermediateState(key);
-    userTaskState.deleteRecordRequestMetadata(key);
+    userTaskState.deleteRecordTrigger(key);
 
     final long elementInstanceKey = value.getElementInstanceKey();
     final ElementInstance elementInstance = elementInstanceState.getInstance(elementInstanceKey);

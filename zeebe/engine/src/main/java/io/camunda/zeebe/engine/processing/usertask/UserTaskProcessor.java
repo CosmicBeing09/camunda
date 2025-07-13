@@ -207,7 +207,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
        * we will have new request values anyway, so persisting these data here is acceptable.
        * A similar approach has been used in `ProcessInstanceCreationCreateWithResultProcessor`.
        */
-      storeUserTaskRecordRequestMetadata(command);
+      storeUserTaskRecordMetadata(command);
 
       final var listener = userTaskElement.getTaskListeners(eventType).getFirst();
       final var userTaskElementInstance = getUserTaskElementInstance(persistedRecord);
@@ -223,7 +223,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     return command instanceof RetryTypedRecord<UserTaskRecord>;
   }
 
-  private void storeUserTaskRecordRequestMetadata(final TypedRecord<UserTaskRecord> command) {
+  private void storeUserTaskRecordMetadata(final TypedRecord<UserTaskRecord> command) {
     if (!command.hasRequestMetadata()) {
       return;
     }
@@ -234,7 +234,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
-    userTaskState.storeRecordRequestMetadata(command.getValue().getUserTaskKey(), metadata);
+    userTaskState.storeRecordTrigger(command.getValue().getUserTaskKey(), metadata);
   }
 
   private void handleCommandRejection(

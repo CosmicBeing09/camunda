@@ -173,7 +173,7 @@ public class UserTaskCancelingV2ApplierTest {
     testSetup.applyEventToState(
         userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord.copy().setAssignee("john"));
     // persist request metadata
-    userTaskState.storeRecordRequestMetadata(
+    userTaskState.storeRecordTrigger(
         userTaskKey,
         new UserTaskTransitionTriggerRequestMetadata()
             .setIntent(UserTaskIntent.CLAIMING)
