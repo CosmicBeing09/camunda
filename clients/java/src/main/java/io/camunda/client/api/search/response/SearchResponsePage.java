@@ -19,12 +19,18 @@ import java.util.List;
 
 public interface SearchResponsePage {
 
-  /** Total number of items that matches the query */
+  /**
+   * Total number of items that matches the query
+   */
   Long totalItems();
 
-  /** The sort values of the first item in the returned page. */
-  List<Object> firstSortValues();
+  /**
+   * The sort values of the first item in the returned page.
+   */
+  List<Object> searchBeforeCursor();
 
-  /** The sort values of the last item in the returned page. */
+  /**
+   * The sort values of the last item in the returned page.
+   */
   List<Object> lastSortValues();
 }
