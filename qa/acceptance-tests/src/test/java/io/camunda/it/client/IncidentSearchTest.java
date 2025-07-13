@@ -248,12 +248,12 @@ class IncidentSearchTest {
   @EnumSource(value = ErrorType.class)
   void shouldRecognizeAllErrorTypesSupportedByOperateInIncidentQuery(final ErrorType errorType) {
     assertThatCode(
-            () ->
-                camundaClient
-                    .newIncidentSearchRequest()
-                    .filter(f -> f.errorType(IncidentErrorType.valueOf(errorType.name())))
-                    .send()
-                    .join())
+        () ->
+            camundaClient
+                .newIncidentSearchRequest()
+                .filter(f -> f.errorType(IncidentErrorType.valueOf(errorType.name())))
+                .send()
+                .join())
         .describedAs(
             """
                 Incident query should execute successfully for filter.errorType = '%1$s'.
@@ -551,7 +551,7 @@ class IncidentSearchTest {
     final var resultSearchBefore =
         camundaClient
             .newIncidentSearchRequest()
-            .page(p -> p.limit(1).searchBefore(result.page().searchBeforeCursor()))
+            .page(p -> p.limit(1).searchBefore(result.page().startCursor()))
             .send()
             .join();
 
