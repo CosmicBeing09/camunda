@@ -13,7 +13,19 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.stringOperatio
 import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 import static io.camunda.search.clients.query.SearchQueryBuilders.term;
 import static io.camunda.webapps.schema.descriptors.IndexDescriptor.TENANT_ID;
-import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.*;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.BPMN_PROCESS_ID;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.END_DATE;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.FLOW_NODE_ID;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.FLOW_NODE_NAME;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.INCIDENT;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.INCIDENT_KEY;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.KEY;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.PROCESS_DEFINITION_KEY;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.PROCESS_INSTANCE_KEY;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.START_DATE;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.STATE;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.TREE_PATH;
+import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.TYPE;
 import static java.util.Optional.ofNullable;
 
 import io.camunda.search.clients.query.SearchQuery;
@@ -48,7 +60,7 @@ public class FlownodeInstanceFilterTransformer
     ofNullable(filter.hasIncident()).ifPresent(f -> queries.add(term(INCIDENT, f)));
     ofNullable(stringTerms(TENANT_ID, filter.tenantIds())).ifPresent(queries::add);
     ofNullable(stringTerms(START_DATE, filter.startDates())).ifPresent(queries::add);
-    ofNullable(stringTerms(END_DATE, filter.endDates())).ifPresent(queries::add);
+    ofNullable(stringTerms(END_DATE, filter.endDateOperations())).ifPresent(queries::add);
     return and(queries);
   }
 
