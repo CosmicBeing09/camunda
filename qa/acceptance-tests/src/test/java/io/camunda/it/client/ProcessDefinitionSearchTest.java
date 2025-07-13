@@ -168,7 +168,7 @@ public class ProcessDefinitionSearchTest {
         camundaClient
             .newProcessDefinitionSearchRequest()
             .sort(s -> s.processDefinitionId().desc())
-            .page(p -> p.limit(2).searchBefore(secondPage.page().firstSortValues()))
+            .page(p -> p.limit(2).searchBefore(secondPage.page().searchBeforeCursor()))
             .send()
             .join();
 

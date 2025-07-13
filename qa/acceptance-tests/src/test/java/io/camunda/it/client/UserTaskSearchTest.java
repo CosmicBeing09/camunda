@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 @MultiDbTest
 class UserTaskSearchTest {
+
   private static Long userTaskKeyTaskAssigned;
 
   private static CamundaClient camundaClient;
@@ -297,7 +298,8 @@ class UserTaskSearchTest {
                     .filter(
                         f ->
                             f.processInstanceVariables(
-                                List.of(vf -> vf.name("process01").value(v -> {}))))
+                                List.of(vf -> vf.name("process01").value(v -> {
+                                }))))
                     .send()
                     .join());
     // then
@@ -538,7 +540,7 @@ class UserTaskSearchTest {
     // Assert First and Last Sort Value matches the first and last item
     // We need to make use of toString, such the test work with ES/OS
     final List<String> firstSortValues =
-        result.page().firstSortValues().stream().map(Object::toString).toList();
+        result.page().searchBeforeCursor().stream().map(Object::toString).toList();
     String creationDateMillis = convertDateIfNeeded(firstSortValues.getFirst());
     String userTaskKey = firstSortValues.getLast();
 
