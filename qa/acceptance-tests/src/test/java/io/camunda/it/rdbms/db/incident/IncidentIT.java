@@ -110,7 +110,7 @@ public class IncidentIT {
             IncidentQuery.of(
                 b ->
                     b.filter(f -> f.processDefinitionIds(processDefinitionId))
-                        .sort(s -> s.creationTime().asc().flowNodeId().asc())
+                        .sort(s -> s.creationTime().asc().flowNodeIdOperations().asc())
                         .page(p -> p.from(0).size(5))));
 
     assertThat(searchResult).isNotNull();
@@ -178,7 +178,8 @@ public class IncidentIT {
 
     final var processDefinitionKey = nextKey();
     createAndSaveRandomIncidents(rdbmsWriter, b -> b.processDefinitionKey(processDefinitionKey));
-    final var sort = IncidentSort.of(s -> s.state().asc().creationTime().asc().flowNodeId().desc());
+    final var sort = IncidentSort.of(
+        s -> s.state().asc().creationTime().asc().flowNodeIdOperations().desc());
     final var searchResult =
         processInstanceReader.search(
             IncidentQuery.of(

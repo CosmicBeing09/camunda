@@ -55,7 +55,7 @@ public class IncidentSortIT {
   public void shouldSortByElementIdAsc(final CamundaRdbmsTestApplication testApplication) {
     testSorting(
         testApplication.getRdbmsService(),
-        b -> b.flowNodeId().asc(),
+        b -> b.flowNodeIdOperations().asc(),
         Comparator.comparing(IncidentEntity::flowNodeId));
   }
 

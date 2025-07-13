@@ -55,7 +55,7 @@ public record IncidentSort(List<FieldSorting> orderings) implements SortOption {
       return this;
     }
 
-    public Builder flowNodeId() {
+    public Builder flowNodeIdOperations() {
       currentOrdering = new FieldSorting("flowNodeId", null);
       return this;
     }
