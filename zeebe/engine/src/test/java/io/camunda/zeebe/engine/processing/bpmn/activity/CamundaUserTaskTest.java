@@ -1026,7 +1026,7 @@ public final class CamundaUserTaskTest {
             .withVariables(Map.of("approvalStatus", "PENDING"))
             .create();
 
-    final var createdUserTaskRecord =
+    final var createdUserTask =
         RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
@@ -1035,7 +1035,7 @@ public final class CamundaUserTaskTest {
     final var variableUpdateRecord =
         ENGINE
             .variables()
-            .ofScope(createdUserTaskRecord.getValue().getElementInstanceKey())
+            .ofScope(createdUserTask.getValue().getElementInstanceKey())
             .withDocument(Map.of("approvalStatus", "SUBMITTED"))
             .withLocalSemantic()
             .update();
@@ -1050,7 +1050,7 @@ public final class CamundaUserTaskTest {
     Assertions.assertThat(
             RecordingExporter.variableRecords(VariableIntent.CREATED)
                 .withProcessInstanceKey(processInstanceKey)
-                .withScopeKey(createdUserTaskRecord.getValue().getElementInstanceKey())
+                .withScopeKey(createdUserTask.getValue().getElementInstanceKey())
                 .getFirst()
                 .getValue())
         .describedAs("Expect the variable to be created at the local scope of user task element")
