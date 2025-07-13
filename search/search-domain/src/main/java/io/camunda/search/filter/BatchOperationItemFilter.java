@@ -48,10 +48,10 @@ public record BatchOperationItemFilter(
     }
 
     public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeys(collectValues(value, values));
+      return processInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
+    public Builder processInstanceKeyOperations(final List<Long> values) {
       processInstanceKeys = addValuesToList(processInstanceKeys, values);
       return this;
     }
