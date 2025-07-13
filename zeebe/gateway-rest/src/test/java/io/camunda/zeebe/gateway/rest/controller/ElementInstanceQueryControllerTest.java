@@ -129,8 +129,10 @@ public class ElementInstanceQueryControllerTest extends RestControllerTest {
   static final String ELEMENT_INSTANCES_URL = "/v2/element-instances/";
   static final String ELEMENT_INSTANCES_SEARCH_URL = ELEMENT_INSTANCES_URL + "search";
 
-  @MockBean ElementInstanceServices elementInstanceServices;
-  @MockBean ProcessCache processCache;
+  @MockBean
+  ElementInstanceServices elementInstanceServices;
+  @MockBean
+  ProcessCache processCache;
 
   @BeforeEach
   void setupServices() {
@@ -247,7 +249,7 @@ public class ElementInstanceQueryControllerTest extends RestControllerTest {
                         .incidentKeys(2251799813685320L)
                         .tenantIds("default")
                         .startDates("2023-05-17T10:10:10Z")
-                        .endDates("2023-05-23T10:10:10.000Z")
+                        .endDateOperations("2023-05-23T10:10:10.000Z")
                         .build())
                 .build());
   }
