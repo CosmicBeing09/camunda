@@ -58,7 +58,7 @@ public record BatchOperationFilter(
       return this;
     }
 
-    public Builder state(final String value, final String... values) {
+    public Builder states(final String value, final String... values) {
       return state(collectValues(value, values));
     }
 
