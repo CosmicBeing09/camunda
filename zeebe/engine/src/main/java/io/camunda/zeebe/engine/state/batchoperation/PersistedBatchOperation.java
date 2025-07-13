@@ -70,7 +70,9 @@ public class PersistedBatchOperation extends UnpackedObject implements DbValue {
     return this;
   }
 
-  /** Marks this batch operation as initialized. */
+  /**
+   * Marks this batch operation as initialized.
+   */
   public void markAsInitialized() {
     initializedProp.setValue(true);
   }
@@ -97,10 +99,10 @@ public class PersistedBatchOperation extends UnpackedObject implements DbValue {
   }
 
   public boolean canResume() {
-    return isPaused();
+    return isSuspended();
   }
 
-  public boolean isPaused() {
+  public boolean isSuspended() {
     return getStatus() == BatchOperationStatus.PAUSED;
   }
 
