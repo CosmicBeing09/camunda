@@ -59,7 +59,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -81,7 +81,7 @@ public final class DeploymentCreateProcessor
   private final ResourceState resourceState;
   private final TimerInstanceState timerInstanceState;
   private final CatchEventBehavior catchEventBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final ExpressionProcessor expressionProcessor;
   private final StateWriter stateWriter;
   private final StartEventSubscriptionManager startEventSubscriptionManager;
@@ -94,7 +94,7 @@ public final class DeploymentCreateProcessor
       final ProcessingState processingState,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior distributionBehavior,
       final EngineConfiguration config,
@@ -201,7 +201,7 @@ public final class DeploymentCreateProcessor
 
   private void transformAndDistributeDeployment(final TypedRecord<DeploymentRecord> command) {
     final DeploymentRecord deploymentEvent = command.getValue();
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextVariableDocKey();
     deploymentEvent.setDeploymentKey(key);
 
     // Note: transforming a resource will also write the CREATE events for said resource
@@ -406,8 +406,8 @@ public final class DeploymentCreateProcessor
   /**
    * Exception that can be thrown during processing of a command, in case the resource cannot be
    * transformed successfully. This allows the platform to roll back any changes the engine made.
-   * This exception can be handled by the processor in {@link #tryHandleError(TypedRecord,
-   * Throwable)}.
+   * This exception can be handled by the processor in
+   * {@link #tryHandleError(TypedRecord, Throwable)}.
    */
   private static final class ResourceTransformationFailedException extends RuntimeException {
 
@@ -429,6 +429,7 @@ public final class DeploymentCreateProcessor
   }
 
   private static final class NoSuchResourceException extends IllegalStateException {
+
     private NoSuchResourceException(final String resourceName) {
       super(
           String.format(

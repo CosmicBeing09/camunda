@@ -8,7 +8,7 @@
 package io.camunda.zeebe.stream.api.state;
 
 /** Allows to manipulate the key generator. Should be used with caution. */
-public interface KeyGeneratorControls extends KeyGenerator {
+public interface KeyGeneratorControls extends VariableDocKeyGenerator {
 
   /**
    * Set the given value as the new key if it is higher than the current key.

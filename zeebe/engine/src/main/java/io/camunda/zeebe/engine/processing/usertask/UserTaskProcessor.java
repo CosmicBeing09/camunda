@@ -38,7 +38,7 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import java.util.Optional;
 
 @ExcludeAuthorizationCheck
@@ -71,7 +71,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   public UserTaskProcessor(
       final ProcessingState state,
       final MutableUserTaskState userTaskState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {

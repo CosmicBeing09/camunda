@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 /** Utility class to add all scaling related processors to the {@link TypedRecordProcessors}. */
 public final class ScalingProcessors {
@@ -23,7 +23,7 @@ public final class ScalingProcessors {
       final CommandDistributionBehavior distributionBehavior,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ProcessingState processingState) {
     typedRecordProcessors.onCommand(
         ValueType.SCALE,

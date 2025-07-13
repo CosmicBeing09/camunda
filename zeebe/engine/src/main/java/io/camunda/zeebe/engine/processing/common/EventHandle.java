@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionInte
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
@@ -37,7 +37,7 @@ public final class EventHandle {
   private final MessageStartEventSubscriptionRecord startEventSubscriptionRecord =
       new MessageStartEventSubscriptionRecord();
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final ProcessState processState;
 
@@ -47,7 +47,7 @@ public final class EventHandle {
   private final BpmnStateBehavior stateBehavior;
 
   public EventHandle(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final Writers writers,
       final ProcessState processState,
@@ -85,8 +85,8 @@ public final class EventHandle {
    *
    * @param processDefinitionKey the event's corresponding process definition key
    * @param processInstanceKey the event's corresponding process instance key
-   * @param eventScopeKey the event's scope key, which used to index the trigger in {@link
-   *     io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState}
+   * @param eventScopeKey the event's scope key, which used to index the trigger in
+   * {@link io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState}
    * @param catchEventId the ID of the element which should be triggered by the event
    * @param variables the variables/payload of the event (can be empty)
    * @return the key of the process event
@@ -191,7 +191,7 @@ public final class EventHandle {
       final DirectBuffer correlationKey,
       final DirectBuffer variables) {
 
-    final var newProcessInstanceKey = keyGenerator.nextKey();
+    final var newProcessInstanceKey = keyGenerator.nextVariableDocKey();
     startEventSubscriptionRecord
         .setProcessDefinitionKey(subscription.getProcessDefinitionKey())
         .setBpmnProcessId(subscription.getBpmnProcessIdBuffer())

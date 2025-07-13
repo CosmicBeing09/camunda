@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
 import org.junit.Before;
 import org.junit.Rule;
@@ -21,9 +21,10 @@ import org.junit.Test;
 
 public final class KeyGeneratorTest {
 
-  @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
+  @Rule
+  public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
-  private KeyGenerator keyGenerator;
+  private VariableDocKeyGenerator keyGenerator;
 
   @Before
   public void setUp() throws Exception {
@@ -35,7 +36,7 @@ public final class KeyGeneratorTest {
     // given
 
     // when
-    final long firstKey = keyGenerator.nextKey();
+    final long firstKey = keyGenerator.nextVariableDocKey();
 
     // then
     assertThat(firstKey).isEqualTo(Protocol.encodePartitionId(Protocol.DEPLOYMENT_PARTITION, 1));
@@ -44,10 +45,10 @@ public final class KeyGeneratorTest {
   @Test
   public void shouldGetNextValue() {
     // given
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextVariableDocKey();
 
     // when
-    final long nextKey = keyGenerator.nextKey();
+    final long nextKey = keyGenerator.nextVariableDocKey();
 
     // then
     assertThat(nextKey).isGreaterThan(key);
@@ -58,13 +59,13 @@ public final class KeyGeneratorTest {
     // given
     final ZeebeDb<ZbColumnFamilies> newDb = stateRule.createNewDb();
     final int secondPartitionId = Protocol.DEPLOYMENT_PARTITION + 1;
-    final KeyGenerator keyGenerator2 =
+    final VariableDocKeyGenerator keyGenerator2 =
         new DbKeyGenerator(secondPartitionId, newDb, newDb.createContext());
 
-    final long keyOfFirstPartition = keyGenerator.nextKey();
+    final long keyOfFirstPartition = keyGenerator.nextVariableDocKey();
 
     // when
-    final long keyOfSecondPartition = keyGenerator2.nextKey();
+    final long keyOfSecondPartition = keyGenerator2.nextVariableDocKey();
 
     // then
     assertThat(keyOfFirstPartition).isNotEqualTo(keyOfSecondPartition);

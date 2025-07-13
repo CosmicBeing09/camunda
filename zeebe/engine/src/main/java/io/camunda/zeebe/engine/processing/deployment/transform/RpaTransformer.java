@@ -19,7 +19,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ResourceMetadataRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ResourceRecord;
 import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.io.IOException;
 import java.util.Optional;
@@ -27,16 +27,17 @@ import java.util.function.LongSupplier;
 import org.agrona.DirectBuffer;
 
 public class RpaTransformer implements DeploymentResourceTransformer {
+
   private static final int INITIAL_VERSION = 1;
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final ResourceState resourceState;
 
   public RpaTransformer(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ResourceState resourceState) {
@@ -78,7 +79,7 @@ public class RpaTransformer implements DeploymentResourceTransformer {
             metadata -> {
               var key = metadata.getResourceKey();
               if (metadata.isDuplicate()) {
-                key = keyGenerator.nextKey();
+                key = keyGenerator.nextVariableDocKey();
                 metadata
                     .setResourceKey(key)
                     .setVersion(
@@ -104,7 +105,7 @@ public class RpaTransformer implements DeploymentResourceTransformer {
       final Resource resource,
       final DeploymentResource deploymentResource,
       final DeploymentRecord deploymentRecord) {
-    final LongSupplier newResourceKey = keyGenerator::nextKey;
+    final LongSupplier newResourceKey = keyGenerator::nextVariableDocKey;
     final DirectBuffer checksum =
         checksumGenerator.checksum(deploymentResource.getResourceBuffer());
     final String tenantId = deploymentRecord.getTenantId();
@@ -122,8 +123,8 @@ public class RpaTransformer implements DeploymentResourceTransformer {
               final boolean isDuplicate =
                   latestResource.getChecksum().equals(resourceMetadataRecord.getChecksumBuffer())
                       && latestResource
-                          .getResourceName()
-                          .equals(resourceMetadataRecord.getResourceNameBuffer());
+                      .getResourceName()
+                      .equals(resourceMetadataRecord.getResourceNameBuffer());
 
               if (isDuplicate) {
                 final int latestVersion = latestResource.getVersion();
@@ -191,5 +192,7 @@ public class RpaTransformer implements DeploymentResourceTransformer {
   }
 
   @JsonIgnoreProperties(ignoreUnknown = true)
-  private record Resource(String id, String versionTag) {}
+  private record Resource(String id, String versionTag) {
+
+  }
 }

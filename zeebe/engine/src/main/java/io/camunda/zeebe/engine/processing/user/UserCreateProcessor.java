@@ -28,7 +28,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import java.util.Set;
 
 public class UserCreateProcessor implements DistributedTypedRecordProcessor<UserRecord> {
@@ -36,7 +36,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   private static final String USER_ALREADY_EXISTS_ERROR_MESSAGE =
       "Expected to create user with username '%s', but a user with this username already exists";
   private final UserState userState;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -45,7 +45,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   private final TypedCommandWriter commandWriter;
 
   public UserCreateProcessor(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ProcessingState state,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
@@ -82,7 +82,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
       return;
     }
 
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextVariableDocKey();
     command.getValue().setUserKey(key);
 
     stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, command.getValue());

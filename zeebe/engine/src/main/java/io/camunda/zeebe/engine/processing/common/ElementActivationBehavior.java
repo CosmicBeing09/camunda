@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
@@ -37,7 +37,7 @@ public final class ElementActivationBehavior {
 
   public static final long NO_ANCESTOR_SCOPE_KEY = -1L;
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
   private final BpmnStateBehavior stateBehavior;
@@ -46,7 +46,7 @@ public final class ElementActivationBehavior {
   private final ElementInstanceState elementInstanceState;
 
   public ElementActivationBehavior(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CatchEventBehavior catchEventBehavior,
       final ElementInstanceState elementInstanceState,
@@ -78,7 +78,8 @@ public final class ElementActivationBehavior {
       final ProcessInstanceRecord processInstanceRecord,
       final AbstractFlowElement elementToActivate) {
     return activateElement(
-        processInstanceRecord, elementToActivate, NO_ANCESTOR_SCOPE_KEY, (empty, function) -> {});
+        processInstanceRecord, elementToActivate, NO_ANCESTOR_SCOPE_KEY, (empty, function) -> {
+        });
   }
 
   /**
@@ -94,7 +95,7 @@ public final class ElementActivationBehavior {
    * @param processInstanceRecord the record of the process instance
    * @param elementToActivate The element to activate
    * @param ancestorScopeKey The key of the chosen ancestor scope in case there are multiple flow
-   *     scope instances
+   * scope instances
    * @param createVariablesCallback Callback to create variables at a given scope
    * @return The key of the activated element instance and the keys of all it's flow scopes
    */
@@ -123,7 +124,9 @@ public final class ElementActivationBehavior {
     return activatedElementKeys;
   }
 
-  /** Collects all the flow scopes of an element, but excludes the root process as an element */
+  /**
+   * Collects all the flow scopes of an element, but excludes the root process as an element
+   */
   private Deque<ExecutableFlowElement> collectFlowScopesOfElement(
       final ExecutableFlowElement element) {
     final Deque<ExecutableFlowElement> flowScopes = new ArrayDeque<>();
@@ -145,7 +148,8 @@ public final class ElementActivationBehavior {
    *
    * <p>This method uses recursion, each time polling an element from the subprocesses parameter.
    *
-   * <p>It is able to determine whether a new instance of an ancestral subprocess must be activated,
+   * <p>It is able to determine whether a new instance of an ancestral subprocess must be
+   * activated,
    * or that one of the existing instances can be used. In some cases this requires the
    * ancestorScopeKey to choose between multiple available instances of the same subprocess.
    *
@@ -153,19 +157,19 @@ public final class ElementActivationBehavior {
    * subprocesses, if the ancestorScopeKey refers to an ancestor of that subprocess.
    *
    * @param processInstanceRecord the record of the process instance in which an element is being
-   *     activated
+   * activated
    * @param flowScopeKey key of the element instance that should be used as direct flow scope of the
-   *     next to poll subprocess from subprocesses
+   * next to poll subprocess from subprocesses
    * @param subprocesses the elements to activate, these are ancestors of the element targeted for
-   *     activation, instances may or may not yet exist of these elements
+   * activation, instances may or may not yet exist of these elements
    * @param ancestorScopeKey the key of an ancestor (indirect/direct flow scope) used for ancestor
-   *     selection, determines whether new instances of subprocesses should be activated or that we
-   *     can use existing ones
+   * selection, determines whether new instances of subprocesses should be activated or that we can
+   * use existing ones
    * @param createVariablesCallback a callback function to create variables in the activated
-   *     subprocesses, and the selected instances
+   * subprocesses, and the selected instances
    * @param activatedElementKeys collects the keys of the subprocesses encountered and/or activated
    * @return the key of the last subprocess, to be used as direct flow scope of the element targeted
-   *     for activation
+   * for activation
    */
   private long activateAncestralSubprocesses(
       final ProcessInstanceRecord processInstanceRecord,
@@ -194,8 +198,8 @@ public final class ElementActivationBehavior {
 
       if (nextSubprocess.getElementType() == BpmnElementType.MULTI_INSTANCE_BODY
           || (nextSubprocess.getFlowScope() != null
-              && nextSubprocess.getFlowScope().getElementType()
-                  == BpmnElementType.MULTI_INSTANCE_BODY)) {
+          && nextSubprocess.getFlowScope().getElementType()
+          == BpmnElementType.MULTI_INSTANCE_BODY)) {
         // unsupported scenario, attempting to activate a multi-instance body or an inner instance
         throw new UnsupportedMultiInstanceBodyActivationException(
             BufferUtil.bufferAsString(nextSubprocess.getId()), bpmnProcessId);
@@ -219,8 +223,9 @@ public final class ElementActivationBehavior {
 
   /**
    * This method tries to find the instance of the subprocess that should be used as the flow scope
-   * of the next recursion of {@link #activateAncestralSubprocesses(ProcessInstanceRecord, long,
-   * Deque, long, BiConsumer, ActivatedElementKeys)}.
+   * of the next recursion of
+   * {@link #activateAncestralSubprocesses(ProcessInstanceRecord, long, Deque, long, BiConsumer,
+   * ActivatedElementKeys)}.
    *
    * <p>This method works by looking up element instances of the specific subprocess, and then
    * considers whether we can use one of the instances that are found, or whether a new instance
@@ -231,9 +236,9 @@ public final class ElementActivationBehavior {
    * @param bpmnProcessId the id of the process
    * @param subprocess the specific subprocess that we hope to find an instance of
    * @param flowScopeKey the key of the flow scope instance whose children are the only instances
-   *     considered
+   * considered
    * @param ancestorScopeKey the key of an ancestor (indirect/direct flow scope) used for ancestor
-   *     selection, determines whether we may consider existing instances, or should ignore them
+   * selection, determines whether we may consider existing instances, or should ignore them
    * @return optionally the key of the instance it found, otherwise an empty optional.
    */
   private Optional<Long> findReusableSubprocessInstanceKey(
@@ -356,7 +361,7 @@ public final class ElementActivationBehavior {
       elementInstanceFlowScopeKey = -1L;
 
     } else {
-      elementInstanceKey = keyGenerator.nextKey();
+      elementInstanceKey = keyGenerator.nextVariableDocKey();
       elementInstanceFlowScopeKey = flowScopeKey;
     }
 
@@ -401,7 +406,7 @@ public final class ElementActivationBehavior {
       final AbstractFlowElement elementToActivate,
       final long flowScopeKey) {
 
-    final var elementInstanceKey = keyGenerator.nextKey();
+    final var elementInstanceKey = keyGenerator.nextVariableDocKey();
     final var elementRecord =
         createElementRecord(processInstanceRecord, elementToActivate, flowScopeKey);
     commandWriter.appendFollowUpCommand(
@@ -464,6 +469,7 @@ public final class ElementActivationBehavior {
   }
 
   public static class ActivatedElementKeys {
+
     private final Set<Long> flowScopeKeys = new HashSet<>();
     private Long elementInstanceKey;
 

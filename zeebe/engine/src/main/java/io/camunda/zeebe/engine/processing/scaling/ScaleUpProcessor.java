@@ -22,14 +22,15 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.PartitionUtil;
 import java.util.HashSet;
 import java.util.Optional;
 
 @ExcludeAuthorizationCheck
 public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRecord> {
-  private final KeyGenerator keyGenerator;
+
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -37,7 +38,7 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   private final CommandDistributionBehavior commandDistributionBehavior;
 
   public ScaleUpProcessor(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final ProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -60,7 +61,7 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
       responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
       return;
     }
-    final var scalingKey = keyGenerator.nextKey();
+    final var scalingKey = keyGenerator.nextVariableDocKey();
     scaleUp.setBootstrappedAt(command.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
     responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp, command);
@@ -131,5 +132,7 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
     return Optional.empty();
   }
 
-  private record Rejection(RejectionType type, String reason) {}
+  private record Rejection(RejectionType type, String reason) {
+
+  }
 }

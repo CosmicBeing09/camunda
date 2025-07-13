@@ -31,7 +31,7 @@ import io.camunda.zeebe.protocol.record.value.AdHocSubProcessActivityActivationR
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 
 public class AdHocSubProcessActivityActivateProcessor
@@ -55,13 +55,13 @@ public class AdHocSubProcessActivityActivateProcessor
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
 
   public AdHocSubProcessActivityActivateProcessor(
       final Writers writers,
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final VariableDocKeyGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -105,7 +105,7 @@ public class AdHocSubProcessActivityActivateProcessor
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
               ? ERROR_MSG_AD_HOC_SUB_PROCESS_NOT_FOUND.formatted(
-                  command.getValue().getAdHocSubProcessInstanceKey())
+              command.getValue().getAdHocSubProcessInstanceKey())
               : rejection.reason();
       writeRejectionError(command, rejection.type(), errorMessage);
 
@@ -176,7 +176,7 @@ public class AdHocSubProcessActivityActivateProcessor
           .setBpmnElementType(elementToActivate.getElementType())
           .setBpmnEventType(elementToActivate.getEventType());
 
-      final long elementToActivateInstanceKey = keyGenerator.nextKey();
+      final long elementToActivateInstanceKey = keyGenerator.nextVariableDocKey();
       commandWriter.appendFollowUpCommand(
           elementToActivateInstanceKey,
           ProcessInstanceIntent.ACTIVATE_ELEMENT,
@@ -204,9 +204,9 @@ public class AdHocSubProcessActivityActivateProcessor
   private boolean hasDuplicateElements(
       final TypedRecord<AdHocSubProcessActivityActivationRecord> command) {
     return command.getValue().getElements().stream()
-            .map(AdHocSubProcessActivityActivationElementValue::getElementId)
-            .distinct()
-            .count()
+        .map(AdHocSubProcessActivityActivationElementValue::getElementId)
+        .distinct()
+        .count()
         != command.getValue().getElements().size();
   }
 
@@ -215,10 +215,10 @@ public class AdHocSubProcessActivityActivateProcessor
       final ElementInstance adHocSubProcessElementInstance) {
     final var authRequest =
         new AuthorizationRequest(
-                command,
-                AuthorizationResourceType.PROCESS_DEFINITION,
-                PermissionType.UPDATE_PROCESS_INSTANCE,
-                adHocSubProcessElementInstance.getValue().getTenantId())
+            command,
+            AuthorizationResourceType.PROCESS_DEFINITION,
+            PermissionType.UPDATE_PROCESS_INSTANCE,
+            adHocSubProcessElementInstance.getValue().getTenantId())
             .addResourceId(adHocSubProcessElementInstance.getValue().getBpmnProcessId());
 
     return authCheckBehavior.isAuthorized(authRequest);

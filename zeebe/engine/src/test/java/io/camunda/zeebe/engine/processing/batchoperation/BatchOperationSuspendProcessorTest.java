@@ -7,7 +7,12 @@
  */
 package io.camunda.zeebe.engine.processing.batchoperation;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -22,13 +27,15 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationLifecycleManagementRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** This test class only covers cases not covered by the LifecycleBatchOperationTest engine test */
+/**
+ * This test class only covers cases not covered by the LifecycleBatchOperationTest engine test
+ */
 class BatchOperationSuspendProcessorTest {
 
   private StateWriter stateWriter;
@@ -36,7 +43,7 @@ class BatchOperationSuspendProcessorTest {
   private TypedRejectionWriter rejectionWriter;
   private TypedResponseWriter responseWriter;
   private BatchOperationSuspendProcessor processor;
-  private KeyGenerator keyGenerator;
+  private VariableDocKeyGenerator keyGenerator;
   private BatchOperationState batchOperationState;
 
   @BeforeEach
@@ -45,7 +52,7 @@ class BatchOperationSuspendProcessorTest {
     commandWriter = mock(TypedCommandWriter.class);
     rejectionWriter = mock(TypedRejectionWriter.class);
     responseWriter = mock(TypedResponseWriter.class);
-    keyGenerator = mock(KeyGenerator.class);
+    keyGenerator = mock(VariableDocKeyGenerator.class);
 
     final var writers = mock(Writers.class);
     when(writers.state()).thenReturn(stateWriter);
@@ -60,7 +67,7 @@ class BatchOperationSuspendProcessorTest {
     final var authCheckBehavior = mock(AuthorizationCheckBehavior.class);
     when(authCheckBehavior.isAuthorized(any())).thenReturn(Either.right(null));
 
-    when(keyGenerator.nextKey()).thenReturn(1L);
+    when(keyGenerator.nextVariableDocKey()).thenReturn(1L);
 
     // Inject mocked writers
     processor =

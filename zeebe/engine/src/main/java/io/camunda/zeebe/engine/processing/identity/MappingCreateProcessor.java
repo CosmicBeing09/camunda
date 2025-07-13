@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.record.intent.MappingIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class MappingCreateProcessor implements DistributedTypedRecordProcessor<MappingRecord> {
 
@@ -35,7 +35,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
 
   private final MappingState mappingState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -44,7 +44,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
   public MappingCreateProcessor(
       final MappingState mappingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.mappingState = mappingState;
@@ -109,7 +109,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       return;
     }
 
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextVariableDocKey();
     record.setMappingKey(key);
 
     stateWriter.appendFollowUpEvent(key, MappingIntent.CREATED, record);

@@ -37,7 +37,7 @@ public final class DbKeyGenerator implements KeyGeneratorControls {
   }
 
   @Override
-  public long nextKey() {
+  public long nextVariableDocKey() {
     return nextValueManager.getNextValue(LATEST_KEY);
   }
 

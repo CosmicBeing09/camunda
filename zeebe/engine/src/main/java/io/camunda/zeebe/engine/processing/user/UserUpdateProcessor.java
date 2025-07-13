@@ -24,12 +24,12 @@ import io.camunda.zeebe.protocol.record.intent.UserIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class UserUpdateProcessor implements DistributedTypedRecordProcessor<UserRecord> {
 
   private final UserState userState;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -37,7 +37,7 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
   private final AuthorizationCheckBehavior authCheckBehavior;
 
   public UserUpdateProcessor(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ProcessingState state,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
@@ -86,7 +86,7 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
     responseWriter.writeEventOnCommand(
         persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, command);
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextVariableDocKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

@@ -18,7 +18,7 @@ import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.test.util.Strings;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import org.junit.Before;
@@ -29,11 +29,12 @@ public class ProcessStateMultiTenantTest {
 
   private static final String TENANT_1 = "tenant1";
   private static final String TENANT_2 = "tenant2";
-  @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
+  @Rule
+  public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableProcessState processState;
   private MutableProcessingState processingState;
-  private KeyGenerator keyGenerator;
+  private VariableDocKeyGenerator keyGenerator;
 
   @Before
   public void setUp() {
@@ -45,7 +46,7 @@ public class ProcessStateMultiTenantTest {
   @Test
   public void shouldPutDeploymentForDifferentTenants() {
     // given
-    final long processKey = keyGenerator.nextKey();
+    final long processKey = keyGenerator.nextVariableDocKey();
     final String processId = Strings.newRandomValidBpmnId();
     final int version = 1;
     final var tenant1Deployment = createDeploymentRecord(TENANT_1, processKey, processId, version);
@@ -79,7 +80,7 @@ public class ProcessStateMultiTenantTest {
   @Test
   public void shouldPutProcessForMultipleTenants() {
     // given
-    final long processKey = keyGenerator.nextKey();
+    final long processKey = keyGenerator.nextVariableDocKey();
     final String processId = Strings.newRandomValidBpmnId();
     final int version = 1;
     final var tenant1Process = createProcessRecord(TENANT_1, processKey, processId, version);
@@ -125,8 +126,8 @@ public class ProcessStateMultiTenantTest {
   @Test
   public void shouldStoreProcessDefinitionKeyByProcessIdAndDeploymentKeyForMultipleTenants() {
     // given
-    final var processKey = keyGenerator.nextKey();
-    final var deploymentKey = keyGenerator.nextKey();
+    final var processKey = keyGenerator.nextVariableDocKey();
+    final var deploymentKey = keyGenerator.nextVariableDocKey();
     final var processId = Strings.newRandomValidBpmnId();
     final var version = 1;
     final var tenant1Process =
@@ -156,7 +157,7 @@ public class ProcessStateMultiTenantTest {
   @Test
   public void shouldStoreProcessDefinitionKeyByProcessIdAndVersionTagForMultipleTenants() {
     // given
-    final var processKey = keyGenerator.nextKey();
+    final var processKey = keyGenerator.nextVariableDocKey();
     final var processId = Strings.newRandomValidBpmnId();
     final var version = 1;
     final var versionTag = "v1.0";
@@ -185,7 +186,7 @@ public class ProcessStateMultiTenantTest {
   @Test
   public void shouldUpdateProcessStateForTenant() {
     // given
-    final long processKey = keyGenerator.nextKey();
+    final long processKey = keyGenerator.nextVariableDocKey();
     final String processId = Strings.newRandomValidBpmnId();
     final int version = 1;
     final var tenant1Process = createProcessRecord(TENANT_1, processKey, processId, version);
@@ -217,7 +218,7 @@ public class ProcessStateMultiTenantTest {
 
   @Test
   public void shouldDeleteProcessForTenant() {
-    final long processKey = keyGenerator.nextKey();
+    final long processKey = keyGenerator.nextVariableDocKey();
     final String processId = Strings.newRandomValidBpmnId();
     final int version = 1;
     final var tenant1Process = createProcessRecord(TENANT_1, processKey, processId, version);

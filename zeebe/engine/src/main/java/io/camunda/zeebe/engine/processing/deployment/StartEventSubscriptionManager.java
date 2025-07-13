@@ -24,7 +24,7 @@ import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubs
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.List;
 import java.util.function.Predicate;
@@ -38,12 +38,12 @@ public class StartEventSubscriptionManager {
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
   private final SignalSubscriptionState signalSubscriptionState;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
 
   public StartEventSubscriptionManager(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final StateWriter stateWriter) {
     processState = processingState.getProcessState();
     messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
@@ -64,9 +64,9 @@ public class StartEventSubscriptionManager {
 
   private boolean isLatestProcess(final ProcessMetadata processRecord) {
     return processState
-            .getLatestProcessVersionByProcessId(
-                processRecord.getBpmnProcessIdBuffer(), processRecord.getTenantId())
-            .getVersion()
+        .getLatestProcessVersionByProcessId(
+            processRecord.getBpmnProcessIdBuffer(), processRecord.getTenantId())
+        .getVersion()
         == processRecord.getVersion();
   }
 
@@ -131,7 +131,7 @@ public class StartEventSubscriptionManager {
               processRecord.getBpmnProcessIdBuffer(), version, processRecord.getTenantId());
       if (lastStartProcess != null
           && lastStartProcess.getProcess().getStartEvents().stream()
-              .anyMatch(hasStartEventMatching)) {
+          .anyMatch(hasStartEventMatching)) {
         return lastStartProcess;
       }
     }
@@ -186,7 +186,7 @@ public class StartEventSubscriptionManager {
                   .setStartEventId(startEvent.getId())
                   .setTenantId(processDefinition.getTenantId());
 
-              final var subscriptionKey = keyGenerator.nextKey();
+              final var subscriptionKey = keyGenerator.nextVariableDocKey();
               stateWriter.appendFollowUpEvent(
                   subscriptionKey,
                   MessageStartEventSubscriptionIntent.CREATED,
@@ -211,7 +211,7 @@ public class StartEventSubscriptionManager {
                   .setCatchEventId(startEvent.getId())
                   .setTenantId(processDefinition.getTenantId());
 
-              final var subscriptionKey = keyGenerator.nextKey();
+              final var subscriptionKey = keyGenerator.nextVariableDocKey();
               stateWriter.appendFollowUpEvent(
                   subscriptionKey, SignalSubscriptionIntent.CREATED, signalSubscriptionRecord);
             });
