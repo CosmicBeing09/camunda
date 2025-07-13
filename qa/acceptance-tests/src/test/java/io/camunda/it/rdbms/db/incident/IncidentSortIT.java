@@ -98,7 +98,7 @@ public class IncidentSortIT {
   public void shouldSortByErrorMessageAsc(final CamundaRdbmsTestApplication testApplication) {
     testSorting(
         testApplication.getRdbmsService(),
-        b -> b.errorMessage().asc(),
+        b -> b.errorMessageOperations().asc(),
         Comparator.comparing(IncidentEntity::errorMessage));
   }
 

@@ -50,7 +50,7 @@ public record IncidentSort(List<FieldSorting> orderings) implements SortOption {
       return this;
     }
 
-    public Builder errorMessage() {
+    public Builder errorMessageOperations() {
       currentOrdering = new FieldSorting("errorMessage", null);
       return this;
     }
