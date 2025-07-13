@@ -135,11 +135,11 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   }
 
   private boolean isEntityPresent(
-      final String entityId, final EntityType entityType, final boolean internalGroupsEnabled) {
+      final String entityId, final EntityType entityType, final boolean groupsClaimEnabled) {
     return switch (entityType) {
       case USER, CLIENT -> true; // With simple mappings, any username and client id can be assigned
       case MAPPING -> mappingState.get(entityId).isPresent();
-      case GROUP -> !internalGroupsEnabled || groupState.get(entityId).isPresent();
+      case GROUP -> !groupsClaimEnabled || groupState.get(entityId).isPresent();
       default -> false;
     };
   }
