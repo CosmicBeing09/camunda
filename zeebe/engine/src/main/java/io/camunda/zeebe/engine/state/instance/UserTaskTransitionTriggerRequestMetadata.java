@@ -66,7 +66,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    *
    * @return The trigger type (for instance: `USER_TASK` or `VARIABLE_DOCUMENT`).
    */
-  public ValueType getTriggerType() {
+  public ValueType getValueType() {
     return triggerTypeProperty.getValue();
   }
 
