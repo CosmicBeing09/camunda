@@ -29,7 +29,7 @@ public class VariableValueFilterTest {
 
     // then
     assertThat(filter.name()).isEqualTo("foo");
-    assertThat(filter.valueOperations()).isEmpty();
+    assertThat(filter.operationTypeOperations()).isEmpty();
   }
 
   @Test
@@ -50,6 +50,6 @@ public class VariableValueFilterTest {
 
     // then
     assertThat(filter.name()).isEqualTo("name");
-    assertThat(filter.valueOperations()).hasSize(5);
+    assertThat(filter.operationTypeOperations()).hasSize(5);
   }
 }
