@@ -255,7 +255,7 @@ public class BatchOperationMetrics {
       final Long batchOperationKey,
       final BatchOperationLatency batchOperationLatency,
       final BatchOperationType batchOperationType) {
-    final var meterDoc = BatchOperationMetricsDoc.BATCH_OPERATION_LATENCY;
+    final var meterDoc = BatchOperationMetricsDoc.BATCH_OPERATION_DURATION;
     return Timer.resource(registry, meterDoc.getName())
         .description(meterDoc.getDescription())
         .tag(
