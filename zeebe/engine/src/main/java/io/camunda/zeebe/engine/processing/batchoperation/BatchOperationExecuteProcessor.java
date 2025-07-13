@@ -71,7 +71,7 @@ public final class BatchOperationExecuteProcessor
       return;
     }
 
-    if (batchOperation.isPaused()) {
+    if (batchOperation.isSuspended()) {
       LOGGER.info("Batch operation {} is paused.", batchOperation.getKey());
       return;
     }

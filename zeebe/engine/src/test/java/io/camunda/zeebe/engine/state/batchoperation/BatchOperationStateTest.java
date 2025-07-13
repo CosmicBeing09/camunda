@@ -510,7 +510,7 @@ public class BatchOperationStateTest {
     // then
     final var persistedBatchOperation = state.get(batchOperationKey);
     assertThat(persistedBatchOperation).isNotEmpty();
-    assertThat(persistedBatchOperation.get().isPaused()).isTrue();
+    assertThat(persistedBatchOperation.get().isSuspended()).isTrue();
   }
 
   @Test
