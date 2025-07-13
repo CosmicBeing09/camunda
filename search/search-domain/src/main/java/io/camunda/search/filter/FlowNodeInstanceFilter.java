@@ -169,8 +169,8 @@ public record FlowNodeInstanceFilter(
       return tenantIds(collectValuesAsList(values));
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final List<String> values) {
-      startDates = addValuesToList(startDates, values);
+    public FlowNodeInstanceFilter.Builder startDates(final List<String> operations) {
+      startDates = addValuesToList(startDates, operations);
       return this;
     }
 
