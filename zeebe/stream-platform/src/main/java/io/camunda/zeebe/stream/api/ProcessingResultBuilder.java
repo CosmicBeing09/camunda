@@ -17,7 +17,9 @@ import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.stream.api.records.ExceededBatchRecordSizeException;
 import io.camunda.zeebe.util.Either;
 
-/** Builder to compose the processing result */
+/**
+ * Builder to compose the processing result
+ */
 public interface ProcessingResultBuilder {
 
   /**
@@ -25,12 +27,12 @@ public interface ProcessingResultBuilder {
    *
    * @return returns itself for method chaining
    * @throws ExceededBatchRecordSizeException if the appended record doesn't fit into the
-   *     RecordBatch
+   * RecordBatch
    */
   default ProcessingResultBuilder appendRecord(
-      final long key, final RecordValue value, final RecordMetadata metadata)
+      final long key, final RecordValue value, final RecordMetadata request)
       throws RuntimeException {
-    final var either = appendRecordReturnEither(key, value, metadata);
+    final var either = appendRecordReturnEither(key, value, request);
 
     if (either.isLeft()) {
       // This is how we handled too big record batches as well, except that this is now a
@@ -43,15 +45,15 @@ public interface ProcessingResultBuilder {
   }
 
   /**
-   * Appends a record to the result, returns an {@link Either<RuntimeException,
-   * ProcessingResultBuilder>} which indicates whether the appending was successful or not. This is
-   * useful in case were potentially we could reach the record batch limit size. The return either
-   * allows to handle such error case gracefully.
+   * Appends a record to the result, returns an
+   * {@link Either<RuntimeException, ProcessingResultBuilder>} which indicates whether the appending
+   * was successful or not. This is useful in case were potentially we could reach the record batch
+   * limit size. The return either allows to handle such error case gracefully.
    *
    * @return returns either a failure or itself for chaining
    */
   Either<RuntimeException, ProcessingResultBuilder> appendRecordReturnEither(
-      final long key, final RecordValue value, final RecordMetadata metadata);
+      final long key, final RecordValue value, final RecordMetadata request);
 
   /**
    * Sets the response for the result; will be overwritten if called more than once
