@@ -46,7 +46,7 @@ public record ProcessDefinitionStatisticsFilter(
         .parentFlowNodeInstanceKeyOperations(parentFlowNodeInstanceKeyOperations)
         .startDateOperations(startDateOperations)
         .endDateOperations(endDateOperations)
-        .stateOperations(statesOperations)
+        .statesOperations(statesOperations)
         .hasIncident(hasIncident)
         .tenantIdOperations(tenantIdOperations)
         .variables(variableFilters)
@@ -152,7 +152,7 @@ public record ProcessDefinitionStatisticsFilter(
       return endDateOperations(collectValues(operation, operations));
     }
 
-    public Builder stateOperations(final List<Operation<String>> operations) {
+    public Builder statesOperations(final List<Operation<String>> operations) {
       statesOperations = addValuesToList(statesOperations, operations);
       return this;
     }
@@ -164,7 +164,7 @@ public record ProcessDefinitionStatisticsFilter(
     @SafeVarargs
     public final Builder stateOperations(
         final Operation<String> operation, final Operation<String>... operations) {
-      return stateOperations(collectValues(operation, operations));
+      return statesOperations(collectValues(operation, operations));
     }
 
     public Builder hasIncident(final Boolean value) {

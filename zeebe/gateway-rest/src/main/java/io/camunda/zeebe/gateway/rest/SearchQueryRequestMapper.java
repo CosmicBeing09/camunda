@@ -227,7 +227,7 @@ public final class SearchQueryRequestMapper {
           .ifPresent(builder::endDateOperations);
       ofNullable(filter.getState())
           .map(mapToOperations(String.class, new ProcessInstanceStateConverter()))
-          .ifPresent(builder::stateOperations);
+          .ifPresent(builder::statesOperations);
       ofNullable(filter.getHasIncident()).ifPresent(builder::hasIncident);
       ofNullable(filter.getTenantId())
           .map(mapToOperations(String.class))
@@ -998,7 +998,7 @@ public final class SearchQueryRequestMapper {
                   .ifPresent(builder::processDefinitionIds);
               Optional.ofNullable(f.getState())
                   .map(mapToOperations(String.class))
-                  .ifPresent(builder::stateOperations);
+                  .ifPresent(builder::statesOperations);
               Optional.ofNullable(f.getType())
                   .ifPresent(
                       t -> builder.types(FlowNodeType.fromZeebeBpmnElementType(t.getValue())));
