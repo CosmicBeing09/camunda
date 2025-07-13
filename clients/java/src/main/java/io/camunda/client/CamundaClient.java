@@ -17,8 +17,8 @@ package io.camunda.client;
 
 import io.camunda.client.api.ExperimentalApi;
 import io.camunda.client.api.command.ActivateAdHocSubProcessActivitiesCommandStep1;
-import io.camunda.client.api.command.AddMappingToGroupStep1;
 import io.camunda.client.api.command.AssignGroupToTenantCommandStep1;
+import io.camunda.client.api.command.AssignMappingToGroupStep1;
 import io.camunda.client.api.command.AssignMappingToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToClientCommandStep1;
 import io.camunda.client.api.command.AssignRoleToGroupCommandStep1;
@@ -132,14 +132,16 @@ import io.camunda.client.impl.CamundaClientBuilderImpl;
 import io.camunda.client.impl.CamundaClientCloudBuilderImpl;
 import io.camunda.client.impl.CamundaClientImpl;
 
-/** The client to communicate with a Camunda broker/cluster. */
+/**
+ * The client to communicate with a Camunda broker/cluster.
+ */
 public interface CamundaClient extends AutoCloseable, JobClient {
 
   /**
    * @return a new Camunda client with default configuration values. In order to customize
-   *     configuration, use the methods {@link #newClientBuilder()} or {@link
-   *     #newClient(CamundaClientConfiguration)}. See {@link CamundaClientBuilder} for the
-   *     configuration options and default values.
+   * configuration, use the methods {@link #newClientBuilder()} or
+   * {@link #newClient(CamundaClientConfiguration)}. See {@link CamundaClientBuilder} for the
+   * configuration options and default values.
    */
   static CamundaClient newClient() {
     return newClientBuilder().build();
@@ -206,8 +208,8 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    * </pre>
    *
    * @return a builder for the command
-   * @deprecated since 8 for removal with 8.1, replaced by {@link
-   *     CamundaClient#newDeployResourceCommand()}
+   * @deprecated since 8 for removal with 8.1, replaced by
+   * {@link CamundaClient#newDeployResourceCommand()}
    */
   DeployProcessCommandStep1 newDeployCommand();
 
@@ -580,8 +582,8 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *  .send();
    * </pre>
    *
-   * <p>If the user task is linked to a process instance then this command will complete the related
-   * activity and continue the flow.
+   * <p>If the user task is linked to a process instance then this command will complete the
+   * related activity and continue the flow.
    *
    * <p>This command is only sent via REST over HTTP, not via gRPC <br>
    * <br>
@@ -998,7 +1000,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    * </pre>
    *
    * @param adHocSubProcessInstanceKey the key which identifies the corresponding ad-hoc sub-process
-   *     instance
+   * instance
    * @return a builder for the command
    */
   ActivateAdHocSubProcessActivitiesCommandStep1 newActivateAdHocSubProcessActivitiesCommand(
@@ -2203,7 +2205,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    */
-  AddMappingToGroupStep1 newAddMappingToGroupCommand();
+  AssignMappingToGroupStep1 newAssignMappingToGroupCommand();
 
   /**
    * Command to unassign a mapping rule from a group.

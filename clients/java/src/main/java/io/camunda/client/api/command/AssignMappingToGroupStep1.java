@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.AddMappingToGroupResponse;
 
-public interface AddMappingToGroupStep1 {
+public interface AssignMappingToGroupStep1 {
 
   /**
    * Sets the mapping ID for adding.
@@ -25,17 +25,17 @@ public interface AddMappingToGroupStep1 {
    * @param mappingId the ID of the mapping to add
    * @return the builder for this command.
    */
-  AddMappingToGroupStep2 mappingId(String mappingId);
+  AssignMappingToGroupStep2 mappingId(String mappingId);
 
-  interface AddMappingToGroupStep2 extends FinalCommandStep<AddMappingToGroupResponse> {
+  interface AssignMappingToGroupStep2 extends FinalCommandStep<AddMappingToGroupResponse> {
 
     /**
      * Sets the group ID.
      *
      * @param groupId the groupId of the group
      * @return the builder for this command. Call {@link #send()} to complete the command and send
-     *     it to the broker.
+     * it to the broker.
      */
-    AddMappingToGroupStep2 groupId(String groupId);
+    AssignMappingToGroupStep2 groupId(String groupId);
   }
 }

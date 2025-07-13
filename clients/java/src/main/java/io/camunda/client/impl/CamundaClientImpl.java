@@ -23,8 +23,8 @@ import io.camunda.client.CredentialsProvider;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.ActivateAdHocSubProcessActivitiesCommandStep1;
 import io.camunda.client.api.command.ActivateJobsCommandStep1;
-import io.camunda.client.api.command.AddMappingToGroupStep1;
 import io.camunda.client.api.command.AssignGroupToTenantCommandStep1;
+import io.camunda.client.api.command.AssignMappingToGroupStep1;
 import io.camunda.client.api.command.AssignMappingToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToClientCommandStep1;
 import io.camunda.client.api.command.AssignRoleToGroupCommandStep1;
@@ -276,6 +276,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public final class CamundaClientImpl implements CamundaClient {
+
   private final CamundaClientConfiguration config;
   private final JsonMapper jsonMapper;
   private final GatewayStub asyncStub;
@@ -416,7 +417,7 @@ public final class CamundaClientImpl implements CamundaClient {
     final GatewayStub gatewayStub = GatewayGrpc.newStub(channel).withCallCredentials(credentials);
     if (!config.getInterceptors().isEmpty()) {
       return gatewayStub.withInterceptors(
-          config.getInterceptors().toArray(new ClientInterceptor[] {}));
+          config.getInterceptors().toArray(new ClientInterceptor[]{}));
     }
     return gatewayStub;
   }
@@ -433,7 +434,8 @@ public final class CamundaClientImpl implements CamundaClient {
 
     try {
       return objectMapper.readValue(
-          defaultServiceConfig, new TypeReference<Map<String, Object>>() {});
+          defaultServiceConfig, new TypeReference<Map<String, Object>>() {
+          });
     } catch (final IOException e) {
       Loggers.LOGGER.warn(
           "Failed to read default service config from classpath; will not configure a default retry policy",
@@ -1119,7 +1121,8 @@ public final class CamundaClientImpl implements CamundaClient {
 
   @Override
   public CreateBatchOperationCommandStep1 newCreateBatchOperationCommand() {
-    return new CreateBatchOperationCommandStep1Impl(httpClient, jsonMapper) {};
+    return new CreateBatchOperationCommandStep1Impl(httpClient, jsonMapper) {
+    };
   }
 
   @Override
@@ -1138,7 +1141,7 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public AddMappingToGroupStep1 newAddMappingToGroupCommand() {
+  public AssignMappingToGroupStep1 newAssignMappingToGroupCommand() {
     return new AddMappingToGroupCommandImpl(httpClient);
   }
 

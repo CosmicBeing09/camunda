@@ -30,7 +30,8 @@ public class UnassignMappingFromGroupTest {
   private final TestStandaloneBroker zeebe =
       new TestStandaloneBroker().withRecordingExporter(true).withUnauthenticatedAccess();
 
-  @AutoClose private CamundaClient client;
+  @AutoClose
+  private CamundaClient client;
 
   private String groupId;
   private String mappingId;
@@ -57,7 +58,7 @@ public class UnassignMappingFromGroupTest {
             .send()
             .join()
             .getGroupId();
-    client.newAddMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
+    client.newAssignMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
   }
 
   @Test
@@ -81,12 +82,12 @@ public class UnassignMappingFromGroupTest {
 
     // when / then
     assertThatThrownBy(
-            () ->
-                client
-                    .newUnassignMappingFromGroupCommand(nonExistentGroupId)
-                    .mappingId(mappingId)
-                    .send()
-                    .join())
+        () ->
+            client
+                .newUnassignMappingFromGroupCommand(nonExistentGroupId)
+                .mappingId(mappingId)
+                .send()
+                .join())
         .isInstanceOf(ProblemException.class)
         .hasMessageContaining("Failed with code 404: 'Not Found'")
         .hasMessageContaining(
@@ -98,8 +99,8 @@ public class UnassignMappingFromGroupTest {
   void shouldRejectIfMissingGroupId() {
     // when / then
     assertThatThrownBy(
-            () ->
-                client.newUnassignMappingFromGroupCommand(null).mappingId(mappingId).send().join())
+        () ->
+            client.newUnassignMappingFromGroupCommand(null).mappingId(mappingId).send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("groupId must not be null");
   }
@@ -108,7 +109,7 @@ public class UnassignMappingFromGroupTest {
   void shouldRejectIfEmptyGroupId() {
     // when / then
     assertThatThrownBy(
-            () -> client.newUnassignMappingFromGroupCommand("").mappingId(mappingId).send().join())
+        () -> client.newUnassignMappingFromGroupCommand("").mappingId(mappingId).send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("groupId must not be empty");
   }
@@ -117,8 +118,8 @@ public class UnassignMappingFromGroupTest {
   void shouldRejectIfMissingMappingId() {
     // when / then
     assertThatThrownBy(
-            () ->
-                client.newUnassignMappingFromGroupCommand("groupId").mappingId(null).send().join())
+        () ->
+            client.newUnassignMappingFromGroupCommand("groupId").mappingId(null).send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("mappingId must not be null");
   }
@@ -127,7 +128,7 @@ public class UnassignMappingFromGroupTest {
   void shouldRejectIfEmptyMappingId() {
     // when / then
     assertThatThrownBy(
-            () -> client.newUnassignMappingFromGroupCommand("groupId").mappingId("").send().join())
+        () -> client.newUnassignMappingFromGroupCommand("groupId").mappingId("").send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("mappingId must not be empty");
   }

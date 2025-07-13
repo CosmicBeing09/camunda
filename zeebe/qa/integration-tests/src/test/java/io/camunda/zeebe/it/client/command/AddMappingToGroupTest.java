@@ -30,7 +30,8 @@ public class AddMappingToGroupTest {
   private final TestStandaloneBroker zeebe =
       new TestStandaloneBroker().withRecordingExporter(true).withUnauthenticatedAccess();
 
-  @AutoClose private CamundaClient client;
+  @AutoClose
+  private CamundaClient client;
 
   private String groupId;
   private String mappingId;
@@ -62,7 +63,7 @@ public class AddMappingToGroupTest {
   @Test
   void shouldAddMappingToGroup() {
     // when
-    client.newAddMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
+    client.newAssignMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
 
     // then
     ZeebeAssertHelper.assertEntityAssignedToGroup(
@@ -80,13 +81,13 @@ public class AddMappingToGroupTest {
 
     // when / then
     assertThatThrownBy(
-            () ->
-                client
-                    .newAddMappingToGroupCommand()
-                    .mappingId(mappingId)
-                    .groupId(nonExistentGroupId)
-                    .send()
-                    .join())
+        () ->
+            client
+                .newAssignMappingToGroupCommand()
+                .mappingId(mappingId)
+                .groupId(nonExistentGroupId)
+                .send()
+                .join())
         .isInstanceOf(ProblemException.class)
         .hasMessageContaining("Failed with code 404: 'Not Found'")
         .hasMessageContaining(
@@ -97,17 +98,17 @@ public class AddMappingToGroupTest {
   @Test
   void shouldRejectIfAlreadyAdded() {
     // given
-    client.newAddMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
+    client.newAssignMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
 
     // when / then
     assertThatThrownBy(
-            () ->
-                client
-                    .newAddMappingToGroupCommand()
-                    .mappingId(mappingId)
-                    .groupId(groupId)
-                    .send()
-                    .join())
+        () ->
+            client
+                .newAssignMappingToGroupCommand()
+                .mappingId(mappingId)
+                .groupId(groupId)
+                .send()
+                .join())
         .isInstanceOf(ProblemException.class)
         .hasMessageContaining("Failed with code 409: 'Conflict'")
         .hasMessageContaining(
@@ -119,13 +120,13 @@ public class AddMappingToGroupTest {
   void shouldRejectIfMissingGroupId() {
     // when / then
     assertThatThrownBy(
-            () ->
-                client
-                    .newAddMappingToGroupCommand()
-                    .mappingId(mappingId)
-                    .groupId(null)
-                    .send()
-                    .join())
+        () ->
+            client
+                .newAssignMappingToGroupCommand()
+                .mappingId(mappingId)
+                .groupId(null)
+                .send()
+                .join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("groupId must not be null");
   }
@@ -134,8 +135,8 @@ public class AddMappingToGroupTest {
   void shouldRejectIfEmptyGroupId() {
     // when / then
     assertThatThrownBy(
-            () ->
-                client.newAddMappingToGroupCommand().mappingId(mappingId).groupId("").send().join())
+        () ->
+            client.newAssignMappingToGroupCommand().mappingId(mappingId).groupId("").send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("groupId must not be empty");
   }
@@ -144,8 +145,8 @@ public class AddMappingToGroupTest {
   void shouldRejectIfMissingMappingId() {
     // when / then
     assertThatThrownBy(
-            () ->
-                client.newAddMappingToGroupCommand().mappingId(null).groupId(groupId).send().join())
+        () ->
+            client.newAssignMappingToGroupCommand().mappingId(null).groupId(groupId).send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("mappingId must not be null");
   }
@@ -154,7 +155,7 @@ public class AddMappingToGroupTest {
   void shouldRejectIfEmptyMappingId() {
     // when / then
     assertThatThrownBy(
-            () -> client.newAddMappingToGroupCommand().mappingId("").groupId(groupId).send().join())
+        () -> client.newAssignMappingToGroupCommand().mappingId("").groupId(groupId).send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("mappingId must not be empty");
   }
