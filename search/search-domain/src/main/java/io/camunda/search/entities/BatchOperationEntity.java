@@ -16,7 +16,7 @@ public record BatchOperationEntity(
     // Operate BatchOperation ID is a UUID
     // Engine BatchOperation ID is a Long
     String batchOperationId,
-    BatchOperationState state,
+    BatchOperationState states,
     String operationType,
     OffsetDateTime startDate,
     OffsetDateTime endDate,
@@ -29,7 +29,7 @@ public record BatchOperationEntity(
    * String. However, the new batch engine uses a Long as ID (Key).
    *
    * @param batchOperationId throws IllegalArgumentException if the batchOperationId is not a valid
-   *     number (Legacy Batch Operation IDs are not supported)
+   * number (Legacy Batch Operation IDs are not supported)
    * @return batchOperationKey
    */
   public static Long getBatchOperationKey(final String batchOperationId) {
@@ -51,9 +51,11 @@ public record BatchOperationEntity(
       String batchOperationId,
       Long itemKey,
       Long processInstanceKey,
-      BatchOperationItemState state,
+      BatchOperationItemState states,
       OffsetDateTime processedDate,
-      String errorMessage) {}
+      String errorMessage) {
+
+  }
 
   public enum BatchOperationState {
     CREATED,

@@ -14,7 +14,7 @@ public enum BatchOperationItemSearchColumn implements SearchColumn<BatchOperatio
   BATCH_OPERATION_ID("batchOperationId", BatchOperationItemEntity::batchOperationId),
   ITEM_KEY("itemKey", BatchOperationItemEntity::itemKey),
   PROCESS_INSTANCE_KEY("processInstanceKey", BatchOperationItemEntity::processInstanceKey),
-  STATE("state", BatchOperationItemEntity::state),
+  STATE("state", BatchOperationItemEntity::states),
   PROCESSED_DATE("processedDate", BatchOperationItemEntity::processedDate);
 
   private final String property;
