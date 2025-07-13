@@ -119,9 +119,10 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return stringTerms(FLOW_NODE_ID, flowNodeIds);
   }
 
-  private SearchQuery getErrorTypeQuery(final List<ErrorType> errorTypes) {
+  private SearchQuery getErrorTypeQuery(final List<ErrorType> errorTypeOperations) {
     return stringTerms(
-        ERROR_TYPE, errorTypes != null ? errorTypes.stream().map(Enum::name).toList() : null);
+        ERROR_TYPE,
+        errorTypeOperations != null ? errorTypeOperations.stream().map(Enum::name).toList() : null);
   }
 
   private SearchQuery getProcessInstanceKeyQuery(final List<Long> processInstanceKeys) {
