@@ -120,14 +120,14 @@ public class BatchOperationItemProvider {
       final Authentication authentication,
       final Supplier<Boolean> shouldAbort) {
     // first fetch all matching processInstances
-    final var processInstanceKeys =
+    final var processInstanceKeyOperations =
         fetchProcessInstanceItems(partitionId, filter, authentication, shouldAbort).stream()
             .map(Item::processInstanceKey)
             .toList();
 
     // then fetch all incidents of the matching processInstances
-    return getIncidentItemsOfProcessInstanceKeys(
-        new ArrayList<>(processInstanceKeys), authentication, shouldAbort);
+    return getIncidentItemsOfProcessInstanceKeyOperations(
+        new ArrayList<>(processInstanceKeyOperations), authentication, shouldAbort);
   }
 
   private <F extends FilterBase> Set<Item> fetchEntityItems(
@@ -160,7 +160,7 @@ public class BatchOperationItemProvider {
     return items;
   }
 
-  private Set<Item> getIncidentItemsOfProcessInstanceKeys(
+  private Set<Item> getIncidentItemsOfProcessInstanceKeyOperations(
       final List<Long> processInstanceKeys,
       final Authentication authentication,
       final Supplier<Boolean> shouldAbort) {

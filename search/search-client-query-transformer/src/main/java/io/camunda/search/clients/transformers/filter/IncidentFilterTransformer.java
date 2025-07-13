@@ -125,8 +125,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
         ERROR_TYPE, errorTypes != null ? errorTypes.stream().map(Enum::name).toList() : null);
   }
 
-  private SearchQuery getProcessInstanceKeyQuery(final List<Long> processInstanceKeys) {
-    return longTerms(PROCESS_INSTANCE_KEY, processInstanceKeys);
+  private SearchQuery getProcessInstanceKeyQuery(final List<Long> processInstanceKeyOperations) {
+    return longTerms(PROCESS_INSTANCE_KEY, processInstanceKeyOperations);
   }
 
   private SearchQuery getProcessDefinitionKeyQuery(final List<Long> processDefinitionKeys) {
