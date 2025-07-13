@@ -86,7 +86,7 @@ public class BatchOperationLifecycleManagementHandler
   public void flush(final BatchOperationEntity entity, final BatchRequest batchRequest)
       throws PersistenceException {
     final Map<String, Object> updateFields = new HashMap<>();
-    updateFields.put(BatchOperationTemplate.STATE, entity.getState());
+    updateFields.put(BatchOperationTemplate.STATE_OPERATIONS, entity.getState());
     updateFields.put(BatchOperationTemplate.END_DATE, entity.getEndDate());
     batchRequest.update(indexName, entity.getId(), updateFields);
   }

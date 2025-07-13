@@ -10,7 +10,7 @@ package io.camunda.search.clients.transformers.sort;
 import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.END_DATE;
 import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.ID;
 import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.START_DATE;
-import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.STATE;
+import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.STATE_OPERATIONS;
 import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.TYPE;
 
 public class BatchOperationFieldSortingTransformer implements FieldSortingTransformer {
@@ -19,7 +19,7 @@ public class BatchOperationFieldSortingTransformer implements FieldSortingTransf
   public String apply(final String domainField) {
     return switch (domainField) {
       case "batchOperationId" -> ID;
-      case "state" -> STATE;
+      case "state" -> STATE_OPERATIONS;
       case "operationType" -> TYPE;
       case "startDate" -> START_DATE;
       case "endDate" -> END_DATE;

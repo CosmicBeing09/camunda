@@ -68,7 +68,7 @@ public class BatchOperationStartedHandler
   public void flush(final BatchOperationEntity entity, final BatchRequest batchRequest)
       throws PersistenceException {
     final Map<String, Object> updateFields = new HashMap<>();
-    updateFields.put(BatchOperationTemplate.STATE, entity.getState());
+    updateFields.put(BatchOperationTemplate.STATE_OPERATIONS, entity.getState());
     updateFields.put(BatchOperationTemplate.START_DATE, entity.getStartDate());
     batchRequest.update(indexName, entity.getId(), updateFields);
   }
