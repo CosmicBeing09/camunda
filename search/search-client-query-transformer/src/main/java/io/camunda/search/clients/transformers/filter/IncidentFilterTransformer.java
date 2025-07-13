@@ -61,7 +61,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var treePathQuery = getTreePathQuery(filter.treePath());
     final var jobKeyQuery = getJobKeyQuery(filter.jobKeys());
     final var tenantIdQuery = getTenantIdQuery(filter.tenantIds());
-    final var errorMessageHashesQuery = getErrorMessageHashesQuery(filter.errorMessageHashes());
+    final var errorMessageHashOperationsQuery = getErrorMessageHashOperationsQuery(
+        filter.errorMessageHashOperations());
 
     return and(
         keyQuery,
@@ -77,7 +78,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
         treePathQuery,
         jobKeyQuery,
         tenantIdQuery,
-        errorMessageHashesQuery);
+        errorMessageHashOperationsQuery);
   }
 
   private SearchQuery getTenantIdQuery(final List<String> tenantIds) {
@@ -140,7 +141,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return longTerms(KEY, keys);
   }
 
-  private SearchQuery getErrorMessageHashesQuery(final List<Integer> errorMessageHashes) {
+  private SearchQuery getErrorMessageHashOperationsQuery(final List<Integer> errorMessageHashes) {
     return intTerms(ERROR_MSG_HASH, errorMessageHashes);
   }
 }
