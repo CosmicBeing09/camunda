@@ -47,7 +47,7 @@ public class SearchRequestPageImpl
   }
 
   @Override
-  public SearchRequestPage searchAfter(final String values) {
+  public SearchRequestPage endCursor(final String values) {
     page.setSearchAfter(values);
     return this;
   }

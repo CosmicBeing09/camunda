@@ -95,7 +95,7 @@ public class ProcessDefinitionSearchTest {
         camundaClient
             .newProcessDefinitionSearchRequest()
             .sort(s -> s.processDefinitionKey().desc())
-            .page(p -> p.limit(1).searchAfter(firstPage.page().searchAfterCursor()))
+            .page(p -> p.limit(1).endCursor(firstPage.page().endCursor()))
             .send()
             .join();
 
@@ -130,7 +130,7 @@ public class ProcessDefinitionSearchTest {
         camundaClient
             .newProcessDefinitionSearchRequest()
             .sort(s -> s.processDefinitionId().desc())
-            .page(p -> p.limit(1).searchAfter(firstPage.page().searchAfterCursor()))
+            .page(p -> p.limit(1).endCursor(firstPage.page().endCursor()))
             .send()
             .join();
 
@@ -159,7 +159,7 @@ public class ProcessDefinitionSearchTest {
         camundaClient
             .newProcessDefinitionSearchRequest()
             .sort(s -> s.processDefinitionId().desc())
-            .page(p -> p.limit(1).searchAfter(firstPage.page().searchAfterCursor()))
+            .page(p -> p.limit(1).endCursor(firstPage.page().endCursor()))
             .send()
             .join();
     // when
@@ -549,7 +549,7 @@ public class ProcessDefinitionSearchTest {
     final var resultAfter =
         camundaClient
             .newProcessDefinitionSearchRequest()
-            .page(p -> p.searchAfter(result.page().searchAfterCursor()))
+            .page(p -> p.endCursor(result.page().endCursor()))
             .send()
             .join();
 
