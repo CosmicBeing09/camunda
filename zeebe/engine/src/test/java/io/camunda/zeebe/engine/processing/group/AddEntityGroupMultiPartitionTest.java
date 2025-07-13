@@ -34,8 +34,10 @@ import org.junit.rules.TestWatcher;
 public class AddEntityGroupMultiPartitionTest {
 
   private static final int PARTITION_COUNT = 3;
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeGroupAddEntityCommand() {
@@ -56,16 +58,16 @@ public class AddEntityGroupMultiPartitionTest {
     engine.group().addEntity(groupId).withEntityId(username).withEntityType(EntityType.USER).add();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 4)
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.GROUP
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == GroupIntent.ADD_ENTITY)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(
+                record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 4)
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.GROUP
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == GroupIntent.ADD_ENTITY)))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
@@ -92,10 +94,10 @@ public class AddEntityGroupMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.groupRecords()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(GroupIntent.ENTITY_ADDED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.groupRecords()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(GroupIntent.ENTITY_ADDED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(GroupIntent.ADD_ENTITY, GroupIntent.ENTITY_ADDED);
     }
@@ -121,9 +123,9 @@ public class AddEntityGroupMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 4)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 4)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -131,7 +133,7 @@ public class AddEntityGroupMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the group creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, GroupIntent.CREATE));
     final var username =
@@ -156,8 +158,8 @@ public class AddEntityGroupMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(4))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(4))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.USER, UserIntent.CREATE),

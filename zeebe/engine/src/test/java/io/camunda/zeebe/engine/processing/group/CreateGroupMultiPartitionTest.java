@@ -30,11 +30,14 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
 public class CreateGroupMultiPartitionTest {
+
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeGroupCreateCommand() {
@@ -44,9 +47,9 @@ public class CreateGroupMultiPartitionTest {
     engine.group().newGroup(groupId).withName(name).create();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
@@ -73,10 +76,10 @@ public class CreateGroupMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.groupRecords()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(GroupIntent.CREATED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.groupRecords()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(GroupIntent.CREATED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsExactly(GroupIntent.CREATE, GroupIntent.CREATED);
     }
@@ -91,9 +94,9 @@ public class CreateGroupMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -102,7 +105,7 @@ public class CreateGroupMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the role creation distribution is intercepted
 
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, RoleIntent.CREATE));
 
@@ -118,8 +121,8 @@ public class CreateGroupMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.ROLE, RoleIntent.CREATE), tuple(ValueType.GROUP, GroupIntent.CREATE));

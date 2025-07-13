@@ -31,9 +31,11 @@ public class DeleteMappingMultiPartitionTest {
 
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeMappingDeleteCommand() {
@@ -51,10 +53,10 @@ public class DeleteMappingMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(
+                record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
         .extracting(
             Record::getIntent,
             Record::getRecordType,
@@ -81,10 +83,10 @@ public class DeleteMappingMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.mappingRecords()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(MappingIntent.DELETED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.mappingRecords()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(MappingIntent.DELETED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(MappingIntent.DELETE, MappingIntent.DELETED);
     }
@@ -106,9 +108,9 @@ public class DeleteMappingMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -116,7 +118,7 @@ public class DeleteMappingMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(
             partition -> engine.interceptInterPartitionIntent(partition, MappingIntent.CREATE));
@@ -137,8 +139,8 @@ public class DeleteMappingMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.MAPPING, MappingIntent.CREATE),

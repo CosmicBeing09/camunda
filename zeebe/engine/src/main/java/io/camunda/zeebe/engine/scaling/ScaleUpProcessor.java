@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.Optional;
 
 public class ScaleUpProcessor implements TypedRecordProcessor<ScaleRecord> {
+
   private final KeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
@@ -75,8 +76,8 @@ public class ScaleUpProcessor implements TypedRecordProcessor<ScaleRecord> {
     }
 
     final var requestedPartitionCount = command.getValue().getDesiredPartitionCount();
-    final var currentPartitionsInRoutingState = routingState.currentPartitions();
-    final var desiredPartitionsInRoutingState = routingState.desiredPartitions();
+    final var currentPartitionsInRoutingState = routingState.currentPartitionIds();
+    final var desiredPartitionsInRoutingState = routingState.desiredPartitionIds();
 
     final var allPartitionsInRoutingState = new HashSet<>();
     allPartitionsInRoutingState.addAll(currentPartitionsInRoutingState);
@@ -119,5 +120,7 @@ public class ScaleUpProcessor implements TypedRecordProcessor<ScaleRecord> {
     return Optional.empty();
   }
 
-  private record Rejection(RejectionType type, String reason) {}
+  private record Rejection(RejectionType type, String reason) {
+
+  }
 }

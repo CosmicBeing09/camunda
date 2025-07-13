@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 final class RoutingInfoInitializationMigrationTest {
+
   @SuppressWarnings("unused")
   private MutableProcessingState processingState;
 
@@ -63,7 +64,7 @@ final class RoutingInfoInitializationMigrationTest {
     // then
     final var updatedRoutingState = context.processingState().getRoutingState();
     assertThat(updatedRoutingState.isInitialized()).isTrue();
-    assertThat(updatedRoutingState.currentPartitions()).containsExactlyInAnyOrder(1, 2, 3);
+    assertThat(updatedRoutingState.currentPartitionIds()).containsExactlyInAnyOrder(1, 2, 3);
     assertThat(updatedRoutingState.messageCorrelation())
         .isEqualTo(new MessageCorrelation.HashMod(3));
   }

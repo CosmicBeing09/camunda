@@ -31,9 +31,11 @@ public class UpdateTenantMultiPartitionTest {
 
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeTenantUpdateCommand() {
@@ -54,16 +56,16 @@ public class UpdateTenantMultiPartitionTest {
         .await();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.TENANT
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == TenantIntent.UPDATE)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(
+                record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.TENANT
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == TenantIntent.UPDATE)))
         .extracting(
             Record::getIntent,
             Record::getRecordType,
@@ -90,10 +92,10 @@ public class UpdateTenantMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.tenantRecords()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.UPDATED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.tenantRecords()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(TenantIntent.UPDATED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(TenantIntent.UPDATE, TenantIntent.UPDATED);
     }
@@ -108,9 +110,9 @@ public class UpdateTenantMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -118,7 +120,7 @@ public class UpdateTenantMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, TenantIntent.CREATE));
     final var tenantId = UUID.randomUUID().toString();
@@ -138,8 +140,8 @@ public class UpdateTenantMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.TENANT, TenantIntent.CREATE),

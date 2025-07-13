@@ -10,16 +10,19 @@ package io.camunda.zeebe.engine.state.immutable;
 import java.util.Set;
 
 public interface RoutingState {
-  Set<Integer> currentPartitions();
 
-  Set<Integer> desiredPartitions();
+  Set<Integer> currentPartitionIds();
+
+  Set<Integer> desiredPartitionIds();
 
   MessageCorrelation messageCorrelation();
 
   boolean isInitialized();
 
   sealed interface MessageCorrelation {
+
     record HashMod(int partitionCount) implements MessageCorrelation {
+
       public HashMod {
         if (partitionCount <= 0) {
           throw new IllegalArgumentException("Partition count must be positive");

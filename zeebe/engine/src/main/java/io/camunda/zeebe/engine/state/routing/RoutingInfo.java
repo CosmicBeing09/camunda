@@ -24,16 +24,25 @@ import org.agrona.DirectBuffer;
  * DbRoutingState}.
  */
 public interface RoutingInfo {
-  /** Returns the current set of partitions. */
+
+  /**
+   * Returns the current set of partitions.
+   */
   Set<Integer> partitions();
 
-  /** Returns the desired set of partitions. */
+  /**
+   * Returns the desired set of partitions.
+   */
   Set<Integer> desiredPartitions();
 
-  /** Returns the current partition id for the given correlation key. */
+  /**
+   * Returns the current partition id for the given correlation key.
+   */
   int partitionForCorrelationKey(final DirectBuffer correlationKey);
 
-  /** Returns whether a partition is being scaled up at that point in time. */
+  /**
+   * Returns whether a partition is being scaled up at that point in time.
+   */
   boolean isPartitionScaling(final int partitionId);
 
   /**
@@ -53,6 +62,7 @@ public interface RoutingInfo {
   }
 
   class StaticRoutingInfo implements RoutingInfo {
+
     private final Set<Integer> otherPartitions;
     private final int partitionCount;
 
@@ -83,10 +93,11 @@ public interface RoutingInfo {
   }
 
   /**
-   * Naive implementation that always looks up the routing information from the {@link
-   * RoutingState}. Later on, we might want to cache this information.
+   * Naive implementation that always looks up the routing information from the
+   * {@link RoutingState}. Later on, we might want to cache this information.
    */
   class DynamicRoutingInfo implements RoutingInfo {
+
     private final RoutingState routingState;
     private final RoutingInfo fallback;
 
@@ -100,7 +111,7 @@ public interface RoutingInfo {
       if (!routingState.isInitialized()) {
         return fallback.partitions();
       }
-      return routingState.currentPartitions();
+      return routingState.currentPartitionIds();
     }
 
     @Override
@@ -108,7 +119,7 @@ public interface RoutingInfo {
       if (!routingState.isInitialized()) {
         return fallback.partitions();
       }
-      return routingState.desiredPartitions();
+      return routingState.desiredPartitionIds();
     }
 
     @Override

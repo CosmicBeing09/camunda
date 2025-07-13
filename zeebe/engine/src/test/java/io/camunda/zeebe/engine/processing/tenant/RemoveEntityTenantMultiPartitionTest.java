@@ -33,8 +33,10 @@ import org.junit.rules.TestWatcher;
 public class RemoveEntityTenantMultiPartitionTest {
 
   private static final int PARTITION_COUNT = 3;
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   public void setupTenantWithUserAndRemoveEntity() {
     final var username = "foo";
@@ -66,16 +68,16 @@ public class RemoveEntityTenantMultiPartitionTest {
   public void shouldDistributeTenantRemoveEntityCommand() {
     setupTenantWithUserAndRemoveEntity();
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 5)
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.TENANT
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == TenantIntent.REMOVE_ENTITY)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(
+                record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 5)
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.TENANT
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == TenantIntent.REMOVE_ENTITY)))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
@@ -102,10 +104,10 @@ public class RemoveEntityTenantMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.tenantRecords()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.ENTITY_REMOVED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.tenantRecords()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(TenantIntent.ENTITY_REMOVED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(TenantIntent.REMOVE_ENTITY, TenantIntent.ENTITY_REMOVED);
     }
@@ -115,9 +117,9 @@ public class RemoveEntityTenantMultiPartitionTest {
   public void shouldDistributeInIdentityQueue() {
     setupTenantWithUserAndRemoveEntity();
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 5)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 5)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -125,7 +127,7 @@ public class RemoveEntityTenantMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the user creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, UserIntent.CREATE));
     setupTenantWithUserAndRemoveEntity();
@@ -134,8 +136,8 @@ public class RemoveEntityTenantMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(5))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(5))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.USER, UserIntent.CREATE),

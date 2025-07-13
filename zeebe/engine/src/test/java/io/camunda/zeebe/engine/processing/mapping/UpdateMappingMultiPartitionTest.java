@@ -28,8 +28,10 @@ public class UpdateMappingMultiPartitionTest {
 
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeMappingUpdateCommand() {
@@ -57,11 +59,11 @@ public class UpdateMappingMultiPartitionTest {
 
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.mappingRecords()
-                  .withPartitionId(partitionId)
-                  .skip(2)
-                  .limit(record -> record.getIntent().equals(MappingIntent.UPDATED))
-                  .toList())
+          RecordingExporter.mappingRecords()
+              .withPartitionId(partitionId)
+              .skip(2)
+              .limit(record -> record.getIntent().equals(MappingIntent.UPDATED))
+              .toList())
           .extracting(Record::getIntent)
           .containsExactly(MappingIntent.UPDATE, MappingIntent.UPDATED);
     }
@@ -93,9 +95,9 @@ public class UpdateMappingMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -103,7 +105,7 @@ public class UpdateMappingMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the role creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(
             partition -> engine.interceptInterPartitionIntent(partition, MappingIntent.CREATE));
@@ -131,8 +133,8 @@ public class UpdateMappingMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.MAPPING, MappingIntent.CREATE),

@@ -28,11 +28,14 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
 public class DeleteGroupMultiPartitionTest {
+
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeGroupDeleteCommand() {
@@ -43,16 +46,16 @@ public class DeleteGroupMultiPartitionTest {
     engine.group().deleteGroup(groupId).delete();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.GROUP
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == GroupIntent.DELETE)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(
+                record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.GROUP
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == GroupIntent.DELETE)))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
@@ -79,10 +82,10 @@ public class DeleteGroupMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.groupRecords()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(GroupIntent.DELETED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.groupRecords()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(GroupIntent.DELETED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(GroupIntent.DELETE, GroupIntent.DELETED);
     }
@@ -98,9 +101,9 @@ public class DeleteGroupMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -109,7 +112,7 @@ public class DeleteGroupMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
     final var name = UUID.randomUUID().toString();
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, GroupIntent.CREATE));
     final var groupId = UUID.randomUUID().toString();
@@ -121,8 +124,8 @@ public class DeleteGroupMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.GROUP, GroupIntent.CREATE), tuple(ValueType.GROUP, GroupIntent.DELETE));

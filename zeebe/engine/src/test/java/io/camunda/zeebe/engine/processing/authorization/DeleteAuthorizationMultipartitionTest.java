@@ -33,8 +33,10 @@ public class DeleteAuthorizationMultipartitionTest {
 
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
-  @Rule public final TestWatcher recordingExporterTestWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final TestWatcher recordingExporterTestWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldTestLifecycle() {
@@ -60,15 +62,15 @@ public class DeleteAuthorizationMultipartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.AUTHORIZATION
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == AuthorizationIntent.DELETE)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.AUTHORIZATION
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == AuthorizationIntent.DELETE)))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
@@ -96,10 +98,10 @@ public class DeleteAuthorizationMultipartitionTest {
 
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.records()
-                  .withPartitionId(partitionId)
-                  .limit(r -> r.getIntent().equals(AuthorizationIntent.DELETED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.records()
+              .withPartitionId(partitionId)
+              .limit(r -> r.getIntent().equals(AuthorizationIntent.DELETED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .endsWith(AuthorizationIntent.DELETE, AuthorizationIntent.DELETED);
     }
@@ -125,9 +127,9 @@ public class DeleteAuthorizationMultipartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -135,7 +137,7 @@ public class DeleteAuthorizationMultipartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the user creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(
             partition ->
@@ -160,8 +162,8 @@ public class DeleteAuthorizationMultipartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.AUTHORIZATION, AuthorizationIntent.CREATE),

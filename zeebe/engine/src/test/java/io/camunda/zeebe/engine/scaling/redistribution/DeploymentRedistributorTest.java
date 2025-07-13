@@ -39,9 +39,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith({MockitoExtension.class, ProcessingStateExtension.class})
 public class DeploymentRedistributorTest {
 
-  @Mock private DeploymentDistributionCommandSender deploymentDistributionCommandSender;
+  @Mock
+  private DeploymentDistributionCommandSender deploymentDistributionCommandSender;
 
-  /** Injected by {@link ProcessingStateExtension} */
+  /**
+   * Injected by {@link ProcessingStateExtension}
+   */
   private MutableProcessingState processingState;
 
   private MutableRoutingState routingState;
@@ -85,7 +88,7 @@ public class DeploymentRedistributorTest {
 
     // Add pending deployment distributions for partitions 1, 2, and 3
     routingState
-        .desiredPartitions()
+        .desiredPartitionIds()
         .forEach(
             partition -> deploymentState.addPendingDeploymentDistribution(recordKey, partition));
   }

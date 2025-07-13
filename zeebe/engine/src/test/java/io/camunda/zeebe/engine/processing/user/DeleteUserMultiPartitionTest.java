@@ -30,11 +30,14 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
 public class DeleteUserMultiPartitionTest {
+
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeUserDeleteCommand() {
@@ -62,16 +65,16 @@ public class DeleteUserMultiPartitionTest {
         .await();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 3)
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.USER
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == UserIntent.DELETE)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limitByCount(
+                record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 3)
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.USER
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == UserIntent.DELETE)))
         .extracting(
             Record::getIntent,
             Record::getRecordType,
@@ -98,10 +101,10 @@ public class DeleteUserMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.records()
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(UserIntent.DELETED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.records()
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(UserIntent.DELETED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(UserIntent.DELETE, UserIntent.DELETED);
     }
@@ -130,9 +133,9 @@ public class DeleteUserMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 3)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 3)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -140,7 +143,7 @@ public class DeleteUserMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the user creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, UserIntent.CREATE));
 
@@ -167,8 +170,8 @@ public class DeleteUserMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(3))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(3))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             Assertions.tuple(ValueType.USER, UserIntent.CREATE),

@@ -30,11 +30,14 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
 public class CreateRoleMultiPartitionTest {
+
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeRoleCreateCommand() {
@@ -43,9 +46,9 @@ public class CreateRoleMultiPartitionTest {
     engine.role().newRole(roleId).create();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
             Record::getIntent,
             Record::getRecordType,
@@ -72,11 +75,11 @@ public class CreateRoleMultiPartitionTest {
         .endsWith(tuple(CommandDistributionIntent.FINISHED, RecordType.EVENT, 1));
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.roleRecords()
-                  .withRoleId(roleId)
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(RoleIntent.CREATED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.roleRecords()
+              .withRoleId(roleId)
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(RoleIntent.CREATED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsExactly(RoleIntent.CREATE, RoleIntent.CREATED);
     }
@@ -90,9 +93,9 @@ public class CreateRoleMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -101,7 +104,7 @@ public class CreateRoleMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the user creation distribution is intercepted
 
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, UserIntent.CREATE));
 
@@ -122,8 +125,8 @@ public class CreateRoleMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(3))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(3))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.USER, UserIntent.CREATE),

@@ -33,7 +33,7 @@ public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord>
   public void processRecord(final TypedRecord<ScaleRecord> command) {
     final var key = keyGenerator.nextKey();
     final var request = command.getValue();
-    final var desiredPartitions = routingState.desiredPartitions();
+    final var desiredPartitions = routingState.desiredPartitionIds();
     // The desired partition count in the request can be smaller than the value in the state in case
     // a late request is received and another scale up is in progress
     if (request.getDesiredPartitionCount() > desiredPartitions.size()) {
@@ -47,7 +47,7 @@ public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord>
       final var response = new ScaleRecord();
       response
           .setDesiredPartitionCount(desiredPartitions.size())
-          .setRedistributedPartitions(routingState.currentPartitions());
+          .setRedistributedPartitions(routingState.currentPartitionIds());
       writers.state().appendFollowUpEvent(key, ScaleIntent.STATUS_RESPONSE, response);
       writers.response().writeEventOnCommand(key, ScaleIntent.STATUS_RESPONSE, response, command);
     }

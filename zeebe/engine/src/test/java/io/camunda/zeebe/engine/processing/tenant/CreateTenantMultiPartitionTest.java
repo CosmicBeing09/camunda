@@ -29,11 +29,14 @@ import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
 public class CreateTenantMultiPartitionTest {
+
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
-  @Rule public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final TestWatcher testWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldDistributeTenantCreateCommand() {
@@ -43,9 +46,9 @@ public class CreateTenantMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
             Record::getIntent,
             Record::getRecordType,
@@ -69,11 +72,11 @@ public class CreateTenantMultiPartitionTest {
 
     for (int partitionId = 2; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.tenantRecords()
-                  .withTenantId(tenantId)
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.CREATED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.tenantRecords()
+              .withTenantId(tenantId)
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(TenantIntent.CREATED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsSubsequence(TenantIntent.CREATE, TenantIntent.CREATED);
     }
@@ -91,9 +94,9 @@ public class CreateTenantMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -101,7 +104,7 @@ public class CreateTenantMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the user creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, RoleIntent.CREATE));
 
@@ -117,8 +120,8 @@ public class CreateTenantMultiPartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.ROLE, RoleIntent.CREATE), tuple(ValueType.TENANT, TenantIntent.CREATE));
