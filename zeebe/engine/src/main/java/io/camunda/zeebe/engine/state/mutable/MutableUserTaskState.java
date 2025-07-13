@@ -25,7 +25,8 @@ public interface MutableUserTaskState extends UserTaskState {
 
   void storeIntermediateState(final UserTaskRecord userTask, final LifecycleState lifecycleState);
 
-  void updateIntermediateState(long key, Consumer<UserTaskIntermediateStateValue> updater);
+  void updateIntermediateState(long variableDocKey,
+      Consumer<UserTaskIntermediateStateValue> updater);
 
   void deleteIntermediateState(final long userTaskKey);
 
