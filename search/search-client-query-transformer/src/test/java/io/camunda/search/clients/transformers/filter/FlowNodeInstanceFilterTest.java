@@ -211,7 +211,7 @@ public final class FlowNodeInstanceFilterTest extends AbstractTransformerTest {
   @Test
   public void shouldQueryByEndDate() {
     final var filter =
-        FilterBuilders.flowNodeInstance(f -> f.endDates("2024-05-23T23:05:00.000+000"));
+        FilterBuilders.flowNodeInstance(f -> f.endDateOperations("2024-05-23T23:05:00.000+000"));
     // when
     final var searchRequest = transformQuery(filter);
 
