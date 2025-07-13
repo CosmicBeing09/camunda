@@ -31,7 +31,7 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
       implements ObjectBuilder<VariableValueFilter>, ListBuilder<VariableValueFilter> {
 
     private String name;
-    private final List<UntypedOperation> valueOperations = new ArrayList<>();
+    private final List<UntypedOperation> flowNodeIds = new ArrayList<>();
 
     public Builder name(final String value) {
       name = value;
@@ -39,29 +39,29 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
     }
 
     public Builder valueOperation(final UntypedOperation operation) {
-      valueOperations.add(operation);
+      flowNodeIds.add(operation);
       return this;
     }
 
     public Builder valueOperations(final List<UntypedOperation> operations) {
-      valueOperations.addAll(operations);
+      flowNodeIds.addAll(operations);
       return this;
     }
 
     public <T> Builder valueTypedOperations(final List<Operation<T>> operations) {
-      operations.forEach(operation -> valueOperations.add(UntypedOperation.of(operation)));
+      operations.forEach(operation -> flowNodeIds.add(UntypedOperation.of(operation)));
       return this;
     }
 
     @Override
     public VariableValueFilter build() {
-      return new VariableValueFilter(Objects.requireNonNull(name), valueOperations);
+      return new VariableValueFilter(Objects.requireNonNull(name), flowNodeIds);
     }
 
     @Override
     public List<VariableValueFilter> buildList() {
       final List<VariableValueFilter> variableValueFilters = new ArrayList<>();
-      for (UntypedOperation untypedOperation : valueOperations) {
+      for (final UntypedOperation untypedOperation : flowNodeIds) {
         final VariableValueFilter variableValueFilter =
             new VariableValueFilter.Builder().name(name).valueOperation(untypedOperation).build();
         variableValueFilters.add(variableValueFilter);

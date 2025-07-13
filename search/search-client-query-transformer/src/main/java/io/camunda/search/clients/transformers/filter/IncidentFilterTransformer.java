@@ -115,8 +115,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return longTerms(FLOW_NODE_INSTANCE_KEY, flowNodeInstanceKeys);
   }
 
-  private SearchQuery getFlowNodeIdQuery(final List<String> flowNodeIds) {
-    return stringTerms(FLOW_NODE_ID, flowNodeIds);
+  private SearchQuery getFlowNodeIdQuery(final List<String> flowNodeIdOperations) {
+    return stringTerms(FLOW_NODE_ID, flowNodeIdOperations);
   }
 
   private SearchQuery getErrorTypeQuery(final List<ErrorType> errorTypes) {
