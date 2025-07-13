@@ -80,8 +80,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
         errorMessageHashesQuery);
   }
 
-  private SearchQuery getTenantIdQuery(final List<String> tenantIds) {
-    return stringTerms(TENANT_ID, tenantIds);
+  private SearchQuery getTenantIdQuery(final List<String> tenantIdOperations) {
+    return stringTerms(TENANT_ID, tenantIdOperations);
   }
 
   private SearchQuery getJobKeyQuery(final List<Long> jobKeys) {
