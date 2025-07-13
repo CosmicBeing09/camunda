@@ -7,7 +7,8 @@
  */
 package io.camunda.search.filter;
 
-import static io.camunda.util.CollectionUtil.*;
+import static io.camunda.util.CollectionUtil.addValuesToList;
+import static io.camunda.util.CollectionUtil.collectValues;
 
 import io.camunda.util.FilterUtil;
 import io.camunda.util.ObjectBuilder;
@@ -82,7 +83,7 @@ public record ProcessDefinitionStatisticsFilter(
       return this;
     }
 
-    public Builder processInstanceKeys(final Long value, final Long... values) {
+    public Builder processInstanceKeyOperations(final Long value, final Long... values) {
       return processInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 

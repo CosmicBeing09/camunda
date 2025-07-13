@@ -120,14 +120,14 @@ public class BatchOperationItemProvider {
       final Authentication authentication,
       final Supplier<Boolean> shouldAbort) {
     // first fetch all matching processInstances
-    final var processInstanceKeys =
+    final var processInstanceKeyOperations =
         fetchProcessInstanceItems(partitionId, filter, authentication, shouldAbort).stream()
             .map(Item::processInstanceKey)
             .toList();
 
     // then fetch all incidents of the matching processInstances
-    return getIncidentItemsOfProcessInstanceKeys(
-        new ArrayList<>(processInstanceKeys), authentication, shouldAbort);
+    return getIncidentItemsOfProcessInstanceKeyOperations(
+        new ArrayList<>(processInstanceKeyOperations), authentication, shouldAbort);
   }
 
   private <F extends FilterBase> Set<Item> fetchEntityItems(
@@ -160,7 +160,7 @@ public class BatchOperationItemProvider {
     return items;
   }
 
-  private Set<Item> getIncidentItemsOfProcessInstanceKeys(
+  private Set<Item> getIncidentItemsOfProcessInstanceKeyOperations(
       final List<Long> processInstanceKeys,
       final Authentication authentication,
       final Supplier<Boolean> shouldAbort) {
@@ -174,14 +174,17 @@ public class BatchOperationItemProvider {
         return Set.of();
       }
       final var filter =
-          new IncidentFilter.Builder().processInstanceKeys(processInstanceKeysBatch).build();
+          new IncidentFilter.Builder().processInstanceKeyOperations(processInstanceKeysBatch)
+              .build();
       incidents.addAll(fetchIncidentItems(filter, authentication, shouldAbort));
     }
 
     return incidents;
   }
 
-  public record Item(long itemKey, long processInstanceKey) {}
+  public record Item(long itemKey, long processInstanceKey) {
+
+  }
 
   /**
    * Internal abstraction to hold the result of a page of entity items.
@@ -190,7 +193,9 @@ public class BatchOperationItemProvider {
    * @param lastSortValues the last sortValues for pagination
    * @param total the total amount of found items
    */
-  private record ItemPage(List<Item> items, Object[] lastSortValues, long total) {}
+  private record ItemPage(List<Item> items, Object[] lastSortValues, long total) {
+
+  }
 
   /**
    * Internal abstraction interface to get a single page of entity items of a specific type. This is
@@ -215,7 +220,7 @@ public class BatchOperationItemProvider {
      *
      * @param authentication the authentication of the user which started the batch operation
      * @param authorization the same authorization is needed, that is normally used in
-     *     ProcessInstanceServices / IncidentServices
+     * ProcessInstanceServices / IncidentServices
      * @return the security context
      */
     default SecurityContext createSecurityContext(
@@ -226,6 +231,7 @@ public class BatchOperationItemProvider {
   }
 
   private final class ProcessInstancePageFetcher implements ItemPageFetcher<ProcessInstanceFilter> {
+
     @Override
     public ItemPage fetchItems(
         final ProcessInstanceFilter filter,
@@ -256,6 +262,7 @@ public class BatchOperationItemProvider {
   }
 
   private final class IncidentPageFetcher implements ItemPageFetcher<IncidentFilter> {
+
     @Override
     public ItemPage fetchItems(
         final IncidentFilter filter,
