@@ -47,6 +47,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @Tag("rdbms")
 @ExtendWith(CamundaRdbmsInvocationContextProviderExtension.class)
 public class BatchOperationIT {
+
   public static final OffsetDateTime NOW = OffsetDateTime.now();
 
   @TestTemplate
@@ -384,7 +385,7 @@ public class BatchOperationIT {
             .search(
                 new BatchOperationQuery(
                     new BatchOperationFilter.Builder()
-                        .operationTypes(batchOperation.operationType())
+                        .operationTypeOperations(batchOperation.operationType())
                         .build(),
                     BatchOperationSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -440,7 +441,8 @@ public class BatchOperationIT {
             .getBatchOperationReader()
             .search(
                 new BatchOperationQuery(
-                    new BatchOperationFilter.Builder().operationTypes(operationType).build(),
+                    new BatchOperationFilter.Builder().operationTypeOperations(operationType)
+                        .build(),
                     BatchOperationSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(5))));
 

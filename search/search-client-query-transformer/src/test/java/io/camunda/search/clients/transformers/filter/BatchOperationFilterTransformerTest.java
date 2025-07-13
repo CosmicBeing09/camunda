@@ -78,7 +78,7 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
   @Test
   void shouldQueryByOperationType() {
     // given
-    final var filter = FilterBuilders.batchOperation(f -> f.operationTypes("CREATE"));
+    final var filter = FilterBuilders.batchOperation(f -> f.operationTypeOperations("CREATE"));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -99,7 +99,7 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
     // given
     final var filter =
         FilterBuilders.batchOperation(
-            f -> f.batchOperationIds("123").state("ACTIVE").operationTypes("CREATE"));
+            f -> f.batchOperationIds("123").state("ACTIVE").operationTypeOperations("CREATE"));
 
     // when
     final var searchRequest = transformQuery(filter);
