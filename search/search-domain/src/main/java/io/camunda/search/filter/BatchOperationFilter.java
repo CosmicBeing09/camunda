@@ -15,9 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationFilter(
-    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationFilter> {
 
@@ -25,30 +23,30 @@ public record BatchOperationFilter(
     private List<String> operationTypes;
     private List<String> state;
 
-    public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIds(collectValues(value, values));
+    public Builder batchOperationIds(final String value, final String... operations) {
+      return batchOperationIds(collectValues(value, operations));
     }
 
-    public Builder batchOperationIds(final List<String> values) {
-      batchOperationIds = addValuesToList(batchOperationIds, values);
+    public Builder batchOperationIds(final List<String> operations) {
+      batchOperationIds = addValuesToList(batchOperationIds, operations);
       return this;
     }
 
-    public Builder operationTypes(final String value, final String... values) {
-      return operationTypes(collectValues(value, values));
+    public Builder operationTypes(final String value, final String... operations) {
+      return operationTypes(collectValues(value, operations));
     }
 
-    public Builder operationTypes(final List<String> values) {
-      operationTypes = addValuesToList(operationTypes, values);
+    public Builder operationTypes(final List<String> operations) {
+      operationTypes = addValuesToList(operationTypes, operations);
       return this;
     }
 
-    public Builder state(final String value, final String... values) {
-      return state(collectValues(value, values));
+    public Builder state(final String value, final String... operations) {
+      return state(collectValues(value, operations));
     }
 
-    public Builder state(final List<String> values) {
-      state = addValuesToList(state, values);
+    public Builder state(final List<String> operations) {
+      state = addValuesToList(state, operations);
       return this;
     }
 
@@ -61,3 +59,7 @@ public record BatchOperationFilter(
     }
   }
 }
+    implements
+
+public record BatchOperationFilter(
+    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
