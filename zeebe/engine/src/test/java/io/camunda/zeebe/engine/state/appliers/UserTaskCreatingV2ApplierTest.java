@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
@@ -23,19 +23,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskCreatingV2ApplierTest {
 
-  /** Injected by {@link ProcessingStateExtension} */
+  /**
+   * Injected by {@link ProcessingStateExtension}
+   */
   private MutableProcessingState processingState;
 
-  /** The class under test. */
+  /**
+   * The class under test.
+   */
   private UserTaskCreatingV2Applier userTaskCreatingV2Applier;
 
-  /** Used for state assertions. */
+  /**
+   * Used for state assertions.
+   */
   private MutableUserTaskState userTaskState;
 
   @BeforeEach
   public void setup() {
     userTaskCreatingV2Applier = new UserTaskCreatingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
   }
 
   @Test
@@ -86,7 +92,7 @@ public class UserTaskCreatingV2ApplierTest {
 
   @Test
   public void
-      shouldStoreIntermediateStateAndNoInitialAssigneeWhenCreatingUserTaskWithoutAssignee() {
+  shouldStoreIntermediateStateAndNoInitialAssigneeWhenCreatingUserTaskWithoutAssignee() {
     // given
     final long userTaskKey = new Random().nextLong();
     final long elementInstanceKey = new Random().nextLong();

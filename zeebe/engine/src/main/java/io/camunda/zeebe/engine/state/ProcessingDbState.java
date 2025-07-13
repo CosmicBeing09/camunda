@@ -90,6 +90,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class ProcessingDbState implements MutableProcessingState {
+
   private final ZeebeDb<ZbColumnFamilies> zeebeDb;
   private final KeyGenerator keyGenerator;
   private final MutableProcessState processState;
@@ -293,7 +294,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableUserTaskState getUserTaskState() {
+  public MutableUserTaskState getAsyncRequestState() {
     return userTaskState;
   }
 

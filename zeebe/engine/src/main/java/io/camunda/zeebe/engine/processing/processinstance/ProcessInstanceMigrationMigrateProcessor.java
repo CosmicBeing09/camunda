@@ -7,7 +7,30 @@
  */
 package io.camunda.zeebe.engine.processing.processinstance;
 
-import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.*;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.ProcessInstanceMigrationPreconditionFailedException;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireMappedCatchEventsToStayAttachedToSameElement;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoBoundaryEventInSource;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoBoundaryEventInTarget;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoCatchEventMappingToChangeEventType;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoConcurrentCommand;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoConcurrentCommandForGateway;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoDuplicateTargetsInCatchEventMappings;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoEventSubprocessInSource;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoEventSubprocessInTarget;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoStartEventInstanceForTargetProcess;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNonDuplicateSourceElementIds;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNonNullProcessInstance;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNonNullTargetElementId;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNonNullTargetProcessDefinition;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireReferredElementsExist;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireSameElementType;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireSameMultiInstanceLoopCharacteristics;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireSameUserTaskImplementation;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireSequenceFlowExistsInTarget;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireSupportedElementType;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireUnchangedFlowScope;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireValidGatewayMapping;
+import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireValidTargetIncomingFlowCount;
 import static io.camunda.zeebe.engine.state.immutable.IncidentState.MISSING_INCIDENT;
 
 import io.camunda.zeebe.engine.Loggers;
@@ -24,6 +47,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejection
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
@@ -31,7 +55,6 @@ import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
@@ -77,7 +100,7 @@ public class ProcessInstanceMigrationMigrateProcessor
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
   private final JobState jobState;
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final VariableState variableState;
   private final IncidentState incidentState;
   private final EventScopeInstanceState eventScopeInstanceState;
@@ -101,7 +124,7 @@ public class ProcessInstanceMigrationMigrateProcessor
     elementInstanceState = processingState.getElementInstanceState();
     processState = processingState.getProcessState();
     jobState = processingState.getJobState();
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
     variableState = processingState.getVariableState();
     incidentState = processingState.getIncidentState();
     eventScopeInstanceState = processingState.getEventScopeInstanceState();
@@ -134,10 +157,10 @@ public class ProcessInstanceMigrationMigrateProcessor
 
     final var authorizationRequest =
         new AuthorizationRequest(
-                command,
-                AuthorizationResourceType.PROCESS_DEFINITION,
-                PermissionType.UPDATE_PROCESS_INSTANCE,
-                processInstance.getValue().getTenantId())
+            command,
+            AuthorizationResourceType.PROCESS_DEFINITION,
+            PermissionType.UPDATE_PROCESS_INSTANCE,
+            processInstance.getValue().getTenantId())
             .addResourceId(processInstance.getValue().getBpmnProcessId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {
@@ -145,9 +168,9 @@ public class ProcessInstanceMigrationMigrateProcessor
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
               ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
-                  "migrate a process instance",
-                  processInstance.getValue().getProcessInstanceKey(),
-                  "such process instance")
+              "migrate a process instance",
+              processInstance.getValue().getProcessInstanceKey(),
+              "such process instance")
               : rejection.reason();
       rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
       responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
@@ -346,9 +369,9 @@ public class ProcessInstanceMigrationMigrateProcessor
         throw new SafetyCheckFailedException(
             String.format(
                 """
-                Expected to migrate a job for process instance with key '%d', \
-                but could not find job with key '%d'. \
-                Please report this as a bug""",
+                    Expected to migrate a job for process instance with key '%d', \
+                    but could not find job with key '%d'. \
+                    Please report this as a bug""",
                 processInstanceKey, elementInstance.getJobKey()));
       }
       stateWriter.appendFollowUpEvent(
@@ -379,9 +402,9 @@ public class ProcessInstanceMigrationMigrateProcessor
         throw new SafetyCheckFailedException(
             String.format(
                 """
-                Expected to migrate a user task for process instance with key '%d', \
-                but could not find user task with key '%d'. \
-                Please report this as a bug""",
+                    Expected to migrate a user task for process instance with key '%d', \
+                    but could not find user task with key '%d'. \
+                    Please report this as a bug""",
                 processInstanceKey, elementInstance.getUserTaskKey()));
       }
       stateWriter.appendFollowUpEvent(
@@ -534,9 +557,9 @@ public class ProcessInstanceMigrationMigrateProcessor
       throw new SafetyCheckFailedException(
           String.format(
               """
-              Expected to migrate a user task for process instance with key '%d', \
-              but could not find incident with key '%d'. \
-              Please report this as a bug""",
+                  Expected to migrate a user task for process instance with key '%d', \
+                  but could not find incident with key '%d'. \
+                  Please report this as a bug""",
               elementInstanceRecord.getProcessInstanceKey(), incidentKey));
     }
     stateWriter.appendFollowUpEvent(
@@ -614,5 +637,7 @@ public class ProcessInstanceMigrationMigrateProcessor
     }
   }
 
-  record ActiveSequenceFlow(ExecutableSequenceFlow sequenceFlow, ExecutableFlowNode target) {}
+  record ActiveSequenceFlow(ExecutableSequenceFlow sequenceFlow, ExecutableFlowNode target) {
+
+  }
 }

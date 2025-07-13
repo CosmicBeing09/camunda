@@ -18,8 +18,8 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUse
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedForm;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.FormState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
@@ -96,16 +96,16 @@ public final class BpmnUserTaskBehavior {
         .flatMap(
             p ->
                 evaluateFormIdExpressionToFormKey(
-                        userTaskProps.getFormId(),
-                        userTaskProps.getFormBindingType(),
-                        userTaskProps.getFormVersionTag(),
-                        context,
-                        scopeKey)
+                    userTaskProps.getFormId(),
+                    userTaskProps.getFormBindingType(),
+                    userTaskProps.getFormVersionTag(),
+                    context,
+                    scopeKey)
                     .map(p::formKey))
         .flatMap(
             p ->
                 evaluateExternalFormReferenceExpression(
-                        userTaskProps.getExternalFormReference(), scopeKey)
+                    userTaskProps.getExternalFormReference(), scopeKey)
                     .map(p::externalFormReference))
         .flatMap(
             p ->
@@ -228,11 +228,11 @@ public final class BpmnUserTaskBehavior {
                                 new Failure(
                                     String.format(
                                         """
-                                        Expected to use a form with id '%s' with binding type 'deployment', \
-                                        but no such form found in the deployment with key %s which contained the current process. \
-                                        To resolve this incident, migrate the process instance to a process definition \
-                                        that is deployed together with the intended form to use.\
-                                        """,
+                                            Expected to use a form with id '%s' with binding type 'deployment', \
+                                            but no such form found in the deployment with key %s which contained the current process. \
+                                            To resolve this incident, migrate the process instance to a process definition \
+                                            that is deployed together with the intended form to use.\
+                                            """,
                                         formId, deploymentKey),
                                     ErrorType.FORM_NOT_FOUND,
                                     scopeKey))));
@@ -268,9 +268,9 @@ public final class BpmnUserTaskBehavior {
                     new Failure(
                         String.format(
                             """
-                            Expected to use a form with id '%s' and version tag '%s', but no such form found. \
-                            To resolve the incident, deploy a form with the given id and version tag.
-                            """,
+                                Expected to use a form with id '%s' and version tag '%s', but no such form found. \
+                                To resolve the incident, deploy a form with the given id and version tag.
+                                """,
                             formId, versionTag),
                         ErrorType.FORM_NOT_FOUND,
                         scopeKey)));

@@ -15,9 +15,9 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -67,7 +67,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
           """;
   private static final String
       TL_JOB_COMPLETION_WITH_ASSIGNEE_CORRECTION_ON_CREATING_NOT_SUPPORTED_MESSAGE =
-          """
+      """
           Expected to complete task listener job, but correcting the assignee on 'CREATING' event is \
           not supported when the user task has an assignee defined in the model \
           (job key '%d', type '%s', processInstanceKey '%d'). \
@@ -95,7 +95,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
           JobListenerEventType.UPDATING,
           JobListenerEventType.COMPLETING);
 
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
   private final JobProcessingMetrics jobMetrics;
@@ -106,7 +106,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
       final JobProcessingMetrics jobMetrics,
       final EventHandle eventHandle,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    userTaskState = state.getUserTaskState();
+    userTaskState = state.getAsyncRequestState();
     elementInstanceState = state.getElementInstanceState();
     defaultProcessor =
         new DefaultJobCommandPreconditionGuard(
@@ -199,7 +199,9 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
     }
   }
 
-  /** We currently don't support completing task listener jobs with variables. */
+  /**
+   * We currently don't support completing task listener jobs with variables.
+   */
   private Either<Rejection, JobRecord> checkTaskListenerJobForProvidingVariables(
       final TypedRecord<JobRecord> command, final JobRecord job) {
 

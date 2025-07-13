@@ -23,7 +23,7 @@ public final class UserTaskCompletedV1Applier
   private final MutableElementInstanceState elementInstanceState;
 
   public UserTaskCompletedV1Applier(final MutableProcessingState processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 

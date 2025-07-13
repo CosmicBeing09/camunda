@@ -12,9 +12,9 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -32,7 +32,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
   private static final String INVALID_USER_TASK_EMPTY_ASSIGNEE_MESSAGE =
       "Expected to claim user task with key '%d', but provided assignee is empty";
 
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
@@ -41,7 +41,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
       final ProcessingState state,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    userTaskState = state.getUserTaskState();
+    userTaskState = state.getAsyncRequestState();
     stateWriter = writers.state();
     responseWriter = writers.response();
     preconditionChecker =
@@ -49,7 +49,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
             List.of(LifecycleState.CREATED),
             "claim",
             UserTaskClaimProcessor::checkClaim,
-            state.getUserTaskState(),
+            state.getAsyncRequestState(),
             authCheckBehavior);
   }
 

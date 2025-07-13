@@ -7,9 +7,9 @@
  */
 package io.camunda.zeebe.engine.processing.job;
 
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
@@ -23,12 +23,12 @@ import org.agrona.DirectBuffer;
 public class JobVariablesCollector {
 
   private final VariableState variableState;
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final ElementInstanceState elementInstanceState;
 
   public JobVariablesCollector(final ProcessingState processingState) {
     variableState = processingState.getVariableState();
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 

@@ -14,10 +14,10 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -32,7 +32,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
   private static final String DEFAULT_ACTION = "complete";
 
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState asyncRequestState;
   private final EventHandle eventHandle;
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
@@ -45,7 +45,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
     elementInstanceState = state.getElementInstanceState();
-    userTaskState = state.getUserTaskState();
+    asyncRequestState = state.getAsyncRequestState();
     this.eventHandle = eventHandle;
     stateWriter = writers.state();
     commandWriter = writers.command();
@@ -54,7 +54,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
         new UserTaskCommandPreconditionChecker(
             List.of(LifecycleState.CREATED),
             "complete",
-            state.getUserTaskState(),
+            state.getAsyncRequestState(),
             authCheckBehavior);
   }
 
@@ -98,7 +98,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
        * Note: It's important to retrieve this metadata from the user task state before appending
        * the "COMPLETED" event, as it will be cleared by the "COMPLETED" event applier.
        */
-      final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
+      final var recordRequestMetadata = asyncRequestState.findRecordRequestMetadata(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 

@@ -12,9 +12,9 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -26,7 +26,7 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
 
   private static final String DEFAULT_ACTION = "assign";
 
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
@@ -35,12 +35,13 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
       final ProcessingState state,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    userTaskState = state.getUserTaskState();
+    userTaskState = state.getAsyncRequestState();
     stateWriter = writers.state();
     responseWriter = writers.response();
     preconditionChecker =
         new UserTaskCommandPreconditionChecker(
-            List.of(LifecycleState.CREATED), "assign", state.getUserTaskState(), authCheckBehavior);
+            List.of(LifecycleState.CREATED), "assign", state.getAsyncRequestState(),
+            authCheckBehavior);
   }
 
   @Override

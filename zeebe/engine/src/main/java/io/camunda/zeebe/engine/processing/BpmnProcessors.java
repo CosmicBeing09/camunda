@@ -105,7 +105,7 @@ public final class BpmnProcessors {
         processingState,
         keyGenerator,
         writers,
-        processingState.getUserTaskState(),
+        processingState.getAsyncRequestState(),
         authCheckBehavior);
     addProcessInstanceCreationStreamProcessors(
         typedRecordProcessors,

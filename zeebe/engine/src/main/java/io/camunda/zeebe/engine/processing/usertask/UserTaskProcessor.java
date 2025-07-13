@@ -23,10 +23,10 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejection
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandProcessor;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
@@ -156,10 +156,9 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
           writeRejectionForCommand(command, persistedRecord, UserTaskIntent.ASSIGNMENT_DENIED);
       case UPDATING ->
           writeRejectionForCommand(command, persistedRecord, UserTaskIntent.UPDATE_DENIED);
-      default ->
-          throw new IllegalArgumentException(
-              "Expected to reject operation for user task: '%d', but operation could not be determined from the task's current lifecycle state: '%s'"
-                  .formatted(command.getValue().getUserTaskKey(), lifecycleState));
+      default -> throw new IllegalArgumentException(
+          "Expected to reject operation for user task: '%d', but operation could not be determined from the task's current lifecycle state: '%s'"
+              .formatted(command.getValue().getUserTaskKey(), lifecycleState));
     }
   }
 
@@ -266,19 +265,18 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     recordRequestMetadata.ifPresent(
         metadata -> {
           switch (metadata.getTriggerType()) {
-            case USER_TASK ->
-                responseWriter.writeRejection(
-                    command.getKey(),
-                    mapDeniedIntentToResponseIntent(intent),
-                    command.getValue(),
-                    command.getValueType(),
-                    RejectionType.INVALID_STATE,
-                    mapDeniedIntentToResponseRejectionReason(
-                        intent,
-                        persistedRecord.getUserTaskKey(),
-                        command.getValue().getDeniedReason()),
-                    metadata.getRequestId(),
-                    metadata.getRequestStreamId());
+            case USER_TASK -> responseWriter.writeRejection(
+                command.getKey(),
+                mapDeniedIntentToResponseIntent(intent),
+                command.getValue(),
+                command.getValueType(),
+                RejectionType.INVALID_STATE,
+                mapDeniedIntentToResponseRejectionReason(
+                    intent,
+                    persistedRecord.getUserTaskKey(),
+                    command.getValue().getDeniedReason()),
+                metadata.getRequestId(),
+                metadata.getRequestStreamId());
             case VARIABLE_DOCUMENT -> {
               final long userTaskInstanceKey = command.getValue().getElementInstanceKey();
               variableState
@@ -306,10 +304,9 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
                             metadata.getRequestStreamId());
                       });
             }
-            default ->
-                throw new IllegalArgumentException(
-                    "Unexpected user task transition trigger type: '%s'"
-                        .formatted(metadata.getTriggerType()));
+            default -> throw new IllegalArgumentException(
+                "Unexpected user task transition trigger type: '%s'"
+                    .formatted(metadata.getTriggerType()));
           }
         });
   }
@@ -342,9 +339,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
       case UPDATING -> ZeebeTaskListenerEventType.updating;
       case COMPLETING -> ZeebeTaskListenerEventType.completing;
       case CANCELING -> ZeebeTaskListenerEventType.canceling;
-      default ->
-          throw new IllegalArgumentException(
-              "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
+      default -> throw new IllegalArgumentException(
+          "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
     };
   }
 
@@ -380,9 +376,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
           case UPDATING -> UserTaskIntent.UPDATE;
           case COMPLETING -> UserTaskIntent.COMPLETE;
           case CANCELING -> UserTaskIntent.CANCEL;
-          default ->
-              throw new IllegalArgumentException(
-                  "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
+          default -> throw new IllegalArgumentException(
+              "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
         };
 
     return commandProcessors.getCommandProcessor(userTaskIntent);

@@ -13,9 +13,9 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
@@ -34,7 +34,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
   private static final String DEFAULT_ACTION = "update";
 
   private final StateWriter stateWriter;
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final VariableState variableState;
   private final TypedResponseWriter responseWriter;
   private final VariableBehavior variableBehavior;
@@ -46,13 +46,14 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       final VariableBehavior variableBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     stateWriter = writers.state();
-    userTaskState = state.getUserTaskState();
+    userTaskState = state.getAsyncRequestState();
     variableState = state.getVariableState();
     this.variableBehavior = variableBehavior;
     responseWriter = writers.response();
     preconditionChecker =
         new UserTaskCommandPreconditionChecker(
-            List.of(LifecycleState.CREATED), "update", state.getUserTaskState(), authCheckBehavior);
+            List.of(LifecycleState.CREATED), "update", state.getAsyncRequestState(),
+            authCheckBehavior);
   }
 
   @Override
@@ -143,36 +144,32 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             metadata.getRequestId(),
             metadata.getRequestStreamId());
       }
-      default ->
-          throw new IllegalArgumentException(
-              "Unexpected user task transition trigger type: '%s'"
-                  .formatted(metadata.getTriggerType()));
+      default -> throw new IllegalArgumentException(
+          "Unexpected user task transition trigger type: '%s'"
+              .formatted(metadata.getTriggerType()));
     }
   }
 
   private void mergeVariables(
       final UserTaskRecord userTaskRecord, final VariableDocumentRecord variableRecord) {
     switch (variableRecord.getUpdateSemantics()) {
-      case LOCAL ->
-          variableBehavior.mergeLocalDocument(
-              userTaskRecord.getElementInstanceKey(),
-              userTaskRecord.getProcessDefinitionKey(),
-              userTaskRecord.getProcessInstanceKey(),
-              userTaskRecord.getBpmnProcessIdBuffer(),
-              userTaskRecord.getTenantId(),
-              variableRecord.getVariablesBuffer());
-      case PROPAGATE ->
-          variableBehavior.mergeDocument(
-              userTaskRecord.getElementInstanceKey(),
-              userTaskRecord.getProcessDefinitionKey(),
-              userTaskRecord.getProcessInstanceKey(),
-              userTaskRecord.getBpmnProcessIdBuffer(),
-              userTaskRecord.getTenantId(),
-              variableRecord.getVariablesBuffer());
-      default ->
-          throw new IllegalStateException(
-              "Unexpected variable update semantic: '%s'. Expected either 'LOCAL' or 'PROPAGATE'."
-                  .formatted(variableRecord.getUpdateSemantics()));
+      case LOCAL -> variableBehavior.mergeLocalDocument(
+          userTaskRecord.getElementInstanceKey(),
+          userTaskRecord.getProcessDefinitionKey(),
+          userTaskRecord.getProcessInstanceKey(),
+          userTaskRecord.getBpmnProcessIdBuffer(),
+          userTaskRecord.getTenantId(),
+          variableRecord.getVariablesBuffer());
+      case PROPAGATE -> variableBehavior.mergeDocument(
+          userTaskRecord.getElementInstanceKey(),
+          userTaskRecord.getProcessDefinitionKey(),
+          userTaskRecord.getProcessInstanceKey(),
+          userTaskRecord.getBpmnProcessIdBuffer(),
+          userTaskRecord.getTenantId(),
+          variableRecord.getVariablesBuffer());
+      default -> throw new IllegalStateException(
+          "Unexpected variable update semantic: '%s'. Expected either 'LOCAL' or 'PROPAGATE'."
+              .formatted(variableRecord.getUpdateSemantics()));
     }
   }
 }

@@ -81,7 +81,8 @@ import java.util.function.Supplier;
 
 public final class EngineProcessors {
 
-  private EngineProcessors() {}
+  private EngineProcessors() {
+  }
 
   public static TypedRecordProcessors createEngineProcessors(
       final TypedRecordProcessorContext typedRecordProcessorContext,
@@ -333,7 +334,7 @@ public final class EngineProcessors {
       final AuthorizationCheckBehavior authCheckBehavior) {
     return new UserTaskProcessor(
         processingState,
-        processingState.getUserTaskState(),
+        processingState.getAsyncRequestState(),
         processingState.getKeyGenerator(),
         bpmnBehaviors,
         writers,

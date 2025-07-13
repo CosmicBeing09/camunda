@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.state.instance;
 
 import io.camunda.zeebe.db.DbValue;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.msgpack.property.EnumProperty;
 import io.camunda.zeebe.msgpack.property.ObjectProperty;
@@ -20,9 +20,9 @@ import java.util.Objects;
  * `COMPLETE`, `UPDATE`, `ASSIGN` etc. mainly when task listeners are defined for these operations.
  *
  * <p>The intermediate state includes a {@link UserTaskRecord} that captures the state of the user
- * task as it was when the command (e.g., COMPLETE, ASSIGN) was invoked. It also tracks the {@link
- * LifecycleState} of the task, representing the current state in its lifecycle (e.g., COMPLETING,
- * ASSIGNING).
+ * task as it was when the command (e.g., COMPLETE, ASSIGN) was invoked. It also tracks the
+ * {@link LifecycleState} of the task, representing the current state in its lifecycle (e.g.,
+ * COMPLETING, ASSIGNING).
  *
  * <p>This state is stored immediately after the user task command is invoked and before the task
  * listeners are executed. It is used to finalize the command after all task listeners have been
