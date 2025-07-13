@@ -88,10 +88,10 @@ public record IncidentFilter(
     }
 
     public Builder errorTypes(final ErrorType value, final ErrorType... values) {
-      return errorTypes(collectValues(value, values));
+      return errorTypeOperations(collectValues(value, values));
     }
 
-    public Builder errorTypes(final List<ErrorType> values) {
+    public Builder errorTypeOperations(final List<ErrorType> values) {
       errorTypes = addValuesToList(errorTypes, values);
       return this;
     }
