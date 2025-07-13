@@ -51,53 +51,53 @@ public record IncidentFilter(
     private List<Long> jobKeys;
     private List<String> tenantIds;
 
-    public Builder incidentKeys(final Long value, final Long... values) {
-      return incidentKeys(collectValues(value, values));
+    public Builder incidentKeys(final Long value, final Long... operations) {
+      return incidentKeys(collectValues(value, operations));
     }
 
-    public Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+    public Builder incidentKeys(final List<Long> operations) {
+      incidentKeys = addValuesToList(incidentKeys, operations);
       return this;
     }
 
-    public Builder processDefinitionKeys(final Long value, final Long... values) {
-      return processDefinitionKeys(collectValues(value, values));
+    public Builder processDefinitionKeys(final Long value, final Long... operations) {
+      return processDefinitionKeys(collectValues(value, operations));
     }
 
-    public Builder processDefinitionKeys(final List<Long> values) {
-      processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
+    public Builder processDefinitionKeys(final List<Long> operations) {
+      processDefinitionKeys = addValuesToList(processDefinitionKeys, operations);
       return this;
     }
 
-    public Builder processDefinitionIds(final String value, final String... values) {
-      return processDefinitionIds(collectValues(value, values));
+    public Builder processDefinitionIds(final String value, final String... operations) {
+      return processDefinitionIds(collectValues(value, operations));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public Builder processDefinitionIds(final List<String> operations) {
+      processDefinitionIds = addValuesToList(processDefinitionIds, operations);
       return this;
     }
 
-    public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeys(collectValues(value, values));
+    public Builder processInstanceKeys(final Long value, final Long... operations) {
+      return processInstanceKeys(collectValues(value, operations));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public Builder processInstanceKeys(final List<Long> operations) {
+      processInstanceKeys = addValuesToList(processInstanceKeys, operations);
       return this;
     }
 
-    public Builder errorTypes(final ErrorType value, final ErrorType... values) {
-      return errorTypes(collectValues(value, values));
+    public Builder errorTypes(final ErrorType value, final ErrorType... operations) {
+      return errorTypes(collectValues(value, operations));
     }
 
-    public Builder errorTypes(final List<ErrorType> values) {
-      errorTypes = addValuesToList(errorTypes, values);
+    public Builder errorTypes(final List<ErrorType> operations) {
+      errorTypes = addValuesToList(errorTypes, operations);
       return this;
     }
 
-    public Builder errorMessages(final String value, final String... values) {
-      return errorMessages(collectValues(value, values));
+    public Builder errorMessages(final String value, final String... operations) {
+      return errorMessages(collectValues(value, operations));
     }
 
     public Builder errorMessages(final List<String> values) {
