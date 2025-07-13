@@ -237,8 +237,8 @@ public final class VariableDocumentUpdateProcessor
         new UserTaskTransitionTriggerRequestMetadata()
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.VARIABLE_DOCUMENT)
-            .setRequestId(command.getRequestId())
-            .setRequestStreamId(command.getRequestStreamId());
+            .setRequestId(command.getId())
+            .setRequestStreamId(command.getStreamId());
     userTaskState.storeRecordTrigger(userTaskKey, metadata);
   }
 }

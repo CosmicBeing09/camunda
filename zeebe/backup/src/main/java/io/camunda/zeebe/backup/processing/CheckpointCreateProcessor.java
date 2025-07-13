@@ -23,6 +23,7 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import java.util.Set;
 
 public final class CheckpointCreateProcessor {
+
   private final CheckpointState checkpointState;
   private final BackupManager backupManager;
 
@@ -102,8 +103,8 @@ public final class CheckpointCreateProcessor {
           ValueType.CHECKPOINT,
           RejectionType.NULL_VAL,
           "",
-          command.getRequestId(),
-          command.getRequestStreamId());
+          command.getId(),
+          command.getStreamId());
     }
     return resultBuilder.build();
   }

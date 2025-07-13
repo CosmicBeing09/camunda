@@ -17,6 +17,7 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import java.util.Map;
 
 public class UnwrittenRecord implements TypedRecord {
+
   private final long key;
   private final int partitionId;
   private final UnifiedRecordValue value;
@@ -109,12 +110,12 @@ public class UnwrittenRecord implements TypedRecord {
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getStreamId() {
     return metadata.getRequestStreamId();
   }
 
   @Override
-  public long getRequestId() {
+  public long getId() {
     return metadata.getRequestId();
   }
 

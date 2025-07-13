@@ -101,8 +101,8 @@ public final class MessageCorrelationCorrelateProcessor
     final long messageKey = keyGenerator.nextKey();
     messageCorrelationRecord
         .setMessageKey(messageKey)
-        .setRequestId(command.getRequestId())
-        .setRequestStreamId(command.getRequestStreamId());
+        .setRequestId(command.getId())
+        .setRequestStreamId(command.getStreamId());
 
     final var messageRecord =
         new MessageRecord()
