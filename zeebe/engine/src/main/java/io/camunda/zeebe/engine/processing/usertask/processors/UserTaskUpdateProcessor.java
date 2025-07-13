@@ -97,7 +97,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     }
 
     final var metadata = recordRequestMetadata.get();
-    switch (metadata.getTriggerType()) {
+    switch (metadata.getValueType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
         responseWriter.writeResponse(
@@ -143,36 +143,32 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             metadata.getRequestId(),
             metadata.getRequestStreamId());
       }
-      default ->
-          throw new IllegalArgumentException(
-              "Unexpected user task transition trigger type: '%s'"
-                  .formatted(metadata.getTriggerType()));
+      default -> throw new IllegalArgumentException(
+          "Unexpected user task transition trigger type: '%s'"
+              .formatted(metadata.getValueType()));
     }
   }
 
   private void mergeVariables(
       final UserTaskRecord userTaskRecord, final VariableDocumentRecord variableRecord) {
     switch (variableRecord.getUpdateSemantics()) {
-      case LOCAL ->
-          variableBehavior.mergeLocalDocument(
-              userTaskRecord.getElementInstanceKey(),
-              userTaskRecord.getProcessDefinitionKey(),
-              userTaskRecord.getProcessInstanceKey(),
-              userTaskRecord.getBpmnProcessIdBuffer(),
-              userTaskRecord.getTenantId(),
-              variableRecord.getVariablesBuffer());
-      case PROPAGATE ->
-          variableBehavior.mergeDocument(
-              userTaskRecord.getElementInstanceKey(),
-              userTaskRecord.getProcessDefinitionKey(),
-              userTaskRecord.getProcessInstanceKey(),
-              userTaskRecord.getBpmnProcessIdBuffer(),
-              userTaskRecord.getTenantId(),
-              variableRecord.getVariablesBuffer());
-      default ->
-          throw new IllegalStateException(
-              "Unexpected variable update semantic: '%s'. Expected either 'LOCAL' or 'PROPAGATE'."
-                  .formatted(variableRecord.getUpdateSemantics()));
+      case LOCAL -> variableBehavior.mergeLocalDocument(
+          userTaskRecord.getElementInstanceKey(),
+          userTaskRecord.getProcessDefinitionKey(),
+          userTaskRecord.getProcessInstanceKey(),
+          userTaskRecord.getBpmnProcessIdBuffer(),
+          userTaskRecord.getTenantId(),
+          variableRecord.getVariablesBuffer());
+      case PROPAGATE -> variableBehavior.mergeDocument(
+          userTaskRecord.getElementInstanceKey(),
+          userTaskRecord.getProcessDefinitionKey(),
+          userTaskRecord.getProcessInstanceKey(),
+          userTaskRecord.getBpmnProcessIdBuffer(),
+          userTaskRecord.getTenantId(),
+          variableRecord.getVariablesBuffer());
+      default -> throw new IllegalStateException(
+          "Unexpected variable update semantic: '%s'. Expected either 'LOCAL' or 'PROPAGATE'."
+              .formatted(variableRecord.getUpdateSemantics()));
     }
   }
 }
