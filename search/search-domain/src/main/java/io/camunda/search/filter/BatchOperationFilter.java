@@ -15,9 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationFilter(
-    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationFilter> {
 
@@ -35,10 +33,10 @@ public record BatchOperationFilter(
     }
 
     public Builder operationTypes(final String value, final String... values) {
-      return operationTypes(collectValues(value, values));
+      return operationTypeOperations(collectValues(value, values));
     }
 
-    public Builder operationTypes(final List<String> values) {
+    public Builder operationTypeOperations(final List<String> values) {
       operationTypes = addValuesToList(operationTypes, values);
       return this;
     }
@@ -61,3 +59,6 @@ public record BatchOperationFilter(
     }
   }
 }
+    implements
+public record BatchOperationFilter(
+    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
