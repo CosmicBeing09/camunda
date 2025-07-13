@@ -59,10 +59,10 @@ public record BatchOperationFilter(
     }
 
     public Builder states(final String value, final String... values) {
-      return state(collectValues(value, values));
+      return states(collectValues(value, values));
     }
 
-    public Builder state(final List<String> values) {
+    public Builder states(final List<String> values) {
       states = addValuesToList(states, values);
       return this;
     }
