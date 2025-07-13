@@ -20,7 +20,7 @@ public interface SearchRequestPage {
   /**
    * Start the page from.
    */
-  SearchRequestPage from(final Integer value);
+  SearchRequestPage cursor(final Integer value);
 
   /**
    * Limit the the number of returned entities.

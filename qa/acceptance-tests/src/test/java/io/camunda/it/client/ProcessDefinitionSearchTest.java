@@ -63,7 +63,7 @@ public class ProcessDefinitionSearchTest {
     final var resultSearchFrom =
         camundaClient
             .newProcessDefinitionSearchRequest()
-            .page(p -> p.limit(2).from(2))
+            .page(p -> p.limit(2).cursor(2))
             .send()
             .join();
 

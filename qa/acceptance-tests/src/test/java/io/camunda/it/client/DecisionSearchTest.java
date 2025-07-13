@@ -598,7 +598,7 @@ class DecisionSearchTest {
     final var resultSearchFrom =
         camundaClient
             .newDecisionRequirementsSearchRequest()
-            .page(p -> p.limit(2).from(2))
+            .page(p -> p.limit(2).cursor(2))
             .send()
             .join();
 

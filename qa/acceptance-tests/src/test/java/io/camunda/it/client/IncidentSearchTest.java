@@ -547,7 +547,7 @@ class IncidentSearchTest {
     final var firstIncidentKey = resultAll.items().get(0).getIncidentKey();
 
     final var result =
-        camundaClient.newIncidentSearchRequest().page(p -> p.limit(2).from(1)).send().join();
+        camundaClient.newIncidentSearchRequest().page(p -> p.limit(2).cursor(1)).send().join();
     final var resultSearchBefore =
         camundaClient
             .newIncidentSearchRequest()
@@ -572,7 +572,7 @@ class IncidentSearchTest {
     final var thirdKey = resultAll.items().get(2).getIncidentKey();
 
     final var resultSearchFrom =
-        camundaClient.newIncidentSearchRequest().page(p -> p.limit(2).from(2)).send().join();
+        camundaClient.newIncidentSearchRequest().page(p -> p.limit(2).cursor(2)).send().join();
 
     // then
     assertThat(resultSearchFrom.items().stream().findFirst().get().getIncidentKey())
