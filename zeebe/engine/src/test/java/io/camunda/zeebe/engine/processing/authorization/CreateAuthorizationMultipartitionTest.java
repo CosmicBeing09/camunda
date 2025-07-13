@@ -7,12 +7,10 @@
  */
 package io.camunda.zeebe.engine.processing.authorization;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
@@ -34,8 +32,10 @@ public class CreateAuthorizationMultipartitionTest {
 
   private static final int PARTITION_COUNT = 3;
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
-  @Rule public final TestWatcher recordingExporterTestWatcher = new RecordingExporterTestWatcher();
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final TestWatcher recordingExporterTestWatcher = new RecordingExporterTestWatcher();
 
   @Test
   public void shouldTestLifecycle() {
@@ -55,15 +55,15 @@ public class CreateAuthorizationMultipartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED))
-                .filter(
-                    record ->
-                        record.getValueType() == ValueType.AUTHORIZATION
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == AuthorizationIntent.CREATE)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED))
+            .filter(
+                record ->
+                    record.getValueType() == ValueType.AUTHORIZATION
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == AuthorizationIntent.CREATE)))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
@@ -91,11 +91,11 @@ public class CreateAuthorizationMultipartitionTest {
 
     for (int partitionId = 2; partitionId < PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.authorizationRecords()
-                  .withAuthorizationKey(authorizationKey)
-                  .withPartitionId(partitionId)
-                  .limit(r -> r.getIntent().equals(AuthorizationIntent.CREATED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.authorizationRecords()
+              .withAuthorizationKey(authorizationKey)
+              .withPartitionId(partitionId)
+              .limit(r -> r.getIntent().equals(AuthorizationIntent.CREATED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .endsWith(AuthorizationIntent.CREATE, AuthorizationIntent.CREATED);
     }
@@ -116,9 +116,9 @@ public class CreateAuthorizationMultipartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .limit(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED))
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .limit(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED))
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());
   }
@@ -128,7 +128,8 @@ public class CreateAuthorizationMultipartitionTest {
     // given the user creation distribution is intercepted
     engine.getProcessingState().getRoutingState().currentPartitions().stream()
         .skip(1)
-        .forEach(partition -> engine.interceptInterPartitionIntent(partition, UserIntent.CREATE));
+        .forEach(
+            partitionId -> engine.interceptInterPartitionIntent(partitionId, UserIntent.CREATE));
     engine
         .user()
         .newUser("foo")
@@ -154,8 +155,8 @@ public class CreateAuthorizationMultipartitionTest {
 
     // then
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .limit(2))
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
             tuple(ValueType.USER, UserIntent.CREATE),
