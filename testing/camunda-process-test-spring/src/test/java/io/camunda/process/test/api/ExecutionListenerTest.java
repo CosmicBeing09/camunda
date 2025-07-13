@@ -32,7 +32,7 @@ import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
 import io.camunda.process.test.impl.proxy.ZeebeClientProxy;
 import io.camunda.process.test.impl.runtime.CamundaContainerRuntime;
-import io.camunda.process.test.impl.runtime.CamundaContainerRuntimeBuilder;
+import io.camunda.process.test.impl.runtime.CamundaRuntimeBuilder;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultCollector;
 import io.camunda.process.test.impl.testresult.ProcessTestResult;
 import io.camunda.spring.client.event.CamundaClientClosingEvent;
@@ -63,36 +63,55 @@ public class ExecutionListenerTest {
   private static final URI GRPC_API_ADDRESS = URI.create("http://my-host:100");
   private static final URI REST_API_ADDRESS = URI.create("http://my-host:200");
 
-  private static final Consumer<String> NOOP = s -> {};
+  private static final Consumer<String> NOOP = s -> {
+  };
 
   @Mock(answer = Answers.RETURNS_SELF)
-  private CamundaContainerRuntimeBuilder camundaContainerRuntimeBuilder;
+  private CamundaRuntimeBuilder camundaContainerRuntimeBuilder;
 
-  @Mock private CamundaContainerRuntime camundaContainerRuntime;
-  @Mock private CamundaContainer camundaContainer;
-  @Mock private ConnectorsContainer connectorsContainer;
+  @Mock
+  private CamundaContainerRuntime camundaContainerRuntime;
+  @Mock
+  private CamundaContainer camundaContainer;
+  @Mock
+  private ConnectorsContainer connectorsContainer;
 
-  @Mock private CamundaClientProxy camundaClientProxy;
-  @Mock private ZeebeClientProxy zeebeClientProxy;
-  @Mock private CamundaProcessTestContextProxy camundaProcessTestContextProxy;
-  @Mock private CamundaManagementClient camundaManagementClient;
-  @Mock private CamundaProcessTestResultCollector camundaProcessTestResultCollector;
+  @Mock
+  private CamundaClientProxy camundaClientProxy;
+  @Mock
+  private ZeebeClientProxy zeebeClientProxy;
+  @Mock
+  private CamundaProcessTestContextProxy camundaProcessTestContextProxy;
+  @Mock
+  private CamundaManagementClient camundaManagementClient;
+  @Mock
+  private CamundaProcessTestResultCollector camundaProcessTestResultCollector;
 
-  @Mock private TestContext testContext;
+  @Mock
+  private TestContext testContext;
 
   @Mock(answer = Answers.RETURNS_SMART_NULLS)
   private ApplicationContext applicationContext;
 
-  @Mock private JsonMapper jsonMapper;
-  @Mock private io.camunda.zeebe.client.api.JsonMapper zeebeClientJsonMapper;
+  @Mock
+  private JsonMapper jsonMapper;
+  @Mock
+  private io.camunda.zeebe.client.api.JsonMapper zeebeClientJsonMapper;
 
-  @Captor private ArgumentCaptor<CamundaClient> camundaClientArgumentCaptor;
-  @Captor private ArgumentCaptor<ZeebeClient> zeebeClientArgumentCaptor;
-  @Captor private ArgumentCaptor<CamundaProcessTestContext> camundaProcessTestContextArgumentCaptor;
-  @Captor private ArgumentCaptor<CamundaClientCreatedEvent> camundaClientCreatedEventArgumentCaptor;
-  @Captor private ArgumentCaptor<CamundaClientClosingEvent> camundaClientClosingEventArgumentCaptor;
-  @Captor private ArgumentCaptor<ZeebeClientCreatedEvent> zeebeClientCreatedEventArgumentCaptor;
-  @Captor private ArgumentCaptor<ZeebeClientClosingEvent> zeebeClientClosingEventArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<CamundaClient> camundaClientArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<ZeebeClient> zeebeClientArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<CamundaProcessTestContext> camundaProcessTestContextArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<CamundaClientCreatedEvent> camundaClientCreatedEventArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<CamundaClientClosingEvent> camundaClientClosingEventArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<ZeebeClientCreatedEvent> zeebeClientCreatedEventArgumentCaptor;
+  @Captor
+  private ArgumentCaptor<ZeebeClientClosingEvent> zeebeClientClosingEventArgumentCaptor;
 
   @BeforeEach
   void configureMocks() {
@@ -189,7 +208,7 @@ public class ExecutionListenerTest {
         new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
 
     when(applicationContext.getBeanNamesForType(JsonMapper.class))
-        .thenReturn(new String[] {"camundaJsonMapper"});
+        .thenReturn(new String[]{"camundaJsonMapper"});
 
     when(applicationContext.getBean(JsonMapper.class)).thenReturn(jsonMapper);
 
@@ -213,9 +232,9 @@ public class ExecutionListenerTest {
     final CamundaProcessTestExecutionListener listener =
         new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
 
-    when(applicationContext.getBeanNamesForType(JsonMapper.class)).thenReturn(new String[] {});
+    when(applicationContext.getBeanNamesForType(JsonMapper.class)).thenReturn(new String[]{});
     when(applicationContext.getBeanNamesForType(io.camunda.zeebe.client.api.JsonMapper.class))
-        .thenReturn(new String[] {"zeebeJsonMapper"});
+        .thenReturn(new String[]{"zeebeJsonMapper"});
 
     when(applicationContext.getBean(io.camunda.zeebe.client.api.JsonMapper.class))
         .thenReturn(zeebeClientJsonMapper);

@@ -25,7 +25,7 @@ import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
 import io.camunda.process.test.impl.proxy.ZeebeClientProxy;
 import io.camunda.process.test.impl.runtime.CamundaContainerRuntime;
-import io.camunda.process.test.impl.runtime.CamundaContainerRuntimeBuilder;
+import io.camunda.process.test.impl.runtime.CamundaRuntimeBuilder;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultCollector;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultPrinter;
 import io.camunda.process.test.impl.testresult.ProcessTestResult;
@@ -73,7 +73,7 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
   private static final Logger LOG =
       LoggerFactory.getLogger(CamundaProcessTestExecutionListener.class);
 
-  private final CamundaContainerRuntimeBuilder containerRuntimeBuilder;
+  private final CamundaRuntimeBuilder containerRuntimeBuilder;
   private final CamundaProcessTestResultPrinter processTestResultPrinter;
   private final List<AutoCloseable> createdClients = new ArrayList<>();
 
@@ -89,7 +89,7 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
   }
 
   CamundaProcessTestExecutionListener(
-      final CamundaContainerRuntimeBuilder containerRuntimeBuilder,
+      final CamundaRuntimeBuilder containerRuntimeBuilder,
       final Consumer<String> testResultPrintStream) {
     this.containerRuntimeBuilder = containerRuntimeBuilder;
     processTestResultPrinter = new CamundaProcessTestResultPrinter(testResultPrintStream);
