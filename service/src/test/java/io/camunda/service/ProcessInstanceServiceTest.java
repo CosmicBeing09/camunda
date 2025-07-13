@@ -187,7 +187,8 @@ public final class ProcessInstanceServiceTest {
   void shouldCancelProcessInstanceBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(
+            b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -210,8 +211,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
   }
 
@@ -283,7 +284,8 @@ public final class ProcessInstanceServiceTest {
   void shouldResolveIncidentBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(
+            b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -305,8 +307,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
   }
 
@@ -314,7 +316,8 @@ public final class ProcessInstanceServiceTest {
   void shouldMigrateProcessInstanceBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(
+            b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -346,8 +349,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
 
     final var modificationPlan = enrichedRecord.getMigrationPlan();
@@ -362,7 +365,8 @@ public final class ProcessInstanceServiceTest {
   void shouldModifyProcessInstanceBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(
+            b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -393,8 +397,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
 
     final var filterBuffer = enrichedRecord.getEntityFilterBuffer();
@@ -413,9 +417,9 @@ public final class ProcessInstanceServiceTest {
 
   private void authorizeProcessReadInstance(final boolean authorize, final String processId) {
     when(securityContextProvider.isAuthorized(
-            processId,
-            authentication,
-            Authorization.of(a -> a.processDefinition().readProcessInstance())))
+        processId,
+        authentication,
+        Authorization.of(a -> a.processDefinition().readProcessInstance())))
         .thenReturn(authorize);
   }
 
