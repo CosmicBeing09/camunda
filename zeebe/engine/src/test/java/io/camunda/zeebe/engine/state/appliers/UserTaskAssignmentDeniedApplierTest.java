@@ -23,16 +23,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskAssignmentDeniedApplierTest {
 
-  /** Injected by {@link ProcessingStateExtension} */
+  /**
+   * Injected by {@link ProcessingStateExtension}
+   */
   private MutableProcessingState processingState;
 
-  /** The class under test. */
+  /**
+   * The class under test.
+   */
   private UserTaskAssignmentDeniedApplier userTaskAssignmentDeniedApplierApplier;
 
-  /** Used for state assertions. */
+  /**
+   * Used for state assertions.
+   */
   private MutableUserTaskState userTaskState;
 
-  /** For setting up the state before testing the applier. */
+  /**
+   * For setting up the state before testing the applier.
+   */
   private AppliersTestSetupHelper testSetup;
 
   @BeforeEach
@@ -74,7 +82,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey))
         .describedAs("Expect that intermediate state is not present anymore")
         .isNull();
-    Assertions.assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    Assertions.assertThat(userTaskState.findUserTaskMetadata(userTaskKey))
         .describedAs("Expect that record request metadata is not present anymore")
         .isEmpty();
     Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())
