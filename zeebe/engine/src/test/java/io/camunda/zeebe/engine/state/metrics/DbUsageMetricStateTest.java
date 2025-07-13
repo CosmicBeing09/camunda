@@ -37,7 +37,7 @@ public class DbUsageMetricStateTest {
     final var eventTime = InstantSource.system().millis();
 
     // when
-    state.createRPIMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordRPIMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
     final var actual = state.getTenantIdPIsMapByEventTime(eventTime);
@@ -52,10 +52,10 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.createRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.createRPIMetric(eventTime2, 10L, "tenant1");
-    state.createRPIMetric(eventTime2, 11L, "tenant1");
-    state.createRPIMetric(eventTime2, 12L, "tenant2");
+    state.recordRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordRPIMetric(eventTime2, 10L, "tenant1");
+    state.recordRPIMetric(eventTime2, 11L, "tenant1");
+    state.recordRPIMetric(eventTime2, 12L, "tenant2");
 
     // when
     final var actual1 = state.getTenantIdPIsMapByEventTime(eventTime1);
@@ -76,10 +76,10 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.createRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.createRPIMetric(eventTime2, 10L, "tenant1");
-    state.createRPIMetric(eventTime2, 11L, "tenant1");
-    state.createRPIMetric(eventTime2, 12L, "tenant2");
+    state.recordRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordRPIMetric(eventTime2, 10L, "tenant1");
+    state.recordRPIMetric(eventTime2, 11L, "tenant1");
+    state.recordRPIMetric(eventTime2, 12L, "tenant2");
     assertThat(state.getTenantIdPIsMapByEventTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
