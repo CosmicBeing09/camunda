@@ -37,7 +37,13 @@ import io.camunda.client.api.worker.JobWorker;
 import io.camunda.qa.util.multidb.MultiDbTest;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.random.RandomGenerator;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.AfterAll;
@@ -708,7 +714,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
               // then
               assertThat(result.items().size()).isEqualTo(3);
               assertThat(
-                      result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+                  result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
                   .containsExactlyInAnyOrder(
                       "parent_process_v1", "child_process_v1", "manual_process");
             });
@@ -1044,7 +1050,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
@@ -1071,7 +1077,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
@@ -1463,7 +1469,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
