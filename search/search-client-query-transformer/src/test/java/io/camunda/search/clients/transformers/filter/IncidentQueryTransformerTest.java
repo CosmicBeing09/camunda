@@ -244,7 +244,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByTenantId() {
-    final var filter = FilterBuilders.incident(f -> f.tenantIds("Homer"));
+    final var filter = FilterBuilders.incident(f -> f.tenantIdOperations("Homer"));
 
     // when
     final var searchRequest = transformQuery(filter);

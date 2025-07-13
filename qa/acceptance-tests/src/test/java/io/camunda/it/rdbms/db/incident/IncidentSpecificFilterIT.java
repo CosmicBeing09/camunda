@@ -45,9 +45,11 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = {"spring.liquibase.enabled=false", "camunda.database.type=rdbms"})
 public class IncidentSpecificFilterIT {
 
-  @Autowired private RdbmsService rdbmsService;
+  @Autowired
+  private RdbmsService rdbmsService;
 
-  @Autowired private IncidentReader processDefinitionReader;
+  @Autowired
+  private IncidentReader processDefinitionReader;
 
   private RdbmsWriter rdbmsWriter;
 
@@ -105,6 +107,6 @@ public class IncidentSpecificFilterIT {
                 new DateValueFilter(
                     NOW.minus(1, ChronoUnit.MILLIS), NOW.plus(1, ChronoUnit.MILLIS)))
             .build(),
-        new IncidentFilter.Builder().tenantIds("sorting-tenant1").build());
+        new IncidentFilter.Builder().tenantIdOperations("sorting-tenant1").build());
   }
 }
