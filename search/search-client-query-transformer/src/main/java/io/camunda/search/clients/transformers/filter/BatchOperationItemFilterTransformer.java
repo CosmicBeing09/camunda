@@ -7,8 +7,13 @@
  */
 package io.camunda.search.clients.transformers.filter;
 
-import static io.camunda.search.clients.query.SearchQueryBuilders.*;
-import static io.camunda.webapps.schema.descriptors.template.OperationTemplate.*;
+import static io.camunda.search.clients.query.SearchQueryBuilders.and;
+import static io.camunda.search.clients.query.SearchQueryBuilders.longTerms;
+import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
+import static io.camunda.webapps.schema.descriptors.template.OperationTemplate.BATCH_OPERATION_ID;
+import static io.camunda.webapps.schema.descriptors.template.OperationTemplate.ITEM_KEY;
+import static io.camunda.webapps.schema.descriptors.template.OperationTemplate.PROCESS_INSTANCE_KEY;
+import static io.camunda.webapps.schema.descriptors.template.OperationTemplate.STATE;
 
 import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.filter.BatchOperationItemFilter;
@@ -30,7 +35,7 @@ public final class BatchOperationItemFilterTransformer
     Optional.ofNullable(stringTerms(BATCH_OPERATION_ID, filter.batchOperationIds()))
         .ifPresent(queries::add);
     Optional.ofNullable(stringTerms(STATE, filter.state())).ifPresent(queries::add);
-    Optional.ofNullable(longTerms(ITEM_KEY, filter.itemKeys())).ifPresent(queries::add);
+    Optional.ofNullable(longTerms(ITEM_KEY, filter.itemKeyOperations())).ifPresent(queries::add);
     Optional.ofNullable(longTerms(PROCESS_INSTANCE_KEY, filter.processInstanceKeys()))
         .ifPresent(queries::add);
 
