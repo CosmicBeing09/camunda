@@ -25,7 +25,7 @@ public record BatchOperationFilter(
     private List<String> operationTypes;
     private List<String> state;
 
-    public Builder batchOperationIds(final String value, final String... values) {
+    public Builder batchOperationIdOperations(final String value, final String... values) {
       return batchOperationIds(collectValues(value, values));
     }
 

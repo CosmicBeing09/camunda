@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record BatchOperationItemFilter(
-    List<String> batchOperationIds,
+    List<String> batchOperationIdOperations,
     List<Long> itemKeys,
     List<Long> processInstanceKeys,
     List<String> state)
@@ -24,17 +24,17 @@ public record BatchOperationItemFilter(
 
   public static final class Builder implements ObjectBuilder<BatchOperationItemFilter> {
 
-    private List<String> batchOperationIds;
+    private List<String> batchOperationIdOperations;
     private List<Long> itemKeys;
     private List<Long> processInstanceKeys;
     private List<String> state;
 
-    public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIds(collectValues(value, values));
+    public Builder batchOperationIdOperations(final String value, final String... values) {
+      return batchOperationIdOperations(collectValues(value, values));
     }
 
-    public Builder batchOperationIds(final List<String> values) {
-      batchOperationIds = addValuesToList(batchOperationIds, values);
+    public Builder batchOperationIdOperations(final List<String> values) {
+      batchOperationIdOperations = addValuesToList(batchOperationIdOperations, values);
       return this;
     }
 
@@ -68,7 +68,7 @@ public record BatchOperationItemFilter(
     @Override
     public BatchOperationItemFilter build() {
       return new BatchOperationItemFilter(
-          Objects.requireNonNullElse(batchOperationIds, Collections.emptyList()),
+          Objects.requireNonNullElse(batchOperationIdOperations, Collections.emptyList()),
           Objects.requireNonNullElse(itemKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
           Objects.requireNonNullElse(state, Collections.emptyList()));

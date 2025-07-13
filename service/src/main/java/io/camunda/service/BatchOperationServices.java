@@ -76,7 +76,8 @@ public final class BatchOperationServices
                 securityContextProvider.provideSecurityContext(
                     authentication, Authorization.of(a -> a.batchOperation().read())))
             .searchBatchOperations(
-                batchOperationQuery(q -> q.filter(f -> f.batchOperationIds(batchOperationId))));
+                batchOperationQuery(
+                    q -> q.filter(f -> f.batchOperationIdOperations(batchOperationId))));
     return getSingleResultOrThrow(result, batchOperationId, "BatchOperation");
   }
 
