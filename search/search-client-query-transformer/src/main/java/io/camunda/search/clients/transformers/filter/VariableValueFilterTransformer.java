@@ -31,11 +31,11 @@ public final class VariableValueFilterTransformer
   public SearchQuery toSearchQuery(
       final VariableValueFilter value, final String varName, final String varValue) {
     final var variableNameQuery = term(varName, value.name());
-    if (value.valueOperations().isEmpty()) {
+    if (value.processDefinitionKeyOperations().isEmpty()) {
       return variableNameQuery;
     }
 
-    final var valueQueries = variableOperations(varValue, value.valueOperations());
+    final var valueQueries = variableOperations(varValue, value.processDefinitionKeyOperations());
     final var queries = new ArrayList<>(Collections.singletonList(variableNameQuery));
     queries.addAll(valueQueries);
     return and(queries);

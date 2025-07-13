@@ -13,7 +13,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public record VariableValueFilter(String name, List<UntypedOperation> valueOperations)
+public record VariableValueFilter(String name,
+                                  List<UntypedOperation> processDefinitionKeyOperations)
     implements FilterBase {
 
   @Override
@@ -23,7 +24,7 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
         + name
         + ", "
         + "valueOperation="
-        + valueOperations
+        + processDefinitionKeyOperations
         + ']';
   }
 
@@ -31,7 +32,7 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
       implements ObjectBuilder<VariableValueFilter>, ListBuilder<VariableValueFilter> {
 
     private String name;
-    private final List<UntypedOperation> valueOperations = new ArrayList<>();
+    private final List<UntypedOperation> processDefinitionKeyOperations = new ArrayList<>();
 
     public Builder name(final String value) {
       name = value;
@@ -39,29 +40,30 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
     }
 
     public Builder valueOperation(final UntypedOperation operation) {
-      valueOperations.add(operation);
+      processDefinitionKeyOperations.add(operation);
       return this;
     }
 
     public Builder valueOperations(final List<UntypedOperation> operations) {
-      valueOperations.addAll(operations);
+      processDefinitionKeyOperations.addAll(operations);
       return this;
     }
 
     public <T> Builder valueTypedOperations(final List<Operation<T>> operations) {
-      operations.forEach(operation -> valueOperations.add(UntypedOperation.of(operation)));
+      operations.forEach(
+          operation -> processDefinitionKeyOperations.add(UntypedOperation.of(operation)));
       return this;
     }
 
     @Override
     public VariableValueFilter build() {
-      return new VariableValueFilter(Objects.requireNonNull(name), valueOperations);
+      return new VariableValueFilter(Objects.requireNonNull(name), processDefinitionKeyOperations);
     }
 
     @Override
     public List<VariableValueFilter> buildList() {
       final List<VariableValueFilter> variableValueFilters = new ArrayList<>();
-      for (UntypedOperation untypedOperation : valueOperations) {
+      for (final UntypedOperation untypedOperation : processDefinitionKeyOperations) {
         final VariableValueFilter variableValueFilter =
             new VariableValueFilter.Builder().name(name).valueOperation(untypedOperation).build();
         variableValueFilters.add(variableValueFilter);
