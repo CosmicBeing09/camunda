@@ -33,16 +33,24 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskCancelingV2ApplierTest {
 
-  /** Injected by {@link ProcessingStateExtension} */
+  /**
+   * Injected by {@link ProcessingStateExtension}
+   */
   private MutableProcessingState processingState;
 
-  /** The class under test. */
+  /**
+   * The class under test.
+   */
   private UserTaskCancelingV2Applier userTaskCancelingApplier;
 
-  /** Used for state assertions. */
+  /**
+   * Used for state assertions.
+   */
   private MutableUserTaskState userTaskState;
 
-  /** For setting up the state before testing the applier. */
+  /**
+   * For setting up the state before testing the applier.
+   */
   private AppliersTestSetupHelper testSetup;
 
   @BeforeEach
@@ -169,7 +177,7 @@ public class UserTaskCancelingV2ApplierTest {
         userTaskKey,
         new UserTaskTransitionTriggerRequestMetadata()
             .setIntent(UserTaskIntent.CLAIMING)
-            .setTriggerType(ValueType.USER_TASK)
+            .setValueType(ValueType.USER_TASK)
             .setRequestId(new Random().nextLong())
             .setRequestStreamId(new Random().nextInt()));
 
