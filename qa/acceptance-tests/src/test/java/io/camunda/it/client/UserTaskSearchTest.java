@@ -35,6 +35,7 @@ import org.junit.jupiter.api.Test;
 
 @MultiDbTest
 class UserTaskSearchTest {
+
   private static Long userTaskKeyTaskAssigned;
 
   private static CamundaClient camundaClient;
@@ -297,7 +298,8 @@ class UserTaskSearchTest {
                     .filter(
                         f ->
                             f.processInstanceVariables(
-                                List.of(vf -> vf.name("process01").value(v -> {}))))
+                                List.of(vf -> vf.name("process01").value(v -> {
+                                }))))
                     .send()
                     .join());
     // then
@@ -434,9 +436,9 @@ class UserTaskSearchTest {
   }
 
   @Test
-  public void shouldRetrieveTaskByElementName() {
+  public void shouldRetrieveTaskByName() {
     final var result =
-        camundaClient.newUserTaskSearchRequest().filter(f -> f.elementName("P2")).send().join();
+        camundaClient.newUserTaskSearchRequest().filter(f -> f.taskName("P2")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
     result.items().forEach(item -> assertThat(item.getElementName()).isEqualTo("P2"));
   }
