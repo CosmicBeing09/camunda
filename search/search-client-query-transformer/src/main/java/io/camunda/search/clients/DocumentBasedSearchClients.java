@@ -285,7 +285,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
     // Search for active incidents that match the given error message hash codes
     final var incidentFilter =
         FilterBuilders.incident(
-            f -> f.errorMessageHashes(incidentErrorHashCodes).states(IncidentState.ACTIVE));
+            f -> f.errorMessageHashOperations(incidentErrorHashCodes).states(IncidentState.ACTIVE));
 
     final var incidentResult = searchIncidents(IncidentQuery.of(f -> f.filter(incidentFilter)));
 
@@ -430,10 +430,10 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
             .build();
     final List<UsageMetricsEntity> metrics =
         new SearchClientBasedQueryExecutor(
-                searchClient,
-                transformers,
-                new DocumentAuthorizationQueryStrategy(this),
-                securityContext)
+            searchClient,
+            transformers,
+            new DocumentAuthorizationQueryStrategy(this),
+            securityContext)
             .findAll(filter, io.camunda.webapps.schema.entities.UsageMetricsEntity.class);
     return metrics.stream().map(UsageMetricsEntity::value).distinct().count();
   }

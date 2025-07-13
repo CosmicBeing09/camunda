@@ -61,7 +61,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var treePathQuery = getTreePathQuery(filter.treePath());
     final var jobKeyQuery = getJobKeyQuery(filter.jobKeys());
     final var tenantIdQuery = getTenantIdQuery(filter.tenantIds());
-    final var errorMessageHashesQuery = getErrorMessageHashesQuery(filter.errorMessageHashes());
+    final var errorMessageHashesQuery = getErrorMessageHashesQuery(
+        filter.errorMessageHashOperations());
 
     return and(
         keyQuery,
