@@ -13,7 +13,7 @@ import java.time.OffsetDateTime;
 
 public record BatchOperationDbModel(
     String batchOperationId,
-    BatchOperationState state,
+    BatchOperationState states,
     String operationType,
     OffsetDateTime startDate,
     OffsetDateTime endDate,
@@ -25,7 +25,7 @@ public record BatchOperationDbModel(
   public static class Builder implements ObjectBuilder<BatchOperationDbModel> {
 
     private String batchOperationId;
-    private BatchOperationState state;
+    private BatchOperationState states;
     private String operationType;
     private OffsetDateTime startDate;
     private OffsetDateTime endDate = null;
@@ -33,7 +33,8 @@ public record BatchOperationDbModel(
     private Integer operationsFailedCount = 0;
     private Integer operationsCompletedCount = 0;
 
-    public Builder() {}
+    public Builder() {
+    }
 
     public Builder batchOperationId(final String batchOperationId) {
       this.batchOperationId = batchOperationId;
@@ -41,7 +42,7 @@ public record BatchOperationDbModel(
     }
 
     public Builder state(final BatchOperationState state) {
-      this.state = state;
+      states = state;
       return this;
     }
 
@@ -79,7 +80,7 @@ public record BatchOperationDbModel(
     public BatchOperationDbModel build() {
       return new BatchOperationDbModel(
           batchOperationId,
-          state,
+          states,
           operationType,
           startDate,
           endDate,

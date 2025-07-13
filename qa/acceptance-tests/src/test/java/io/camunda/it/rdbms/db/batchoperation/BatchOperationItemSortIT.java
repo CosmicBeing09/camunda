@@ -63,7 +63,7 @@ public class BatchOperationItemSortIT {
     testSorting(
         testApplication.getRdbmsService(),
         b -> b.state().asc(),
-        Comparator.comparing(BatchOperationItemEntity::state));
+        Comparator.comparing(BatchOperationItemEntity::states));
   }
 
   private void testSorting(

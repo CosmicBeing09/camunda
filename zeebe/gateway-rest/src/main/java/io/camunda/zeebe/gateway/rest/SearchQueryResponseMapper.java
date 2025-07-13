@@ -121,7 +121,8 @@ import java.util.stream.Collectors;
 
 public final class SearchQueryResponseMapper {
 
-  private SearchQueryResponseMapper() {}
+  private SearchQueryResponseMapper() {
+  }
 
   public static UsageMetricsResponse toUsageMetricsResponse(
       final UsageMetricsCount usageMetricsCount) {
@@ -143,8 +144,8 @@ public final class SearchQueryResponseMapper {
   }
 
   public static ProcessDefinitionElementStatisticsQueryResult
-      toProcessDefinitionElementStatisticsResult(
-          final List<ProcessFlowNodeStatisticsEntity> result) {
+  toProcessDefinitionElementStatisticsResult(
+      final List<ProcessFlowNodeStatisticsEntity> result) {
     return new ProcessDefinitionElementStatisticsQueryResult()
         .items(
             result.stream()
@@ -153,7 +154,7 @@ public final class SearchQueryResponseMapper {
   }
 
   public static ProcessInstanceElementStatisticsQueryResult
-      toProcessInstanceElementStatisticsResult(final List<ProcessFlowNodeStatisticsEntity> result) {
+  toProcessInstanceElementStatisticsResult(final List<ProcessFlowNodeStatisticsEntity> result) {
     return new ProcessInstanceElementStatisticsQueryResult()
         .items(
             result.stream()
@@ -465,7 +466,7 @@ public final class SearchQueryResponseMapper {
   public static BatchOperationResponse toBatchOperation(final BatchOperationEntity entity) {
     return new BatchOperationResponse()
         .batchOperationId(entity.batchOperationId())
-        .state(BatchOperationResponse.StateEnum.fromValue(entity.state().name()))
+        .state(BatchOperationResponse.StateEnum.fromValue(entity.states().name()))
         .batchOperationType(BatchOperationTypeEnum.fromValue(entity.operationType()))
         .startDate(formatDate(entity.startDate()))
         .endDate(formatDate(entity.endDate()))
@@ -496,7 +497,7 @@ public final class SearchQueryResponseMapper {
         .processInstanceKey(entity.processInstanceKey().toString())
         .processedDate(formatDate(entity.processedDate()))
         .errorMessage(entity.errorMessage())
-        .state(BatchOperationItemResponse.StateEnum.fromValue(entity.state().name()));
+        .state(BatchOperationItemResponse.StateEnum.fromValue(entity.states().name()));
   }
 
   private static List<RoleResult> toRoles(final List<RoleEntity> roles) {
@@ -959,5 +960,7 @@ public final class SearchQueryResponseMapper {
                 : processInstanceEntity.processDefinitionName());
   }
 
-  private record RuleIdentifier(String ruleId, int ruleIndex) {}
+  private record RuleIdentifier(String ruleId, int ruleIndex) {
+
+  }
 }

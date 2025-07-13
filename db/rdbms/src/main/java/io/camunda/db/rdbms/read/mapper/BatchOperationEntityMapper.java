@@ -15,7 +15,7 @@ public class BatchOperationEntityMapper {
   public static BatchOperationEntity toEntity(final BatchOperationDbModel dbModel) {
     return new BatchOperationEntity(
         dbModel.batchOperationId(),
-        dbModel.state(),
+        dbModel.states(),
         dbModel.operationType(),
         dbModel.startDate(),
         dbModel.endDate(),
