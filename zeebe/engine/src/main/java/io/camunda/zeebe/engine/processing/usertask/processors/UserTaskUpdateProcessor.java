@@ -84,7 +84,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var recordRequestMetadata = userTaskState.findUserTaskMetadata(userTaskKey);
+    final var recordRequestMetadata = userTaskState.findUserTaskDetails(userTaskKey);
     if (recordRequestMetadata.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "
