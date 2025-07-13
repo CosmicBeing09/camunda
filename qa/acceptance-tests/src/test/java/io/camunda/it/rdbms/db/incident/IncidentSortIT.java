@@ -90,7 +90,7 @@ public class IncidentSortIT {
   public void shouldSortByErrorTypeAsc(final CamundaRdbmsTestApplication testApplication) {
     testSorting(
         testApplication.getRdbmsService(),
-        b -> b.errorType().asc(),
+        b -> b.errorTypeOperations().asc(),
         Comparator.comparing(it -> it.errorType().name()));
   }
 

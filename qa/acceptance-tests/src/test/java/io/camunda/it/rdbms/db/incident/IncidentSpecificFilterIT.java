@@ -45,9 +45,11 @@ import org.springframework.test.context.TestPropertySource;
 @TestPropertySource(properties = {"spring.liquibase.enabled=false", "camunda.database.type=rdbms"})
 public class IncidentSpecificFilterIT {
 
-  @Autowired private RdbmsService rdbmsService;
+  @Autowired
+  private RdbmsService rdbmsService;
 
-  @Autowired private IncidentReader processDefinitionReader;
+  @Autowired
+  private IncidentReader processDefinitionReader;
 
   private RdbmsWriter rdbmsWriter;
 
@@ -96,7 +98,7 @@ public class IncidentSpecificFilterIT {
         new IncidentFilter.Builder().processInstanceKeys(3000L).build(),
         new IncidentFilter.Builder().flowNodeIds("sorting-flow-node").build(),
         new IncidentFilter.Builder().flowNodeInstanceKeys(4000L).build(),
-        new IncidentFilter.Builder().errorTypes(ErrorType.JOB_NO_RETRIES).build(),
+        new IncidentFilter.Builder().errorTypeOperations(ErrorType.JOB_NO_RETRIES).build(),
         new IncidentFilter.Builder().errorMessages("error-message-5000").build(),
         new IncidentFilter.Builder().states(IncidentState.ACTIVE).build(),
         new IncidentFilter.Builder().jobKeys(6000L).build(),

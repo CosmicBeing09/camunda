@@ -45,7 +45,7 @@ public record IncidentSort(List<FieldSorting> orderings) implements SortOption {
       return this;
     }
 
-    public Builder errorType() {
+    public Builder errorTypeOperations() {
       currentOrdering = new FieldSorting("errorType", null);
       return this;
     }

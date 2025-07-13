@@ -9,7 +9,12 @@ package io.camunda.zeebe.gateway.rest;
 
 import static io.camunda.zeebe.gateway.rest.RequestMapper.getResult;
 import static io.camunda.zeebe.gateway.rest.util.AdvancedSearchFilterUtil.mapToOperations;
-import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.*;
+import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.ERROR_MESSAGE_NULL_VARIABLE_NAME;
+import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.ERROR_MESSAGE_NULL_VARIABLE_VALUE;
+import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.ERROR_SEARCH_BEFORE_AND_AFTER;
+import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.ERROR_SEARCH_BEFORE_AND_AFTER_AND_FROM;
+import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.ERROR_SORT_FIELD_MUST_NOT_BE_NULL;
+import static io.camunda.zeebe.gateway.rest.validator.ErrorMessages.ERROR_UNKNOWN_SORT_BY;
 import static io.camunda.zeebe.gateway.rest.validator.RequestValidator.validate;
 import static io.camunda.zeebe.gateway.rest.validator.RequestValidator.validateDate;
 import static java.util.Optional.ofNullable;
@@ -20,19 +25,30 @@ import io.camunda.search.entities.FlowNodeInstanceEntity.FlowNodeType;
 import io.camunda.search.entities.IncidentEntity;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.search.entities.UserTaskEntity.UserTaskState;
-import io.camunda.search.filter.*;
 import io.camunda.search.filter.AuthorizationFilter;
 import io.camunda.search.filter.BatchOperationFilter;
+import io.camunda.search.filter.DateValueFilter;
 import io.camunda.search.filter.DecisionDefinitionFilter;
 import io.camunda.search.filter.DecisionInstanceFilter;
 import io.camunda.search.filter.DecisionRequirementsFilter;
+import io.camunda.search.filter.FilterBase;
+import io.camunda.search.filter.FilterBuilders;
+import io.camunda.search.filter.FlowNodeInstanceFilter;
+import io.camunda.search.filter.GroupFilter;
 import io.camunda.search.filter.IncidentFilter;
+import io.camunda.search.filter.MappingFilter;
+import io.camunda.search.filter.Operation;
 import io.camunda.search.filter.ProcessDefinitionFilter;
 import io.camunda.search.filter.ProcessDefinitionStatisticsFilter;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.search.filter.ProcessInstanceFilter.Builder;
+import io.camunda.search.filter.RoleFilter;
+import io.camunda.search.filter.TenantFilter;
+import io.camunda.search.filter.UsageMetricsFilter;
+import io.camunda.search.filter.UserFilter;
 import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.filter.VariableFilter;
+import io.camunda.search.filter.VariableValueFilter;
 import io.camunda.search.page.SearchQueryPage;
 import io.camunda.search.query.AuthorizationQuery;
 import io.camunda.search.query.BatchOperationItemQuery;
@@ -97,7 +113,8 @@ public final class SearchQueryRequestMapper {
       new AdvancedStringFilter();
   public static final BasicStringFilter EMPTY_BASIC_STRING_FILTER = new BasicStringFilter();
 
-  private SearchQueryRequestMapper() {}
+  private SearchQueryRequestMapper() {
+  }
 
   public static Either<ProblemDetail, UsageMetricsQuery> toUsageMetricsQuery(
       final String startTime, final String endTime) {
@@ -137,8 +154,8 @@ public final class SearchQueryRequestMapper {
   }
 
   public static Either<ProblemDetail, ProcessDefinitionStatisticsFilter>
-      toProcessDefinitionStatisticsQuery(
-          final long processDefinitionKey, final ProcessDefinitionElementStatisticsQuery request) {
+  toProcessDefinitionStatisticsQuery(
+      final long processDefinitionKey, final ProcessDefinitionElementStatisticsQuery request) {
     if (request == null) {
       return Either.right(
           new ProcessDefinitionStatisticsFilter.Builder(processDefinitionKey).build());
@@ -156,9 +173,9 @@ public final class SearchQueryRequestMapper {
   }
 
   public static Either<List<String>, ProcessDefinitionStatisticsFilter>
-      toProcessDefinitionStatisticsFilter(
-          final long processDefinitionKey,
-          final io.camunda.zeebe.gateway.protocol.rest.ProcessDefinitionStatisticsFilter filter) {
+  toProcessDefinitionStatisticsFilter(
+      final long processDefinitionKey,
+      final io.camunda.zeebe.gateway.protocol.rest.ProcessDefinitionStatisticsFilter filter) {
     final List<String> validationErrors = new ArrayList<>();
 
     final Either<List<String>, ProcessDefinitionStatisticsFilter.Builder> builder =
@@ -186,8 +203,8 @@ public final class SearchQueryRequestMapper {
   }
 
   private static Either<List<String>, ProcessDefinitionStatisticsFilter.Builder>
-      toBaseProcessInstanceFilterFields(
-          final long processDefinitionKey, final BaseProcessInstanceFilterFields filter) {
+  toBaseProcessInstanceFilterFields(
+      final long processDefinitionKey, final BaseProcessInstanceFilterFields filter) {
     final var builder = FilterBuilders.processDefinitionStatisticsFilter(processDefinitionKey);
     final List<String> validationErrors = new ArrayList<>();
     if (filter != null) {
@@ -1124,7 +1141,8 @@ public final class SearchQueryRequestMapper {
           .map(KeyUtil::keyToLong)
           .ifPresent(builder::processInstanceKeys);
       ofNullable(filter.getErrorType())
-          .ifPresent(t -> builder.errorTypes(IncidentEntity.ErrorType.valueOf(t.getValue())));
+          .ifPresent(
+              t -> builder.errorTypeOperations(IncidentEntity.ErrorType.valueOf(t.getValue())));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessages);
       ofNullable(filter.getElementId()).ifPresent(builder::flowNodeIds);
       ofNullable(filter.getElementInstanceKey())
@@ -1394,7 +1412,7 @@ public final class SearchQueryRequestMapper {
         case PROCESS_DEFINITION_KEY -> builder.processDefinitionKey();
         case PROCESS_DEFINITION_ID -> builder.processDefinitionId();
         case PROCESS_INSTANCE_KEY -> builder.processInstanceKey();
-        case ERROR_TYPE -> builder.errorType();
+        case ERROR_TYPE -> builder.errorTypeOperations();
         case ERROR_MESSAGE -> builder.errorMessage();
         case ELEMENT_ID -> builder.flowNodeId();
         case ELEMENT_INSTANCE_KEY -> builder.flowNodeInstanceKey();
@@ -1546,10 +1564,10 @@ public final class SearchQueryRequestMapper {
   }
 
   private static <T, B extends SortOption.AbstractBuilder<B> & ObjectBuilder<T>, F>
-      Either<List<String>, T> toSearchQuerySort(
-          final List<SearchQuerySortRequest<F>> sorting,
-          final Supplier<B> builderSupplier,
-          final BiFunction<F, B, List<String>> sortFieldMapper) {
+  Either<List<String>, T> toSearchQuerySort(
+      final List<SearchQuerySortRequest<F>> sorting,
+      final Supplier<B> builderSupplier,
+      final BiFunction<F, B, List<String>> sortFieldMapper) {
     if (sorting != null && !sorting.isEmpty()) {
       final List<String> validationErrors = new ArrayList<>();
       final var builder = builderSupplier.get();
@@ -1567,40 +1585,40 @@ public final class SearchQueryRequestMapper {
   }
 
   private static <
-          T,
-          B extends TypedSearchQueryBuilder<T, B, F, S>,
-          F extends FilterBase,
-          S extends SortOption>
-      Either<ProblemDetail, T> buildSearchQuery(
-          final Either<List<String>, S> sorting,
-          final Either<List<String>, SearchQueryPage> page,
-          final Supplier<B> queryBuilderSupplier) {
+      T,
+      B extends TypedSearchQueryBuilder<T, B, F, S>,
+      F extends FilterBase,
+      S extends SortOption>
+  Either<ProblemDetail, T> buildSearchQuery(
+      final Either<List<String>, S> sorting,
+      final Either<List<String>, SearchQueryPage> page,
+      final Supplier<B> queryBuilderSupplier) {
     return buildSearchQuery(Either.right(null), sorting, page, queryBuilderSupplier);
   }
 
   private static <
-          T,
-          B extends TypedSearchQueryBuilder<T, B, F, S>,
-          F extends FilterBase,
-          S extends SortOption>
-      Either<ProblemDetail, T> buildSearchQuery(
-          final F filter,
-          final Either<List<String>, S> sorting,
-          final Either<List<String>, SearchQueryPage> page,
-          final Supplier<B> queryBuilderSupplier) {
+      T,
+      B extends TypedSearchQueryBuilder<T, B, F, S>,
+      F extends FilterBase,
+      S extends SortOption>
+  Either<ProblemDetail, T> buildSearchQuery(
+      final F filter,
+      final Either<List<String>, S> sorting,
+      final Either<List<String>, SearchQueryPage> page,
+      final Supplier<B> queryBuilderSupplier) {
     return buildSearchQuery(Either.right(filter), sorting, page, queryBuilderSupplier);
   }
 
   private static <
-          T,
-          B extends TypedSearchQueryBuilder<T, B, F, S>,
-          F extends FilterBase,
-          S extends SortOption>
-      Either<ProblemDetail, T> buildSearchQuery(
-          final Either<List<String>, F> filter,
-          final Either<List<String>, S> sorting,
-          final Either<List<String>, SearchQueryPage> page,
-          final Supplier<B> queryBuilderSupplier) {
+      T,
+      B extends TypedSearchQueryBuilder<T, B, F, S>,
+      F extends FilterBase,
+      S extends SortOption>
+  Either<ProblemDetail, T> buildSearchQuery(
+      final Either<List<String>, F> filter,
+      final Either<List<String>, S> sorting,
+      final Either<List<String>, SearchQueryPage> page,
+      final Supplier<B> queryBuilderSupplier) {
     final List<String> validationErrors = new ArrayList<>();
     if (filter.isLeft()) {
       validationErrors.addAll(filter.getLeft());
