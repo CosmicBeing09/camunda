@@ -17,13 +17,13 @@ package io.camunda.client.impl.oauth;
 
 import static io.camunda.client.impl.BuilderUtils.applyEnvironmentValueIfNotNull;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.ENTRA_ENV_CERTIFICATE_PASSWORD;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.ENTRA_ENV_CERTIFICATE_PATH;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_AUTHORIZATION_SERVER;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CACHE_PATH;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CONNECT_TIMEOUT;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_READ_TIMEOUT;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_CERT_PATH;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_KEY_SECRET;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_PATH;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_SECRET;
@@ -47,6 +47,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 public final class OAuthCredentialsProviderBuilder {
+
   public static final String INVALID_ARGUMENT_MSG = "Expected valid %s but none was provided.";
   private static final String DEFAULT_AUTHZ_SERVER = "https://login.cloud.camunda.io/oauth/token/";
   private static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(5);
@@ -71,7 +72,9 @@ public final class OAuthCredentialsProviderBuilder {
   private Path entraCertificatePath;
   private String entraCertificatePassword;
 
-  /** Client id to be used when requesting access token from OAuth authorization server. */
+  /**
+   * Client id to be used when requesting access token from OAuth authorization server.
+   */
   public OAuthCredentialsProviderBuilder clientId(final String clientId) {
     this.clientId = clientId;
     return this;
@@ -84,7 +87,9 @@ public final class OAuthCredentialsProviderBuilder {
     return clientId;
   }
 
-  /** Client secret to be used when requesting access token from OAuth authorization server. */
+  /**
+   * Client secret to be used when requesting access token from OAuth authorization server.
+   */
   public OAuthCredentialsProviderBuilder clientSecret(final String clientSecret) {
     this.clientSecret = clientSecret;
     return this;
@@ -97,7 +102,9 @@ public final class OAuthCredentialsProviderBuilder {
     return clientSecret;
   }
 
-  /** The resource for which the access token should be valid. */
+  /**
+   * The resource for which the access token should be valid.
+   */
   public OAuthCredentialsProviderBuilder audience(final String audience) {
     this.audience = audience;
     return this;
@@ -110,7 +117,9 @@ public final class OAuthCredentialsProviderBuilder {
     return audience;
   }
 
-  /** The scopes of the access token. */
+  /**
+   * The scopes of the access token.
+   */
   public OAuthCredentialsProviderBuilder scope(final String scope) {
     this.scope = scope;
     return this;
@@ -123,7 +132,9 @@ public final class OAuthCredentialsProviderBuilder {
     return scope;
   }
 
-  /** The authorization server's URL, from which the access token will be requested. */
+  /**
+   * The authorization server's URL, from which the access token will be requested.
+   */
   public OAuthCredentialsProviderBuilder authorizationServerUrl(
       final String authorizationServerUrl) {
     this.authorizationServerUrl = authorizationServerUrl;
@@ -137,7 +148,9 @@ public final class OAuthCredentialsProviderBuilder {
     return authorizationServer;
   }
 
-  /** Path to keystore used for OAuth identity provider */
+  /**
+   * Path to keystore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder keystorePath(final Path keystorePath) {
     this.keystorePath = keystorePath;
     return this;
@@ -157,7 +170,9 @@ public final class OAuthCredentialsProviderBuilder {
     return keystorePath;
   }
 
-  /** Password to keystore used for OAuth identity provider */
+  /**
+   * Password to keystore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder keystorePassword(final String keystorePassword) {
     this.keystorePassword = keystorePassword;
     return this;
@@ -170,7 +185,9 @@ public final class OAuthCredentialsProviderBuilder {
     return keystorePassword;
   }
 
-  /** Keystore key password used for OAuth identity provider */
+  /**
+   * Keystore key password used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder keystoreKeyPassword(final String keystoreKeyPassword) {
     this.keystoreKeyPassword = keystoreKeyPassword;
     return this;
@@ -183,7 +200,9 @@ public final class OAuthCredentialsProviderBuilder {
     return keystoreKeyPassword;
   }
 
-  /** Path to truststore used for OAuth identity provider */
+  /**
+   * Path to truststore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder truststorePath(final Path truststorePath) {
     this.truststorePath = truststorePath;
     return this;
@@ -203,7 +222,9 @@ public final class OAuthCredentialsProviderBuilder {
     return truststorePath;
   }
 
-  /** Password to truststore used for OAuth identity provider */
+  /**
+   * Password to truststore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder truststorePassword(final String truststorePassword) {
     this.truststorePassword = truststorePassword;
     return this;
@@ -233,8 +254,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   /**
-   * The connection timeout of request. The default value is 5 seconds. Max value is {@link
-   * Integer#MAX_VALUE} milliseconds.
+   * The connection timeout of request. The default value is 5 seconds. Max value is
+   * {@link Integer#MAX_VALUE} milliseconds.
    */
   public OAuthCredentialsProviderBuilder connectTimeout(final Duration connectTimeout) {
     this.connectTimeout = connectTimeout;
@@ -256,8 +277,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   /**
-   * The data read timeout of request. The default value is 5 seconds. Max value is {@link
-   * Integer#MAX_VALUE} milliseconds.
+   * The data read timeout of request. The default value is 5 seconds. Max value is
+   * {@link Integer#MAX_VALUE} milliseconds.
    */
   public OAuthCredentialsProviderBuilder readTimeout(final Duration readTimeout) {
     this.readTimeout = readTimeout;
@@ -327,7 +348,7 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyMSEntraConfiguration() {
-    applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
+    applyEnvironmentValueIfNotNull(this::entraCertificatePath, OAUTH_ENV_SSL_CLIENT_CERT_PATH);
     applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
@@ -438,10 +459,10 @@ public final class OAuthCredentialsProviderBuilder {
       validateTimeout(connectTimeout, "ConnectTimeout");
       validateTimeout(readTimeout, "ReadTimeout");
     } catch (final NullPointerException
-        | IOException
-        | KeyStoreException
-        | NoSuchAlgorithmException
-        | CertificateException e) {
+                   | IOException
+                   | KeyStoreException
+                   | NoSuchAlgorithmException
+                   | CertificateException e) {
       throw new IllegalArgumentException(e);
     }
   }
