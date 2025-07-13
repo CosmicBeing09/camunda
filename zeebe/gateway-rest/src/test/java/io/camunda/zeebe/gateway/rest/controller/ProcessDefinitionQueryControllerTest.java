@@ -42,6 +42,7 @@ import org.springframework.http.MediaType;
 
 @WebMvcTest(value = ProcessDefinitionController.class)
 public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
+
   static final String PROCESS_DEFINITION_URL = "/v2/process-definitions/";
   static final String PROCESS_DEFINITION_SEARCH_URL = PROCESS_DEFINITION_URL + "search";
 
@@ -58,37 +59,37 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
           "formId");
   static final String PROCESS_DEFINITION_ENTITY_JSON =
       """
-      {
-          "processDefinitionKey": "23",
-          "name": "Complex process",
-          "processDefinitionId": "complexProcess",
-          "resourceName": "complexProcess.bpmn",
-          "version": 5,
-          "versionTag": "alpha",
-          "tenantId": "<default>"
-      }""";
+          {
+              "processDefinitionKey": "23",
+              "name": "Complex process",
+              "processDefinitionId": "complexProcess",
+              "resourceName": "complexProcess.bpmn",
+              "version": 5,
+              "versionTag": "alpha",
+              "tenantId": "<default>"
+          }""";
   static final String EXPECTED_SEARCH_RESPONSE =
       """
-      {
-          "items": [
-              {
-                  "processDefinitionKey": "1",
-                  "name": "Complex process",
-                  "processDefinitionId": "complexProcess",
-                  "resourceName": "complexProcess.bpmn",
-                  "version": 5,
-                  "versionTag": "alpha",
-                  "tenantId": "<default>"
+          {
+              "items": [
+                  {
+                      "processDefinitionKey": "1",
+                      "name": "Complex process",
+                      "processDefinitionId": "complexProcess",
+                      "resourceName": "complexProcess.bpmn",
+                      "version": 5,
+                      "versionTag": "alpha",
+                      "tenantId": "<default>"
+                  }
+              ],
+              "page": {
+                  "totalItems": 1,
+                  "firstSortValues": ["f"],
+                  "lastSortValues": [
+                      "v"
+                  ]
               }
-          ],
-          "page": {
-              "totalItems": 1,
-              "firstSortValues": ["f"],
-              "lastSortValues": [
-                  "v"
-              ]
-          }
-      }""";
+          }""";
   static final SearchQueryResult<ProcessDefinitionEntity> SEARCH_QUERY_RESULT =
       new Builder<ProcessDefinitionEntity>()
           .total(1L)
@@ -104,22 +105,24 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
                       "alpha",
                       "<default>",
                       "formId")))
-          .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .firstSortValues(new Object[]{"f"})
+          .lastSortValues(new Object[]{"v"})
           .build();
   private static final String FORM_ITEM_JSON =
       """
-      {
-        "formKey": "0",
-        "tenantId": "tenant-1",
-        "formId": "formId",
-        "schema": "schema",
-        "version": 1
-      }
-      """;
-  @MockBean ProcessDefinitionServices processDefinitionServices;
+          {
+            "formKey": "0",
+            "tenantId": "tenant-1",
+            "formId": "formId",
+            "schema": "schema",
+            "version": 1
+          }
+          """;
+  @MockBean
+  ProcessDefinitionServices processDefinitionServices;
 
-  @MockBean FormServices formServices;
+  @MockBean
+  FormServices formServices;
 
   @BeforeEach
   void setupProcessDefinitionServices() {
@@ -234,7 +237,7 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
   }
 
   private static Stream<Pair<String, BiFunction<ProcessDefinitionServices, Long, ?>>>
-      getProcessDefinitionTestCasesParameters() {
+  getProcessDefinitionTestCasesParameters() {
     return Stream.of(
         Pair.of(PROCESS_DEFINITION_URL + "%d", ProcessDefinitionServices::getByKey),
         Pair.of(
@@ -339,7 +342,7 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
                 .states("ACTIVE")
                 .addOrOperation(
                     new ProcessDefinitionStatisticsFilter.Builder(processDefinitionKey)
-                        .flowNodeIds("elementId")
+                        .flowNodeIdOperations("elementId")
                         .build())
                 .addOrOperation(
                     new ProcessDefinitionStatisticsFilter.Builder(processDefinitionKey)
@@ -423,13 +426,13 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
         .expectBody()
         .json(
             """
-            {
-              "type": "about:blank",
-              "title": "NOT_FOUND",
-              "status": 404,
-              "detail": "Process definition with key 999 not found"
-            }
-            """);
+                {
+                  "type": "about:blank",
+                  "title": "NOT_FOUND",
+                  "status": 404,
+                  "detail": "Process definition with key 999 not found"
+                }
+                """);
   }
 
   @Test
@@ -447,13 +450,13 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
         .expectBody()
         .json(
             """
-            {
-              "type": "about:blank",
-              "title": "java.lang.RuntimeException",
-              "status": 500,
-              "detail": "Unexpected error occurred during the request processing: Unexpected error",
-              "instance": "/v2/process-definitions/1/form"
-            }
-            """);
+                {
+                  "type": "about:blank",
+                  "title": "java.lang.RuntimeException",
+                  "status": 500,
+                  "detail": "Unexpected error occurred during the request processing: Unexpected error",
+                  "instance": "/v2/process-definitions/1/form"
+                }
+                """);
   }
 }
