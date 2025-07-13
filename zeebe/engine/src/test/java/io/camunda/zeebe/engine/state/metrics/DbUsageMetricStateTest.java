@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.metrics;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUsageMetricState;
@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 public class DbUsageMetricStateTest {
+
   private MutableProcessingState processingState;
   private MutableUsageMetricState state;
 
@@ -40,7 +41,7 @@ public class DbUsageMetricStateTest {
     state.createRPIMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
-    final var actual = state.getTenantIdPIsMapByEventTime(eventTime);
+    final var actual = state.getActiveBucket(eventTime);
     assertThat(actual)
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
@@ -58,8 +59,8 @@ public class DbUsageMetricStateTest {
     state.createRPIMetric(eventTime2, 12L, "tenant2");
 
     // when
-    final var actual1 = state.getTenantIdPIsMapByEventTime(eventTime1);
-    final var actual2 = state.getTenantIdPIsMapByEventTime(eventTime2);
+    final var actual1 = state.getActiveBucket(eventTime1);
+    final var actual2 = state.getActiveBucket(eventTime2);
 
     // then
     assertThat(actual1)
@@ -80,10 +81,10 @@ public class DbUsageMetricStateTest {
     state.createRPIMetric(eventTime2, 10L, "tenant1");
     state.createRPIMetric(eventTime2, 11L, "tenant1");
     state.createRPIMetric(eventTime2, 12L, "tenant2");
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime1))
+    assertThat(state.getActiveBucket(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime2))
+    assertThat(state.getActiveBucket(eventTime2))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of("tenant1", List.of(10L, 11L), "tenant2", List.of(12L)));
 
@@ -91,9 +92,9 @@ public class DbUsageMetricStateTest {
     state.deleteByEventTime(eventTime2);
 
     // then
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime1))
+    assertThat(state.getActiveBucket(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime2)).isEmpty();
+    assertThat(state.getActiveBucket(eventTime2)).isEmpty();
   }
 }
