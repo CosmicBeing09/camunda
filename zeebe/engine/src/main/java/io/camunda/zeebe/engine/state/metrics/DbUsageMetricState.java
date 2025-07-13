@@ -71,7 +71,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   private UsageMetricStateValue getOrCreateRollingBucket() {
-    var bucket = getRollingBucket();
+    var bucket = getActiveBucket();
     if (bucket == null) {
       final long millis = clock.millis();
       bucket =
