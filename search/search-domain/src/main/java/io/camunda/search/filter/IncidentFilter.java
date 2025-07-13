@@ -23,7 +23,7 @@ public record IncidentFilter(
     List<String> processDefinitionIds,
     List<Long> processInstanceKeys,
     List<ErrorType> errorTypes,
-    List<String> errorMessages,
+    List<String> errorMessageOperations,
     List<Integer> errorMessageHashes,
     List<String> flowNodeIds,
     List<Long> flowNodeInstanceKeys,
@@ -41,7 +41,7 @@ public record IncidentFilter(
     private List<String> processDefinitionIds;
     private List<Long> processInstanceKeys;
     private List<ErrorType> errorTypes;
-    private List<String> errorMessages;
+    private List<String> errorMessageOperations;
     private List<Integer> errorMessageHashes;
     private List<String> flowNodeIds;
     private List<Long> flowNodeInstanceKeys;
@@ -96,12 +96,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder errorMessages(final String value, final String... values) {
-      return errorMessages(collectValues(value, values));
+    public Builder errorMessageOperations(final String value, final String... values) {
+      return errorMessageOperations(collectValues(value, values));
     }
 
-    public Builder errorMessages(final List<String> values) {
-      errorMessages = addValuesToList(errorMessages, values);
+    public Builder errorMessageOperations(final List<String> values) {
+      errorMessageOperations = addValuesToList(errorMessageOperations, values);
       return this;
     }
 
@@ -177,7 +177,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
           Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
-          Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
+          Objects.requireNonNullElse(errorMessageOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeInstanceKeys, Collections.emptyList()),

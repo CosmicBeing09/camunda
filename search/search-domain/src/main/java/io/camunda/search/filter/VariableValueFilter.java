@@ -61,7 +61,7 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
     @Override
     public List<VariableValueFilter> buildList() {
       final List<VariableValueFilter> variableValueFilters = new ArrayList<>();
-      for (UntypedOperation untypedOperation : valueOperations) {
+      for (final UntypedOperation untypedOperation : valueOperations) {
         final VariableValueFilter variableValueFilter =
             new VariableValueFilter.Builder().name(name).valueOperation(untypedOperation).build();
         variableValueFilters.add(variableValueFilter);
