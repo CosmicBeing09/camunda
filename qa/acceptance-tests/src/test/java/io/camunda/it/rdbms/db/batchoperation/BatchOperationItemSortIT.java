@@ -83,7 +83,7 @@ public class BatchOperationItemSortIT {
             .search(
                 new BatchOperationItemQuery(
                     new BatchOperationItemFilter.Builder()
-                        .batchOperationIds(batchOperation.batchOperationId())
+                        .batchOperationIdOperations(batchOperation.batchOperationId())
                         .build(),
                     BatchOperationItemSort.of(sortBuilder),
                     SearchQueryPage.of(b -> b)))
