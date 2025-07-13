@@ -24,8 +24,8 @@ import io.camunda.process.test.impl.extension.CamundaProcessTestContextImpl;
 import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
 import io.camunda.process.test.impl.proxy.ZeebeClientProxy;
-import io.camunda.process.test.impl.runtime.CamundaContainerRuntime;
-import io.camunda.process.test.impl.runtime.CamundaContainerRuntimeBuilder;
+import io.camunda.process.test.impl.runtime.CamundaRuntime;
+import io.camunda.process.test.impl.runtime.CamundaRuntimeBuilder;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultCollector;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultPrinter;
 import io.camunda.process.test.impl.testresult.ProcessTestResult;
@@ -73,11 +73,11 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
   private static final Logger LOG =
       LoggerFactory.getLogger(CamundaProcessTestExecutionListener.class);
 
-  private final CamundaContainerRuntimeBuilder containerRuntimeBuilder;
+  private final CamundaRuntimeBuilder containerRuntimeBuilder;
   private final CamundaProcessTestResultPrinter processTestResultPrinter;
   private final List<AutoCloseable> createdClients = new ArrayList<>();
 
-  private CamundaContainerRuntime containerRuntime;
+  private CamundaRuntime containerRuntime;
   private CamundaProcessTestResultCollector processTestResultCollector;
   private CamundaProcessTestContext camundaProcessTestContext;
   private CamundaManagementClient camundaManagementClient;
@@ -85,11 +85,11 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
   private ZeebeClient zeebeClient;
 
   public CamundaProcessTestExecutionListener() {
-    this(CamundaContainerRuntime.newBuilder(), System.err::println);
+    this(CamundaRuntime.newBuilder(), System.err::println);
   }
 
   CamundaProcessTestExecutionListener(
-      final CamundaContainerRuntimeBuilder containerRuntimeBuilder,
+      final CamundaRuntimeBuilder containerRuntimeBuilder,
       final Consumer<String> testResultPrintStream) {
     this.containerRuntimeBuilder = containerRuntimeBuilder;
     processTestResultPrinter = new CamundaProcessTestResultPrinter(testResultPrintStream);
@@ -221,7 +221,7 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
     }
   }
 
-  private CamundaContainerRuntime buildRuntime(final TestContext testContext) {
+  private CamundaRuntime buildRuntime(final TestContext testContext) {
     final CamundaContainerRuntimeConfiguration runtimeConfiguration =
         testContext.getApplicationContext().getBean(CamundaContainerRuntimeConfiguration.class);
 
