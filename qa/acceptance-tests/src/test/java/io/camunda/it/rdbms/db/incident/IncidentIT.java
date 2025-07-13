@@ -155,7 +155,7 @@ public class IncidentIT {
                                     .errorMessages(original.errorMessage())
                                     .errorMessageHashes(original.errorMessageHash())
                                     .flowNodeInstanceKeys(original.flowNodeInstanceKey())
-                                    .flowNodeIds(original.flowNodeId())
+                                    .flowNodeIdOperations(original.flowNodeId())
                                     .jobKeys(original.jobKey())
                                     .tenantIds(original.tenantId())
                                     .creationTime(
@@ -198,11 +198,11 @@ public class IncidentIT {
                             p ->
                                 p.size(5)
                                     .searchAfter(
-                                        new Object[] {
-                                          instanceAfter.state(),
-                                          instanceAfter.creationTime(),
-                                          instanceAfter.flowNodeId(),
-                                          instanceAfter.processInstanceKey()
+                                        new Object[]{
+                                            instanceAfter.state(),
+                                            instanceAfter.creationTime(),
+                                            instanceAfter.flowNodeId(),
+                                            instanceAfter.processInstanceKey()
                                         }))));
 
     assertThat(nextPage.total()).isEqualTo(20);

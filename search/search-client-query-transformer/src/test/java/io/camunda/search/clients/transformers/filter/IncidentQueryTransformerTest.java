@@ -151,7 +151,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByFlowNodeId() {
-    final var filter = FilterBuilders.incident(f -> f.flowNodeIds("flowNodeId-17"));
+    final var filter = FilterBuilders.incident(f -> f.flowNodeIdOperations("flowNodeId-17"));
 
     // when
     final var searchRequest = transformQuery(filter);
