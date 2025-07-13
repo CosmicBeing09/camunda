@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperation
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationItem;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationLifecycleManagementRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceMigrationPlan;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationPlan;
 import io.camunda.zeebe.protocol.impl.record.value.clock.ClockRecord;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
@@ -142,75 +142,75 @@ final class JsonSerializableToJsonTest {
   }
 
   private static Object[][] records() {
-    return new Object[][] {
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////// Record /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "Record",
-        (Supplier<JsonSerializable>)
-            () -> {
-              final RecordMetadata recordMetadata = new RecordMetadata();
+    return new Object[][]{
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// Record /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "Record",
+            (Supplier<JsonSerializable>)
+                () -> {
+                  final RecordMetadata recordMetadata = new RecordMetadata();
 
-              final DeploymentIntent intent = DeploymentIntent.CREATE;
-              final int protocolVersion = 1;
-              final VersionInfo brokerVersion = new VersionInfo(1, 2, 3);
-              final ValueType valueType = ValueType.DEPLOYMENT;
+                  final DeploymentIntent intent = DeploymentIntent.CREATE;
+                  final int protocolVersion = 1;
+                  final VersionInfo brokerVersion = new VersionInfo(1, 2, 3);
+                  final ValueType valueType = ValueType.DEPLOYMENT;
 
-              final RecordType recordType = RecordType.COMMAND;
-              final String rejectionReason = "fails";
-              final RejectionType rejectionType = RejectionType.INVALID_ARGUMENT;
-              final int requestId = 23;
-              final int requestStreamId = 1;
+                  final RecordType recordType = RecordType.COMMAND;
+                  final String rejectionReason = "fails";
+                  final RejectionType rejectionType = RejectionType.INVALID_ARGUMENT;
+                  final int requestId = 23;
+                  final int requestStreamId = 1;
 
-              final AuthInfo authInfo = new AuthInfo().setClaims(Map.of("foo", "bar"));
+                  final AuthInfo authInfo = new AuthInfo().setClaims(Map.of("foo", "bar"));
 
-              recordMetadata
-                  .intent(intent)
-                  .protocolVersion(protocolVersion)
-                  .brokerVersion(brokerVersion)
-                  .recordVersion(10)
-                  .valueType(valueType)
-                  .recordType(recordType)
-                  .rejectionReason(rejectionReason)
-                  .rejectionType(rejectionType)
-                  .requestId(requestId)
-                  .requestStreamId(requestStreamId)
-                  .authorization(authInfo)
-                  .operationReference(1234);
+                  recordMetadata
+                      .intent(intent)
+                      .protocolVersion(protocolVersion)
+                      .brokerVersion(brokerVersion)
+                      .recordVersion(10)
+                      .valueType(valueType)
+                      .recordType(recordType)
+                      .rejectionReason(rejectionReason)
+                      .rejectionType(rejectionType)
+                      .requestId(requestId)
+                      .requestStreamId(requestStreamId)
+                      .authorization(authInfo)
+                      .operationReference(1234);
 
-              final String resourceName = "resource";
-              final DirectBuffer resource = wrapString("contents");
-              final String bpmnProcessId = "testProcess";
-              final long processDefinitionKey = 123;
-              final int processVersion = 12;
-              final DirectBuffer checksum = wrapString("checksum");
+                  final String resourceName = "resource";
+                  final DirectBuffer resource = wrapString("contents");
+                  final String bpmnProcessId = "testProcess";
+                  final long processDefinitionKey = 123;
+                  final int processVersion = 12;
+                  final DirectBuffer checksum = wrapString("checksum");
 
-              final DeploymentRecord record = new DeploymentRecord();
-              record
-                  .resources()
-                  .add()
-                  .setResourceName(wrapString(resourceName))
-                  .setResource(resource);
-              record
-                  .processesMetadata()
-                  .add()
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setKey(processDefinitionKey)
-                  .setResourceName(wrapString(resourceName))
-                  .setVersion(processVersion)
-                  .setChecksum(checksum);
-              record.setReconstructionProgress(ReconstructionProgress.DECISION_REQUIREMENTS);
+                  final DeploymentRecord record = new DeploymentRecord();
+                  record
+                      .resources()
+                      .add()
+                      .setResourceName(wrapString(resourceName))
+                      .setResource(resource);
+                  record
+                      .processesMetadata()
+                      .add()
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setKey(processDefinitionKey)
+                      .setResourceName(wrapString(resourceName))
+                      .setVersion(processVersion)
+                      .setChecksum(checksum);
+                  record.setReconstructionProgress(ReconstructionProgress.DECISION_REQUIREMENTS);
 
-              final int key = 1234;
-              final int position = 4321;
-              final int sourcePosition = 231;
-              final long timestamp = 2191L;
+                  final int key = 1234;
+                  final int position = 4321;
+                  final int sourcePosition = 231;
+                  final long timestamp = 2191L;
 
-              return new CopiedRecord<>(
-                  record, recordMetadata, key, 0, position, sourcePosition, timestamp);
-            },
-        """
+                  return new CopiedRecord<>(
+                      record, recordMetadata, key, 0, position, sourcePosition, timestamp);
+                },
+            """
         {
           "valueType": "DEPLOYMENT",
           "key": 1234,
@@ -257,25 +257,25 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////// Empty Record ////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "Empty Record",
-        (Supplier<JsonSerializable>)
-            () -> {
-              final var record = new DeploymentRecord();
-              final var metadata = new RecordMetadata().brokerVersion(new VersionInfo(0, 0, 0));
-              final int key = -1;
-              final int partitionId = -1;
-              final int position = -1;
-              final int sourcePosition = -1;
-              final int timestamp = -1;
-              return new CopiedRecord<>(
-                  record, metadata, key, partitionId, position, sourcePosition, timestamp);
-            },
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////// Empty Record ////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "Empty Record",
+            (Supplier<JsonSerializable>)
+                () -> {
+                  final var record = new DeploymentRecord();
+                  final var metadata = new RecordMetadata().brokerVersion(new VersionInfo(0, 0, 0));
+                  final int key = -1;
+                  final int partitionId = -1;
+                  final int position = -1;
+                  final int sourcePosition = -1;
+                  final int timestamp = -1;
+                  return new CopiedRecord<>(
+                      record, metadata, key, partitionId, position, sourcePosition, timestamp);
+                },
+            """
         {
           "key": -1,
           "position": -1,
@@ -303,81 +303,81 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// DeploymentRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "DeploymentRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String resourceName = "resource";
-              final DirectBuffer resource = wrapString("contents");
-              final String bpmnProcessId = "testProcess";
-              final long processDefinitionKey = 123;
-              final int processVersion = 12;
-              final DirectBuffer checksum = wrapString("checksum");
-              final long deploymentKey = 1234;
-              final String versionTag = "v1.0";
-              final DeploymentRecord record = new DeploymentRecord();
-              record
-                  .setDeploymentKey(deploymentKey)
-                  .resources()
-                  .add()
-                  .setResourceName(wrapString(resourceName))
-                  .setResource(resource);
-              record
-                  .processesMetadata()
-                  .add()
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setKey(processDefinitionKey)
-                  .setResourceName(wrapString(resourceName))
-                  .setVersion(processVersion)
-                  .setChecksum(checksum)
-                  .setDuplicate(true)
-                  .setDeploymentKey(deploymentKey)
-                  .setVersionTag(versionTag);
-              record
-                  .decisionRequirementsMetadata()
-                  .add()
-                  .setDecisionRequirementsId("drg-id")
-                  .setDecisionRequirementsName("drg-name")
-                  .setDecisionRequirementsVersion(1)
-                  .setDecisionRequirementsKey(1L)
-                  .setNamespace("namespace")
-                  .setResourceName("resource-name")
-                  .setChecksum(checksum)
-                  .setDuplicate(true);
-              record
-                  .decisionsMetadata()
-                  .add()
-                  .setDecisionId("decision-id")
-                  .setDecisionName("decision-name")
-                  .setVersion(1)
-                  .setDecisionKey(2L)
-                  .setDecisionRequirementsKey(1L)
-                  .setDecisionRequirementsId("drg-id")
-                  .setDeploymentKey(deploymentKey)
-                  .setVersionTag(versionTag)
-                  .setDuplicate(true);
-              record
-                  .formMetadata()
-                  .add()
-                  .setFormId("form-id")
-                  .setVersion(1)
-                  .setFormKey(1L)
-                  .setResourceName("form1.form")
-                  .setChecksum(checksum)
-                  .setDeploymentKey(deploymentKey)
-                  .setDuplicate(true)
-                  .setVersionTag(versionTag);
-              record
-                  .setTenantId("tenant-23")
-                  .setReconstructionKey(123)
-                  .setReconstructionProgress(ReconstructionProgress.FORM);
-              return record;
-            },
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// DeploymentRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "DeploymentRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String resourceName = "resource";
+                  final DirectBuffer resource = wrapString("contents");
+                  final String bpmnProcessId = "testProcess";
+                  final long processDefinitionKey = 123;
+                  final int processVersion = 12;
+                  final DirectBuffer checksum = wrapString("checksum");
+                  final long deploymentKey = 1234;
+                  final String versionTag = "v1.0";
+                  final DeploymentRecord record = new DeploymentRecord();
+                  record
+                      .setDeploymentKey(deploymentKey)
+                      .resources()
+                      .add()
+                      .setResourceName(wrapString(resourceName))
+                      .setResource(resource);
+                  record
+                      .processesMetadata()
+                      .add()
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setKey(processDefinitionKey)
+                      .setResourceName(wrapString(resourceName))
+                      .setVersion(processVersion)
+                      .setChecksum(checksum)
+                      .setDuplicate(true)
+                      .setDeploymentKey(deploymentKey)
+                      .setVersionTag(versionTag);
+                  record
+                      .decisionRequirementsMetadata()
+                      .add()
+                      .setDecisionRequirementsId("drg-id")
+                      .setDecisionRequirementsName("drg-name")
+                      .setDecisionRequirementsVersion(1)
+                      .setDecisionRequirementsKey(1L)
+                      .setNamespace("namespace")
+                      .setResourceName("resource-name")
+                      .setChecksum(checksum)
+                      .setDuplicate(true);
+                  record
+                      .decisionsMetadata()
+                      .add()
+                      .setDecisionId("decision-id")
+                      .setDecisionName("decision-name")
+                      .setVersion(1)
+                      .setDecisionKey(2L)
+                      .setDecisionRequirementsKey(1L)
+                      .setDecisionRequirementsId("drg-id")
+                      .setDeploymentKey(deploymentKey)
+                      .setVersionTag(versionTag)
+                      .setDuplicate(true);
+                  record
+                      .formMetadata()
+                      .add()
+                      .setFormId("form-id")
+                      .setVersion(1)
+                      .setFormKey(1L)
+                      .setResourceName("form1.form")
+                      .setChecksum(checksum)
+                      .setDeploymentKey(deploymentKey)
+                      .setDuplicate(true)
+                      .setVersionTag(versionTag);
+                  record
+                      .setTenantId("tenant-23")
+                      .setReconstructionKey(123)
+                      .setReconstructionProgress(ReconstructionProgress.FORM);
+                  return record;
+                },
+            """
         {
           "resources": [
             {
@@ -443,31 +443,31 @@ final class JsonSerializableToJsonTest {
           "deploymentKey": 1234
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// DeploymentDistributionRecord /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "DeploymentDistributionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final var record = new DeploymentDistributionRecord();
-              record.setPartition(2);
-              return record;
-            },
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// DeploymentDistributionRecord /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "DeploymentDistributionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final var record = new DeploymentDistributionRecord();
+                  record.setPartition(2);
+                  return record;
+                },
+            """
         {
           "partitionId": 2
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// Empty DeploymentRecord /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "Empty DeploymentRecord",
-        (Supplier<UnifiedRecordValue>) DeploymentRecord::new,
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// Empty DeploymentRecord /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "Empty DeploymentRecord",
+            (Supplier<UnifiedRecordValue>) DeploymentRecord::new,
+            """
         {
           "resources": [],
           "processesMetadata": [],
@@ -479,38 +479,38 @@ final class JsonSerializableToJsonTest {
           "deploymentKey": -1
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// ProcessRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "ProcessRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String resourceName = "resource";
-              final DirectBuffer resource = wrapString("contents");
-              final String bpmnProcessId = "testProcess";
-              final long processDefinitionKey = 123;
-              final int processVersion = 12;
-              final DirectBuffer checksum = wrapString("checksum");
-              final long deploymentKey = 1234;
-              final String versionTag = "v1.0";
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// ProcessRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "ProcessRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String resourceName = "resource";
+                  final DirectBuffer resource = wrapString("contents");
+                  final String bpmnProcessId = "testProcess";
+                  final long processDefinitionKey = 123;
+                  final int processVersion = 12;
+                  final DirectBuffer checksum = wrapString("checksum");
+                  final long deploymentKey = 1234;
+                  final String versionTag = "v1.0";
 
-              final ProcessRecord record = new ProcessRecord();
-              record
-                  .setResourceName(wrapString(resourceName))
-                  .setResource(resource)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setKey(processDefinitionKey)
-                  .setResourceName(wrapString(resourceName))
-                  .setVersion(processVersion)
-                  .setChecksum(checksum)
-                  .setDeploymentKey(deploymentKey)
-                  .setVersionTag(versionTag);
+                  final ProcessRecord record = new ProcessRecord();
+                  record
+                      .setResourceName(wrapString(resourceName))
+                      .setResource(resource)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setKey(processDefinitionKey)
+                      .setResourceName(wrapString(resourceName))
+                      .setVersion(processVersion)
+                      .setChecksum(checksum)
+                      .setDeploymentKey(deploymentKey)
+                      .setVersionTag(versionTag);
 
-              return record;
-            },
-        """
+                  return record;
+                },
+            """
         {
           "resourceName": "resource",
           "resource": "Y29udGVudHM=",
@@ -525,31 +525,31 @@ final class JsonSerializableToJsonTest {
           "versionTag": "v1.0"
         }
         """
-      },
-      new Object[] {
-        "ProcessRecord (with empty deployment key and version tag)",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String resourceName = "resource";
-              final DirectBuffer resource = wrapString("contents");
-              final String bpmnProcessId = "testProcess";
-              final long processDefinitionKey = 123;
-              final int processVersion = 12;
-              final DirectBuffer checksum = wrapString("checksum");
+        },
+        new Object[]{
+            "ProcessRecord (with empty deployment key and version tag)",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String resourceName = "resource";
+                  final DirectBuffer resource = wrapString("contents");
+                  final String bpmnProcessId = "testProcess";
+                  final long processDefinitionKey = 123;
+                  final int processVersion = 12;
+                  final DirectBuffer checksum = wrapString("checksum");
 
-              final ProcessRecord record = new ProcessRecord();
-              record
-                  .setResourceName(wrapString(resourceName))
-                  .setResource(resource)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setKey(processDefinitionKey)
-                  .setResourceName(wrapString(resourceName))
-                  .setVersion(processVersion)
-                  .setChecksum(checksum);
+                  final ProcessRecord record = new ProcessRecord();
+                  record
+                      .setResourceName(wrapString(resourceName))
+                      .setResource(resource)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setKey(processDefinitionKey)
+                      .setResourceName(wrapString(resourceName))
+                      .setVersion(processVersion)
+                      .setChecksum(checksum);
 
-              return record;
-            },
-        """
+                  return record;
+                },
+            """
         {
           "resourceName": "resource",
           "resource": "Y29udGVudHM=",
@@ -564,67 +564,67 @@ final class JsonSerializableToJsonTest {
           "versionTag": ""
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// ErrorRecord ///////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "ErrorRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final ErrorRecord record = new ErrorRecord();
-              record.initErrorRecord(RUNTIME_EXCEPTION, 123);
-              record.setProcessInstanceKey(4321);
-              return record;
-            },
-        errorRecordAsJson(4321)
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// Empty ErrorRecord /////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "Empty ErrorRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final ErrorRecord record = new ErrorRecord();
-              record.initErrorRecord(RUNTIME_EXCEPTION, 123);
-              return record;
-            },
-        errorRecordAsJson(-1)
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// IncidentRecord /////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "IncidentRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long elementInstanceKey = 34;
-              final long processDefinitionKey = 134;
-              final long processInstanceKey = 10;
-              final String elementId = "activity";
-              final String bpmnProcessId = "process";
-              final String errorMessage = "error";
-              final ErrorType errorType = ErrorType.IO_MAPPING_ERROR;
-              final long jobKey = 123;
-              final var elementInstancePath = List.of(List.of(101L, 102L), List.of(103L, 104L));
-              final var processDefinitionPath = List.of(101L, 102L);
-              final var callingElementPath = List.of(12345, 67890);
-              return new IncidentRecord()
-                  .setElementInstanceKey(elementInstanceKey)
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setElementId(wrapString(elementId))
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setErrorMessage(errorMessage)
-                  .setErrorType(errorType)
-                  .setJobKey(jobKey)
-                  .setVariableScopeKey(elementInstanceKey)
-                  .setElementInstancePath(elementInstancePath)
-                  .setProcessDefinitionPath(processDefinitionPath)
-                  .setCallingElementPath(callingElementPath);
-            },
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// ErrorRecord ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "ErrorRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final ErrorRecord record = new ErrorRecord();
+                  record.initErrorRecord(RUNTIME_EXCEPTION, 123);
+                  record.setProcessInstanceKey(4321);
+                  return record;
+                },
+            errorRecordAsJson(4321)
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// Empty ErrorRecord /////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "Empty ErrorRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final ErrorRecord record = new ErrorRecord();
+                  record.initErrorRecord(RUNTIME_EXCEPTION, 123);
+                  return record;
+                },
+            errorRecordAsJson(-1)
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// IncidentRecord /////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "IncidentRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long elementInstanceKey = 34;
+                  final long processDefinitionKey = 134;
+                  final long processInstanceKey = 10;
+                  final String elementId = "activity";
+                  final String bpmnProcessId = "process";
+                  final String errorMessage = "error";
+                  final ErrorType errorType = ErrorType.IO_MAPPING_ERROR;
+                  final long jobKey = 123;
+                  final var elementInstancePath = List.of(List.of(101L, 102L), List.of(103L, 104L));
+                  final var processDefinitionPath = List.of(101L, 102L);
+                  final var callingElementPath = List.of(12345, 67890);
+                  return new IncidentRecord()
+                      .setElementInstanceKey(elementInstanceKey)
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setElementId(wrapString(elementId))
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setErrorMessage(errorMessage)
+                      .setErrorType(errorType)
+                      .setJobKey(jobKey)
+                      .setVariableScopeKey(elementInstanceKey)
+                      .setElementInstancePath(elementInstancePath)
+                      .setProcessDefinitionPath(processDefinitionPath)
+                      .setCallingElementPath(callingElementPath);
+                },
+            """
         {
           "errorType": "IO_MAPPING_ERROR",
           "errorMessage": "error",
@@ -641,14 +641,14 @@ final class JsonSerializableToJsonTest {
           "callingElementPath": [12345, 67890]
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// Empty IncidentRecord ///////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      new Object[] {
-        "Empty IncidentRecord",
-        (Supplier<UnifiedRecordValue>) IncidentRecord::new,
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// Empty IncidentRecord ///////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        new Object[]{
+            "Empty IncidentRecord",
+            (Supplier<UnifiedRecordValue>) IncidentRecord::new,
+            """
         {
           "errorType": "UNKNOWN",
           "errorMessage": "",
@@ -665,81 +665,81 @@ final class JsonSerializableToJsonTest {
           "callingElementPath":[]
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// JobBatchRecord ////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "JobBatchRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final int amount = 1;
-              final long timeout = 2L;
-              final String type = "type";
-              final String worker = "worker";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// JobBatchRecord ////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "JobBatchRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final int amount = 1;
+                  final long timeout = 2L;
+                  final String type = "type";
+                  final String worker = "worker";
 
-              final JobBatchRecord record =
-                  new JobBatchRecord()
-                      .setMaxJobsToActivate(amount)
-                      .setTimeout(timeout)
-                      .setType(type)
-                      .setWorker(worker)
-                      .setTruncated(true);
+                  final JobBatchRecord record =
+                      new JobBatchRecord()
+                          .setMaxJobsToActivate(amount)
+                          .setTimeout(timeout)
+                          .setType(type)
+                          .setWorker(worker)
+                          .setTruncated(true);
 
-              record.jobKeys().add().setValue(3L);
-              final JobRecord jobRecord = record.jobs().add();
+                  record.jobKeys().add().setValue(3L);
+                  final JobRecord jobRecord = record.jobs().add();
 
-              final String bpmnProcessId = "test-process";
-              final int processDefinitionKey = 13;
-              final int processDefinitionVersion = 12;
-              final int processInstanceKey = 1234;
-              final String activityId = "activity";
-              final int activityInstanceKey = 123;
-              final Set<String> changedAttributes = Set.of("bar", "foo");
-              final JobResult result =
-                  new JobResult()
-                      .setDenied(true)
-                      .setDeniedReason("Reason to deny lifecycle transition")
-                      .setCorrections(
-                          new JobResultCorrections()
-                              .setAssignee("frodo")
-                              .setDueDate("today")
-                              .setFollowUpDate("tomorrow")
-                              .setCandidateGroupsList(List.of("fellowship", "eagles"))
-                              .setCandidateUsersList(List.of("frodo", "sam", "gollum"))
-                              .setPriority(1))
-                      .setCorrectedAttributes(
-                          List.of(
-                              "assignee",
-                              "dueDate",
-                              "followUpDate",
-                              "candidateGroupsList",
-                              "candidateUsersList",
-                              "priority"));
+                  final String bpmnProcessId = "test-process";
+                  final int processDefinitionKey = 13;
+                  final int processDefinitionVersion = 12;
+                  final int processInstanceKey = 1234;
+                  final String activityId = "activity";
+                  final int activityInstanceKey = 123;
+                  final Set<String> changedAttributes = Set.of("bar", "foo");
+                  final JobResult result =
+                      new JobResult()
+                          .setDenied(true)
+                          .setDeniedReason("Reason to deny lifecycle transition")
+                          .setCorrections(
+                              new JobResultCorrections()
+                                  .setAssignee("frodo")
+                                  .setDueDate("today")
+                                  .setFollowUpDate("tomorrow")
+                                  .setCandidateGroupsList(List.of("fellowship", "eagles"))
+                                  .setCandidateUsersList(List.of("frodo", "sam", "gollum"))
+                                  .setPriority(1))
+                          .setCorrectedAttributes(
+                              List.of(
+                                  "assignee",
+                                  "dueDate",
+                                  "followUpDate",
+                                  "candidateGroupsList",
+                                  "candidateUsersList",
+                                  "priority"));
 
-              jobRecord
-                  .setWorker(wrapString(worker))
-                  .setType(wrapString(type))
-                  .setVariables(VARIABLES_MSGPACK)
-                  .setRetries(3)
-                  .setRecurringTime(1001L)
-                  .setRetryBackoff(1002L)
-                  .setErrorMessage("failed message")
-                  .setErrorCode(wrapString("error"))
-                  .setDeadline(1000L)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setProcessDefinitionVersion(processDefinitionVersion)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setElementId(wrapString(activityId))
-                  .setElementInstanceKey(activityInstanceKey)
-                  .setChangedAttributes(changedAttributes)
-                  .setResult(result);
+                  jobRecord
+                      .setWorker(wrapString(worker))
+                      .setType(wrapString(type))
+                      .setVariables(VARIABLES_MSGPACK)
+                      .setRetries(3)
+                      .setRecurringTime(1001L)
+                      .setRetryBackoff(1002L)
+                      .setErrorMessage("failed message")
+                      .setErrorCode(wrapString("error"))
+                      .setDeadline(1000L)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setProcessDefinitionVersion(processDefinitionVersion)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setElementId(wrapString(activityId))
+                      .setElementInstanceKey(activityInstanceKey)
+                      .setChangedAttributes(changedAttributes)
+                      .setResult(result);
 
-              return record;
-            },
-        """
+                  return record;
+                },
+            """
         {
           "maxJobsToActivate": 1,
           "type": "type",
@@ -799,18 +799,18 @@ final class JsonSerializableToJsonTest {
           "tenantIds": []
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty JobBatchRecord //////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty JobBatchRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String type = "type";
-              return new JobBatchRecord().setType(type);
-            },
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty JobBatchRecord //////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty JobBatchRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String type = "type";
+                  return new JobBatchRecord().setType(type);
+                },
+            """
         {
           "worker": "",
           "type": "type",
@@ -822,76 +822,77 @@ final class JsonSerializableToJsonTest {
           "tenantIds": []
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// JobRecord /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "JobRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String worker = "myWorker";
-              final String type = "myType";
-              final int retries = 12;
-              final int deadline = 13;
-              final int timeout = 14;
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// JobRecord /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "JobRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String worker = "myWorker";
+                  final String type = "myType";
+                  final int retries = 12;
+                  final int deadline = 13;
+                  final int timeout = 14;
 
-              final String bpmnProcessId = "test-process";
-              final int processDefinitionKey = 13;
-              final int processDefinitionVersion = 12;
-              final int processInstanceKey = 1234;
-              final String elementId = "activity";
-              final int activityInstanceKey = 123;
-              final Set<String> changedAttributes = Set.of("bar", "foo");
-              final JobResult result =
-                  new JobResult()
-                      .setDenied(true)
-                      .setDeniedReason("Reason to deny lifecycle transition")
-                      .setCorrections(
-                          new JobResultCorrections()
-                              .setAssignee("frodo")
-                              .setDueDate("today")
-                              .setFollowUpDate("tomorrow")
-                              .setCandidateGroupsList(List.of("fellowship", "eagles"))
-                              .setCandidateUsersList(List.of("frodo", "sam", "gollum"))
-                              .setPriority(1))
-                      .setCorrectedAttributes(
-                          List.of(
-                              "assignee",
-                              "dueDate",
-                              "followUpDate",
-                              "candidateGroupsList",
-                              "candidateUsersList",
-                              "priority"));
+                  final String bpmnProcessId = "test-process";
+                  final int processDefinitionKey = 13;
+                  final int processDefinitionVersion = 12;
+                  final int processInstanceKey = 1234;
+                  final String elementId = "activity";
+                  final int activityInstanceKey = 123;
+                  final Set<String> changedAttributes = Set.of("bar", "foo");
+                  final JobResult result =
+                      new JobResult()
+                          .setDenied(true)
+                          .setDeniedReason("Reason to deny lifecycle transition")
+                          .setCorrections(
+                              new JobResultCorrections()
+                                  .setAssignee("frodo")
+                                  .setDueDate("today")
+                                  .setFollowUpDate("tomorrow")
+                                  .setCandidateGroupsList(List.of("fellowship", "eagles"))
+                                  .setCandidateUsersList(List.of("frodo", "sam", "gollum"))
+                                  .setPriority(1))
+                          .setCorrectedAttributes(
+                              List.of(
+                                  "assignee",
+                                  "dueDate",
+                                  "followUpDate",
+                                  "candidateGroupsList",
+                                  "candidateUsersList",
+                                  "priority"));
 
-              final Map<String, String> customHeaders =
-                  Collections.singletonMap("workerVersion", "42");
+                  final Map<String, String> customHeaders =
+                      Collections.singletonMap("workerVersion", "42");
 
-              final JobRecord record =
-                  new JobRecord()
-                      .setWorker(wrapString(worker))
-                      .setType(wrapString(type))
-                      .setVariables(VARIABLES_MSGPACK)
-                      .setRetries(retries)
-                      .setRetryBackoff(1003)
-                      .setRecurringTime(1004)
-                      .setDeadline(deadline)
-                      .setTimeout(timeout)
-                      .setErrorMessage("failed message")
-                      .setErrorCode(wrapString("error"))
-                      .setBpmnProcessId(wrapString(bpmnProcessId))
-                      .setProcessDefinitionKey(processDefinitionKey)
-                      .setProcessDefinitionVersion(processDefinitionVersion)
-                      .setProcessInstanceKey(processInstanceKey)
-                      .setElementId(wrapString(elementId))
-                      .setElementInstanceKey(activityInstanceKey)
-                      .setChangedAttributes(changedAttributes)
-                      .setResult(result);
+                  final JobRecord record =
+                      new JobRecord()
+                          .setWorker(wrapString(worker))
+                          .setType(wrapString(type))
+                          .setVariables(VARIABLES_MSGPACK)
+                          .setRetries(retries)
+                          .setRetryBackoff(1003)
+                          .setRecurringTime(1004)
+                          .setDeadline(deadline)
+                          .setTimeout(timeout)
+                          .setErrorMessage("failed message")
+                          .setErrorCode(wrapString("error"))
+                          .setBpmnProcessId(wrapString(bpmnProcessId))
+                          .setProcessDefinitionKey(processDefinitionKey)
+                          .setProcessDefinitionVersion(processDefinitionVersion)
+                          .setProcessInstanceKey(processInstanceKey)
+                          .setElementId(wrapString(elementId))
+                          .setElementInstanceKey(activityInstanceKey)
+                          .setChangedAttributes(changedAttributes)
+                          .setResult(result);
 
-              record.setCustomHeaders(wrapArray(MsgPackConverter.convertToMsgPack(customHeaders)));
-              return record;
-            },
-        """
+                  record.setCustomHeaders(
+                      wrapArray(MsgPackConverter.convertToMsgPack(customHeaders)));
+                  return record;
+                },
+            """
         {
           "bpmnProcessId": "test-process",
           "processDefinitionKey": 13,
@@ -940,15 +941,15 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// Empty JobRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty JobRecord",
-        (Supplier<UnifiedRecordValue>) JobRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// Empty JobRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty JobRecord",
+            (Supplier<UnifiedRecordValue>) JobRecord::new,
+            """
         {
           "type": "",
           "processDefinitionVersion": -1,
@@ -986,18 +987,18 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// JobRecord with nullable variable //////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "JobRecordWithNullableVariable",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new JobRecord()
-                    .setVariables(
-                        new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// JobRecord with nullable variable //////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "JobRecordWithNullableVariable",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new JobRecord()
+                        .setVariables(
+                            new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
+            """
         {
           "type": "",
           "errorMessage": "",
@@ -1037,29 +1038,29 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// MessageRecord /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "MessageRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String correlationKey = "test-key";
-              final String messageName = "test-message";
-              final long timeToLive = 12;
-              final String messageId = "test-id";
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// MessageRecord /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "MessageRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String correlationKey = "test-key";
+                  final String messageName = "test-message";
+                  final long timeToLive = 12;
+                  final String messageId = "test-id";
 
-              return new MessageRecord()
-                  .setCorrelationKey(wrapString(correlationKey))
-                  .setName(wrapString(messageName))
-                  .setVariables(VARIABLES_MSGPACK)
-                  .setTimeToLive(timeToLive)
-                  .setDeadline(22L)
-                  .setMessageId(wrapString(messageId))
-                  .setTenantId("foo");
-            },
-        """
+                  return new MessageRecord()
+                      .setCorrelationKey(wrapString(correlationKey))
+                      .setName(wrapString(messageName))
+                      .setVariables(VARIABLES_MSGPACK)
+                      .setTimeToLive(timeToLive)
+                      .setDeadline(22L)
+                      .setMessageId(wrapString(messageId))
+                      .setTenantId("foo");
+                },
+            """
         {
           "timeToLive": 12,
           "correlationKey": "test-key",
@@ -1072,24 +1073,24 @@ final class JsonSerializableToJsonTest {
           "tenantId": "foo"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty MessageRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty MessageRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String correlationKey = "test-key";
-              final String messageName = "test-message";
-              final long timeToLive = 12;
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty MessageRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty MessageRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String correlationKey = "test-key";
+                  final String messageName = "test-message";
+                  final long timeToLive = 12;
 
-              return new MessageRecord()
-                  .setTimeToLive(timeToLive)
-                  .setCorrelationKey(correlationKey)
-                  .setName(messageName);
-            },
-        """
+                  return new MessageRecord()
+                      .setTimeToLive(timeToLive)
+                      .setCorrelationKey(correlationKey)
+                      .setName(messageName);
+                },
+            """
         {
           "timeToLive": 12,
           "correlationKey": "test-key",
@@ -1100,22 +1101,22 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// MessageBatchRecord
-      // /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "MessageBatchRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final List<Long> messageKeys = List.of(123L, 456L);
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// MessageBatchRecord
+        // /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "MessageBatchRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final List<Long> messageKeys = List.of(123L, 456L);
 
-              return new MessageBatchRecord()
-                  .addMessageKey(messageKeys.get(0))
-                  .addMessageKey(messageKeys.get(1));
-            },
-        """
+                  return new MessageBatchRecord()
+                      .addMessageKey(messageKeys.get(0))
+                      .addMessageKey(messageKeys.get(1));
+                },
+            """
         {
           "messageKeys": [
             123,
@@ -1123,47 +1124,47 @@ final class JsonSerializableToJsonTest {
           ]
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty MessageBatchRecord
-      // ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty MessageBatchRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              return new MessageBatchRecord();
-            },
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty MessageBatchRecord
+        // ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty MessageBatchRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  return new MessageBatchRecord();
+                },
+            """
         {
           "messageKeys": []
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// MessageStartEventSubscriptionRecord ///////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "MessageStartEventSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String messageName = "name";
-              final String startEventId = "startEvent";
-              final int processDefinitionKey = 22334;
-              final String bpmnProcessId = "process";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// MessageStartEventSubscriptionRecord ///////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "MessageStartEventSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String messageName = "name";
+                  final String startEventId = "startEvent";
+                  final int processDefinitionKey = 22334;
+                  final String bpmnProcessId = "process";
 
-              return new MessageStartEventSubscriptionRecord()
-                  .setMessageName(wrapString(messageName))
-                  .setStartEventId(wrapString(startEventId))
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setProcessInstanceKey(2L)
-                  .setMessageKey(3L)
-                  .setCorrelationKey(wrapString("test-key"))
-                  .setVariables(VARIABLES_MSGPACK);
-            },
-        """
+                  return new MessageStartEventSubscriptionRecord()
+                      .setMessageName(wrapString(messageName))
+                      .setStartEventId(wrapString(startEventId))
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setProcessInstanceKey(2L)
+                      .setMessageKey(3L)
+                      .setCorrelationKey(wrapString("test-key"))
+                      .setVariables(VARIABLES_MSGPACK);
+                },
+            """
         {
           "processDefinitionKey": 22334,
           "messageName": "name",
@@ -1178,21 +1179,21 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty MessageStartEventSubscriptionRecord /////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty MessageStartEventSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final int processDefinitionKey = 22334;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty MessageStartEventSubscriptionRecord /////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty MessageStartEventSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final int processDefinitionKey = 22334;
 
-              return new MessageStartEventSubscriptionRecord()
-                  .setProcessDefinitionKey(processDefinitionKey);
-            },
-        """
+                  return new MessageStartEventSubscriptionRecord()
+                      .setProcessDefinitionKey(processDefinitionKey);
+                },
+            """
         {
           "processDefinitionKey": 22334,
           "messageName": "",
@@ -1205,34 +1206,34 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// MessageSubscriptionRecord /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "MessageSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long elementInstanceKey = 1L;
-              final String bpmnProcessId = "process";
-              final String messageName = "name";
-              final long processInstanceKey = 2L;
-              final String correlationKey = "key";
-              final long messageKey = 3L;
-              final long requestId = 4L;
-              final int requestStreamId = 5;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// MessageSubscriptionRecord /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "MessageSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long elementInstanceKey = 1L;
+                  final String bpmnProcessId = "process";
+                  final String messageName = "name";
+                  final long processInstanceKey = 2L;
+                  final String correlationKey = "key";
+                  final long messageKey = 3L;
+                  final long requestId = 4L;
+                  final int requestStreamId = 5;
 
-              return new MessageSubscriptionRecord()
-                  .setElementInstanceKey(elementInstanceKey)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setMessageKey(messageKey)
-                  .setMessageName(wrapString(messageName))
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setCorrelationKey(wrapString(correlationKey))
-                  .setVariables(VARIABLES_MSGPACK);
-            },
-        """
+                  return new MessageSubscriptionRecord()
+                      .setElementInstanceKey(elementInstanceKey)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setMessageKey(messageKey)
+                      .setMessageName(wrapString(messageName))
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setCorrelationKey(wrapString(correlationKey))
+                      .setVariables(VARIABLES_MSGPACK);
+                },
+            """
         {
           "processInstanceKey": 2,
           "elementInstanceKey": 1,
@@ -1247,23 +1248,23 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty MessageSubscriptionRecord
-      // /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty MessageSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long elementInstanceKey = 13L;
-              final long processInstanceKey = 1L;
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty MessageSubscriptionRecord
+        // /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty MessageSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long elementInstanceKey = 13L;
+                  final long processInstanceKey = 1L;
 
-              return new MessageSubscriptionRecord()
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setElementInstanceKey(elementInstanceKey);
-            },
-        """
+                  return new MessageSubscriptionRecord()
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setElementInstanceKey(elementInstanceKey);
+                },
+            """
         {
           "processInstanceKey": 1,
           "elementInstanceKey": 13,
@@ -1276,35 +1277,35 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////// ProcessMessageSubscriptionRecord /////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ProcessMessageSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long elementInstanceKey = 123;
-              final String bpmnProcessId = "process";
-              final String messageName = "test-message";
-              final int subscriptionPartitionId = 2;
-              final int messageKey = 3;
-              final long processInstanceKey = 1345;
-              final String correlationKey = "key";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// ProcessMessageSubscriptionRecord /////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ProcessMessageSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long elementInstanceKey = 123;
+                  final String bpmnProcessId = "process";
+                  final String messageName = "test-message";
+                  final int subscriptionPartitionId = 2;
+                  final int messageKey = 3;
+                  final long processInstanceKey = 1345;
+                  final String correlationKey = "key";
 
-              return new ProcessMessageSubscriptionRecord()
-                  .setElementInstanceKey(elementInstanceKey)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setMessageName(wrapString(messageName))
-                  .setMessageKey(messageKey)
-                  .setSubscriptionPartitionId(subscriptionPartitionId)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setVariables(VARIABLES_MSGPACK)
-                  .setCorrelationKey(wrapString(correlationKey))
-                  .setElementId(wrapString("A"));
-            },
-        """
+                  return new ProcessMessageSubscriptionRecord()
+                      .setElementInstanceKey(elementInstanceKey)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setMessageName(wrapString(messageName))
+                      .setMessageKey(messageKey)
+                      .setSubscriptionPartitionId(subscriptionPartitionId)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setVariables(VARIABLES_MSGPACK)
+                      .setCorrelationKey(wrapString(correlationKey))
+                      .setElementId(wrapString("A"));
+                },
+            """
         {
           "elementInstanceKey": 123,
           "messageName": "test-message",
@@ -1320,23 +1321,23 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////// Empty ProcessMessageSubscriptionRecord ///////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty ProcessMessageSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long elementInstanceKey = 123;
-              final long processInstanceKey = 1345;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// Empty ProcessMessageSubscriptionRecord ///////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty ProcessMessageSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long elementInstanceKey = 123;
+                  final long processInstanceKey = 1345;
 
-              return new ProcessMessageSubscriptionRecord()
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setElementInstanceKey(elementInstanceKey);
-            },
-        """
+                  return new ProcessMessageSubscriptionRecord()
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setElementInstanceKey(elementInstanceKey);
+                },
+            """
         {
           "elementInstanceKey": 123,
           "messageName": "",
@@ -1350,31 +1351,31 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////// TimerRecord /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "TimerRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final int processDefinitionKey = 13;
-              final int processInstanceKey = 1234;
-              final int dueDate = 1234;
-              final int elementInstanceKey = 567;
-              final String handlerNodeId = "node1";
-              final int repetitions = 3;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////// TimerRecord /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "TimerRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final int processDefinitionKey = 13;
+                  final int processInstanceKey = 1234;
+                  final int dueDate = 1234;
+                  final int elementInstanceKey = 567;
+                  final String handlerNodeId = "node1";
+                  final int repetitions = 3;
 
-              return new TimerRecord()
-                  .setDueDate(dueDate)
-                  .setElementInstanceKey(elementInstanceKey)
-                  .setTargetElementId(wrapString(handlerNodeId))
-                  .setRepetitions(repetitions)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setProcessDefinitionKey(processDefinitionKey);
-            },
-        """
+                  return new TimerRecord()
+                      .setDueDate(dueDate)
+                      .setElementInstanceKey(elementInstanceKey)
+                      .setTargetElementId(wrapString(handlerNodeId))
+                      .setRepetitions(repetitions)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setProcessDefinitionKey(processDefinitionKey);
+                },
+            """
         {
           "elementInstanceKey": 567,
           "processInstanceKey": 1234,
@@ -1385,31 +1386,31 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// VariableRecord ////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "VariableRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String name = "x";
-              final String value = "1";
-              final long scopeKey = 3;
-              final long processInstanceKey = 2;
-              final long processDefinitionKey = 4;
-              final String bpmnProcessId = "process";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// VariableRecord ////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "VariableRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String name = "x";
+                  final String value = "1";
+                  final long scopeKey = 3;
+                  final long processInstanceKey = 2;
+                  final long processDefinitionKey = 4;
+                  final String bpmnProcessId = "process";
 
-              return new VariableRecord()
-                  .setName(wrapString(name))
-                  .setValue(new UnsafeBuffer(MsgPackConverter.convertToMsgPack(value)))
-                  .setScopeKey(scopeKey)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setBpmnProcessId(wrapString(bpmnProcessId));
-            },
-        """
+                  return new VariableRecord()
+                      .setName(wrapString(name))
+                      .setValue(new UnsafeBuffer(MsgPackConverter.convertToMsgPack(value)))
+                      .setScopeKey(scopeKey)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setBpmnProcessId(wrapString(bpmnProcessId));
+                },
+            """
         {
           "scopeKey": 3,
           "processInstanceKey": 2,
@@ -1420,30 +1421,30 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      // custom tenant
-      {
-        "VariableRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String name = "x";
-              final String value = "1";
-              final long scopeKey = 3;
-              final long processInstanceKey = 2;
-              final long processDefinitionKey = 4;
-              final String bpmnProcessId = "process";
+        // custom tenant
+        {
+            "VariableRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String name = "x";
+                  final String value = "1";
+                  final long scopeKey = 3;
+                  final long processInstanceKey = 2;
+                  final long processDefinitionKey = 4;
+                  final String bpmnProcessId = "process";
 
-              return new VariableRecord()
-                  .setName(wrapString(name))
-                  .setValue(new UnsafeBuffer(MsgPackConverter.convertToMsgPack(value)))
-                  .setScopeKey(scopeKey)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setTenantId("tenant-test");
-            },
-        """
+                  return new VariableRecord()
+                      .setName(wrapString(name))
+                      .setValue(new UnsafeBuffer(MsgPackConverter.convertToMsgPack(value)))
+                      .setScopeKey(scopeKey)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setTenantId("tenant-test");
+                },
+            """
         {
           "scopeKey": 3,
           "processInstanceKey": 2,
@@ -1454,24 +1455,24 @@ final class JsonSerializableToJsonTest {
           "tenantId": "tenant-test"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// VariableDocumentRecord ////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "VariableDocumentRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String value = "{'foo':1}";
-              final long scopeKey = 3;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// VariableDocumentRecord ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "VariableDocumentRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String value = "{'foo':1}";
+                  final long scopeKey = 3;
 
-              return new VariableDocumentRecord()
-                  .setUpdateSemantics(VariableDocumentUpdateSemantic.LOCAL)
-                  .setVariables(new UnsafeBuffer(MsgPackConverter.convertToMsgPack(value)))
-                  .setScopeKey(scopeKey);
-            },
-        """
+                  return new VariableDocumentRecord()
+                      .setUpdateSemantics(VariableDocumentUpdateSemantic.LOCAL)
+                      .setVariables(new UnsafeBuffer(MsgPackConverter.convertToMsgPack(value)))
+                      .setScopeKey(scopeKey);
+                },
+            """
         {
           "updateSemantics": "LOCAL",
           "variables": {
@@ -1481,20 +1482,20 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty VariableDocumentRecord //////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty VariableDocumentRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long scopeKey = 3;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty VariableDocumentRecord //////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty VariableDocumentRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long scopeKey = 3;
 
-              return new VariableDocumentRecord().setScopeKey(scopeKey);
-            },
-        """
+                  return new VariableDocumentRecord().setScopeKey(scopeKey);
+                },
+            """
         {
           "updateSemantics": "PROPAGATE",
           "variables": {},
@@ -1502,33 +1503,33 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// ProcessInstanceCreationRecord ////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ProcessInstanceCreationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String processId = "process";
-              final long key = 1L;
-              final int version = 1;
-              final long instanceKey = 2L;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// ProcessInstanceCreationRecord ////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ProcessInstanceCreationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String processId = "process";
+                  final long key = 1L;
+                  final int version = 1;
+                  final long instanceKey = 2L;
 
-              return new ProcessInstanceCreationRecord()
-                  .setBpmnProcessId(processId)
-                  .setProcessDefinitionKey(key)
-                  .setVersion(version)
-                  .setTenantId("test-tenant")
-                  .setVariables(
-                      new UnsafeBuffer(
-                          MsgPackConverter.convertToMsgPack("{'foo':'bar','baz':'boz'}")))
-                  .addStartInstruction(
-                      new ProcessInstanceCreationStartInstruction().setElementId("element"))
-                  .setProcessInstanceKey(instanceKey);
-            },
-        """
+                  return new ProcessInstanceCreationRecord()
+                      .setBpmnProcessId(processId)
+                      .setProcessDefinitionKey(key)
+                      .setVersion(version)
+                      .setTenantId("test-tenant")
+                      .setVariables(
+                          new UnsafeBuffer(
+                              MsgPackConverter.convertToMsgPack("{'foo':'bar','baz':'boz'}")))
+                      .addStartInstruction(
+                          new ProcessInstanceCreationStartInstruction().setElementId("element"))
+                      .setProcessInstanceKey(instanceKey);
+                },
+            """
         {
           "variables": {
             "foo": "bar",
@@ -1546,15 +1547,15 @@ final class JsonSerializableToJsonTest {
           "tenantId": "test-tenant"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty ProcessInstanceCreationRecord //////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty ProcessInstanceCreationRecord",
-        (Supplier<UnifiedRecordValue>) ProcessInstanceCreationRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty ProcessInstanceCreationRecord //////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty ProcessInstanceCreationRecord",
+            (Supplier<UnifiedRecordValue>) ProcessInstanceCreationRecord::new,
+            """
         {
           "variables": {},
           "bpmnProcessId": "",
@@ -1565,37 +1566,37 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// ProcessInstanceModificationRecord /////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ProcessInstanceModificationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final long key = 1L;
-              final var elementInstanceKeyToTerminate = 2L;
-              final var elementIdToActivate = "activity";
-              final var ancestorScopeKey = 3L;
-              final var variableInstructionElementId = "sub-process";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// ProcessInstanceModificationRecord /////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ProcessInstanceModificationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final long key = 1L;
+                  final var elementInstanceKeyToTerminate = 2L;
+                  final var elementIdToActivate = "activity";
+                  final var ancestorScopeKey = 3L;
+                  final var variableInstructionElementId = "sub-process";
 
-              return new ProcessInstanceModificationRecord()
-                  .setProcessInstanceKey(key)
-                  .addTerminateInstruction(
-                      new ProcessInstanceModificationTerminateInstruction()
-                          .setElementInstanceKey(elementInstanceKeyToTerminate))
-                  .addActivateInstruction(
-                      new ProcessInstanceModificationActivateInstruction()
-                          .setElementId(elementIdToActivate)
-                          .setAncestorScopeKey(ancestorScopeKey)
-                          .addVariableInstruction(
-                              new ProcessInstanceModificationVariableInstruction()
-                                  .setVariables(VARIABLES_MSGPACK)
-                                  .setElementId(variableInstructionElementId))
-                          .addAncestorScopeKeys(Set.of(key, ancestorScopeKey)));
-            },
-        """
+                  return new ProcessInstanceModificationRecord()
+                      .setProcessInstanceKey(key)
+                      .addTerminateInstruction(
+                          new ProcessInstanceModificationTerminateInstruction()
+                              .setElementInstanceKey(elementInstanceKeyToTerminate))
+                      .addActivateInstruction(
+                          new ProcessInstanceModificationActivateInstruction()
+                              .setElementId(elementIdToActivate)
+                              .setAncestorScopeKey(ancestorScopeKey)
+                              .addVariableInstruction(
+                                  new ProcessInstanceModificationVariableInstruction()
+                                      .setVariables(VARIABLES_MSGPACK)
+                                      .setElementId(variableInstructionElementId))
+                              .addAncestorScopeKeys(Set.of(key, ancestorScopeKey)));
+                },
+            """
         {
           "processInstanceKey": 1,
           "terminateInstructions": [{
@@ -1616,16 +1617,16 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty ProcessInstanceModificationRecord ///////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty ProcessInstanceModificationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> new ProcessInstanceModificationRecord().setProcessInstanceKey(1L),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty ProcessInstanceModificationRecord ///////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty ProcessInstanceModificationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> new ProcessInstanceModificationRecord().setProcessInstanceKey(1L),
+            """
         {
           "processInstanceKey": 1,
           "terminateInstructions": [],
@@ -1634,42 +1635,42 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// ProcessInstanceRecord ////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ProcessInstanceRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String bpmnProcessId = "test-process";
-              final int processDefinitionKey = 13;
-              final int version = 12;
-              final int processInstanceKey = 1234;
-              final String elementId = "activity";
-              final int flowScopeKey = 123;
-              final BpmnElementType bpmnElementType = BpmnElementType.SERVICE_TASK;
-              final var elementInstancePath = List.of(List.of(101L, 102L), List.of(103L, 104L));
-              final var processDefinitionPath = List.of(101L, 102L);
-              final var callingElementPath = List.of(12345, 67890);
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// ProcessInstanceRecord ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ProcessInstanceRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String bpmnProcessId = "test-process";
+                  final int processDefinitionKey = 13;
+                  final int version = 12;
+                  final int processInstanceKey = 1234;
+                  final String elementId = "activity";
+                  final int flowScopeKey = 123;
+                  final BpmnElementType bpmnElementType = BpmnElementType.SERVICE_TASK;
+                  final var elementInstancePath = List.of(List.of(101L, 102L), List.of(103L, 104L));
+                  final var processDefinitionPath = List.of(101L, 102L);
+                  final var callingElementPath = List.of(12345, 67890);
 
-              return new ProcessInstanceRecord()
-                  .setElementId(elementId)
-                  .setBpmnElementType(bpmnElementType)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setVersion(version)
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setFlowScopeKey(flowScopeKey)
-                  .setParentProcessInstanceKey(11)
-                  .setParentElementInstanceKey(22)
-                  .setBpmnEventType(BpmnEventType.UNSPECIFIED)
-                  .setElementInstancePath(elementInstancePath)
-                  .setProcessDefinitionPath(processDefinitionPath)
-                  .setCallingElementPath(callingElementPath);
-            },
-        """
+                  return new ProcessInstanceRecord()
+                      .setElementId(elementId)
+                      .setBpmnElementType(bpmnElementType)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setVersion(version)
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setFlowScopeKey(flowScopeKey)
+                      .setParentProcessInstanceKey(11)
+                      .setParentElementInstanceKey(22)
+                      .setBpmnEventType(BpmnEventType.UNSPECIFIED)
+                      .setElementInstancePath(elementInstancePath)
+                      .setProcessDefinitionPath(processDefinitionPath)
+                      .setCallingElementPath(callingElementPath);
+                },
+            """
         {
           "bpmnProcessId": "test-process",
           "version": 12,
@@ -1687,15 +1688,15 @@ final class JsonSerializableToJsonTest {
           "callingElementPath": [12345, 67890]
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty ProcessInstanceRecord //////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty ProcessInstanceRecord",
-        (Supplier<UnifiedRecordValue>) ProcessInstanceRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty ProcessInstanceRecord //////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty ProcessInstanceRecord",
+            (Supplier<UnifiedRecordValue>) ProcessInstanceRecord::new,
+            """
         {
           "bpmnProcessId": "",
           "version": -1,
@@ -1713,25 +1714,25 @@ final class JsonSerializableToJsonTest {
           "callingElementPath": []
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// DecisionRecord  ///////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "DecisionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new DecisionRecord()
-                    .setDecisionId("decision-id")
-                    .setDecisionName("decision-name")
-                    .setVersion(1)
-                    .setDecisionKey(2L)
-                    .setDecisionRequirementsKey(3L)
-                    .setDecisionRequirementsId("decision-requirements-id")
-                    .setDeploymentKey(4L)
-                    .setVersionTag("v1.0"),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// DecisionRecord  ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "DecisionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new DecisionRecord()
+                        .setDecisionId("decision-id")
+                        .setDecisionName("decision-name")
+                        .setVersion(1)
+                        .setDecisionKey(2L)
+                        .setDecisionRequirementsKey(3L)
+                        .setDecisionRequirementsId("decision-requirements-id")
+                        .setDeploymentKey(4L)
+                        .setVersionTag("v1.0"),
+            """
         {
           "decisionId": "decision-id",
           "decisionName": "decision-name",
@@ -1745,19 +1746,19 @@ final class JsonSerializableToJsonTest {
           "versionTag": "v1.0"
         }
         """
-      },
-      {
-        "DecisionRecord (with empty deployment key and version tag)",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new DecisionRecord()
-                    .setDecisionId("decision-id")
-                    .setDecisionName("decision-name")
-                    .setVersion(1)
-                    .setDecisionKey(2L)
-                    .setDecisionRequirementsKey(3L)
-                    .setDecisionRequirementsId("decision-requirements-id"),
-        """
+        },
+        {
+            "DecisionRecord (with empty deployment key and version tag)",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new DecisionRecord()
+                        .setDecisionId("decision-id")
+                        .setDecisionName("decision-name")
+                        .setVersion(1)
+                        .setDecisionKey(2L)
+                        .setDecisionRequirementsKey(3L)
+                        .setDecisionRequirementsId("decision-requirements-id"),
+            """
         {
           "decisionId": "decision-id",
           "decisionName": "decision-name",
@@ -1771,25 +1772,25 @@ final class JsonSerializableToJsonTest {
           "versionTag": ""
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// DecisionRequirementsRecord  ///////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "DecisionRequirementsRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new DecisionRequirementsRecord()
-                    .setDecisionRequirementsId("decision-requirements-id")
-                    .setDecisionRequirementsName("decision-requirements-name")
-                    .setDecisionRequirementsVersion(1)
-                    .setDecisionRequirementsKey(2L)
-                    .setNamespace("namespace")
-                    .setResourceName("resource-name")
-                    .setResource(wrapString("resource"))
-                    .setChecksum(wrapString("checksum")),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// DecisionRequirementsRecord  ///////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "DecisionRequirementsRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new DecisionRequirementsRecord()
+                        .setDecisionRequirementsId("decision-requirements-id")
+                        .setDecisionRequirementsName("decision-requirements-name")
+                        .setDecisionRequirementsVersion(1)
+                        .setDecisionRequirementsKey(2L)
+                        .setNamespace("namespace")
+                        .setResourceName("resource-name")
+                        .setResource(wrapString("resource"))
+                        .setChecksum(wrapString("checksum")),
+            """
         {
           "decisionRequirementsId": "decision-requirements-id",
           "decisionRequirementsName": "decision-requirements-name",
@@ -1803,63 +1804,63 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// DecisionEvaluationRecord  /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "DecisionEvaluationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final var record =
-                  new DecisionEvaluationRecord()
-                      .setDecisionKey(1L)
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// DecisionEvaluationRecord  /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "DecisionEvaluationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final var record =
+                      new DecisionEvaluationRecord()
+                          .setDecisionKey(1L)
+                          .setDecisionId("decision-id")
+                          .setDecisionName("decision-name")
+                          .setDecisionVersion(1)
+                          .setDecisionRequirementsKey(2L)
+                          .setDecisionRequirementsId("decision-requirements-id")
+                          .setDecisionOutput(toMessagePack("'decision-output'"))
+                          .setVariables(VARIABLES_MSGPACK)
+                          .setProcessDefinitionKey(3L)
+                          .setBpmnProcessId("bpmn-process-id")
+                          .setDecisionVersion(1)
+                          .setProcessInstanceKey(4L)
+                          .setElementInstanceKey(5L)
+                          .setElementId("element-id")
+                          .setEvaluationFailureMessage("evaluation-failure-message")
+                          .setFailedDecisionId("failed-decision-id");
+
+                  final var evaluatedDecisionRecord = record.evaluatedDecisions().add();
+                  evaluatedDecisionRecord
                       .setDecisionId("decision-id")
                       .setDecisionName("decision-name")
-                      .setDecisionVersion(1)
-                      .setDecisionRequirementsKey(2L)
-                      .setDecisionRequirementsId("decision-requirements-id")
-                      .setDecisionOutput(toMessagePack("'decision-output'"))
-                      .setVariables(VARIABLES_MSGPACK)
-                      .setProcessDefinitionKey(3L)
-                      .setBpmnProcessId("bpmn-process-id")
-                      .setDecisionVersion(1)
-                      .setProcessInstanceKey(4L)
-                      .setElementInstanceKey(5L)
-                      .setElementId("element-id")
-                      .setEvaluationFailureMessage("evaluation-failure-message")
-                      .setFailedDecisionId("failed-decision-id");
+                      .setDecisionKey(6L)
+                      .setDecisionVersion(7)
+                      .setDecisionType("DECISION_TABLE")
+                      .setDecisionOutput(toMessagePack("'decision-output'"));
 
-              final var evaluatedDecisionRecord = record.evaluatedDecisions().add();
-              evaluatedDecisionRecord
-                  .setDecisionId("decision-id")
-                  .setDecisionName("decision-name")
-                  .setDecisionKey(6L)
-                  .setDecisionVersion(7)
-                  .setDecisionType("DECISION_TABLE")
-                  .setDecisionOutput(toMessagePack("'decision-output'"));
+                  evaluatedDecisionRecord
+                      .evaluatedInputs()
+                      .add()
+                      .setInputId("input-id")
+                      .setInputName("input-name")
+                      .setInputValue(toMessagePack("'input-value'"));
 
-              evaluatedDecisionRecord
-                  .evaluatedInputs()
-                  .add()
-                  .setInputId("input-id")
-                  .setInputName("input-name")
-                  .setInputValue(toMessagePack("'input-value'"));
+                  final var matchedRuleRecord = evaluatedDecisionRecord.matchedRules().add();
+                  matchedRuleRecord.setRuleId("rule-id").setRuleIndex(1);
 
-              final var matchedRuleRecord = evaluatedDecisionRecord.matchedRules().add();
-              matchedRuleRecord.setRuleId("rule-id").setRuleIndex(1);
+                  matchedRuleRecord
+                      .evaluatedOutputs()
+                      .add()
+                      .setOutputId("output-id")
+                      .setOutputName("output-name")
+                      .setOutputValue(toMessagePack("'output-value'"));
 
-              matchedRuleRecord
-                  .evaluatedOutputs()
-                  .add()
-                  .setOutputId("output-id")
-                  .setOutputName("output-name")
-                  .setOutputValue(toMessagePack("'output-value'"));
-
-              return record;
-            },
-        """
+                  return record;
+                },
+            """
         {
           "decisionKey":1,
           "decisionId":"decision-id",
@@ -1912,63 +1913,63 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      // custom tenant
-      {
-        "DecisionEvaluationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final var record =
-                  new DecisionEvaluationRecord()
-                      .setDecisionKey(1L)
+        // custom tenant
+        {
+            "DecisionEvaluationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final var record =
+                      new DecisionEvaluationRecord()
+                          .setDecisionKey(1L)
+                          .setDecisionId("decision-id")
+                          .setDecisionName("decision-name")
+                          .setDecisionVersion(1)
+                          .setDecisionRequirementsKey(2L)
+                          .setDecisionRequirementsId("decision-requirements-id")
+                          .setDecisionOutput(toMessagePack("'decision-output'"))
+                          .setVariables(VARIABLES_MSGPACK)
+                          .setProcessDefinitionKey(3L)
+                          .setBpmnProcessId("bpmn-process-id")
+                          .setDecisionVersion(1)
+                          .setProcessInstanceKey(4L)
+                          .setElementInstanceKey(5L)
+                          .setElementId("element-id")
+                          .setEvaluationFailureMessage("evaluation-failure-message")
+                          .setFailedDecisionId("failed-decision-id")
+                          .setTenantId("tenant-test");
+
+                  final var evaluatedDecisionRecord = record.evaluatedDecisions().add();
+                  evaluatedDecisionRecord
                       .setDecisionId("decision-id")
                       .setDecisionName("decision-name")
-                      .setDecisionVersion(1)
-                      .setDecisionRequirementsKey(2L)
-                      .setDecisionRequirementsId("decision-requirements-id")
+                      .setDecisionKey(6L)
+                      .setDecisionVersion(7)
+                      .setDecisionType("DECISION_TABLE")
                       .setDecisionOutput(toMessagePack("'decision-output'"))
-                      .setVariables(VARIABLES_MSGPACK)
-                      .setProcessDefinitionKey(3L)
-                      .setBpmnProcessId("bpmn-process-id")
-                      .setDecisionVersion(1)
-                      .setProcessInstanceKey(4L)
-                      .setElementInstanceKey(5L)
-                      .setElementId("element-id")
-                      .setEvaluationFailureMessage("evaluation-failure-message")
-                      .setFailedDecisionId("failed-decision-id")
                       .setTenantId("tenant-test");
 
-              final var evaluatedDecisionRecord = record.evaluatedDecisions().add();
-              evaluatedDecisionRecord
-                  .setDecisionId("decision-id")
-                  .setDecisionName("decision-name")
-                  .setDecisionKey(6L)
-                  .setDecisionVersion(7)
-                  .setDecisionType("DECISION_TABLE")
-                  .setDecisionOutput(toMessagePack("'decision-output'"))
-                  .setTenantId("tenant-test");
+                  evaluatedDecisionRecord
+                      .evaluatedInputs()
+                      .add()
+                      .setInputId("input-id")
+                      .setInputName("input-name")
+                      .setInputValue(toMessagePack("'input-value'"));
 
-              evaluatedDecisionRecord
-                  .evaluatedInputs()
-                  .add()
-                  .setInputId("input-id")
-                  .setInputName("input-name")
-                  .setInputValue(toMessagePack("'input-value'"));
+                  final var matchedRuleRecord = evaluatedDecisionRecord.matchedRules().add();
+                  matchedRuleRecord.setRuleId("rule-id").setRuleIndex(1);
 
-              final var matchedRuleRecord = evaluatedDecisionRecord.matchedRules().add();
-              matchedRuleRecord.setRuleId("rule-id").setRuleIndex(1);
+                  matchedRuleRecord
+                      .evaluatedOutputs()
+                      .add()
+                      .setOutputId("output-id")
+                      .setOutputName("output-name")
+                      .setOutputValue(toMessagePack("'output-value'"));
 
-              matchedRuleRecord
-                  .evaluatedOutputs()
-                  .add()
-                  .setOutputId("output-id")
-                  .setOutputName("output-name")
-                  .setOutputValue(toMessagePack("'output-value'"));
-
-              return record;
-            },
-        """
+                  return record;
+                },
+            """
         {
           "decisionKey":1,
           "decisionId":"decision-id",
@@ -2021,15 +2022,15 @@ final class JsonSerializableToJsonTest {
           "tenantId": "tenant-test"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty DecisionEvaluationRecord ////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty DecisionEvaluationRecord",
-        (Supplier<UnifiedRecordValue>) () -> new DecisionEvaluationRecord(),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty DecisionEvaluationRecord ////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty DecisionEvaluationRecord",
+            (Supplier<UnifiedRecordValue>) () -> new DecisionEvaluationRecord(),
+            """
         {
           "decisionKey":-1,
           "decisionId":"",
@@ -2050,34 +2051,34 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Checkpoint record ////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Checkpoint record",
-        (Supplier<UnifiedRecordValue>)
-            () -> new CheckpointRecord().setCheckpointId(1L).setCheckpointPosition(10L),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Checkpoint record ////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Checkpoint record",
+            (Supplier<UnifiedRecordValue>)
+                () -> new CheckpointRecord().setCheckpointId(1L).setCheckpointPosition(10L),
+            """
         {
           "checkpointId":1,
           "checkpointPosition":10
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Escalation record /////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Escalation record",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new EscalationRecord()
-                    .setProcessInstanceKey(4L)
-                    .setEscalationCode("escalation")
-                    .setThrowElementId(wrapString("throw"))
-                    .setCatchElementId(wrapString("catch")),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Escalation record /////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Escalation record",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new EscalationRecord()
+                        .setProcessInstanceKey(4L)
+                        .setEscalationCode("escalation")
+                        .setThrowElementId(wrapString("throw"))
+                        .setCatchElementId(wrapString("catch")),
+            """
         {
           "processInstanceKey":4,
           "escalationCode": "escalation",
@@ -2086,15 +2087,15 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty EscalationRecord ////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty EscalationRecord",
-        (Supplier<UnifiedRecordValue>) EscalationRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty EscalationRecord ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty EscalationRecord",
+            (Supplier<UnifiedRecordValue>) EscalationRecord::new,
+            """
         {
           "processInstanceKey":-1,
           "escalationCode": "",
@@ -2103,23 +2104,23 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// SignalRecord /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "SignalRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String signalName = "test-signal";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// SignalRecord /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "SignalRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String signalName = "test-signal";
 
-              return new SignalRecord()
-                  .setSignalName(wrapString(signalName))
-                  .setVariables(VARIABLES_MSGPACK)
-                  .setTenantId("acme");
-            },
-        """
+                  return new SignalRecord()
+                      .setSignalName(wrapString(signalName))
+                      .setVariables(VARIABLES_MSGPACK)
+                      .setTenantId("acme");
+                },
+            """
         {
           "signalName":"test-signal",
           "variables": {
@@ -2128,49 +2129,49 @@ final class JsonSerializableToJsonTest {
           "tenantId": "acme"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty SignalRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty SignalRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String signalName = "test-signal";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty SignalRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty SignalRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String signalName = "test-signal";
 
-              return new SignalRecord().setSignalName(signalName);
-            },
-        """
+                  return new SignalRecord().setSignalName(signalName);
+                },
+            """
         {
           "signalName":"test-signal",
           "variables": {},
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// SignalSubscriptionRecord ///////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "SignalSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String signalName = "name";
-              final String catchEventId = "startEvent";
-              final int processDefinitionKey = 22334;
-              final String bpmnProcessId = "process";
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// SignalSubscriptionRecord ///////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "SignalSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String signalName = "name";
+                  final String catchEventId = "startEvent";
+                  final int processDefinitionKey = 22334;
+                  final String bpmnProcessId = "process";
 
-              return new SignalSubscriptionRecord()
-                  .setSignalName(wrapString(signalName))
-                  .setCatchEventId(wrapString(catchEventId))
-                  .setProcessDefinitionKey(processDefinitionKey)
-                  .setBpmnProcessId(wrapString(bpmnProcessId))
-                  .setCatchEventInstanceKey(3L)
-                  .setTenantId("acme");
-            },
-        """
+                  return new SignalSubscriptionRecord()
+                      .setSignalName(wrapString(signalName))
+                      .setCatchEventId(wrapString(catchEventId))
+                      .setProcessDefinitionKey(processDefinitionKey)
+                      .setBpmnProcessId(wrapString(bpmnProcessId))
+                      .setCatchEventInstanceKey(3L)
+                      .setTenantId("acme");
+                },
+            """
         {
           "processDefinitionKey":22334,
           "signalName": "name",
@@ -2180,20 +2181,21 @@ final class JsonSerializableToJsonTest {
           "tenantId": "acme"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty SignalSubscriptionRecord /////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty SignalStartEventSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final int processDefinitionKey = 22334;
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty SignalSubscriptionRecord /////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty SignalStartEventSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final int processDefinitionKey = 22334;
 
-              return new SignalSubscriptionRecord().setProcessDefinitionKey(processDefinitionKey);
-            },
-        """
+                  return new SignalSubscriptionRecord().setProcessDefinitionKey(
+                      processDefinitionKey);
+                },
+            """
         {
           "processDefinitionKey":22334,
           "signalName":"",
@@ -2203,45 +2205,45 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////// ResourceDeletionRecord ///////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ResourceDeletionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final var resourceKey = 1L;
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////// ResourceDeletionRecord ///////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ResourceDeletionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final var resourceKey = 1L;
 
-              return new ResourceDeletionRecord()
-                  .setResourceKey(resourceKey)
-                  .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-            },
-        """
+                  return new ResourceDeletionRecord()
+                      .setResourceKey(resourceKey)
+                      .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+                },
+            """
         {
           "resourceKey":1,
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////// AdHocSubProcessActivityActivationRecord //////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "AdHocSubProcessActivityActivationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final var adHocSubProcessActivityActivationRecord =
-                  new AdHocSubProcessActivityActivationRecord()
-                      .setAdHocSubProcessInstanceKey("1234")
-                      .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// AdHocSubProcessActivityActivationRecord //////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "AdHocSubProcessActivityActivationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final var adHocSubProcessActivityActivationRecord =
+                      new AdHocSubProcessActivityActivationRecord()
+                          .setAdHocSubProcessInstanceKey("1234")
+                          .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
-              adHocSubProcessActivityActivationRecord.elements().add().setElementId("123");
+                  adHocSubProcessActivityActivationRecord.elements().add().setElementId("123");
 
-              return adHocSubProcessActivityActivationRecord;
-            },
-        """
+                  return adHocSubProcessActivityActivationRecord;
+                },
+            """
         {
           "adHocSubProcessInstanceKey": "1234",
           "tenantId": "<default>",
@@ -2252,53 +2254,53 @@ final class JsonSerializableToJsonTest {
           ]
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////// Empty AdHocSubProcessActivityActivationRecord ///////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty AdHocSubProcessActivityActivationRecord",
-        (Supplier<UnifiedRecordValue>) AdHocSubProcessActivityActivationRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////// Empty AdHocSubProcessActivityActivationRecord ///////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty AdHocSubProcessActivityActivationRecord",
+            (Supplier<UnifiedRecordValue>) AdHocSubProcessActivityActivationRecord::new,
+            """
         {
           "adHocSubProcessInstanceKey": "",
           "tenantId": "<default>",
           "elements": []
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// CommandDistributionRecord //////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "CommandDistributionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final var deploymentRecord = new DeploymentRecord();
-              deploymentRecord
-                  .resources()
-                  .add()
-                  .setResourceName("my_first_bpmn.bpmn")
-                  .setResource(wrapString("This is the contents of the BPMN"));
-              deploymentRecord
-                  .processesMetadata()
-                  .add()
-                  .setKey(123)
-                  .setVersion(1)
-                  .setBpmnProcessId("my_first_process")
-                  .setResourceName("my_first_bpmn.bpmn")
-                  .setChecksum(wrapString("sha1"));
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// CommandDistributionRecord //////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "CommandDistributionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final var deploymentRecord = new DeploymentRecord();
+                  deploymentRecord
+                      .resources()
+                      .add()
+                      .setResourceName("my_first_bpmn.bpmn")
+                      .setResource(wrapString("This is the contents of the BPMN"));
+                  deploymentRecord
+                      .processesMetadata()
+                      .add()
+                      .setKey(123)
+                      .setVersion(1)
+                      .setBpmnProcessId("my_first_process")
+                      .setResourceName("my_first_bpmn.bpmn")
+                      .setChecksum(wrapString("sha1"));
 
-              return new CommandDistributionRecord()
-                  .setPartitionId(1)
-                  .setQueueId("totally-random-queue-id")
-                  .setValueType(ValueType.DEPLOYMENT)
-                  .setIntent(DeploymentIntent.CREATE)
-                  .setCommandValue(deploymentRecord);
-            },
-        """
+                  return new CommandDistributionRecord()
+                      .setPartitionId(1)
+                      .setQueueId("totally-random-queue-id")
+                      .setValueType(ValueType.DEPLOYMENT)
+                      .setIntent(DeploymentIntent.CREATE)
+                      .setCommandValue(deploymentRecord);
+                },
+            """
         {
           "partitionId": 1,
           "queueId": "totally-random-queue-id",
@@ -2329,15 +2331,15 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty CommandDistributionRecord ////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty CommandDistributionRecord",
-        (Supplier<UnifiedRecordValue>) () -> new CommandDistributionRecord().setPartitionId(1),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty CommandDistributionRecord ////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty CommandDistributionRecord",
+            (Supplier<UnifiedRecordValue>) () -> new CommandDistributionRecord().setPartitionId(1),
+            """
         {
           "partitionId": 1,
           "queueId": null,
@@ -2346,20 +2348,20 @@ final class JsonSerializableToJsonTest {
           "commandValue": null
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////// ProcessInstanceBatchRecord /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ProcessInstanceBatchRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new ProcessInstanceBatchRecord()
-                    .setProcessInstanceKey(123L)
-                    .setBatchElementInstanceKey(456L)
-                    .setIndex(10L),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////// ProcessInstanceBatchRecord /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ProcessInstanceBatchRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new ProcessInstanceBatchRecord()
+                        .setProcessInstanceKey(123L)
+                        .setBatchElementInstanceKey(456L)
+                        .setIndex(10L),
+            """
         {
           "processInstanceKey": 123,
           "batchElementInstanceKey": 456,
@@ -2367,19 +2369,19 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////// Empty ProcessInstanceBatchRecord ///////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty ProcessInstanceBatchRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new ProcessInstanceBatchRecord()
-                    .setProcessInstanceKey(123L)
-                    .setBatchElementInstanceKey(456L),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////// Empty ProcessInstanceBatchRecord ///////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty ProcessInstanceBatchRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new ProcessInstanceBatchRecord()
+                        .setProcessInstanceKey(123L)
+                        .setBatchElementInstanceKey(456L),
+            """
         {
           "processInstanceKey": 123,
           "batchElementInstanceKey": 456,
@@ -2387,39 +2389,39 @@ final class JsonSerializableToJsonTest {
           "tenantId": "<default>"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////// UserTaskRecord ///////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "UserTaskRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new UserTaskRecord()
-                    .setUserTaskKey(123)
-                    .setAssignee("myAssignee")
-                    .setCandidateGroupsList(List.of("myCandidateGroups"))
-                    .setCandidateUsersList(List.of("myCandidateUsers"))
-                    .setCreationTimestamp(1699633748000L)
-                    .setDueDate("2023-11-11T11:11:00+01:00")
-                    .setFollowUpDate("2023-11-12T11:11:00+01:00")
-                    .setFormKey(456)
-                    .setExternalFormReference("myReference")
-                    .setVariables(VARIABLES_MSGPACK)
-                    .setCustomHeaders(
-                        wrapArray(MsgPackConverter.convertToMsgPack(Map.of("foo", "bar"))))
-                    .setChangedAttributes(List.of("foo", "bar"))
-                    .setAction("complete")
-                    .setBpmnProcessId("test-process")
-                    .setProcessDefinitionKey(13)
-                    .setProcessDefinitionVersion(12)
-                    .setProcessInstanceKey(1234)
-                    .setElementId("activity")
-                    .setElementInstanceKey(5678)
-                    .setPriority(80)
-                    .setDeniedReason("Reason to deny lifecycle transition"),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////// UserTaskRecord ///////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "UserTaskRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new UserTaskRecord()
+                        .setUserTaskKey(123)
+                        .setAssignee("myAssignee")
+                        .setCandidateGroupsList(List.of("myCandidateGroups"))
+                        .setCandidateUsersList(List.of("myCandidateUsers"))
+                        .setCreationTimestamp(1699633748000L)
+                        .setDueDate("2023-11-11T11:11:00+01:00")
+                        .setFollowUpDate("2023-11-12T11:11:00+01:00")
+                        .setFormKey(456)
+                        .setExternalFormReference("myReference")
+                        .setVariables(VARIABLES_MSGPACK)
+                        .setCustomHeaders(
+                            wrapArray(MsgPackConverter.convertToMsgPack(Map.of("foo", "bar"))))
+                        .setChangedAttributes(List.of("foo", "bar"))
+                        .setAction("complete")
+                        .setBpmnProcessId("test-process")
+                        .setProcessDefinitionKey(13)
+                        .setProcessDefinitionVersion(12)
+                        .setProcessInstanceKey(1234)
+                        .setElementId("activity")
+                        .setElementInstanceKey(5678)
+                        .setPriority(80)
+                        .setDeniedReason("Reason to deny lifecycle transition"),
+            """
       {
         "bpmnProcessId": "test-process",
         "processDefinitionKey": 13,
@@ -2449,15 +2451,15 @@ final class JsonSerializableToJsonTest {
         "deniedReason": "Reason to deny lifecycle transition"
       }
       """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////////// Empty UserTaskRecord//////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty UserTaskRecord",
-        (Supplier<UnifiedRecordValue>) UserTaskRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////////// Empty UserTaskRecord//////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty UserTaskRecord",
+            (Supplier<UnifiedRecordValue>) UserTaskRecord::new,
+            """
       {
         "bpmnProcessId": "",
         "processDefinitionKey": -1,
@@ -2483,18 +2485,18 @@ final class JsonSerializableToJsonTest {
         "deniedReason": ""
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////// UserTaskRecord with nullable variable /////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "UserTaskRecord WithNullableVariable",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new UserTaskRecord()
-                    .setVariables(
-                        new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////// UserTaskRecord with nullable variable /////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "UserTaskRecord WithNullableVariable",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new UserTaskRecord()
+                        .setVariables(
+                            new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
+            """
       {
         "bpmnProcessId": "",
         "processDefinitionKey": -1,
@@ -2522,29 +2524,29 @@ final class JsonSerializableToJsonTest {
         "deniedReason": ""
       }
       """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// ProcessInstanceMigrationRecord ///////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ProcessInstanceMigrationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new ProcessInstanceMigrationRecord()
-                    .setProcessInstanceKey(123L)
-                    .setTargetProcessDefinitionKey(456L)
-                    .addMappingInstruction(
-                        new ProcessInstanceMigrationMappingInstruction()
-                            .setSourceElementId("sourceId")
-                            .setTargetElementId("targetId"))
-                    .addMappingInstruction(
-                        new ProcessInstanceMigrationMappingInstruction()
-                            .setSourceElementId("sourceId2"))
-                    .addMappingInstruction(
-                        new ProcessInstanceMigrationMappingInstruction()
-                            .setTargetElementId("targetId3")),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// ProcessInstanceMigrationRecord ///////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ProcessInstanceMigrationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new ProcessInstanceMigrationRecord()
+                        .setProcessInstanceKey(123L)
+                        .setTargetProcessDefinitionKey(456L)
+                        .addMappingInstruction(
+                            new ProcessInstanceMigrationMappingInstruction()
+                                .setSourceElementId("sourceId")
+                                .setTargetElementId("targetId"))
+                        .addMappingInstruction(
+                            new ProcessInstanceMigrationMappingInstruction()
+                                .setSourceElementId("sourceId2"))
+                        .addMappingInstruction(
+                            new ProcessInstanceMigrationMappingInstruction()
+                                .setTargetElementId("targetId3")),
+            """
         {
           "processInstanceKey": 123,
           "targetProcessDefinitionKey": 456,
@@ -2560,47 +2562,47 @@ final class JsonSerializableToJsonTest {
           }]
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// Empty ProcessInstanceMigrationRecord /////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty ProcessInstanceMigrationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new ProcessInstanceMigrationRecord()
-                    .setProcessInstanceKey(123L)
-                    .setTargetProcessDefinitionKey(456L),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Empty ProcessInstanceMigrationRecord /////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty ProcessInstanceMigrationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new ProcessInstanceMigrationRecord()
+                        .setProcessInstanceKey(123L)
+                        .setTargetProcessDefinitionKey(456L),
+            """
         {
           "processInstanceKey": 123,
           "targetProcessDefinitionKey": 456,
           "mappingInstructions": []
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// CompensationSubscriptionRecord ///////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "CompensationSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new CompensationSubscriptionRecord()
-                    .setTenantId("tenantId")
-                    .setProcessInstanceKey(123L)
-                    .setProcessDefinitionKey(456L)
-                    .setCompensableActivityId("elementActivityId")
-                    .setThrowEventId("elementThrowEventId")
-                    .setThrowEventInstanceKey(123L)
-                    .setCompensationHandlerId("compensationActivityElementId")
-                    .setCompensationHandlerInstanceKey(100L)
-                    .setCompensableActivityScopeKey(789L)
-                    .setCompensableActivityInstanceKey(123L)
-                    .setVariables(VARIABLES_MSGPACK),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// CompensationSubscriptionRecord ///////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "CompensationSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new CompensationSubscriptionRecord()
+                        .setTenantId("tenantId")
+                        .setProcessInstanceKey(123L)
+                        .setProcessDefinitionKey(456L)
+                        .setCompensableActivityId("elementActivityId")
+                        .setThrowEventId("elementThrowEventId")
+                        .setThrowEventInstanceKey(123L)
+                        .setCompensationHandlerId("compensationActivityElementId")
+                        .setCompensationHandlerInstanceKey(100L)
+                        .setCompensableActivityScopeKey(789L)
+                        .setCompensableActivityInstanceKey(123L)
+                        .setVariables(VARIABLES_MSGPACK),
+            """
         {
           "tenantId": "tenantId",
           "processInstanceKey": 123,
@@ -2617,15 +2619,15 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// Empty CompensationSubscriptionRecord /////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "CompensationSubscriptionRecord",
-        (Supplier<UnifiedRecordValue>) CompensationSubscriptionRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Empty CompensationSubscriptionRecord /////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "CompensationSubscriptionRecord",
+            (Supplier<UnifiedRecordValue>) CompensationSubscriptionRecord::new,
+            """
         {
           "tenantId": "<default>",
           "processInstanceKey": -1,
@@ -2640,32 +2642,32 @@ final class JsonSerializableToJsonTest {
           "variables": {}
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////// MessageCorrelationRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "MessageCorrelationRecord",
-        (Supplier<UnifiedRecordValue>)
-            () -> {
-              final String correlationKey = "test-key";
-              final String messageName = "test-message";
-              final long processInstanceKey = 1L;
-              final long messageKey = 2L;
-              final long requestId = 3L;
-              final int requestStreamId = 4;
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// MessageCorrelationRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "MessageCorrelationRecord",
+            (Supplier<UnifiedRecordValue>)
+                () -> {
+                  final String correlationKey = "test-key";
+                  final String messageName = "test-message";
+                  final long processInstanceKey = 1L;
+                  final long messageKey = 2L;
+                  final long requestId = 3L;
+                  final int requestStreamId = 4;
 
-              return new MessageCorrelationRecord()
-                  .setCorrelationKey(correlationKey)
-                  .setName(messageName)
-                  .setVariables(VARIABLES_MSGPACK)
-                  .setTenantId("foo")
-                  .setProcessInstanceKey(processInstanceKey)
-                  .setMessageKey(messageKey)
-                  .setRequestId(requestId)
-                  .setRequestStreamId(requestStreamId);
-            },
-        """
+                  return new MessageCorrelationRecord()
+                      .setCorrelationKey(correlationKey)
+                      .setName(messageName)
+                      .setVariables(VARIABLES_MSGPACK)
+                      .setTenantId("foo")
+                      .setProcessInstanceKey(processInstanceKey)
+                      .setMessageKey(messageKey)
+                      .setRequestId(requestId)
+                      .setRequestStreamId(requestStreamId);
+                },
+            """
         {
           "correlationKey": "test-key",
           "variables": {
@@ -2679,22 +2681,22 @@ final class JsonSerializableToJsonTest {
           "requestStreamId": 4
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////// UserRecord /////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "UserRecord",
-        (Supplier<UserRecord>)
-            () ->
-                new UserRecord()
-                    .setUserKey(1L)
-                    .setUsername("foobar")
-                    .setName("Foo Bar")
-                    .setEmail("foo@bar")
-                    .setPassword("f00b4r"),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// UserRecord /////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "UserRecord",
+            (Supplier<UserRecord>)
+                () ->
+                    new UserRecord()
+                        .setUserKey(1L)
+                        .setUsername("foobar")
+                        .setName("Foo Bar")
+                        .setEmail("foo@bar")
+                        .setPassword("f00b4r"),
+            """
         {
           "userKey": 1,
           "username": "foobar",
@@ -2703,14 +2705,14 @@ final class JsonSerializableToJsonTest {
           "password": "f00b4r"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// Empty UserRecord //////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "UserRecord",
-        (Supplier<UserRecord>) () -> new UserRecord().setUsername("foobar"),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// Empty UserRecord //////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "UserRecord",
+            (Supplier<UserRecord>) () -> new UserRecord().setUsername("foobar"),
+            """
         {
           "userKey": -1,
           "username": "foobar",
@@ -2719,58 +2721,58 @@ final class JsonSerializableToJsonTest {
           "password": ""
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////// ClockRecord ////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ClockRecord (pin)",
-        (Supplier<ClockRecord>) () -> new ClockRecord().pinAt(5),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// ClockRecord ////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ClockRecord (pin)",
+            (Supplier<ClockRecord>) () -> new ClockRecord().pinAt(5),
+            """
         {
           "time": 5
         }
         """
-      },
-      {
-        "ClockRecord (offset)",
-        (Supplier<ClockRecord>) () -> new ClockRecord().offsetBy(30),
-        """
+        },
+        {
+            "ClockRecord (offset)",
+            (Supplier<ClockRecord>) () -> new ClockRecord().offsetBy(30),
+            """
         {
           "time": 30
         }
         """
-      },
-      {
-        "ClockRecord (none)",
-        (Supplier<ClockRecord>)
-            () -> {
-              final var record = new ClockRecord().offsetBy(30);
-              record.reset();
-              return record;
-            },
-        """
+        },
+        {
+            "ClockRecord (none)",
+            (Supplier<ClockRecord>)
+                () -> {
+                  final var record = new ClockRecord().offsetBy(30);
+                  record.reset();
+                  return record;
+                },
+            """
         {
           "time": 0
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// AuthorizationRecord ////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Authorization record",
-        (Supplier<AuthorizationRecord>)
-            () ->
-                new AuthorizationRecord()
-                    .setAuthorizationKey(1L)
-                    .setOwnerId("ownerId")
-                    .setOwnerType(AuthorizationOwnerType.USER)
-                    .setResourceId("resourceId")
-                    .setResourceType(AuthorizationResourceType.RESOURCE)
-                    .setPermissionTypes(Set.of(PermissionType.CREATE)),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// AuthorizationRecord ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Authorization record",
+            (Supplier<AuthorizationRecord>)
+                () ->
+                    new AuthorizationRecord()
+                        .setAuthorizationKey(1L)
+                        .setOwnerId("ownerId")
+                        .setOwnerType(AuthorizationOwnerType.USER)
+                        .setResourceId("resourceId")
+                        .setResourceType(AuthorizationResourceType.RESOURCE)
+                        .setPermissionTypes(Set.of(PermissionType.CREATE)),
+            """
         {
           "authorizationKey": 1,
           "ownerId": "ownerId",
@@ -2782,14 +2784,14 @@ final class JsonSerializableToJsonTest {
           ]
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty AuthorizationRecord /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty AuthorizationRecord",
-        (Supplier<AuthorizationRecord>) AuthorizationRecord::new,
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty AuthorizationRecord /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty AuthorizationRecord",
+            (Supplier<AuthorizationRecord>) AuthorizationRecord::new,
+            """
         {
           "authorizationKey": -1,
           "ownerId": "",
@@ -2799,22 +2801,22 @@ final class JsonSerializableToJsonTest {
           "permissionTypes": []
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////// Empty MessageCorrelationRecord /////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty MessageCorrelationRecord",
-        (Supplier<MessageCorrelationRecord>)
-            () -> {
-              final String correlationKey = "test-key";
-              final String messageName = "test-message";
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////// Empty MessageCorrelationRecord /////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty MessageCorrelationRecord",
+            (Supplier<MessageCorrelationRecord>)
+                () -> {
+                  final String correlationKey = "test-key";
+                  final String messageName = "test-message";
 
-              return new MessageCorrelationRecord()
-                  .setCorrelationKey(correlationKey)
-                  .setName(messageName);
-            },
-        """
+                  return new MessageCorrelationRecord()
+                      .setCorrelationKey(correlationKey)
+                      .setName(messageName);
+                },
+            """
         {
           "correlationKey": "test-key",
           "variables": {},
@@ -2826,22 +2828,22 @@ final class JsonSerializableToJsonTest {
           "requestStreamId": -1
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// RoleRecord /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Role record",
-        (Supplier<RoleRecord>)
-            () ->
-                new RoleRecord()
-                    .setRoleKey(1L)
-                    .setRoleId("id")
-                    .setName("role")
-                    .setDescription("description")
-                    .setEntityId("entityId")
-                    .setEntityType(EntityType.USER),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// RoleRecord /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Role record",
+            (Supplier<RoleRecord>)
+                () ->
+                    new RoleRecord()
+                        .setRoleKey(1L)
+                        .setRoleId("id")
+                        .setName("role")
+                        .setDescription("description")
+                        .setEntityId("entityId")
+                        .setEntityType(EntityType.USER),
+            """
         {
           "roleKey": 1,
           "roleId": "id",
@@ -2851,14 +2853,14 @@ final class JsonSerializableToJsonTest {
           "entityType": "USER"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty RoleRecord /////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty RoleRecord",
-        (Supplier<RoleRecord>) () -> new RoleRecord().setRoleId("roleId"),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty RoleRecord /////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty RoleRecord",
+            (Supplier<RoleRecord>) () -> new RoleRecord().setRoleId("roleId"),
+            """
         {
           "roleKey": -1,
           "roleId": "roleId",
@@ -2868,23 +2870,23 @@ final class JsonSerializableToJsonTest {
           "entityType": "UNSPECIFIED"
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////// TenantRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "TenantRecord",
-        (Supplier<UnifiedRecordValue>)
-            () ->
-                new TenantRecord()
-                    .setTenantKey(123L)
-                    .setTenantId("tenant-abc")
-                    .setName("Test Tenant")
-                    .setDescription("Test Description")
-                    .setEntityId("entity-xyz")
-                    .setEntityType(EntityType.USER),
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// TenantRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "TenantRecord",
+            (Supplier<UnifiedRecordValue>)
+                () ->
+                    new TenantRecord()
+                        .setTenantKey(123L)
+                        .setTenantId("tenant-abc")
+                        .setName("Test Tenant")
+                        .setDescription("Test Description")
+                        .setEntityId("entity-xyz")
+                        .setEntityType(EntityType.USER),
+            """
         {
           "tenantKey": 123,
           "tenantId": "tenant-abc",
@@ -2894,14 +2896,14 @@ final class JsonSerializableToJsonTest {
           "entityType": "USER"
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      /////////////////////////////////////// Empty TenantRecord //////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty TenantRecord",
-        (Supplier<UnifiedRecordValue>) () -> new TenantRecord().setTenantId("tenantId"),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        /////////////////////////////////////// Empty TenantRecord //////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty TenantRecord",
+            (Supplier<UnifiedRecordValue>) () -> new TenantRecord().setTenantId("tenantId"),
+            """
           {
             "tenantKey": -1,
             "tenantId": "tenantId",
@@ -2911,57 +2913,57 @@ final class JsonSerializableToJsonTest {
             "entityType": "UNSPECIFIED"
           }
           """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////////// ScaleRecord ////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "ScaleRecord (empty)",
-        (Supplier<ScaleRecord>) ScaleRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////// ScaleRecord ////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "ScaleRecord (empty)",
+            (Supplier<ScaleRecord>) ScaleRecord::new,
+            """
         {
           "desiredPartitionCount": -1,
           "redistributedPartitions": [],
           "relocatedPartitions": []
         }
         """
-      },
-      {
-        "ScaleRecord",
-        (Supplier<ScaleRecord>) () -> new ScaleRecord().setDesiredPartitionCount(5),
-        """
+        },
+        {
+            "ScaleRecord",
+            (Supplier<ScaleRecord>) () -> new ScaleRecord().setDesiredPartitionCount(5),
+            """
         {
          "desiredPartitionCount": 5,
           "redistributedPartitions": [],
           "relocatedPartitions": []
         }
         """
-      },
-      {
-        "ScaleRecord w/ redistributedPartitions & relocatedPartitions",
-        (Supplier<ScaleRecord>)
-            () ->
-                new ScaleRecord()
-                    .setDesiredPartitionCount(5)
-                    .setRelocatedPartitions(List.of(4, 5))
-                    .setRedistributedPartitions(List.of(4, 5)),
-        """
+        },
+        {
+            "ScaleRecord w/ redistributedPartitions & relocatedPartitions",
+            (Supplier<ScaleRecord>)
+                () ->
+                    new ScaleRecord()
+                        .setDesiredPartitionCount(5)
+                        .setRelocatedPartitions(List.of(4, 5))
+                        .setRedistributedPartitions(List.of(4, 5)),
+            """
         {
          "desiredPartitionCount": 5,
           "redistributedPartitions": [4,5],
           "relocatedPartitions": [4,5]
         }
         """
-      },
+        },
 
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////////// RedistributionRecord //////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "RedistributionRecord (empty)",
-        (Supplier<RedistributionRecord>) RedistributionRecord::new,
-        """
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////// RedistributionRecord //////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "RedistributionRecord (empty)",
+            (Supplier<RedistributionRecord>) RedistributionRecord::new,
+            """
         {
           "stage": -1,
           "progress": {
@@ -2969,15 +2971,15 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
-      {
-        "RedistributionRecord",
-        (Supplier<RedistributionRecord>)
-            () ->
-                new RedistributionRecord()
-                    .setStage(2)
-                    .setProgress(new RedistributionProgress().claimDeploymentKey(123)),
-        """
+        },
+        {
+            "RedistributionRecord",
+            (Supplier<RedistributionRecord>)
+                () ->
+                    new RedistributionRecord()
+                        .setStage(2)
+                        .setProgress(new RedistributionProgress().claimDeploymentKey(123)),
+            """
         {
           "stage": 2,
           "progress": {
@@ -2985,22 +2987,22 @@ final class JsonSerializableToJsonTest {
           }
         }
         """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// GroupRecord /////////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Group record",
-        (Supplier<GroupRecord>)
-            () ->
-                new GroupRecord()
-                    .setGroupKey(1L)
-                    .setGroupId("groupId")
-                    .setName("group")
-                    .setDescription("description")
-                    .setEntityId("entityId")
-                    .setEntityType(EntityType.USER),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// GroupRecord /////////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Group record",
+            (Supplier<GroupRecord>)
+                () ->
+                    new GroupRecord()
+                        .setGroupKey(1L)
+                        .setGroupId("groupId")
+                        .setName("group")
+                        .setDescription("description")
+                        .setEntityId("entityId")
+                        .setEntityType(EntityType.USER),
+            """
       {
         "groupKey": 1,
         "groupId": "groupId",
@@ -3010,14 +3012,14 @@ final class JsonSerializableToJsonTest {
         "entityType": "USER"
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty GroupRecord /////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty GroupRecord",
-        (Supplier<GroupRecord>) () -> new GroupRecord().setGroupId("groupId"),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty GroupRecord /////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty GroupRecord",
+            (Supplier<GroupRecord>) () -> new GroupRecord().setGroupId("groupId"),
+            """
       {
         "groupKey": -1,
         "groupId": "groupId",
@@ -3027,21 +3029,21 @@ final class JsonSerializableToJsonTest {
         "entityType": "UNSPECIFIED"
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////////////////// MappingRecord //////////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Mapping record",
-        (Supplier<MappingRecord>)
-            () ->
-                new MappingRecord()
-                    .setMappingKey(1L)
-                    .setClaimName("claimName")
-                    .setClaimValue("claimValue")
-                    .setMappingId("id1")
-                    .setName("name"),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////////////////// MappingRecord //////////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Mapping record",
+            (Supplier<MappingRecord>)
+                () ->
+                    new MappingRecord()
+                        .setMappingKey(1L)
+                        .setClaimName("claimName")
+                        .setClaimValue("claimValue")
+                        .setMappingId("id1")
+                        .setName("name"),
+            """
       {
         "mappingKey": 1,
         "claimName": "claimName",
@@ -3050,14 +3052,14 @@ final class JsonSerializableToJsonTest {
         "name": "name"
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// Empty MappingRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty MappingRecord",
-        (Supplier<MappingRecord>) () -> new MappingRecord().setMappingId("mappingId"),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// Empty MappingRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty MappingRecord",
+            (Supplier<MappingRecord>) () -> new MappingRecord().setMappingId("mappingId"),
+            """
       {
         "mappingKey": -1,
         "mappingId": "mappingId",
@@ -3066,71 +3068,71 @@ final class JsonSerializableToJsonTest {
         "name": ""
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////////////// IdentitySetupRecord ///////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "IdentitySetup record",
-        (Supplier<IdentitySetupRecord>)
-            () ->
-                new IdentitySetupRecord()
-                    .addRole(
-                        new RoleRecord()
-                            .setRoleKey(1)
-                            .setRoleId("id")
-                            .setName("roleName")
-                            .setDescription("description")
-                            .setEntityId("entityId")
-                            .setEntityType(EntityType.USER))
-                    .addRoleMember(
-                        new RoleRecord()
-                            .setRoleId("id")
-                            .setEntityType(EntityType.USER)
-                            .setEntityId("username"))
-                    .addUser(
-                        new UserRecord()
-                            .setUserKey(3L)
-                            .setUsername("username")
-                            .setName("name")
-                            .setEmail("email")
-                            .setPassword("password"))
-                    .addUser(
-                        new UserRecord()
-                            .setUserKey(4L)
-                            .setUsername("foo")
-                            .setName("bar")
-                            .setEmail("baz")
-                            .setPassword("qux"))
-                    .setDefaultTenant(
-                        new TenantRecord().setTenantKey(5).setTenantId("id").setName("name"))
-                    .addTenantMember(
-                        new TenantRecord()
-                            .setTenantId("id")
-                            .setEntityType(EntityType.ROLE)
-                            .setEntityId("id"))
-                    .addMapping(
-                        new MappingRecord()
-                            .setMappingKey(6)
-                            .setMappingId("id1")
-                            .setClaimName("claim1")
-                            .setClaimValue("value1")
-                            .setName("Claim 1"))
-                    .addMapping(
-                        new MappingRecord()
-                            .setMappingKey(7)
-                            .setMappingId("id2")
-                            .setClaimName("claim2")
-                            .setClaimValue("value2")
-                            .setName("Claim 2"))
-                    .addAuthorization(
-                        new AuthorizationRecord()
-                            .setOwnerId("id2")
-                            .setOwnerType(AuthorizationOwnerType.MAPPING)
-                            .setResourceType(AuthorizationResourceType.RESOURCE)
-                            .setResourceId("resource-id")
-                            .setPermissionTypes(Set.of(PermissionType.CREATE))),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////// IdentitySetupRecord ///////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "IdentitySetup record",
+            (Supplier<IdentitySetupRecord>)
+                () ->
+                    new IdentitySetupRecord()
+                        .addRole(
+                            new RoleRecord()
+                                .setRoleKey(1)
+                                .setRoleId("id")
+                                .setName("roleName")
+                                .setDescription("description")
+                                .setEntityId("entityId")
+                                .setEntityType(EntityType.USER))
+                        .addRoleMember(
+                            new RoleRecord()
+                                .setRoleId("id")
+                                .setEntityType(EntityType.USER)
+                                .setEntityId("username"))
+                        .addUser(
+                            new UserRecord()
+                                .setUserKey(3L)
+                                .setUsername("username")
+                                .setName("name")
+                                .setEmail("email")
+                                .setPassword("password"))
+                        .addUser(
+                            new UserRecord()
+                                .setUserKey(4L)
+                                .setUsername("foo")
+                                .setName("bar")
+                                .setEmail("baz")
+                                .setPassword("qux"))
+                        .setDefaultTenant(
+                            new TenantRecord().setTenantKey(5).setTenantId("id").setName("name"))
+                        .addTenantMember(
+                            new TenantRecord()
+                                .setTenantId("id")
+                                .setEntityType(EntityType.ROLE)
+                                .setEntityId("id"))
+                        .addMapping(
+                            new MappingRecord()
+                                .setMappingKey(6)
+                                .setMappingId("id1")
+                                .setClaimName("claim1")
+                                .setClaimValue("value1")
+                                .setName("Claim 1"))
+                        .addMapping(
+                            new MappingRecord()
+                                .setMappingKey(7)
+                                .setMappingId("id2")
+                                .setClaimName("claim2")
+                                .setClaimValue("value2")
+                                .setName("Claim 2"))
+                        .addAuthorization(
+                            new AuthorizationRecord()
+                                .setOwnerId("id2")
+                                .setOwnerType(AuthorizationOwnerType.MAPPING)
+                                .setResourceType(AuthorizationResourceType.RESOURCE)
+                                .setResourceId("resource-id")
+                                .setPermissionTypes(Set.of(PermissionType.CREATE))),
+            """
       {
         "roles": [
           {
@@ -3214,17 +3216,17 @@ final class JsonSerializableToJsonTest {
         ]
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// Empty IdentitySetupRecord ////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty IdentitySetupRecord",
-        (Supplier<IdentitySetupRecord>)
-            () ->
-                new IdentitySetupRecord()
-                    .setDefaultTenant(new TenantRecord().setTenantId("tenantId")),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Empty IdentitySetupRecord ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty IdentitySetupRecord",
+            (Supplier<IdentitySetupRecord>)
+                () ->
+                    new IdentitySetupRecord()
+                        .setDefaultTenant(new TenantRecord().setTenantId("tenantId")),
+            """
       {
           "roles": [],
           "users": [],
@@ -3242,18 +3244,18 @@ final class JsonSerializableToJsonTest {
           "authorizations": []
       }
       """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// Empty BatchOperationCreationRecord ///////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "BatchOperationCreationRecord",
-        (Supplier<BatchOperationCreationRecord>)
-            () ->
-                new BatchOperationCreationRecord()
-                    .setBatchOperationKey(12345L)
-                    .setBatchOperationType(BatchOperationType.CANCEL_PROCESS_INSTANCE),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Empty BatchOperationCreationRecord ///////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "BatchOperationCreationRecord",
+            (Supplier<BatchOperationCreationRecord>)
+                () ->
+                    new BatchOperationCreationRecord()
+                        .setBatchOperationKey(12345L)
+                        .setBatchOperationType(BatchOperationType.CANCEL_PROCESS_INSTANCE),
+            """
   {
     "batchOperationKey": 12345,
     "batchOperationType": "CANCEL_PROCESS_INSTANCE",
@@ -3265,49 +3267,49 @@ final class JsonSerializableToJsonTest {
     }
   }
   """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// Full BatchOperationCreationRecord ////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "BatchOperationCreationRecord",
-        (Supplier<BatchOperationCreationRecord>)
-            () ->
-                new BatchOperationCreationRecord()
-                    .setBatchOperationKey(12345L)
-                    .setBatchOperationType(BatchOperationType.MIGRATE_PROCESS_INSTANCE)
-                    .setEntityFilter(
-                        toMessagePack("{'processDefinitionKey': 67890, 'state': 'ACTIVE'}"))
-                    .setMigrationPlan(
-                        new BatchOperationProcessInstanceMigrationPlan()
-                            .setTargetProcessDefinitionKey(98765L)
-                            .addMappingInstruction(
-                                new ProcessInstanceMigrationMappingInstruction()
-                                    .setSourceElementId("sourceTask")
-                                    .setTargetElementId("targetTask")))
-                    .setModificationPlan(
-                        new BatchOperationProcessInstanceModificationPlan()
-                            .addMoveInstruction(
-                                new BatchOperationProcessInstanceModificationMoveInstruction()
-                                    .setSourceElementId("sourceTask")
-                                    .setTargetElementId("targetTask")))
-                    .setAuthentication(
-                        toMessagePack(
-                            """
-                  {
-                    'authenticated_username': 'bud spencer',
-                    'authenticated_client_id': 'client-123',
-                    'authenticated_group_ids': ['groupA', 'groupB'],
-                    'authenticated_role_ids': ['roleX', 'roleY'],
-                    'authenticated_tenant_ids': ['tenant1', 'tenant2'],
-                    'authenticated_mapping_ids': ['mapping1', 'mapping2'],
-                    'claims': {
-                      'email': 'budspencer@example.com',
-                      'department': 'engineering'
-                    }
-                  }
-                  """)),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// Full BatchOperationCreationRecord ////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "BatchOperationCreationRecord",
+            (Supplier<BatchOperationCreationRecord>)
+                () ->
+                    new BatchOperationCreationRecord()
+                        .setBatchOperationKey(12345L)
+                        .setBatchOperationType(BatchOperationType.MIGRATE_PROCESS_INSTANCE)
+                        .setEntityFilter(
+                            toMessagePack("{'processDefinitionKey': 67890, 'state': 'ACTIVE'}"))
+                        .setMigrationPlan(
+                            new BatchOperationProcessInstanceMigrationPlan()
+                                .setTargetProcessDefinitionKey(98765L)
+                                .addMappingInstruction(
+                                    new ProcessInstanceMigrationMappingInstruction()
+                                        .setSourceElementId("sourceTask")
+                                        .setTargetElementId("targetTask")))
+                        .setModificationPlan(
+                            new BatchOperationProcessInstanceModificationPlan()
+                                .addMoveInstruction(
+                                    new BatchOperationProcessInstanceModificationMoveRequest()
+                                        .setSourceElementId("sourceTask")
+                                        .setTargetElementId("targetTask")))
+                        .setAuthentication(
+                            toMessagePack(
+                                """
+                                    {
+                                      'authenticated_username': 'bud spencer',
+                                      'authenticated_client_id': 'client-123',
+                                      'authenticated_group_ids': ['groupA', 'groupB'],
+                                      'authenticated_role_ids': ['roleX', 'roleY'],
+                                      'authenticated_tenant_ids': ['tenant1', 'tenant2'],
+                                      'authenticated_mapping_ids': ['mapping1', 'mapping2'],
+                                      'claims': {
+                                        'email': 'budspencer@example.com',
+                                        'department': 'engineering'
+                                      }
+                                    }
+                                    """)),
+            """
   {
      "batchOperationKey": 12345,
      "batchOperationType": "MIGRATE_PROCESS_INSTANCE",
@@ -3343,35 +3345,35 @@ final class JsonSerializableToJsonTest {
      }
    }
   """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////// Empty BatchOperationChunkRecord //////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty BatchOperationChunkRecord",
-        (Supplier<BatchOperationChunkRecord>)
-            () -> new BatchOperationChunkRecord().setBatchOperationKey(12345L),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////// Empty BatchOperationChunkRecord //////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty BatchOperationChunkRecord",
+            (Supplier<BatchOperationChunkRecord>)
+                () -> new BatchOperationChunkRecord().setBatchOperationKey(12345L),
+            """
   {
     "batchOperationKey": 12345,
     "items": []
   }
   """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// BatchOperationChunkRecord ////////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "BatchOperationChunkRecord",
-        (Supplier<BatchOperationChunkRecord>)
-            () ->
-                new BatchOperationChunkRecord()
-                    .setBatchOperationKey(12345L)
-                    .setItems(
-                        List.of(
-                            new BatchOperationItem().setItemKey(1L).setProcessInstanceKey(2L),
-                            new BatchOperationItem().setItemKey(2L).setProcessInstanceKey(2L))),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// BatchOperationChunkRecord ////////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "BatchOperationChunkRecord",
+            (Supplier<BatchOperationChunkRecord>)
+                () ->
+                    new BatchOperationChunkRecord()
+                        .setBatchOperationKey(12345L)
+                        .setItems(
+                            List.of(
+                                new BatchOperationItem().setItemKey(1L).setProcessInstanceKey(2L),
+                                new BatchOperationItem().setItemKey(2L).setProcessInstanceKey(2L))),
+            """
   {
     "items": [
       {
@@ -3390,51 +3392,51 @@ final class JsonSerializableToJsonTest {
     "batchOperationKey": 12345
   }
   """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ////////////////////////////// BatchOperationExecutionRecord ////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "BatchOperationExecutionRecord",
-        (Supplier<BatchOperationExecutionRecord>)
-            () ->
-                new BatchOperationExecutionRecord()
-                    .setBatchOperationKey(12345L)
-                    .setItemKeys(Set.of(1L, 2L)),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ////////////////////////////// BatchOperationExecutionRecord ////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "BatchOperationExecutionRecord",
+            (Supplier<BatchOperationExecutionRecord>)
+                () ->
+                    new BatchOperationExecutionRecord()
+                        .setBatchOperationKey(12345L)
+                        .setItemKeys(Set.of(1L, 2L)),
+            """
   {
     "batchOperationKey": 12345,
     "itemKeys": [1, 2]
   }
   """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      //////////////////////// Empty BatchOperationExecutionRecord ////////////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "Empty BatchOperationExecutionRecord",
-        (Supplier<BatchOperationExecutionRecord>)
-            () -> new BatchOperationExecutionRecord().setBatchOperationKey(12345L),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        //////////////////////// Empty BatchOperationExecutionRecord ////////////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "Empty BatchOperationExecutionRecord",
+            (Supplier<BatchOperationExecutionRecord>)
+                () -> new BatchOperationExecutionRecord().setBatchOperationKey(12345L),
+            """
   {
     "batchOperationKey": 12345,
     "itemKeys": []
   }
   """
-      },
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      ///////////////////////// BatchOperationLifecycleManagementRecord ///////////////////////////
-      /////////////////////////////////////////////////////////////////////////////////////////////
-      {
-        "BatchOperationLifecycleManagementRecord",
-        (Supplier<BatchOperationLifecycleManagementRecord>)
-            () -> new BatchOperationLifecycleManagementRecord().setBatchOperationKey(12345L),
-        """
+        },
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////// BatchOperationLifecycleManagementRecord ///////////////////////////
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        {
+            "BatchOperationLifecycleManagementRecord",
+            (Supplier<BatchOperationLifecycleManagementRecord>)
+                () -> new BatchOperationLifecycleManagementRecord().setBatchOperationKey(12345L),
+            """
   {
     "batchOperationKey": 12345
   }
   """
-      },
+        },
     };
   }
 

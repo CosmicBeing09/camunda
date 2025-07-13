@@ -14,13 +14,14 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationTerminateInstruction;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent;
-import io.camunda.zeebe.protocol.record.value.BatchOperationCreationRecordValue.ProcessInstanceModificationMoveInstructionValue;
+import io.camunda.zeebe.protocol.record.value.BatchOperationCreationRecordValue.ProcessInstanceModificationMoveRequestValue;
 import java.util.ArrayDeque;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ModifyProcessInstanceBatchOperationExecutor implements BatchOperationExecutor {
+
   private static final Logger LOGGER =
       LoggerFactory.getLogger(ModifyProcessInstanceBatchOperationExecutor.class);
 
@@ -40,8 +41,8 @@ public class ModifyProcessInstanceBatchOperationExecutor implements BatchOperati
         batchOperation.getModificationPlan().getMoveInstructions().stream()
             .collect(
                 Collectors.toMap(
-                    ProcessInstanceModificationMoveInstructionValue::getSourceElementId,
-                    ProcessInstanceModificationMoveInstructionValue::getTargetElementId));
+                    ProcessInstanceModificationMoveRequestValue::getSourceElementId,
+                    ProcessInstanceModificationMoveRequestValue::getTargetElementId));
 
     final var command = new ProcessInstanceModificationRecord();
     command.setProcessInstanceKey(processInstanceKey);

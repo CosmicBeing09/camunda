@@ -24,6 +24,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @ImmutableProtocol(builder = ImmutableBatchOperationCreationRecordValue.Builder.class)
 public interface BatchOperationCreationRecordValue extends BatchOperationRelated, RecordValue {
+
   /**
    * @return batch operation type which defines the batch operation which should operate on the keys
    */
@@ -35,14 +36,14 @@ public interface BatchOperationCreationRecordValue extends BatchOperationRelated
   String getEntityFilter();
 
   /**
-   * @return the migration plan, this is only used for {@link
-   *     BatchOperationType#MIGRATE_PROCESS_INSTANCE}
+   * @return the migration plan, this is only used for
+   * {@link BatchOperationType#MIGRATE_PROCESS_INSTANCE}
    */
   BatchOperationProcessInstanceMigrationPlanValue getMigrationPlan();
 
   /**
-   * @return the modification plan, this is only used for {@link
-   *     BatchOperationType#MODIFY_PROCESS_INSTANCE}
+   * @return the modification plan, this is only used for
+   * {@link BatchOperationType#MODIFY_PROCESS_INSTANCE}
    */
   BatchOperationProcessInstanceModificationPlanValue getModificationPlan();
 
@@ -99,18 +100,22 @@ public interface BatchOperationCreationRecordValue extends BatchOperationRelated
      *
      * @return Returns a list of move instructions
      */
-    List<ProcessInstanceModificationMoveInstructionValue> getMoveInstructions();
+    List<ProcessInstanceModificationMoveRequestValue> getMoveInstructions();
   }
 
   @Value.Immutable
   @ImmutableProtocol(
       builder = ImmutableProcessInstanceModificationMoveInstructionValue.Builder.class)
-  interface ProcessInstanceModificationMoveInstructionValue {
+  interface ProcessInstanceModificationMoveRequestValue {
 
-    /** Returns the id of the element to terminate element instances at. */
+    /**
+     * Returns the id of the element to terminate element instances at.
+     */
     String getSourceElementId();
 
-    /** Returns the id of the element to create a new element instance at. */
+    /**
+     * Returns the id of the element to create a new element instance at.
+     */
     String getTargetElementId();
   }
 }

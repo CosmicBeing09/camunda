@@ -23,7 +23,7 @@ import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceMigrationPlan;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationPlan;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
@@ -57,7 +57,8 @@ abstract class AbstractBatchOperationTest {
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =
       new RecordingExporterTestWatcher();
 
-  @Rule public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
+  @Rule
+  public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
   protected final SearchClientsProxy searchClientsProxy = Mockito.mock(SearchClientsProxy.class);
 
   @Rule
@@ -132,7 +133,7 @@ abstract class AbstractBatchOperationTest {
 
     final var modificationPlan = new BatchOperationProcessInstanceModificationPlan();
 
-    final var mappingInstruction = new BatchOperationProcessInstanceModificationMoveInstruction();
+    final var mappingInstruction = new BatchOperationProcessInstanceModificationMoveRequest();
     mappingInstruction.setSourceElementId(sourceElementId);
     mappingInstruction.setTargetElementId(targetElementId);
     modificationPlan.addMoveInstruction(mappingInstruction);

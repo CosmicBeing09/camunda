@@ -11,16 +11,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.camunda.zeebe.msgpack.property.ArrayProperty;
 import io.camunda.zeebe.msgpack.value.ObjectValue;
 import io.camunda.zeebe.protocol.record.value.BatchOperationCreationRecordValue.BatchOperationProcessInstanceModificationPlanValue;
-import io.camunda.zeebe.protocol.record.value.BatchOperationCreationRecordValue.ProcessInstanceModificationMoveInstructionValue;
+import io.camunda.zeebe.protocol.record.value.BatchOperationCreationRecordValue.ProcessInstanceModificationMoveRequestValue;
 import java.util.List;
 
 public final class BatchOperationProcessInstanceModificationPlan extends ObjectValue
     implements BatchOperationProcessInstanceModificationPlanValue {
 
-  private final ArrayProperty<BatchOperationProcessInstanceModificationMoveInstruction>
+  private final ArrayProperty<BatchOperationProcessInstanceModificationMoveRequest>
       moveInstructionsProperty =
-          new ArrayProperty<>(
-              "moveInstructions", BatchOperationProcessInstanceModificationMoveInstruction::new);
+      new ArrayProperty<>(
+          "moveInstructions", BatchOperationProcessInstanceModificationMoveRequest::new);
 
   public BatchOperationProcessInstanceModificationPlan() {
     super(1);
@@ -34,23 +34,25 @@ public final class BatchOperationProcessInstanceModificationPlan extends ObjectV
    * <p>{@inheritDoc}
    */
   @Override
-  public List<ProcessInstanceModificationMoveInstructionValue> getMoveInstructions() {
+  public List<ProcessInstanceModificationMoveRequestValue> getMoveInstructions() {
     return moveInstructionsProperty.stream()
         .map(
             element ->
-                (ProcessInstanceModificationMoveInstructionValue)
-                    new BatchOperationProcessInstanceModificationMoveInstruction().copy(element))
+                (ProcessInstanceModificationMoveRequestValue)
+                    new BatchOperationProcessInstanceModificationMoveRequest().copy(element))
         .toList();
   }
 
-  /** Returns true if this record has mapping instructions, otherwise false. */
+  /**
+   * Returns true if this record has mapping instructions, otherwise false.
+   */
   @JsonIgnore
   public boolean hasMoveInstructions() {
     return !moveInstructionsProperty.isEmpty();
   }
 
   public BatchOperationProcessInstanceModificationPlan addMoveInstruction(
-      final BatchOperationProcessInstanceModificationMoveInstruction mappingInstruction) {
+      final BatchOperationProcessInstanceModificationMoveRequest mappingInstruction) {
     moveInstructionsProperty.add().copy(mappingInstruction);
     return this;
   }
@@ -62,7 +64,7 @@ public final class BatchOperationProcessInstanceModificationPlan extends ObjectV
         .forEach(
             inst ->
                 addMoveInstruction(
-                    (BatchOperationProcessInstanceModificationMoveInstruction) inst));
+                    (BatchOperationProcessInstanceModificationMoveRequest) inst));
     return this;
   }
 }

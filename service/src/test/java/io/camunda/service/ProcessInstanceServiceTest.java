@@ -38,7 +38,7 @@ import io.camunda.zeebe.broker.client.api.dto.BrokerResponse;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerCreateBatchOperationRequest;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
 import io.camunda.zeebe.protocol.record.value.BatchOperationType;
 import java.util.List;
@@ -201,8 +201,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
   }
 
@@ -296,8 +296,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
   }
 
@@ -337,8 +337,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
 
     final var modificationPlan = enrichedRecord.getMigrationPlan();
@@ -368,7 +368,7 @@ public final class ProcessInstanceServiceTest {
         new ProcessInstanceModifyBatchOperationRequest(
             filter,
             List.of(
-                new BatchOperationProcessInstanceModificationMoveInstruction()
+                new BatchOperationProcessInstanceModificationMoveRequest()
                     .setSourceElementId("source1")
                     .setTargetElementId("target1")));
 
@@ -384,8 +384,8 @@ public final class ProcessInstanceServiceTest {
     final var enrichedRecord = captor.getValue().getRequestWriter();
 
     assertThat(
-            MsgPackConverter.convertToObject(
-                enrichedRecord.getAuthenticationBuffer(), Authentication.class))
+        MsgPackConverter.convertToObject(
+            enrichedRecord.getAuthenticationBuffer(), Authentication.class))
         .isEqualTo(authentication);
 
     final var filterBuffer = enrichedRecord.getEntityFilterBuffer();
@@ -404,9 +404,9 @@ public final class ProcessInstanceServiceTest {
 
   private void authorizeProcessReadInstance(final boolean authorize, final String processId) {
     when(securityContextProvider.isAuthorized(
-            processId,
-            authentication,
-            Authorization.of(a -> a.processDefinition().readProcessInstance())))
+        processId,
+        authentication,
+        Authorization.of(a -> a.processDefinition().readProcessInstance())))
         .thenReturn(authorize);
   }
 }

@@ -36,7 +36,7 @@ import io.camunda.zeebe.gateway.impl.broker.request.BrokerMigrateProcessInstance
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerModifyProcessInstanceRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceMigrationPlan;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationPlan;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationStartInstruction;
@@ -57,7 +57,7 @@ import java.util.stream.Collectors;
 
 public final class ProcessInstanceServices
     extends SearchQueryService<
-        ProcessInstanceServices, ProcessInstanceQuery, ProcessInstanceEntity> {
+    ProcessInstanceServices, ProcessInstanceQuery, ProcessInstanceEntity> {
 
   private final ProcessInstanceSearchClient processInstanceSearchClient;
   private final SequenceFlowSearchClient sequenceFlowSearchClient;
@@ -208,7 +208,7 @@ public final class ProcessInstanceServices
   }
 
   public CompletableFuture<BatchOperationCreationRecord>
-      cancelProcessInstanceBatchOperationWithResult(final ProcessInstanceFilter filter) {
+  cancelProcessInstanceBatchOperationWithResult(final ProcessInstanceFilter filter) {
     final var brokerRequest =
         new BrokerCreateBatchOperationRequest()
             .setFilter(filter)
@@ -303,28 +303,40 @@ public final class ProcessInstanceServices
       Long requestTimeout,
       Long operationReference,
       List<ProcessInstanceCreationStartInstruction> startInstructions,
-      List<String> fetchVariables) {}
+      List<String> fetchVariables) {
 
-  public record ProcessInstanceCancelRequest(Long processInstanceKey, Long operationReference) {}
+  }
+
+  public record ProcessInstanceCancelRequest(Long processInstanceKey, Long operationReference) {
+
+  }
 
   public record ProcessInstanceMigrateRequest(
       Long processInstanceKey,
       Long targetProcessDefinitionKey,
       List<ProcessInstanceMigrationMappingInstruction> mappingInstructions,
-      Long operationReference) {}
+      Long operationReference) {
+
+  }
 
   public record ProcessInstanceModifyRequest(
       Long processInstanceKey,
       List<ProcessInstanceModificationActivateInstruction> activateInstructions,
       List<ProcessInstanceModificationTerminateInstruction> terminateInstructions,
-      Long operationReference) {}
+      Long operationReference) {
+
+  }
 
   public record ProcessInstanceMigrationBatchOperationRequest(
       ProcessInstanceFilter filter,
       Long targetProcessDefinitionKey,
-      List<ProcessInstanceMigrationMappingInstruction> mappingInstructions) {}
+      List<ProcessInstanceMigrationMappingInstruction> mappingInstructions) {
+
+  }
 
   public record ProcessInstanceModifyBatchOperationRequest(
       ProcessInstanceFilter filter,
-      List<BatchOperationProcessInstanceModificationMoveInstruction> moveInstructions) {}
+      List<BatchOperationProcessInstanceModificationMoveRequest> moveInstructions) {
+
+  }
 }

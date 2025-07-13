@@ -121,7 +121,7 @@ import io.camunda.zeebe.gateway.rest.validator.GroupRequestValidator;
 import io.camunda.zeebe.gateway.rest.validator.RoleRequestValidator;
 import io.camunda.zeebe.gateway.rest.validator.TenantRequestValidator;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
@@ -227,9 +227,9 @@ public class RequestMapper {
 
     final Either<ProblemDetail, List<String>> validationResponse =
         validateTenantIds(
-                getStringListOrEmpty(activationRequest, JobActivationRequest::getTenantIds),
-                multiTenancyEnabled,
-                "Activate Jobs")
+            getStringListOrEmpty(activationRequest, JobActivationRequest::getTenantIds),
+            multiTenancyEnabled,
+            "Activate Jobs")
             .flatMap(
                 tenantIds ->
                     validateJobActivationRequest(activationRequest)
@@ -522,15 +522,15 @@ public class RequestMapper {
   }
 
   public static <BrokerResponseT>
-      CompletableFuture<ResponseEntity<Object>> executeServiceMethodWithNoContentResult(
-          final Supplier<CompletableFuture<BrokerResponseT>> method) {
+  CompletableFuture<ResponseEntity<Object>> executeServiceMethodWithNoContentResult(
+      final Supplier<CompletableFuture<BrokerResponseT>> method) {
     return RequestMapper.executeServiceMethod(
         method, ignored -> ResponseEntity.noContent().build());
   }
 
   public static <BrokerResponseT>
-      CompletableFuture<ResponseEntity<Object>> executeServiceMethodWithAcceptedResult(
-          final Supplier<CompletableFuture<BrokerResponseT>> method) {
+  CompletableFuture<ResponseEntity<Object>> executeServiceMethodWithAcceptedResult(
+      final Supplier<CompletableFuture<BrokerResponseT>> method) {
     return RequestMapper.executeServiceMethod(method, ignored -> ResponseEntity.accepted().build());
   }
 
@@ -567,7 +567,7 @@ public class RequestMapper {
       final boolean multiTenancyEnabled) {
     final Either<ProblemDetail, String> validationResponse =
         validateTenantId(
-                messagePublicationRequest.getTenantId(), multiTenancyEnabled, "Publish Message")
+            messagePublicationRequest.getTenantId(), multiTenancyEnabled, "Publish Message")
             .flatMap(
                 tenantId ->
                     validateMessagePublicationRequest(messagePublicationRequest)
@@ -763,7 +763,7 @@ public class RequestMapper {
                     .map(
                         instruction ->
                             new io.camunda.zeebe.protocol.impl.record.value.processinstance
-                                    .ProcessInstanceCreationStartInstruction()
+                                .ProcessInstanceCreationStartInstruction()
                                 .setElementId(instruction.getElementId()))
                     .toList(),
                 request.getFetchVariables()));
@@ -796,8 +796,8 @@ public class RequestMapper {
   }
 
   public static Either<ProblemDetail, ProcessInstanceMigrationBatchOperationRequest>
-      toProcessInstanceMigrationBatchOperationRequest(
-          final ProcessInstanceMigrationBatchOperationInstruction request) {
+  toProcessInstanceMigrationBatchOperationRequest(
+      final ProcessInstanceMigrationBatchOperationInstruction request) {
     // First validate filter and return early
     final var filter = SearchQueryRequestMapper.toProcessInstanceFilter(request.getFilter());
     if (filter.isLeft()) {
@@ -841,8 +841,8 @@ public class RequestMapper {
   }
 
   public static Either<ProblemDetail, ProcessInstanceModifyBatchOperationRequest>
-      toProcessInstanceModifyBatchOperationRequest(
-          final ProcessInstanceModificationBatchOperationInstruction request) {
+  toProcessInstanceModifyBatchOperationRequest(
+      final ProcessInstanceModificationBatchOperationInstruction request) {
     // First validate filter and return early
     final var filter = SearchQueryRequestMapper.toProcessInstanceFilter(request.getFilter());
     if (filter.isLeft()) {
@@ -930,9 +930,9 @@ public class RequestMapper {
   }
 
   public static Either<ProblemDetail, AdHocSubProcessActivateActivitiesRequest>
-      toAdHocSubProcessActivateActivitiesRequest(
-          final String adHocSubProcessInstanceKey,
-          final AdHocSubProcessActivateActivitiesInstruction request) {
+  toAdHocSubProcessActivateActivitiesRequest(
+      final String adHocSubProcessInstanceKey,
+      final AdHocSubProcessActivateActivitiesInstruction request) {
     return getResult(
         validateAdHocSubProcessActivationRequest(request),
         () ->
@@ -946,11 +946,11 @@ public class RequestMapper {
   }
 
   private static List<ProcessInstanceModificationActivateInstruction>
-      mapProcessInstanceModificationActivateInstruction(
-          final List<
-                  io.camunda.zeebe.gateway.protocol.rest
-                      .ProcessInstanceModificationActivateInstruction>
-              instructions) {
+  mapProcessInstanceModificationActivateInstruction(
+      final List<
+          io.camunda.zeebe.gateway.protocol.rest
+              .ProcessInstanceModificationActivateInstruction>
+          instructions) {
     return instructions.stream()
         .map(
             instruction -> {
@@ -973,17 +973,17 @@ public class RequestMapper {
         .toList();
   }
 
-  private static List<BatchOperationProcessInstanceModificationMoveInstruction>
-      mapProcessInstanceModificationMoveInstruction(
-          final List<
-                  io.camunda.zeebe.gateway.protocol.rest
-                      .ProcessInstanceModificationMoveBatchOperationInstruction>
-              instructions) {
+  private static List<BatchOperationProcessInstanceModificationMoveRequest>
+  mapProcessInstanceModificationMoveInstruction(
+      final List<
+          io.camunda.zeebe.gateway.protocol.rest
+              .ProcessInstanceModificationMoveBatchOperationInstruction>
+          instructions) {
     return instructions.stream()
         .map(
             instruction -> {
               final var mappedInstruction =
-                  new BatchOperationProcessInstanceModificationMoveInstruction();
+                  new BatchOperationProcessInstanceModificationMoveRequest();
               mappedInstruction
                   .setSourceElementId(instruction.getSourceElementId())
                   .setTargetElementId(instruction.getTargetElementId());
@@ -1090,30 +1090,48 @@ public class RequestMapper {
   }
 
   public record CompleteUserTaskRequest(
-      long userTaskKey, Map<String, Object> variables, String action) {}
+      long userTaskKey, Map<String, Object> variables, String action) {
 
-  public record UpdateUserTaskRequest(long userTaskKey, UserTaskRecord changeset, String action) {}
+  }
+
+  public record UpdateUserTaskRequest(long userTaskKey, UserTaskRecord changeset, String action) {
+
+  }
 
   public record AssignUserTaskRequest(
-      long userTaskKey, String assignee, String action, boolean allowOverride) {}
+      long userTaskKey, String assignee, String action, boolean allowOverride) {
+
+  }
 
   public record FailJobRequest(
       long jobKey,
       int retries,
       String errorMessage,
       Long retryBackoff,
-      Map<String, Object> variables) {}
+      Map<String, Object> variables) {
+
+  }
 
   public record ErrorJobRequest(
-      long jobKey, String errorCode, String errorMessage, Map<String, Object> variables) {}
+      long jobKey, String errorCode, String errorMessage, Map<String, Object> variables) {
 
-  public record CompleteJobRequest(long jobKey, Map<String, Object> variables, JobResult result) {}
+  }
 
-  public record UpdateJobRequest(long jobKey, UpdateJobChangeset changeset) {}
+  public record CompleteJobRequest(long jobKey, Map<String, Object> variables, JobResult result) {
+
+  }
+
+  public record UpdateJobRequest(long jobKey, UpdateJobChangeset changeset) {
+
+  }
 
   public record BroadcastSignalRequest(
-      String signalName, Map<String, Object> variables, String tenantId) {}
+      String signalName, Map<String, Object> variables, String tenantId) {
+
+  }
 
   public record DecisionEvaluationRequest(
-      String decisionId, Long decisionKey, Map<String, Object> variables, String tenantId) {}
+      String decisionId, Long decisionKey, Map<String, Object> variables, String tenantId) {
+
+  }
 }
