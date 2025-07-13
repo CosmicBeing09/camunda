@@ -45,16 +45,17 @@ import org.springframework.test.context.TestPropertySource;
 @SpringBootTest(classes = {RdbmsTestConfiguration.class})
 @TestPropertySource(
     properties = {
-      "spring.liquibase.enabled=false",
-      "camunda.database.type=rdbms",
-      "zeebe.broker.exporters.rdbms.args.maxQueueSize=0",
-      "camunda.database.index-prefix=C8_"
+        "spring.liquibase.enabled=false",
+        "camunda.database.type=rdbms",
+        "zeebe.broker.exporters.rdbms.args.maxQueueSize=0",
+        "camunda.database.index-prefix=C8_"
     })
 class RdbmsExporterBatchOperationsIT {
 
   private final ExporterTestController controller = new ExporterTestController();
 
-  @Autowired private RdbmsService rdbmsService;
+  @Autowired
+  private RdbmsService rdbmsService;
 
   private RdbmsExporterWrapper exporter;
 
@@ -134,12 +135,13 @@ class RdbmsExporterBatchOperationsIT {
             .getBatchOperationItemReader()
             .search(
                 SearchQueryBuilders.batchOperationItemQuery(
-                    q -> q.filter(f -> f.batchOperationIds(Long.toString(batchOperationKey)))))
+                    q -> q.filter(
+                        f -> f.batchOperationIdOperations(Long.toString(batchOperationKey)))))
             .items();
     assertThat(batchOperationItems).hasSize(3);
     assertThat(
-            batchOperationItems.stream()
-                .allMatch(item -> item.state() == BatchOperationItemState.CANCELED))
+        batchOperationItems.stream()
+            .allMatch(item -> item.state() == BatchOperationItemState.CANCELED))
         .isTrue();
   }
 
