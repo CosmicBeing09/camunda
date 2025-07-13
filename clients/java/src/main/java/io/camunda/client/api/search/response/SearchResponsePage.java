@@ -17,12 +17,18 @@ package io.camunda.client.api.search.response;
 
 public interface SearchResponsePage {
 
-  /** Total number of items that matches the query */
+  /**
+   * Total number of items that matches the query
+   */
   Long totalItems();
 
-  /** The sort values of the first item in the returned page. */
-  String searchBeforeCursor();
+  /**
+   * The sort values of the first item in the returned page.
+   */
+  String startCursor();
 
-  /** The sort values of the last item in the returned page. */
+  /**
+   * The sort values of the last item in the returned page.
+   */
   String searchAfterCursor();
 }
