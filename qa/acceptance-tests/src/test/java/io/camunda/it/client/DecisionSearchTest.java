@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 
 @MultiDbTest
 class DecisionSearchTest {
+
   private static final List<Decision> DEPLOYED_DECISIONS = new ArrayList<>();
   private static final List<DecisionRequirements> DEPLOYED_DECISION_REQUIREMENTS =
       new ArrayList<>();
@@ -492,7 +493,7 @@ class DecisionSearchTest {
     final var resultAfter =
         camundaClient
             .newDecisionRequirementsSearchRequest()
-            .page(p -> p.searchAfter(result.page().searchAfterCursor()))
+            .page(p -> p.searchAfter(result.page().endCursor()))
             .send()
             .join();
 
@@ -516,20 +517,20 @@ class DecisionSearchTest {
         .untilAsserted(
             () -> {
               assertThat(
-                      camundaClient
-                          .newDecisionDefinitionSearchRequest()
-                          .send()
-                          .join()
-                          .items()
-                          .size())
+                  camundaClient
+                      .newDecisionDefinitionSearchRequest()
+                      .send()
+                      .join()
+                      .items()
+                      .size())
                   .isEqualTo(DEPLOYED_DECISIONS.size());
               assertThat(
-                      camundaClient
-                          .newDecisionRequirementsSearchRequest()
-                          .send()
-                          .join()
-                          .items()
-                          .size())
+                  camundaClient
+                      .newDecisionRequirementsSearchRequest()
+                      .send()
+                      .join()
+                      .items()
+                      .size())
                   .isEqualTo(DEPLOYED_DECISION_REQUIREMENTS.size());
             });
   }
