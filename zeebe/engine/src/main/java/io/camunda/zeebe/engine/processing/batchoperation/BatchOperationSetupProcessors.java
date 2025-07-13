@@ -89,7 +89,7 @@ public final class BatchOperationSetupProcessors {
                 keyGenerator))
         .onCommand(
             ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
-            BatchOperationIntent.PAUSE,
+            BatchOperationIntent.SUSPEND,
             new BatchOperationPauseProcessor(
                 writers,
                 commandDistributionBehavior,

@@ -24,7 +24,7 @@ public enum BatchOperationIntent implements Intent {
   FAILED((short) 5),
   CANCEL((short) 6),
   CANCELED((short) 7),
-  PAUSE((short) 8),
+  SUSPEND((short) 8),
   PAUSED((short) 9),
   RESUME((short) 10),
   RESUMED((short) 11);
@@ -58,7 +58,7 @@ public enum BatchOperationIntent implements Intent {
       case 7:
         return CANCELED;
       case 8:
-        return PAUSE;
+        return SUSPEND;
       case 9:
         return PAUSED;
       case 10:
