@@ -47,6 +47,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 public final class OAuthCredentialsProviderBuilder {
+
   public static final String INVALID_ARGUMENT_MSG = "Expected valid %s but none was provided.";
   private static final String DEFAULT_AUTHZ_SERVER = "https://login.cloud.camunda.io/oauth/token/";
   private static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(5);
@@ -68,10 +69,12 @@ public final class OAuthCredentialsProviderBuilder {
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
-  private Path entraCertificatePath;
-  private String entraCertificatePassword;
+  private Path sslClientCertPath;
+  private String sslClientCertPassword;
 
-  /** Client id to be used when requesting access token from OAuth authorization server. */
+  /**
+   * Client id to be used when requesting access token from OAuth authorization server.
+   */
   public OAuthCredentialsProviderBuilder clientId(final String clientId) {
     this.clientId = clientId;
     return this;
@@ -84,7 +87,9 @@ public final class OAuthCredentialsProviderBuilder {
     return clientId;
   }
 
-  /** Client secret to be used when requesting access token from OAuth authorization server. */
+  /**
+   * Client secret to be used when requesting access token from OAuth authorization server.
+   */
   public OAuthCredentialsProviderBuilder clientSecret(final String clientSecret) {
     this.clientSecret = clientSecret;
     return this;
@@ -97,7 +102,9 @@ public final class OAuthCredentialsProviderBuilder {
     return clientSecret;
   }
 
-  /** The resource for which the access token should be valid. */
+  /**
+   * The resource for which the access token should be valid.
+   */
   public OAuthCredentialsProviderBuilder audience(final String audience) {
     this.audience = audience;
     return this;
@@ -110,7 +117,9 @@ public final class OAuthCredentialsProviderBuilder {
     return audience;
   }
 
-  /** The scopes of the access token. */
+  /**
+   * The scopes of the access token.
+   */
   public OAuthCredentialsProviderBuilder scope(final String scope) {
     this.scope = scope;
     return this;
@@ -123,7 +132,9 @@ public final class OAuthCredentialsProviderBuilder {
     return scope;
   }
 
-  /** The authorization server's URL, from which the access token will be requested. */
+  /**
+   * The authorization server's URL, from which the access token will be requested.
+   */
   public OAuthCredentialsProviderBuilder authorizationServerUrl(
       final String authorizationServerUrl) {
     this.authorizationServerUrl = authorizationServerUrl;
@@ -137,7 +148,9 @@ public final class OAuthCredentialsProviderBuilder {
     return authorizationServer;
   }
 
-  /** Path to keystore used for OAuth identity provider */
+  /**
+   * Path to keystore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder keystorePath(final Path keystorePath) {
     this.keystorePath = keystorePath;
     return this;
@@ -157,7 +170,9 @@ public final class OAuthCredentialsProviderBuilder {
     return keystorePath;
   }
 
-  /** Password to keystore used for OAuth identity provider */
+  /**
+   * Password to keystore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder keystorePassword(final String keystorePassword) {
     this.keystorePassword = keystorePassword;
     return this;
@@ -170,7 +185,9 @@ public final class OAuthCredentialsProviderBuilder {
     return keystorePassword;
   }
 
-  /** Keystore key password used for OAuth identity provider */
+  /**
+   * Keystore key password used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder keystoreKeyPassword(final String keystoreKeyPassword) {
     this.keystoreKeyPassword = keystoreKeyPassword;
     return this;
@@ -183,7 +200,9 @@ public final class OAuthCredentialsProviderBuilder {
     return keystoreKeyPassword;
   }
 
-  /** Path to truststore used for OAuth identity provider */
+  /**
+   * Path to truststore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder truststorePath(final Path truststorePath) {
     this.truststorePath = truststorePath;
     return this;
@@ -203,7 +222,9 @@ public final class OAuthCredentialsProviderBuilder {
     return truststorePath;
   }
 
-  /** Password to truststore used for OAuth identity provider */
+  /**
+   * Password to truststore used for OAuth identity provider
+   */
   public OAuthCredentialsProviderBuilder truststorePassword(final String truststorePassword) {
     this.truststorePassword = truststorePassword;
     return this;
@@ -233,8 +254,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   /**
-   * The connection timeout of request. The default value is 5 seconds. Max value is {@link
-   * Integer#MAX_VALUE} milliseconds.
+   * The connection timeout of request. The default value is 5 seconds. Max value is
+   * {@link Integer#MAX_VALUE} milliseconds.
    */
   public OAuthCredentialsProviderBuilder connectTimeout(final Duration connectTimeout) {
     this.connectTimeout = connectTimeout;
@@ -256,8 +277,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   /**
-   * The data read timeout of request. The default value is 5 seconds. Max value is {@link
-   * Integer#MAX_VALUE} milliseconds.
+   * The data read timeout of request. The default value is 5 seconds. Max value is
+   * {@link Integer#MAX_VALUE} milliseconds.
    */
   public OAuthCredentialsProviderBuilder readTimeout(final Duration readTimeout) {
     this.readTimeout = readTimeout;
@@ -280,30 +301,30 @@ public final class OAuthCredentialsProviderBuilder {
 
   public OAuthCredentialsProviderBuilder entraCertificatePath(final String entraCertificatePath) {
     if (entraCertificatePath != null) {
-      this.entraCertificatePath = Paths.get(entraCertificatePath);
+      sslClientCertPath = Paths.get(entraCertificatePath);
     }
     return this;
   }
 
-  public Path getEntraCertificatePath() {
-    return entraCertificatePath;
+  public Path getSslClientCertPath() {
+    return sslClientCertPath;
   }
 
-  public OAuthCredentialsProviderBuilder entraCertificatePassword(
-      final String entraCertificatePassword) {
-    this.entraCertificatePassword = entraCertificatePassword;
+  public OAuthCredentialsProviderBuilder sslClientCertPassword(
+      final String sslClientCertPassword) {
+    this.sslClientCertPassword = sslClientCertPassword;
     return this;
   }
 
-  public String getEntraCertificatePassword() {
-    return entraCertificatePassword;
+  public String getSslClientCertPassword() {
+    return sslClientCertPassword;
   }
 
   public boolean entraConfigurationProvided() {
-    return entraCertificatePassword != null
-        && !entraCertificatePassword.isEmpty()
-        && entraCertificatePath != null
-        && entraCertificatePath.toFile().exists();
+    return sslClientCertPassword != null
+        && !sslClientCertPassword.isEmpty()
+        && sslClientCertPath != null
+        && sslClientCertPath.toFile().exists();
   }
 
   public OAuthCredentialsProviderBuilder applyEnvironmentOverrides(
@@ -328,7 +349,7 @@ public final class OAuthCredentialsProviderBuilder {
 
   private void applyMSEntraConfiguration() {
     applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
-    applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
+    applyEnvironmentValueIfNotNull(this::sslClientCertPassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
   private void checkEnvironmentOverrides() {
@@ -410,8 +431,8 @@ public final class OAuthCredentialsProviderBuilder {
         // loading the certificate from the provided path to ensure it exists and is valid
         final KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(
-            Files.newInputStream(Paths.get(entraCertificatePath.toAbsolutePath().toString())),
-            entraCertificatePassword.toCharArray());
+            Files.newInputStream(Paths.get(sslClientCertPath.toAbsolutePath().toString())),
+            sslClientCertPassword.toCharArray());
       } else {
         Objects.requireNonNull(clientSecret, String.format(INVALID_ARGUMENT_MSG, "client secret"));
       }
@@ -438,10 +459,10 @@ public final class OAuthCredentialsProviderBuilder {
       validateTimeout(connectTimeout, "ConnectTimeout");
       validateTimeout(readTimeout, "ReadTimeout");
     } catch (final NullPointerException
-        | IOException
-        | KeyStoreException
-        | NoSuchAlgorithmException
-        | CertificateException e) {
+                   | IOException
+                   | KeyStoreException
+                   | NoSuchAlgorithmException
+                   | CertificateException e) {
       throw new IllegalArgumentException(e);
     }
   }
