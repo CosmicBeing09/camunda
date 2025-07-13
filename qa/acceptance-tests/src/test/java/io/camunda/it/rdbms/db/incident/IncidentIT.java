@@ -149,7 +149,7 @@ public class IncidentIT {
                                 f.incidentKeys(original.incidentKey())
                                     .processInstanceKeys(original.processInstanceKey())
                                     .processDefinitionIds(original.processDefinitionId())
-                                    .processDefinitionKeys(original.processDefinitionKey())
+                                    .processDefinitionKeyOperations(original.processDefinitionKey())
                                     .states(original.state())
                                     .errorTypes(original.errorType())
                                     .errorMessages(original.errorMessage())
@@ -183,7 +183,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(processDefinitionKey))
+                    b.filter(f -> f.processDefinitionKeyOperations(processDefinitionKey))
                         .sort(sort)
                         .page(p -> p.from(0).size(20))));
 
@@ -192,17 +192,17 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(processDefinitionKey))
+                    b.filter(f -> f.processDefinitionKeyOperations(processDefinitionKey))
                         .sort(sort)
                         .page(
                             p ->
                                 p.size(5)
                                     .searchAfter(
-                                        new Object[] {
-                                          instanceAfter.state(),
-                                          instanceAfter.creationTime(),
-                                          instanceAfter.flowNodeId(),
-                                          instanceAfter.processInstanceKey()
+                                        new Object[]{
+                                            instanceAfter.state(),
+                                            instanceAfter.creationTime(),
+                                            instanceAfter.flowNodeId(),
+                                            instanceAfter.processInstanceKey()
                                         }))));
 
     assertThat(nextPage.total()).isEqualTo(20);
@@ -256,7 +256,8 @@ public class IncidentIT {
         reader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(definition.processDefinitionKey()))
+                    b.filter(
+                            f -> f.processDefinitionKeyOperations(definition.processDefinitionKey()))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(20))));
 

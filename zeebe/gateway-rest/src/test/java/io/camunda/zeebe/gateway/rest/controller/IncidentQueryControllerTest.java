@@ -83,8 +83,8 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                       IncidentState.ACTIVE,
                       101L,
                       "tenantId")))
-          .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .firstSortValues(new Object[]{"f"})
+          .lastSortValues(new Object[]{"v"})
           .build();
 
   static final String EXPECTED_GET_RESPONSE =
@@ -123,7 +123,8 @@ public class IncidentQueryControllerTest extends RestControllerTest {
   static final String INCIDENT_URL = "/v2/incidents/";
   static final String INCIDENT_SEARCH_URL = INCIDENT_URL + "search";
 
-  @MockBean IncidentServices incidentServices;
+  @MockBean
+  IncidentServices incidentServices;
 
   @BeforeEach
   void setupIncidentServices() {
@@ -219,7 +220,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                 .filter(
                     new IncidentFilter.Builder()
                         .incidentKeys(5L)
-                        .processDefinitionKeys(23L)
+                        .processDefinitionKeyOperations(23L)
                         .processDefinitionIds("complexProcess")
                         .processInstanceKeys(42L)
                         .errorTypes(ErrorType.JOB_NO_RETRIES)
