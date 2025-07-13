@@ -56,7 +56,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public void createRPIMetric(
+  public void recordRPIMetric(
       final long eventTime, final long processInstanceKey, final String tenantId) {
     eventTimeKey.wrapLong(eventTime);
     piKey.wrapLong(processInstanceKey);
