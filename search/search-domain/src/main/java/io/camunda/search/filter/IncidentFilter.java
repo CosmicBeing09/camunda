@@ -120,10 +120,10 @@ public record IncidentFilter(
     }
 
     public Builder flowNodeIds(final String value, final String... values) {
-      return flowNodeIds(collectValues(value, values));
+      return flowNodeIdOperations(collectValues(value, values));
     }
 
-    public Builder flowNodeIds(final List<String> values) {
+    public Builder flowNodeIdOperations(final List<String> values) {
       flowNodeIds = addValuesToList(flowNodeIds, values);
       return this;
     }
