@@ -53,8 +53,8 @@ public record BatchOperationFilter(
       return operationTypes(collectValues(value, values));
     }
 
-    public Builder operationTypes(final List<String> values) {
-      operationTypes = addValuesToList(operationTypes, values);
+    public Builder operationTypes(final List<String> operations) {
+      operationTypes = addValuesToList(operationTypes, operations);
       return this;
     }
 
