@@ -7,7 +7,6 @@
  */
 package io.camunda.zeebe.engine.state.appliers;
 
-import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
@@ -23,16 +22,25 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskCanceledApplierTest {
-  /** Injected by {@link ProcessingStateExtension} */
+
+  /**
+   * Injected by {@link ProcessingStateExtension}
+   */
   private MutableProcessingState processingState;
 
-  /** The class under test. */
+  /**
+   * The class under test.
+   */
   private UserTaskCanceledApplier userTaskCanceledApplier;
 
-  /** Used for state assertions. */
+  /**
+   * Used for state assertions.
+   */
   private MutableUserTaskState userTaskState;
 
-  /** For setting up the state before testing the applier. */
+  /**
+   * For setting up the state before testing the applier.
+   */
   private AppliersTestSetupHelper testSetup;
 
   @BeforeEach
@@ -83,7 +91,7 @@ public class UserTaskCanceledApplierTest {
             "Expect that intermediate state is cleared after cancellation of the User Task")
         .isNull();
 
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findAsyncRequest(userTaskKey))
         .describedAs("Expect that request metadata is cleared after cancellation of the User Task")
         .isEmpty();
 
@@ -112,7 +120,7 @@ public class UserTaskCanceledApplierTest {
         .describedAs("Expect there is no intermediate state for the User Task")
         .isNull();
 
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findAsyncRequest(userTaskKey))
         .describedAs("Expect there is no request metadata for the User Task")
         .isEmpty();
 
