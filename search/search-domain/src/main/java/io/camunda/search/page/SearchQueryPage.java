@@ -65,7 +65,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
       return this;
     }
 
-    public Builder searchAfter(final String value) {
+    public Builder after(final String value) {
       searchAfter = value;
       return this;
     }
