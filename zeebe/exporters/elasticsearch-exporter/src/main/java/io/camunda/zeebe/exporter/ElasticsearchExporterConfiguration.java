@@ -18,10 +18,14 @@ public class ElasticsearchExporterConfiguration {
 
   private static final String DEFAULT_URL = "http://localhost:9200";
 
-  /** Comma-separated Elasticsearch http urls */
+  /**
+   * Comma-separated Elasticsearch http urls
+   */
   public String url = DEFAULT_URL;
 
-  /** The request timeout for the elastic search client. The timeout unit is milliseconds. */
+  /**
+   * The request timeout for the elastic search client. The timeout unit is milliseconds.
+   */
   public int requestTimeoutMs = 30_000;
 
   public final IndexConfiguration index = new IndexConfiguration();
@@ -106,7 +110,7 @@ public class ElasticsearchExporterConfiguration {
       case COMPENSATION_SUBSCRIPTION -> index.compensationSubscription;
       case MESSAGE_CORRELATION -> index.messageCorrelation;
       case AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION -> index.adHocSubProcessActivityActivation;
-      case ASYNC_REQUEST_METADATA -> index.asyncRequestMetadata;
+      case ASYNC_REQUEST_METADATA -> index.asyncRequest;
       default -> false;
     };
   }
@@ -150,6 +154,7 @@ public class ElasticsearchExporterConfiguration {
   }
 
   public static class IndexConfiguration {
+
     // prefix for index and templates
     public String prefix = "zeebe-record";
 
@@ -217,7 +222,7 @@ public class ElasticsearchExporterConfiguration {
     public boolean batchOperationLifecycleManagement = false;
     public boolean batchOperationPartitionLifecycle = false;
 
-    public boolean asyncRequestMetadata = false;
+    public boolean asyncRequest = false;
 
     // index settings
     private Integer numberOfShards = null;
@@ -328,12 +333,13 @@ public class ElasticsearchExporterConfiguration {
           + ", authorization="
           + authorization
           + ", asyncRequestMetadata="
-          + asyncRequestMetadata
+          + asyncRequest
           + '}';
     }
   }
 
   public static class BulkConfiguration {
+
     // delay before forced flush
     public int delay = 5;
     // bulk size before flush
@@ -355,6 +361,7 @@ public class ElasticsearchExporterConfiguration {
   }
 
   public static class AuthenticationConfiguration {
+
     private String username;
     private String password;
 

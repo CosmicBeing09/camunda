@@ -13,10 +13,13 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import java.util.EnumSet;
 import java.util.stream.Stream;
 
-/** Collection of utilities for unit and integration tests. */
+/**
+ * Collection of utilities for unit and integration tests.
+ */
 final class TestSupport {
 
-  private TestSupport() {}
+  private TestSupport() {
+  }
 
   /**
    * Sets the correct indexing configuration field for the given value type. This is particularly
@@ -70,10 +73,9 @@ final class TestSupport {
       case BATCH_OPERATION_PARTITION_LIFECYCLE -> config.batchOperationPartitionLifecycle = value;
       case AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION ->
           config.adHocSubProcessActivityActivation = value;
-      case ASYNC_REQUEST_METADATA -> config.asyncRequestMetadata = value;
-      default ->
-          throw new IllegalArgumentException(
-              "No known indexing configuration option for value type " + valueType);
+      case ASYNC_REQUEST_METADATA -> config.asyncRequest = value;
+      default -> throw new IllegalArgumentException(
+          "No known indexing configuration option for value type " + valueType);
     }
   }
 
@@ -88,9 +90,8 @@ final class TestSupport {
       case EVENT -> config.event = value;
       case COMMAND -> config.command = value;
       case COMMAND_REJECTION -> config.rejection = value;
-      default ->
-          throw new IllegalArgumentException(
-              "No known indexing configuration option for record type " + recordType);
+      default -> throw new IllegalArgumentException(
+          "No known indexing configuration option for record type " + recordType);
     }
   }
 
