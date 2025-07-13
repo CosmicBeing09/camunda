@@ -71,6 +71,7 @@ import org.slf4j.LoggerFactory;
  */
 @ThreadSafe
 public final class OAuthCredentialsProvider implements CredentialsProvider {
+
   private static final String HEADER_AUTH_KEY = "Authorization";
   private static final String JWT_ASSERTION_TYPE =
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
@@ -106,7 +107,9 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     readTimeout = builder.getReadTimeout();
   }
 
-  /** Adds an access token to the Authorization header of a gRPC call. */
+  /**
+   * Adds an access token to the Authorization header of a gRPC call.
+   */
   @Override
   public void applyCredentials(final CredentialsApplier applier) throws IOException {
     final CamundaClientCredentials camundaClientCredentials =
@@ -132,14 +135,14 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     try {
       return statusCode.isUnauthorized()
           && credentialsCache
-              .withCache(
-                  clientId,
-                  value -> {
-                    final CamundaClientCredentials fetchedCredentials = fetchCredentials();
-                    credentialsCache.put(clientId, fetchedCredentials).writeCache();
-                    return !fetchedCredentials.equals(value) || !value.isValid();
-                  })
-              .orElse(false);
+          .withCache(
+              clientId,
+              value -> {
+                final CamundaClientCredentials fetchedCredentials = fetchCredentials();
+                credentialsCache.put(clientId, fetchedCredentials).writeCache();
+                return !fetchedCredentials.equals(value) || !value.isValid();
+              })
+          .orElse(false);
     } catch (final IOException e) {
       LOG.error("Failed while fetching credentials: ", e);
       return false;
@@ -153,7 +156,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
       payload.put(
           "client_assertion",
           getClientAssertion(
-              builder.getEntraCertificatePath().toAbsolutePath().toString(),
+              builder.getSslClientCertPath().toAbsolutePath().toString(),
               builder.getEntraCertificatePassword(),
               builder.getClientId(),
               builder.getAudience()));
@@ -244,20 +247,21 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
       }
       return builder.build().getSocketFactory();
     } catch (final NoSuchAlgorithmException
-        | KeyManagementException
-        | KeyStoreException
-        | UnrecoverableKeyException
-        | CertificateException
-        | IOException e) {
+                   | KeyManagementException
+                   | KeyStoreException
+                   | UnrecoverableKeyException
+                   | CertificateException
+                   | IOException e) {
       throw new RuntimeException("Failed to create SSL context", e);
     }
   }
 
   private static String getClientAssertion(
-      String certPath, String certStorePassword, String clientId, String audience) {
+      final String certPath, final String certStorePassword, final String clientId,
+      final String audience) {
     final X509Certificate certificate;
     final Algorithm algorithm;
-    try (FileInputStream stream = new FileInputStream(certPath)) {
+    try (final FileInputStream stream = new FileInputStream(certPath)) {
       final KeyStore keyStore = KeyStore.getInstance("PKCS12");
       final char[] password = certStorePassword.toCharArray();
       keyStore.load(stream, password);
@@ -269,7 +273,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
 
       certificate = (X509Certificate) keyStore.getCertificate(alias);
       algorithm = Algorithm.RSA256(publicKey, privateKey);
-    } catch (IOException | GeneralSecurityException e) {
+    } catch (final IOException | GeneralSecurityException e) {
       throw new RuntimeException("Failed to create client assertion", e);
     }
 
@@ -293,12 +297,12 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
         .sign(algorithm);
   }
 
-  private static String generateX5tThumbprint(X509Certificate certificate) {
+  private static String generateX5tThumbprint(final X509Certificate certificate) {
     try {
       final MessageDigest digest = MessageDigest.getInstance("SHA-1");
       final byte[] encoded = digest.digest(certificate.getEncoded());
       return Base64.getUrlEncoder().withoutPadding().encodeToString(encoded);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new RuntimeException("Failed to generate x5t thumbprint", e);
     }
   }
