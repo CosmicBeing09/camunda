@@ -516,7 +516,7 @@ class UserTaskSearchTest {
     final var resultBefore =
         camundaClient
             .newUserTaskSearchRequest()
-            .page(p -> p.searchBefore(Collections.singletonList(keyAfter)))
+            .page(p -> p.searchBeforeCursor(Collections.singletonList(keyAfter)))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(1);

@@ -297,7 +297,7 @@ public class QueryProcessInstanceTest extends ClientRestTest {
             p ->
                 p.from(23)
                     .limit(5)
-                    .searchBefore(Collections.singletonList("b"))
+                    .searchBeforeCursor(Collections.singletonList("b"))
                     .searchAfter(Collections.singletonList("a")))
         .send()
         .join();

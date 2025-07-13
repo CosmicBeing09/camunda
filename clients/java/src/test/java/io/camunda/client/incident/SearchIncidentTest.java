@@ -154,7 +154,7 @@ public class SearchIncidentTest extends ClientRestTest {
             p ->
                 p.from(23)
                     .limit(5)
-                    .searchBefore(Arrays.asList("b"))
+                    .searchBeforeCursor(Arrays.asList("b"))
                     .searchAfter(Arrays.asList("a")))
         .send()
         .join();
