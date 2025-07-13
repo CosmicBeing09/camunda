@@ -16,14 +16,14 @@ import java.util.List;
 import java.util.Objects;
 
 public record BatchOperationFilter(
-    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
+    List<String> batchOperationIds, List<String> operationTypes, List<String> stateOperations)
     implements FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationFilter> {
 
     private List<String> batchOperationIds;
     private List<String> operationTypes;
-    private List<String> state;
+    private List<String> stateOperations;
 
     public Builder batchOperationIds(final String value, final String... values) {
       return batchOperationIds(collectValues(value, values));
@@ -48,7 +48,7 @@ public record BatchOperationFilter(
     }
 
     public Builder state(final List<String> values) {
-      state = addValuesToList(state, values);
+      stateOperations = addValuesToList(stateOperations, values);
       return this;
     }
 
@@ -57,7 +57,7 @@ public record BatchOperationFilter(
       return new BatchOperationFilter(
           Objects.requireNonNullElse(batchOperationIds, Collections.emptyList()),
           Objects.requireNonNullElse(operationTypes, Collections.emptyList()),
-          Objects.requireNonNullElse(state, Collections.emptyList()));
+          Objects.requireNonNullElse(stateOperations, Collections.emptyList()));
     }
   }
 }
