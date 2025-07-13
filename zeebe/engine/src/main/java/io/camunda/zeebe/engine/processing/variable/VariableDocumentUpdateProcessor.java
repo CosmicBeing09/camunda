@@ -233,12 +233,12 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final var metadata =
+    final var request =
         new UserTaskTransitionTriggerRequestMetadata()
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.VARIABLE_DOCUMENT)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
-    userTaskState.storeRecordRequestMetadata(userTaskKey, metadata);
+    userTaskState.storeRecordRequestMetadata(userTaskKey, request);
   }
 }
