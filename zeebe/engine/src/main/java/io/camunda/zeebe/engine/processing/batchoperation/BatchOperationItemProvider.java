@@ -192,7 +192,9 @@ public class BatchOperationItemProvider {
     return incidents;
   }
 
-  public record Item(long itemKey, long processInstanceKey) {}
+  public record Item(long itemKey, long processInstanceKey) {
+
+  }
 
   /**
    * Internal abstraction to hold the result of a page of entity items.
@@ -201,7 +203,9 @@ public class BatchOperationItemProvider {
    * @param searchAfter cursor to fetch the next page of items
    * @param total the total amount of found items
    */
-  private record ItemPage(List<Item> items, String searchAfter, long total) {}
+  private record ItemPage(List<Item> items, String searchAfter, long total) {
+
+  }
 
   /**
    * Internal abstraction interface to get a single page of entity items of a specific type. This is
@@ -226,7 +230,7 @@ public class BatchOperationItemProvider {
      *
      * @param authentication the authentication of the user which started the batch operation
      * @param authorization the same authorization is needed, that is normally used in
-     *     ProcessInstanceServices / IncidentServices
+     * ProcessInstanceServices / IncidentServices
      * @return the security context
      */
     default SecurityContext createSecurityContext(
@@ -237,6 +241,7 @@ public class BatchOperationItemProvider {
   }
 
   private final class ProcessInstancePageFetcher implements ItemPageFetcher<ProcessInstanceFilter> {
+
     @Override
     public ItemPage fetchItems(
         final ProcessInstanceFilter filter,
@@ -246,7 +251,7 @@ public class BatchOperationItemProvider {
           createSecurityContext(
               authentication, Authorization.of(a -> a.processDefinition().readProcessInstance()));
       final var page =
-          SearchQueryPageBuilders.page().size(queryPageSize).searchAfter(searchAfter).build();
+          SearchQueryPageBuilders.page().size(queryPageSize).after(searchAfter).build();
       final var query =
           SearchQueryBuilders.processInstanceSearchQuery()
               .filter(filter)
@@ -267,6 +272,7 @@ public class BatchOperationItemProvider {
   }
 
   private final class IncidentPageFetcher implements ItemPageFetcher<IncidentFilter> {
+
     @Override
     public ItemPage fetchItems(
         final IncidentFilter filter,
@@ -276,7 +282,7 @@ public class BatchOperationItemProvider {
           createSecurityContext(
               authentication, Authorization.of(a -> a.processDefinition().readProcessInstance()));
       final var page =
-          SearchQueryPageBuilders.page().size(queryPageSize).searchAfter(searchAfter).build();
+          SearchQueryPageBuilders.page().size(queryPageSize).after(searchAfter).build();
       final var query = SearchQueryBuilders.incidentSearchQuery().filter(filter).page(page).build();
 
       final var result =
