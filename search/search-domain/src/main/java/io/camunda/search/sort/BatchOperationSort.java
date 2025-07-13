@@ -31,12 +31,12 @@ public record BatchOperationSort(List<FieldSorting> orderings) implements SortOp
       return this;
     }
 
-    public Builder state() {
+    public Builder stateOperations() {
       currentOrdering = new FieldSorting("state", null);
       return this;
     }
 
-    public Builder operationType() {
+    public Builder operationTypeOperations() {
       currentOrdering = new FieldSorting("operationType", null);
       return this;
     }
