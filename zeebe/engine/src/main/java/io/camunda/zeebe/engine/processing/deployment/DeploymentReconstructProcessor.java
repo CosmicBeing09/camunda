@@ -35,7 +35,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord.R
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Collection;
 import java.util.HashSet;
@@ -51,9 +51,10 @@ import org.agrona.collections.MutableReference;
  */
 @ExcludeAuthorizationCheck
 public class DeploymentReconstructProcessor implements TypedRecordProcessor<DeploymentRecord> {
+
   private static final long NO_DEPLOYMENT_KEY = -1;
   private final DeploymentResourceUtil resourceUtil = new DeploymentResourceUtil();
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final DeploymentState deploymentState;
   private final ProcessState processState;
   private final FormState formState;
@@ -64,7 +65,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
   private final DeploymentRecord cachedDeploymentRecordCommand = new DeploymentRecord();
 
   public DeploymentReconstructProcessor(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ProcessingState processingState,
       final Writers writers) {
     this.keyGenerator = keyGenerator;
@@ -88,7 +89,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
     }
     final var identifier = fromDeploymentRecord(record.getValue());
 
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextVariableDocKey();
 
     final var resourceOpt =
         findNextResource(identifier, record.getValue().getReconstructionProgress());
@@ -134,13 +135,12 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
   private Optional<Resource> findResource(
       final ResourceIdentifier identifier, final ReconstructionProgress reconstructionProgress) {
     return switch (identifier) {
-      case null ->
-          switch (reconstructionProgress) {
-            case PROCESS -> findProcessResource(null);
-            case FORM -> findFormResource(null);
-            case DECISION_REQUIREMENTS -> findDecisionRequirementsResource(null);
-            case DONE -> Optional.empty();
-          };
+      case null -> switch (reconstructionProgress) {
+        case PROCESS -> findProcessResource(null);
+        case FORM -> findFormResource(null);
+        case DECISION_REQUIREMENTS -> findDecisionRequirementsResource(null);
+        case DONE -> Optional.empty();
+      };
       case final ProcessIdentifier processIdentifier -> findProcessResource(processIdentifier);
       case final FormIdentifier form -> findFormResource(form);
       case final DecisionRequirementsIdentifier decisionRequirementsIdentifier ->
@@ -323,9 +323,10 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
         resourceUtil.applyFormMetadata(form, metadata);
       }
       case DecisionRequirementsResource(
-              final var deploymentKey,
-              final var decisionRequirements,
-              final var decisions) -> {
+          final var deploymentKey,
+          final var decisionRequirements,
+          final var decisions
+      ) -> {
         final var requirementsMetadata = deploymentRecord.decisionRequirementsMetadata().add();
         resourceUtil.applyDecisionRequirementsMetadata(decisionRequirements, requirementsMetadata);
         decisions.forEach(
@@ -356,6 +357,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
   }
 
   sealed interface Resource {
+
     long key();
 
     long deploymentKey();

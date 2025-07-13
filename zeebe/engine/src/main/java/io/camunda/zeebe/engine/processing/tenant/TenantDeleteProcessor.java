@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<TenantRecord> {
 
@@ -43,7 +43,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   private final UserState userState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -52,7 +52,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   public TenantDeleteProcessor(
       final ProcessingState state,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     tenantState = state.getTenantState();
@@ -138,7 +138,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
 
   private void distributeCommand(final TypedRecord<TenantRecord> command) {
     commandDistributionBehavior
-        .withKey(keyGenerator.nextKey())
+        .withKey(keyGenerator.nextVariableDocKey())
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
         .distribute(command);
   }
@@ -153,16 +153,14 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
         tenantId,
         (type, id) -> {
           switch (type) {
-            case USER ->
-                stateWriter.appendFollowUpEvent(
-                    tenantKey,
-                    TenantIntent.ENTITY_REMOVED,
-                    new TenantRecord().setTenantId(tenantId).setEntityId(id).setEntityType(type));
-            default ->
-                throw new UnsupportedOperationException(
-                    String.format(
-                        "Expected to remove entity with id %s and type %s from tenant %s, but the type is not supported.",
-                        id, type, tenantId));
+            case USER -> stateWriter.appendFollowUpEvent(
+                tenantKey,
+                TenantIntent.ENTITY_REMOVED,
+                new TenantRecord().setTenantId(tenantId).setEntityId(id).setEntityType(type));
+            default -> throw new UnsupportedOperationException(
+                String.format(
+                    "Expected to remove entity with id %s and type %s from tenant %s, but the type is not supported.",
+                    id, type, tenantId));
           }
         });
   }

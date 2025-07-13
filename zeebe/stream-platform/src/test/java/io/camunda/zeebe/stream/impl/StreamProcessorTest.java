@@ -430,7 +430,7 @@ public final class StreamProcessorTest {
         .untilAsserted(
             () ->
                 assertThat(
-                        streamPlatform.getStreamProcessor().getLastProcessedPositionAsync().join())
+                    streamPlatform.getStreamProcessor().getLastProcessedPositionAsync().join())
                     .isEqualTo(1));
 
     final var logStreamReader = streamPlatform.getLogStream().newLogStreamReader();
@@ -515,19 +515,19 @@ public final class StreamProcessorTest {
     final var mockProcessorLifecycleAware = streamPlatform.getMockProcessorLifecycleAware();
     final CountDownLatch asyncServiceLatch = new CountDownLatch(1);
     doAnswer(
-            (invocationOnMock) -> {
-              final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
-              context
-                  .getScheduleService()
-                  .runDelayedAsync(
-                      Duration.ZERO,
-                      (taskResultBuilder) -> {
-                        asyncServiceLatch.countDown();
-                        return taskResultBuilder.build();
-                      });
+        (invocationOnMock) -> {
+          final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
+          context
+              .getScheduleService()
+              .runDelayedAsync(
+                  Duration.ZERO,
+                  (taskResultBuilder) -> {
+                    asyncServiceLatch.countDown();
+                    return taskResultBuilder.build();
+                  });
 
-              return invocationOnMock.callRealMethod();
-            })
+          return invocationOnMock.callRealMethod();
+        })
         .when(mockProcessorLifecycleAware)
         .onRecovered(any());
 
@@ -545,25 +545,25 @@ public final class StreamProcessorTest {
     final CountDownLatch asyncServiceLatch = new CountDownLatch(1);
     final CountDownLatch countDownLatch = new CountDownLatch(1);
     doAnswer(
-            (invocationOnMock) -> {
-              final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
+        (invocationOnMock) -> {
+          final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
 
-              context
-                  .getScheduleService()
-                  .runAtFixedRateAsync(
-                      Duration.ZERO,
-                      (taskResultBuilder) -> {
-                        try {
-                          asyncServiceLatch.countDown();
-                          countDownLatch.await();
-                        } catch (final InterruptedException e) {
-                          throw new RuntimeException(e);
-                        }
-                        return taskResultBuilder.build();
-                      });
+          context
+              .getScheduleService()
+              .runAtFixedRateAsync(
+                  Duration.ZERO,
+                  (taskResultBuilder) -> {
+                    try {
+                      asyncServiceLatch.countDown();
+                      countDownLatch.await();
+                    } catch (final InterruptedException e) {
+                      throw new RuntimeException(e);
+                    }
+                    return taskResultBuilder.build();
+                  });
 
-              return invocationOnMock.callRealMethod();
-            })
+          return invocationOnMock.callRealMethod();
+        })
         .when(mockProcessorLifecycleAware)
         .onRecovered(any());
 
@@ -594,34 +594,34 @@ public final class StreamProcessorTest {
     final CountDownLatch processorLatch = new CountDownLatch(1);
     final CountDownLatch waitLatch = new CountDownLatch(1);
     doAnswer(
-            (invocationOnMock) -> {
-              final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
+        (invocationOnMock) -> {
+          final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
 
-              context
-                  .getScheduleService()
-                  .runAtFixedRateAsync(
-                      Duration.ofMinutes(1),
-                      (taskResultBuilder) -> {
-                        asyncServiceLatch.countDown();
-                        return taskResultBuilder.build();
-                      });
+          context
+              .getScheduleService()
+              .runAtFixedRateAsync(
+                  Duration.ofMinutes(1),
+                  (taskResultBuilder) -> {
+                    asyncServiceLatch.countDown();
+                    return taskResultBuilder.build();
+                  });
 
-              return invocationOnMock.callRealMethod();
-            })
+          return invocationOnMock.callRealMethod();
+        })
         .when(mockProcessorLifecycleAware)
         .onRecovered(any());
 
     final var defaultRecordProcessor = streamPlatform.getDefaultMockedRecordProcessor();
     doAnswer(
-            (invocationOnMock -> {
-              try {
-                processorLatch.countDown();
-                waitLatch.await();
-              } catch (final InterruptedException e) {
-                throw new RuntimeException(e);
-              }
-              return invocationOnMock.callRealMethod();
-            }))
+        (invocationOnMock -> {
+          try {
+            processorLatch.countDown();
+            waitLatch.await();
+          } catch (final InterruptedException e) {
+            throw new RuntimeException(e);
+          }
+          return invocationOnMock.callRealMethod();
+        }))
         .when(defaultRecordProcessor)
         .process(any(), any());
     streamPlatform.startStreamProcessor();
@@ -721,9 +721,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
         };
     // in order to not mark the processing as skipped we need to return a result
     testProcessor.processingResult =
@@ -738,7 +738,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextVariableDocKey();
 
     // when
     streamPlatform.writeBatch(
@@ -748,7 +748,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextVariableDocKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 4);
   }
 
@@ -760,9 +760,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
 
           throw new RuntimeException("expected");
         };
@@ -776,7 +776,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextVariableDocKey();
 
     // when
     streamPlatform.writeBatch(
@@ -786,7 +786,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextVariableDocKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 1);
   }
 
@@ -802,9 +802,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
         };
     doCallRealMethod()
         .doReturn(EmptyProcessingResult.INSTANCE)
@@ -814,7 +814,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextVariableDocKey();
 
     // when
     streamPlatform.writeBatch(
@@ -824,7 +824,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextVariableDocKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 4);
   }
 
@@ -840,9 +840,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
+          keyGenerator.nextVariableDocKey();
 
           throw new RuntimeException("expected");
         };
@@ -858,7 +858,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextVariableDocKey();
 
     // when
     streamPlatform.writeBatch(
@@ -868,7 +868,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextVariableDocKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 1);
   }
 
@@ -1453,25 +1453,25 @@ public final class StreamProcessorTest {
     final var writing = new CountDownLatch(1);
     final var lifecycleAware = streamPlatform.getMockProcessorLifecycleAware();
     doAnswer(
-            (invocationOnMock -> {
-              final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
-              recovery.countDown();
-              context
-                  .getScheduleService()
-                  .runDelayed(
-                      Duration.ZERO,
-                      (taskResultBuilder) -> {
-                        try {
-                          writing.await();
-                        } catch (final InterruptedException e) {
-                          throw new RuntimeException(e);
-                        }
-                        taskResultBuilder.appendCommandRecord(
-                            1, ACTIVATE_ELEMENT, Records.processInstance(1));
-                        return taskResultBuilder.build();
-                      });
-              return invocationOnMock.callRealMethod();
-            }))
+        (invocationOnMock -> {
+          final var context = (ReadonlyStreamProcessorContext) invocationOnMock.getArgument(0);
+          recovery.countDown();
+          context
+              .getScheduleService()
+              .runDelayed(
+                  Duration.ZERO,
+                  (taskResultBuilder) -> {
+                    try {
+                      writing.await();
+                    } catch (final InterruptedException e) {
+                      throw new RuntimeException(e);
+                    }
+                    taskResultBuilder.appendCommandRecord(
+                        1, ACTIVATE_ELEMENT, Records.processInstance(1));
+                    return taskResultBuilder.build();
+                  });
+          return invocationOnMock.callRealMethod();
+        }))
         .when(lifecycleAware)
         .onRecovered(any());
 
@@ -1542,7 +1542,7 @@ public final class StreamProcessorTest {
                 healthReport ->
                     healthReport.isDead()
                         && healthReport.getIssue().throwable()
-                            instanceof final UncommittedStateException uncommittedStateException
+                        instanceof final UncommittedStateException uncommittedStateException
                         && uncommittedStateException.getCause().equals(unexpectedException)));
   }
 
@@ -1551,8 +1551,10 @@ public final class StreamProcessorTest {
     ProcessingResult processingResult = EmptyProcessingResult.INSTANCE;
     ProcessingResult processingResultOnError = EmptyProcessingResult.INSTANCE;
     RecordProcessorContext recordProcessorContext;
-    private Consumer<RecordProcessorContext> processingAction = (ctx) -> {};
-    private Consumer<RecordProcessorContext> onProcessingErrorAction = (ctx) -> {};
+    private Consumer<RecordProcessorContext> processingAction = (ctx) -> {
+    };
+    private Consumer<RecordProcessorContext> onProcessingErrorAction = (ctx) -> {
+    };
 
     @Override
     public void init(final RecordProcessorContext recordProcessorContext) {
@@ -1565,7 +1567,8 @@ public final class StreamProcessorTest {
     }
 
     @Override
-    public void replay(final TypedRecord record) {}
+    public void replay(final TypedRecord record) {
+    }
 
     @Override
     public ProcessingResult process(

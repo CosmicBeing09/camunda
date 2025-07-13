@@ -34,7 +34,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,7 +45,7 @@ public final class MessageCorrelationCorrelateProcessor
       "Expected to find subscription for message with name '%s' and correlation key '%s', but none was found.";
 
   private final MessageCorrelateBehavior correlateBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
@@ -53,7 +53,7 @@ public final class MessageCorrelationCorrelateProcessor
 
   public MessageCorrelationCorrelateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final ProcessState processState,
       final BpmnBehaviors bpmnBehaviors,
@@ -98,7 +98,7 @@ public final class MessageCorrelationCorrelateProcessor
       return;
     }
 
-    final long messageKey = keyGenerator.nextKey();
+    final long messageKey = keyGenerator.nextVariableDocKey();
     messageCorrelationRecord
         .setMessageKey(messageKey)
         .setRequestId(command.getRequestId())

@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<RoleRecord> {
 
@@ -39,7 +39,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -48,7 +48,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   public RoleDeleteProcessor(
       final ProcessingState state,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     roleState = state.getRoleState();
@@ -96,7 +96,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
     stateWriter.appendFollowUpEvent(roleKey, RoleIntent.DELETED, record);
     responseWriter.writeEventOnCommand(roleKey, RoleIntent.DELETED, record, command);
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextVariableDocKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

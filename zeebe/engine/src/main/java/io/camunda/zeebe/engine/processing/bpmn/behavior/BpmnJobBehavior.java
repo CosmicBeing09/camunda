@@ -40,7 +40,7 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,22 +60,22 @@ public final class BpmnJobBehavior {
 
   public static final String FIND_LATEST_RESOURCE_BY_ID_FAILED_MESSAGE =
       """
-      Expected to link a resource with id '%s', but no resource with this id is found, \
-      at least a resource with this id should be available. \
-      To resolve the Incident please deploy a resource with the same id.
-      """;
+          Expected to link a resource with id '%s', but no resource with this id is found, \
+          at least a resource with this id should be available. \
+          To resolve the Incident please deploy a resource with the same id.
+          """;
   public static final String FIND_RESOURCE_BY_ID_AND_VERSION_TAG_FAILED_MESSAGE =
       """
-      Expected to link a resource with id '%s' and version tag '%s', but no such resource found. \
-      To resolve the incident, deploy a resource with the given id and version tag.
-      """;
+          Expected to link a resource with id '%s' and version tag '%s', but no such resource found. \
+          To resolve the incident, deploy a resource with the given id and version tag.
+          """;
   public static final String FIND_RESOURCE_BY_ID_IN_SAME_DEPLOYMENT_FAILED_MESSAGE =
       """
-      Expected to link a resource with id '%s' and binding type 'deployment', \
-      but no such resource found in the deployment with key %s which contained the current process. \
-      To resolve this incident, migrate the process instance to a process definition \
-      that is deployed together with the intended resource to use.\
-      """;
+          Expected to link a resource with id '%s' and binding type 'deployment', \
+          but no such resource found in the deployment with key %s which contained the current process. \
+          To resolve this incident, migrate the process instance to a process definition \
+          that is deployed together with the intended resource to use.\
+          """;
   private static final Logger LOGGER =
       LoggerFactory.getLogger(BpmnJobBehavior.class.getPackageName());
   private static final Set<State> CANCELABLE_STATES =
@@ -83,7 +83,7 @@ public final class BpmnJobBehavior {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private final JobRecord jobRecord = new JobRecord().setVariables(DocumentValue.EMPTY_DOCUMENT);
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final JobState jobState;
   private final ExpressionProcessor expressionBehavior;
@@ -95,7 +95,7 @@ public final class BpmnJobBehavior {
   private final BpmnUserTaskBehavior userTaskBehavior;
 
   public BpmnJobBehavior(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final JobState jobState,
       final Writers writers,
       final ExpressionProcessor expressionBehavior,
@@ -192,11 +192,11 @@ public final class BpmnJobBehavior {
   private Either<Failure, String> resolveLinkedResourceKey(
       final LinkedResource linkedResource, final BpmnElementContext context, final long scopeKey) {
     return findLinkedResource(
-            linkedResource.getResourceId(),
-            linkedResource.getBindingType(),
-            linkedResource.getVersionTag(),
-            context,
-            scopeKey)
+        linkedResource.getResourceId(),
+        linkedResource.getBindingType(),
+        linkedResource.getVersionTag(),
+        context,
+        scopeKey)
         .map(PersistedResource::getResourceKey)
         .map(String::valueOf);
   }
@@ -394,12 +394,12 @@ public final class BpmnJobBehavior {
             result ->
                 Strings.isNullOrEmpty(result)
                     ? Either.left(
-                        new Failure(
-                            String.format(
-                                "Expected result of the expression '%s' to be a not-empty string, but was an empty string.",
-                                type.getExpression()),
-                            ErrorType.EXTRACT_VALUE_ERROR,
-                            scopeKey))
+                    new Failure(
+                        String.format(
+                            "Expected result of the expression '%s' to be a not-empty string, but was an empty string.",
+                            type.getExpression()),
+                        ErrorType.EXTRACT_VALUE_ERROR,
+                        scopeKey))
                     : Either.right(result));
   }
 
@@ -430,7 +430,7 @@ public final class BpmnJobBehavior {
         .setElementInstanceKey(context.getElementInstanceKey())
         .setTenantId(context.getTenantId());
 
-    final var jobKey = keyGenerator.nextKey();
+    final var jobKey = keyGenerator.nextVariableDocKey();
     stateWriter.appendFollowUpEvent(jobKey, JobIntent.CREATED, jobRecord);
     jobActivationBehavior.publishWork(jobKey, jobRecord);
     jobMetrics.countJobEvent(JobAction.CREATED, jobKind, props.getType());
@@ -533,6 +533,7 @@ public final class BpmnJobBehavior {
   }
 
   public static final class JobProperties {
+
     private String type;
     private Long retries;
     private String assignee;
@@ -626,6 +627,7 @@ public final class BpmnJobBehavior {
   }
 
   public static final class LinkedResourceProps {
+
     private String resourceKey;
     private String resourceType;
     private String linkName;

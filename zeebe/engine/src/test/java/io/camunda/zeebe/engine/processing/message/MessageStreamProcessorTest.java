@@ -43,7 +43,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
 import io.camunda.zeebe.stream.api.ProcessingResultBuilder;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.Duration;
@@ -70,7 +70,7 @@ public final class MessageStreamProcessorTest {
   @Before
   public void setup() {
     mockInterpartitionCommandSender = mock(InterPartitionCommandSender.class);
-    final var mockKeyGenerator = mock(KeyGenerator.class);
+    final var mockKeyGenerator = mock(VariableDocKeyGenerator.class);
     final var mockDistributionState = mock(DistributionState.class);
     final var mockProcessingResultBuilder = mock(ProcessingResultBuilder.class);
     final var mockEventAppliers = mock(EventAppliers.class);

@@ -28,7 +28,7 @@ import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.time.InstantSource;
 import java.time.ZonedDateTime;
@@ -48,7 +48,7 @@ public final class BpmnUserTaskBehavior {
       EnumSet.complementOf(EnumSet.of(LifecycleState.NOT_FOUND, LifecycleState.CANCELING));
 
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
@@ -57,7 +57,7 @@ public final class BpmnUserTaskBehavior {
   private final InstantSource clock;
 
   public BpmnUserTaskBehavior(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final ExpressionProcessor expressionBehavior,
       final BpmnStateBehavior stateBehavior,
@@ -96,16 +96,16 @@ public final class BpmnUserTaskBehavior {
         .flatMap(
             p ->
                 evaluateFormIdExpressionToFormKey(
-                        userTaskProps.getFormId(),
-                        userTaskProps.getFormBindingType(),
-                        userTaskProps.getFormVersionTag(),
-                        context,
-                        scopeKey)
+                    userTaskProps.getFormId(),
+                    userTaskProps.getFormBindingType(),
+                    userTaskProps.getFormVersionTag(),
+                    context,
+                    scopeKey)
                     .map(p::formKey))
         .flatMap(
             p ->
                 evaluateExternalFormReferenceExpression(
-                        userTaskProps.getExternalFormReference(), scopeKey)
+                    userTaskProps.getExternalFormReference(), scopeKey)
                     .map(p::externalFormReference))
         .flatMap(
             p ->
@@ -116,7 +116,7 @@ public final class BpmnUserTaskBehavior {
       final BpmnElementContext context,
       final ExecutableUserTask element,
       final UserTaskProperties userTaskProperties) {
-    final var userTaskKey = keyGenerator.nextKey();
+    final var userTaskKey = keyGenerator.nextVariableDocKey();
 
     final var encodedHeaders =
         headerEncoder.encode(element.getUserTaskProperties().getTaskHeaders());
@@ -228,11 +228,11 @@ public final class BpmnUserTaskBehavior {
                                 new Failure(
                                     String.format(
                                         """
-                                        Expected to use a form with id '%s' with binding type 'deployment', \
-                                        but no such form found in the deployment with key %s which contained the current process. \
-                                        To resolve this incident, migrate the process instance to a process definition \
-                                        that is deployed together with the intended form to use.\
-                                        """,
+                                            Expected to use a form with id '%s' with binding type 'deployment', \
+                                            but no such form found in the deployment with key %s which contained the current process. \
+                                            To resolve this incident, migrate the process instance to a process definition \
+                                            that is deployed together with the intended form to use.\
+                                            """,
                                         formId, deploymentKey),
                                     ErrorType.FORM_NOT_FOUND,
                                     scopeKey))));
@@ -268,9 +268,9 @@ public final class BpmnUserTaskBehavior {
                     new Failure(
                         String.format(
                             """
-                            Expected to use a form with id '%s' and version tag '%s', but no such form found. \
-                            To resolve the incident, deploy a form with the given id and version tag.
-                            """,
+                                Expected to use a form with id '%s' and version tag '%s', but no such form found. \
+                                To resolve the incident, deploy a form with the given id and version tag.
+                                """,
                             formId, versionTag),
                         ErrorType.FORM_NOT_FOUND,
                         scopeKey)));

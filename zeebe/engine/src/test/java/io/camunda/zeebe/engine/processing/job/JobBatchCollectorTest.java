@@ -48,6 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 final class JobBatchCollectorTest {
+
   private static final String JOB_TYPE = "job";
 
   private final RecordLengthEvaluator lengthEvaluator = new RecordLengthEvaluator();
@@ -67,7 +68,7 @@ final class JobBatchCollectorTest {
   @Test
   void shouldTruncateBatchIfNoMoreCanBeWritten() {
     // given
-    final long variableScopeKey = state.getKeyGenerator().nextKey();
+    final long variableScopeKey = state.getKeyGenerator().nextVariableDocKey();
     final TypedRecord<JobBatchRecord> record = createRecord();
     final List<Job> jobs = Arrays.asList(createJob(variableScopeKey), createJob(variableScopeKey));
     final var toggle = new AtomicBoolean(true);
@@ -90,7 +91,7 @@ final class JobBatchCollectorTest {
   @Test
   void shouldReturnLargeJobIfFirstJobCannotBeWritten() {
     // given
-    final long variableScopeKey = state.getKeyGenerator().nextKey();
+    final long variableScopeKey = state.getKeyGenerator().nextVariableDocKey();
     final TypedRecord<JobBatchRecord> record = createRecord();
     final List<Job> jobs = Arrays.asList(createJob(variableScopeKey), createJob(variableScopeKey));
 
@@ -111,8 +112,8 @@ final class JobBatchCollectorTest {
   void shouldCollectJobsWithVariables() {
     // given - multiple jobs to ensure variables are collected based on the scope
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long firstScopeKey = state.getKeyGenerator().nextKey();
-    final long secondScopeKey = state.getKeyGenerator().nextKey();
+    final long firstScopeKey = state.getKeyGenerator().nextVariableDocKey();
+    final long secondScopeKey = state.getKeyGenerator().nextVariableDocKey();
     final Map<String, String> firstJobVariables = Map.of("foo", "bar", "baz", "buz");
     final Map<String, String> secondJobVariables = Map.of("fizz", "buzz");
     createJobWithVariables(firstScopeKey, firstJobVariables);
@@ -138,7 +139,7 @@ final class JobBatchCollectorTest {
   void shouldAppendJobKeyToBatchRecord() {
     // given - multiple jobs to ensure variables are collected based on the scope
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long scopeKey = state.getKeyGenerator().nextKey();
+    final long scopeKey = state.getKeyGenerator().nextVariableDocKey();
     final List<Job> jobs = Arrays.asList(createJob(scopeKey), createJob(scopeKey));
 
     // when
@@ -153,7 +154,7 @@ final class JobBatchCollectorTest {
   void shouldActivateUpToMaxJobs() {
     // given
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long scopeKey = state.getKeyGenerator().nextKey();
+    final long scopeKey = state.getKeyGenerator().nextVariableDocKey();
     final List<Job> jobs = Arrays.asList(createJob(scopeKey), createJob(scopeKey));
     record.getValue().setMaxJobsToActivate(1);
 
@@ -175,7 +176,7 @@ final class JobBatchCollectorTest {
   void shouldSetDeadlineOnActivation() {
     // given
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long scopeKey = state.getKeyGenerator().nextKey();
+    final long scopeKey = state.getKeyGenerator().nextVariableDocKey();
     final long expectedDeadline = record.getTimestamp() + record.getValue().getTimeout();
     createJob(scopeKey);
     createJob(scopeKey);
@@ -202,7 +203,7 @@ final class JobBatchCollectorTest {
   void shouldSetWorkerOnActivation() {
     // given
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long scopeKey = state.getKeyGenerator().nextKey();
+    final long scopeKey = state.getKeyGenerator().nextVariableDocKey();
     final String expectedWorker = "foo";
     createJob(scopeKey);
     createJob(scopeKey);
@@ -230,8 +231,8 @@ final class JobBatchCollectorTest {
   void shouldFetchOnlyRequestedVariables() {
     // given
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long firstScopeKey = state.getKeyGenerator().nextKey();
-    final long secondScopeKey = state.getKeyGenerator().nextKey();
+    final long firstScopeKey = state.getKeyGenerator().nextVariableDocKey();
+    final long secondScopeKey = state.getKeyGenerator().nextVariableDocKey();
     final Map<String, String> firstJobVariables = Map.of("foo", "bar", "baz", "buz");
     final Map<String, String> secondJobVariables = Map.of("fizz", "buzz");
     createJobWithVariables(firstScopeKey, firstJobVariables);
@@ -267,7 +268,7 @@ final class JobBatchCollectorTest {
   void shouldEstimateLengthCorrectly() {
     // given - multiple jobs to ensure variables are collected based on the scope
     final TypedRecord<JobBatchRecord> record = createRecord();
-    final long scopeKey = state.getKeyGenerator().nextKey();
+    final long scopeKey = state.getKeyGenerator().nextVariableDocKey();
     final Map<String, String> variables = Map.of("foo", "bar");
     final MutableReference<Integer> estimatedLength = new MutableReference<>();
     final int initialLength = record.getLength();
@@ -298,8 +299,8 @@ final class JobBatchCollectorTest {
     final String tenantA = "tenant-a";
     final String tenantB = "tenant-b";
     final TypedRecord<JobBatchRecord> record = createRecord(tenantA, tenantB);
-    final long firstScopeKey = state.getKeyGenerator().nextKey();
-    final long secondScopeKey = state.getKeyGenerator().nextKey();
+    final long firstScopeKey = state.getKeyGenerator().nextVariableDocKey();
+    final long secondScopeKey = state.getKeyGenerator().nextVariableDocKey();
     createJob(firstScopeKey, tenantA);
     createJob(secondScopeKey, tenantB);
 
@@ -324,8 +325,8 @@ final class JobBatchCollectorTest {
     final String tenantA = "tenant-a";
     final String tenantB = "tenant-b";
     final TypedRecord<JobBatchRecord> record = createRecord(tenantA);
-    final long firstScopeKey = state.getKeyGenerator().nextKey();
-    final long secondScopeKey = state.getKeyGenerator().nextKey();
+    final long firstScopeKey = state.getKeyGenerator().nextVariableDocKey();
+    final long secondScopeKey = state.getKeyGenerator().nextVariableDocKey();
     createJob(firstScopeKey, tenantA);
     createJob(secondScopeKey, tenantB);
 
@@ -360,7 +361,8 @@ final class JobBatchCollectorTest {
         tenantIds.length > 0 ? List.of(tenantIds) : List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
     batchRecord.setTenantIds(tenantIdsList);
 
-    return new MockTypedRecord<>(state.getKeyGenerator().nextKey(), metadata, batchRecord);
+    return new MockTypedRecord<>(state.getKeyGenerator().nextVariableDocKey(), metadata,
+        batchRecord);
   }
 
   private Job createJob(final long variableScopeKey) {
@@ -375,7 +377,7 @@ final class JobBatchCollectorTest {
             .setElementInstanceKey(variableScopeKey)
             .setType(JOB_TYPE)
             .setTenantId(tenantId);
-    final long jobKey = state.getKeyGenerator().nextKey();
+    final long jobKey = state.getKeyGenerator().nextVariableDocKey();
 
     state.getJobState().create(jobKey, jobRecord);
     return new Job(jobKey, jobRecord);
@@ -404,6 +406,7 @@ final class JobBatchCollectorTest {
   }
 
   private static final class RecordLengthEvaluator implements Predicate<Integer> {
+
     private Predicate<Integer> canWriteEventOfLength = length -> true;
 
     @Override
@@ -412,5 +415,7 @@ final class JobBatchCollectorTest {
     }
   }
 
-  private record Job(long key, JobRecord job) {}
+  private record Job(long key, JobRecord job) {
+
+  }
 }

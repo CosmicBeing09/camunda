@@ -24,21 +24,23 @@ import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
 import io.camunda.zeebe.protocol.impl.record.value.decision.DecisionEvaluationRecord;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
 import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 
-/** Provides decision behavior to the BPMN processors */
+/**
+ * Provides decision behavior to the BPMN processors
+ */
 public final class BpmnDecisionBehavior {
 
   private final DecisionBehavior decisionBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableState variableState;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
 
@@ -47,7 +49,7 @@ public final class BpmnDecisionBehavior {
       final ProcessingState processingState,
       final EventTriggerBehavior eventTriggerBehavior,
       final StateWriter stateWriter,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ExpressionProcessor expressionBehavior,
       final BpmnStateBehavior stateBehavior) {
 
@@ -176,7 +178,7 @@ public final class BpmnDecisionBehavior {
         .setElementInstanceKey(context.getElementInstanceKey())
         .setElementId(context.getElementId());
 
-    final var newDecisionEvaluationKey = keyGenerator.nextKey();
+    final var newDecisionEvaluationKey = keyGenerator.nextVariableDocKey();
     stateWriter.appendFollowUpEvent(
         newDecisionEvaluationKey,
         decisionEvaluationEventTuple.getLeft(),

@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public final class BatchOperationSuspendProcessor
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final BatchOperationState batchOperationState;
   private final AuthorizationCheckBehavior authCheckBehavior;
 
@@ -57,7 +57,7 @@ public final class BatchOperationSuspendProcessor
       final CommandDistributionBehavior commandDistributionBehavior,
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final VariableDocKeyGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -83,7 +83,7 @@ public final class BatchOperationSuspendProcessor
 
     final var recordValue = command.getValue();
     final var batchOperationKey = command.getValue().getBatchOperationKey();
-    final var suspendKey = keyGenerator.nextKey();
+    final var suspendKey = keyGenerator.nextVariableDocKey();
     LOGGER.debug(
         "Processing new command to suspend batch operation with key '{}': {}",
         command.getKey(),

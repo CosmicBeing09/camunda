@@ -8,7 +8,6 @@
 package io.camunda.zeebe.engine.processing.processinstance.migration;
 
 import static io.camunda.zeebe.engine.processing.processinstance.migration.MigrationTestUtil.extractProcessDefinitionKeyByProcessId;
-import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -50,7 +49,8 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
   @ClassRule
   public static final EngineRule ENGINE = EngineRule.singlePartition().maxCommandsInBatch(1);
 
-  @Rule public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
+  @Rule
+  public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
 
   @Test
   public void shouldContinueMigratedInstanceWithJobCompleteBefore() {
@@ -129,9 +129,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -196,9 +196,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -295,9 +295,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -366,10 +366,10 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
             .key(timerCreated.getKey()));
 
     assertThat(
-            RecordingExporter.timerRecords(TimerIntent.TRIGGER)
-                .withProcessInstanceKey(processInstanceKey)
-                .onlyCommandRejections()
-                .findFirst())
+        RecordingExporter.timerRecords(TimerIntent.TRIGGER)
+            .withProcessInstanceKey(processInstanceKey)
+            .onlyCommandRejections()
+            .findFirst())
         .describedAs(
             "Expect that the timer command is rejected because the migration recreate the subscription")
         .isPresent();
@@ -380,9 +380,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -488,9 +488,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -584,9 +584,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -699,9 +699,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -805,9 +805,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -898,9 +898,9 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
     // then
     assertThat(
-            RecordingExporter.processInstanceRecords()
-                .withProcessInstanceKey(processInstanceKey)
-                .limitToProcessInstanceCompleted())
+        RecordingExporter.processInstanceRecords()
+            .withProcessInstanceKey(processInstanceKey)
+            .limitToProcessInstanceCompleted())
         .extracting(r -> r.getValue().getElementId(), Record::getIntent)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -978,7 +978,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
         ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
-    final var intermediateCatchEventKey = keyGenerator.nextKey();
+    final var intermediateCatchEventKey = keyGenerator.nextVariableDocKey();
 
     // we need to stop the engine to ensure events are applied after writing the records directly
     ENGINE.stop();
@@ -1041,15 +1041,15 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         .contains(
             String.format(
                 """
-                Expected to migrate process instance '%s' but active element with id 'MSG_1' \
-                is an intermediate catch event attached to an event-based gateway. \
-                Migrating active events attached to an event-based gateway is not possible yet.""",
+                    Expected to migrate process instance '%s' but active element with id 'MSG_1' \
+                    is an intermediate catch event attached to an event-based gateway. \
+                    Migrating active events attached to an event-based gateway is not possible yet.""",
                 processInstanceKey));
   }
 
   @Test
   public void
-      shouldRejectJoiningParallelGatewayMigrationIfAllIncomingSequenceFlowsOfSourceGatewayIsTaken() {
+  shouldRejectJoiningParallelGatewayMigrationIfAllIncomingSequenceFlowsOfSourceGatewayIsTaken() {
     // given
     final String processId = helper.getBpmnProcessId();
     final String targetProcessId = helper.getBpmnProcessId() + "_v2";
@@ -1090,10 +1090,10 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(processId).create();
 
     assertThat(
-            RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
-                .withProcessInstanceKey(processInstanceKey)
-                .withElementType(BpmnElementType.SERVICE_TASK)
-                .limit(2))
+        RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
+            .withProcessInstanceKey(processInstanceKey)
+            .withElementType(BpmnElementType.SERVICE_TASK)
+            .limit(2))
         .hasSize(2);
 
     ENGINE.job().ofInstance(processInstanceKey).withType("type1").complete();
@@ -1159,7 +1159,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
 
   @Test
   public void
-      shouldRejectJoiningInclusiveGatewayMigrationIfAllIncomingSequenceFlowsOfSourceGatewayIsTaken() {
+  shouldRejectJoiningInclusiveGatewayMigrationIfAllIncomingSequenceFlowsOfSourceGatewayIsTaken() {
     // given
     final String processId = helper.getBpmnProcessId();
     final String targetProcessId = helper.getBpmnProcessId() + "_v2";
@@ -1204,10 +1204,10 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(processId).create();
 
     assertThat(
-            RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
-                .withProcessInstanceKey(processInstanceKey)
-                .withElementType(BpmnElementType.SERVICE_TASK)
-                .limit(2))
+        RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
+            .withProcessInstanceKey(processInstanceKey)
+            .withElementType(BpmnElementType.SERVICE_TASK)
+            .limit(2))
         .hasSize(2);
 
     ENGINE.job().ofInstance(processInstanceKey).withType("type1").complete();
@@ -1330,8 +1330,8 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
         ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
-    final var sequenceFlowKey = keyGenerator.nextKey();
-    final var multiInstanceBodyKey = keyGenerator.nextKey();
+    final var sequenceFlowKey = keyGenerator.nextVariableDocKey();
+    final var multiInstanceBodyKey = keyGenerator.nextVariableDocKey();
 
     // we need to stop the engine to ensure events are applied after writing the records directly
     ENGINE.stop();
@@ -1375,10 +1375,10 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.start();
 
     assertThat(
-            RecordingExporter.jobRecords(JobIntent.CREATED)
-                .withProcessInstanceKey(processInstanceKey)
-                .withType("A")
-                .limit(3))
+        RecordingExporter.jobRecords(JobIntent.CREATED)
+            .withProcessInstanceKey(processInstanceKey)
+            .withType("A")
+            .limit(3))
         .describedAs("Expect that the jobs were created successfully")
         .hasSize(3)
         .describedAs("Expect that the created jobs are for the target process definition")

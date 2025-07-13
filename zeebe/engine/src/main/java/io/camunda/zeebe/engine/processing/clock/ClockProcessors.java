@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ClockIntent;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public final class ClockProcessors {
   private ClockProcessors() {}
@@ -22,7 +22,7 @@ public final class ClockProcessors {
   public static void addClockProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ControllableStreamClock clock,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {

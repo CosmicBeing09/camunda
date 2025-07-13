@@ -36,7 +36,7 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
@@ -60,7 +60,7 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
   private final CatchEventAnalyzer stateAnalyzer;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final JobProcessingMetrics jobMetrics;
@@ -69,7 +69,7 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
   public JobThrowErrorProcessor(
       final ProcessingState state,
       final BpmnEventPublicationBehavior eventPublicationBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final JobProcessingMetrics jobMetrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;
@@ -192,7 +192,8 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
         .setProcessDefinitionPath(treePathProperties.processDefinitionPath())
         .setCallingElementPath(treePathProperties.callingElementPath());
 
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), IncidentIntent.CREATED, incidentEvent);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextVariableDocKey(), IncidentIntent.CREATED,
+        incidentEvent);
   }
 
   private DirectBuffer getElementId(final JobRecord job) {

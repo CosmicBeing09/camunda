@@ -14,11 +14,11 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class UserProcessors {
   public static void addUserProcessors(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final TypedRecordProcessors typedRecordProcessors,
       final MutableProcessingState processingState,
       final Writers writers,

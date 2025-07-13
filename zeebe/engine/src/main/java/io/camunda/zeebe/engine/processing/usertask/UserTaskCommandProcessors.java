@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCreateProc
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskUpdateProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public final class UserTaskCommandProcessors {
 
   public UserTaskCommandProcessors(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {

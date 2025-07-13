@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.escalation.EscalationRecord;
 import io.camunda.zeebe.protocol.record.intent.EscalationIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Optional;
@@ -35,11 +35,11 @@ public final class BpmnEventPublicationBehavior {
   private final EventHandle eventHandle;
   private final CatchEventAnalyzer catchEventAnalyzer;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
 
   public BpmnEventPublicationBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final EventTriggerBehavior eventTriggerBehavior,
       final BpmnStateBehavior stateBehavior,
       final Writers writers) {
@@ -113,13 +113,13 @@ public final class BpmnEventPublicationBehavior {
 
   /**
    * Finds the right catch event for the given escalation. This is done by going up through the
-   * scope hierarchy recursively until a matching catch event is found. Otherwise, it returns {@link
-   * Optional#empty()}.
+   * scope hierarchy recursively until a matching catch event is found. Otherwise, it returns
+   * {@link Optional#empty()}.
    *
    * @param escalationCode the escalation code of the escalation event
    * @param context the current element context
-   * @return a valid {@link CatchEventTuple} if a catch event is found, Otherwise, it returns {@link
-   *     Optional#empty()}
+   * @return a valid {@link CatchEventTuple} if a catch event is found, Otherwise, it returns
+   * {@link Optional#empty()}
    */
   public Optional<CatchEventTuple> findEscalationCatchEvent(
       final DirectBuffer escalationCode, final BpmnElementContext context) {
@@ -153,7 +153,7 @@ public final class BpmnEventPublicationBehavior {
 
     boolean canBeCompleted = true;
     boolean escalated = false;
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextVariableDocKey();
 
     if (escalationCatchEvent.isPresent()) {
       final var catchEventTuple = escalationCatchEvent.get();

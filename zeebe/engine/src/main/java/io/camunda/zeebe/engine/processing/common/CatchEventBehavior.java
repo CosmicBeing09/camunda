@@ -39,7 +39,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
@@ -64,14 +64,14 @@ public final class CatchEventBehavior {
       new ProcessMessageSubscriptionRecord();
   private final TimerRecord timerRecord = new TimerRecord();
   private final DueDateTimerChecker timerChecker;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final SignalSubscriptionRecord signalSubscription = new SignalSubscriptionRecord();
   private final InstantSource clock;
   private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
 
   public CatchEventBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final ExpressionProcessor expressionProcessor,
       final SubscriptionCommandSender subscriptionCommandSender,
       final StateWriter stateWriter,
@@ -152,7 +152,7 @@ public final class CatchEventBehavior {
    *
    * @param context the context of the element instance that subscribes to events
    * @param supplier the supplier of catch events to subscribe to, typically the element of the
-   *     element instance that subscribes to events
+   * element instance that subscribes to events
    * @return either a failure or nothing
    */
   public Either<Failure, Void> subscribeToEvents(
@@ -169,14 +169,14 @@ public final class CatchEventBehavior {
    *
    * @param context the context of the element instance that subscribes to events
    * @param supplier the supplier of catch events to subscribe to, typically the element of the
-   *     element instance that subscribes to events
+   * element instance that subscribes to events
    * @param filterBeforeEvaluation the filter for catch events to subscribe to. Only events that
-   *     match the filter are subscribed to. This filter is applied before evaluating the catch
-   *     event's expressions. This is especially useful for filtering catch events that doesn't
-   *     require an expression evaluation.
+   * match the filter are subscribed to. This filter is applied before evaluating the catch event's
+   * expressions. This is especially useful for filtering catch events that doesn't require an
+   * expression evaluation.
    * @param filterAfterEvaluation the filter for catch events to subscribe to. Only events that
-   *     match the filter are subscribed to. This filter is applied after evaluating the catch
-   *     event's expressions.
+   * match the filter are subscribed to. This filter is applied after evaluating the catch event's
+   * expressions.
    * @return either a failure or nothing
    */
   public Either<Failure, Void> subscribeToEvents(
@@ -312,7 +312,7 @@ public final class CatchEventBehavior {
     subscription.setInterrupting(event.isInterrupting());
     subscription.setTenantId(context.getTenantId());
 
-    final var subscriptionKey = keyGenerator.nextKey();
+    final var subscriptionKey = keyGenerator.nextVariableDocKey();
     stateWriter.appendFollowUpEvent(
         subscriptionKey, ProcessMessageSubscriptionIntent.CREATING, subscription);
 
@@ -385,7 +385,8 @@ public final class CatchEventBehavior {
           return true;
         });
 
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), TimerIntent.CREATED, timerRecord);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextVariableDocKey(), TimerIntent.CREATED,
+        timerRecord);
   }
 
   private void subscribeToSignalEvents(
@@ -408,7 +409,7 @@ public final class CatchEventBehavior {
         .setCatchEventId(event.getId())
         .setTenantId(context.getTenantId());
 
-    final var subscriptionKey = keyGenerator.nextKey();
+    final var subscriptionKey = keyGenerator.nextVariableDocKey();
     stateWriter.appendFollowUpEvent(
         subscriptionKey, SignalSubscriptionIntent.CREATED, signalSubscription);
   }
@@ -548,6 +549,7 @@ public final class CatchEventBehavior {
    * expressions for a message, and to capture intermediate results of the evaluation
    */
   private static class OngoingEvaluation {
+
     private final ExpressionProcessor expressionProcessor;
     private final ExecutableCatchEvent event;
     private final BpmnElementContext context;

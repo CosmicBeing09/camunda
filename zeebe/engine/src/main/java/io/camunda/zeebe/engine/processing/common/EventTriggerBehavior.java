@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import org.agrona.DirectBuffer;
 
 public class EventTriggerBehavior {
@@ -33,7 +33,7 @@ public class EventTriggerBehavior {
   private final ProcessInstanceRecord eventRecord = new ProcessInstanceRecord();
   private final ProcessEventRecord processEventRecord = new ProcessEventRecord();
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final CatchEventBehavior catchEventBehavior;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
@@ -44,7 +44,7 @@ public class EventTriggerBehavior {
   private final VariableBehavior variableBehavior;
 
   public EventTriggerBehavior(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final CatchEventBehavior catchEventBehavior,
       final Writers writers,
       final ProcessingState processingState,
@@ -73,8 +73,8 @@ public class EventTriggerBehavior {
 
     if (flowScopeElementInstance.isInterrupted()
         && !flowScopeElementInstance
-            .getInterruptingElementId()
-            .equals(startEvent.getEventSubProcess())) {
+        .getInterruptingElementId()
+        .equals(startEvent.getEventSubProcess())) {
       // the flow scope is already interrupted - discard this event
       return;
     }
@@ -143,8 +143,8 @@ public class EventTriggerBehavior {
    *
    * @param processDefinitionKey the event's corresponding process definition key
    * @param processInstanceKey the event's corresponding process instance key
-   * @param eventScopeKey the event's scope key, which used to index the trigger in {@link
-   *     io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState}
+   * @param eventScopeKey the event's scope key, which used to index the trigger in
+   * {@link io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState}
    * @param catchEventId the ID of the element which should be triggered by the event
    * @param variables the variables/payload of the event (can be empty)
    * @return the key of the process event
@@ -156,7 +156,7 @@ public class EventTriggerBehavior {
       final long eventScopeKey,
       final DirectBuffer catchEventId,
       final DirectBuffer variables) {
-    final var eventKey = keyGenerator.nextKey();
+    final var eventKey = keyGenerator.nextVariableDocKey();
     processEventRecord.reset();
     processEventRecord
         .setScopeKey(eventScopeKey)
@@ -170,8 +170,8 @@ public class EventTriggerBehavior {
   }
 
   /**
-   * Marks a process to be triggered by updating the state with a new {@link
-   * ProcessEventIntent#TRIGGERED} event.
+   * Marks a process to be triggered by updating the state with a new
+   * {@link ProcessEventIntent#TRIGGERED} event.
    *
    * @param processInstanceKey the process instance key of the event trigger
    * @param processDefinitionKey the process instance key of the event trigger
@@ -237,7 +237,7 @@ public class EventTriggerBehavior {
         .setElementId(triggeredEvent.getId())
         .setBpmnEventType(triggeredEvent.getEventType());
 
-    final var eventInstanceKey = keyGenerator.nextKey();
+    final var eventInstanceKey = keyGenerator.nextVariableDocKey();
 
     final var elementTreePath =
         stateBehavior.getElementTreePath(eventInstanceKey, flowScopeKey, elementRecord);

@@ -13,12 +13,12 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.user.IdentitySetupInitializer;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.IdentitySetupIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.FeatureFlags;
 
 public final class IdentitySetupProcessors {
   public static void addIdentitySetupProcessors(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final SecurityConfiguration securityConfig,

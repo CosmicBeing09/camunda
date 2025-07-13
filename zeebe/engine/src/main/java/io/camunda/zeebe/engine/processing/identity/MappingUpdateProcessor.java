@@ -22,9 +22,10 @@ import io.camunda.zeebe.protocol.record.intent.MappingIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<MappingRecord> {
+
   private static final String MAPPING_NULL_VALUE_ERROR_MESSAGE =
       "Expected to update mappingRule with claimName '%s' and claimValue '%s' and name '%s' and mappingRuleId '%s', but at least one of them is null.";
   private static final String MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE =
@@ -34,7 +35,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
 
   private final MappingState mappingState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -43,7 +44,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
   public MappingUpdateProcessor(
       final MappingState mappingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.mappingState = mappingState;
@@ -89,7 +90,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
 
     final var authorizationRequest =
         new AuthorizationRequest(
-                command, AuthorizationResourceType.MAPPING_RULE, PermissionType.UPDATE)
+            command, AuthorizationResourceType.MAPPING_RULE, PermissionType.UPDATE)
             .addResourceId(mappingId);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {
@@ -116,7 +117,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
         record.getMappingKey(), MappingIntent.UPDATED, record, command);
 
     commandDistributionBehavior
-        .withKey(keyGenerator.nextKey())
+        .withKey(keyGenerator.nextVariableDocKey())
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
         .distribute(command);
   }

@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
@@ -41,11 +41,11 @@ public class DecisionEvaluationEvaluteProcessor
   private final TypedResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
 
   public DecisionEvaluationEvaluteProcessor(
       final DecisionBehavior decisionBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
@@ -68,10 +68,10 @@ public class DecisionEvaluationEvaluteProcessor
       final var decisionId = bufferAsString(decision.getDecisionId());
       final var authRequest =
           new AuthorizationRequest(
-                  command,
-                  AuthorizationResourceType.DECISION_DEFINITION,
-                  PermissionType.CREATE_DECISION_INSTANCE,
-                  record.getTenantId())
+              command,
+              AuthorizationResourceType.DECISION_DEFINITION,
+              PermissionType.CREATE_DECISION_INSTANCE,
+              record.getTenantId())
               .addResourceId(decisionId);
 
       final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
@@ -80,7 +80,7 @@ public class DecisionEvaluationEvaluteProcessor
         final String errorMessage =
             RejectionType.NOT_FOUND.equals(rejection.type())
                 ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
-                    "evaluate a decision", record.getDecisionKey(), "such decision")
+                "evaluate a decision", record.getDecisionKey(), "such decision")
                 : rejection.reason();
         responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
         rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
@@ -105,9 +105,9 @@ public class DecisionEvaluationEvaluteProcessor
 
               final Tuple<DecisionEvaluationIntent, DecisionEvaluationRecord>
                   evaluationRecordTuple =
-                      decisionBehavior.createDecisionEvaluationEvent(decision, evaluationResult);
+                  decisionBehavior.createDecisionEvaluationEvent(decision, evaluationResult);
 
-              final var evaluationRecordKey = keyGenerator.nextKey();
+              final var evaluationRecordKey = keyGenerator.nextVariableDocKey();
               stateWriter.appendFollowUpEvent(
                   evaluationRecordKey,
                   evaluationRecordTuple.getLeft(),

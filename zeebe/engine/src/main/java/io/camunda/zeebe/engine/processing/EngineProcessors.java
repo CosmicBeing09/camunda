@@ -74,7 +74,7 @@ import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.InstantSource;
 import java.util.function.Supplier;
@@ -407,7 +407,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final DeploymentDistributionCommandSender deploymentDistributionCommandSender,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior distributionBehavior,
       final EngineConfiguration config,

@@ -24,7 +24,7 @@ import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class TenantCreateProcessor implements DistributedTypedRecordProcessor<TenantRecord> {
 
@@ -32,7 +32,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
       "Expected to create tenant with ID '%s', but a tenant with this ID already exists";
   private final TenantState tenantState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -41,7 +41,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   public TenantCreateProcessor(
       final TenantState tenantState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.tenantState = tenantState;
@@ -103,7 +103,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   private void createTenant(final TypedRecord<TenantRecord> command, final TenantRecord record) {
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextVariableDocKey();
     record.setTenantKey(key);
     stateWriter.appendFollowUpEvent(key, TenantIntent.CREATED, record);
     responseWriter.writeEventOnCommand(key, TenantIntent.CREATED, record, command);

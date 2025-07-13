@@ -21,7 +21,7 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.collection.Tuple;
 import java.util.Optional;
 
@@ -29,7 +29,7 @@ import java.util.Optional;
 public class MarkPartitionBootstrappedProcessor
     implements DistributedTypedRecordProcessor<ScaleRecord> {
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -37,7 +37,7 @@ public class MarkPartitionBootstrappedProcessor
   private final CommandDistributionBehavior distributionBehavior;
 
   public MarkPartitionBootstrappedProcessor(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final ProcessingState processingState,
       final CommandDistributionBehavior distributionBehavior) {
@@ -58,7 +58,7 @@ public class MarkPartitionBootstrappedProcessor
       rejectWith(command, rejection.get().getLeft(), rejection.get().getRight());
       return;
     }
-    final var scalingKey = keyGenerator.nextKey();
+    final var scalingKey = keyGenerator.nextVariableDocKey();
     final var wasAlreadyBootstrapped = areAllPartitionsBootstrapped();
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
     responseWriter.writeEventOnCommand(

@@ -36,7 +36,7 @@ import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.VariableDocumentUpdateSemantic;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import org.agrona.DirectBuffer;
 
 public final class VariableDocumentUpdateProcessor
@@ -51,7 +51,7 @@ public final class VariableDocumentUpdateProcessor
   private final ElementInstanceState elementInstanceState;
   private final MutableUserTaskState userTaskState;
   private final ProcessState processState;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final VariableBehavior variableBehavior;
   private final BpmnJobBehavior jobBehavior;
   private final Writers writers;
@@ -59,7 +59,7 @@ public final class VariableDocumentUpdateProcessor
 
   public VariableDocumentUpdateProcessor(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final MutableUserTaskState userTaskState,
@@ -120,7 +120,7 @@ public final class VariableDocumentUpdateProcessor
         return;
       }
 
-      final long variableDocKey = keyGenerator.nextKey();
+      final long variableDocKey = keyGenerator.nextVariableDocKey();
       writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATING, value);
 
       final var userTaskRecord = userTaskState.getUserTask(userTaskKey);
@@ -207,7 +207,7 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final long variableDocKey = keyGenerator.nextKey();
+    final long variableDocKey = keyGenerator.nextVariableDocKey();
 
     writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATED, value);
     writers.response()

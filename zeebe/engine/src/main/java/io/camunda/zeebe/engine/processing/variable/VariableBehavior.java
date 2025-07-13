@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.variable.IndexedDocument;
 import io.camunda.zeebe.engine.state.variable.VariableInstance;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import java.util.Iterator;
 import org.agrona.DirectBuffer;
 
@@ -29,7 +29,7 @@ public final class VariableBehavior {
 
   private final VariableState variableState;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
 
   private final IndexedDocument indexedDocument = new IndexedDocument();
   private final VariableRecord variableRecord = new VariableRecord();
@@ -37,7 +37,7 @@ public final class VariableBehavior {
   public VariableBehavior(
       final VariableState variableState,
       final StateWriter stateWriter,
-      final KeyGenerator keyGenerator) {
+      final VariableDocKeyGenerator keyGenerator) {
     this.variableState = variableState;
     this.stateWriter = stateWriter;
     this.keyGenerator = keyGenerator;
@@ -151,10 +151,11 @@ public final class VariableBehavior {
 
   /**
    * Publishes a follow up event to create or update the variable with name {@code name} on the
-   * given scope with key {@code scopeKey}, with additional {@code processDefinitionKey} and {@code
-   * processInstanceKey} context.
+   * given scope with key {@code scopeKey}, with additional {@code processDefinitionKey} and
+   * {@code processInstanceKey} context.
    *
-   * <p>If the scope is the process instance itself, then {@code scopeKey} should be equal to {@code
+   * <p>If the scope is the process instance itself, then {@code scopeKey} should be equal to
+   * {@code
    * processInstanceKey}.
    *
    * @param scopeKey the key of the scope on which to set the variable
@@ -192,7 +193,7 @@ public final class VariableBehavior {
     final VariableInstance variableInstance =
         variableState.getVariableInstanceLocal(record.getScopeKey(), record.getNameBuffer());
     if (variableInstance == null) {
-      final long key = keyGenerator.nextKey();
+      final long key = keyGenerator.nextVariableDocKey();
       stateWriter.appendFollowUpEvent(key, VariableIntent.CREATED, record);
     } else if (!variableInstance.getValue().equals(record.getValueBuffer())) {
       stateWriter.appendFollowUpEvent(variableInstance.getKey(), VariableIntent.UPDATED, record);

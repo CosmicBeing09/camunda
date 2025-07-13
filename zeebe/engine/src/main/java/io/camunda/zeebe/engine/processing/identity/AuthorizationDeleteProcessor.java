@@ -22,12 +22,12 @@ import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRe
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class AuthorizationDeleteProcessor
     implements DistributedTypedRecordProcessor<AuthorizationRecord> {
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final CommandDistributionBehavior distributionBehavior;
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
@@ -36,7 +36,7 @@ public class AuthorizationDeleteProcessor
 
   public AuthorizationDeleteProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final MutableProcessingState processingState,
       final CommandDistributionBehavior distributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -84,7 +84,7 @@ public class AuthorizationDeleteProcessor
 
   private void writeEventAndDistribute(
       final TypedRecord<AuthorizationRecord> command, final long authorizationKey) {
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextVariableDocKey();
     command.getValue().setAuthorizationKey(authorizationKey);
     stateWriter.appendFollowUpEvent(
         authorizationKey, AuthorizationIntent.DELETED, command.getValue());

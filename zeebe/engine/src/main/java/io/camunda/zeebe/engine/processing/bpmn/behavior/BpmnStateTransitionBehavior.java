@@ -29,12 +29,13 @@ import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Arrays;
 import java.util.function.Function;
 
 public final class BpmnStateTransitionBehavior {
+
   private static final String ALREADY_MIGRATED_ERROR_MSG =
       "The Processor for the element type %s is already migrated no need to call %s again this is already done in the BpmnStreamProcessor for you. Happy to help :) ";
   private static final String NO_PROCESS_FOUND_MESSAGE =
@@ -43,7 +44,7 @@ public final class BpmnStateTransitionBehavior {
   private final ProcessInstanceRecord childInstanceRecord = new ProcessInstanceRecord();
   private final ProcessInstanceRecord followUpInstanceRecord = new ProcessInstanceRecord();
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final BpmnStateBehavior stateBehavior;
   private final Function<BpmnElementType, BpmnElementContainerProcessor<ExecutableFlowElement>>
       processorLookUp;
@@ -53,7 +54,7 @@ public final class BpmnStateTransitionBehavior {
   private final TypedCommandWriter commandWriter;
 
   public BpmnStateTransitionBehavior(
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final BpmnStateBehavior stateBehavior,
       final ProcessEngineMetrics metrics,
       final Function<BpmnElementType, BpmnElementContainerProcessor<ExecutableFlowElement>>
@@ -92,7 +93,7 @@ public final class BpmnStateTransitionBehavior {
     // generate the key before they write ACTIVATE command, to prepare the state (e.g. set
     // variables) for the upcoming element instance.
     if (context.getElementInstanceKey() == -1) {
-      final var newElementInstanceKey = keyGenerator.nextKey();
+      final var newElementInstanceKey = keyGenerator.nextVariableDocKey();
       transitionContext =
           context.copy(newElementInstanceKey, context.getRecordValue(), context.getIntent());
     }
@@ -299,7 +300,7 @@ public final class BpmnStateTransitionBehavior {
         .setBpmnEventType(sequenceFlow.getEventType());
 
     // take the sequence flow
-    final var sequenceFlowKey = keyGenerator.nextKey();
+    final var sequenceFlowKey = keyGenerator.nextVariableDocKey();
     stateWriter.appendFollowUpEvent(
         sequenceFlowKey, ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN, followUpInstanceRecord);
     final BpmnElementContext sequenceFlowTaken =
@@ -346,7 +347,7 @@ public final class BpmnStateTransitionBehavior {
         .setBpmnElementType(childElement.getElementType())
         .setBpmnEventType(childElement.getEventType());
 
-    final long childInstanceKey = keyGenerator.nextKey();
+    final long childInstanceKey = keyGenerator.nextVariableDocKey();
     commandWriter.appendFollowUpCommand(
         childInstanceKey, ProcessInstanceIntent.ACTIVATE_ELEMENT, childInstanceRecord);
 
@@ -366,7 +367,7 @@ public final class BpmnStateTransitionBehavior {
             .setBatchElementInstanceKey(context.getElementInstanceKey())
             .setIndex(amount);
 
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextVariableDocKey();
     commandWriter.appendFollowUpCommand(key, ProcessInstanceBatchIntent.ACTIVATE, record);
   }
 
@@ -380,7 +381,7 @@ public final class BpmnStateTransitionBehavior {
         .setBpmnElementType(element.getElementType())
         .setBpmnEventType(element.getEventType());
 
-    final var elementInstanceKey = keyGenerator.nextKey();
+    final var elementInstanceKey = keyGenerator.nextVariableDocKey();
     commandWriter.appendFollowUpCommand(
         elementInstanceKey, ProcessInstanceIntent.ACTIVATE_ELEMENT, followUpInstanceRecord);
   }
@@ -403,7 +404,7 @@ public final class BpmnStateTransitionBehavior {
           new ProcessInstanceBatchRecord()
               .setProcessInstanceKey(context.getProcessInstanceKey())
               .setBatchElementInstanceKey(context.getElementInstanceKey());
-      final var key = keyGenerator.nextKey();
+      final var key = keyGenerator.nextVariableDocKey();
       commandWriter.appendFollowUpCommand(key, ProcessInstanceBatchIntent.TERMINATE, batchRecord);
       return false;
     }
@@ -478,8 +479,8 @@ public final class BpmnStateTransitionBehavior {
             final var message =
                 String.format(
                     """
-                    Process instance `%d` has too many nested child instances and could not be terminated. \
-                    The deepest nested child instance has been banned as a result.""",
+                        Process instance `%d` has too many nested child instances and could not be terminated. \
+                        The deepest nested child instance has been banned as a result.""",
                     containerContext.getProcessInstanceKey());
             throw new ChildTerminationStackOverflowException(message);
           }
@@ -545,7 +546,7 @@ public final class BpmnStateTransitionBehavior {
   public long createChildProcessInstance(
       final DeployedProcess process, final BpmnElementContext context) {
 
-    final var processInstanceKey = keyGenerator.nextKey();
+    final var processInstanceKey = keyGenerator.nextVariableDocKey();
 
     childInstanceRecord.reset();
     childInstanceRecord
@@ -586,6 +587,7 @@ public final class BpmnStateTransitionBehavior {
 
   @FunctionalInterface
   private interface ElementContainerProcessorFunction {
+
     Either<Failure, ?> apply(
         BpmnElementContainerProcessor<ExecutableFlowElement> containerProcessor,
         ExecutableFlowElement containerScope,

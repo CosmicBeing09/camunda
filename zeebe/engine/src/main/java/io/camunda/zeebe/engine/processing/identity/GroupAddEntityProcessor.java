@@ -27,9 +27,10 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 
 public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<GroupRecord> {
+
   private static final String ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE =
       "Expected to add entity with ID '%s' to group with ID '%s', but the entity is already assigned to this group.";
 
@@ -37,7 +38,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   private final MappingState mappingState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -46,7 +47,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   public GroupAddEntityProcessor(
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.commandDistributionBehavior = commandDistributionBehavior;
@@ -109,7 +110,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
     stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_ADDED, record);
     responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, record, command);
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextVariableDocKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

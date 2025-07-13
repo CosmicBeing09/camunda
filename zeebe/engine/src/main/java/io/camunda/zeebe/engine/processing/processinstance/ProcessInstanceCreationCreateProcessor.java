@@ -41,7 +41,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.VariableDocKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Arrays;
 import java.util.Set;
@@ -76,7 +76,7 @@ public final class ProcessInstanceCreationCreateProcessor
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
 
-  private final KeyGenerator keyGenerator;
+  private final VariableDocKeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -88,7 +88,7 @@ public final class ProcessInstanceCreationCreateProcessor
 
   public ProcessInstanceCreationCreateProcessor(
       final ProcessState processState,
-      final KeyGenerator keyGenerator,
+      final VariableDocKeyGenerator keyGenerator,
       final Writers writers,
       final BpmnBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,
@@ -141,10 +141,10 @@ public final class ProcessInstanceCreationCreateProcessor
     final var processId = bufferAsString(deployedProcess.getBpmnProcessId());
     final var request =
         new AuthorizationRequest(
-                command,
-                AuthorizationResourceType.PROCESS_DEFINITION,
-                PermissionType.CREATE_PROCESS_INSTANCE,
-                command.getValue().getTenantId())
+            command,
+            AuthorizationResourceType.PROCESS_DEFINITION,
+            PermissionType.CREATE_PROCESS_INSTANCE,
+            command.getValue().getTenantId())
             .addResourceId(processId);
 
     final var isAuthorized = authCheckBehavior.isAuthorized(request);
@@ -156,9 +156,9 @@ public final class ProcessInstanceCreationCreateProcessor
     final String errorMessage =
         RejectionType.NOT_FOUND.equals(rejection.type())
             ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
-                "create an instance of process",
-                command.getValue().getProcessDefinitionKey(),
-                "such process")
+            "create an instance of process",
+            command.getValue().getProcessDefinitionKey(),
+            "such process")
             : rejection.reason();
     return Either.left(new Rejection(rejection.type(), errorMessage));
   }
@@ -167,7 +167,7 @@ public final class ProcessInstanceCreationCreateProcessor
       final CommandControl<ProcessInstanceCreationRecord> controller,
       final ProcessInstanceCreationRecord record,
       final DeployedProcess process) {
-    final long processInstanceKey = keyGenerator.nextKey();
+    final long processInstanceKey = keyGenerator.nextVariableDocKey();
 
     setVariablesFromDocument(
         record,
@@ -298,7 +298,7 @@ public final class ProcessInstanceCreationCreateProcessor
                     new Rejection(
                         RejectionType.INVALID_ARGUMENT,
                         ("Expected to create instance of process with start instructions but the element with id '%s' targets unsupported element type '%s'. "
-                                + "Supported element types are: %s")
+                            + "Supported element types are: %s")
                             .formatted(
                                 elementIdAndType.elementId,
                                 elementIdAndType.elementType,
@@ -439,5 +439,7 @@ public final class ProcessInstanceCreationCreateProcessor
         });
   }
 
-  private record ElementIdAndType(String elementId, BpmnElementType elementType) {}
+  private record ElementIdAndType(String elementId, BpmnElementType elementType) {
+
+  }
 }
