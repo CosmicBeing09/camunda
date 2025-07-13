@@ -119,26 +119,29 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
 
   private static final String EXPECTED_CALL_HIERARCHY =
       """
-        [
-          {
-             "processInstanceKey": "123",
-             "processDefinitionKey": "789",
-             "processDefinitionName": "Demo Process"
-          }
-        ]
-      """;
+            [
+              {
+                 "processInstanceKey": "123",
+                 "processDefinitionKey": "789",
+                 "processDefinitionName": "Demo Process"
+              }
+            ]
+          """;
 
   private static final SearchQueryResult<ProcessInstanceEntity> SEARCH_QUERY_RESULT =
       new Builder<ProcessInstanceEntity>()
           .total(1L)
           .items(List.of(PROCESS_INSTANCE_ENTITY))
-          .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .firstSortValues(new Object[]{"f"})
+          .lastSortValues(new Object[]{"v"})
           .build();
 
-  @MockBean ProcessInstanceServices processInstanceServices;
-  @MockBean MultiTenancyConfiguration multiTenancyCfg;
-  @Captor ArgumentCaptor<ProcessInstanceQuery> queryCaptor;
+  @MockBean
+  ProcessInstanceServices processInstanceServices;
+  @MockBean
+  MultiTenancyConfiguration multiTenancyCfg;
+  @Captor
+  ArgumentCaptor<ProcessInstanceQuery> queryCaptor;
 
   @BeforeEach
   void setupServices() {
@@ -687,22 +690,22 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
     // given
     final var request =
         """
-        {
-          "filter": {
-            "state": "ACTIVE",
-            "tenantId": "tenant",
-            "$or": [
-              { "processDefinitionId": "process_v1" },
-              { "processDefinitionId": "process_v2", "hasIncident": true }
-            ]
-          }
-        }""";
+            {
+              "filter": {
+                "state": "ACTIVE",
+                "tenantId": "tenant",
+                "$or": [
+                  { "processDefinitionId": "process_v1" },
+                  { "processDefinitionId": "process_v2", "hasIncident": true }
+                ]
+              }
+            }""";
 
     final var orFilters =
         List.of(
-            new ProcessInstanceFilter.Builder().processDefinitionIds("process_v1").build(),
+            new ProcessInstanceFilter.Builder().processDefinitionIdOperations("process_v1").build(),
             new ProcessInstanceFilter.Builder()
-                .processDefinitionIds("process_v2")
+                .processDefinitionIdOperations("process_v2")
                 .hasIncident(true)
                 .build());
 

@@ -61,7 +61,8 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByBpmnProcessId() {
-    final var filter = FilterBuilders.incident(f -> f.processDefinitionIds("complexProcess"));
+    final var filter = FilterBuilders.incident(
+        f -> f.processDefinitionIdOperations("complexProcess"));
 
     // when
     final var searchRequest = transformQuery(filter);

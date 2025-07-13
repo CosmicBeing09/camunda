@@ -52,7 +52,7 @@ public class BatchOperationStateTest {
     final var type = BatchOperationType.CANCEL_PROCESS_INSTANCE;
     final var filter =
         new ProcessInstanceFilter.Builder()
-            .processDefinitionIds("process")
+            .processDefinitionIdOperations("process")
             .processDefinitionVersions(1)
             .build();
     final String username = "bud spencer";
@@ -87,7 +87,7 @@ public class BatchOperationStateTest {
     final var type = BatchOperationType.MIGRATE_PROCESS_INSTANCE;
     final var filter =
         new ProcessInstanceFilter.Builder()
-            .processDefinitionIds("process")
+            .processDefinitionIdOperations("process")
             .processDefinitionVersions(1)
             .build();
 
@@ -128,7 +128,7 @@ public class BatchOperationStateTest {
     final var type = BatchOperationType.MODIFY_PROCESS_INSTANCE;
     final var filter =
         new ProcessInstanceFilter.Builder()
-            .processDefinitionIds("process")
+            .processDefinitionIdOperations("process")
             .processDefinitionVersions(1)
             .build();
 

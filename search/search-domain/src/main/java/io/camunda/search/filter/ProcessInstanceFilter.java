@@ -115,7 +115,7 @@ public record ProcessInstanceFilter(
       return this;
     }
 
-    public Builder processDefinitionIds(final String value, final String... values) {
+    public Builder processDefinitionIdOperations(final String value, final String... values) {
       return processDefinitionIdOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
