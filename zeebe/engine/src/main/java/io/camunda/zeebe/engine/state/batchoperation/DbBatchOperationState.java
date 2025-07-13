@@ -37,7 +37,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
 
   private final ColumnFamily<DbLong, PersistedBatchOperation> batchOperationColumnFamily;
   private final ColumnFamily<
-          DbCompositeKey<DbForeignKey<DbLong>, DbLong>, PersistedBatchOperationChunk>
+      DbCompositeKey<DbForeignKey<DbLong>, DbLong>, PersistedBatchOperationChunk>
       batchOperationChunksColumnFamily;
   private final ColumnFamily<DbLong, DbNil> pendingBatchOperationColumnFamily;
 
@@ -162,13 +162,13 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   }
 
   @Override
-  public void pause(final long batchOperationKey) {
+  public void suspend(final long batchOperationKey) {
     LOGGER.trace("Pausing batch operation with key {}", batchOperationKey);
     batchKey.wrapLong(batchOperationKey);
 
     // Set status to PAUSED
     final var batch = batchOperationColumnFamily.get(batchKey);
-    batch.setStatus(BatchOperationStatus.PAUSED);
+    batch.setStatus(BatchOperationStatus.SUSPENDED);
     batchOperationColumnFamily.update(batchKey, batch);
   }
 
@@ -233,7 +233,9 @@ public class DbBatchOperationState implements MutableBatchOperationState {
     return chunkKeys.stream().limit(batchSize).toList();
   }
 
-  /** This deletes everything related to the batch operation. */
+  /**
+   * This deletes everything related to the batch operation.
+   */
   private void deleteBatchOperation(final long batchOperationKey) {
     batchKey.wrapLong(batchOperationKey);
 
@@ -264,7 +266,9 @@ public class DbBatchOperationState implements MutableBatchOperationState {
     return batchChunk;
   }
 
-  /** Returns the chunk for min chunk key */
+  /**
+   * Returns the chunk for min chunk key
+   */
   private PersistedBatchOperationChunk getMinChunk(final PersistedBatchOperation batch) {
     chunkKey.wrapLong(batch.getMinChunkKey());
     return batchOperationChunksColumnFamily.get(fkBatchKeyAndChunkKey);

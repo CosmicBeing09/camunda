@@ -20,7 +20,7 @@ public class BrokerPauseBatchOperationRequest
   BatchOperationExecutionRecord requestDto = new BatchOperationExecutionRecord();
 
   public BrokerPauseBatchOperationRequest() {
-    super(ValueType.BATCH_OPERATION_EXECUTION, BatchOperationIntent.PAUSE);
+    super(ValueType.BATCH_OPERATION_EXECUTION, BatchOperationIntent.SUSPEND);
   }
 
   public BrokerPauseBatchOperationRequest setBatchOperationKey(final long batchOperationKey) {

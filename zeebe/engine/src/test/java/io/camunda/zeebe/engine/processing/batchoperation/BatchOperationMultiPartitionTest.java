@@ -30,15 +30,18 @@ import org.junit.Rule;
 import org.junit.Test;
 
 public final class BatchOperationMultiPartitionTest {
+
   private static final int PARTITION_COUNT = 3;
 
   @Rule
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =
       new RecordingExporterTestWatcher();
 
-  @Rule public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
+  @Rule
+  public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
 
-  @Rule public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
+  @Rule
+  public final EngineRule engine = EngineRule.multiplePartition(PARTITION_COUNT);
 
   @Test
   public void shouldCreateOnAllPartitions() {
@@ -61,11 +64,11 @@ public final class BatchOperationMultiPartitionTest {
 
     for (int partitionId = 2; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.batchOperationCreationRecords()
-                  .withBatchOperationKey(batchOperationKey)
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(BatchOperationIntent.CREATED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.batchOperationCreationRecords()
+              .withBatchOperationKey(batchOperationKey)
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(BatchOperationIntent.CREATED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsExactly(BatchOperationIntent.CREATE, BatchOperationIntent.CREATED);
     }
@@ -87,11 +90,11 @@ public final class BatchOperationMultiPartitionTest {
 
     for (int partitionId = 2; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.batchOperationLifecycleRecords()
-                  .withBatchOperationKey(batchOperationKey)
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(BatchOperationIntent.CANCELED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.batchOperationLifecycleRecords()
+              .withBatchOperationKey(batchOperationKey)
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(BatchOperationIntent.CANCELED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsExactly(BatchOperationIntent.CANCEL, BatchOperationIntent.CANCELED);
     }
@@ -107,18 +110,18 @@ public final class BatchOperationMultiPartitionTest {
 
     assertThatCommandIsDistributedCorrectly(
         ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
-        BatchOperationIntent.PAUSE,
+        BatchOperationIntent.SUSPEND,
         BatchOperationIntent.PAUSED);
 
     for (int partitionId = 2; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.batchOperationLifecycleRecords()
-                  .withBatchOperationKey(batchOperationKey)
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(BatchOperationIntent.PAUSED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.batchOperationLifecycleRecords()
+              .withBatchOperationKey(batchOperationKey)
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(BatchOperationIntent.PAUSED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
-          .containsExactly(BatchOperationIntent.PAUSE, BatchOperationIntent.PAUSED);
+          .containsExactly(BatchOperationIntent.SUSPEND, BatchOperationIntent.PAUSED);
     }
   }
 
@@ -138,11 +141,11 @@ public final class BatchOperationMultiPartitionTest {
 
     for (int partitionId = 2; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
-              RecordingExporter.batchOperationLifecycleRecords()
-                  .withBatchOperationKey(batchOperationKey)
-                  .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(BatchOperationIntent.RESUMED))
-                  .collect(Collectors.toList()))
+          RecordingExporter.batchOperationLifecycleRecords()
+              .withBatchOperationKey(batchOperationKey)
+              .withPartitionId(partitionId)
+              .limit(record -> record.getIntent().equals(BatchOperationIntent.RESUMED))
+              .collect(Collectors.toList()))
           .extracting(Record::getIntent)
           .containsExactly(BatchOperationIntent.RESUME, BatchOperationIntent.RESUMED);
     }
@@ -159,9 +162,9 @@ public final class BatchOperationMultiPartitionTest {
             .getBatchOperationKey();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
         .extracting(Record::getIntent)
         .endsWith(CommandDistributionIntent.FINISHED);
 
@@ -174,9 +177,9 @@ public final class BatchOperationMultiPartitionTest {
     engine.batchOperation().newLifecycle().withBatchOperationKey(batchOperationKey).pause();
 
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
         .extracting(Record::getIntent)
         .endsWith(CommandDistributionIntent.FINISHED);
 
@@ -186,15 +189,15 @@ public final class BatchOperationMultiPartitionTest {
   private void assertThatCommandIsDistributedCorrectly(
       final ValueType valueType, final Intent commandIntent, final Intent eventIntent) {
     assertThat(
-            RecordingExporter.records()
-                .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED))
-                .filter(
-                    record ->
-                        record.getValueType() == valueType
-                            || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
-                                && ((CommandDistributionRecordValue) record.getValue()).getIntent()
-                                    == commandIntent)))
+        RecordingExporter.records()
+            .withPartitionId(1)
+            .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED))
+            .filter(
+                record ->
+                    record.getValueType() == valueType
+                        || (record.getValueType() == ValueType.COMMAND_DISTRIBUTION
+                        && ((CommandDistributionRecordValue) record.getValue()).getIntent()
+                        == commandIntent)))
         .extracting(Record::getIntent, Record::getRecordType, this::extractPartitionId)
         .startsWith(
             tuple(commandIntent, RecordType.COMMAND, 1),
@@ -212,8 +215,8 @@ public final class BatchOperationMultiPartitionTest {
 
     // is in correct queue
     assertThat(
-            RecordingExporter.commandDistributionRecords()
-                .withIntent(CommandDistributionIntent.ENQUEUED))
+        RecordingExporter.commandDistributionRecords()
+            .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.BATCH_OPERATION.getQueueId());
   }

@@ -55,20 +55,20 @@ public final class BatchOperationClient {
 
     private static final Function<Long, Record<BatchOperationCreationRecordValue>>
         SUCCESS_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationCreationRecords()
-                    .withIntent(BatchOperationIntent.CREATED)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationCreationRecords()
+                .withIntent(BatchOperationIntent.CREATED)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private static final Function<Long, Record<BatchOperationCreationRecordValue>>
         REJECTION_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationCreationRecords()
-                    .onlyCommandRejections()
-                    .withIntent(BatchOperationIntent.CREATE)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationCreationRecords()
+                .onlyCommandRejections()
+                .withIntent(BatchOperationIntent.CREATE)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private final CommandWriter writer;
     private final BatchOperationCreationRecord batchOperationCreationRecord;
@@ -116,8 +116,6 @@ public final class BatchOperationClient {
 
     /**
      * This is needed if we want to make sure that the scheduler does it's work and created chunks
-     *
-     * @return
      */
     public BatchOperationCreationClient waitForStarted() {
       waitForStarted = true;
@@ -167,6 +165,7 @@ public final class BatchOperationClient {
   }
 
   public static class BatchOperationCreationWithResultClient {
+
     private final CommandWriter writer;
     private final BatchOperationCreationRecord record;
     private long requestId = 1L;
@@ -205,11 +204,11 @@ public final class BatchOperationClient {
 
     private static final Function<Long, Record<BatchOperationExecutionRecordValue>>
         EXECUTION_SUCCESS_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationExecutionRecords()
-                    .withIntent(BatchOperationExecutionIntent.EXECUTED)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationExecutionRecords()
+                .withIntent(BatchOperationExecutionIntent.EXECUTED)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private final CommandWriter writer;
     private final BatchOperationExecutionRecord batchOperationExecutionRecord;
@@ -271,54 +270,54 @@ public final class BatchOperationClient {
 
     private static final Function<Long, Record<BatchOperationLifecycleManagementRecordValue>>
         CANCEL_SUCCESS_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationLifecycleRecords()
-                    .withIntent(BatchOperationIntent.CANCELED)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationLifecycleRecords()
+                .withIntent(BatchOperationIntent.CANCELED)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private static final Function<Long, Record<BatchOperationLifecycleManagementRecordValue>>
         CANCEL_REJECTION_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationLifecycleRecords()
-                    .onlyCommandRejections()
-                    .withIntent(BatchOperationIntent.CANCEL)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationLifecycleRecords()
+                .onlyCommandRejections()
+                .withIntent(BatchOperationIntent.CANCEL)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private static final Function<Long, Record<BatchOperationLifecycleManagementRecordValue>>
         PAUSE_SUCCESS_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationLifecycleRecords()
-                    .withIntent(BatchOperationIntent.PAUSED)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationLifecycleRecords()
+                .withIntent(BatchOperationIntent.PAUSED)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private static final Function<Long, Record<BatchOperationLifecycleManagementRecordValue>>
         PAUSE_REJECTION_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationLifecycleRecords()
-                    .onlyCommandRejections()
-                    .withIntent(BatchOperationIntent.PAUSE)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationLifecycleRecords()
+                .onlyCommandRejections()
+                .withIntent(BatchOperationIntent.SUSPEND)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private static final Function<Long, Record<BatchOperationLifecycleManagementRecordValue>>
         RESUME_SUCCESS_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationLifecycleRecords()
-                    .withIntent(BatchOperationIntent.RESUMED)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationLifecycleRecords()
+                .withIntent(BatchOperationIntent.RESUMED)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private static final Function<Long, Record<BatchOperationLifecycleManagementRecordValue>>
         RESUME_REJECTION_EXPECTATION =
-            (position) ->
-                RecordingExporter.batchOperationLifecycleRecords()
-                    .onlyCommandRejections()
-                    .withIntent(BatchOperationIntent.RESUME)
-                    .withSourceRecordPosition(position)
-                    .getFirst();
+        (position) ->
+            RecordingExporter.batchOperationLifecycleRecords()
+                .onlyCommandRejections()
+                .withIntent(BatchOperationIntent.RESUME)
+                .withSourceRecordPosition(position)
+                .getFirst();
 
     private final CommandWriter writer;
     private final BatchOperationLifecycleManagementRecord batchOperationLifecycleManagementRecord;
@@ -381,7 +380,7 @@ public final class BatchOperationClient {
           writer.writeCommandOnPartition(
               partition,
               r ->
-                  r.intent(BatchOperationIntent.PAUSE)
+                  r.intent(BatchOperationIntent.SUSPEND)
                       .event(batchOperationLifecycleManagementRecord)
                       .authorizations(authorizations)
                       .requestId(new Random().nextLong())
@@ -401,7 +400,7 @@ public final class BatchOperationClient {
       writer.writeCommandOnPartition(
           partition,
           r ->
-              r.intent(BatchOperationIntent.PAUSE)
+              r.intent(BatchOperationIntent.SUSPEND)
                   .event(batchOperationLifecycleManagementRecord)
                   .authorizations(authorizations)
                   .requestId(new Random().nextLong())

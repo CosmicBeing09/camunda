@@ -160,470 +160,474 @@ public class CommandDistributionIdempotencyTest {
   @Parameters(name = "{0}")
   public static Collection<Object[]> scenarios() {
     return Arrays.asList(
-        new Object[][] {
-          {
-            "Authorization.CREATE is idempotent",
-            new Scenario(
-                ValueType.AUTHORIZATION,
-                AuthorizationIntent.CREATE,
-                () -> {
-                  final var user = createUser();
-                  return ENGINE
-                      .authorization()
-                      .newAuthorization()
-                      .withOwnerId(user.getValue().getUsername())
-                      .withResourceId("*")
-                      .withResourceType(AuthorizationResourceType.USER)
-                      .withPermissions(PermissionType.READ)
-                      .create();
-                }),
-            AuthorizationCreateProcessor.class
-          },
-          {
-            "Authorization.DELETE is idempotent",
-            new Scenario(
-                ValueType.AUTHORIZATION,
-                AuthorizationIntent.DELETE,
-                () -> {
-                  final var user = createUser();
-                  final var key =
-                      ENGINE
+        new Object[][]{
+            {
+                "Authorization.CREATE is idempotent",
+                new Scenario(
+                    ValueType.AUTHORIZATION,
+                    AuthorizationIntent.CREATE,
+                    () -> {
+                      final var user = createUser();
+                      return ENGINE
                           .authorization()
                           .newAuthorization()
                           .withOwnerId(user.getValue().getUsername())
                           .withResourceId("*")
                           .withResourceType(AuthorizationResourceType.USER)
                           .withPermissions(PermissionType.READ)
-                          .create()
-                          .getValue()
-                          .getAuthorizationKey();
-
-                  return ENGINE.authorization().deleteAuthorization(key).delete();
-                }),
-            AuthorizationDeleteProcessor.class
-          },
-          {
-            "Authorization.UPDATE is idempotent",
-            new Scenario(
-                ValueType.AUTHORIZATION,
-                AuthorizationIntent.UPDATE,
-                () -> {
-                  final var user = createUser();
-                  final var key =
-                      ENGINE
-                          .authorization()
-                          .newAuthorization()
-                          .withOwnerId(user.getValue().getUsername())
-                          .withResourceId("*")
-                          .withResourceType(AuthorizationResourceType.USER)
-                          .withPermissions(PermissionType.READ)
-                          .create()
-                          .getValue()
-                          .getAuthorizationKey();
-
-                  return ENGINE.authorization().updateAuthorization(key).update();
-                }),
-            AuthorizationUpdateProcessor.class
-          },
-          {
-            "BatchOperation.CREATE is idempotent",
-            new Scenario(
-                ValueType.BATCH_OPERATION_CREATION,
-                BatchOperationIntent.CREATE,
-                () ->
-                    ENGINE
-                        .batchOperation()
-                        .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
-                        .withFilter(
-                            new UnsafeBuffer(
-                                MsgPackConverter.convertToMsgPack(
-                                    new ProcessInstanceFilter.Builder()
-                                        .processInstanceKeys(1L, 3L, 8L)
-                                        .build())))
-                        .create()),
-            BatchOperationCreateProcessor.class
-          },
-          {
-            "BatchOperation.CANCEL is idempotent",
-            new Scenario(
-                ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
-                BatchOperationIntent.CANCEL,
-                () -> {
-                  final var batchOperation = createBatchOperation();
-                  return ENGINE
-                      .batchOperation()
-                      .newLifecycle()
-                      .withBatchOperationKey(batchOperation.getKey())
-                      .cancel();
-                }),
-            BatchOperationCancelProcessor.class
-          },
-          {
-            "BatchOperation.PAUSE is idempotent",
-            new Scenario(
-                ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
-                BatchOperationIntent.PAUSE,
-                () -> {
-                  final var batchOperation = createBatchOperation();
-                  return ENGINE
-                      .batchOperation()
-                      .newLifecycle()
-                      .withBatchOperationKey(batchOperation.getKey())
-                      .pause();
-                }),
-            BatchOperationPauseProcessor.class
-          },
-          {
-            "BatchOperation.RESUME is idempotent",
-            new Scenario(
-                ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
-                BatchOperationIntent.RESUME,
-                () -> {
-                  final var batchOperation = createBatchOperation();
-                  pauseBatchOperation(batchOperation.getKey());
-                  return ENGINE
-                      .batchOperation()
-                      .newLifecycle()
-                      .withBatchOperationKey(batchOperation.getKey())
-                      .resume();
-                }),
-            BatchOperationResumeProcessor.class
-          },
-          {
-            "Clock.RESET is idempotent",
-            new Scenario(ValueType.CLOCK, ClockIntent.RESET, () -> ENGINE.clock().reset()),
-            ClockProcessor.class
-          },
-          {
-            "Deployment.CREATE is idempotent",
-            new Scenario(
-                ValueType.DEPLOYMENT,
-                DeploymentIntent.CREATE,
-                CommandDistributionIdempotencyTest::deployProcess),
-            DeploymentCreateProcessor.class
-          },
-          {
-            "Group.CREATE is idempotent",
-            new Scenario(
-                ValueType.GROUP,
-                GroupIntent.CREATE,
-                () -> createGroup(Strings.newRandomValidIdentityId())),
-            GroupCreateProcessor.class
-          },
-          {
-            "Group.DELETE is idempotent",
-            new Scenario(
-                ValueType.GROUP,
-                GroupIntent.DELETE,
-                () -> {
-                  final var groupId = UUID.randomUUID().toString();
-                  createGroup(groupId);
-                  return ENGINE.group().deleteGroup(groupId).delete();
-                }),
-            GroupDeleteProcessor.class
-          },
-          {
-            "Group.UPDATE is idempotent",
-            new Scenario(
-                ValueType.GROUP,
-                GroupIntent.UPDATE,
-                () -> {
-                  final var groupId = UUID.randomUUID().toString();
-                  createGroup(groupId);
-                  return ENGINE
-                      .group()
-                      .updateGroup(groupId)
-                      .withName(UUID.randomUUID().toString())
-                      .update();
-                }),
-            GroupUpdateProcessor.class
-          },
-          {
-            "Group.ADD_ENTITY is idempotent",
-            new Scenario(
-                ValueType.GROUP,
-                GroupIntent.ADD_ENTITY,
-                () -> {
-                  final var groupId = Strings.newRandomValidIdentityId();
-                  createGroup(groupId);
-                  final var username = createUser().getValue().getUsername();
-                  return ENGINE
-                      .group()
-                      .addEntity(groupId)
-                      .withEntityId(username)
-                      .withEntityType(EntityType.USER)
-                      .add();
-                }),
-            GroupAddEntityProcessor.class
-          },
-          {
-            "Group.REMOVE_ENTITY is idempotent",
-            new Scenario(
-                ValueType.GROUP,
-                GroupIntent.REMOVE_ENTITY,
-                () -> {
-                  final var groupId = Strings.newRandomValidIdentityId();
-                  createGroup(groupId);
-                  final var username = createUser().getValue().getUsername();
-                  ENGINE
-                      .group()
-                      .addEntity(groupId)
-                      .withEntityId(username)
-                      .withEntityType(EntityType.USER)
-                      .add();
-                  return ENGINE
-                      .group()
-                      .removeEntity(groupId)
-                      .withEntityId(username)
-                      .withEntityType(EntityType.USER)
-                      .remove();
-                }),
-            GroupRemoveEntityProcessor.class
-          },
-          {
-            "Mapping.CREATE is idempotent",
-            new Scenario(
-                ValueType.MAPPING,
-                MappingIntent.CREATE,
-                CommandDistributionIdempotencyTest::createMapping),
-            MappingCreateProcessor.class
-          },
-          {
-            "Mapping.UPDATE is idempotent",
-            new Scenario(
-                ValueType.MAPPING,
-                MappingIntent.UPDATE,
-                () -> {
-                  final var mapping = createMapping();
-                  return ENGINE.mapping().updateMapping(mapping.getValue().getMappingId()).update();
-                }),
-            MappingUpdateProcessor.class
-          },
-          {
-            "Mapping.DELETE is idempotent",
-            new Scenario(
-                ValueType.MAPPING,
-                MappingIntent.DELETE,
-                () -> {
-                  final var mapping = createMapping();
-                  return ENGINE.mapping().deleteMapping(mapping.getValue().getMappingId()).delete();
-                }),
-            MappingDeleteProcessor.class
-          },
-          {
-            "ResourceDeletion.DELETE is idempotent",
-            new Scenario(
-                ValueType.RESOURCE_DELETION,
-                ResourceDeletionIntent.DELETE,
-                () -> {
-                  final var process = deployProcess();
-                  return ENGINE
-                      .resourceDeletion()
-                      .withResourceKey(
-                          process
+                          .create();
+                    }),
+                AuthorizationCreateProcessor.class
+            },
+            {
+                "Authorization.DELETE is idempotent",
+                new Scenario(
+                    ValueType.AUTHORIZATION,
+                    AuthorizationIntent.DELETE,
+                    () -> {
+                      final var user = createUser();
+                      final var key =
+                          ENGINE
+                              .authorization()
+                              .newAuthorization()
+                              .withOwnerId(user.getValue().getUsername())
+                              .withResourceId("*")
+                              .withResourceType(AuthorizationResourceType.USER)
+                              .withPermissions(PermissionType.READ)
+                              .create()
                               .getValue()
-                              .getProcessesMetadata()
-                              .getFirst()
-                              .getProcessDefinitionKey())
-                      .delete();
-                }),
-            ResourceDeletionDeleteProcessor.class
-          },
-          {
-            "Role.CREATE is idempotent",
-            new Scenario(
-                ValueType.ROLE, RoleIntent.CREATE, CommandDistributionIdempotencyTest::createRole),
-            RoleCreateProcessor.class
-          },
-          {
-            "Role.DELETE is idempotent",
-            new Scenario(
-                ValueType.ROLE,
-                RoleIntent.DELETE,
-                () -> {
-                  final Record<RoleRecordValue> role = createRole();
-                  return ENGINE.role().deleteRole(role.getValue().getRoleId()).delete();
-                }),
-            RoleDeleteProcessor.class
-          },
-          {
-            "Role.UPDATE is idempotent",
-            new Scenario(
-                ValueType.ROLE,
-                RoleIntent.UPDATE,
-                () -> {
-                  final var role = createRole();
-                  return ENGINE
-                      .role()
-                      .updateRole(role.getValue().getRoleId())
-                      .withName(UUID.randomUUID().toString())
-                      .update();
-                }),
-            RoleUpdateProcessor.class
-          },
-          {
-            "Role.ADD_ENTITY is idempotent",
-            new Scenario(
-                ValueType.ROLE,
-                RoleIntent.ADD_ENTITY,
-                () -> {
-                  final var role = createRole();
-                  final var user = createUser();
-                  return ENGINE
-                      .role()
-                      .addEntity(role.getValue().getRoleId())
-                      .withEntityId(user.getValue().getUsername())
-                      .withEntityType(EntityType.USER)
-                      .add();
-                }),
-            RoleAddEntityProcessor.class
-          },
-          {
-            "Role.REMOVE_ENTITY is idempotent",
-            new Scenario(
-                ValueType.ROLE,
-                RoleIntent.REMOVE_ENTITY,
-                () -> {
-                  final var role = createRole().getValue();
-                  final var user = createUser().getValue();
-                  ENGINE
-                      .role()
-                      .addEntity(role.getRoleId())
-                      .withEntityId(user.getUsername())
-                      .withEntityType(EntityType.USER)
-                      .add();
-                  return ENGINE
-                      .role()
-                      .removeEntity(role.getRoleId())
-                      .withEntityId(user.getUsername())
-                      .withEntityType(EntityType.USER)
-                      .remove();
-                }),
-            RoleRemoveEntityProcessor.class
-          },
-          {
-            "Signal.BROADCAST is idempotent",
-            new Scenario(
-                ValueType.SIGNAL,
-                SignalIntent.BROADCAST,
-                () -> ENGINE.signal().withSignalName(UUID.randomUUID().toString()).broadcast()),
-            SignalBroadcastProcessor.class
-          },
-          {
-            "Tenant.CREATE is idempotent",
-            new Scenario(
-                ValueType.TENANT,
-                TenantIntent.CREATE,
-                CommandDistributionIdempotencyTest::createTenant),
-            TenantCreateProcessor.class
-          },
-          {
-            "Tenant.DELETE is idempotent",
-            new Scenario(
-                ValueType.TENANT,
-                TenantIntent.DELETE,
-                () -> {
-                  final var tenant = createTenant();
-                  return ENGINE.tenant().deleteTenant(tenant.getValue().getTenantId()).delete();
-                }),
-            TenantDeleteProcessor.class
-          },
-          {
-            "Tenant.UPDATE is idempotent",
-            new Scenario(
-                ValueType.TENANT,
-                TenantIntent.UPDATE,
-                () -> {
-                  final var tenant = createTenant();
-                  return ENGINE
-                      .tenant()
-                      .updateTenant(tenant.getValue().getTenantId())
-                      .withName(UUID.randomUUID().toString())
-                      .update();
-                }),
-            TenantUpdateProcessor.class
-          },
-          {
-            "Tenant.ADD_ENTITY is idempotent",
-            new Scenario(
-                ValueType.TENANT,
-                TenantIntent.ADD_ENTITY,
-                () -> {
-                  final var tenant = createTenant();
-                  final var user = createUser();
-                  return ENGINE
-                      .tenant()
-                      .addEntity(tenant.getValue().getTenantId())
-                      .withEntityId(user.getValue().getUsername())
-                      .withEntityType(EntityType.USER)
-                      .add();
-                }),
-            TenantAddEntityProcessor.class
-          },
-          {
-            "Tenant.REMOVE_ENTITY is idempotent",
-            new Scenario(
-                ValueType.TENANT,
-                TenantIntent.REMOVE_ENTITY,
-                () -> {
-                  final var tenant = createTenant();
-                  final var user = createUser();
-                  ENGINE
-                      .tenant()
-                      .addEntity(tenant.getValue().getTenantId())
-                      .withEntityId(user.getValue().getUsername())
-                      .withEntityType(EntityType.USER)
-                      .add();
-                  return ENGINE
-                      .tenant()
-                      .removeEntity(tenant.getValue().getTenantId())
-                      .withEntityId(user.getValue().getUsername())
-                      .withEntityType(EntityType.USER)
-                      .remove();
-                }),
-            TenantRemoveEntityProcessor.class
-          },
-          {
-            "User.CREATE is idempotent",
-            new Scenario(
-                ValueType.USER, UserIntent.CREATE, CommandDistributionIdempotencyTest::createUser),
-            UserCreateProcessor.class
-          },
-          {
-            "User.DELETE is idempotent",
-            new Scenario(
-                ValueType.USER,
-                UserIntent.DELETE,
-                () -> {
-                  final var user = createUser();
-                  return ENGINE.user().deleteUser(user.getValue().getUsername()).delete();
-                }),
-            UserDeleteProcessor.class,
-          },
-          {
-            "User.UPDATE is idempotent",
-            new Scenario(
-                ValueType.USER,
-                UserIntent.UPDATE,
-                () -> {
-                  final var user = createUser();
-                  return ENGINE
-                      .user()
-                      .updateUser()
-                      .withUsername(user.getValue().getUsername())
-                      .withName(UUID.randomUUID().toString())
-                      .update();
-                }),
-            UserUpdateProcessor.class
-          },
-          {
-            "MessageSubscription.MIGRATE is idempotent",
-            new Scenario(
-                ValueType.MESSAGE_SUBSCRIPTION,
-                MessageSubscriptionIntent.MIGRATE,
-                CommandDistributionIdempotencyTest::migrateMessageSubscription),
-            MessageSubscriptionMigrateProcessor.class
-          }
+                              .getAuthorizationKey();
+
+                      return ENGINE.authorization().deleteAuthorization(key).delete();
+                    }),
+                AuthorizationDeleteProcessor.class
+            },
+            {
+                "Authorization.UPDATE is idempotent",
+                new Scenario(
+                    ValueType.AUTHORIZATION,
+                    AuthorizationIntent.UPDATE,
+                    () -> {
+                      final var user = createUser();
+                      final var key =
+                          ENGINE
+                              .authorization()
+                              .newAuthorization()
+                              .withOwnerId(user.getValue().getUsername())
+                              .withResourceId("*")
+                              .withResourceType(AuthorizationResourceType.USER)
+                              .withPermissions(PermissionType.READ)
+                              .create()
+                              .getValue()
+                              .getAuthorizationKey();
+
+                      return ENGINE.authorization().updateAuthorization(key).update();
+                    }),
+                AuthorizationUpdateProcessor.class
+            },
+            {
+                "BatchOperation.CREATE is idempotent",
+                new Scenario(
+                    ValueType.BATCH_OPERATION_CREATION,
+                    BatchOperationIntent.CREATE,
+                    () ->
+                        ENGINE
+                            .batchOperation()
+                            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+                            .withFilter(
+                                new UnsafeBuffer(
+                                    MsgPackConverter.convertToMsgPack(
+                                        new ProcessInstanceFilter.Builder()
+                                            .processInstanceKeys(1L, 3L, 8L)
+                                            .build())))
+                            .create()),
+                BatchOperationCreateProcessor.class
+            },
+            {
+                "BatchOperation.CANCEL is idempotent",
+                new Scenario(
+                    ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
+                    BatchOperationIntent.CANCEL,
+                    () -> {
+                      final var batchOperation = createBatchOperation();
+                      return ENGINE
+                          .batchOperation()
+                          .newLifecycle()
+                          .withBatchOperationKey(batchOperation.getKey())
+                          .cancel();
+                    }),
+                BatchOperationCancelProcessor.class
+            },
+            {
+                "BatchOperation.PAUSE is idempotent",
+                new Scenario(
+                    ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
+                    BatchOperationIntent.SUSPEND,
+                    () -> {
+                      final var batchOperation = createBatchOperation();
+                      return ENGINE
+                          .batchOperation()
+                          .newLifecycle()
+                          .withBatchOperationKey(batchOperation.getKey())
+                          .pause();
+                    }),
+                BatchOperationPauseProcessor.class
+            },
+            {
+                "BatchOperation.RESUME is idempotent",
+                new Scenario(
+                    ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT,
+                    BatchOperationIntent.RESUME,
+                    () -> {
+                      final var batchOperation = createBatchOperation();
+                      pauseBatchOperation(batchOperation.getKey());
+                      return ENGINE
+                          .batchOperation()
+                          .newLifecycle()
+                          .withBatchOperationKey(batchOperation.getKey())
+                          .resume();
+                    }),
+                BatchOperationResumeProcessor.class
+            },
+            {
+                "Clock.RESET is idempotent",
+                new Scenario(ValueType.CLOCK, ClockIntent.RESET, () -> ENGINE.clock().reset()),
+                ClockProcessor.class
+            },
+            {
+                "Deployment.CREATE is idempotent",
+                new Scenario(
+                    ValueType.DEPLOYMENT,
+                    DeploymentIntent.CREATE,
+                    CommandDistributionIdempotencyTest::deployProcess),
+                DeploymentCreateProcessor.class
+            },
+            {
+                "Group.CREATE is idempotent",
+                new Scenario(
+                    ValueType.GROUP,
+                    GroupIntent.CREATE,
+                    () -> createGroup(Strings.newRandomValidIdentityId())),
+                GroupCreateProcessor.class
+            },
+            {
+                "Group.DELETE is idempotent",
+                new Scenario(
+                    ValueType.GROUP,
+                    GroupIntent.DELETE,
+                    () -> {
+                      final var groupId = UUID.randomUUID().toString();
+                      createGroup(groupId);
+                      return ENGINE.group().deleteGroup(groupId).delete();
+                    }),
+                GroupDeleteProcessor.class
+            },
+            {
+                "Group.UPDATE is idempotent",
+                new Scenario(
+                    ValueType.GROUP,
+                    GroupIntent.UPDATE,
+                    () -> {
+                      final var groupId = UUID.randomUUID().toString();
+                      createGroup(groupId);
+                      return ENGINE
+                          .group()
+                          .updateGroup(groupId)
+                          .withName(UUID.randomUUID().toString())
+                          .update();
+                    }),
+                GroupUpdateProcessor.class
+            },
+            {
+                "Group.ADD_ENTITY is idempotent",
+                new Scenario(
+                    ValueType.GROUP,
+                    GroupIntent.ADD_ENTITY,
+                    () -> {
+                      final var groupId = Strings.newRandomValidIdentityId();
+                      createGroup(groupId);
+                      final var username = createUser().getValue().getUsername();
+                      return ENGINE
+                          .group()
+                          .addEntity(groupId)
+                          .withEntityId(username)
+                          .withEntityType(EntityType.USER)
+                          .add();
+                    }),
+                GroupAddEntityProcessor.class
+            },
+            {
+                "Group.REMOVE_ENTITY is idempotent",
+                new Scenario(
+                    ValueType.GROUP,
+                    GroupIntent.REMOVE_ENTITY,
+                    () -> {
+                      final var groupId = Strings.newRandomValidIdentityId();
+                      createGroup(groupId);
+                      final var username = createUser().getValue().getUsername();
+                      ENGINE
+                          .group()
+                          .addEntity(groupId)
+                          .withEntityId(username)
+                          .withEntityType(EntityType.USER)
+                          .add();
+                      return ENGINE
+                          .group()
+                          .removeEntity(groupId)
+                          .withEntityId(username)
+                          .withEntityType(EntityType.USER)
+                          .remove();
+                    }),
+                GroupRemoveEntityProcessor.class
+            },
+            {
+                "Mapping.CREATE is idempotent",
+                new Scenario(
+                    ValueType.MAPPING,
+                    MappingIntent.CREATE,
+                    CommandDistributionIdempotencyTest::createMapping),
+                MappingCreateProcessor.class
+            },
+            {
+                "Mapping.UPDATE is idempotent",
+                new Scenario(
+                    ValueType.MAPPING,
+                    MappingIntent.UPDATE,
+                    () -> {
+                      final var mapping = createMapping();
+                      return ENGINE.mapping().updateMapping(mapping.getValue().getMappingId())
+                          .update();
+                    }),
+                MappingUpdateProcessor.class
+            },
+            {
+                "Mapping.DELETE is idempotent",
+                new Scenario(
+                    ValueType.MAPPING,
+                    MappingIntent.DELETE,
+                    () -> {
+                      final var mapping = createMapping();
+                      return ENGINE.mapping().deleteMapping(mapping.getValue().getMappingId())
+                          .delete();
+                    }),
+                MappingDeleteProcessor.class
+            },
+            {
+                "ResourceDeletion.DELETE is idempotent",
+                new Scenario(
+                    ValueType.RESOURCE_DELETION,
+                    ResourceDeletionIntent.DELETE,
+                    () -> {
+                      final var process = deployProcess();
+                      return ENGINE
+                          .resourceDeletion()
+                          .withResourceKey(
+                              process
+                                  .getValue()
+                                  .getProcessesMetadata()
+                                  .getFirst()
+                                  .getProcessDefinitionKey())
+                          .delete();
+                    }),
+                ResourceDeletionDeleteProcessor.class
+            },
+            {
+                "Role.CREATE is idempotent",
+                new Scenario(
+                    ValueType.ROLE, RoleIntent.CREATE,
+                    CommandDistributionIdempotencyTest::createRole),
+                RoleCreateProcessor.class
+            },
+            {
+                "Role.DELETE is idempotent",
+                new Scenario(
+                    ValueType.ROLE,
+                    RoleIntent.DELETE,
+                    () -> {
+                      final Record<RoleRecordValue> role = createRole();
+                      return ENGINE.role().deleteRole(role.getValue().getRoleId()).delete();
+                    }),
+                RoleDeleteProcessor.class
+            },
+            {
+                "Role.UPDATE is idempotent",
+                new Scenario(
+                    ValueType.ROLE,
+                    RoleIntent.UPDATE,
+                    () -> {
+                      final var role = createRole();
+                      return ENGINE
+                          .role()
+                          .updateRole(role.getValue().getRoleId())
+                          .withName(UUID.randomUUID().toString())
+                          .update();
+                    }),
+                RoleUpdateProcessor.class
+            },
+            {
+                "Role.ADD_ENTITY is idempotent",
+                new Scenario(
+                    ValueType.ROLE,
+                    RoleIntent.ADD_ENTITY,
+                    () -> {
+                      final var role = createRole();
+                      final var user = createUser();
+                      return ENGINE
+                          .role()
+                          .addEntity(role.getValue().getRoleId())
+                          .withEntityId(user.getValue().getUsername())
+                          .withEntityType(EntityType.USER)
+                          .add();
+                    }),
+                RoleAddEntityProcessor.class
+            },
+            {
+                "Role.REMOVE_ENTITY is idempotent",
+                new Scenario(
+                    ValueType.ROLE,
+                    RoleIntent.REMOVE_ENTITY,
+                    () -> {
+                      final var role = createRole().getValue();
+                      final var user = createUser().getValue();
+                      ENGINE
+                          .role()
+                          .addEntity(role.getRoleId())
+                          .withEntityId(user.getUsername())
+                          .withEntityType(EntityType.USER)
+                          .add();
+                      return ENGINE
+                          .role()
+                          .removeEntity(role.getRoleId())
+                          .withEntityId(user.getUsername())
+                          .withEntityType(EntityType.USER)
+                          .remove();
+                    }),
+                RoleRemoveEntityProcessor.class
+            },
+            {
+                "Signal.BROADCAST is idempotent",
+                new Scenario(
+                    ValueType.SIGNAL,
+                    SignalIntent.BROADCAST,
+                    () -> ENGINE.signal().withSignalName(UUID.randomUUID().toString()).broadcast()),
+                SignalBroadcastProcessor.class
+            },
+            {
+                "Tenant.CREATE is idempotent",
+                new Scenario(
+                    ValueType.TENANT,
+                    TenantIntent.CREATE,
+                    CommandDistributionIdempotencyTest::createTenant),
+                TenantCreateProcessor.class
+            },
+            {
+                "Tenant.DELETE is idempotent",
+                new Scenario(
+                    ValueType.TENANT,
+                    TenantIntent.DELETE,
+                    () -> {
+                      final var tenant = createTenant();
+                      return ENGINE.tenant().deleteTenant(tenant.getValue().getTenantId()).delete();
+                    }),
+                TenantDeleteProcessor.class
+            },
+            {
+                "Tenant.UPDATE is idempotent",
+                new Scenario(
+                    ValueType.TENANT,
+                    TenantIntent.UPDATE,
+                    () -> {
+                      final var tenant = createTenant();
+                      return ENGINE
+                          .tenant()
+                          .updateTenant(tenant.getValue().getTenantId())
+                          .withName(UUID.randomUUID().toString())
+                          .update();
+                    }),
+                TenantUpdateProcessor.class
+            },
+            {
+                "Tenant.ADD_ENTITY is idempotent",
+                new Scenario(
+                    ValueType.TENANT,
+                    TenantIntent.ADD_ENTITY,
+                    () -> {
+                      final var tenant = createTenant();
+                      final var user = createUser();
+                      return ENGINE
+                          .tenant()
+                          .addEntity(tenant.getValue().getTenantId())
+                          .withEntityId(user.getValue().getUsername())
+                          .withEntityType(EntityType.USER)
+                          .add();
+                    }),
+                TenantAddEntityProcessor.class
+            },
+            {
+                "Tenant.REMOVE_ENTITY is idempotent",
+                new Scenario(
+                    ValueType.TENANT,
+                    TenantIntent.REMOVE_ENTITY,
+                    () -> {
+                      final var tenant = createTenant();
+                      final var user = createUser();
+                      ENGINE
+                          .tenant()
+                          .addEntity(tenant.getValue().getTenantId())
+                          .withEntityId(user.getValue().getUsername())
+                          .withEntityType(EntityType.USER)
+                          .add();
+                      return ENGINE
+                          .tenant()
+                          .removeEntity(tenant.getValue().getTenantId())
+                          .withEntityId(user.getValue().getUsername())
+                          .withEntityType(EntityType.USER)
+                          .remove();
+                    }),
+                TenantRemoveEntityProcessor.class
+            },
+            {
+                "User.CREATE is idempotent",
+                new Scenario(
+                    ValueType.USER, UserIntent.CREATE,
+                    CommandDistributionIdempotencyTest::createUser),
+                UserCreateProcessor.class
+            },
+            {
+                "User.DELETE is idempotent",
+                new Scenario(
+                    ValueType.USER,
+                    UserIntent.DELETE,
+                    () -> {
+                      final var user = createUser();
+                      return ENGINE.user().deleteUser(user.getValue().getUsername()).delete();
+                    }),
+                UserDeleteProcessor.class,
+            },
+            {
+                "User.UPDATE is idempotent",
+                new Scenario(
+                    ValueType.USER,
+                    UserIntent.UPDATE,
+                    () -> {
+                      final var user = createUser();
+                      return ENGINE
+                          .user()
+                          .updateUser()
+                          .withUsername(user.getValue().getUsername())
+                          .withName(UUID.randomUUID().toString())
+                          .update();
+                    }),
+                UserUpdateProcessor.class
+            },
+            {
+                "MessageSubscription.MIGRATE is idempotent",
+                new Scenario(
+                    ValueType.MESSAGE_SUBSCRIPTION,
+                    MessageSubscriptionIntent.MIGRATE,
+                    CommandDistributionIdempotencyTest::migrateMessageSubscription),
+                MessageSubscriptionMigrateProcessor.class
+            }
         });
   }
 
@@ -662,22 +666,22 @@ public class CommandDistributionIdempotencyTest {
 
               // Make sure we have two records on the target partition
               assertThat(
-                      RecordingExporter.records()
-                          .withPartitionId(2)
-                          .withValueType(distributionCommand.getValue().getValueType())
-                          .withIntent(distributionCommand.getValue().getIntent())
-                          .withRecordKey(distributionCommand.getKey())
-                          .limit(2))
+                  RecordingExporter.records()
+                      .withPartitionId(2)
+                      .withValueType(distributionCommand.getValue().getValueType())
+                      .withIntent(distributionCommand.getValue().getIntent())
+                      .withRecordKey(distributionCommand.getKey())
+                      .limit(2))
                   .hasSize(2);
             });
     RecordingExporter.setMaximumWaitTime(5000);
 
     // then we expect the distribution still finishes based on the second (retried) acknowledgement
     assertThat(
-            RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
-                .withPartitionId(1)
-                .withRecordKey(distributionCommand.getKey())
-                .exists())
+        RecordingExporter.commandDistributionRecords(CommandDistributionIntent.FINISHED)
+            .withPartitionId(1)
+            .withRecordKey(distributionCommand.getKey())
+            .exists())
         .isTrue();
   }
 
@@ -806,6 +810,7 @@ public class CommandDistributionIdempotencyTest {
   }
 
   private static class AcknowledgementInterceptor {
+
     private final CompletableFuture<Record<CommandDistributionRecordValue>> signal =
         new CompletableFuture();
     private final AtomicInteger acknowledgeCount = new AtomicInteger(0);
@@ -848,8 +853,6 @@ public class CommandDistributionIdempotencyTest {
     /**
      * Signals that the initial command distribution started and allows to identify the
      * acknowledgements we want to intercept
-     *
-     * @param distributionCommand
      */
     public void enable(final Record<CommandDistributionRecordValue> distributionCommand) {
       signal.complete(distributionCommand);
@@ -895,9 +898,9 @@ public class CommandDistributionIdempotencyTest {
       try {
         return Optional.of(signal.get(5000, TimeUnit.MILLISECONDS).getKey());
       } catch (final InterruptedException
-          | ExecutionException
-          | TimeoutException
-          | CancellationException e) {
+                     | ExecutionException
+                     | TimeoutException
+                     | CancellationException e) {
         // complete the future, let the commands pass, but make sure to fail the test
         if (!signal.isDone()) {
           signal.completeExceptionally(e);
@@ -909,6 +912,7 @@ public class CommandDistributionIdempotencyTest {
 
   @FunctionalInterface
   interface CommandSender {
+
     Record sendCommand();
   }
 }
