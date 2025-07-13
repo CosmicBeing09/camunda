@@ -45,6 +45,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class UserTaskJobBasedHandlerTest {
+
   private static final Set<JobIntent> SUPPORTED_INTENTS =
       EnumSet.of(
           JobIntent.CREATED,
@@ -318,7 +319,7 @@ public class UserTaskJobBasedHandlerTest {
     assertThat(taskEntity.getPosition()).isEqualTo(jobRecord.getPosition());
     assertThat(taskEntity.getProcessInstanceId()).isEqualTo(String.valueOf(processInstanceKey));
     assertThat(taskEntity.getFlowNodeBpmnId()).isEqualTo(jobRecordValue.getElementId());
-    assertThat(taskEntity.getFlowNodeName()).isEqualTo("my-flow-node");
+    assertThat(taskEntity.getName()).isEqualTo("my-flow-node");
     assertThat(taskEntity.getBpmnProcessId()).isEqualTo(jobRecordValue.getBpmnProcessId());
     assertThat(taskEntity.getProcessDefinitionId())
         .isEqualTo(String.valueOf(jobRecordValue.getProcessDefinitionKey()));
