@@ -1477,7 +1477,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var thirdKey = resultAll.items().get(2).getElementInstanceKey();
 
     final var resultSearchFrom =
-        camundaClient.newElementInstanceSearchRequest().page(p -> p.limit(2).from(2)).send().join();
+        camundaClient.newElementInstanceSearchRequest().page(p -> p.limit(2).cursor(2)).send().join();
 
     // then
     assertThat(resultSearchFrom.items().size()).isEqualTo(2);

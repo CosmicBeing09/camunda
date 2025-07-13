@@ -1206,7 +1206,7 @@ class UserTaskSearchTest {
     final var thirdKey = resultAll.items().get(2).getUserTaskKey();
 
     final var resultSearchFrom =
-        camundaClient.newUserTaskSearchRequest().page(p -> p.limit(2).from(2)).send().join();
+        camundaClient.newUserTaskSearchRequest().page(p -> p.limit(2).cursor(2)).send().join();
 
     // then
     assertThat(resultSearchFrom.items().size()).isEqualTo(2);
