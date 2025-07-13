@@ -242,15 +242,15 @@ public final class DeploymentCreateProcessor
     deploymentEvent.processesMetadata().stream()
         .filter(not(ProcessMetadata::isDuplicate))
         .forEach(
-            metadata -> {
+            request -> {
               for (final DeploymentResource resource : deploymentEvent.getResources()) {
                 final var resourceChecksum =
                     deploymentTransformer.getChecksum(resource.getResource());
-                if (resourceChecksum.equals(metadata.getChecksumBuffer())) {
+                if (resourceChecksum.equals(request.getChecksumBuffer())) {
                   stateWriter.appendFollowUpEvent(
-                      metadata.getKey(),
+                      request.getKey(),
                       ProcessIntent.CREATED,
-                      new ProcessRecord().wrap(metadata, resource.getResource()));
+                      new ProcessRecord().wrap(request, resource.getResource()));
                 }
               }
             });
@@ -278,15 +278,15 @@ public final class DeploymentCreateProcessor
     deploymentEvent.formMetadata().stream()
         .filter(not(FormMetadataRecord::isDuplicate))
         .forEach(
-            metadata -> {
+            request -> {
               for (final DeploymentResource resource : deploymentEvent.getResources()) {
                 final var resourceChecksum =
                     deploymentTransformer.getChecksum(resource.getResource());
-                if (resourceChecksum.equals(metadata.getChecksumBuffer())) {
+                if (resourceChecksum.equals(request.getChecksumBuffer())) {
                   stateWriter.appendFollowUpEvent(
-                      metadata.getFormKey(),
+                      request.getFormKey(),
                       FormIntent.CREATED,
-                      new FormRecord().wrap(metadata, resource.getResource()));
+                      new FormRecord().wrap(request, resource.getResource()));
                 }
               }
             });
@@ -406,8 +406,8 @@ public final class DeploymentCreateProcessor
   /**
    * Exception that can be thrown during processing of a command, in case the resource cannot be
    * transformed successfully. This allows the platform to roll back any changes the engine made.
-   * This exception can be handled by the processor in {@link #tryHandleError(TypedRecord,
-   * Throwable)}.
+   * This exception can be handled by the processor in
+   * {@link #tryHandleError(TypedRecord, Throwable)}.
    */
   private static final class ResourceTransformationFailedException extends RuntimeException {
 
@@ -429,6 +429,7 @@ public final class DeploymentCreateProcessor
   }
 
   private static final class NoSuchResourceException extends IllegalStateException {
+
     private NoSuchResourceException(final String resourceName) {
       super(
           String.format(

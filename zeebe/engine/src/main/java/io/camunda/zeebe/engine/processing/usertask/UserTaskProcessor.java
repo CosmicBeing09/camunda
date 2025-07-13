@@ -156,10 +156,9 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
           writeRejectionForCommand(command, persistedRecord, UserTaskIntent.ASSIGNMENT_DENIED);
       case UPDATING ->
           writeRejectionForCommand(command, persistedRecord, UserTaskIntent.UPDATE_DENIED);
-      default ->
-          throw new IllegalArgumentException(
-              "Expected to reject operation for user task: '%d', but operation could not be determined from the task's current lifecycle state: '%s'"
-                  .formatted(command.getValue().getUserTaskKey(), lifecycleState));
+      default -> throw new IllegalArgumentException(
+          "Expected to reject operation for user task: '%d', but operation could not be determined from the task's current lifecycle state: '%s'"
+              .formatted(command.getValue().getUserTaskKey(), lifecycleState));
     }
   }
 
@@ -225,7 +224,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void storeUserTaskRecordRequestMetadata(final TypedRecord<UserTaskRecord> command) {
-    if (!command.hasRequestMetadata()) {
+    if (!command.hasRequest()) {
       return;
     }
 
@@ -260,25 +259,24 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var recordRequestMetadata =
-        userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
+        userTaskState.findRecordRequest(persistedRecord.getUserTaskKey());
 
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
     recordRequestMetadata.ifPresent(
         metadata -> {
           switch (metadata.getTriggerType()) {
-            case USER_TASK ->
-                responseWriter.writeRejection(
-                    command.getKey(),
-                    mapDeniedIntentToResponseIntent(intent),
-                    command.getValue(),
-                    command.getValueType(),
-                    RejectionType.INVALID_STATE,
-                    mapDeniedIntentToResponseRejectionReason(
-                        intent,
-                        persistedRecord.getUserTaskKey(),
-                        command.getValue().getDeniedReason()),
-                    metadata.getRequestId(),
-                    metadata.getRequestStreamId());
+            case USER_TASK -> responseWriter.writeRejection(
+                command.getKey(),
+                mapDeniedIntentToResponseIntent(intent),
+                command.getValue(),
+                command.getValueType(),
+                RejectionType.INVALID_STATE,
+                mapDeniedIntentToResponseRejectionReason(
+                    intent,
+                    persistedRecord.getUserTaskKey(),
+                    command.getValue().getDeniedReason()),
+                metadata.getRequestId(),
+                metadata.getRequestStreamId());
             case VARIABLE_DOCUMENT -> {
               final long userTaskInstanceKey = command.getValue().getElementInstanceKey();
               variableState
@@ -306,10 +304,9 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
                             metadata.getRequestStreamId());
                       });
             }
-            default ->
-                throw new IllegalArgumentException(
-                    "Unexpected user task transition trigger type: '%s'"
-                        .formatted(metadata.getTriggerType()));
+            default -> throw new IllegalArgumentException(
+                "Unexpected user task transition trigger type: '%s'"
+                    .formatted(metadata.getTriggerType()));
           }
         });
   }
@@ -342,9 +339,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
       case UPDATING -> ZeebeTaskListenerEventType.updating;
       case COMPLETING -> ZeebeTaskListenerEventType.completing;
       case CANCELING -> ZeebeTaskListenerEventType.canceling;
-      default ->
-          throw new IllegalArgumentException(
-              "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
+      default -> throw new IllegalArgumentException(
+          "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
     };
   }
 
@@ -380,9 +376,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
           case UPDATING -> UserTaskIntent.UPDATE;
           case COMPLETING -> UserTaskIntent.COMPLETE;
           case CANCELING -> UserTaskIntent.CANCEL;
-          default ->
-              throw new IllegalArgumentException(
-                  "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
+          default -> throw new IllegalArgumentException(
+              "Unexpected user task lifecycle state: '%s'".formatted(lifecycleState));
         };
 
     return commandProcessors.getCommandProcessor(userTaskIntent);
