@@ -70,13 +70,19 @@ import org.slf4j.LoggerFactory;
 public class CamundaProcessTestExtension
     implements BeforeEachCallback, BeforeAllCallback, AfterEachCallback, AfterAllCallback {
 
-  /** The JUnit extension namespace to store the runtime and context. */
+  /**
+   * The JUnit extension namespace to store the runtime and context.
+   */
   public static final Namespace NAMESPACE = Namespace.create(CamundaProcessTestExtension.class);
 
-  /** The JUnit extension store key of the runtime. */
+  /**
+   * The JUnit extension store key of the runtime.
+   */
   public static final String STORE_KEY_RUNTIME = "camunda-process-test-runtime";
 
-  /** The JUnit extension store key of the context. */
+  /**
+   * The JUnit extension store key of the context.
+   */
   public static final String STORE_KEY_CONTEXT = "camunda-process-test-context";
 
   private static final Logger LOG = LoggerFactory.getLogger(CamundaProcessTestExtension.class);
@@ -86,7 +92,7 @@ public class CamundaProcessTestExtension
   private final CamundaContainerRuntimeBuilder containerRuntimeBuilder;
   private final CamundaProcessTestResultPrinter processTestResultPrinter;
 
-  private CamundaContainerRuntime containerRuntime;
+  private CamundaContainerRuntime runtime;
   private CamundaProcessTestResultCollector processTestResultCollector;
 
   private CamundaManagementClient camundaManagementClient;
@@ -121,30 +127,30 @@ public class CamundaProcessTestExtension
   @Override
   public void beforeAll(final ExtensionContext context) {
     // create runtime
-    containerRuntime = containerRuntimeBuilder.build();
-    containerRuntime.start();
+    runtime = containerRuntimeBuilder.build();
+    runtime.start();
 
     camundaManagementClient =
         new CamundaManagementClient(
-            containerRuntime.getCamundaContainer().getMonitoringApiAddress(),
-            containerRuntime.getCamundaContainer().getRestApiAddress());
+            runtime.getCamundaContainer().getMonitoringApiAddress(),
+            runtime.getCamundaContainer().getRestApiAddress());
 
     camundaProcessTestContext =
         new CamundaProcessTestContextImpl(
-            containerRuntime.getCamundaContainer(),
-            containerRuntime.getConnectorsContainer(),
+            runtime.getCamundaContainer(),
+            runtime.getConnectorsContainer(),
             createdClients::add,
             camundaManagementClient);
 
     // put in store
     final Store store = context.getStore(NAMESPACE);
-    store.put(STORE_KEY_RUNTIME, containerRuntime);
+    store.put(STORE_KEY_RUNTIME, runtime);
     store.put(STORE_KEY_CONTEXT, camundaProcessTestContext);
   }
 
   @Override
   public void beforeEach(final ExtensionContext context) throws Exception {
-    if (containerRuntime == null) {
+    if (runtime == null) {
       throw new IllegalStateException(
           "The CamundaProcessTestExtension failed to start because the runtime is not created. "
               + "Make sure that you registering the extension on a static field.");
@@ -157,7 +163,7 @@ public class CamundaProcessTestExtension
       injectField(context, CamundaProcessTestContext.class, () -> camundaProcessTestContext);
     } catch (final Exception e) {
       closeCreatedClients();
-      containerRuntime.close();
+      runtime.close();
       throw e;
     }
 
@@ -203,7 +209,7 @@ public class CamundaProcessTestExtension
 
   @Override
   public void afterEach(final ExtensionContext extensionContext) {
-    if (containerRuntime == null) {
+    if (runtime == null) {
       // Skip if the runtime is not created.
       return;
     }
@@ -248,11 +254,11 @@ public class CamundaProcessTestExtension
 
   @Override
   public void afterAll(final ExtensionContext context) throws Exception {
-    if (containerRuntime == null) {
+    if (runtime == null) {
       // Skip if the runtime is not created.
       return;
     }
-    containerRuntime.close();
+    runtime.close();
   }
 
   private static boolean isTestFailed(final ExtensionContext extensionContext) {
