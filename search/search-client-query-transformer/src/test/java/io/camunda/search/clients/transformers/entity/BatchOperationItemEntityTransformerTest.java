@@ -38,7 +38,7 @@ class BatchOperationItemEntityTransformerTest {
     final var searchEntity = transformer.apply(entity);
     assertThat(searchEntity).isNotNull();
     assertThat(searchEntity.batchOperationId()).isEqualTo("1");
-    assertThat(searchEntity.state()).isEqualTo(BatchOperationItemState.ACTIVE);
+    assertThat(searchEntity.states()).isEqualTo(BatchOperationItemState.ACTIVE);
     assertThat(searchEntity.itemKey()).isEqualTo(123L);
     assertThat(searchEntity.processInstanceKey()).isEqualTo(456L);
     assertThat(searchEntity.processedDate()).isEqualTo(NOW);
@@ -61,7 +61,7 @@ class BatchOperationItemEntityTransformerTest {
     final var searchEntity = transformer.apply(entity);
     assertThat(searchEntity).isNotNull();
     assertThat(searchEntity.batchOperationId()).isEqualTo(uuid);
-    assertThat(searchEntity.state()).isEqualTo(BatchOperationItemState.ACTIVE);
+    assertThat(searchEntity.states()).isEqualTo(BatchOperationItemState.ACTIVE);
     assertThat(searchEntity.itemKey()).isEqualTo(123L);
     assertThat(searchEntity.processInstanceKey()).isEqualTo(456L);
     assertThat(searchEntity.processedDate()).isEqualTo(NOW);
