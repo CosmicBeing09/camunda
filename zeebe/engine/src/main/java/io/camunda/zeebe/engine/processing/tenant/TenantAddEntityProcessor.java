@@ -124,7 +124,9 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
     commandDistributionBehavior.acknowledgeCommand(command);
   }
 
-  /** Loads the persisted tenant by the tenant id. */
+  /**
+   * Loads the persisted tenant by the tenant id.
+   */
   private Either<String, PersistedTenant> getPersistedTenant(final TenantRecord record) {
     final var tenantId = record.getTenantId();
     return tenantState
@@ -191,7 +193,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
       final RejectionType type,
       final String errorMessage) {
     rejectionWriter.appendRejection(command, type, errorMessage);
-    if (command.hasRequestMetadata()) {
+    if (command.hasUserTaskDetails()) {
       responseWriter.writeRejectionOnCommand(command, type, errorMessage);
     }
   }

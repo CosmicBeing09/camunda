@@ -37,7 +37,7 @@ public final class UserTaskAssignedV2Applier
 
     // Clear operational data related to the current assign(claim) transition
     userTaskState.deleteIntermediateState(key);
-    userTaskState.deleteRecordRequestMetadata(key);
+    userTaskState.deleteRecordTrigger(key);
     userTaskState.deleteInitialAssignee(key);
 
     final var elementInstance = elementInstanceState.getInstance(value.getElementInstanceKey());

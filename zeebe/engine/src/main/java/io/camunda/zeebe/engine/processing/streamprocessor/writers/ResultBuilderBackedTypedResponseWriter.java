@@ -28,7 +28,7 @@ public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilde
   @Override
   public void writeRejectionOnCommand(
       final TypedRecord<?> command, final RejectionType type, final String reason) {
-    writeRejection(command, type, reason, command.getRequestId(), command.getRequestStreamId());
+    writeRejection(command, type, reason, command.getId(), command.getStreamId());
   }
 
   @Override
@@ -81,8 +81,8 @@ public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilde
         event.getIntent(),
         event.getValue(),
         event.getValueType(),
-        event.getRequestId(),
-        event.getRequestStreamId());
+        event.getId(),
+        event.getStreamId());
   }
 
   @Override
@@ -96,8 +96,8 @@ public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilde
         eventState,
         eventValue,
         command.getValueType(),
-        command.getRequestId(),
-        command.getRequestStreamId());
+        command.getId(),
+        command.getStreamId());
   }
 
   @Override

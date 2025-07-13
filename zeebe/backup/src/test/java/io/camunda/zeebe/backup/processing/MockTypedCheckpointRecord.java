@@ -99,12 +99,12 @@ record MockTypedCheckpointRecord(
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getStreamId() {
     return -1;
   }
 
   @Override
-  public long getRequestId() {
+  public long getId() {
     return -1L;
   }
 

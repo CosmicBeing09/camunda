@@ -22,15 +22,15 @@ public interface TypedRecord<T extends UnifiedRecordValue> extends Record<T> {
   @Override
   T getValue();
 
-  int getRequestStreamId();
+  int getStreamId();
 
-  long getRequestId();
+  long getId();
 
   int getLength();
 
-  default boolean hasRequestMetadata() {
-    return getRequestId() != RecordMetadataEncoder.requestIdNullValue()
-        && getRequestStreamId() != RecordMetadataEncoder.requestStreamIdNullValue();
+  default boolean hasUserTaskDetails() {
+    return getId() != RecordMetadataEncoder.requestIdNullValue()
+        && getStreamId() != RecordMetadataEncoder.requestStreamIdNullValue();
   }
 
   /**

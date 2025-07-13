@@ -316,8 +316,8 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
         .isTrue();
     assertThat(
-            authorizedTenantIds.isAuthorizedForTenantIds(
-                List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER)))
+        authorizedTenantIds.isAuthorizedForTenantIds(
+            List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER)))
         .isTrue();
     assertThat(authorizedTenantIds.isAuthorizedForTenantId("not-authorized")).isFalse();
   }
@@ -691,7 +691,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations())
         .thenReturn(Map.of(USER_TOKEN_CLAIMS, Map.of(claimName, claimValue)));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasUserTaskDetails()).thenReturn(true);
     return command;
   }
 
@@ -794,14 +794,14 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
   private TypedRecord<?> mockCommand(final String username) {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasUserTaskDetails()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithAnonymousUser() {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasUserTaskDetails()).thenReturn(true);
     return command;
   }
 }

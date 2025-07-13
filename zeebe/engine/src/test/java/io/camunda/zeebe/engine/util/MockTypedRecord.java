@@ -47,12 +47,12 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getStreamId() {
     return metadata.getRequestStreamId();
   }
 
   @Override
-  public long getRequestId() {
+  public long getId() {
     return metadata.getRequestId();
   }
 

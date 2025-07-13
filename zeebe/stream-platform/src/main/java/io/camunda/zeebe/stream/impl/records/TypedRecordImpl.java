@@ -22,6 +22,7 @@ import io.camunda.zeebe.util.StringUtil;
 import java.util.Map;
 
 public final class TypedRecordImpl implements TypedRecord {
+
   private final int partitionId;
   private LoggedEvent rawEvent;
   private RecordMetadata metadata;
@@ -125,13 +126,13 @@ public final class TypedRecordImpl implements TypedRecord {
 
   @Override
   @JsonIgnore
-  public int getRequestStreamId() {
+  public int getStreamId() {
     return metadata.getRequestStreamId();
   }
 
   @Override
   @JsonIgnore
-  public long getRequestId() {
+  public long getId() {
     return metadata.getRequestId();
   }
 

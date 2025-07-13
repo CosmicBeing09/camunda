@@ -82,23 +82,23 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
     userTaskRecord.setAssignee(command.getValue().getAssignee());
     userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasUserTaskDetails()) {
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
-      final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
+      final var userTaskDetailsRecord = userTaskState.findUserTaskDetails(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
 
-      recordRequestMetadata.ifPresent(
-          metadata ->
+      userTaskDetailsRecord.ifPresent(
+          userTaskDetails ->
               responseWriter.writeResponse(
                   userTaskKey,
                   UserTaskIntent.ASSIGNED,
                   userTaskRecord,
                   ValueType.USER_TASK,
-                  metadata.getRequestId(),
-                  metadata.getRequestStreamId()));
+                  userTaskDetails.getRequestId(),
+                  userTaskDetails.getRequestStreamId()));
     }
   }
 

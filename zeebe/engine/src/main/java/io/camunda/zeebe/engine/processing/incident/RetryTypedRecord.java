@@ -127,12 +127,12 @@ public final class RetryTypedRecord<T extends UnifiedRecordValue> implements Typ
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getStreamId() {
     return RecordMetadataEncoder.requestStreamIdNullValue();
   }
 
   @Override
-  public long getRequestId() {
+  public long getId() {
     return RecordMetadataEncoder.requestIdNullValue();
   }
 
