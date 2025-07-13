@@ -16,6 +16,7 @@
 package io.camunda.client.impl;
 
 public final class CamundaClientEnvironmentVariables {
+
   public static final String PLAINTEXT_CONNECTION_VAR = "CAMUNDA_INSECURE_CONNECTION";
   public static final String CA_CERTIFICATE_VAR = "CAMUNDA_CA_CERTIFICATE_PATH";
   public static final String KEEP_ALIVE_VAR = "CAMUNDA_KEEP_ALIVE";
@@ -31,7 +32,9 @@ public final class CamundaClientEnvironmentVariables {
   public static final String USE_DEFAULT_RETRY_POLICY_VAR =
       "CAMUNDA_CLIENT_USE_DEFAULT_RETRY_POLICY";
 
-  /** OAuth Environment Variables */
+  /**
+   * OAuth Environment Variables
+   */
   public static final String OAUTH_ENV_CLIENT_ID = "CAMUNDA_CLIENT_ID";
 
   public static final String OAUTH_ENV_CLIENT_SECRET = "CAMUNDA_CLIENT_SECRET";
@@ -52,13 +55,16 @@ public final class CamundaClientEnvironmentVariables {
   public static final String OAUTH_ENV_CONNECT_TIMEOUT = "CAMUNDA_AUTH_CONNECT_TIMEOUT";
   public static final String OAUTH_ENV_READ_TIMEOUT = "CAMUNDA_AUTH_READ_TIMEOUT";
 
-  public static final String ENTRA_ENV_CERTIFICATE_PATH = "ENTRA_CERTIFICATE_PATH";
+  public static final String OAUTH_ENV_SSL_CLIENT_CERT_PATH = "ENTRA_CERTIFICATE_PATH";
   public static final String ENTRA_ENV_CERTIFICATE_PASSWORD = "ENTRA_CERTIFICATE_PASSWORD";
 
-  /** Basic Auth Environment Variables */
+  /**
+   * Basic Auth Environment Variables
+   */
   public static final String BASIC_AUTH_ENV_USERNAME = "CAMUNDA_BASIC_AUTH_USERNAME";
 
   public static final String BASIC_AUTH_ENV_PASSWORD = "CAMUNDA_BASIC_AUTH_PASSWORD";
 
-  private CamundaClientEnvironmentVariables() {}
+  private CamundaClientEnvironmentVariables() {
+  }
 }
