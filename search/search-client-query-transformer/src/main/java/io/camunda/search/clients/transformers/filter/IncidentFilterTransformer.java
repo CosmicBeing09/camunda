@@ -55,7 +55,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var errorTypeQuery = getErrorTypeQuery(filter.errorTypes());
     final var errorMessageQuery = getErrorMessageQuery(filter.errorMessages());
     final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIds());
-    final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
+    final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(
+        filter.flowNodeInstanceKeyOperations());
     final var creationTimeQuery = getCreationTimeQuery(filter.creationTime());
     final var stateQuery = getStateQuery(filter.states());
     final var treePathQuery = getTreePathQuery(filter.treePath());
@@ -111,8 +112,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return stringTerms(BPMN_PROCESS_ID, bpmnProcessIds);
   }
 
-  private SearchQuery getFlowNodeInstanceKeyQuery(final List<Long> flowNodeInstanceKeys) {
-    return longTerms(FLOW_NODE_INSTANCE_KEY, flowNodeInstanceKeys);
+  private SearchQuery getFlowNodeInstanceKeyQuery(final List<Long> flowNodeInstanceKeyOperations) {
+    return longTerms(FLOW_NODE_INSTANCE_KEY, flowNodeInstanceKeyOperations);
   }
 
   private SearchQuery getFlowNodeIdQuery(final List<String> flowNodeIds) {

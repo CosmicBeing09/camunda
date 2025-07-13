@@ -60,7 +60,7 @@ public record IncidentSort(List<FieldSorting> orderings) implements SortOption {
       return this;
     }
 
-    public Builder flowNodeInstanceKey() {
+    public Builder flowNodeInstanceKeyOperations() {
       currentOrdering = new FieldSorting("flowNodeInstanceKey", null);
       return this;
     }
