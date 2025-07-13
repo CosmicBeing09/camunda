@@ -78,7 +78,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
   @Test
   void shouldQueryByProcessInstanceKey() {
     // given
-    final var filter = FilterBuilders.batchOperationItem(f -> f.processInstanceKeys(456L));
+    final var filter = FilterBuilders.batchOperationItem(f -> f.processInstanceKeyOperations(456L));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -122,7 +122,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
                 f.batchOperationIds("123")
                     .state("ACTIVE")
                     .itemKeys(123L)
-                    .processInstanceKeys(456L));
+                    .processInstanceKeyOperations(456L));
 
     // when
     final var searchRequest = transformQuery(filter);
