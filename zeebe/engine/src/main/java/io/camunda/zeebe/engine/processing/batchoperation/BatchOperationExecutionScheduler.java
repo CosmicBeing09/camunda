@@ -46,7 +46,9 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
   private final BatchOperationItemProvider entityKeyProvider;
   private final int partitionId;
 
-  /** Marks if this scheduler is currently executing or not. */
+  /**
+   * Marks if this scheduler is currently executing or not.
+   */
   private final AtomicBoolean executing = new AtomicBoolean(false);
 
   public BatchOperationExecutionScheduler(
@@ -97,7 +99,7 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
 
   private void executeBatchOperation(
       final PersistedBatchOperation batchOperation, final TaskResultBuilder taskResultBuilder) {
-    if (batchOperation.isPaused()) {
+    if (batchOperation.isSuspended()) {
       LOG.trace("Batch operation {} is paused.", batchOperation.getKey());
       return;
     }
@@ -180,15 +182,14 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
         () -> !batchOperationState.exists(batchOperation.getKey());
 
     return switch (batchOperation.getBatchOperationType()) {
-      case CANCEL_PROCESS_INSTANCE ->
-          entityKeyProvider.fetchProcessInstanceItems(
-              partitionId,
-              batchOperation.getEntityFilter(ProcessInstanceFilter.class).toBuilder()
-                  .states(ProcessInstanceState.ACTIVE.name())
-                  .parentProcessInstanceKeyOperations(Operation.exists(false))
-                  .build(),
-              batchOperation.getAuthentication(),
-              abortCondition);
+      case CANCEL_PROCESS_INSTANCE -> entityKeyProvider.fetchProcessInstanceItems(
+          partitionId,
+          batchOperation.getEntityFilter(ProcessInstanceFilter.class).toBuilder()
+              .states(ProcessInstanceState.ACTIVE.name())
+              .parentProcessInstanceKeyOperations(Operation.exists(false))
+              .build(),
+          batchOperation.getAuthentication(),
+          abortCondition);
       case MIGRATE_PROCESS_INSTANCE, MODIFY_PROCESS_INSTANCE ->
           entityKeyProvider.fetchProcessInstanceItems(
               partitionId,
@@ -197,17 +198,15 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
                   .build(),
               batchOperation.getAuthentication(),
               abortCondition);
-      case RESOLVE_INCIDENT ->
-          entityKeyProvider.fetchIncidentItems(
-              partitionId,
-              batchOperation.getEntityFilter(ProcessInstanceFilter.class).toBuilder()
-                  .states(ProcessInstanceState.ACTIVE.name())
-                  .build(),
-              batchOperation.getAuthentication(),
-              abortCondition);
-      default ->
-          throw new IllegalArgumentException(
-              "Unexpected batch operation type: " + batchOperation.getBatchOperationType());
+      case RESOLVE_INCIDENT -> entityKeyProvider.fetchIncidentItems(
+          partitionId,
+          batchOperation.getEntityFilter(ProcessInstanceFilter.class).toBuilder()
+              .states(ProcessInstanceState.ACTIVE.name())
+              .build(),
+          batchOperation.getAuthentication(),
+          abortCondition);
+      default -> throw new IllegalArgumentException(
+          "Unexpected batch operation type: " + batchOperation.getBatchOperationType());
     };
   }
 }
