@@ -27,11 +27,12 @@ public interface TypedEventWriter {
    * consider using {@link #appendFollowUpEvent(long, Intent, RecordValue, int)} instead.
    *
    * @param key the key of the event
-   * @param intent the intent of the event
+   * @param intentToWrite the intent of the event
    * @param value the record of the event
-   * @throws ExceededBatchRecordSizeException if the appended event doesn't fit into the RecordBatch
+   * @throws ExceededBatchRecordSizeException if the appended event doesn't fit into the
+   * RecordBatch
    */
-  void appendFollowUpEvent(long key, Intent intent, RecordValue value);
+  void appendFollowUpEvent(long key, Intent intentToWrite, RecordValue value);
 
   /**
    * Append a specific version of a follow up event to the result builder.
@@ -46,7 +47,8 @@ public interface TypedEventWriter {
    * @param intent the intent of the event
    * @param value the record of the event
    * @param recordVersion the version of the record of the event
-   * @throws ExceededBatchRecordSizeException if the appended event doesn't fit into the RecordBatch
+   * @throws ExceededBatchRecordSizeException if the appended event doesn't fit into the
+   * RecordBatch
    */
   void appendFollowUpEvent(long key, Intent intent, RecordValue value, int recordVersion);
 
