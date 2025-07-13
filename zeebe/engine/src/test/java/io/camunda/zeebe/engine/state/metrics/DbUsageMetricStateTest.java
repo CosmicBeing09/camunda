@@ -48,7 +48,7 @@ public class DbUsageMetricStateTest {
   }
 
   @Test
-  public void shouldGetTenantIdPIsMapByEventTime() {
+  public void shouldGetRollingBucket() {
     // given
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
