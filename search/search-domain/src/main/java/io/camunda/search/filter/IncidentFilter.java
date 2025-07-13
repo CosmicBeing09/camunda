@@ -147,10 +147,10 @@ public record IncidentFilter(
     }
 
     public Builder treePaths(final String value, final String... values) {
-      return treePaths(collectValues(value, values));
+      return treePath(collectValues(value, values));
     }
 
-    public Builder treePaths(final List<String> values) {
+    public Builder treePath(final List<String> values) {
       treePaths = addValuesToList(treePaths, values);
       return this;
     }
