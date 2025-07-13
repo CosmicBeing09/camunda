@@ -121,7 +121,8 @@ import java.util.stream.Collectors;
 
 public final class SearchQueryResponseMapper {
 
-  private SearchQueryResponseMapper() {}
+  private SearchQueryResponseMapper() {
+  }
 
   public static UsageMetricsResponse toUsageMetricsResponse(
       final UsageMetricsCount usageMetricsCount) {
@@ -143,8 +144,8 @@ public final class SearchQueryResponseMapper {
   }
 
   public static ProcessDefinitionElementStatisticsQueryResult
-      toProcessDefinitionElementStatisticsResult(
-          final List<ProcessFlowNodeStatisticsEntity> result) {
+  toProcessDefinitionElementStatisticsResult(
+      final List<ProcessFlowNodeStatisticsEntity> result) {
     return new ProcessDefinitionElementStatisticsQueryResult()
         .items(
             result.stream()
@@ -153,7 +154,7 @@ public final class SearchQueryResponseMapper {
   }
 
   public static ProcessInstanceElementStatisticsQueryResult
-      toProcessInstanceElementStatisticsResult(final List<ProcessFlowNodeStatisticsEntity> result) {
+  toProcessInstanceElementStatisticsResult(final List<ProcessFlowNodeStatisticsEntity> result) {
     return new ProcessInstanceElementStatisticsQueryResult()
         .items(
             result.stream()
@@ -703,7 +704,7 @@ public final class SearchQueryResponseMapper {
         .creationTime(formatDate(t.creationTime()))
         .state(IncidentResult.StateEnum.fromValue(t.state().name()))
         .jobKey(KeyUtil.keyToString(t.jobKey()))
-        .tenantId(t.tenantId());
+        .tenantId(t.tenantIdOperations());
   }
 
   public static UserTaskResult toUserTask(final UserTaskEntity t, final String name) {
@@ -959,5 +960,7 @@ public final class SearchQueryResponseMapper {
                 : processInstanceEntity.processDefinitionName());
   }
 
-  private record RuleIdentifier(String ruleId, int ruleIndex) {}
+  private record RuleIdentifier(String ruleId, int ruleIndex) {
+
+  }
 }

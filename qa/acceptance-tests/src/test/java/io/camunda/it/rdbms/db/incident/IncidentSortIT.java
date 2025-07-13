@@ -123,7 +123,7 @@ public class IncidentSortIT {
     testSorting(
         testApplication.getRdbmsService(),
         b -> b.tenantId().asc(),
-        Comparator.comparing(IncidentEntity::tenantId));
+        Comparator.comparing(IncidentEntity::tenantIdOperations));
   }
 
   @TestTemplate

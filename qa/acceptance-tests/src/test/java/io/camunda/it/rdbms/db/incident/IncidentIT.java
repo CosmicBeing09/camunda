@@ -157,7 +157,7 @@ public class IncidentIT {
                                     .flowNodeInstanceKeys(original.flowNodeInstanceKey())
                                     .flowNodeIds(original.flowNodeId())
                                     .jobKeys(original.jobKey())
-                                    .tenantIds(original.tenantId())
+                                    .tenantIdOperations(original.tenantId())
                                     .creationTime(
                                         new DateValueFilter(
                                             original.creationDate().minusSeconds(1),
@@ -198,11 +198,11 @@ public class IncidentIT {
                             p ->
                                 p.size(5)
                                     .searchAfter(
-                                        new Object[] {
-                                          instanceAfter.state(),
-                                          instanceAfter.creationTime(),
-                                          instanceAfter.flowNodeId(),
-                                          instanceAfter.processInstanceKey()
+                                        new Object[]{
+                                            instanceAfter.state(),
+                                            instanceAfter.creationTime(),
+                                            instanceAfter.flowNodeId(),
+                                            instanceAfter.processInstanceKey()
                                         }))));
 
     assertThat(nextPage.total()).isEqualTo(20);

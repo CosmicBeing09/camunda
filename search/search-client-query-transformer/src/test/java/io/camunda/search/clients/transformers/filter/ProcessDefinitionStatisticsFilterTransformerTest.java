@@ -164,7 +164,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     // given
     final var processInstanceFilter =
         FilterBuilders.processDefinitionStatisticsFilter(
-            PROCESS_DEFINITION_KEY, f -> f.tenantIds("tenant"));
+            PROCESS_DEFINITION_KEY, f -> f.tenantIdOperations("tenant"));
 
     // when
     final var searchRequest = transformQuery(processInstanceFilter);
