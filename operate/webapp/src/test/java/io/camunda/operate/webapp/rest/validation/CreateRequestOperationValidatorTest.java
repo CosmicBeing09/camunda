@@ -199,13 +199,13 @@ public class CreateRequestOperationValidatorTest {
 
   @Test
   public void testValidateAddVariable() {
-    final CreateOperationRequestDto operationRequest =
+    final CreateOperationRequestDto request =
         new CreateOperationRequestDto(OperationType.ADD_VARIABLE);
 
-    operationRequest.setVariableScopeId("abc");
-    operationRequest.setVariableName("var");
-    operationRequest.setVariableValue("val");
+    request.setVariableScopeId("abc");
+    request.setVariableName("var");
+    request.setVariableValue("val");
 
-    assertDoesNotThrow(() -> underTest.validate(operationRequest, "123"));
+    assertDoesNotThrow(() -> underTest.validate(request, "123"));
   }
 }
