@@ -71,16 +71,16 @@ public final class AuthorizationCheckBehavior {
    * contains the data required to do the check.
    *
    * @param request the authorization request to check authorization for. This contains the command,
-   *     the resource type, the permission type, a set of resource identifiers and the tenant id
+   * the resource type, the permission type, a set of resource identifiers and the tenant id
    * @return a {@link Either} containing a {@link RejectionType} if the user is not authorized or
-   *     {@link Void} if the user is authorized
+   * {@link Void} if the user is authorized
    */
   public Either<Rejection, Void> isAuthorized(final AuthorizationRequest request) {
     if (!authorizationsEnabled && !multiTenancyEnabled) {
       return Either.right(null);
     }
 
-    if (!request.getCommand().hasRequestMetadata()
+    if (!request.getCommand().hasRequest()
         && request.getCommand().getOperationReference() == operationReferenceNullValue()) {
       // The command is written by Zeebe internally. Internal Zeebe commands are always authorized
       return Either.right(null);
@@ -236,10 +236,10 @@ public final class AuthorizationCheckBehavior {
     final var optionalUsername = getUsername(request);
     if (optionalUsername.isPresent()) {
       getAuthorizedResourceIdentifiers(
-              EntityType.USER,
-              optionalUsername.get(),
-              request.getResourceType(),
-              request.getPermissionType())
+          EntityType.USER,
+          optionalUsername.get(),
+          request.getResourceType(),
+          request.getPermissionType())
           .forEach(authorizedResourceIds::add);
     }
     // If a username was present, don't use the client id
@@ -314,7 +314,7 @@ public final class AuthorizationCheckBehavior {
             .<String>mapMulti(
                 (groupId, stream) -> {
                   getDirectAuthorizedResourceIdentifiers(
-                          AuthorizationOwnerType.GROUP, groupId, resourceType, permissionType)
+                      AuthorizationOwnerType.GROUP, groupId, resourceType, permissionType)
                       .forEach(stream);
                   membershipState
                       .getMemberships(EntityType.GROUP, groupId, RelationType.ROLE)
@@ -343,7 +343,7 @@ public final class AuthorizationCheckBehavior {
       return true;
     }
 
-    if (!command.hasRequestMetadata()) {
+    if (!command.hasRequest()) {
       // The command is written by Zeebe internally. Internal Zeebe commands are always allowed to
       // access all tenants
       return true;
@@ -399,6 +399,7 @@ public final class AuthorizationCheckBehavior {
   }
 
   public static final class AuthorizationRequest {
+
     private final TypedRecord<?> command;
     private final AuthorizationResourceType resourceType;
     private final PermissionType permissionType;
@@ -515,5 +516,7 @@ public final class AuthorizationCheckBehavior {
     }
   }
 
-  private record UserTokenClaim(String claimName, String claimValue) {}
+  private record UserTokenClaim(String claimName, String claimValue) {
+
+  }
 }

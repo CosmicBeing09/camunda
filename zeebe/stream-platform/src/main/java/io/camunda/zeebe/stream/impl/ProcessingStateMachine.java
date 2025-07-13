@@ -188,7 +188,7 @@ public final class ProcessingStateMachine {
     processingMetrics = new ProcessingMetrics(context.getMeterRegistry());
     processingFilter =
         new MetadataEventFilter(
-                recordMetadata -> recordMetadata.getRecordType() == RecordType.COMMAND)
+            recordMetadata -> recordMetadata.getRecordType() == RecordType.COMMAND)
             .and(record -> !record.shouldSkipProcessing())
             .and(context.processingFilter());
     clock = context.getClock();
@@ -242,7 +242,7 @@ public final class ProcessingStateMachine {
    * written to the log.
    *
    * @return true if the ProcessingStateMachine has reached the end of the log and nothing is left
-   *     to being processed/applied, false otherwise
+   * to being processed/applied, false otherwise
    */
   public boolean hasReachedEnd() {
     return reachedEnd;
@@ -388,11 +388,11 @@ public final class ProcessingStateMachine {
    *
    * @param processingResult the processing result of the last processed command
    * @param lastProcessingResultSize the size of the processing result before processing the last
-   *     command
+   * command
    * @param currentBatchSize the current batch size (only commands counted), includes already
-   *     processed and pending commands
+   * processed and pending commands
    * @return the result of the current batch processing step, which contains the next to processed
-   *     commands and the records which should be written to the log
+   * commands and the records which should be written to the log
    */
   private BatchProcessingStepResult collectBatchProcessingStepResult(
       final ProcessingResult processingResult,
@@ -556,7 +556,7 @@ public final class ProcessingStateMachine {
   }
 
   private void errorHandlingInTransaction(final Throwable processingException) throws Exception {
-    startErrorLoop(typedCommand.hasRequestMetadata());
+    startErrorLoop(typedCommand.hasRequest());
     zeebeDbTransaction = transactionContext.getCurrentTransaction();
     zeebeDbTransaction.run(
         () -> {
@@ -763,10 +763,13 @@ public final class ProcessingStateMachine {
   }
 
   private record BatchProcessingStepResult(
-      List<TypedRecord<?>> toProcess, List<LogAppendEntry> toWrite) {}
+      List<TypedRecord<?>> toProcess, List<LogAppendEntry> toWrite) {
+
+  }
 
   @FunctionalInterface
   private interface NextProcessingStep {
+
     void run() throws Exception;
   }
 
