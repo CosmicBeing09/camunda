@@ -44,6 +44,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class UserTaskHandlerTest {
+
   private static final Set<UserTaskIntent> SUPPORTED_INTENTS =
       EnumSet.of(
           UserTaskIntent.CREATED,
@@ -290,7 +291,7 @@ public class UserTaskHandlerTest {
     assertThat(taskEntity.getPosition()).isEqualTo(taskRecord.getPosition());
     assertThat(taskEntity.getProcessInstanceId()).isEqualTo(String.valueOf(processInstanceKey));
     assertThat(taskEntity.getFlowNodeBpmnId()).isEqualTo(taskRecordValue.getElementId());
-    assertThat(taskEntity.getFlowNodeName()).isEqualTo("my-flow-node");
+    assertThat(taskEntity.getName()).isEqualTo("my-flow-node");
     assertThat(taskEntity.getBpmnProcessId()).isEqualTo(taskRecordValue.getBpmnProcessId());
     assertThat(taskEntity.getProcessDefinitionId())
         .isEqualTo(String.valueOf(taskRecordValue.getProcessDefinitionKey()));

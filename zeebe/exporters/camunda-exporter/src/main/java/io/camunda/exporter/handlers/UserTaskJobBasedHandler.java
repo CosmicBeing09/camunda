@@ -111,26 +111,24 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
     entity.setKey(record.getKey());
     switch (record.getIntent()) {
       case JobIntent.CREATED -> createTaskEntity(entity, record);
-      case JobIntent.COMPLETED, JobIntent.CANCELED ->
-          entity
-              .setState(
-                  record.getIntent().equals(JobIntent.COMPLETED)
-                      ? TaskState.COMPLETED
-                      : TaskState.CANCELED)
-              .setCompletionTime(
-                  ExporterUtil.toZonedOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())));
-      case JobIntent.MIGRATED ->
-          entity
-              .setFlowNodeBpmnId(record.getValue().getElementId())
-              .setFlowNodeName(
-                  ProcessCacheUtil.getFlowNodeName(
-                          processCache,
-                          record.getValue().getProcessDefinitionKey(),
-                          record.getValue().getElementId())
-                      .orElse(null))
-              .setBpmnProcessId(record.getValue().getBpmnProcessId())
-              .setProcessDefinitionId(String.valueOf(record.getValue().getProcessDefinitionKey()))
-              .setState(TaskState.CREATED);
+      case JobIntent.COMPLETED, JobIntent.CANCELED -> entity
+          .setState(
+              record.getIntent().equals(JobIntent.COMPLETED)
+                  ? TaskState.COMPLETED
+                  : TaskState.CANCELED)
+          .setCompletionTime(
+              ExporterUtil.toZonedOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())));
+      case JobIntent.MIGRATED -> entity
+          .setFlowNodeBpmnId(record.getValue().getElementId())
+          .setName(
+              ProcessCacheUtil.getFlowNodeName(
+                      processCache,
+                      record.getValue().getProcessDefinitionKey(),
+                      record.getValue().getElementId())
+                  .orElse(null))
+          .setBpmnProcessId(record.getValue().getBpmnProcessId())
+          .setProcessDefinitionId(String.valueOf(record.getValue().getProcessDefinitionKey()))
+          .setState(TaskState.CREATED);
       case JobIntent.RECURRED_AFTER_BACKOFF -> entity.setState(TaskState.CREATED);
       case JobIntent.FAILED -> {
         final var recordValue = record.getValue();
@@ -140,7 +138,8 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
           entity.setState(TaskState.FAILED);
         }
       }
-      default -> {}
+      default -> {
+      }
     }
 
     final TaskJoinRelationship joinRelation = new TaskJoinRelationship();
@@ -182,8 +181,8 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
     if (entity.getFlowNodeBpmnId() != null) {
       updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getFlowNodeBpmnId());
     }
-    if (entity.getFlowNodeName() != null) {
-      updateFields.put(TaskTemplate.FLOW_NODE_NAME, entity.getFlowNodeName());
+    if (entity.getName() != null) {
+      updateFields.put(TaskTemplate.FLOW_NODE_NAME, entity.getName());
     }
     if (entity.getProcessDefinitionId() != null) {
       updateFields.put(TaskTemplate.PROCESS_DEFINITION_ID, entity.getProcessDefinitionId());
@@ -218,7 +217,7 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
         .setFlowNodeInstanceId(String.valueOf(recordValue.getElementInstanceKey()))
         .setProcessInstanceId(String.valueOf(recordValue.getProcessInstanceKey()))
         .setFlowNodeBpmnId(recordValue.getElementId())
-        .setFlowNodeName(
+        .setName(
             ProcessCacheUtil.getFlowNodeName(
                     processCache,
                     record.getValue().getProcessDefinitionKey(),
