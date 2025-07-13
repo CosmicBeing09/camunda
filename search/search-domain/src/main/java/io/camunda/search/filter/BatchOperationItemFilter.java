@@ -39,10 +39,10 @@ public record BatchOperationItemFilter(
     }
 
     public Builder itemKeys(final Long value, final Long... values) {
-      return itemKeys(collectValues(value, values));
+      return itemKeyOperations(collectValues(value, values));
     }
 
-    public Builder itemKeys(final List<Long> values) {
+    public Builder itemKeyOperations(final List<Long> values) {
       itemKeys = addValuesToList(itemKeys, values);
       return this;
     }
