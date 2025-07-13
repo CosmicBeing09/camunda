@@ -25,7 +25,7 @@ public class BatchOperationFieldSortingTransformerTest extends AbstractSortTrans
   private static Stream<Arguments> provideSortParameters() {
     return Stream.of(
         new TestArguments("id", SortOrder.ASC, s -> s.batchOperationId().asc()),
-        new TestArguments("state", SortOrder.DESC, s -> s.state().desc()),
+        new TestArguments("state", SortOrder.DESC, s -> s.stateOperations().desc()),
         new TestArguments("type", SortOrder.ASC, s -> s.operationType().asc()),
         new TestArguments("startDate", SortOrder.DESC, s -> s.startDate().desc()),
         new TestArguments("endDate", SortOrder.ASC, s -> s.endDate().asc()));
@@ -67,7 +67,7 @@ public class BatchOperationFieldSortingTransformerTest extends AbstractSortTrans
 
     @Override
     public Object[] get() {
-      return new Object[] {field, sortOrder, fn};
+      return new Object[]{field, sortOrder, fn};
     }
   }
 }
