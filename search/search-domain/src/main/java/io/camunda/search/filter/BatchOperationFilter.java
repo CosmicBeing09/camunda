@@ -50,10 +50,10 @@ public record BatchOperationFilter(
     }
 
     public Builder operationTypes(final String value, final String... values) {
-      return operationTypes(collectValues(value, values));
+      return operationTypeOperations(collectValues(value, values));
     }
 
-    public Builder operationTypes(final List<String> values) {
+    public Builder operationTypeOperations(final List<String> values) {
       operationTypes = addValuesToList(operationTypes, values);
       return this;
     }
