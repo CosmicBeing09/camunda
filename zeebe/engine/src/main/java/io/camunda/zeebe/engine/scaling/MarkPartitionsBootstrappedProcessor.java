@@ -52,10 +52,10 @@ public class MarkPartitionsBootstrappedProcessor implements TypedRecordProcessor
       responseWriter.writeRejectionOnCommand(command, RejectionType.INVALID_ARGUMENT, reason);
     }
     final var scalingKey = keyGenerator.nextKey();
-    stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITIONS_BOOTSTRAPPED, scaleUp);
+    stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
     // TODO remove when relocation is needed
     responseWriter.writeEventOnCommand(
-        scalingKey, ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED, scaleUp, command);
+        scalingKey, ScaleIntent.MARK_PARTITION_BOOTSTRAPPED, scaleUp, command);
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALED_UP, scaleUp);
   }
 }
