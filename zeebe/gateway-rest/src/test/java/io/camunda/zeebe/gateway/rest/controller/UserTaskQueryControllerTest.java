@@ -250,7 +250,7 @@ public class UserTaskQueryControllerTest extends RestControllerTest {
                 CamundaSearchException.Reason.NOT_FOUND));
     when(processCache.getUserTaskName(any())).thenReturn("name");
     final var processCacheItem = mock(ProcessCacheItem.class);
-    when(processCacheItem.getElementName(any())).thenReturn("name");
+    when(processCacheItem.getName(any())).thenReturn("name");
     final Map<Long, ProcessCacheItem> processDefinitionMap = mock(HashMap.class);
     when(processDefinitionMap.getOrDefault(any(), any())).thenReturn(processCacheItem);
     when(processCache.getUserTaskNames(any())).thenReturn(processDefinitionMap);

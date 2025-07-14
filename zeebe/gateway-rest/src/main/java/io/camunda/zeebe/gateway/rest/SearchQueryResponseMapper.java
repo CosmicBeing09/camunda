@@ -613,7 +613,7 @@ public final class SearchQueryResponseMapper {
               final var elementName =
                   processCacheItems
                       .getOrDefault(instance.processDefinitionKey(), ProcessCacheItem.EMPTY)
-                      .getElementName(instance.flowNodeId());
+                      .getName(instance.flowNodeId());
               return toElementInstance(instance, elementName);
             })
         .toList();
@@ -644,7 +644,7 @@ public final class SearchQueryResponseMapper {
         .processDefinitionId(entity.processDefinitionId())
         .adHocSubProcessId(entity.adHocSubProcessId())
         .elementId(entity.elementId())
-        .elementName(entity.elementName())
+        .elementName(entity.name())
         .type(AdHocSubProcessActivityResult.TypeEnum.fromValue(entity.type().name()))
         .documentation(entity.documentation())
         .tenantId(entity.tenantId());
@@ -680,7 +680,7 @@ public final class SearchQueryResponseMapper {
               final var name =
                   processCacheItems
                       .getOrDefault(t.processDefinitionKey(), ProcessCacheItem.EMPTY)
-                      .getElementName(t.elementId());
+                      .getName(t.elementId());
               return toUserTask(t, name);
             })
         .toList();

@@ -79,7 +79,7 @@ public class ProcessCache {
   }
 
   public String getUserTaskName(final UserTaskEntity userTask) {
-    return getCacheItem(userTask.processDefinitionKey()).getElementName(userTask.elementId());
+    return getCacheItem(userTask.processDefinitionKey()).getName(userTask.elementId());
   }
 
   public Map<Long, ProcessCacheItem> getElementNames(final List<FlowNodeInstanceEntity> items) {
@@ -90,7 +90,7 @@ public class ProcessCache {
   }
 
   public String getElementName(final FlowNodeInstanceEntity element) {
-    return getCacheItem(element.processDefinitionKey()).getElementName(element.flowNodeId());
+    return getCacheItem(element.processDefinitionKey()).getName(element.flowNodeId());
   }
 
   public void invalidate() {
