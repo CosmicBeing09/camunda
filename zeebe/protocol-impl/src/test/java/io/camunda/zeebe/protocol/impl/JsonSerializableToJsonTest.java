@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.VersionInfo;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationRecord;
@@ -148,7 +148,7 @@ final class JsonSerializableToJsonTest {
         "Record",
         (Supplier<JsonSerializable>)
             () -> {
-              final RecordMetadata recordMetadata = new RecordMetadata();
+              final RecordRequest recordMetadata = new RecordRequest();
 
               final DeploymentIntent intent = DeploymentIntent.CREATE;
               final int protocolVersion = 1;
@@ -264,7 +264,7 @@ final class JsonSerializableToJsonTest {
         (Supplier<JsonSerializable>)
             () -> {
               final var record = new DeploymentRecord();
-              final var metadata = new RecordMetadata().brokerVersion(new VersionInfo(0, 0, 0));
+              final var metadata = new RecordRequest().brokerVersion(new VersionInfo(0, 0, 0));
               final int key = -1;
               final int partitionId = -1;
               final int position = -1;

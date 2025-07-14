@@ -28,7 +28,7 @@ import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
-public final class RecordMetadata implements BufferWriter, BufferReader {
+public final class RecordRequest implements BufferWriter, BufferReader {
   public static final int BLOCK_LENGTH =
       MessageHeaderEncoder.ENCODED_LENGTH + RecordMetadataEncoder.BLOCK_LENGTH;
   public static final int DEFAULT_RECORD_VERSION = 1;
@@ -57,7 +57,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   private int recordVersion = DEFAULT_RECORD_VERSION;
   private long operationReference;
 
-  public RecordMetadata() {
+  public RecordRequest() {
     reset();
   }
 
@@ -166,7 +166,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return requestId;
   }
 
-  public RecordMetadata requestId(final long requestId) {
+  public RecordRequest requestId(final long requestId) {
     this.requestId = requestId;
     return this;
   }
@@ -175,12 +175,12 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return requestStreamId;
   }
 
-  public RecordMetadata requestStreamId(final int requestStreamId) {
+  public RecordRequest requestStreamId(final int requestStreamId) {
     this.requestStreamId = requestStreamId;
     return this;
   }
 
-  public RecordMetadata protocolVersion(final int protocolVersion) {
+  public RecordRequest protocolVersion(final int protocolVersion) {
     this.protocolVersion = protocolVersion;
     return this;
   }
@@ -193,12 +193,12 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return valueType;
   }
 
-  public RecordMetadata valueType(final ValueType eventType) {
+  public RecordRequest valueType(final ValueType eventType) {
     valueType = eventType;
     return this;
   }
 
-  public RecordMetadata intent(final Intent intent) {
+  public RecordRequest intent(final Intent intent) {
     this.intent = intent;
     intentValue = intent.value();
     return this;
@@ -208,7 +208,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return intent;
   }
 
-  public RecordMetadata recordType(final RecordType recordType) {
+  public RecordRequest recordType(final RecordType recordType) {
     this.recordType = recordType;
     return this;
   }
@@ -217,7 +217,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return recordType;
   }
 
-  public RecordMetadata rejectionType(final RejectionType rejectionType) {
+  public RecordRequest rejectionType(final RejectionType rejectionType) {
     this.rejectionType = rejectionType;
     return this;
   }
@@ -226,13 +226,13 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return rejectionType;
   }
 
-  public RecordMetadata rejectionReason(final String rejectionReason) {
+  public RecordRequest rejectionReason(final String rejectionReason) {
     final byte[] bytes = rejectionReason.getBytes(StandardCharsets.UTF_8);
     this.rejectionReason.wrap(bytes);
     return this;
   }
 
-  public RecordMetadata rejectionReason(final DirectBuffer buffer) {
+  public RecordRequest rejectionReason(final DirectBuffer buffer) {
     rejectionReason.wrap(buffer);
     return this;
   }
@@ -241,12 +241,12 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return BufferUtil.bufferAsString(rejectionReason);
   }
 
-  public RecordMetadata authorization(final AuthInfo authorization) {
+  public RecordRequest authorization(final AuthInfo authorization) {
     this.authorization.copyFrom(authorization);
     return this;
   }
 
-  public RecordMetadata authorization(final DirectBuffer buffer) {
+  public RecordRequest authorization(final DirectBuffer buffer) {
     authorization.wrap(buffer);
     return this;
   }
@@ -255,7 +255,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return authorization;
   }
 
-  public RecordMetadata brokerVersion(final VersionInfo brokerVersion) {
+  public RecordRequest brokerVersion(final VersionInfo brokerVersion) {
     this.brokerVersion = brokerVersion;
     return this;
   }
@@ -264,7 +264,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return brokerVersion;
   }
 
-  public RecordMetadata recordVersion(final int recordVersion) {
+  public RecordRequest recordVersion(final int recordVersion) {
     this.recordVersion = recordVersion;
     return this;
   }
@@ -273,7 +273,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return recordVersion;
   }
 
-  public RecordMetadata operationReference(final long operationReference) {
+  public RecordRequest operationReference(final long operationReference) {
     this.operationReference = operationReference;
     return this;
   }
@@ -282,7 +282,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     return operationReference;
   }
 
-  public RecordMetadata reset() {
+  public RecordRequest reset() {
     recordType = RecordType.NULL_VAL;
     requestId = RecordMetadataEncoder.requestIdNullValue();
     requestStreamId = RecordMetadataEncoder.requestStreamIdNullValue();
@@ -300,6 +300,29 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   }
 
   @Override
+  public boolean equals(final Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    final RecordRequest that = (RecordRequest) o;
+    return requestId == that.requestId
+        && intentValue == that.intentValue
+        && requestStreamId == that.requestStreamId
+        && protocolVersion == that.protocolVersion
+        && valueType == that.valueType
+        && recordType == that.recordType
+        && rejectionType == that.rejectionType
+        && rejectionReason.equals(that.rejectionReason)
+        && authorization.equals(that.authorization)
+        && brokerVersion.equals(that.brokerVersion)
+        && recordVersion == that.recordVersion
+        && operationReference == that.operationReference;
+  }
+
+  @Override
   public int hashCode() {
     return Objects.hash(
         requestId,
@@ -314,29 +337,6 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
         brokerVersion,
         recordVersion,
         operationReference);
-  }
-
-  @Override
-  public boolean equals(final Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    final RecordMetadata that = (RecordMetadata) o;
-    return requestId == that.requestId
-        && intentValue == that.intentValue
-        && requestStreamId == that.requestStreamId
-        && protocolVersion == that.protocolVersion
-        && valueType == that.valueType
-        && recordType == that.recordType
-        && rejectionType == that.rejectionType
-        && rejectionReason.equals(that.rejectionReason)
-        && authorization.equals(that.authorization)
-        && brokerVersion.equals(that.brokerVersion)
-        && recordVersion == that.recordVersion
-        && operationReference == that.operationReference;
   }
 
   @Override

@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.util;
 
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedEventWriter;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import java.util.List;
@@ -29,7 +29,7 @@ public final class RecordingTypedEventWriter implements TypedEventWriter {
 
   @Override
   public void appendFollowUpEvent(final long key, final Intent intent, final RecordValue value) {
-    appendFollowUpEvent(key, intent, value, RecordMetadata.DEFAULT_RECORD_VERSION);
+    appendFollowUpEvent(key, intent, value, RecordRequest.DEFAULT_RECORD_VERSION);
   }
 
   @Override

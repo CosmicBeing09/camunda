@@ -23,7 +23,7 @@ import io.camunda.zeebe.logstreams.impl.log.LogEntryDescriptor;
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -126,7 +126,7 @@ final class InterPartitionCommandReceiverTest {
     verify(logStreamWriter).tryWrite(any(WriteContext.class), entryCaptor.capture());
     final var metadataWriter = entryCaptor.getValue().recordMetadata();
     final var metadataBuffer = new ExpandableArrayBuffer();
-    final var metadata = new RecordMetadata();
+    final var metadata = new RecordRequest();
     metadataWriter.write(metadataBuffer, 0);
     metadata.wrap(metadataBuffer, 0, metadataWriter.getLength());
 

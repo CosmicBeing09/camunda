@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.message.StoredMessage;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageBatchRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -65,7 +65,7 @@ public final class MessageBatchExpireProcessorTest {
     // when
     final var messageBatchExpireProcessor = createProcessor(false);
     messageBatchExpireProcessor.processRecord(
-        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordMetadata()));
+        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordRequest()));
 
     // then
     verify(stateWriter, times(3)).appendFollowUpEvent(anyLong(), any(), any());
@@ -100,7 +100,7 @@ public final class MessageBatchExpireProcessorTest {
     // when
     final var messageBatchExpireProcessor = createProcessor(true);
     messageBatchExpireProcessor.processRecord(
-        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordMetadata()));
+        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordRequest()));
 
     // then
     verify(stateWriter, times(1))
@@ -148,7 +148,7 @@ public final class MessageBatchExpireProcessorTest {
     // when
     final var messageBatchExpireProcessor = createProcessor(true);
     messageBatchExpireProcessor.processRecord(
-        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordMetadata()));
+        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordRequest()));
 
     // then
     verify(stateWriter, times(1))
@@ -185,7 +185,7 @@ public final class MessageBatchExpireProcessorTest {
 
     // when
     final UnwrittenRecord record =
-        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordMetadata());
+        new UnwrittenRecord(-1, 1, messageBatchRecord, new RecordRequest());
     final var messageBatchExpireProcessor = createProcessor(true);
     messageBatchExpireProcessor.processRecord(record);
 

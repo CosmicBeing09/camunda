@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.stream.api.records;
 
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferWriter;
 
@@ -29,7 +29,7 @@ public interface MutableRecordBatch extends ImmutableRecordBatch {
    */
   Either<RuntimeException, Void> appendRecord(
       final long key,
-      final RecordMetadata metadata,
+      final RecordRequest metadata,
       final int sourceIndex,
       final BufferWriter valueWriter);
 

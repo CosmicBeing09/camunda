@@ -38,7 +38,7 @@ public final class CopiedRecord<T extends UnifiedRecordValue> implements Record<
 
   public CopiedRecord(
       final T recordValue,
-      final RecordMetadata metadata,
+      final RecordRequest metadata,
       final long key,
       final int partitionId,
       final long position,

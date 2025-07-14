@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.streamprocessor.writers;
 
 import io.camunda.zeebe.engine.state.EventApplier;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -46,7 +46,7 @@ final class ResultBuilderBackedEventApplyingStateWriter extends AbstractResultBu
   public void appendFollowUpEvent(
       final long key, final Intent intent, final RecordValue value, final int recordVersion) {
     final var metadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.EVENT)
             .intent(intent)
             .recordVersion(recordVersion)

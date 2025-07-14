@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.streamprocessor.writers;
 
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -61,7 +61,7 @@ final class ResultBuilderBackedTypedCommandWriter extends AbstractResultBuilderB
       final long operationReference,
       final Map<String, Object> claims) {
     final var metadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.COMMAND)
             .intent(intent)
             .rejectionType(RejectionType.NULL_VAL)

@@ -18,7 +18,7 @@ import io.camunda.zeebe.logstreams.impl.flowcontrol.FlowControlLimits;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter.WriteFailure;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -277,11 +277,11 @@ class ZeebePartitionAdminAccess implements PartitionAdminAccess {
     errorRecord.setProcessInstanceKey(processInstanceKey);
 
     final var recordMetadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.EVENT)
             .valueType(ValueType.ERROR)
             .intent(ErrorIntent.CREATED)
-            .recordVersion(RecordMetadata.DEFAULT_RECORD_VERSION)
+            .recordVersion(RecordRequest.DEFAULT_RECORD_VERSION)
             .rejectionType(RejectionType.NULL_VAL)
             .rejectionReason("");
     final var entry =

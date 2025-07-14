@@ -69,23 +69,23 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
       final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequest()) {
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
-      final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
+      final var recordRequest = userTaskState.findRecordRequest(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
 
-      recordRequestMetadata.ifPresent(
-          metadata ->
+      recordRequest.ifPresent(
+          request ->
               responseWriter.writeResponse(
                   userTaskKey,
                   UserTaskIntent.ASSIGNED,
                   userTaskRecord,
                   ValueType.USER_TASK,
-                  metadata.getRequestId(),
-                  metadata.getRequestStreamId()));
+                  request.getRequestId(),
+                  request.getRequestStreamId()));
     }
   }
 }

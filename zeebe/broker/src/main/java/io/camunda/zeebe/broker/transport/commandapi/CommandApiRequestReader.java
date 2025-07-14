@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.ExecuteCommandRequestDecoder.TEMP
 import io.camunda.zeebe.broker.transport.AsyncApiRequestHandler.RequestReader;
 import io.camunda.zeebe.broker.transport.RequestReaderException;
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
@@ -99,7 +99,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
   }
 
   private UnifiedRecordValue value;
-  private final RecordMetadata metadata = new RecordMetadata();
+  private final RecordRequest metadata = new RecordRequest();
   private final AuthInfo authInfo = new AuthInfo();
   private final MessageHeaderDecoder messageHeaderDecoder = new MessageHeaderDecoder();
   private final ExecuteCommandRequestDecoder commandRequestDecoder =
@@ -157,7 +157,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
     return value;
   }
 
-  public RecordMetadata metadata() {
+  public RecordRequest metadata() {
     return metadata;
   }
 }

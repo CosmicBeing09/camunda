@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.util;
 
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
@@ -55,18 +55,18 @@ public final class RecordToWrite implements LogAppendEntry {
 
   private static final long DEFAULT_KEY = 1;
 
-  private final RecordMetadata recordMetadata;
+  private final RecordRequest recordMetadata;
   private UnifiedRecordValue unifiedRecordValue;
 
   private long key = DEFAULT_KEY;
   private int sourceIndex = -1;
 
-  private RecordToWrite(final RecordMetadata recordMetadata) {
+  private RecordToWrite(final RecordRequest recordMetadata) {
     this.recordMetadata = recordMetadata;
   }
 
   public static RecordToWrite command() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
     recordMetadata.recordType(RecordType.COMMAND);
     recordMetadata.authorization(
         AuthorizationUtil.getAuthInfo(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
@@ -74,12 +74,12 @@ public final class RecordToWrite implements LogAppendEntry {
   }
 
   public static RecordToWrite event() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
     return new RecordToWrite(recordMetadata.recordType(RecordType.EVENT));
   }
 
   public static RecordToWrite rejection() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
     return new RecordToWrite(recordMetadata.recordType(RecordType.COMMAND_REJECTION));
   }
 
@@ -232,7 +232,7 @@ public final class RecordToWrite implements LogAppendEntry {
   }
 
   @Override
-  public RecordMetadata recordMetadata() {
+  public RecordRequest recordMetadata() {
     return recordMetadata;
   }
 

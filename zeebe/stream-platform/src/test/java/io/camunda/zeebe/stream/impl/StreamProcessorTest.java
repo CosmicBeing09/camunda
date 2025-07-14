@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDbTransaction;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -384,7 +384,7 @@ public final class StreamProcessorTest {
               resultBuilder.appendRecordReturnEither(
                   1,
                   Records.processInstance(1),
-                  new RecordMetadata()
+                  new RecordRequest()
                       .recordType(RecordType.EVENT)
                       .intent(ACTIVATE_ELEMENT)
                       .rejectionType(RejectionType.NULL_VAL)
@@ -392,7 +392,7 @@ public final class StreamProcessorTest {
               resultBuilder.appendRecordReturnEither(
                   2,
                   Records.processInstance(1),
-                  new RecordMetadata()
+                  new RecordRequest()
                       .recordType(RecordType.COMMAND)
                       .intent(ACTIVATE_ELEMENT)
                       .rejectionType(RejectionType.NULL_VAL)
@@ -405,7 +405,7 @@ public final class StreamProcessorTest {
               resultBuilder.appendRecordReturnEither(
                   3,
                   Records.processInstance(1),
-                  new RecordMetadata()
+                  new RecordRequest()
                       .recordType(RecordType.EVENT)
                       .intent(ACTIVATE_ELEMENT)
                       .rejectionType(RejectionType.NULL_VAL)
@@ -441,7 +441,7 @@ public final class StreamProcessorTest {
         .isEqualTo(-1);
     final var firstRecordPosition = firstRecord.getPosition();
 
-    final var firstRecordMetadata = new RecordMetadata();
+    final var firstRecordMetadata = new RecordRequest();
     firstRecord.readMetadata(firstRecordMetadata);
     assertThat(firstRecordMetadata.getOperationReference())
         .as("Record metadata should contain the operation reference")
@@ -454,7 +454,7 @@ public final class StreamProcessorTest {
       assertThat(followup.getSourceEventPosition())
           .as("Followup records should point to source event")
           .isEqualTo(firstRecordPosition);
-      final var followupMetadata = new RecordMetadata();
+      final var followupMetadata = new RecordRequest();
       followup.readMetadata(followupMetadata);
       assertThat(followupMetadata.getOperationReference())
           .as("Followup records should contain the same operation reference of the initial command")
@@ -470,7 +470,7 @@ public final class StreamProcessorTest {
     resultBuilder.appendRecordReturnEither(
         1,
         Records.processInstance(1),
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.EVENT)
             .intent(ACTIVATE_ELEMENT)
             .rejectionType(RejectionType.NULL_VAL)
@@ -478,7 +478,7 @@ public final class StreamProcessorTest {
     resultBuilder.appendRecordReturnEither(
         2,
         Records.processInstance(1),
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.COMMAND)
             .intent(COMPLETE_ELEMENT)
             .rejectionType(RejectionType.NULL_VAL)
@@ -932,7 +932,7 @@ public final class StreamProcessorTest {
         .appendRecord(
             4,
             Records.processInstance(1),
-            new RecordMetadata()
+            new RecordRequest()
                 .recordType(RecordType.COMMAND)
                 .intent(ELEMENT_ACTIVATING)
                 .rejectionType(RejectionType.NULL_VAL)
@@ -989,7 +989,7 @@ public final class StreamProcessorTest {
                     .appendRecord(
                         4,
                         Records.processInstance(1),
-                        new RecordMetadata()
+                        new RecordRequest()
                             .recordType(RecordType.COMMAND)
                             .intent(ELEMENT_ACTIVATING)
                             .rejectionType(RejectionType.NULL_VAL)
@@ -1001,7 +1001,7 @@ public final class StreamProcessorTest {
                     .appendRecord(
                         5,
                         Records.processInstance(2),
-                        new RecordMetadata()
+                        new RecordRequest()
                             .recordType(RecordType.COMMAND)
                             .intent(ELEMENT_ACTIVATING)
                             .rejectionType(RejectionType.NULL_VAL)
@@ -1013,7 +1013,7 @@ public final class StreamProcessorTest {
                     .appendRecord(
                         6,
                         Records.processInstance(2),
-                        new RecordMetadata()
+                        new RecordRequest()
                             .recordType(RecordType.EVENT)
                             .intent(ELEMENT_ACTIVATING)
                             .rejectionType(RejectionType.NULL_VAL)
@@ -1092,7 +1092,7 @@ public final class StreamProcessorTest {
         .appendRecord(
             4,
             Records.processInstance(1),
-            new RecordMetadata()
+            new RecordRequest()
                 .recordType(RecordType.COMMAND)
                 .intent(ELEMENT_ACTIVATING)
                 .rejectionType(RejectionType.NULL_VAL)
@@ -1162,7 +1162,7 @@ public final class StreamProcessorTest {
     resultBuilder.appendRecordReturnEither(
         1,
         Records.processInstance(1),
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.COMMAND_REJECTION)
             .intent(ACTIVATE_ELEMENT)
             .rejectionType(RejectionType.NULL_VAL)
@@ -1188,7 +1188,7 @@ public final class StreamProcessorTest {
     await("should write rejection to log")
         .untilAsserted(() -> assertThat(logStreamReader.hasNext()).isTrue());
     final var record = logStreamReader.next();
-    final var recordMetadata = new RecordMetadata();
+    final var recordMetadata = new RecordRequest();
     record.readMetadata(recordMetadata);
     assertThat(recordMetadata.getRecordType()).isEqualTo(RecordType.COMMAND_REJECTION);
     assertThat(record.getSourceEventPosition()).isEqualTo(1);
@@ -1264,7 +1264,7 @@ public final class StreamProcessorTest {
     resultBuilder.appendRecordReturnEither(
         1,
         Records.processInstance(1),
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.EVENT)
             .intent(ELEMENT_ACTIVATING)
             .rejectionType(RejectionType.NULL_VAL)
@@ -1286,7 +1286,7 @@ public final class StreamProcessorTest {
     Assertions.assertThat(loggedEventArgumentCaptor.getAllValues())
         .extracting(
             loggedEvent -> {
-              final RecordMetadata recordMetadata = new RecordMetadata();
+              final RecordRequest recordMetadata = new RecordRequest();
               loggedEvent.readMetadata(recordMetadata);
               return recordMetadata.getRecordType();
             })

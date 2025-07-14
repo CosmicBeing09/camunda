@@ -29,7 +29,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
+import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequest;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
@@ -225,17 +225,17 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void storeUserTaskRecordRequestMetadata(final TypedRecord<UserTaskRecord> command) {
-    if (!command.hasRequestMetadata()) {
+    if (!command.hasRequest()) {
       return;
     }
 
-    final var metadata =
-        new UserTaskTransitionTriggerRequestMetadata()
+    final var request =
+        new UserTaskTransitionTriggerRequest()
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
-    userTaskState.storeRecordRequestMetadata(command.getValue().getUserTaskKey(), metadata);
+    userTaskState.storeRecordRequestMetadata(command.getValue().getUserTaskKey(), request);
   }
 
   private void handleCommandRejection(
@@ -260,12 +260,12 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var recordRequestMetadata =
-        userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
+        userTaskState.findRecordRequest(persistedRecord.getUserTaskKey());
 
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
     recordRequestMetadata.ifPresent(
-        metadata -> {
-          switch (metadata.getTriggerType()) {
+        request -> {
+          switch (request.getTriggerType()) {
             case USER_TASK ->
                 responseWriter.writeRejection(
                     command.getKey(),
@@ -277,8 +277,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
                         intent,
                         persistedRecord.getUserTaskKey(),
                         command.getValue().getDeniedReason()),
-                    metadata.getRequestId(),
-                    metadata.getRequestStreamId());
+                    request.getRequestId(),
+                    request.getRequestStreamId());
             case VARIABLE_DOCUMENT -> {
               final long userTaskInstanceKey = command.getValue().getElementInstanceKey();
               variableState
@@ -302,14 +302,14 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
                             ValueType.VARIABLE_DOCUMENT,
                             RejectionType.INVALID_STATE,
                             deniedReason,
-                            metadata.getRequestId(),
-                            metadata.getRequestStreamId());
+                            request.getRequestId(),
+                            request.getRequestStreamId());
                       });
             }
             default ->
                 throw new IllegalArgumentException(
                     "Unexpected user task transition trigger type: '%s'"
-                        .formatted(metadata.getTriggerType()));
+                        .formatted(request.getTriggerType()));
           }
         });
   }

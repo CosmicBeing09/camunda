@@ -10,14 +10,14 @@ package io.camunda.zeebe.stream.impl.records;
 import static io.camunda.zeebe.stream.impl.TypedEventRegistry.EVENT_REGISTRY;
 
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.util.ReflectUtil;
 import io.camunda.zeebe.util.buffer.BufferWriter;
 import org.agrona.concurrent.UnsafeBuffer;
 
 public record RecordBatchEntry(
-    RecordMetadata recordMetadata, long key, int sourceIndex, UnifiedRecordValue unifiedRecordValue)
+    RecordRequest recordMetadata, long key, int sourceIndex, UnifiedRecordValue unifiedRecordValue)
     implements LogAppendEntry {
 
   @Override
@@ -27,7 +27,7 @@ public record RecordBatchEntry(
 
   public static RecordBatchEntry createEntry(
       final long key,
-      final RecordMetadata metadata,
+      final RecordRequest metadata,
       final int sourceIndex,
       final BufferWriter valueWriter) {
 

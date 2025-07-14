@@ -17,7 +17,7 @@ import io.camunda.zeebe.logstreams.log.LogStreamBatchReader;
 import io.camunda.zeebe.logstreams.log.LogStreamBatchReader.Batch;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.scheduler.ActorControl;
@@ -52,7 +52,7 @@ public final class ReplayStateMachine implements LogRecordAwaiter {
   private static final MetadataFilter REPLAY_FILTER =
       recordMetadata -> recordMetadata.getRecordType() == RecordType.EVENT;
 
-  private final RecordMetadata metadata = new RecordMetadata();
+  private final RecordRequest metadata = new RecordRequest();
   private final KeyGeneratorControls keyGeneratorControls;
   private final MutableLastProcessedPositionState lastProcessedPositionState;
   private final ActorControl actor;

@@ -34,7 +34,7 @@ import io.camunda.zeebe.logstreams.util.TestLogStream;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -398,7 +398,7 @@ public final class TestStreams {
 
   public static class FluentLogWriter {
 
-    protected final RecordMetadata metadata = new RecordMetadata();
+    protected final RecordRequest metadata = new RecordRequest();
     protected final LogStreamWriter writer;
     protected UnifiedRecordValue value;
     protected long key = -1;

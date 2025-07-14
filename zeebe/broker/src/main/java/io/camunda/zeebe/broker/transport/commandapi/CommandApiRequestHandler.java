@@ -13,7 +13,7 @@ import io.camunda.zeebe.broker.transport.ErrorResponseWriter;
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.ErrorCode;
 import io.camunda.zeebe.protocol.record.ExecuteCommandRequestDecoder;
@@ -131,7 +131,7 @@ final class CommandApiRequestHandler
 
   private Either<ErrorResponseWriter, Boolean> writeCommand(
       final long key,
-      final RecordMetadata metadata,
+      final RecordRequest metadata,
       final UnifiedRecordValue value,
       final LogStreamWriter logStreamWriter,
       final ErrorResponseWriter errorWriter,
