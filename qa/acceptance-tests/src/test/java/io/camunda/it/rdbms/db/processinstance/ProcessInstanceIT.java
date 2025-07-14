@@ -126,7 +126,7 @@ public class ProcessInstanceIT {
         processInstanceReader.search(
             ProcessInstanceQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds("test-process-unique"))
+                    b.filter(f -> f.processDefinitionIdOperations("test-process-unique"))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(10))));
 
@@ -195,7 +195,7 @@ public class ProcessInstanceIT {
         processInstanceReader.search(
             ProcessInstanceQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(processDefinitionId))
+                    b.filter(f -> f.processDefinitionIdOperations(processDefinitionId))
                         .sort(s -> s.startDate().asc().processDefinitionName().asc())
                         .page(p -> p.from(0).size(5))));
 
@@ -250,7 +250,7 @@ public class ProcessInstanceIT {
                     b.filter(
                             f ->
                                 f.processInstanceKeys(processInstanceKey)
-                                    .processDefinitionIds("test-process")
+                                    .processDefinitionIdOperations("test-process")
                                     .processDefinitionKeys(1337L)
                                     .states(ProcessInstanceState.ACTIVE.name())
                                     .parentProcessInstanceKeys(-1L)
@@ -291,7 +291,7 @@ public class ProcessInstanceIT {
         processInstanceReader.search(
             ProcessInstanceQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(processDefinition.processDefinitionId()))
+                    b.filter(f -> f.processDefinitionIdOperations(processDefinition.processDefinitionId()))
                         .sort(sort)
                         .page(p -> p.from(0).size(20))));
 
@@ -300,7 +300,7 @@ public class ProcessInstanceIT {
         processInstanceReader.search(
             ProcessInstanceQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(processDefinition.processDefinitionId()))
+                    b.filter(f -> f.processDefinitionIdOperations(processDefinition.processDefinitionId()))
                         .sort(sort)
                         .page(
                             p ->

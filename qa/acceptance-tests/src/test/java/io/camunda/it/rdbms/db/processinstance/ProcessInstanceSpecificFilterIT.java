@@ -92,7 +92,7 @@ public class ProcessInstanceSpecificFilterIT {
   static List<ProcessInstanceFilter> shouldFindProcessInstanceWithSpecificFilterParameters() {
     return List.of(
         new ProcessInstanceFilter.Builder().processInstanceKeys(42L).build(),
-        new ProcessInstanceFilter.Builder().processDefinitionIds("test-process-987654321").build(),
+        new ProcessInstanceFilter.Builder().processDefinitionIdOperations("test-process-987654321").build(),
         new ProcessInstanceFilter.Builder().processDefinitionKeys(987654321L).build(),
         new ProcessInstanceFilter.Builder().states(ProcessInstanceState.ACTIVE.name()).build(),
         new ProcessInstanceFilter.Builder().parentProcessInstanceKeys(-1L).build(),

@@ -68,7 +68,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
   public void shouldQueryByProcessDefinitionId() {
     // given
     final var processInstanceFilter =
-        FilterBuilders.processInstance(f -> f.processDefinitionIds("bpmn"));
+        FilterBuilders.processInstance(f -> f.processDefinitionIdOperations("bpmn"));
 
     // when
     final var searchRequest = transformQuery(processInstanceFilter);
