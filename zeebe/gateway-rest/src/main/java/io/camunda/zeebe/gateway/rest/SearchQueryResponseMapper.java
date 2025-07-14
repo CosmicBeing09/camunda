@@ -703,7 +703,7 @@ public final class SearchQueryResponseMapper {
         .creationTime(formatDate(t.creationTime()))
         .state(IncidentResult.StateEnum.fromValue(t.state().name()))
         .jobKey(KeyUtil.keyToString(t.jobKey()))
-        .tenantId(t.tenantId());
+        .tenantId(t.tenantIdOperations());
   }
 
   public static UserTaskResult toUserTask(final UserTaskEntity t, final String name) {
