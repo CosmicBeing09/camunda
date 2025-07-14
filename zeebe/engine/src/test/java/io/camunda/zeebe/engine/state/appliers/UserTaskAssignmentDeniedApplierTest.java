@@ -74,7 +74,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey))
         .describedAs("Expect that intermediate state is not present anymore")
         .isNull();
-    Assertions.assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    Assertions.assertThat(userTaskState.findRecordRequest(userTaskKey))
         .describedAs("Expect that record request metadata is not present anymore")
         .isEmpty();
     Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())

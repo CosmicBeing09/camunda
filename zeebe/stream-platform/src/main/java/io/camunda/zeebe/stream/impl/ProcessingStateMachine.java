@@ -556,7 +556,7 @@ public final class ProcessingStateMachine {
   }
 
   private void errorHandlingInTransaction(final Throwable processingException) throws Exception {
-    startErrorLoop(typedCommand.hasRequestMetadata());
+    startErrorLoop(typedCommand.hasRequest());
     zeebeDbTransaction = transactionContext.getCurrentTransaction();
     zeebeDbTransaction.run(
         () -> {
