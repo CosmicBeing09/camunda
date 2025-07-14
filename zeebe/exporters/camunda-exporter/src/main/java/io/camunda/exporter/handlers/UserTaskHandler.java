@@ -174,7 +174,7 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
       updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getFlowNodeBpmnId());
     }
     if (entity.getFlowNodeName() != null) {
-      updateFields.put(TaskTemplate.FLOW_NODE_NAME, entity.getFlowNodeName());
+      updateFields.put(TaskTemplate.NAME, entity.getFlowNodeName());
     }
     if (entity.getProcessDefinitionId() != null) {
       updateFields.put(TaskTemplate.PROCESS_DEFINITION_ID, entity.getProcessDefinitionId());
