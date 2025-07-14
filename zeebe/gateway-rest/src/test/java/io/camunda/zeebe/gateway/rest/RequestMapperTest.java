@@ -210,15 +210,15 @@ class RequestMapperTest {
   @Test
   void shouldMapToProcessInstanceMigrationBatchOperationRequest() {
     // given
-    final var migrationInstruction = new ProcessInstanceMigrationInstruction();
-    migrationInstruction.setTargetProcessDefinitionKey("123");
+    final var migrationPlan = new ProcessInstanceMigrationInstruction();
+    migrationPlan.setTargetProcessDefinitionKey("123");
     final var mappingInstruction = new MigrateProcessInstanceMappingInstruction();
     mappingInstruction.setSourceElementId("source1");
     mappingInstruction.setTargetElementId("target1");
-    migrationInstruction.setMappingInstructions(List.of(mappingInstruction));
+    migrationPlan.setMappingInstructions(List.of(mappingInstruction));
 
     final var batchOperationInstruction = new ProcessInstanceMigrationBatchOperationInstruction();
-    batchOperationInstruction.setMigrationPlan(migrationInstruction);
+    batchOperationInstruction.setMigrationPlan(migrationPlan);
     final var filter = new ProcessInstanceFilter();
     batchOperationInstruction.setFilter(filter);
 
