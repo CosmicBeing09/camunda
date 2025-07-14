@@ -54,7 +54,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var processInstanceKeyQuery = getProcessInstanceKeyQuery(filter.processInstanceKeys());
     final var errorTypeQuery = getErrorTypeQuery(filter.errorTypes());
     final var errorMessageQuery = getErrorMessageQuery(filter.errorMessages());
-    final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIds());
+    final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIdOperations());
     final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
     final var creationTimeQuery = getCreationTimeQuery(filter.creationTime());
     final var stateQuery = getStateQuery(filter.states());
