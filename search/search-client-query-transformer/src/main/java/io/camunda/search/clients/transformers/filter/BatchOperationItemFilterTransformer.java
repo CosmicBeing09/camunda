@@ -30,7 +30,7 @@ public final class BatchOperationItemFilterTransformer
     Optional.ofNullable(stringTerms(BATCH_OPERATION_ID, filter.batchOperationIds()))
         .ifPresent(queries::add);
     Optional.ofNullable(stringTerms(STATE, filter.state())).ifPresent(queries::add);
-    Optional.ofNullable(longTerms(ITEM_KEY, filter.itemKeys())).ifPresent(queries::add);
+    Optional.ofNullable(longTerms(ITEM_KEY, filter.itemKeyOperations())).ifPresent(queries::add);
     Optional.ofNullable(longTerms(PROCESS_INSTANCE_KEY, filter.processInstanceKeys()))
         .ifPresent(queries::add);
 
