@@ -704,7 +704,7 @@ public final class SearchQueryRequestMapper {
       validationErrors.add(ERROR_SORT_FIELD_MUST_NOT_BE_NULL);
     } else {
       switch (field) {
-        case STATE -> builder.state();
+        case STATE -> builder.states();
         case OPERATION_TYPE -> builder.operationType();
         case START_DATE -> builder.startDate();
         case END_DATE -> builder.endDate();
