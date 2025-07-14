@@ -147,7 +147,7 @@ public class IncidentIT {
                     b.filter(
                             f ->
                                 f.incidentKeys(original.incidentKey())
-                                    .processInstanceKeys(original.processInstanceKey())
+                                    .processInstanceKeyOperations(original.processInstanceKey())
                                     .processDefinitionIds(original.processDefinitionId())
                                     .processDefinitionKeys(original.processDefinitionKey())
                                     .states(original.state())
