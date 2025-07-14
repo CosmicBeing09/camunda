@@ -705,7 +705,7 @@ public final class SearchQueryRequestMapper {
     } else {
       switch (field) {
         case STATE -> builder.state();
-        case OPERATION_TYPE -> builder.operationType();
+        case OPERATION_TYPE -> builder.operationTypeOperations();
         case START_DATE -> builder.startDate();
         case END_DATE -> builder.endDate();
         default -> validationErrors.add(ERROR_UNKNOWN_SORT_BY.formatted(field));

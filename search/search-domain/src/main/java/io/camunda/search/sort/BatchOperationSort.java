@@ -36,7 +36,7 @@ public record BatchOperationSort(List<FieldSorting> orderings) implements SortOp
       return this;
     }
 
-    public Builder operationType() {
+    public Builder operationTypeOperations() {
       currentOrdering = new FieldSorting("operationType", null);
       return this;
     }
