@@ -16,8 +16,8 @@ public record BatchOperationEntity(
     // Operate BatchOperation ID is a UUID
     // Engine BatchOperation ID is a Long
     String batchOperationId,
-    BatchOperationState state,
-    String operationType,
+    BatchOperationState stateOperations,
+    String operationTypeOperations,
     OffsetDateTime startDate,
     OffsetDateTime endDate,
     Integer operationsTotalCount,

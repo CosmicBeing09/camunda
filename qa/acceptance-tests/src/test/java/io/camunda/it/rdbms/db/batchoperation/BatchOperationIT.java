@@ -96,7 +96,7 @@ public class BatchOperationIT {
     final BatchOperationEntity batchOperationEntity = updatedBatchOperation.items().getFirst();
     assertThat(batchOperationEntity.endDate()).isNull();
     assertThat(batchOperationEntity.operationsTotalCount()).isEqualTo(3);
-    assertThat(batchOperationEntity.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperationEntity.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and items are there
     final var updatedItems =
@@ -144,7 +144,7 @@ public class BatchOperationIT {
     assertThat(batchOperationEntity.endDate()).isNull();
     assertThat(batchOperationEntity.operationsTotalCount()).isEqualTo(2);
     assertThat(batchOperationEntity.operationsCompletedCount()).isEqualTo(1);
-    assertThat(batchOperationEntity.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperationEntity.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and items have correct state
     final var updatedItems =
@@ -206,7 +206,7 @@ public class BatchOperationIT {
     assertThat(batchOperationEntity.endDate()).isNull();
     assertThat(batchOperationEntity.operationsTotalCount()).isEqualTo(2);
     assertThat(batchOperationEntity.operationsFailedCount()).isEqualTo(1);
-    assertThat(batchOperationEntity.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperationEntity.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and items have correct state
     final var updatedItems =
@@ -265,7 +265,7 @@ public class BatchOperationIT {
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate())
         .isCloseTo(endDate, new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().stateOperations())
         .isEqualTo(BatchOperationState.CANCELED);
   }
 
@@ -289,7 +289,7 @@ public class BatchOperationIT {
 
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate()).isNull();
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().stateOperations())
         .isEqualTo(BatchOperationState.SUSPENDED);
   }
 
@@ -316,7 +316,7 @@ public class BatchOperationIT {
 
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate()).isNull();
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().stateOperations())
         .isEqualTo(BatchOperationState.ACTIVE);
   }
 
@@ -342,7 +342,7 @@ public class BatchOperationIT {
     assertThat(updatedBatchOperation).isNotNull();
     assertThat(updatedBatchOperation.items().getFirst().endDate())
         .isCloseTo(endDate, new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
-    assertThat(updatedBatchOperation.items().getFirst().state())
+    assertThat(updatedBatchOperation.items().getFirst().stateOperations())
         .isEqualTo(BatchOperationState.COMPLETED);
   }
 
@@ -384,7 +384,7 @@ public class BatchOperationIT {
             .search(
                 new BatchOperationQuery(
                     new BatchOperationFilter.Builder()
-                        .operationTypes(batchOperation.operationType())
+                        .operationTypeOperations(batchOperation.operationType())
                         .build(),
                     BatchOperationSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -394,7 +394,7 @@ public class BatchOperationIT {
     assertThat(searchResult.items().size()).isGreaterThanOrEqualTo(1);
     final var operationTypes =
         searchResult.items().stream()
-            .map(BatchOperationEntity::operationType)
+            .map(BatchOperationEntity::operationTypeOperations)
             .collect(Collectors.toSet());
     assertThat(operationTypes).containsOnly(batchOperation.operationType());
   }
@@ -415,7 +415,7 @@ public class BatchOperationIT {
             .search(
                 new BatchOperationQuery(
                     new BatchOperationFilter.Builder()
-                        .state(BatchOperationState.ACTIVE.name())
+                        .stateOperations(BatchOperationState.ACTIVE.name())
                         .build(),
                     BatchOperationSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -423,7 +423,7 @@ public class BatchOperationIT {
     assertThat(searchResult).isNotNull();
     assertThat(searchResult.items()).isNotEmpty();
     assertThat(searchResult.items())
-        .allSatisfy(i -> assertThat(i.state()).isEqualTo(BatchOperationState.ACTIVE));
+        .allSatisfy(i -> assertThat(i.stateOperations()).isEqualTo(BatchOperationState.ACTIVE));
     assertThat(searchResult.items()).anySatisfy(i -> assertBatchOperationEntity(i, batchOperation));
   }
 
@@ -440,7 +440,7 @@ public class BatchOperationIT {
             .getBatchOperationReader()
             .search(
                 new BatchOperationQuery(
-                    new BatchOperationFilter.Builder().operationTypes(operationType).build(),
+                    new BatchOperationFilter.Builder().operationTypeOperations(operationType).build(),
                     BatchOperationSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(5))));
 

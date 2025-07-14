@@ -687,10 +687,10 @@ public final class SearchQueryRequestMapper {
       ofNullable(filter.getBatchOperationId())
           .map(mapToOperations(String.class))
           .ifPresent(builder::batchOperationIdOperations);
-      ofNullable(filter.getState()).map(StateEnum::toString).ifPresent(builder::state);
+      ofNullable(filter.getState()).map(StateEnum::toString).ifPresent(builder::stateOperations);
       ofNullable(filter.getOperationType())
           .map(BatchOperationTypeEnum::toString)
-          .ifPresent(builder::operationTypes);
+          .ifPresent(builder::operationTypeOperations);
     }
 
     return builder.build();
@@ -704,7 +704,7 @@ public final class SearchQueryRequestMapper {
       validationErrors.add(ERROR_SORT_FIELD_MUST_NOT_BE_NULL);
     } else {
       switch (field) {
-        case STATE -> builder.state();
+        case STATE -> builder.stateOperations();
         case OPERATION_TYPE -> builder.operationType();
         case START_DATE -> builder.startDate();
         case END_DATE -> builder.endDate();

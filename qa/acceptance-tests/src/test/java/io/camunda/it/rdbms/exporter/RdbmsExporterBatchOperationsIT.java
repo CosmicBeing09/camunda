@@ -89,7 +89,7 @@ class RdbmsExporterBatchOperationsIT {
         rdbmsService.getBatchOperationReader().findOne(String.valueOf(batchOperationKey)).get();
     assertThat(batchOperation).isNotNull();
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and when we complete it
     exporter.export(batchOperationExecutionCompletedRecord);
@@ -97,7 +97,7 @@ class RdbmsExporterBatchOperationsIT {
     // then it should be completed
     batchOperation =
         rdbmsService.getBatchOperationReader().findOne(String.valueOf(batchOperationKey)).get();
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.COMPLETED);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.COMPLETED);
   }
 
   @Test
@@ -118,7 +118,7 @@ class RdbmsExporterBatchOperationsIT {
         rdbmsService.getBatchOperationReader().findOne(String.valueOf(batchOperationKey)).get();
     assertThat(batchOperation).isNotNull();
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
 
     // and when we cancel it
     exporter.export(batchOperationCanceledRecord);
@@ -126,7 +126,7 @@ class RdbmsExporterBatchOperationsIT {
     // then it should be canceled
     batchOperation =
         rdbmsService.getBatchOperationReader().findOne(String.valueOf(batchOperationKey)).get();
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.CANCELED);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.CANCELED);
 
     // and the items should be canceled
     final var batchOperationItems =
@@ -161,7 +161,7 @@ class RdbmsExporterBatchOperationsIT {
     // then it should be canceled
     final var batchOperation =
         rdbmsService.getBatchOperationReader().findOne(String.valueOf(batchOperationKey)).get();
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.SUSPENDED);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.SUSPENDED);
   }
 
   @Test
@@ -185,7 +185,7 @@ class RdbmsExporterBatchOperationsIT {
     // then it should be canceled
     final var batchOperation =
         rdbmsService.getBatchOperationReader().findOne(String.valueOf(batchOperationKey)).get();
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -210,7 +210,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(1);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(0);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -235,7 +235,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(0);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(1);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -260,7 +260,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(1);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(0);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -285,7 +285,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(0);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(1);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -310,7 +310,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(1);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(0);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -335,7 +335,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(0);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(1);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -360,7 +360,7 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(1);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(0);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 
   @Test
@@ -386,6 +386,6 @@ class RdbmsExporterBatchOperationsIT {
     assertThat(batchOperation.operationsTotalCount()).isEqualTo(3);
     assertThat(batchOperation.operationsCompletedCount()).isEqualTo(0);
     assertThat(batchOperation.operationsFailedCount()).isEqualTo(1);
-    assertThat(batchOperation.state()).isEqualTo(BatchOperationState.ACTIVE);
+    assertThat(batchOperation.stateOperations()).isEqualTo(BatchOperationState.ACTIVE);
   }
 }
