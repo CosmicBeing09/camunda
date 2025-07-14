@@ -234,7 +234,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
-            .setRequestStreamId(command.getRequestStreamId());
+            .setRequestStreamId(command.getScopeKey());
     userTaskState.storeRecordRequestMetadata(command.getValue().getUserTaskKey(), metadata);
   }
 

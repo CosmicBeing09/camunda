@@ -102,7 +102,7 @@ public final class MessageCorrelationCorrelateProcessor
     messageCorrelationRecord
         .setMessageKey(messageKey)
         .setRequestId(command.getRequestId())
-        .setRequestStreamId(command.getRequestStreamId());
+        .setRequestStreamId(command.getScopeKey());
 
     final var messageRecord =
         new MessageRecord()

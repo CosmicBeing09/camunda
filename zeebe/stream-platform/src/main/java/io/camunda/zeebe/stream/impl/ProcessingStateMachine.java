@@ -545,7 +545,7 @@ public final class ProcessingStateMachine {
         RejectionType.PROCESSING_ERROR,
         rejectionReason,
         typedCommand.getRequestId(),
-        typedCommand.getRequestStreamId());
+        typedCommand.getScopeKey());
     currentProcessingResult = processingResultBuilder.build();
 
     pendingWrites = currentProcessingResult.getRecordBatch().entries();

@@ -22,7 +22,7 @@ public interface TypedRecord<T extends UnifiedRecordValue> extends Record<T> {
   @Override
   T getValue();
 
-  int getRequestStreamId();
+  int getScopeKey();
 
   long getRequestId();
 
@@ -30,7 +30,7 @@ public interface TypedRecord<T extends UnifiedRecordValue> extends Record<T> {
 
   default boolean hasRequestMetadata() {
     return getRequestId() != RecordMetadataEncoder.requestIdNullValue()
-        && getRequestStreamId() != RecordMetadataEncoder.requestStreamIdNullValue();
+        && getScopeKey() != RecordMetadataEncoder.requestStreamIdNullValue();
   }
 
   /**
