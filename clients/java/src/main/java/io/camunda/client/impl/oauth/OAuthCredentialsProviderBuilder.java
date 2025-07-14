@@ -17,7 +17,7 @@ package io.camunda.client.impl.oauth;
 
 import static io.camunda.client.impl.BuilderUtils.applyEnvironmentValueIfNotNull;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.ENTRA_ENV_CERTIFICATE_PASSWORD;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.ENTRA_ENV_CERTIFICATE_PATH;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_CERT_PATH;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_AUTHORIZATION_SERVER;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CACHE_PATH;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
@@ -327,7 +327,7 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyMSEntraConfiguration() {
-    applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
+    applyEnvironmentValueIfNotNull(this::entraCertificatePath, OAUTH_ENV_SSL_CLIENT_CERT_PATH);
     applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
