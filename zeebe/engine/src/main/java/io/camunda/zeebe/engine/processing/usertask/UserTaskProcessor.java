@@ -260,7 +260,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var recordRequestMetadata =
-        userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
+        userTaskState.findRecordMetadata(persistedRecord.getUserTaskKey());
 
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
     recordRequestMetadata.ifPresent(
