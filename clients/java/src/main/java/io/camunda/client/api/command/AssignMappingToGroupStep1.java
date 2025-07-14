@@ -17,10 +17,10 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.AddMappingToGroupResponse;
 
-public interface AddMappingToGroupStep1 {
+public interface AssignMappingToGroupStep1 {
 
   /**
-   * Sets the mapping ID for adding.
+   * Sets the mapping ID for assigning.
    *
    * @param mappingId the ID of the mapping to add
    * @return the builder for this command.
