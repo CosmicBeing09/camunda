@@ -1124,7 +1124,7 @@ public final class SearchQueryRequestMapper {
           .map(KeyUtil::keyToLong)
           .ifPresent(builder::processInstanceKeys);
       ofNullable(filter.getErrorType())
-          .ifPresent(t -> builder.errorTypes(IncidentEntity.ErrorType.valueOf(t.getValue())));
+          .ifPresent(t -> builder.errorTypeOperations(IncidentEntity.ErrorType.valueOf(t.getValue())));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessages);
       ofNullable(filter.getElementId()).ifPresent(builder::flowNodeIds);
       ofNullable(filter.getElementInstanceKey())
