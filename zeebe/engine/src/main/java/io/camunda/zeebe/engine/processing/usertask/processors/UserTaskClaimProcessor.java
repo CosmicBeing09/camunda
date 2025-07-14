@@ -87,10 +87,10 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
-      final var recordRequestMetadata = userTaskState.findRecordMetadata(userTaskKey);
+      final var recordMetadata = userTaskState.findRecordMetadata(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
 
-      recordRequestMetadata.ifPresent(
+      recordMetadata.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,
