@@ -13,7 +13,7 @@ import io.camunda.zeebe.logstreams.log.LogStreamReader;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.logstreams.util.TestLogStream;
 import io.camunda.zeebe.msgpack.UnpackedObject;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.util.ReflectUtil;
 import java.util.EnumMap;
@@ -57,7 +57,7 @@ public final class LogStreamPrinter {
     sb.append(HEADER_INDENTATION);
     writeRecordHeader(event, sb);
     sb.append("\n");
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     event.readMetadata(metadata);
     sb.append(ENTRY_INDENTATION);
     writeMetadata(metadata, sb);
@@ -77,7 +77,7 @@ public final class LogStreamPrinter {
     sb.append(event.getKey());
   }
 
-  private static void writeMetadata(final RecordMetadata metadata, final StringBuilder sb) {
+  private static void writeMetadata(final RecordRequest metadata, final StringBuilder sb) {
     sb.append(metadata.toString());
   }
 }

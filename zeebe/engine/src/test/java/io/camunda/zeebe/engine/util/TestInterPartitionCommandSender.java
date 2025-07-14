@@ -11,7 +11,7 @@ import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.WriteContext;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -53,7 +53,7 @@ public class TestInterPartitionCommandSender implements InterPartitionCommandSen
       return;
     }
     final var metadata =
-        new RecordMetadata().recordType(RecordType.COMMAND).intent(intent).valueType(valueType);
+        new RecordRequest().recordType(RecordType.COMMAND).intent(intent).valueType(valueType);
     final var writer = writers.computeIfAbsent(receiverPartitionId, i -> new CompletableFuture<>());
     final LogAppendEntry entry;
     if (recordKey != null) {

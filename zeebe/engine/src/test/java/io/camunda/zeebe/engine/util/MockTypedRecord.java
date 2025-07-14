@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.util;
 
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -22,10 +22,10 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
 
   private final long timestamp;
   private long key;
-  private RecordMetadata metadata;
+  private RecordRequest metadata;
   private T value;
 
-  public MockTypedRecord(final long key, final RecordMetadata metadata, final T value) {
+  public MockTypedRecord(final long key, final RecordRequest metadata, final T value) {
     this.key = key;
     this.metadata = metadata;
     this.value = value;
@@ -65,7 +65,7 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
     this.value = value;
   }
 
-  public void setMetadata(final RecordMetadata metadata) {
+  public void setMetadata(final RecordRequest metadata) {
     this.metadata = metadata;
   }
 

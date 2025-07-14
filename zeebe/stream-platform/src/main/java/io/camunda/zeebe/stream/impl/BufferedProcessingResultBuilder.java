@@ -10,7 +10,7 @@ package io.camunda.zeebe.stream.impl;
 import static io.camunda.zeebe.protocol.record.RecordMetadataDecoder.operationReferenceNullValue;
 
 import io.camunda.zeebe.msgpack.UnpackedObject;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RecordMetadataEncoder;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -55,7 +55,7 @@ final class BufferedProcessingResultBuilder implements ProcessingResultBuilder {
 
   @Override
   public Either<RuntimeException, ProcessingResultBuilder> appendRecordReturnEither(
-      final long key, final RecordValue value, final RecordMetadata metadata) {
+      final long key, final RecordValue value, final RecordRequest metadata) {
 
     if (operationReference != operationReferenceNullValue()) {
       metadata.operationReference(operationReference);
@@ -99,7 +99,7 @@ final class BufferedProcessingResultBuilder implements ProcessingResultBuilder {
       return this;
     }
     final var metadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(recordType)
             .intent(intent)
             .rejectionType(rejectionType)

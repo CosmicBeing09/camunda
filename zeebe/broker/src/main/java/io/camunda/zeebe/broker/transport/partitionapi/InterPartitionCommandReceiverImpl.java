@@ -16,7 +16,7 @@ import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter.WriteFailure;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.management.CheckpointRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -101,7 +101,7 @@ final class InterPartitionCommandReceiverImpl {
         decoded.checkpointId,
         checkpointId);
     final var metadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.COMMAND)
             .intent(CheckpointIntent.CREATE)
             .valueType(ValueType.CHECKPOINT);
@@ -131,7 +131,7 @@ final class InterPartitionCommandReceiverImpl {
   private record DecodedMessage(
       long checkpointId,
       Optional<Long> recordKey,
-      RecordMetadata metadata,
+      RecordRequest metadata,
       UnifiedRecordValue command) {}
 
   private static final class Decoder {
@@ -140,7 +140,7 @@ final class InterPartitionCommandReceiverImpl {
 
     DecodedMessage decodeMessage(final byte[] message) {
       final var messageBuffer = new UnsafeBuffer();
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
 
       messageBuffer.wrap(message);
       messageDecoder.wrapAndApplyHeader(messageBuffer, 0, headerDecoder);

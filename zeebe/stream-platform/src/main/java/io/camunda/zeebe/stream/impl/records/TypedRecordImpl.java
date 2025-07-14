@@ -10,7 +10,7 @@ package io.camunda.zeebe.stream.impl.records;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -24,7 +24,7 @@ import java.util.Map;
 public final class TypedRecordImpl implements TypedRecord {
   private final int partitionId;
   private LoggedEvent rawEvent;
-  private RecordMetadata metadata;
+  private RecordRequest metadata;
   private UnifiedRecordValue value;
 
   public TypedRecordImpl(final int partitionId) {
@@ -32,14 +32,14 @@ public final class TypedRecordImpl implements TypedRecord {
   }
 
   public void wrap(
-      final LoggedEvent rawEvent, final RecordMetadata metadata, final UnifiedRecordValue value) {
+      final LoggedEvent rawEvent, final RecordRequest metadata, final UnifiedRecordValue value) {
     this.rawEvent = rawEvent;
     this.metadata = metadata;
     this.value = value;
   }
 
   @JsonIgnore
-  public RecordMetadata getMetadata() {
+  public RecordRequest getMetadata() {
     return metadata;
   }
 

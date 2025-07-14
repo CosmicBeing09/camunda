@@ -17,7 +17,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ErrorIntent;
@@ -64,7 +64,7 @@ class StreamProcessorErrorHandlingTest {
     await("should write rejection to log")
         .untilAsserted(() -> assertThat(logStreamReader.hasNext()).isTrue());
     final var record = logStreamReader.next();
-    final var recordMetadata = new RecordMetadata();
+    final var recordMetadata = new RecordRequest();
     record.readMetadata(recordMetadata);
     assertThat(recordMetadata.getRecordType()).isEqualTo(RecordType.EVENT);
     assertThat(recordMetadata.getIntent()).isEqualTo(ErrorIntent.CREATED);
@@ -85,7 +85,7 @@ class StreamProcessorErrorHandlingTest {
     successResult.appendRecordReturnEither(
         1,
         Records.processInstance(1),
-        new RecordMetadata().recordType(RecordType.EVENT).intent(ELEMENT_ACTIVATED));
+        new RecordRequest().recordType(RecordType.EVENT).intent(ELEMENT_ACTIVATED));
 
     when(defaultMockedRecordProcessor.process(any(), any()))
         .thenThrow(new RuntimeException())
@@ -120,7 +120,7 @@ class StreamProcessorErrorHandlingTest {
     await("should write follow up event of second command to log")
         .untilAsserted(() -> assertThat(logStreamReader.hasNext()).isTrue());
     final var record = logStreamReader.next();
-    final var recordMetadata = new RecordMetadata();
+    final var recordMetadata = new RecordRequest();
     record.readMetadata(recordMetadata);
     assertThat(recordMetadata.getRecordType()).isEqualTo(RecordType.EVENT);
     assertThat(recordMetadata.getIntent()).isEqualTo(ELEMENT_ACTIVATED);

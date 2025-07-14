@@ -16,7 +16,7 @@ import io.camunda.zeebe.broker.exporter.stream.ExporterDirector.ExporterInitiali
 import io.camunda.zeebe.exporter.api.Exporter;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.exporter.api.context.Controller;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.jar.ExternalJarClassLoader;
@@ -115,7 +115,7 @@ final class ExternalExporterContainerTest {
     final var record = mock(TypedRecord.class);
     // set a high position to ensure we export it
     when(record.getPosition()).thenReturn(Long.MAX_VALUE);
-    container.exportRecord(mock(RecordMetadata.class), record);
+    container.exportRecord(mock(RecordRequest.class), record);
 
     // then
     final var exporterInstance = (TclExporter) container.getExporter();

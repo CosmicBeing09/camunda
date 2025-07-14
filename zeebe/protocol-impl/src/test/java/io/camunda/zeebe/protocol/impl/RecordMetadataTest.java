@@ -10,7 +10,7 @@ package io.camunda.zeebe.protocol.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordMetadataEncoder;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -24,7 +24,7 @@ final class RecordMetadataTest {
   @Test
   void shouldEncodeDecodeMetadataWithNullValues() {
     // given
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
 
     // when
     encodeDecode(metadata);
@@ -39,11 +39,11 @@ final class RecordMetadataTest {
     assertThat(metadata.getRejectionType()).isEqualTo(RejectionType.NULL_VAL);
     assertThat(metadata.getRejectionReason()).isEmpty();
     assertThat(metadata.getAuthorization()).isEqualTo(new AuthInfo());
-    assertThat(metadata.getBrokerVersion()).isEqualTo(RecordMetadata.CURRENT_BROKER_VERSION);
-    assertThat(metadata.getRecordVersion()).isEqualTo(RecordMetadata.DEFAULT_RECORD_VERSION);
+    assertThat(metadata.getBrokerVersion()).isEqualTo(RecordRequest.CURRENT_BROKER_VERSION);
+    assertThat(metadata.getRecordVersion()).isEqualTo(RecordRequest.DEFAULT_RECORD_VERSION);
   }
 
-  private void encodeDecode(final RecordMetadata metadata) {
+  private void encodeDecode(final RecordRequest metadata) {
     // encode
     final UnsafeBuffer buffer = new UnsafeBuffer(new byte[metadata.getLength()]);
     metadata.write(buffer, 0);

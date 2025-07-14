@@ -8,7 +8,7 @@
 package io.camunda.zeebe.backup.processing;
 
 import io.camunda.zeebe.msgpack.UnpackedObject;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -61,7 +61,7 @@ record MockProcessingResult(List<Event> records) implements ProcessingResult {
 
     @Override
     public Either<RuntimeException, ProcessingResultBuilder> appendRecordReturnEither(
-        final long key, final RecordValue value, final RecordMetadata metadata) {
+        final long key, final RecordValue value, final RecordRequest metadata) {
 
       final var record =
           new Event(

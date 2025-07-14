@@ -15,7 +15,7 @@ import io.camunda.zeebe.exporter.api.Exporter;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.exporter.api.context.Controller;
 import io.camunda.zeebe.exporter.api.context.ScheduledTask;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.scheduler.ActorControl;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -203,7 +203,7 @@ final class ExporterContainer implements Controller {
     return context.getConfiguration().getId();
   }
 
-  private boolean acceptRecord(final RecordMetadata metadata) {
+  private boolean acceptRecord(final RecordRequest metadata) {
     final Context.RecordFilter filter = context.getFilter();
     return filter.acceptType(metadata.getRecordType())
         && filter.acceptValue(metadata.getValueType())
@@ -216,7 +216,7 @@ final class ExporterContainer implements Controller {
         () -> exporter.configure(context), exporter.getClass().getClassLoader());
   }
 
-  boolean exportRecord(final RecordMetadata rawMetadata, final TypedRecord typedEvent) {
+  boolean exportRecord(final RecordRequest rawMetadata, final TypedRecord typedEvent) {
     try {
       if (position < typedEvent.getPosition()) {
         if (acceptRecord(rawMetadata)) {

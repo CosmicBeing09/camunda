@@ -15,7 +15,7 @@ import io.camunda.zeebe.logstreams.log.LogStreamReader;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -122,7 +122,7 @@ public final class ProcessingStateMachine {
             return recordType == RecordType.EVENT || recordType == RecordType.COMMAND_REJECTION;
           });
   private final MutableLastProcessedPositionState lastProcessedPositionState;
-  private final RecordMetadata metadata = new RecordMetadata();
+  private final RecordRequest metadata = new RecordRequest();
   private final ActorControl actor;
   private final LogStreamReader logStreamReader;
   private final TransactionContext transactionContext;
@@ -527,11 +527,11 @@ public final class ProcessingStateMachine {
         new CommandRejectionException(rejectionReason), currentRecord.getPosition());
 
     final var recordMetadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.EVENT)
             .valueType(ValueType.ERROR)
             .intent(ErrorIntent.CREATED)
-            .recordVersion(RecordMetadata.DEFAULT_RECORD_VERSION)
+            .recordVersion(RecordRequest.DEFAULT_RECORD_VERSION)
             .rejectionType(RejectionType.NULL_VAL)
             .rejectionReason("")
             .operationReference(typedCommand.getOperationReference());

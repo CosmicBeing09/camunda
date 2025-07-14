@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -29,7 +29,7 @@ import org.junit.Test;
 public final class TypedEventSerializationTest {
 
   private static Tuple<TypedRecord, CopiedRecord> createRecordTuple() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
 
     final DeploymentIntent intent = DeploymentIntent.CREATE;
     final int protocolVersion = 1;

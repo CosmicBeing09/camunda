@@ -10,7 +10,7 @@ package io.camunda.zeebe.logstreams.log;
 import io.camunda.zeebe.logstreams.impl.log.LogAppendEntryImpl;
 import io.camunda.zeebe.logstreams.impl.log.LogEntryDescriptor;
 import io.camunda.zeebe.logstreams.impl.log.ProcessedLogAppendEntryImpl;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import java.util.Objects;
 
@@ -30,7 +30,7 @@ public interface LogAppendEntry {
   /**
    * @return metadata of the record, like ValueType, Intent, RecordType etc.
    */
-  RecordMetadata recordMetadata();
+  RecordRequest recordMetadata();
 
   /**
    * @return the actual record value, this method returns a general type but can be casted to the
@@ -67,7 +67,7 @@ public interface LogAppendEntry {
    * @return a simple value class implementation of a {@link LogAppendEntry} with the parameters
    */
   static LogAppendEntry of(
-      final RecordMetadata recordMetadata, final UnifiedRecordValue recordValue) {
+      final RecordRequest recordMetadata, final UnifiedRecordValue recordValue) {
     return new LogAppendEntryImpl(
         LogEntryDescriptor.KEY_NULL_VALUE,
         -1,
@@ -86,7 +86,7 @@ public interface LogAppendEntry {
    * @return a simple value class implementation of a {@link LogAppendEntry} with the parameters
    */
   static LogAppendEntry of(
-      final long key, final RecordMetadata recordMetadata, final UnifiedRecordValue recordValue) {
+      final long key, final RecordRequest recordMetadata, final UnifiedRecordValue recordValue) {
     return new LogAppendEntryImpl(
         key,
         -1,
