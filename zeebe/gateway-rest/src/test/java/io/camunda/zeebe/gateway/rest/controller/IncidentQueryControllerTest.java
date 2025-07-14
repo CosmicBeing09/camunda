@@ -219,7 +219,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                 .filter(
                     new IncidentFilter.Builder()
                         .incidentKeys(5L)
-                        .processDefinitionKeys(23L)
+                        .processDefinitionKeyOperations(23L)
                         .processDefinitionIds("complexProcess")
                         .processInstanceKeys(42L)
                         .errorTypes(ErrorType.JOB_NO_RETRIES)
