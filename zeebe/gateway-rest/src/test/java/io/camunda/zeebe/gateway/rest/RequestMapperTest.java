@@ -274,13 +274,13 @@ class RequestMapperTest {
             .sourceElementId("source1")
             .targetElementId("target1");
 
-    final var modificationInstruction =
+    final var modificationRequest =
         new ProcessInstanceModificationBatchOperationInstruction()
             .addMoveInstructionsItem(moveInstruction);
 
     // when
     final Either<ProblemDetail, ProcessInstanceModifyBatchOperationRequest> result =
-        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationInstruction);
+        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationRequest);
 
     // then
     assertTrue(result.isRight());
@@ -301,13 +301,13 @@ class RequestMapperTest {
     final var moveInstruction =
         new ProcessInstanceModificationMoveBatchOperationInstruction().sourceElementId("source1");
 
-    final var modificationInstruction =
+    final var modificationRequest =
         new ProcessInstanceModificationBatchOperationInstruction()
             .addMoveInstructionsItem(moveInstruction);
 
     // when
     final Either<ProblemDetail, ProcessInstanceModifyBatchOperationRequest> result =
-        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationInstruction);
+        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationRequest);
 
     // then
     assertTrue(result.isLeft());

@@ -679,8 +679,8 @@ public class ProcessInstanceControllerTest extends RestControllerTest {
     final var capturedRequest = migrateRequestCaptor.getValue();
     assertThat(capturedRequest.processInstanceKey()).isEqualTo(1);
     assertThat(capturedRequest.targetProcessDefinitionKey()).isEqualTo(123456);
-    assertThat(capturedRequest.mappingInstructions()).isNotEmpty();
-    assertThat(capturedRequest.mappingInstructions().size()).isEqualTo(2);
+    assertThat(capturedRequest.mappingRequests()).isNotEmpty();
+    assertThat(capturedRequest.mappingRequests().size()).isEqualTo(2);
     assertThat(capturedRequest.operationReference()).isEqualTo(123L);
   }
 

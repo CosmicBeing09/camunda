@@ -17,10 +17,10 @@ import java.util.List;
 public final class BatchOperationProcessInstanceModificationPlan extends ObjectValue
     implements BatchOperationProcessInstanceModificationPlanValue {
 
-  private final ArrayProperty<BatchOperationProcessInstanceModificationMoveInstruction>
+  private final ArrayProperty<BatchOperationProcessInstanceModificationMoveRequest>
       moveInstructionsProperty =
           new ArrayProperty<>(
-              "moveInstructions", BatchOperationProcessInstanceModificationMoveInstruction::new);
+              "moveInstructions", BatchOperationProcessInstanceModificationMoveRequest::new);
 
   public BatchOperationProcessInstanceModificationPlan() {
     super(1);
@@ -39,7 +39,7 @@ public final class BatchOperationProcessInstanceModificationPlan extends ObjectV
         .map(
             element ->
                 (ProcessInstanceModificationMoveInstructionValue)
-                    new BatchOperationProcessInstanceModificationMoveInstruction().copy(element))
+                    new BatchOperationProcessInstanceModificationMoveRequest().copy(element))
         .toList();
   }
 
@@ -50,7 +50,7 @@ public final class BatchOperationProcessInstanceModificationPlan extends ObjectV
   }
 
   public BatchOperationProcessInstanceModificationPlan addMoveInstruction(
-      final BatchOperationProcessInstanceModificationMoveInstruction mappingInstruction) {
+      final BatchOperationProcessInstanceModificationMoveRequest mappingInstruction) {
     moveInstructionsProperty.add().copy(mappingInstruction);
     return this;
   }
@@ -62,7 +62,7 @@ public final class BatchOperationProcessInstanceModificationPlan extends ObjectV
         .forEach(
             inst ->
                 addMoveInstruction(
-                    (BatchOperationProcessInstanceModificationMoveInstruction) inst));
+                    (BatchOperationProcessInstanceModificationMoveRequest) inst));
     return this;
   }
 }

@@ -121,7 +121,7 @@ import io.camunda.zeebe.gateway.rest.validator.GroupRequestValidator;
 import io.camunda.zeebe.gateway.rest.validator.RoleRequestValidator;
 import io.camunda.zeebe.gateway.rest.validator.TenantRequestValidator;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
@@ -973,7 +973,7 @@ public class RequestMapper {
         .toList();
   }
 
-  private static List<BatchOperationProcessInstanceModificationMoveInstruction>
+  private static List<BatchOperationProcessInstanceModificationMoveRequest>
       mapProcessInstanceModificationMoveInstruction(
           final List<
                   io.camunda.zeebe.gateway.protocol.rest
@@ -983,7 +983,7 @@ public class RequestMapper {
         .map(
             instruction -> {
               final var mappedInstruction =
-                  new BatchOperationProcessInstanceModificationMoveInstruction();
+                  new BatchOperationProcessInstanceModificationMoveRequest();
               mappedInstruction
                   .setSourceElementId(instruction.getSourceElementId())
                   .setTargetElementId(instruction.getTargetElementId());
