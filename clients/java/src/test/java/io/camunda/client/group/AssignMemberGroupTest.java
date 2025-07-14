@@ -84,7 +84,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
   @Test
   void shouldAddMappingToGroup() {
     // when
-    client.newAddMappingToGroupCommand().mappingId(MAPPING_ID).groupId(GROUP_ID).send().join();
+    client.newAssignMappingToGroupCommand().mappingId(MAPPING_ID).groupId(GROUP_ID).send().join();
 
     // then
     final LoggedRequest request = RestGatewayService.getLastRequest();
@@ -101,7 +101,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newAddMappingToGroupCommand()
+                    .newAssignMappingToGroupCommand()
                     .mappingId(MAPPING_ID)
                     .groupId(GROUP_ID)
                     .send()
@@ -120,7 +120,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newAddMappingToGroupCommand()
+                    .newAssignMappingToGroupCommand()
                     .mappingId(MAPPING_ID)
                     .groupId(GROUP_ID)
                     .send()
@@ -139,7 +139,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newAddMappingToGroupCommand()
+                    .newAssignMappingToGroupCommand()
                     .mappingId(MAPPING_ID)
                     .groupId(GROUP_ID)
                     .send()
@@ -154,7 +154,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newAddMappingToGroupCommand()
+                    .newAssignMappingToGroupCommand()
                     .mappingId(null)
                     .groupId(GROUP_ID)
                     .send()
@@ -168,7 +168,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     // when / then
     assertThatThrownBy(
             () ->
-                client.newAddMappingToGroupCommand().mappingId("").groupId(GROUP_ID).send().join())
+                client.newAssignMappingToGroupCommand().mappingId("").groupId(GROUP_ID).send().join())
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageContaining("mappingId must not be empty");
   }
@@ -179,7 +179,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newAddMappingToGroupCommand()
+                    .newAssignMappingToGroupCommand()
                     .mappingId(MAPPING_ID)
                     .groupId(null)
                     .send()
@@ -194,7 +194,7 @@ public class AssignMemberGroupTest extends ClientRestTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newAddMappingToGroupCommand()
+                    .newAssignMappingToGroupCommand()
                     .mappingId(MAPPING_ID)
                     .groupId("")
                     .send()

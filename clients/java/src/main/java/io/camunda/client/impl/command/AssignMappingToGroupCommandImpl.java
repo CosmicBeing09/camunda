@@ -26,7 +26,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.config.RequestConfig;
 
-public class AddMappingToGroupCommandImpl
+public class AssignMappingToGroupCommandImpl
     implements AddMappingToGroupStep1, AddMappingToGroupStep2 {
 
   private final HttpClient httpClient;
@@ -34,7 +34,7 @@ public class AddMappingToGroupCommandImpl
   private String mappingId;
   private String groupId;
 
-  public AddMappingToGroupCommandImpl(final HttpClient httpClient) {
+  public AssignMappingToGroupCommandImpl(final HttpClient httpClient) {
     this.httpClient = httpClient;
     httpRequestConfig = httpClient.newRequestConfig();
   }
