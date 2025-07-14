@@ -26,7 +26,7 @@ public record IncidentFilter(
     List<String> errorMessages,
     List<Integer> errorMessageHashes,
     List<String> flowNodeIds,
-    List<Long> flowNodeInstanceKeys,
+    List<Long> flowNodeInstanceKeyOperations,
     DateValueFilter creationTime,
     List<IncidentState> states,
     String treePath,
@@ -44,7 +44,7 @@ public record IncidentFilter(
     private List<String> errorMessages;
     private List<Integer> errorMessageHashes;
     private List<String> flowNodeIds;
-    private List<Long> flowNodeInstanceKeys;
+    private List<Long> flowNodeInstanceKeyOperations;
     private DateValueFilter creationTimeFilter;
     private List<IncidentState> states;
     private String treePath;
@@ -128,12 +128,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder flowNodeInstanceKeys(final Long value, final Long... values) {
-      return flowNodeInstanceKeys(collectValues(value, values));
+    public Builder flowNodeInstanceKeyOperations(final Long value, final Long... values) {
+      return flowNodeInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder flowNodeInstanceKeys(final List<Long> values) {
-      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
+    public Builder flowNodeInstanceKeyOperations(final List<Long> values) {
+      flowNodeInstanceKeyOperations = addValuesToList(flowNodeInstanceKeyOperations, values);
       return this;
     }
 
@@ -180,7 +180,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),
-          Objects.requireNonNullElse(flowNodeInstanceKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(flowNodeInstanceKeyOperations, Collections.emptyList()),
           creationTimeFilter,
           Objects.requireNonNullElse(states, Collections.emptyList()),
           treePath,

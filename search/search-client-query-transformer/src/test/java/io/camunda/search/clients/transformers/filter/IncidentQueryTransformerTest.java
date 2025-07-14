@@ -169,7 +169,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByFlowNodeInstanceKey() {
-    final var filter = FilterBuilders.incident(f -> f.flowNodeInstanceKeys(42L));
+    final var filter = FilterBuilders.incident(f -> f.flowNodeInstanceKeyOperations(42L));
 
     // when
     final var searchRequest = transformQuery(filter);
