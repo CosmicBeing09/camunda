@@ -65,7 +65,7 @@ public class ScaleUpTest {
     final var bootstrapPartitions =
         RecordToWrite.command()
             .scale(
-                ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+                ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
                 new ScaleRecord().setDesiredPartitionCount(3));
     // when
     engine.writeRecords(command, bootstrapPartitions);
@@ -77,9 +77,9 @@ public class ScaleUpTest {
                 .map(Record::getIntent))
         .containsExactly(
             ScaleIntent.SCALE_UP,
-            ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALING_UP,
-            ScaleIntent.PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALED_UP);
   }
 
@@ -244,14 +244,14 @@ public class ScaleUpTest {
     final var bootstrapPartitions =
         RecordToWrite.command()
             .scale(
-                ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+                ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
                 new ScaleRecord().setDesiredPartitionCount(4));
     engine.writeRecords(bootstrapPartitions, getStatusCommand);
 
     // then
     final var finalResponse =
         RecordingExporter.scaleRecords()
-            .skipUntil(r -> r.getIntent() == ScaleIntent.PARTITIONS_BOOTSTRAPPED)
+            .skipUntil(r -> r.getIntent() == ScaleIntent.PARTITION_BOOTSTRAPPED)
             .limit(r -> r.getIntent() == ScaleIntent.STATUS_RESPONSE)
             .getLast();
     assertThat(finalResponse.getValue().getDesiredPartitionCount()).isEqualTo(4);
@@ -269,7 +269,7 @@ public class ScaleUpTest {
     final var bootstrapPartitionsTo3 =
         RecordToWrite.command()
             .scale(
-                ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+                ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
                 new ScaleRecord().setDesiredPartitionCount(3));
     // when
     engine.writeRecords(scaleTo3, bootstrapPartitionsTo3);
@@ -282,9 +282,9 @@ public class ScaleUpTest {
         .hasSize(5)
         .containsSequence(
             ScaleIntent.SCALE_UP,
-            ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALING_UP,
-            ScaleIntent.PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALED_UP);
 
     RecordingExporter.reset();
@@ -296,7 +296,7 @@ public class ScaleUpTest {
     final var bootstrapPartitionsTo4 =
         RecordToWrite.command()
             .scale(
-                ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+                ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
                 new ScaleRecord().setDesiredPartitionCount(4));
     engine.writeRecords(scaleTo4, bootstrapPartitionsTo4);
 
@@ -308,9 +308,9 @@ public class ScaleUpTest {
         .hasSize(5)
         .containsSequence(
             ScaleIntent.SCALE_UP,
-            ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALING_UP,
-            ScaleIntent.PARTITIONS_BOOTSTRAPPED,
+            ScaleIntent.PARTITION_BOOTSTRAPPED,
             ScaleIntent.SCALED_UP);
   }
 }
