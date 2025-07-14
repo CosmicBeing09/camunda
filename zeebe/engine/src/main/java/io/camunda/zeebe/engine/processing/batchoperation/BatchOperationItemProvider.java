@@ -174,7 +174,7 @@ public class BatchOperationItemProvider {
         return Set.of();
       }
       final var filter =
-          new IncidentFilter.Builder().processInstanceKeys(processInstanceKeysBatch).build();
+          new IncidentFilter.Builder().processInstanceKeyOperations(processInstanceKeysBatch).build();
       incidents.addAll(fetchIncidentItems(filter, authentication, shouldAbort));
     }
 
