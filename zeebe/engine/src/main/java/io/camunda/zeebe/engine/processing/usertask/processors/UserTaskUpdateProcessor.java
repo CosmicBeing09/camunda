@@ -97,7 +97,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     }
 
     final var metadata = recordRequestMetadata.get();
-    switch (metadata.getTriggerType()) {
+    switch (metadata.getValueType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
         responseWriter.writeResponse(
@@ -146,7 +146,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       default ->
           throw new IllegalArgumentException(
               "Unexpected user task transition trigger type: '%s'"
-                  .formatted(metadata.getTriggerType()));
+                  .formatted(metadata.getValueType()));
     }
   }
 
