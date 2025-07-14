@@ -105,7 +105,7 @@ public class ProcessDefinitionQueryControllerTest extends RestControllerTest {
                       "<default>",
                       "formId")))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
   private static final String FORM_ITEM_JSON =
       """

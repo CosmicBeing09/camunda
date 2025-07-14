@@ -192,7 +192,7 @@ public class UserTaskQueryControllerTest extends RestControllerTest {
                       50 // priority
                       )))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   private static final SearchQueryResult<VariableEntity> SEARCH_VAR_QUERY_RESULT =
@@ -204,7 +204,7 @@ public class UserTaskQueryControllerTest extends RestControllerTest {
                   new VariableEntity(
                       1L, "name2", "value", "valueLong", true, 1L, 2L, "bpid", "<default>")))
           .firstSortValues(new Object[] {"0"})
-          .lastSortValues(new Object[] {"1"})
+          .lastSearchAfter(new Object[] {"1"})
           .build();
 
   @MockBean UserTaskServices userTaskServices;

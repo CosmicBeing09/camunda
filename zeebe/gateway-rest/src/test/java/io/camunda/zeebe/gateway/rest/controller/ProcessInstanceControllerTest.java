@@ -1584,7 +1584,7 @@ public class ProcessInstanceControllerTest extends RestControllerTest {
                         1L,
                         "<default>")))
             .firstSortValues(new Object[] {2251799814751259L})
-            .lastSortValues(new Object[] {2251799814751259L})
+            .lastSearchAfter(new Object[] {2251799814751259L})
             .build();
     final var query = new IncidentQuery.Builder().build();
     when(processInstanceServices.searchIncidents(processInstanceKey, query))

@@ -89,7 +89,7 @@ public class ElementInstanceQueryControllerTest extends RestControllerTest {
                       "bpmnProcessId",
                       "<default>")))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   static final String EXPECTED_GET_RESPONSE =

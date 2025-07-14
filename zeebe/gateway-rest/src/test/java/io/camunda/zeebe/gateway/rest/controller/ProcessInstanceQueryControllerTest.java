@@ -133,7 +133,7 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
           .total(1L)
           .items(List.of(PROCESS_INSTANCE_ENTITY))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   @MockBean ProcessInstanceServices processInstanceServices;

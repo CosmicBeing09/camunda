@@ -64,7 +64,7 @@ public class UserQueryControllerTest extends RestControllerTest {
           .total(1L)
           .items(List.of(new UserEntity(1L, "username1", "name1", "email1", "password1")))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   @MockBean UserServices userServices;

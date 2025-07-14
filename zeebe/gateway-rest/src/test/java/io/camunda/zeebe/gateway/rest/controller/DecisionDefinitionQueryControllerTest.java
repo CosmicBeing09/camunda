@@ -69,7 +69,7 @@ public class DecisionDefinitionQueryControllerTest extends RestControllerTest {
           .total(1L)
           .items(List.of(new DecisionDefinitionEntity(0L, "dId", "name", 1, "drId", 2L, "t")))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   static final String DECISION_DEFINITIONS_SEARCH_URL = "/v2/decision-definitions/search";

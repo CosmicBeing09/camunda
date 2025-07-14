@@ -204,15 +204,15 @@ public class ProcessInstanceIT {
     assertThat(searchResult.items()).hasSize(5);
 
     final var firstInstance = searchResult.items().getFirst();
-    assertThat(searchResult.firstSortValues()).hasSize(3);
-    assertThat(searchResult.firstSortValues())
+    assertThat(searchResult.firstSearchAfter()).hasSize(3);
+    assertThat(searchResult.firstSearchAfter())
         .containsExactly(
             firstInstance.startDate(),
             firstInstance.processDefinitionName(),
             firstInstance.processInstanceKey());
     final var lastInstance = searchResult.items().getLast();
-    assertThat(searchResult.lastSortValues()).hasSize(3);
-    assertThat(searchResult.lastSortValues())
+    assertThat(searchResult.lastSearchAfter()).hasSize(3);
+    assertThat(searchResult.lastSearchAfter())
         .containsExactly(
             lastInstance.startDate(),
             lastInstance.processDefinitionName(),

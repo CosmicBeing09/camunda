@@ -76,7 +76,7 @@ public class AuthorizationQueryControllerTest extends RestControllerTest {
                       "2",
                       Set.of(PermissionType.CREATE))))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   @MockitoBean private AuthorizationServices authorizationServices;

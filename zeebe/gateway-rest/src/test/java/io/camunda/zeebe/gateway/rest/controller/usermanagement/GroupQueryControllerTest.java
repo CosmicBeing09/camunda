@@ -315,7 +315,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
             new SearchQueryResult.Builder<GroupEntity>()
                 .total(3)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .items(
                     List.of(
                         new GroupEntity(groupKey1, groupId1, groupName1, description1),
@@ -401,7 +401,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                         new GroupEntity(groupKey2, groupId2, groupName2, description2),
                         new GroupEntity(groupKey3, groupId3, groupName3, description3)))
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -440,7 +440,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(GROUP_USER_ENTITIES.size())
                 .items(GROUP_USER_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -473,7 +473,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(GROUP_USER_ENTITIES.size())
                 .items(GROUP_USER_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -505,7 +505,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(MAPPNING_ENTITIES.size())
                 .items(MAPPNING_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -538,7 +538,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(MAPPNING_ENTITIES.size())
                 .items(MAPPNING_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -570,7 +570,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(ROLE_ENTITIES.size())
                 .items(ROLE_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -603,7 +603,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(ROLE_ENTITIES.size())
                 .items(ROLE_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -635,7 +635,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(GROUP_CLIENT_ENTITIES.size())
                 .items(GROUP_CLIENT_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then
@@ -668,7 +668,7 @@ public class GroupQueryControllerTest extends RestControllerTest {
                 .total(GROUP_CLIENT_ENTITIES.size())
                 .items(GROUP_CLIENT_ENTITIES)
                 .firstSortValues(new Object[] {"f"})
-                .lastSortValues(new Object[] {"v"})
+                .lastSearchAfter(new Object[] {"v"})
                 .build());
 
     // when / then

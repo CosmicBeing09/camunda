@@ -125,7 +125,7 @@ abstract class AbstractEntityReader<T> {
         .total(totalHits)
         .items(hits)
         .firstSortValues(extractFirstSortValues(hits, dbSort))
-        .lastSortValues(extractLastSortValues(hits, dbSort))
+        .lastSearchAfter(extractLastSortValues(hits, dbSort))
         .build();
   }
 

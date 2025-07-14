@@ -52,7 +52,7 @@ public final class SearchQueryResultTransformer<T, R> {
     return new Builder<R>()
         .total(value.totalHits())
         .firstSortValues(firstSortValues)
-        .lastSortValues(lastSortValues)
+        .lastSearchAfter(lastSortValues)
         .items(items.stream().map(documentToEntityMapper::apply).toList())
         .build();
   }

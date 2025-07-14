@@ -97,7 +97,7 @@ public class DecisionInstanceQueryControllerTest extends RestControllerTest {
                       null,
                       null)))
           .firstSortValues(new Object[] {"f"})
-          .lastSortValues(new Object[] {"v"})
+          .lastSearchAfter(new Object[] {"v"})
           .build();
 
   @MockBean private DecisionInstanceServices decisionInstanceServices;

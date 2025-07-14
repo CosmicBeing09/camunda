@@ -408,15 +408,15 @@ public final class SearchQueryResponseMapper {
   private static SearchQueryPageResponse toSearchQueryPageResponse(
       final SearchQueryResult<?> result) {
 
-    final List<Object> firstSortValues =
-        ofNullable(result.firstSortValues()).map(Arrays::asList).orElse(emptyList());
-    final List<Object> lastSortValues =
-        ofNullable(result.lastSortValues()).map(Arrays::asList).orElse(emptyList());
+    final List<Object> firstSearchAfter =
+        ofNullable(result.firstSearchAfter()).map(Arrays::asList).orElse(emptyList());
+    final List<Object> lastSearchAfter =
+        ofNullable(result.lastSearchAfter()).map(Arrays::asList).orElse(emptyList());
 
     return new SearchQueryPageResponse()
         .totalItems(result.total())
-        .firstSortValues(firstSortValues)
-        .lastSortValues(lastSortValues);
+        .firstSortValues(firstSearchAfter)
+        .lastSortValues(lastSearchAfter);
   }
 
   private static List<ProcessDefinitionResult> toProcessDefinitions(
