@@ -77,12 +77,12 @@ public class BatchOperationMetrics {
     batchOperationEvent(BatchOperationAction.COMPLETED, batchOperationType);
   }
 
-  public void startTotalLatencyMeasure(
+  public void startTotalDurationMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
     createLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey, batchOperationType);
   }
 
-  public void stopTotalLatencyMeasure(final Long batchOperationKey) {
+  public void stopTotalDurationMeasure(final Long batchOperationKey) {
     closeAndRemoveLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey);
   }
 
