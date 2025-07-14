@@ -42,7 +42,7 @@ public class SearchRequestPageImpl
   }
 
   @Override
-  public SearchRequestPage searchBefore(final List<Object> values) {
+  public SearchRequestPage searchBeforeCursor(final List<Object> values) {
     page.setSearchBefore(values);
     return this;
   }

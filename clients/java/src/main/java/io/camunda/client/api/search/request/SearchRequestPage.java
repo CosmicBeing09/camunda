@@ -26,7 +26,7 @@ public interface SearchRequestPage {
   SearchRequestPage limit(final Integer value);
 
   /** Get previous page before the set of values. */
-  SearchRequestPage searchBefore(final List<Object> values);
+  SearchRequestPage searchBeforeCursor(final List<Object> values);
 
   /** Get next page after the set of values. */
   SearchRequestPage searchAfter(final List<Object> values);
