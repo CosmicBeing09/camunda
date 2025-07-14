@@ -235,7 +235,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
-    userTaskState.storeRecordRequestMetadata(command.getValue().getUserTaskKey(), metadata);
+    userTaskState.storeAsyncRequest(command.getValue().getUserTaskKey(), metadata);
   }
 
   private void handleCommandRejection(
@@ -259,11 +259,11 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
       final UserTaskIntent intent) {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
-    final var recordRequestMetadata =
-        userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
+    final var asyncRequest =
+        userTaskState.asyncRequest(persistedRecord.getUserTaskKey());
 
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
-    recordRequestMetadata.ifPresent(
+    asyncRequest.ifPresent(
         metadata -> {
           switch (metadata.getTriggerType()) {
             case USER_TASK ->

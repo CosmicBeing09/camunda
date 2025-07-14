@@ -83,7 +83,7 @@ public class UserTaskCanceledApplierTest {
             "Expect that intermediate state is cleared after cancellation of the User Task")
         .isNull();
 
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.asyncRequest(userTaskKey))
         .describedAs("Expect that request metadata is cleared after cancellation of the User Task")
         .isEmpty();
 
@@ -112,7 +112,7 @@ public class UserTaskCanceledApplierTest {
         .describedAs("Expect there is no intermediate state for the User Task")
         .isNull();
 
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.asyncRequest(userTaskKey))
         .describedAs("Expect there is no request metadata for the User Task")
         .isEmpty();
 

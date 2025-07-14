@@ -84,8 +84,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-    if (recordRequestMetadata.isEmpty()) {
+    final var asyncRequest = userTaskState.asyncRequest(userTaskKey);
+    if (asyncRequest.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "
               + "This may indicate a problem with how the update was triggered. "
@@ -96,7 +96,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var metadata = recordRequestMetadata.get();
+    final var metadata = asyncRequest.get();
     switch (metadata.getTriggerType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);

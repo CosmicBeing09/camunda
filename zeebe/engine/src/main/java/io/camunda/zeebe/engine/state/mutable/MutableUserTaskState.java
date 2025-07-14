@@ -31,10 +31,10 @@ public interface MutableUserTaskState extends UserTaskState {
 
   void deleteIntermediateStateIfExists(final long userTaskKey);
 
-  void storeRecordRequestMetadata(
-      final long userTaskKey, final UserTaskTransitionTriggerRequestMetadata recordRequestMetadata);
+  void storeAsyncRequest(
+      final long userTaskKey, final UserTaskTransitionTriggerRequestMetadata asyncRequest);
 
-  void deleteRecordRequestMetadata(final long userTaskKey);
+  void deleteAsyncRequest(final long userTaskKey);
 
   void storeInitialAssignee(final long userTaskKey, String assignee);
 
