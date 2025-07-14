@@ -47,7 +47,7 @@ public class FormZeebeRecordProcessorElasticSearch {
 
     final FormRecordImpl recordValue = (FormRecordImpl) record.getValue();
 
-    if (record.getIntent().name().equals(FormIntent.CREATED.name())) {
+    if (record.getIntentToWrite().name().equals(FormIntent.CREATED.name())) {
       persistForm(
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
@@ -56,7 +56,7 @@ public class FormZeebeRecordProcessorElasticSearch {
           recordValue.getFormId(),
           false,
           bulkRequest);
-    } else if (record.getIntent().name().equals(FormIntent.DELETED.name())) {
+    } else if (record.getIntentToWrite().name().equals(FormIntent.DELETED.name())) {
       persistForm(
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
@@ -66,7 +66,7 @@ public class FormZeebeRecordProcessorElasticSearch {
           true,
           bulkRequest);
     } else {
-      LOGGER.info("Form intent {} not supported", record.getIntent().name());
+      LOGGER.info("Form intent {} not supported", record.getIntentToWrite().name());
     }
   }
 

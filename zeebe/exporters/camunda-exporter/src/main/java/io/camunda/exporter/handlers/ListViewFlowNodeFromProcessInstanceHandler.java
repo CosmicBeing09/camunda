@@ -58,7 +58,7 @@ public class ListViewFlowNodeFromProcessInstanceHandler
 
   @Override
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
     if (!isOfTypes(record.getValue(), UNHANDLED_TYPES)) {
       return PI_AND_AI_START_STATES.contains(intent)
           || PI_AND_AI_FINISH_STATES.contains(intent)
@@ -83,7 +83,7 @@ public class ListViewFlowNodeFromProcessInstanceHandler
       final FlowNodeInstanceForListViewEntity entity) {
 
     final var recordValue = record.getValue();
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
 
     entity.setKey(record.getKey());
     entity.setId(String.valueOf(record.getKey()));

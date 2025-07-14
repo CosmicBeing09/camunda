@@ -85,13 +85,13 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
 
   @Override
   public boolean handlesRecord(final Record<JobRecordValue> record) {
-    return SUPPORTED_INTENTS.contains(record.getIntent())
+    return SUPPORTED_INTENTS.contains(record.getIntentToWrite())
         && record.getValue().getType().equals(Protocol.USER_TASK_JOB_TYPE);
   }
 
   @Override
   public List<String> generateIds(final Record<JobRecordValue> record) {
-    if (record.getIntent().equals(JobIntent.CREATED)) {
+    if (record.getIntentToWrite().equals(JobIntent.CREATED)) {
       exporterMetadata.setFirstUserTaskKey(TaskImplementation.JOB_WORKER, record.getKey());
     }
     if (refersToPreviousVersionRecord(record.getKey())) {
@@ -109,12 +109,12 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
   public void updateEntity(final Record<JobRecordValue> record, final TaskEntity entity) {
     entity.setProcessInstanceId(String.valueOf(record.getValue().getProcessInstanceKey()));
     entity.setKey(record.getKey());
-    switch (record.getIntent()) {
+    switch (record.getIntentToWrite()) {
       case JobIntent.CREATED -> createTaskEntity(entity, record);
       case JobIntent.COMPLETED, JobIntent.CANCELED ->
           entity
               .setState(
-                  record.getIntent().equals(JobIntent.COMPLETED)
+                  record.getIntentToWrite().equals(JobIntent.COMPLETED)
                       ? TaskState.COMPLETED
                       : TaskState.CANCELED)
               .setCompletionTime(

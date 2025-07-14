@@ -143,12 +143,12 @@ public final class MultiInstanceLargeInputCollectionTest {
     assertThat(
             RecordingExporter.processInstanceBatchRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(p -> p.getIntent() == ProcessInstanceBatchIntent.ACTIVATED))
+                .limit(p -> p.getIntentToWrite() == ProcessInstanceBatchIntent.ACTIVATED))
         .describedAs(
             "Has activated in multiple batches. If this assertion fails please decrease "
                 + "the message size, or increase the input collection.")
         .hasSize(INPUT_COLLECTION_SIZE + 1)
-        .extracting(r -> r.getIntent())
+        .extracting(r -> r.getIntentToWrite())
         .endsWith(ProcessInstanceBatchIntent.ACTIVATED);
   }
 }

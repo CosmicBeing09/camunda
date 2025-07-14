@@ -139,7 +139,7 @@ public final class JobUpdateRetriesTest {
 
     // then
     assertThat(response.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(response.getIntent()).isEqualTo(JobIntent.RETRIES_UPDATED);
+    assertThat(response.getIntentToWrite()).isEqualTo(JobIntent.RETRIES_UPDATED);
     assertThat(response.getKey()).isEqualTo(jobKey);
     assertThat(response.getValue().getRetries()).isEqualTo(NEW_RETRIES);
   }
@@ -155,7 +155,7 @@ public final class JobUpdateRetriesTest {
 
     // then
     assertThat(response.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(response.getIntent()).isEqualTo(JobIntent.RETRIES_UPDATED);
+    assertThat(response.getIntentToWrite()).isEqualTo(JobIntent.RETRIES_UPDATED);
     assertThat(response.getKey()).isEqualTo(jobKey);
     assertThat(response.getValue().getRetries()).isEqualTo(NEW_RETRIES);
   }

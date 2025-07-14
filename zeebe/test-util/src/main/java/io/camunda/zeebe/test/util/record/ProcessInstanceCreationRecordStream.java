@@ -73,7 +73,7 @@ public final class ProcessInstanceCreationRecordStream
       final long processInstanceKey) {
     return limit(
         r ->
-            r.getIntent() == ProcessInstanceCreationIntent.CREATED
+            r.getIntentToWrite() == ProcessInstanceCreationIntent.CREATED
                 && r.getValue().getProcessInstanceKey() == processInstanceKey);
   }
 }

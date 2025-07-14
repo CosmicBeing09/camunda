@@ -97,7 +97,7 @@ public final class EmbeddedSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SEQUENCE_FLOW, ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -132,7 +132,7 @@ public final class EmbeddedSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SEQUENCE_FLOW, ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -224,7 +224,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -276,7 +276,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -299,7 +299,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.END_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETING),
@@ -312,7 +312,7 @@ public final class EmbeddedSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.PROCESS)
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 
@@ -366,7 +366,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -411,7 +411,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -425,7 +425,7 @@ public final class EmbeddedSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.PROCESS)
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 
@@ -453,7 +453,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -500,7 +500,7 @@ public final class EmbeddedSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PARALLEL_GATEWAY, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -533,7 +533,7 @@ public final class EmbeddedSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .onlyEvents()
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -570,7 +570,7 @@ public final class EmbeddedSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .onlyEvents()
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -634,7 +634,7 @@ public final class EmbeddedSubProcessTest {
                 .variableRecords()
                 .withName("x")
                 .withScopeKey(processInstanceKey))
-        .extracting(var -> tuple(var.getIntent(), var.getValue().getValue()))
+        .extracting(var -> tuple(var.getIntentToWrite(), var.getValue().getValue()))
         .containsExactly(tuple(VariableIntent.CREATED, "1"), tuple(VariableIntent.UPDATED, "2"));
   }
 

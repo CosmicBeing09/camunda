@@ -51,7 +51,7 @@ public class VariableZeebeRecordProcessorElasticSearch {
     final VariableRecordValueImpl recordValue = (VariableRecordValueImpl) record.getValue();
 
     // update variable
-    if (record.getIntent().name() != Intent.MIGRATED.name()) {
+    if (record.getIntentToWrite().name() != Intent.MIGRATED.name()) {
       bulkRequest.add(persistVariable(record, recordValue));
     }
   }

@@ -70,7 +70,7 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
     final var calledDecision = deployedDecisionsById.get(DECISION_ID);
 
     // then
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
 
     final var decisionEvaluationValue = record.getValue();
     assertThat(decisionEvaluationValue)
@@ -103,7 +103,7 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
     final var calledDecision = deployedDecisionsById.get(DECISION_ID);
 
     // then
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.FAILED);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.FAILED);
     assertThat(record.getValue())
         .hasDecisionKey(calledDecision.getDecisionKey())
         .hasDecisionId(calledDecision.getDecisionId())
@@ -139,7 +139,7 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
 
     // then
     assertThat(record.getRejectionType()).isEqualTo(RejectionType.NOT_FOUND);
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
     assertThat(record.getRejectionReason())
         .isEqualTo(
             "Expected to evaluate decision '"
@@ -166,7 +166,7 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
 
     // then
     assertThat(record.getRejectionType()).isEqualTo(RejectionType.NOT_FOUND);
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
     assertThat(record.getRejectionReason())
         .isEqualTo(
             "Expected to evaluate decision '"

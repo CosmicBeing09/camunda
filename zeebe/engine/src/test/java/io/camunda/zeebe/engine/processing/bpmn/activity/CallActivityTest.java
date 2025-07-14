@@ -104,7 +104,7 @@ public final class CallActivityTest {
                 .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
                 .withElementId("call")
                 .limit(2))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsExactly(
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_ACTIVATED));
@@ -124,7 +124,7 @@ public final class CallActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withParentProcessInstanceKey(processInstanceKey)
                 .limit(6))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsExactly(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -309,7 +309,7 @@ public final class CallActivityTest {
             RecordingExporter.records()
                 .betweenProcessInstance(processInstanceKey)
                 .processInstanceRecords())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.END_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.COMPLETE_ELEMENT),
@@ -484,7 +484,7 @@ public final class CallActivityTest {
 
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == JobIntent.CREATED)
+                .limit(r -> r.getIntentToWrite() == JobIntent.CREATED)
                 .variableRecords()
                 .withIntent(VariableIntent.CREATED)
                 .withProcessInstanceKey(childInstance.getProcessInstanceKey()))
@@ -516,7 +516,7 @@ public final class CallActivityTest {
 
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == JobIntent.CREATED)
+                .limit(r -> r.getIntentToWrite() == JobIntent.CREATED)
                 .variableRecords()
                 .withIntent(VariableIntent.CREATED)
                 .withProcessInstanceKey(childInstance.getProcessInstanceKey()))
@@ -713,7 +713,7 @@ public final class CallActivityTest {
             RecordingExporter.records()
                 .betweenProcessInstance(processInstanceKey)
                 .processInstanceRecords())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.TERMINATE_ELEMENT),
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -745,7 +745,7 @@ public final class CallActivityTest {
             RecordingExporter.records()
                 .betweenProcessInstance(processInstanceKey)
                 .processInstanceRecords())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -788,7 +788,7 @@ public final class CallActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -974,7 +974,7 @@ public final class CallActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_TERMINATED),

@@ -373,8 +373,8 @@ public final class ZeebeAssertHelper {
 
     assertThat(
             RecordingExporter.incidentRecords()
-                .skipUntil(e -> e.getIntent() == IncidentIntent.RESOLVED)
-                .filter(e -> e.getIntent() == IncidentIntent.CREATED)
+                .skipUntil(e -> e.getIntentToWrite() == IncidentIntent.RESOLVED)
+                .filter(e -> e.getIntentToWrite() == IncidentIntent.CREATED)
                 .exists())
         .isTrue();
   }

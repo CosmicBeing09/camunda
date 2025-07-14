@@ -91,7 +91,7 @@ final class LongPollingIT {
       // it AGAIN after it was created, without the client sending a new request
       assertThat(RecordingExporter.jobBatchRecords(JobBatchIntent.ACTIVATE).limit(2).toList())
           .as("long polling should trigger a second ACTIVATE command without the client doing so")
-          .extracting(Record::getValueType, Record::getIntent)
+          .extracting(Record::getValueType, Record::getIntentToWrite)
           .containsSubsequence(
               Tuple.tuple(ValueType.JOB_BATCH, JobBatchIntent.ACTIVATE),
               Tuple.tuple(ValueType.JOB_BATCH, JobBatchIntent.ACTIVATE));

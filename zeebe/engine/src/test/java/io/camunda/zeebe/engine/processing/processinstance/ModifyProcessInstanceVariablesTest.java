@@ -162,7 +162,7 @@ public class ModifyProcessInstanceVariablesTest {
                 .skipUntil(
                     r ->
                         r.getValueType() == ValueType.PROCESS_INSTANCE_MODIFICATION
-                            && r.getIntent() == ProcessInstanceModificationIntent.MODIFY)
+                            && r.getIntentToWrite() == ProcessInstanceModificationIntent.MODIFY)
                 .onlyEvents()
                 .limit(
                     r ->
@@ -170,14 +170,14 @@ public class ModifyProcessInstanceVariablesTest {
                             && ((ProcessInstanceRecordValue) r.getValue())
                                 .getElementId()
                                 .equals("B")
-                            && r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED))
+                            && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATED))
         .extracting(
             Record::getValueType,
             r ->
                 r.getValueType() == ValueType.PROCESS_INSTANCE
                     ? ((ProcessInstanceRecordValue) r.getValue()).getBpmnElementType()
                     : null,
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to create variable before element scopes")
         .containsSubsequence(
             tuple(ValueType.VARIABLE, null, VariableIntent.CREATED),

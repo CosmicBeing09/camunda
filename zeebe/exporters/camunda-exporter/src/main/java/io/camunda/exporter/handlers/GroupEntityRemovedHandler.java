@@ -39,7 +39,7 @@ public class GroupEntityRemovedHandler
   @Override
   public boolean handlesRecord(final Record<GroupRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && GroupIntent.ENTITY_REMOVED.equals(record.getIntent());
+        && GroupIntent.ENTITY_REMOVED.equals(record.getIntentToWrite());
   }
 
   @Override

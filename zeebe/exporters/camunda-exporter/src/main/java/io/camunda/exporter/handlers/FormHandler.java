@@ -57,7 +57,7 @@ public class FormHandler implements ExportHandler<FormEntity, Form> {
   @Override
   public void updateEntity(final Record<Form> record, final FormEntity entity) {
     final Form value = record.getValue();
-    final var isDeleted = record.getIntent().equals(FormIntent.DELETED);
+    final var isDeleted = record.getIntentToWrite().equals(FormIntent.DELETED);
 
     entity
         .setVersion((long) value.getVersion())

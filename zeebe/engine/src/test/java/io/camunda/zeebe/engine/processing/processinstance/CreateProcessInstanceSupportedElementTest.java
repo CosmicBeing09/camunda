@@ -215,8 +215,8 @@ public class CreateProcessInstanceSupportedElementTest {
                 .limit(
                     r ->
                         r.getValue().getBpmnElementType() == scenario.type
-                            && r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED))
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+                            && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATED))
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),

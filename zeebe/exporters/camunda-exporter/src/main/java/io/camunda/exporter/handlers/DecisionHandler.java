@@ -40,7 +40,7 @@ public class DecisionHandler
 
   @Override
   public boolean handlesRecord(final Record<DecisionRecordValue> record) {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     return STATES.contains(intentStr);
   }
 

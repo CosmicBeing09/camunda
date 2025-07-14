@@ -32,7 +32,7 @@ public class OperationFromProcessInstanceHandler
 
   @Override
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
-    return isProcessEvent(record.getValue()) && ELIGIBLE_STATES.contains(record.getIntent());
+    return isProcessEvent(record.getValue()) && ELIGIBLE_STATES.contains(record.getIntentToWrite());
   }
 
   protected boolean isProcessEvent(final ProcessInstanceRecordValue recordValue) {

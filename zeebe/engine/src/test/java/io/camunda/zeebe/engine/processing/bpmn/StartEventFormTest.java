@@ -88,7 +88,7 @@ public class StartEventFormTest {
 
   private void assertProcessDeployed() {
     assertThat(RecordingExporter.deploymentRecords())
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, DeploymentIntent.CREATE),
             tuple(RecordType.EVENT, DeploymentIntent.CREATED));
@@ -97,7 +97,7 @@ public class StartEventFormTest {
   private void assertProcessInstanceCompleted(final long processInstanceKey) {
     assertThat(
             RecordingExporter.processInstanceRecords().withProcessInstanceKey(processInstanceKey))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED));

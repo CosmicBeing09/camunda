@@ -178,7 +178,7 @@ public final class ConditionIncidentTest {
                 .onlyEvents()
                 .withRecordKey(incidentEvent.getValue().getElementInstanceKey())
                 .limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
     assertThat(
@@ -186,7 +186,7 @@ public final class ConditionIncidentTest {
                 .onlyEvents()
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .hasSize(2)
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }
@@ -217,7 +217,7 @@ public final class ConditionIncidentTest {
                 .onlyEvents()
                 .withRecordKey(incidentEvent.getValue().getElementInstanceKey())
                 .limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
     assertThat(
@@ -225,7 +225,7 @@ public final class ConditionIncidentTest {
                 .onlyEvents()
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .hasSize(2)
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }

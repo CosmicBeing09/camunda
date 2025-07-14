@@ -45,7 +45,7 @@ public class VariableZeebeRecordProcessorOpenSearch {
     final VariableRecordValueImpl recordValue = (VariableRecordValueImpl) record.getValue();
 
     // update variable
-    if (record.getIntent().name() != Intent.MIGRATED.name()) {
+    if (record.getIntentToWrite().name() != Intent.MIGRATED.name()) {
       operations.add(persistVariable(record, recordValue));
     }
   }

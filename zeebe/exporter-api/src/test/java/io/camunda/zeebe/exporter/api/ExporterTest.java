@@ -93,7 +93,7 @@ public final class ExporterTest {
     public void exportRecord(final Record<?> record) {
       if (context.getFilter().acceptValue(record.getValueType())
           && context.getFilter().acceptType(record.getRecordType())
-          && context.getFilter().acceptIntent(record.getIntent())) {
+          && context.getFilter().acceptIntent(record.getIntentToWrite())) {
         exporter.export(record);
       }
     }

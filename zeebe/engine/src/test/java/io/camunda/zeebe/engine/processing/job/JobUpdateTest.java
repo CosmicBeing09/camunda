@@ -60,7 +60,7 @@ public class JobUpdateTest {
     // then
     assertThat(RecordingExporter.jobRecords().limit(3))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             record -> record.getValue().getRetries(),
             record -> record.getValue().getTimeout())
         .containsSubsequence(
@@ -82,7 +82,7 @@ public class JobUpdateTest {
 
     // then
     assertThat(RecordingExporter.jobRecords().limit(3))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(JobIntent.CREATED, JobIntent.UPDATE, JobIntent.UPDATED);
   }
 
@@ -99,7 +99,7 @@ public class JobUpdateTest {
 
     // then
     assertThat(RecordingExporter.jobRecords().limit(3))
-        .extracting(Record::getIntent, record -> record.getValue().getRetries())
+        .extracting(Record::getIntentToWrite, record -> record.getValue().getRetries())
         .containsSubsequence(
             tuple(JobIntent.CREATED, 3), tuple(JobIntent.UPDATE, 5), tuple(JobIntent.UPDATED, 5));
   }
@@ -122,7 +122,7 @@ public class JobUpdateTest {
 
     // then
     assertThat(RecordingExporter.jobRecords().limit(3))
-        .extracting(Record::getIntent, record -> record.getValue().getTimeout())
+        .extracting(Record::getIntentToWrite, record -> record.getValue().getTimeout())
         .containsSubsequence(
             tuple(JobIntent.CREATED, -1L),
             tuple(JobIntent.UPDATE, 300000L),

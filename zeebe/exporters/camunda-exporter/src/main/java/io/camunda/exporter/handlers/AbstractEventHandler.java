@@ -67,7 +67,7 @@ public abstract class AbstractEventHandler<R extends RecordValue>
         EventSourceType.fromZeebeValueType(
             record.getValueType() == null ? null : record.getValueType().name()));
     eventEntity.setDateTime(toOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())));
-    eventEntity.setEventType(EventType.fromZeebeIntent(record.getIntent().name()));
+    eventEntity.setEventType(EventType.fromZeebeIntent(record.getIntentToWrite().name()));
   }
 
   protected void persistEvent(

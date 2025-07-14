@@ -178,7 +178,7 @@ public class AnonymousAuthorizationTest {
 
     // then
     assertThat(RecordingExporter.incidentRecords().onlyEvents().limit(2))
-        .extracting(io.camunda.zeebe.protocol.record.Record::getKey, Record::getIntent)
+        .extracting(io.camunda.zeebe.protocol.record.Record::getKey, Record::getIntentToWrite)
         .describedAs("form not found incident is resolved and no new incident is created")
         .containsExactly(
             tuple(incident.getKey(), IncidentIntent.CREATED),

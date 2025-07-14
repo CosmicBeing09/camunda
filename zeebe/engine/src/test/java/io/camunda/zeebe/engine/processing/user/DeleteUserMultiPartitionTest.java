@@ -65,7 +65,7 @@ public class DeleteUserMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 3)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 3)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.USER
@@ -73,7 +73,7 @@ public class DeleteUserMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == UserIntent.DELETE)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -100,9 +100,9 @@ public class DeleteUserMultiPartitionTest {
       assertThat(
               RecordingExporter.records()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(UserIntent.DELETED))
+                  .limit(record -> record.getIntentToWrite().equals(UserIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(UserIntent.DELETE, UserIntent.DELETED);
     }
   }
@@ -131,7 +131,7 @@ public class DeleteUserMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 3)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 3)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

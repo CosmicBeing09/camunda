@@ -45,7 +45,7 @@ public class ProcessHandler implements ExportHandler<ProcessEntity, Process> {
 
   @Override
   public boolean handlesRecord(final Record<Process> record) {
-    return record.getIntent().equals(ProcessIntent.CREATED);
+    return record.getIntentToWrite().equals(ProcessIntent.CREATED);
   }
 
   @Override

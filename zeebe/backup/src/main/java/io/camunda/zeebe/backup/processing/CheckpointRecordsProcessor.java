@@ -86,7 +86,7 @@ public final class CheckpointRecordsProcessor
       // Should never reach here. StreamProcessor must choose the right processor always.
       throw new IllegalArgumentException("Unknown record");
     }
-    final CheckpointIntent intent = (CheckpointIntent) record.getIntent();
+    final CheckpointIntent intent = (CheckpointIntent) record.getIntentToWrite();
     if (intent == CheckpointIntent.CREATED) {
       checkpointCreatedEventApplier.apply((CheckpointRecord) record.getValue());
     }
@@ -97,7 +97,7 @@ public final class CheckpointRecordsProcessor
   public ProcessingResult process(
       final TypedRecord record, final ProcessingResultBuilder resultBuilder) {
     if (record.getValueType() == ValueType.CHECKPOINT
-        && record.getIntent() == CheckpointIntent.CREATE) {
+        && record.getIntentToWrite() == CheckpointIntent.CREATE) {
       return checkpointCreateProcessor.process(record, resultBuilder);
     }
     // Should never reach here. StreamProcessor must choose the right processor always.

@@ -105,7 +105,7 @@ public class Engine implements RecordProcessor {
   @Override
   public void replay(final TypedRecord event) {
     eventApplier.applyState(
-        event.getKey(), event.getIntent(), event.getValue(), event.getRecordVersion());
+        event.getKey(), event.getIntentToWrite(), event.getValue(), event.getRecordVersion());
   }
 
   @Override
@@ -121,7 +121,7 @@ public class Engine implements RecordProcessor {
             recordProcessorMap.get(
                 typedCommand.getRecordType(),
                 typedCommand.getValueType(),
-                typedCommand.getIntent().value());
+                typedCommand.getIntentToWrite().value());
       } catch (final Exception e) {
         LOG.error(ERROR_MESSAGE_PROCESSOR_NOT_FOUND, typedCommand, e);
       }
@@ -151,7 +151,7 @@ public class Engine implements RecordProcessor {
             recordProcessorMap.get(
                 typedCommand.getRecordType(),
                 typedCommand.getValueType(),
-                typedCommand.getIntent().value());
+                typedCommand.getIntentToWrite().value());
       } catch (final Exception e) {
         LOG.error(ERROR_MESSAGE_PROCESSOR_NOT_FOUND, typedCommand, e);
       }
@@ -172,7 +172,7 @@ public class Engine implements RecordProcessor {
   private boolean shouldProcessCommand(final TypedRecord<?> typedCommand) {
     // There is no ban check needed if the intent is not instance related
     // nor if the intent is to create new instances, which can't be banned yet
-    final Intent intent = typedCommand.getIntent();
+    final Intent intent = typedCommand.getIntentToWrite();
     final boolean noBanCheckNeeded =
         !(intent instanceof ProcessInstanceRelatedIntent)
             || intent instanceof ProcessInstanceCreationIntent;
@@ -217,7 +217,7 @@ public class Engine implements RecordProcessor {
     }
     errorRecord.initErrorRecord(processingException, record.getPosition());
 
-    if (DbBannedInstanceState.shouldBeBanned(record.getIntent())) {
+    if (DbBannedInstanceState.shouldBeBanned(record.getIntentToWrite())) {
       if (record.getValue() instanceof ProcessInstanceRelated) {
         final long processInstanceKey =
             ((ProcessInstanceRelated) record.getValue()).getProcessInstanceKey();

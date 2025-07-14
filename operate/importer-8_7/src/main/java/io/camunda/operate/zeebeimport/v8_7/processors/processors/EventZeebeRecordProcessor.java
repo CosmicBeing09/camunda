@@ -160,7 +160,7 @@ public class EventZeebeRecordProcessor {
       final Consumer<Record<? extends RecordValue>> recordProcessor) {
     if (records.size() >= 1) {
       for (int i = records.size() - 1; i >= 0; i--) {
-        final String intentStr = records.get(i).getIntent().name();
+        final String intentStr = records.get(i).getIntentToWrite().name();
         if (events.contains(intentStr)) {
           recordProcessor.accept(records.get(i));
           break;
@@ -351,7 +351,7 @@ public class EventZeebeRecordProcessor {
         EventSourceType.fromZeebeValueType(
             record.getValueType() == null ? null : record.getValueType().name()));
     eventEntity.setDateTime(DateUtil.toOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())));
-    eventEntity.setEventType(EventType.fromZeebeIntent(record.getIntent().name()));
+    eventEntity.setEventType(EventType.fromZeebeIntent(record.getIntentToWrite().name()));
   }
 
   private void persistEvent(

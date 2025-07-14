@@ -92,7 +92,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   @Override
   public void processRecord(final TypedRecord<UserTaskRecord> command) {
-    final UserTaskIntent intent = (UserTaskIntent) command.getIntent();
+    final UserTaskIntent intent = (UserTaskIntent) command.getIntentToWrite();
     switch (intent) {
       case CREATE, ASSIGN, CLAIM, UPDATE, COMPLETE, CANCEL ->
           processOperationCommand(command, intent);
@@ -231,7 +231,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     final var metadata =
         new UserTaskTransitionTriggerRequestMetadata()
-            .setIntent(command.getIntent())
+            .setIntent(command.getIntentToWrite())
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());

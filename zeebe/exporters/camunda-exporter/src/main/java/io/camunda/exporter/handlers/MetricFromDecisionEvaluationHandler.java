@@ -46,8 +46,8 @@ public class MetricFromDecisionEvaluationHandler
 
   @Override
   public boolean handlesRecord(final Record<DecisionEvaluationRecordValue> record) {
-    return record.getIntent().name().equals(DecisionEvaluationIntent.EVALUATED.name())
-        || record.getIntent().name().equals(DecisionEvaluationIntent.FAILED.name());
+    return record.getIntentToWrite().name().equals(DecisionEvaluationIntent.EVALUATED.name())
+        || record.getIntentToWrite().name().equals(DecisionEvaluationIntent.FAILED.name());
   }
 
   @Override

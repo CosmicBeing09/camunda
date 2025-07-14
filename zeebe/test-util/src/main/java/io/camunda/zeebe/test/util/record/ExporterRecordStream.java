@@ -61,11 +61,11 @@ public abstract class ExporterRecordStream<
 
   public S withIntents(final Intent... intents) {
     final var intentsList = Arrays.asList(intents);
-    return filter(m -> intentsList.contains(m.getIntent()));
+    return filter(m -> intentsList.contains(m.getIntentToWrite()));
   }
 
   public S withIntent(final Intent intent) {
-    return filter(m -> m.getIntent() == intent);
+    return filter(m -> m.getIntentToWrite() == intent);
   }
 
   public S withPartitionId(final int partitionId) {

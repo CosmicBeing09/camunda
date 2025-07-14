@@ -83,7 +83,7 @@ public class IncidentZeebeRecordProcessor {
   private void persistPostImportQueueEntry(
       final Record record, final IncidentRecordValue recordValue, final BatchRequest batchRequest)
       throws PersistenceException {
-    String intent = record.getIntent().name();
+    String intent = record.getIntentToWrite().name();
     if (intent.equals(IncidentIntent.MIGRATED.toString())) {
       intent = IncidentIntent.CREATED.toString();
     }
@@ -108,7 +108,7 @@ public class IncidentZeebeRecordProcessor {
       final BatchRequest batchRequest,
       final Consumer<IncidentEntity> newIncidentHandler)
       throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     final Long incidentKey = record.getKey();
     if (intentStr.equals(IncidentIntent.RESOLVED.toString())) {
 

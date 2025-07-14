@@ -208,7 +208,7 @@ public final class ErrorCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(TASK_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(TASK_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_TERMINATED),
@@ -256,7 +256,7 @@ public final class ErrorCatchEventTest {
               r -> r.getValue().getName(),
               r -> r.getValue().getValue(),
               r -> r.getValue().getScopeKey(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsExactly(
               tuple("foo", "\"bar\"", errorEvents.get(0).getKey(), VariableIntent.CREATED));
     } else {
@@ -266,7 +266,7 @@ public final class ErrorCatchEventTest {
               r -> r.getValue().getName(),
               r -> r.getValue().getValue(),
               r -> r.getValue().getScopeKey(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .describedAs("With event sub process the variables are created at the process instance")
           .containsExactly(tuple("foo", "\"bar\"", processInstanceKey, VariableIntent.CREATED));
     }

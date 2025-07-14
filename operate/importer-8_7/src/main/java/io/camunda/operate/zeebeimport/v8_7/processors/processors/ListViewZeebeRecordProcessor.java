@@ -121,7 +121,7 @@ public class ListViewZeebeRecordProcessor {
   public void processIncidentRecord(final Record record, final BatchRequest batchRequest)
       throws PersistenceException {
 
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     final IncidentRecordValue recordValue = (IncidentRecordValue) record.getValue();
 
     // update activity instance
@@ -170,7 +170,7 @@ public class ListViewZeebeRecordProcessor {
         if (!shouldProcessVariableRecord(scopedVariable)) {
           continue;
         }
-        final var intent = scopedVariable.getIntent();
+        final var intent = scopedVariable.getIntentToWrite();
         final var variableValue = scopedVariable.getValue();
         final var variableName = variableValue.getName();
         final var cachedVariable =
@@ -314,24 +314,24 @@ public class ListViewZeebeRecordProcessor {
 
   private boolean shouldProcessProcessInstanceRecord(
       final Record<ProcessInstanceRecordValue> record) {
-    final var intent = record.getIntent().name();
+    final var intent = record.getIntentToWrite().name();
     return PI_AND_AI_START_STATES.contains(intent)
         || PI_AND_AI_FINISH_STATES.contains(intent)
         || ELEMENT_MIGRATED.name().equals(intent);
   }
 
   private boolean shouldProcessVariableRecord(final Record<VariableRecordValue> record) {
-    final var intent = record.getIntent().name();
+    final var intent = record.getIntentToWrite().name();
     // skip variable migrated record as it always has null in value field
     return !VariableIntent.MIGRATED.name().equals(intent);
   }
 
   private boolean isProcessInstanceTerminated(final Record<ProcessInstanceRecordValue> record) {
-    return record.getIntent() == ELEMENT_TERMINATED;
+    return record.getIntentToWrite() == ELEMENT_TERMINATED;
   }
 
   private boolean isProcessInstanceMigrated(final Record<ProcessInstanceRecordValue> record) {
-    return record.getIntent() == ELEMENT_MIGRATED;
+    return record.getIntentToWrite() == ELEMENT_MIGRATED;
   }
 
   private ProcessInstanceForListViewEntity updateProcessInstance(
@@ -346,7 +346,7 @@ public class ListViewZeebeRecordProcessor {
     }
 
     final var recordValue = record.getValue();
-    final var intentStr = record.getIntent().name();
+    final var intentStr = record.getIntentToWrite().name();
 
     piEntity
         .setId(String.valueOf(recordValue.getProcessInstanceKey()))
@@ -480,7 +480,7 @@ public class ListViewZeebeRecordProcessor {
       return;
     }
 
-    final var intentStr = record.getIntent().name();
+    final var intentStr = record.getIntentToWrite().name();
 
     entity.setKey(record.getValue().getElementInstanceKey());
     entity.setId(ConversionUtils.toStringOrNull(record.getValue().getElementInstanceKey()));
@@ -522,7 +522,7 @@ public class ListViewZeebeRecordProcessor {
     final FlowNodeInstanceForListViewEntity entity = entities.get(record.getKey());
 
     final var recordValue = record.getValue();
-    final var intentStr = record.getIntent().name();
+    final var intentStr = record.getIntentToWrite().name();
 
     entity.setKey(record.getKey());
     entity.setId(ConversionUtils.toStringOrNull(record.getKey()));

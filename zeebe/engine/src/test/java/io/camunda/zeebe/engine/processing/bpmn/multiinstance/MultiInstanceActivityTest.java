@@ -178,7 +178,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(expectedLifecycle);
   }
 
@@ -203,7 +203,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -258,7 +258,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -292,7 +292,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.COMPLETE_ELEMENT),
@@ -354,7 +354,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -388,7 +388,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -445,7 +445,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -475,7 +475,7 @@ public final class MultiInstanceActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SEQUENCE_FLOW, ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -611,7 +611,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -637,7 +637,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementId(ELEMENT_ID)
                 .limit(6))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsExactly(
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -650,7 +650,7 @@ public final class MultiInstanceActivityTest {
             RecordingExporter.processInstanceRecords()
                 .filterRootScope()
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 
@@ -924,10 +924,10 @@ public final class MultiInstanceActivityTest {
             RecordingExporter.variableRecords()
                 .limit(
                     v ->
-                        v.getIntent() == VariableIntent.UPDATED
+                        v.getIntentToWrite() == VariableIntent.UPDATED
                             && v.getValue().getName().equals(OUTPUT_COLLECTION_VARIABLE)
                             && v.getValue().getValue().equals("[10,20,30]")))
-        .extracting(Record::getIntent, r -> r.getValue().getName(), r -> r.getValue().getValue())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getName(), r -> r.getValue().getValue())
         .describedAs("The output element variable is not nil initialized")
         // note that output element expression is set to INPUT_ELEMENT_VARIABLE, so we assert that
         // the output element var is not nil initialized by checking the input element var's value
@@ -975,10 +975,10 @@ public final class MultiInstanceActivityTest {
             RecordingExporter.variableRecords()
                 .limit(
                     v ->
-                        v.getIntent() == VariableIntent.UPDATED
+                        v.getIntentToWrite() == VariableIntent.UPDATED
                             && v.getValue().getName().equals(OUTPUT_COLLECTION_VARIABLE)
                             && v.getValue().getValue().equals("[1,2,3]")))
-        .extracting(Record::getIntent, r -> r.getValue().getName(), r -> r.getValue().getValue())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getName(), r -> r.getValue().getValue())
         .describedAs("The output element variable is not nil initialized")
         // note that output element expression is set to `loopCounter`, so we assert that
         // the output element var is not nil initialized by checking the `loopCounter`'s value
@@ -1143,7 +1143,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.COMPLETE_ELEMENT),
@@ -1206,7 +1206,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.COMPLETE_ELEMENT),
@@ -1265,7 +1265,7 @@ public final class MultiInstanceActivityTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId(ELEMENT_ID))
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1489,7 +1489,7 @@ public final class MultiInstanceActivityTest {
             RecordingExporter.messageSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(5))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             MessageSubscriptionIntent.CREATE,
             MessageSubscriptionIntent.CREATED,
@@ -1504,7 +1504,7 @@ public final class MultiInstanceActivityTest {
         .extracting(
             r ->
                 tuple(
-                    r.getValue().getElementId(), r.getValue().getBpmnElementType(), r.getIntent()))
+                    r.getValue().getElementId(), r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(
                 ELEMENT_ID,
@@ -1586,7 +1586,7 @@ public final class MultiInstanceActivityTest {
         .extracting(
             r ->
                 tuple(
-                    r.getValue().getElementId(), r.getValue().getBpmnElementType(), r.getIntent()))
+                    r.getValue().getElementId(), r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(
                 "to-notified",
@@ -1601,7 +1601,7 @@ public final class MultiInstanceActivityTest {
             RecordingExporter.messageSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(7))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             MessageSubscriptionIntent.CREATE,
             MessageSubscriptionIntent.CREATED,
@@ -1618,7 +1618,7 @@ public final class MultiInstanceActivityTest {
         .extracting(
             r ->
                 tuple(
-                    r.getValue().getElementId(), r.getValue().getBpmnElementType(), r.getIntent()))
+                    r.getValue().getElementId(), r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple("notified", BpmnElementType.END_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(

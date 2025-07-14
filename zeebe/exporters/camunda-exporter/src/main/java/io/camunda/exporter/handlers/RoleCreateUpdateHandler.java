@@ -37,8 +37,8 @@ public class RoleCreateUpdateHandler implements ExportHandler<RoleEntity, RoleRe
   @Override
   public boolean handlesRecord(final Record<RoleRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && (record.getIntent().equals(RoleIntent.CREATED)
-            || record.getIntent().equals(RoleIntent.UPDATED));
+        && (record.getIntentToWrite().equals(RoleIntent.CREATED)
+            || record.getIntentToWrite().equals(RoleIntent.UPDATED));
   }
 
   @Override

@@ -90,7 +90,7 @@ public class OperationReferenceTest {
             .limit(
                 r ->
                     r.getKey() == processInstanceKey
-                        && r.getIntent() == ProcessInstanceIntent.ELEMENT_TERMINATED);
+                        && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_TERMINATED);
 
     assertThat(followUpRecords)
         .hasSizeGreaterThan(0)

@@ -132,7 +132,7 @@ public final class ParallelGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("end", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -164,7 +164,7 @@ public final class ParallelGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSequence(
             tuple("fork", ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple("fork", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -201,7 +201,7 @@ public final class ParallelGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSequence(
             tuple("fork", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(PROCESS_ID, ProcessInstanceIntent.COMPLETE_ELEMENT));
@@ -222,7 +222,7 @@ public final class ParallelGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(events)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("flow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING))
@@ -273,11 +273,11 @@ public final class ParallelGatewayTest {
             .limit(
                 r ->
                     "join".equals(r.getValue().getElementId())
-                        && ProcessInstanceIntent.ELEMENT_COMPLETED == r.getIntent())
+                        && ProcessInstanceIntent.ELEMENT_COMPLETED == r.getIntentToWrite())
             .collect(Collectors.toList());
 
     assertThat(events)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -310,7 +310,7 @@ public final class ParallelGatewayTest {
         RecordingExporter.processInstanceRecords()
             .filter(
                 r ->
-                    r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED
+                    r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATED
                         && r.getValue().getBpmnElementType() == BpmnElementType.SERVICE_TASK)
             .limit(2)
             .collect(Collectors.toList());
@@ -385,7 +385,7 @@ public final class ParallelGatewayTest {
             records.stream()
                 .filter(
                     r -> r.getValue().getBpmnElementType().equals(BpmnElementType.PARALLEL_GATEWAY))
-                .filter(r -> r.getIntent().equals(ProcessInstanceIntent.ACTIVATE_ELEMENT))
+                .filter(r -> r.getIntentToWrite().equals(ProcessInstanceIntent.ACTIVATE_ELEMENT))
                 .filter(r -> r.getRecordType().equals(RecordType.COMMAND_REJECTION)))
         .describedAs("activate command should be rejected twice")
         .hasSize(2)
@@ -399,7 +399,7 @@ public final class ParallelGatewayTest {
     assertThat(
             records.stream()
                 .filter(r -> r.getValue().getElementId().equals("joining"))
-                .filter(r -> r.getIntent().equals(ProcessInstanceIntent.ELEMENT_ACTIVATED)))
+                .filter(r -> r.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_ACTIVATED)))
         .describedAs("joining gateway should only be activated once")
         .hasSize(1);
   }

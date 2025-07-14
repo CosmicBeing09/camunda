@@ -125,7 +125,7 @@ public final class MessageStreamProcessorTest {
         awaitAndGet(
             () -> rule.events().onlyMessageSubscriptionRecords().onlyRejections().findFirst());
 
-    assertThat(rejection.getIntent()).isEqualTo(MessageSubscriptionIntent.CREATE);
+    assertThat(rejection.getIntentToWrite()).isEqualTo(MessageSubscriptionIntent.CREATE);
     assertThat(rejection.getRejectionType()).isEqualTo(RejectionType.INVALID_STATE);
 
     verify(spySubscriptionCommandSender, timeout(5_000).times(2))
@@ -230,7 +230,7 @@ public final class MessageStreamProcessorTest {
         awaitAndGet(
             () -> rule.events().onlyMessageSubscriptionRecords().onlyRejections().findFirst());
 
-    assertThat(rejection.getIntent()).isEqualTo(MessageSubscriptionIntent.CORRELATE);
+    assertThat(rejection.getIntentToWrite()).isEqualTo(MessageSubscriptionIntent.CORRELATE);
     assertThat(rejection.getRejectionType()).isEqualTo(RejectionType.NOT_FOUND);
   }
 
@@ -256,7 +256,7 @@ public final class MessageStreamProcessorTest {
         awaitAndGet(
             () -> rule.events().onlyMessageSubscriptionRecords().onlyRejections().findFirst());
 
-    assertThat(rejection.getIntent()).isEqualTo(MessageSubscriptionIntent.DELETE);
+    assertThat(rejection.getIntentToWrite()).isEqualTo(MessageSubscriptionIntent.DELETE);
     assertThat(rejection.getRejectionType()).isEqualTo(RejectionType.NOT_FOUND);
 
     // cannot verify messageName buffer since it is a view around another buffer which is changed

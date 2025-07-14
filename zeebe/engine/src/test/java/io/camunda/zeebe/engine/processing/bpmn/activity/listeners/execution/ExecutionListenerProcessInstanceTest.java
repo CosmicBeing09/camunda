@@ -86,7 +86,7 @@ public class ExecutionListenerProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.COMPLETE_EXECUTION_LISTENER),
@@ -122,7 +122,7 @@ public class ExecutionListenerProcessInstanceTest {
 
     // then: assert the start EL job was completed after the failure
     assertThat(records().betweenProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(ValueType.JOB, JobIntent.CREATED),
@@ -137,7 +137,7 @@ public class ExecutionListenerProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.COMPLETE_EXECUTION_LISTENER),
@@ -172,7 +172,7 @@ public class ExecutionListenerProcessInstanceTest {
 
     // then: assert the end EL job was completed after the failure
     assertThat(records().betweenProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(ValueType.JOB, JobIntent.CREATED),
@@ -187,7 +187,7 @@ public class ExecutionListenerProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.COMPLETE_EXECUTION_LISTENER),
@@ -255,7 +255,7 @@ public class ExecutionListenerProcessInstanceTest {
                 .withJobKind(JobKind.EXECUTION_LISTENER)
                 .limit(6)
                 .onlyEvents())
-        .extracting(r -> r.getValue().getType(), Record::getIntent)
+        .extracting(r -> r.getValue().getType(), Record::getIntentToWrite)
         .containsSequence(
             tuple(START_EL_TYPE + "_1", JobIntent.CREATED),
             tuple(START_EL_TYPE + "_1", JobIntent.COMPLETED),
@@ -271,7 +271,7 @@ public class ExecutionListenerProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.COMPLETE_EXECUTION_LISTENER),
@@ -343,7 +343,7 @@ public class ExecutionListenerProcessInstanceTest {
                 .withJobKind(JobKind.EXECUTION_LISTENER)
                 .limit(8)
                 .onlyEvents())
-        .extracting(r -> r.getValue().getType(), Record::getIntent)
+        .extracting(r -> r.getValue().getType(), Record::getIntentToWrite)
         .containsSequence(
             // start EL job processing
             tuple(START_EL_TYPE, JobIntent.CREATED),
@@ -363,7 +363,7 @@ public class ExecutionListenerProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.COMPLETE_EXECUTION_LISTENER),
@@ -401,7 +401,7 @@ public class ExecutionListenerProcessInstanceTest {
 
     // then: assert the variable was created after start EL completion
     assertThat(records().withValueTypes(ValueType.JOB, ValueType.VARIABLE).onlyEvents().limit(3))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsExactly(
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.COMPLETED),

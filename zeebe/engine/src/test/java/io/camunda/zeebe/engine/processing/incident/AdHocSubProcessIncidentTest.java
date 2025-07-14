@@ -272,7 +272,7 @@ public class AdHocSubProcessIncidentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(AD_HOC_SUB_PROCESS_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(AD_HOC_SUB_PROCESS_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -320,7 +320,7 @@ public class AdHocSubProcessIncidentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit("B", ProcessInstanceIntent.ELEMENT_ACTIVATED))
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSequence(
             tuple(AD_HOC_SUB_PROCESS_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(AD_HOC_SUB_PROCESS_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -362,7 +362,7 @@ public class AdHocSubProcessIncidentTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withRecordKey(incidentCreated.getKey())
                 .limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }
 }

@@ -59,7 +59,7 @@ public final class TerminateEndEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs(
             "Expect to complete the process instance when reaching the terminate end event")
         .containsSubsequence(
@@ -95,7 +95,7 @@ public final class TerminateEndEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs(
             "Expect to terminate all element instances when reaching the terminate end event")
         .containsSubsequence(
@@ -148,7 +148,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "Expect to terminate all element instances in the subprocess when reaching the terminate end event")
         .containsSubsequence(
@@ -184,7 +184,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "Expect to complete the process instance after all element instances are completed")
         .containsSubsequence(
@@ -248,7 +248,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "Expect to terminate all element instances in the event subprocess when reaching the terminate end event")
         .containsSubsequence(
@@ -278,7 +278,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "Expect to complete the process instance after all element instances are completed")
         .containsSubsequence(
@@ -352,7 +352,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "Expect to terminate all element instances in the subprocess when reaching the terminate end event")
         .containsSubsequence(
@@ -378,7 +378,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to complete the other subprocess instance")
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, "D", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -454,7 +454,7 @@ public final class TerminateEndEventTest {
         .extracting(
             record -> record.getValue().getBpmnElementType(),
             record -> record.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "Expect to terminate all element instances in the child process instance when reaching the terminate end event")
         .containsSubsequence(
@@ -512,7 +512,7 @@ public final class TerminateEndEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs(
             "Expect to terminate all element instances when reaching the terminate end event")
         .containsSubsequence(

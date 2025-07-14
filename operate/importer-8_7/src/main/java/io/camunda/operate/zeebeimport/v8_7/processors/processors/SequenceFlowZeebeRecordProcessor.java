@@ -32,7 +32,7 @@ public class SequenceFlowZeebeRecordProcessor {
 
   public void processSequenceFlowRecord(final Record record, final BatchRequest batchRequest)
       throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     if (intentStr.equals(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN.name())) {
       final ProcessInstanceRecordValue recordValue = (ProcessInstanceRecordValue) record.getValue();
       persistSequenceFlow(record, recordValue, batchRequest);

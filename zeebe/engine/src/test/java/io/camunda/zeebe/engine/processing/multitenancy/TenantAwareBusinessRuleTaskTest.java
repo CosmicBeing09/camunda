@@ -101,7 +101,7 @@ public class TenantAwareBusinessRuleTaskTest {
                 .withElementType(BpmnElementType.BUSINESS_RULE_TASK)
                 .withTenantId(tenantOne)
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),

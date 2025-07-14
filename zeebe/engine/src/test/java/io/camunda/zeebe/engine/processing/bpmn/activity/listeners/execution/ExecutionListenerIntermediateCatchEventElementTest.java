@@ -136,7 +136,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -374,7 +374,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),

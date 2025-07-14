@@ -87,7 +87,7 @@ public final class JobWorkerElementTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(elementBuilder.getElementType())
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -249,7 +249,7 @@ public final class JobWorkerElementTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(elementBuilder.getElementType(), ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(elementBuilder.getElementType(), ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -292,7 +292,7 @@ public final class JobWorkerElementTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withTenantId(tenantId)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(elementBuilder.getElementType(), ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(elementBuilder.getElementType(), ProcessInstanceIntent.ELEMENT_COMPLETED),

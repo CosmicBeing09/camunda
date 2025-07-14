@@ -39,7 +39,7 @@ public class RoleMemberAddedHandler implements ExportHandler<RoleMemberEntity, R
   @Override
   public boolean handlesRecord(final Record<RoleRecordValue> record) {
     return getHandledValueType() == record.getValueType()
-        && record.getIntent() == RoleIntent.ENTITY_ADDED;
+        && record.getIntentToWrite() == RoleIntent.ENTITY_ADDED;
   }
 
   @Override

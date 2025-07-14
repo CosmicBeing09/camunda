@@ -66,7 +66,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
       return;
     }
 
-    final var intent = (ClockIntent) command.getIntent();
+    final var intent = (ClockIntent) command.getIntentToWrite();
     final var clockRecord = command.getValue();
 
     if (intent == ClockIntent.PIN && clockRecord.getTime() < 0) {
@@ -92,7 +92,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
 
   @Override
   public void processDistributedCommand(final TypedRecord<ClockRecord> command) {
-    final var commandIntent = (ClockIntent) command.getIntent();
+    final var commandIntent = (ClockIntent) command.getIntentToWrite();
     final var resultIntent = followUpIntent(commandIntent);
 
     applyClockModification(command.getKey(), commandIntent, resultIntent, command.getValue());

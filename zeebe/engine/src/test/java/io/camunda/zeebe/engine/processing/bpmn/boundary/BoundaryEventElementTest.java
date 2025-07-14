@@ -104,7 +104,7 @@ public final class BoundaryEventElementTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(elementBuilder.elementType, ProcessInstanceIntent.ELEMENT_TERMINATING),

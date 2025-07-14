@@ -40,7 +40,7 @@ public class UserCreatedUpdatedHandler implements ExportHandler<UserEntity, User
   @Override
   public boolean handlesRecord(final Record<UserRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && SUPPORTED_INTENTS.contains(record.getIntent());
+        && SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override

@@ -110,7 +110,7 @@ public class RdbmsExporter {
         record.getPartitionId(),
         record.getPosition(),
         record.getValueType(),
-        record.getIntent());
+        record.getIntentToWrite());
 
     boolean exported = false;
     if (registeredHandlers.containsKey(record.getValueType())) {

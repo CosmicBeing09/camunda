@@ -303,7 +303,7 @@ public class NonInterruptingEventSubprocessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.EVENT_SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.EVENT_SUB_PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -336,8 +336,8 @@ public class NonInterruptingEventSubprocessTest {
                 .limit(
                     r ->
                         r.getValue().getBpmnElementType() == BpmnElementType.EVENT_SUB_PROCESS
-                            && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED))
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+                            && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED))
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -393,12 +393,12 @@ public class NonInterruptingEventSubprocessTest {
             .onlyEvents()
             .limit(
                 r ->
-                    r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED
+                    r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED
                         && r.getValue().getBpmnElementType() == BpmnElementType.EVENT_SUB_PROCESS)
             .asList();
 
     assertThat(events)
-        .extracting(Record::getIntent, e -> e.getValue().getElementId())
+        .extracting(Record::getIntentToWrite, e -> e.getValue().getElementId())
         .containsExactly(
             tuple(ProcessInstanceIntent.ELEMENT_ACTIVATING, "event_sub_proc"),
             tuple(ProcessInstanceIntent.ELEMENT_ACTIVATED, "event_sub_proc"),

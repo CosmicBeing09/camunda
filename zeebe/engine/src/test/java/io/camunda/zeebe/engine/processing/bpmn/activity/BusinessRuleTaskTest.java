@@ -102,7 +102,7 @@ public final class BusinessRuleTaskTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.BUSINESS_RULE_TASK)
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -187,7 +187,7 @@ public final class BusinessRuleTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.BUSINESS_RULE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.BUSINESS_RULE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -842,7 +842,7 @@ public final class BusinessRuleTaskTest {
                 .limitToProcessInstanceCompleted()
                 .withElementType(BpmnElementType.BUSINESS_RULE_TASK))
         .describedAs("expected the business rule task to be completed")
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_COMPLETED);
 
     final var decisionEvaluationRecord =

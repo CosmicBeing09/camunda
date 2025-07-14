@@ -254,11 +254,11 @@ public class TaskListenerBlockedTransitionTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
         .as(
             "Verify the sequence of intents, `assignee`, `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getAssignee(),
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())
@@ -485,9 +485,9 @@ public class TaskListenerBlockedTransitionTest {
     assertThat(
             RecordingExporter.records()
                 .filter(isUserTaskOrVariableDocumentWithElementInstanceKey)
-                .skipUntil(r -> r.getIntent() == VariableDocumentIntent.UPDATE)
-                .limit(r -> r.getIntent() == VariableDocumentIntent.UPDATED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .skipUntil(r -> r.getIntentToWrite() == VariableDocumentIntent.UPDATE)
+                .limit(r -> r.getIntentToWrite() == VariableDocumentIntent.UPDATED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .describedAs("Verify the expected sequence of UserTask and VariableDocument intents")
         .containsExactly(
             tuple(ValueType.VARIABLE_DOCUMENT, VariableDocumentIntent.UPDATE),
@@ -554,8 +554,8 @@ public class TaskListenerBlockedTransitionTest {
             RecordingExporter.userTaskRecords()
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
-                .skipUntil(r -> r.getIntent() == UserTaskIntent.UPDATING)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .skipUntil(r -> r.getIntentToWrite() == UserTaskIntent.UPDATING)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.UPDATED))
         .extracting(Record::getValue)
         .allSatisfy(
             userTask -> {
@@ -684,7 +684,7 @@ public class TaskListenerBlockedTransitionTest {
             RecordingExporter.records()
                 .limitToProcessInstance(processInstanceKey)
                 .filter(isUserTaskOrProcessInstanceRecordWithUserTaskInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .describedAs("Verify the expected sequence of UserTask and VariableDocument intents")
         .describedAs(
             "Expected sequence of UserTask canceling intents and UserTask element termination")
@@ -846,11 +846,11 @@ public class TaskListenerBlockedTransitionTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
         .as(
             "Verify the sequence of intents, `assignee`, `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getAssignee(),
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())
@@ -942,8 +942,8 @@ public class TaskListenerBlockedTransitionTest {
     helper.completeJobs(processInstanceKey, listenerType, listenerType + "_2");
 
     // then: assert the listener job was completed after the failure
-    assertThat(records().limit(r -> r.getIntent() == terminalActionIntent))
-        .extracting(Record::getValueType, Record::getIntent)
+    assertThat(records().limit(r -> r.getIntentToWrite() == terminalActionIntent))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.FAILED),

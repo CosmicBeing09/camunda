@@ -64,7 +64,7 @@ public class ProcessInstanceZeebeRecordProcessorOpenSearch {
 
     final ProcessInstanceRecordValueImpl recordValue =
         (ProcessInstanceRecordValueImpl) record.getValue();
-    if (isVariableScopeType(recordValue) && FLOW_NODE_STATES.contains(record.getIntent().name())) {
+    if (isVariableScopeType(recordValue) && FLOW_NODE_STATES.contains(record.getIntentToWrite().name())) {
       final FlowNodeInstanceEntity flowNodeInstance = createFlowNodeInstance(record);
       operations.add(getFlowNodeInstanceQuery(flowNodeInstance));
     }

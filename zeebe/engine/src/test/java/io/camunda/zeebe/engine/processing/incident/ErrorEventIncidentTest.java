@@ -263,11 +263,11 @@ public final class ErrorEventIncidentTest {
             RecordingExporter.records()
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(IncidentIntent.RESOLVED);
 
     assertThat(RecordingExporter.records().betweenProcessInstance(processInstanceKey).jobRecords())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(JobIntent.CANCEL);
   }
 
@@ -327,7 +327,7 @@ public final class ErrorEventIncidentTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .onlyEvents()
                 .limit(3))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs("incident is created, resolved and recreated")
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED, IncidentIntent.CREATED);
 
@@ -372,7 +372,7 @@ public final class ErrorEventIncidentTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .onlyEvents()
                 .limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs("incident is created and resolved")
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
 
@@ -380,7 +380,7 @@ public final class ErrorEventIncidentTest {
     ENGINE.job().withKey(job.getKey()).complete();
 
     assertThat(RecordingExporter.jobRecords().withRecordKey(job.getKey()).onlyEvents().limit(3))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs("job that had error_thrown is completed")
         .containsExactly(JobIntent.CREATED, JobIntent.ERROR_THROWN, JobIntent.COMPLETED);
   }
@@ -507,7 +507,7 @@ public final class ErrorEventIncidentTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .onlyEvents())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.END_EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),

@@ -57,7 +57,7 @@ public class UpdateTenantMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.TENANT
@@ -65,7 +65,7 @@ public class UpdateTenantMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == TenantIntent.UPDATE)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -92,9 +92,9 @@ public class UpdateTenantMultiPartitionTest {
       assertThat(
               RecordingExporter.tenantRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.UPDATED))
+                  .limit(record -> record.getIntentToWrite().equals(TenantIntent.UPDATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(TenantIntent.UPDATE, TenantIntent.UPDATED);
     }
   }
@@ -109,7 +109,7 @@ public class UpdateTenantMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

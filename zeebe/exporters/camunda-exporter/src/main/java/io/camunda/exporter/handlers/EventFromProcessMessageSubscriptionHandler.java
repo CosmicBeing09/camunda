@@ -38,7 +38,7 @@ public class EventFromProcessMessageSubscriptionHandler
 
   @Override
   public boolean handlesRecord(final Record<ProcessMessageSubscriptionRecordValue> record) {
-    return STATES.contains(record.getIntent());
+    return STATES.contains(record.getIntentToWrite());
   }
 
   @Override

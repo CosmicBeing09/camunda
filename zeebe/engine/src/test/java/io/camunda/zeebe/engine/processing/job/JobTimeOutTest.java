@@ -67,7 +67,7 @@ public final class JobTimeOutTest {
 
     assertThat(jobEvents).extracting(Record::getKey).contains(jobKey);
     assertThat(jobEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(JobIntent.CREATED, JobIntent.TIME_OUT, JobIntent.TIMED_OUT);
   }
 

@@ -51,7 +51,7 @@ public class UserTaskVariableHandler
 
   @Override
   public boolean handlesRecord(final Record<VariableRecordValue> record) {
-    return !VariableIntent.MIGRATED.equals(record.getIntent());
+    return !VariableIntent.MIGRATED.equals(record.getIntentToWrite());
   }
 
   @Override

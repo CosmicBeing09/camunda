@@ -31,7 +31,7 @@ final class ResultBuilderBackedRejectionWriter extends AbstractResultBuilderBack
     final var metadata =
         new RecordMetadata()
             .recordType(RecordType.COMMAND_REJECTION)
-            .intent(command.getIntent())
+            .intent(command.getIntentToWrite())
             .rejectionType(rejectionType)
             .rejectionReason(reason)
             .operationReference(command.getOperationReference());

@@ -76,12 +76,12 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
 
   @Override
   public boolean handlesRecord(final Record<UserTaskRecordValue> record) {
-    return SUPPORTED_INTENTS.contains(record.getIntent());
+    return SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override
   public List<String> generateIds(final Record<UserTaskRecordValue> record) {
-    if (record.getIntent().equals(UserTaskIntent.CREATED)) {
+    if (record.getIntentToWrite().equals(UserTaskIntent.CREATED)) {
       exporterMetadata.setFirstUserTaskKey(TaskImplementation.ZEEBE_USER_TASK, record.getKey());
     }
 
@@ -102,7 +102,7 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
     entity.setAction(record.getValue().getAction());
     entity.setKey(record.getKey());
 
-    switch (record.getIntent()) {
+    switch (record.getIntentToWrite()) {
       case UserTaskIntent.CREATED -> createTaskEntity(entity, record);
       case UserTaskIntent.ASSIGNED, UserTaskIntent.UPDATED ->
           updateChangedAttributes(record, entity);

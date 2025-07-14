@@ -66,7 +66,7 @@ public class VariableZeebeRecordProcessor {
                 varId, key -> new Tuple<Boolean, VariableEntity>(false, new VariableEntity()));
 
         final boolean shouldUpdateValue =
-            !VariableIntent.MIGRATED.equals(scopedVariable.getIntent());
+            !VariableIntent.MIGRATED.equals(scopedVariable.getIntentToWrite());
 
         if (shouldUpdateValue) {
           // as soon as there is one non-MIGRATED record in this batch we want to update the value

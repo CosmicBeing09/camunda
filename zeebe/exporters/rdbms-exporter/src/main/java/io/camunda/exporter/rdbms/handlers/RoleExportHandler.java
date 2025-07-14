@@ -38,15 +38,15 @@ public class RoleExportHandler implements RdbmsExportHandler<RoleRecordValue> {
 
   @Override
   public boolean canExport(final Record<RoleRecordValue> record) {
-    return record.getIntent() != null
-        && record.getIntent() instanceof final RoleIntent intent
+    return record.getIntentToWrite() != null
+        && record.getIntentToWrite() instanceof final RoleIntent intent
         && EXPORTABLE_INTENTS.contains(intent);
   }
 
   @Override
   public void export(final Record<RoleRecordValue> record) {
     final RoleRecordValue value = record.getValue();
-    switch (record.getIntent()) {
+    switch (record.getIntentToWrite()) {
       case RoleIntent.CREATED -> roleWriter.create(map(value));
       case RoleIntent.UPDATED -> roleWriter.update(map(value));
       case RoleIntent.DELETED -> roleWriter.delete(value.getRoleId());
@@ -64,7 +64,7 @@ public class RoleExportHandler implements RdbmsExportHandler<RoleRecordValue> {
                   .entityId(value.getEntityId())
                   .entityType(value.getEntityType().name())
                   .build());
-      default -> LOG.warn("Unexpected intent {} for role record", record.getIntent());
+      default -> LOG.warn("Unexpected intent {} for role record", record.getIntentToWrite());
     }
   }
 

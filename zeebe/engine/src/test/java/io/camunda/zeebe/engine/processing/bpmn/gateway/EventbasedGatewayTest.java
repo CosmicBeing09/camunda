@@ -133,7 +133,7 @@ public final class EventbasedGatewayTest {
                 .skipUntil(
                     r -> r.getValue().getBpmnElementType() == BpmnElementType.EVENT_BASED_GATEWAY)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntentToWrite()))
         .containsSequence(
             tuple("gateway", ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple("gateway", ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -237,7 +237,7 @@ public final class EventbasedGatewayTest {
             .asList();
 
     assertThat(records)
-        .extracting(Record::getIntent, r -> r.getValue().getElementId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(ProcessInstanceIntent.ELEMENT_ACTIVATING, "timer-1"),
             tuple(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN, "to-end1"),
@@ -304,7 +304,7 @@ public final class EventbasedGatewayTest {
             .asList();
 
     assertThat(records)
-        .extracting(r -> r.getIntent(), r -> r.getValue().getElementId())
+        .extracting(r -> r.getIntentToWrite(), r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(ProcessInstanceIntent.ELEMENT_ACTIVATING, "message-1"),
             tuple(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN, "to-end1"),

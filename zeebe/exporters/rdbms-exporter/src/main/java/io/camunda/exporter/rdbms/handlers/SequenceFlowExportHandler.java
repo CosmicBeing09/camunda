@@ -25,9 +25,9 @@ public class SequenceFlowExportHandler implements RdbmsExportHandler<ProcessInst
 
   @Override
   public boolean canExport(final Record<ProcessInstanceRecordValue> record) {
-    return record.getIntent() != null
-        && record.getIntent() instanceof ProcessInstanceIntent
-        && record.getIntent().equals(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN);
+    return record.getIntentToWrite() != null
+        && record.getIntentToWrite() instanceof ProcessInstanceIntent
+        && record.getIntentToWrite().equals(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN);
   }
 
   @Override

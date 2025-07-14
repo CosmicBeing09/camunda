@@ -69,7 +69,7 @@ public class ListViewProcessInstanceFromProcessInstanceHandler
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
     final var recordValue = record.getValue();
     if (isProcessEvent(recordValue)) {
-      final var intent = record.getIntent();
+      final var intent = record.getIntentToWrite();
       return PI_AND_AI_START_STATES.contains(intent)
           || PI_AND_AI_FINISH_STATES.contains(intent)
           || ELEMENT_MIGRATED.equals(intent)
@@ -94,7 +94,7 @@ public class ListViewProcessInstanceFromProcessInstanceHandler
       final ProcessInstanceForListViewEntity piEntity) {
 
     final var recordValue = record.getValue();
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
 
     piEntity
         .setId(String.valueOf(recordValue.getProcessInstanceKey()))

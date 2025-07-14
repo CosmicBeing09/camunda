@@ -111,9 +111,9 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent, r -> r.getValue().getAssignee())
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite, r -> r.getValue().getAssignee())
         .describedAs("Verify that all task listeners were completed with the correct assignee")
         .containsSequence(
             tuple(UserTaskIntent.ASSIGNING, "new_assignee"),
@@ -155,9 +155,9 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.UPDATED))
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent, r -> r.getValue().getPriority())
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite, r -> r.getValue().getPriority())
         .describedAs(
             "Verify intents sequence and state of the `priority` property through the user task transitions")
         .containsSequence(
@@ -199,9 +199,9 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNMENT_DENIED))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNMENT_DENIED))
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent, r -> r.getValue().getAssignee())
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite, r -> r.getValue().getAssignee())
         .describedAs(
             "Verify that the assignee changes. The assignment of the second assignee should be rejected.")
         .containsSequence(
@@ -220,7 +220,7 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .filter(r -> r.getIntent() == UserTaskIntent.ASSIGNMENT_DENIED)
+                .filter(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNMENT_DENIED)
                 .limit(1))
         .extracting(Record::getValue)
         .extracting(UserTaskRecordValue::getAssignee)
@@ -389,8 +389,8 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.COMPLETED))
-        .extracting(Record::getIntent, r -> getDeniedReason(r.getValue()))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.COMPLETED))
+        .extracting(Record::getIntentToWrite, r -> getDeniedReason(r.getValue()))
         .describedAs(
             "The reason to deny lifecycle transition should be present when task listener denies the work")
         .containsExactly(
@@ -430,8 +430,8 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
-        .extracting(Record::getIntent, r -> getDeniedReason(r.getValue()))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
+        .extracting(Record::getIntentToWrite, r -> getDeniedReason(r.getValue()))
         .describedAs(
             "The reason to deny lifecycle transition should be present when task listener denies the work")
         .containsExactly(
@@ -473,8 +473,8 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
-        .extracting(Record::getIntent, r -> getDeniedReason(r.getValue()))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.UPDATED))
+        .extracting(Record::getIntentToWrite, r -> getDeniedReason(r.getValue()))
         .describedAs(
             "The reason to deny lifecycle transition should be present when task listener denies the work")
         .containsExactly(

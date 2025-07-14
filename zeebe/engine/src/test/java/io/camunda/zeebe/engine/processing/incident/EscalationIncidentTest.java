@@ -279,7 +279,7 @@ public class EscalationIncidentTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .onlyEvents())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.END_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.END_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -330,7 +330,7 @@ public class EscalationIncidentTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .onlyEvents())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.INTERMEDIATE_THROW_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETING),

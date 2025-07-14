@@ -32,7 +32,7 @@ public final class ProcessInstanceCommandContext {
   }
 
   public ProcessInstanceIntent getCommand() {
-    return (ProcessInstanceIntent) record.getIntent();
+    return (ProcessInstanceIntent) record.getIntentToWrite();
   }
 
   public TypedRecord<ProcessInstanceRecord> getRecord() {

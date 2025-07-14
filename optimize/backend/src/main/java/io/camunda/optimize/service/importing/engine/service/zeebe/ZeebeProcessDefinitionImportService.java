@@ -83,7 +83,7 @@ public class ZeebeProcessDefinitionImportService
       final List<ZeebeProcessDefinitionRecordDto> zeebeRecords) {
     final List<ProcessDefinitionOptimizeDto> optimizeDtos =
         zeebeRecords.stream()
-            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntent()))
+            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntentToWrite()))
             .map(this::mapZeebeRecordsToOptimizeEntities)
             .collect(Collectors.toList());
     LOG.debug(

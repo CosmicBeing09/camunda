@@ -31,8 +31,8 @@ public class ProcessInstanceIncidentExportHandler
   @Override
   public boolean canExport(final Record<IncidentRecordValue> record) {
     return record.getValue().getProcessInstanceKey() > 0
-        && (record.getIntent() == IncidentIntent.CREATED
-            || record.getIntent() == IncidentIntent.RESOLVED);
+        && (record.getIntentToWrite() == IncidentIntent.CREATED
+            || record.getIntentToWrite() == IncidentIntent.RESOLVED);
   }
 
   @Override
@@ -41,14 +41,14 @@ public class ProcessInstanceIncidentExportHandler
 
     for (final List<Long> elementPair : value.getElementInstancePath()) {
       final var processInstanceKey = elementPair.getFirst();
-      if (record.getIntent().equals(IncidentIntent.CREATED)) {
+      if (record.getIntentToWrite().equals(IncidentIntent.CREATED)) {
         processInstanceWriter.createIncident(processInstanceKey);
-      } else if (record.getIntent().equals(IncidentIntent.RESOLVED)) {
+      } else if (record.getIntentToWrite().equals(IncidentIntent.RESOLVED)) {
         processInstanceWriter.resolveIncident(processInstanceKey);
       } else {
         LOGGER.warn(
             "Unexpected incident intent {} for record {}/{}",
-            record.getIntent(),
+            record.getIntentToWrite(),
             record.getPartitionId(),
             record.getPosition());
       }

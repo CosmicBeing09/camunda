@@ -219,9 +219,9 @@ public class TenantAwareResourceDeletionTest {
   private void verifyResourceIsDeleted(final long key) {
     assertThat(
             RecordingExporter.resourceDeletionRecords()
-                .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED)))
+                .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED)))
         .describedAs("Expect resource to be deleted")
-        .extracting(Record::getIntent, r -> r.getValue().getResourceKey())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getResourceKey())
         .containsOnly(
             tuple(ResourceDeletionIntent.DELETE, key),
             tuple(ResourceDeletionIntent.DELETING, key),

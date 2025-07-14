@@ -375,7 +375,7 @@ public class GroupTest {
     assertThat(deletedGroup).hasGroupId(groupId);
     assertThat(groupRecords).hasSize(2);
     assertThat(groupRecords)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(GroupIntent.ENTITY_REMOVED, GroupIntent.DELETED);
   }
 

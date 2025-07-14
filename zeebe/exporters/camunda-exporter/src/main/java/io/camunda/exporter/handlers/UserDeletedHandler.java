@@ -39,7 +39,7 @@ public class UserDeletedHandler implements ExportHandler<UserEntity, UserRecordV
   @Override
   public boolean handlesRecord(final Record<UserRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && SUPPORTED_INTENTS.contains(record.getIntent());
+        && SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override

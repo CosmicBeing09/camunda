@@ -39,7 +39,7 @@ public class TenantDeletedHandler implements ExportHandler<TenantEntity, TenantR
   @Override
   public boolean handlesRecord(final Record<TenantRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && SUPPORTED_INTENTS.contains(record.getIntent());
+        && SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override

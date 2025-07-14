@@ -381,7 +381,7 @@ public class JobWorkerElementIncidentTest {
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords()
                 .withRecordKey(incidentCreated.getKey()))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }
 

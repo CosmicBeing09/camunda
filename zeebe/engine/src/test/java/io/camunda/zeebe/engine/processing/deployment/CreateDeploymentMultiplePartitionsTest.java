@@ -86,20 +86,20 @@ public final class CreateDeploymentMultiplePartitionsTest {
 
     assertThat(deployment.getPartitionId()).isEqualTo(PARTITION_ID);
     assertThat(deployment.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
 
     final var deploymentRecords =
         RecordingExporter.records()
             .limit(
                 r ->
-                    r.getIntent() == CommandDistributionIntent.FINISHED
+                    r.getIntentToWrite() == CommandDistributionIntent.FINISHED
                         && r.getKey() == secondDeployment.getKey())
             .withRecordKey(deployment.getKey())
             .toList();
 
     final var listOfFinishedDistributions =
         deploymentRecords.stream()
-            .filter(r -> r.getIntent() == CommandDistributionIntent.FINISHED)
+            .filter(r -> r.getIntentToWrite() == CommandDistributionIntent.FINISHED)
             .toList();
     assertThat(listOfFinishedDistributions).hasSize(1);
 
@@ -107,24 +107,24 @@ public final class CreateDeploymentMultiplePartitionsTest {
     assertThat(fullyDistributedDeployment.getKey()).isNotNegative();
     assertThat(fullyDistributedDeployment.getPartitionId()).isEqualTo(PARTITION_ID);
     assertThat(fullyDistributedDeployment.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(fullyDistributedDeployment.getIntent())
+    assertThat(fullyDistributedDeployment.getIntentToWrite())
         .isEqualTo(CommandDistributionIntent.FINISHED);
 
     assertThat(
             deploymentRecords.stream()
-                .filter(r -> r.getIntent() == DeploymentIntent.CREATE)
+                .filter(r -> r.getIntentToWrite() == DeploymentIntent.CREATE)
                 .count())
         .isEqualTo(PARTITION_COUNT - 1);
 
     assertThat(
             deploymentRecords.stream()
-                .filter(r -> r.getIntent() == CommandDistributionIntent.DISTRIBUTING)
+                .filter(r -> r.getIntentToWrite() == CommandDistributionIntent.DISTRIBUTING)
                 .count())
         .isEqualTo(PARTITION_COUNT - 1);
 
     assertThat(
             deploymentRecords.stream()
-                .filter(r -> r.getIntent() == CommandDistributionIntent.ACKNOWLEDGE)
+                .filter(r -> r.getIntentToWrite() == CommandDistributionIntent.ACKNOWLEDGE)
                 .count())
         .isEqualTo(PARTITION_COUNT - 1);
 
@@ -199,7 +199,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
 
     // then
     assertThat(deployment.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
 
     final var deployments =
         RecordingExporter.deploymentRecords()
@@ -230,7 +230,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
 
     // then
     assertThat(deployment.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
 
     final var deployments =
         RecordingExporter.deploymentRecords()
@@ -263,7 +263,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
 
     // then
     assertThat(deployment.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
 
     for (int partition = 1; partition <= PARTITION_COUNT; partition++) {
       final var deployments =
@@ -271,7 +271,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
               .withPartitionId(partition)
               .limit(
                   recordValueRecord ->
-                      recordValueRecord.getIntent().equals(DeploymentIntent.CREATED))
+                      recordValueRecord.getIntentToWrite().equals(DeploymentIntent.CREATED))
               .formRecords()
               .withIntent(FormIntent.CREATED);
 

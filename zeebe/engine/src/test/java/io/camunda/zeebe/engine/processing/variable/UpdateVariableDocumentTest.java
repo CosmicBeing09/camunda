@@ -104,7 +104,7 @@ public final class UpdateVariableDocumentTest {
         .extracting(
             r ->
                 tuple(
-                    r.getIntent(),
+                    r.getIntentToWrite(),
                     r.getValue().getScopeKey(),
                     r.getValue().getName(),
                     r.getValue().getValue()))

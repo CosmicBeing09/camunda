@@ -68,7 +68,7 @@ public class FlowNodeInstanceFromProcessInstanceHandler
   @Override
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
     final var processInstanceRecordValue = record.getValue();
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
     return !isOfTypes(processInstanceRecordValue, UNHANDLED_TYPES)
         && (AI_START_STATES.contains(intent)
             || AI_FINISH_STATES.contains(intent)
@@ -90,7 +90,7 @@ public class FlowNodeInstanceFromProcessInstanceHandler
   public void updateEntity(
       final Record<ProcessInstanceRecordValue> record, final FlowNodeInstanceEntity entity) {
     final var recordValue = record.getValue();
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
     final var processDefinitionKey = recordValue.getProcessDefinitionKey();
 
     entity.setKey(record.getKey());

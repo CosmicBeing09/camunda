@@ -68,7 +68,7 @@ public class ZeebeUserTaskImportService
       final List<ZeebeUserTaskRecordDto> userTaskRecords) {
     final List<ProcessInstanceDto> optimizeDtos =
         userTaskRecords.stream()
-            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntent()))
+            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntentToWrite()))
             .collect(
                 Collectors.groupingBy(
                     zeebeRecord -> zeebeRecord.getValue().getProcessInstanceKey()))
@@ -107,7 +107,7 @@ public class ZeebeUserTaskImportService
               userTaskInstancesByKey.getOrDefault(
                   recordKey,
                   createSkeletonUserTaskInstance(zeebeUserTaskInstanceRecord.getValue()));
-          final UserTaskIntent userTaskRecordIntent = zeebeUserTaskInstanceRecord.getIntent();
+          final UserTaskIntent userTaskRecordIntent = zeebeUserTaskInstanceRecord.getIntentToWrite();
           if (userTaskRecordIntent == CREATING) {
             userTaskForKey.setStartDate(zeebeUserTaskInstanceRecord.getDateForTimestamp());
             if (!StringUtil.isNullOrEmpty(zeebeUserTaskInstanceRecord.getValue().getAssignee())) {

@@ -116,7 +116,7 @@ public class EmbeddedSubProcessConcurrencyTest {
                 .limitToProcessInstance(processInstanceKey)
                 .filter(r -> r.getValueType() == ValueType.PROCESS_EVENT))
         .extracting(
-            Record::getIntent, r -> ((ProcessEventRecordValue) r.getValue()).getTargetElementId())
+            Record::getIntentToWrite, r -> ((ProcessEventRecordValue) r.getValue()).getTargetElementId())
         .containsExactly(
             tuple(ProcessEventIntent.TRIGGERING, "errorBoundary"),
             tuple(ProcessEventIntent.TRIGGERING, "eventSubProcessStartEvent"),
@@ -127,7 +127,7 @@ public class EmbeddedSubProcessConcurrencyTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .onlyEvents()
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_TERMINATING),

@@ -250,7 +250,7 @@ public class MigrateParallelGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .skipUntil(
                     r ->
-                        r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED
+                        r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED
                             && r.getValue().getElementId().equals("task1"))
                 .withIntent(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN)
                 .withProcessInstanceKey(processInstanceKey)
@@ -359,7 +359,7 @@ public class MigrateParallelGatewayTest {
                     r ->
                         r.getValue() instanceof ProcessInstanceRecord
                             && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task1")
-                            && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED)
+                            && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED)
                 .processInstanceRecords()
                 .withIntent(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN)
                 .withProcessInstanceKey(processInstanceKey)

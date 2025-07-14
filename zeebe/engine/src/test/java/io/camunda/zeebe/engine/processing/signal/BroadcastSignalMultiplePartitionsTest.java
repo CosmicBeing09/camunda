@@ -103,7 +103,7 @@ public class BroadcastSignalMultiplePartitionsTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey1)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("catch1", ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple("catch1", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -114,7 +114,7 @@ public class BroadcastSignalMultiplePartitionsTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey2)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("catch2", ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple("catch2", ProcessInstanceIntent.ELEMENT_COMPLETED),

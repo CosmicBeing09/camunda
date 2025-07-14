@@ -33,7 +33,7 @@ public class BatchOperationCreatedExportHandler
   @Override
   public boolean canExport(final Record<BatchOperationCreationRecordValue> record) {
     return record.getValueType() == ValueType.BATCH_OPERATION_CREATION
-        && record.getIntent().equals(BatchOperationIntent.CREATED);
+        && record.getIntentToWrite().equals(BatchOperationIntent.CREATED);
   }
 
   @Override

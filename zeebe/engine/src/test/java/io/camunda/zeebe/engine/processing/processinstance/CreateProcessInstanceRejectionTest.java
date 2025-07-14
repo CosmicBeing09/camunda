@@ -204,8 +204,8 @@ public class CreateProcessInstanceRejectionTest {
                 .limit(
                     r ->
                         r.getRecordType() == RecordType.COMMAND_REJECTION
-                            && r.getIntent() == ProcessInstanceCreationIntent.CREATE))
-        .extracting(Record::getValueType, Record::getIntent)
+                            && r.getIntentToWrite() == ProcessInstanceCreationIntent.CREATE))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .describedAs("Expect that no process instance is activated")
         .doesNotContain(
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_ACTIVATING),

@@ -123,12 +123,12 @@ public final class CancelProcessInstanceTest {
     final List<Record<ProcessInstanceRecordValue>> processEvents =
         RecordingExporter.processInstanceRecords()
             .withProcessInstanceKey(processInstanceKey)
-            .skipUntil(r -> r.getIntent() == CANCEL)
-            .limit(r -> r.getKey() == processInstanceKey && r.getIntent() == ELEMENT_TERMINATED)
+            .skipUntil(r -> r.getIntentToWrite() == CANCEL)
+            .limit(r -> r.getKey() == processInstanceKey && r.getIntentToWrite() == ELEMENT_TERMINATED)
             .asList();
 
     assertThat(processEvents)
-        .extracting(e -> e.getValue().getElementId(), e -> e.getIntent())
+        .extracting(e -> e.getValue().getElementId(), e -> e.getIntentToWrite())
         .containsSubsequence(
             tuple("", CANCEL),
             tuple("PROCESS", ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -185,13 +185,13 @@ public final class CancelProcessInstanceTest {
     final List<Record<ProcessInstanceRecordValue>> processEvents =
         RecordingExporter.processInstanceRecords()
             .withProcessInstanceKey(processInstanceKey)
-            .skipUntil(r -> r.getIntent() == ProcessInstanceIntent.CANCEL)
+            .skipUntil(r -> r.getIntentToWrite() == ProcessInstanceIntent.CANCEL)
             .limitToProcessInstanceTerminated()
             .asList();
 
     assertThat(processEvents)
         .hasSize(10)
-        .extracting(e -> e.getValue().getElementId(), e -> e.getIntent())
+        .extracting(e -> e.getValue().getElementId(), e -> e.getIntentToWrite())
         .containsSubsequence(
             tuple("", ProcessInstanceIntent.CANCEL),
             tuple("SUB_PROCESS_PROCESS", ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -254,9 +254,9 @@ public final class CancelProcessInstanceTest {
     final List<Record<ProcessInstanceRecordValue>> terminatedElements =
         RecordingExporter.processInstanceRecords()
             .withProcessInstanceKey(processInstanceKey)
-            .skipUntil(r -> r.getIntent() == ProcessInstanceIntent.CANCEL)
+            .skipUntil(r -> r.getIntentToWrite() == ProcessInstanceIntent.CANCEL)
             .limitToProcessInstanceTerminated()
-            .filter(r -> r.getIntent() == ELEMENT_TERMINATED)
+            .filter(r -> r.getIntentToWrite() == ELEMENT_TERMINATED)
             .asList();
 
     assertThat(terminatedElements).hasSize(3);
@@ -374,7 +374,7 @@ public final class CancelProcessInstanceTest {
                 .limitToProcessInstance(processInstanceKey)
                 .userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.CANCELING),
             tuple(ValueType.USER_TASK, UserTaskIntent.CANCELED));

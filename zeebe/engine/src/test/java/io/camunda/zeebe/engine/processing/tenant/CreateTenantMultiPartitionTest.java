@@ -45,9 +45,9 @@ public class CreateTenantMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+                .limit(record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 r.getValue() instanceof CommandDistributionRecordValue
@@ -72,9 +72,9 @@ public class CreateTenantMultiPartitionTest {
               RecordingExporter.tenantRecords()
                   .withTenantId(tenantId)
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.CREATED))
+                  .limit(record -> record.getIntentToWrite().equals(TenantIntent.CREATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(TenantIntent.CREATE, TenantIntent.CREATED);
     }
   }
@@ -92,7 +92,7 @@ public class CreateTenantMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 1)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

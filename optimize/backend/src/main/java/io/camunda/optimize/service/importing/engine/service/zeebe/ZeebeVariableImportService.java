@@ -81,7 +81,7 @@ public class ZeebeVariableImportService
       final List<ZeebeVariableRecordDto> zeebeRecords) {
     final List<ProcessInstanceDto> optimizeDtos =
         zeebeRecords.stream()
-            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntent()))
+            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntentToWrite()))
             .collect(
                 Collectors.groupingBy(
                     zeebeRecord -> zeebeRecord.getValue().getProcessInstanceKey()))

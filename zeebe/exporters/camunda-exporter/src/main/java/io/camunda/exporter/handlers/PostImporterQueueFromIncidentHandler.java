@@ -44,7 +44,7 @@ public class PostImporterQueueFromIncidentHandler
 
   @Override
   public List<String> generateIds(final Record<IncidentRecordValue> record) {
-    Intent intent = record.getIntent();
+    Intent intent = record.getIntentToWrite();
     if (intent.equals(IncidentIntent.MIGRATED)) {
       intent = IncidentIntent.CREATED;
     }
@@ -60,7 +60,7 @@ public class PostImporterQueueFromIncidentHandler
   public void updateEntity(
       final Record<IncidentRecordValue> record, final PostImporterQueueEntity entity) {
     final IncidentRecordValue recordValue = record.getValue();
-    Intent intent = record.getIntent();
+    Intent intent = record.getIntentToWrite();
     if (intent.equals(IncidentIntent.MIGRATED)) {
       intent = IncidentIntent.CREATED;
     }

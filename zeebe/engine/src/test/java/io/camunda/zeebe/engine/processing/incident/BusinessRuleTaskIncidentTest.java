@@ -331,7 +331,7 @@ public class BusinessRuleTaskIncidentTest {
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords()
                 .onlyEvents())
-        .extracting(Record::getKey, Record::getIntent)
+        .extracting(Record::getKey, Record::getIntentToWrite)
         .describedAs("created incident is resolved and no new incident is created")
         .containsExactly(
             tuple(incidentCreated.getKey(), IncidentIntent.CREATED),
@@ -382,7 +382,7 @@ public class BusinessRuleTaskIncidentTest {
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords()
                 .onlyEvents())
-        .extracting(Record::getKey, Record::getIntent)
+        .extracting(Record::getKey, Record::getIntentToWrite)
         .describedAs("created incident is resolved and no new incident is created")
         .containsExactly(
             tuple(incidentCreated.getKey(), IncidentIntent.CREATED),
@@ -440,7 +440,7 @@ public class BusinessRuleTaskIncidentTest {
                 .betweenProcessInstance(processInstanceKey)
                 .incidentRecords()
                 .onlyEvents())
-        .extracting(Record::getKey, Record::getIntent)
+        .extracting(Record::getKey, Record::getIntentToWrite)
         .describedAs("created incident is resolved and no new incident is created")
         .containsExactly(
             tuple(incidentCreated.getKey(), IncidentIntent.CREATED),

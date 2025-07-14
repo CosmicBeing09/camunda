@@ -39,7 +39,7 @@ public class TaskCompletedMetricHandler
 
   @Override
   public boolean handlesRecord(final Record<UserTaskRecordValue> record) {
-    return record.getIntent().equals(UserTaskIntent.COMPLETED);
+    return record.getIntentToWrite().equals(UserTaskIntent.COMPLETED);
   }
 
   @Override

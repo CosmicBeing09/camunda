@@ -149,7 +149,7 @@ public final class EscalationCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(THROW_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(THROW_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_TERMINATED),

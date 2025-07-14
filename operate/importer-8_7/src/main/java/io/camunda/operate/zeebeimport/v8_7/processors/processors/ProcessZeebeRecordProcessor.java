@@ -55,7 +55,7 @@ public class ProcessZeebeRecordProcessor {
 
   public void processDeploymentRecord(final Record record, final BatchRequest batchRequest)
       throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
 
     if (STATES.contains(intentStr)) {
       final ProcessMetadataValue recordValue = (ProcessMetadataValue) record.getValue();

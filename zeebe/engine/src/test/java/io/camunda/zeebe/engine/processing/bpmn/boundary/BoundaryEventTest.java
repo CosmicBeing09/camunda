@@ -125,11 +125,11 @@ public final class BoundaryEventTest {
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("timer")
-                        && r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATING)
+                        && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATING)
             .asList();
 
     assertThat(records)
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.TIMER, TimerIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -247,11 +247,11 @@ public final class BoundaryEventTest {
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("timer")
-                        && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED)
+                        && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED)
             .asList();
 
     assertThat(records)
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .endsWith(
             tuple(ValueType.TIMER, TimerIntent.TRIGGERED),
             tuple(ValueType.PROCESS_EVENT, ProcessEventIntent.TRIGGERING),
@@ -299,11 +299,11 @@ public final class BoundaryEventTest {
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
-                        && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED)
+                        && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED)
             .asList();
 
     assertThat(records)
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.TIMER, TimerIntent.TRIGGERED),
             tuple(ValueType.TIMER, TimerIntent.CREATED),

@@ -201,7 +201,7 @@ public class NativeUserTaskFormTest {
 
     // then
     assertThat(RecordingExporter.incidentRecords().onlyEvents())
-        .extracting(Record::getKey, Record::getIntent)
+        .extracting(Record::getKey, Record::getIntentToWrite)
         .describedAs("form not found incident is resolved and no new incident is created")
         .containsExactly(
             tuple(incidentCreated.getKey(), IncidentIntent.CREATED),
@@ -329,7 +329,7 @@ public class NativeUserTaskFormTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.USER_TASK)
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),

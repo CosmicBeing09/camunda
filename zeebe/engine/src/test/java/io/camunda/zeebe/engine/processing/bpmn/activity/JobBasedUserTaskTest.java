@@ -76,7 +76,7 @@ public final class JobBasedUserTaskTest {
                 .withElementType(BpmnElementType.USER_TASK)
                 .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -712,7 +712,7 @@ public final class JobBasedUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -735,7 +735,7 @@ public final class JobBasedUserTaskTest {
         ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).withVariable("foo", 10).create();
     assertThat(
             RecordingExporter.incidentRecords().withProcessInstanceKey(processInstanceKey).limit(1))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED);
 
     // when
@@ -746,7 +746,7 @@ public final class JobBasedUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -755,7 +755,7 @@ public final class JobBasedUserTaskTest {
 
     assertThat(
             RecordingExporter.incidentRecords().withProcessInstanceKey(processInstanceKey).limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }
 }

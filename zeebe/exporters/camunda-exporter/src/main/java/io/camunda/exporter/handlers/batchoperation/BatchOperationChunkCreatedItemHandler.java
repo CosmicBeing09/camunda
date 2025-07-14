@@ -38,7 +38,7 @@ public class BatchOperationChunkCreatedItemHandler extends AbstractOperationHand
 
   @Override
   public boolean handlesRecord(final Record<BatchOperationChunkRecordValue> record) {
-    return record.getIntent().equals(BatchOperationChunkIntent.CREATED);
+    return record.getIntentToWrite().equals(BatchOperationChunkIntent.CREATED);
   }
 
   @Override

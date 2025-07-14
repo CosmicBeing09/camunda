@@ -31,22 +31,22 @@ public class UserExportHandler implements RdbmsExportHandler<UserRecordValue> {
   public boolean canExport(final Record<UserRecordValue> record) {
     // do not react on UserIntent.DELETED to keep historic data
     return record.getValueType() == ValueType.USER
-        && (record.getIntent() == UserIntent.CREATED
-            || record.getIntent() == UserIntent.UPDATED
-            || record.getIntent() == UserIntent.DELETED);
+        && (record.getIntentToWrite() == UserIntent.CREATED
+            || record.getIntentToWrite() == UserIntent.UPDATED
+            || record.getIntentToWrite() == UserIntent.DELETED);
   }
 
   @Override
   public void export(final Record<UserRecordValue> record) {
     final UserRecordValue value = record.getValue();
-    if (record.getIntent() == UserIntent.CREATED) {
+    if (record.getIntentToWrite() == UserIntent.CREATED) {
       userWriter.create(map(value));
-    } else if (record.getIntent() == UserIntent.UPDATED) {
+    } else if (record.getIntentToWrite() == UserIntent.UPDATED) {
       userWriter.update(map(value));
-    } else if (record.getIntent() == UserIntent.DELETED) {
+    } else if (record.getIntentToWrite() == UserIntent.DELETED) {
       userWriter.delete(value.getUsername());
     } else {
-      LOG.warn("Unexpected intent {} for user record", record.getIntent());
+      LOG.warn("Unexpected intent {} for user record", record.getIntentToWrite());
     }
   }
 

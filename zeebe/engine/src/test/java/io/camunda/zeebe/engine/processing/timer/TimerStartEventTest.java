@@ -274,7 +274,7 @@ public final class TimerStartEventTest {
         RecordingExporter.processInstanceRecords()
             .limit(
                 record ->
-                    record.getIntent() == ProcessInstanceIntent.ACTIVATE_ELEMENT
+                    record.getIntentToWrite() == ProcessInstanceIntent.ACTIVATE_ELEMENT
                         && record.getValue().getProcessDefinitionKey()
                             == secondVersionMetadata.getProcessDefinitionKey())
             .collect(Collectors.toList());
@@ -282,7 +282,7 @@ public final class TimerStartEventTest {
     final var processInstanceActivateList =
         processInstanceRecords.stream()
             .filter(record -> record.getValue().getBpmnElementType() == BpmnElementType.PROCESS)
-            .filter(record -> record.getIntent() == ProcessInstanceIntent.ACTIVATE_ELEMENT)
+            .filter(record -> record.getIntentToWrite() == ProcessInstanceIntent.ACTIVATE_ELEMENT)
             .collect(Collectors.toList());
 
     assertThat(processInstanceActivateList)
@@ -378,7 +378,7 @@ public final class TimerStartEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessDefinitionKey(processDefinitionKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),

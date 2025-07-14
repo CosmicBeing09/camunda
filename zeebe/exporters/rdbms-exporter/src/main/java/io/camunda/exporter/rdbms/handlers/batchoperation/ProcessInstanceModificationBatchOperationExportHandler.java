@@ -29,12 +29,12 @@ public class ProcessInstanceModificationBatchOperationExportHandler
 
   @Override
   protected boolean isCompleted(final Record<ProcessInstanceModificationRecordValue> record) {
-    return record.getIntent().equals(ProcessInstanceModificationIntent.MODIFIED);
+    return record.getIntentToWrite().equals(ProcessInstanceModificationIntent.MODIFIED);
   }
 
   @Override
   protected boolean isFailed(final Record<ProcessInstanceModificationRecordValue> record) {
-    return record.getIntent().equals(ProcessInstanceModificationIntent.MODIFY)
+    return record.getIntentToWrite().equals(ProcessInstanceModificationIntent.MODIFY)
         && record.getRejectionType() != RejectionType.NULL_VAL;
   }
 }

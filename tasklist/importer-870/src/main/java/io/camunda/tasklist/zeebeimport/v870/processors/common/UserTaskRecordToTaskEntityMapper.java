@@ -53,7 +53,7 @@ public class UserTaskRecordToTaskEntityMapper {
   }
 
   public Optional<TaskEntity> map(final Record<UserTaskRecordValue> record) {
-    final Intent intent = (Intent) record.getIntent();
+    final Intent intent = (Intent) record.getIntentToWrite();
     LOGGER.debug("Intent {}", intent);
     if (intent == null || !SUPPORTED_INTENTS.contains(intent)) {
       LOGGER.debug("Unsupported intent={}. Skipping it", intent);
@@ -160,7 +160,7 @@ public class UserTaskRecordToTaskEntityMapper {
   public Map<String, Object> getUpdateFieldsMap(
       final TaskEntity entity, final Record<UserTaskRecordValue> record) {
     final Map<String, Object> updateFields = new HashMap<>();
-    final Intent intent = (Intent) record.getIntent();
+    final Intent intent = (Intent) record.getIntentToWrite();
     if (entity.getState() != null) {
       updateFields.put(TaskTemplate.STATE, entity.getState());
     }

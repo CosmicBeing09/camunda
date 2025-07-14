@@ -44,7 +44,7 @@ public class DecisionRequirementsZeebeRecordProcessor {
 
   public void processDecisionRequirementsRecord(
       final Record record, final BatchRequest batchRequest) throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     if (STATES.contains(intentStr)) {
       final DecisionRequirementsRecordValue decisionRequirements =
           (DecisionRequirementsRecordValue) record.getValue();

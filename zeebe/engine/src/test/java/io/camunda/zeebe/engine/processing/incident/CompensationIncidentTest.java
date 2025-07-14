@@ -129,7 +129,7 @@ public class CompensationIncidentTest {
     ENGINE.job().ofInstance(processInstanceKey).withType(COMPENSATION_HANDLER_JOB_TYPE).complete();
 
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -160,7 +160,7 @@ public class CompensationIncidentTest {
     ENGINE.job().ofInstance(processInstanceKey).withType(COMPENSATION_HANDLER_JOB_TYPE).complete();
 
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -191,7 +191,7 @@ public class CompensationIncidentTest {
     ENGINE.incident().ofInstance(processInstanceKey).resolve();
 
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_COMPLETING),
@@ -218,7 +218,7 @@ public class CompensationIncidentTest {
 
     // then
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_ACTIVATED),

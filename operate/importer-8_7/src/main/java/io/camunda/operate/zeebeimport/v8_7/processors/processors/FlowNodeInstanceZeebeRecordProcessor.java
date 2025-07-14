@@ -107,7 +107,7 @@ public class FlowNodeInstanceZeebeRecordProcessor {
 
   public void processIncidentRecord(final Record record, final BatchRequest batchRequest)
       throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     final IncidentRecordValue recordValue = (IncidentRecordValue) record.getValue();
 
     // update activity instance
@@ -190,7 +190,7 @@ public class FlowNodeInstanceZeebeRecordProcessor {
   private boolean shouldProcessProcessInstanceRecord(
       final Record<ProcessInstanceRecordValue> processInstanceRecord) {
     final var processInstanceRecordValue = processInstanceRecord.getValue();
-    final var intent = processInstanceRecord.getIntent().name();
+    final var intent = processInstanceRecord.getIntentToWrite().name();
     return !isProcessEvent(processInstanceRecordValue)
         && (AI_START_STATES.contains(intent)
             || AI_FINISH_STATES.contains(intent)

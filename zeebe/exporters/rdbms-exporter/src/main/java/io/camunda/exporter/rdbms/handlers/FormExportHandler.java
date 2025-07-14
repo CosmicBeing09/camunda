@@ -26,14 +26,14 @@ public class FormExportHandler implements RdbmsExportHandler<Form> {
 
   @Override
   public boolean canExport(final Record<Form> record) {
-    return record.getIntent() instanceof FormIntent;
+    return record.getIntentToWrite() instanceof FormIntent;
   }
 
   @Override
   public void export(final Record<Form> record) {
-    if (record.getIntent().equals(FormIntent.CREATED)) {
+    if (record.getIntentToWrite().equals(FormIntent.CREATED)) {
       formWriter.create(map(record));
-    } else if (record.getIntent().equals(FormIntent.DELETED)) {
+    } else if (record.getIntentToWrite().equals(FormIntent.DELETED)) {
       formWriter.update(map(record).copy(b -> ((FormDbModelBuilder) b).isDeleted(true)));
     }
   }

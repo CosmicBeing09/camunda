@@ -98,7 +98,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
   public void processRecord(final TypedRecord<ProcessInstanceRecord> record) {
 
     // initialize
-    final var intent = (ProcessInstanceIntent) record.getIntent();
+    final var intent = (ProcessInstanceIntent) record.getIntentToWrite();
     final var recordValue = record.getValue();
 
     context.init(record.getKey(), recordValue, intent);
@@ -124,12 +124,12 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
       final TypedRecord<ProcessInstanceRecord> command, final Throwable error) {
     if (error instanceof ExceededBatchRecordSizeException) {
       context.init(
-          command.getKey(), command.getValue(), (ProcessInstanceIntent) command.getIntent());
+          command.getKey(), command.getValue(), (ProcessInstanceIntent) command.getIntentToWrite());
       if (context.getBpmnElementType() != BpmnElementType.PROCESS) {
         // set element's state to what it was doing, this allows us to resolve the incident later
         final BpmnElementContext transitionedContext;
         transitionedContext =
-            switch ((ProcessInstanceIntent) command.getIntent()) {
+            switch ((ProcessInstanceIntent) command.getIntentToWrite()) {
               case ACTIVATE_ELEMENT -> stateTransitionBehavior.transitionToActivating(context);
               case COMPLETE_ELEMENT -> stateTransitionBehavior.transitionToCompleting(context);
               case TERMINATE_ELEMENT -> stateTransitionBehavior.transitionToTerminating(context);

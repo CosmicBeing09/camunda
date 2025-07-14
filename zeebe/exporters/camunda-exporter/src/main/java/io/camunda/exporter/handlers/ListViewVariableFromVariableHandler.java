@@ -48,7 +48,7 @@ public class ListViewVariableFromVariableHandler
 
   @Override
   public boolean handlesRecord(final Record<VariableRecordValue> record) {
-    if (!record.getIntent().equals(VariableIntent.MIGRATED)) {
+    if (!record.getIntentToWrite().equals(VariableIntent.MIGRATED)) {
       return true;
     }
     return false;

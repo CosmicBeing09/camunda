@@ -41,7 +41,7 @@ public class DecisionRequirementsHandler
 
   @Override
   public boolean handlesRecord(final Record<DecisionRequirementsRecordValue> record) {
-    return record.getIntent().equals(DecisionRequirementsIntent.CREATED);
+    return record.getIntentToWrite().equals(DecisionRequirementsIntent.CREATED);
   }
 
   @Override

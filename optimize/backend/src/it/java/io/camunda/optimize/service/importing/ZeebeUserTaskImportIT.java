@@ -1005,7 +1005,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
   private String getExpectedIdFromRecords(
       final List<ZeebeUserTaskRecordDto> eventsForElement, final UserTaskIntent intent) {
     return eventsForElement.stream()
-        .filter(event -> intent.equals(event.getIntent()))
+        .filter(event -> intent.equals(event.getIntentToWrite()))
         .findFirst()
         .map(ZeebeUserTaskRecordDto::getKey)
         .map(String::valueOf)
@@ -1017,7 +1017,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
     return eventsForElement.stream()
         .filter(
             event ->
-                ASSIGNED.equals(event.getIntent())
+                ASSIGNED.equals(event.getIntentToWrite())
                     && assigneeId.equals(event.getValue().getAssignee()))
         .findFirst()
         .map(ZeebeUserTaskRecordDto::getKey)

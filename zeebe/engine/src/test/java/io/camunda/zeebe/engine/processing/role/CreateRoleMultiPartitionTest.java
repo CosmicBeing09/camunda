@@ -45,9 +45,9 @@ public class CreateRoleMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+                .limit(record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -75,9 +75,9 @@ public class CreateRoleMultiPartitionTest {
               RecordingExporter.roleRecords()
                   .withRoleId(roleId)
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(RoleIntent.CREATED))
+                  .limit(record -> record.getIntentToWrite().equals(RoleIntent.CREATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsExactly(RoleIntent.CREATE, RoleIntent.CREATED);
     }
   }
@@ -91,7 +91,7 @@ public class CreateRoleMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 1)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

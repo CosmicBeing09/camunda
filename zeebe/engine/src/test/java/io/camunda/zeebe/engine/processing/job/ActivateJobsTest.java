@@ -134,7 +134,7 @@ public final class ActivateJobsTest {
             .activate();
 
     // then
-    assertThat(batchRecord.getIntent()).isEqualTo(JobBatchIntent.ACTIVATED);
+    assertThat(batchRecord.getIntentToWrite()).isEqualTo(JobBatchIntent.ACTIVATED);
   }
 
   @Test
@@ -170,7 +170,7 @@ public final class ActivateJobsTest {
     final List<Long> jobKeys = batchRecord.getValue().getJobKeys();
 
     // then
-    assertThat(batchRecord.getIntent()).isEqualTo(JobBatchIntent.ACTIVATED);
+    assertThat(batchRecord.getIntentToWrite()).isEqualTo(JobBatchIntent.ACTIVATED);
 
     assertThat(jobKeys).hasSize(1);
     assertThat(jobs).hasSize(1);

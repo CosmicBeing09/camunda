@@ -114,11 +114,11 @@ public final class AssignUserTaskTest {
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .withRecordKey(userTaskKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
         .as(
             "Verify the sequence of intents, `assignee` `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getAssignee(),
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())
@@ -245,7 +245,7 @@ public final class AssignUserTaskTest {
     // then
     final Predicate<Record<UserTaskRecordValue>> untilUserTaskUnassignedRecord =
         r ->
-            r.getIntent() == UserTaskIntent.ASSIGNED
+            r.getIntentToWrite() == UserTaskIntent.ASSIGNED
                 && r.getValue().getAction().equals(unassignAction);
 
     assertThat(
@@ -255,7 +255,7 @@ public final class AssignUserTaskTest {
         .as(
             "Verify the sequence of intents, `assignee`, `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getAssignee(),
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())

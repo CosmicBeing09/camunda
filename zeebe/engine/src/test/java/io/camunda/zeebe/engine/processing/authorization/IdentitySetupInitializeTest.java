@@ -190,7 +190,7 @@ public class IdentitySetupInitializeTest {
     assertThatEntityIsAssignedToRole(roleId, username, EntityType.USER);
     Assertions.assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == IdentitySetupIntent.INITIALIZED)
+                .limit(r -> r.getIntentToWrite() == IdentitySetupIntent.INITIALIZED)
                 .authorizationRecords()
                 .asList())
         .describedAs("No permissions should be added. The role should not be modified.")

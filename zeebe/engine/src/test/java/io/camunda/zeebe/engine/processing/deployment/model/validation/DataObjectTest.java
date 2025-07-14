@@ -71,11 +71,11 @@ public class DataObjectTest {
             .collect(Collectors.toList());
 
     // then
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
     assertThat(deployment.getValue().getProcessesMetadata()).hasSize(1);
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(e -> e.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .contains(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),

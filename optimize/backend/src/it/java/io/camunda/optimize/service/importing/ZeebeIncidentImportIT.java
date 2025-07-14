@@ -257,7 +257,7 @@ public class ZeebeIncidentImportIT extends AbstractCCSMIT {
     final Map<IncidentIntent, List<ZeebeIncidentRecordDto>> incidentsForRecordByIntent =
         getZeebeExportedIncidentEventsByElementId().entrySet().stream()
             .flatMap(entry -> entry.getValue().stream())
-            .collect(Collectors.groupingBy(ZeebeRecordDto::getIntent));
+            .collect(Collectors.groupingBy(ZeebeRecordDto::getIntentToWrite));
     final ZeebeIncidentRecordDto createdRecord =
         incidentsForRecordByIntent.get(IncidentIntent.CREATED).get(0);
     final ZeebeIncidentRecordDto resolvedRecord =

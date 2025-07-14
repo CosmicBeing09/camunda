@@ -165,17 +165,17 @@ public final class ActivityTest {
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
-                        && r.getIntent() == ELEMENT_ACTIVATING)
+                        && r.getIntentToWrite() == ELEMENT_ACTIVATING)
             .limit(
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
-                        && r.getIntent() == ELEMENT_ACTIVATED)
+                        && r.getIntentToWrite() == ELEMENT_ACTIVATED)
             .asList();
 
     assertThat(records).hasSize(5);
     assertThat(records)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(
             ELEMENT_ACTIVATING,
             TimerIntent.CREATED,
@@ -307,16 +307,16 @@ public final class ActivityTest {
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
-                        && r.getIntent() == leavingState,
+                        && r.getIntentToWrite() == leavingState,
                 r ->
                     r.getValue() instanceof ProcessInstanceRecord
                         && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
-                        && r.getIntent() == leftState)
+                        && r.getIntentToWrite() == leftState)
             .asList();
 
     // then
     assertThat(records)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(leavingState, TimerIntent.CANCELED, TimerIntent.CANCELED, leftState);
   }
 }

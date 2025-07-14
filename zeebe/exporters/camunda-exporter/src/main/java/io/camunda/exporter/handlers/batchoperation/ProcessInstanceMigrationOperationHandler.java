@@ -27,12 +27,12 @@ public class ProcessInstanceMigrationOperationHandler
 
   @Override
   boolean isCompleted(final Record<ProcessInstanceMigrationRecordValue> record) {
-    return record.getIntent().equals(ProcessInstanceMigrationIntent.MIGRATED);
+    return record.getIntentToWrite().equals(ProcessInstanceMigrationIntent.MIGRATED);
   }
 
   @Override
   boolean isFailed(final Record<ProcessInstanceMigrationRecordValue> record) {
-    return record.getIntent().equals(ProcessInstanceMigrationIntent.MIGRATE)
+    return record.getIntentToWrite().equals(ProcessInstanceMigrationIntent.MIGRATE)
         && record.getRejectionType() != RejectionType.NULL_VAL;
   }
 }

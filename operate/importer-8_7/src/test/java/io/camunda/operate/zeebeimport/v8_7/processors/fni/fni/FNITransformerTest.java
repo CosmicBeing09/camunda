@@ -234,7 +234,7 @@ public class FNITransformerTest {
     final var record = Mockito.mock(io.camunda.zeebe.protocol.record.Record.class);
     when(record.getKey()).thenReturn(4L);
     when(record.getValue()).thenReturn(recordValue);
-    when(record.getIntent()).thenReturn(intent);
+    when(record.getIntentToWrite()).thenReturn(intent);
     when(record.getValueType()).thenReturn(ValueType.PROCESS_INSTANCE);
     when(record.getRecordType()).thenReturn(RecordType.EVENT);
     when(record.getTimestamp()).thenReturn(timestamp);

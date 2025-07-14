@@ -63,9 +63,9 @@ public class MultiPartitionDeploymentLifecycleTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limit(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED)))
+                .limit(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the deployment was distributing to and
@@ -94,18 +94,18 @@ public class MultiPartitionDeploymentLifecycleTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(2)
-                .limit(r -> r.getIntent().equals(DeploymentIntent.CREATED))
+                .limit(r -> r.getIntentToWrite().equals(DeploymentIntent.CREATED))
                 .collect(Collectors.toList()))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(
             DeploymentIntent.CREATE, ProcessIntent.CREATED, DeploymentIntent.CREATED);
 
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(3)
-                .limit(r -> r.getIntent().equals(DeploymentIntent.CREATED))
+                .limit(r -> r.getIntentToWrite().equals(DeploymentIntent.CREATED))
                 .collect(Collectors.toList()))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(
             DeploymentIntent.CREATE, ProcessIntent.CREATED, DeploymentIntent.CREATED);
   }
@@ -119,9 +119,9 @@ public class MultiPartitionDeploymentLifecycleTest {
     assertThat(
             RecordingExporter.commandDistributionRecords()
                 .withPartitionId(DEPLOYMENT_PARTITION)
-                .limit(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED)))
+                .limit(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED)))
         .describedAs("Has dully distributed the deployment")
-        .extracting(Record::getIntent, Record::getRecordType, r -> r.getValue().getPartitionId())
+        .extracting(Record::getIntentToWrite, Record::getRecordType, r -> r.getValue().getPartitionId())
         .startsWith(tuple(CommandDistributionIntent.STARTED, RecordType.EVENT, 1))
         .containsSubsequence(
             tuple(CommandDistributionIntent.DISTRIBUTING, RecordType.EVENT, 2),
@@ -136,9 +136,9 @@ public class MultiPartitionDeploymentLifecycleTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(2)
-                .limit(r -> r.getIntent().equals(DeploymentIntent.CREATED)))
+                .limit(r -> r.getIntentToWrite().equals(DeploymentIntent.CREATED)))
         .describedAs("Has created DMN resources on partition 2")
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(
             DeploymentIntent.CREATE,
             DecisionRequirementsIntent.CREATED,
@@ -148,9 +148,9 @@ public class MultiPartitionDeploymentLifecycleTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(3)
-                .limit(r -> r.getIntent().equals(DeploymentIntent.CREATED)))
+                .limit(r -> r.getIntentToWrite().equals(DeploymentIntent.CREATED)))
         .describedAs("Has created DMN resources on partition 3")
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(
             DeploymentIntent.CREATE,
             DecisionRequirementsIntent.CREATED,

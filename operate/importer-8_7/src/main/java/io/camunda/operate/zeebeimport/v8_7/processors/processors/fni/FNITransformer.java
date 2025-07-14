@@ -73,7 +73,7 @@ public class FNITransformer {
     }
 
     final var recordValue = record.getValue();
-    final var intentStr = record.getIntent().name();
+    final var intentStr = record.getIntentToWrite().name();
 
     entity.setKey(record.getKey());
     entity.setId(ConversionUtils.toStringOrNull(record.getKey()));

@@ -60,7 +60,7 @@ public class FlowNodeInstanceFromIncidentHandler
   @Override
   public void updateEntity(
       final Record<IncidentRecordValue> record, final FlowNodeInstanceEntity entity) {
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
     if (intent.equals(IncidentIntent.CREATED) || intent.equals(IncidentIntent.MIGRATED)) {
       entity.setIncidentKey(record.getKey());
     } else if (intent.equals(IncidentIntent.RESOLVED)) {

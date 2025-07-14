@@ -64,8 +64,8 @@ public class JobZeebeRecordProcessorElasticSearch {
     final JobRecordValueImpl recordValue = record.getValue();
 
     if (recordValue.getType().equals(Protocol.USER_TASK_JOB_TYPE)) {
-      if (record.getIntent() != null
-          && !record.getIntent().name().equals(Intent.TIMED_OUT.name())) {
+      if (record.getIntentToWrite() != null
+          && !record.getIntentToWrite().name().equals(Intent.TIMED_OUT.name())) {
         bulkRequest.add(persistTask(record, recordValue));
       }
     }
@@ -159,7 +159,7 @@ public class JobZeebeRecordProcessorElasticSearch {
       }
     }
 
-    final Intent intent = (Intent) record.getIntent();
+    final Intent intent = (Intent) record.getIntentToWrite();
     LOGGER.debug("Intent {}", intent);
 
     switch (intent) {

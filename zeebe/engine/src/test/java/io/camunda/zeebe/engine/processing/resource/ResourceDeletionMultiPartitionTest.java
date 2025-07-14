@@ -59,9 +59,9 @@ public class ResourceDeletionMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the deletion was distributing to and
@@ -91,9 +91,9 @@ public class ResourceDeletionMultiPartitionTest {
       assertThat(
               RecordingExporter.records()
                   .withPartitionId(partitionId)
-                  .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED))
+                  .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .endsWith(
               ResourceDeletionIntent.DELETE,
               ResourceDeletionIntent.DELETING,
@@ -124,9 +124,9 @@ public class ResourceDeletionMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the deletion was distributing to and
@@ -156,9 +156,9 @@ public class ResourceDeletionMultiPartitionTest {
       assertThat(
               RecordingExporter.records()
                   .withPartitionId(partitionId)
-                  .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED))
+                  .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .endsWith(
               ResourceDeletionIntent.DELETE,
               ResourceDeletionIntent.DELETING,
@@ -188,9 +188,9 @@ public class ResourceDeletionMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the deletion was distributing to and
@@ -219,9 +219,9 @@ public class ResourceDeletionMultiPartitionTest {
       assertThat(
               RecordingExporter.records()
                   .withPartitionId(partitionId)
-                  .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED))
+                  .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .endsWith(
               ResourceDeletionIntent.DELETE,
               ResourceDeletionIntent.DELETING,
@@ -250,9 +250,9 @@ public class ResourceDeletionMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the deletion was distributing to and
@@ -281,9 +281,9 @@ public class ResourceDeletionMultiPartitionTest {
       assertThat(
               RecordingExporter.records()
                   .withPartitionId(partitionId)
-                  .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED))
+                  .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .endsWith(
               ResourceDeletionIntent.DELETE,
               ResourceDeletionIntent.DELETING,

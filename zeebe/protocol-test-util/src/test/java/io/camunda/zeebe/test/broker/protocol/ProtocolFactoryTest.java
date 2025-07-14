@@ -142,7 +142,7 @@ final class ProtocolFactoryTest {
     // then
     RecordAssert.assertThat(record).hasValueType(valueType);
     assertThat(record.getValue()).isInstanceOf(valueTypeMapping.getValueClass());
-    assertThat(record.getIntent()).isInstanceOf(valueTypeMapping.getIntentClass());
+    assertThat(record.getIntentToWrite()).isInstanceOf(valueTypeMapping.getIntentClass());
   }
 
   @ParameterizedTest

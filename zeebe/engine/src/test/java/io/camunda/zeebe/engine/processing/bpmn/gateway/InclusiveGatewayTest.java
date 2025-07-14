@@ -243,7 +243,7 @@ public final class InclusiveGatewayTest {
             .asList();
 
     assertThat(processEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -271,7 +271,7 @@ public final class InclusiveGatewayTest {
             .asList();
 
     assertThat(processEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -299,7 +299,7 @@ public final class InclusiveGatewayTest {
             .asList();
 
     assertThat(processEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -327,7 +327,7 @@ public final class InclusiveGatewayTest {
             .asList();
 
     assertThat(processEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -488,7 +488,7 @@ public final class InclusiveGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSequence(
             tuple("inclusive", ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple("inclusive", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -568,7 +568,7 @@ public final class InclusiveGatewayTest {
             .asList();
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSequence(
             tuple("inclusive", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(processId, ProcessInstanceIntent.COMPLETE_ELEMENT));
@@ -661,7 +661,7 @@ public final class InclusiveGatewayTest {
                         record.stream().filter(r -> r.getValueType() == ValueType.PROCESS_INSTANCE))
                     .extracting(
                         r -> ((ProcessInstanceRecordValue) r.getValue()).getElementId(),
-                        Record::getIntent)
+                        Record::getIntentToWrite)
                     .containsSubsequence(
                         tuple("inclusive", ProcessInstanceIntent.ELEMENT_COMPLETED),
                         tuple("s3", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -669,7 +669,7 @@ public final class InclusiveGatewayTest {
         .describedAs("Expect that the default flow's condition is not evaluated")
         .satisfies(
             r ->
-                assertThat(r).extracting(Record::getIntent).doesNotContain(IncidentIntent.CREATED));
+                assertThat(r).extracting(Record::getIntentToWrite).doesNotContain(IncidentIntent.CREATED));
   }
 
   @Test
@@ -738,7 +738,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING))
@@ -778,7 +778,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsOnlyOnce(
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -818,7 +818,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING))
@@ -860,7 +860,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("joinFlow2", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -902,7 +902,7 @@ public final class InclusiveGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(events)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("joinFlow1", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
             tuple("joinFlow2", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -946,7 +946,7 @@ public final class InclusiveGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(elementInstances)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsOnlyOnce(
             tuple("task1", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("task2", ProcessInstanceIntent.ELEMENT_ACTIVATED));
@@ -989,7 +989,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsOnlyOnce(
             tuple("task1", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("task3", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1093,7 +1093,7 @@ public final class InclusiveGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("join", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("join", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1173,7 +1173,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("task-1", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING))
@@ -1215,7 +1215,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("task-1", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING))
@@ -1253,7 +1253,7 @@ public final class InclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("task-1", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("join", ProcessInstanceIntent.ELEMENT_ACTIVATING))
@@ -1302,7 +1302,7 @@ public final class InclusiveGatewayTest {
                 .withElementType(BpmnElementType.SERVICE_TASK)
                 .withIntent(ProcessInstanceIntent.ELEMENT_ACTIVATED)
                 .limit(2))
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .contains(
             tuple("task1", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("task2", ProcessInstanceIntent.ELEMENT_ACTIVATED));

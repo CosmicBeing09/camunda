@@ -73,7 +73,7 @@ public class ListViewFlowNodeFromJobHandler
       final Record<JobRecordValue> record, final FlowNodeInstanceForListViewEntity entity) {
 
     final var recordValue = record.getValue();
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
 
     entity
         .setId(String.valueOf(record.getValue().getElementInstanceKey()))

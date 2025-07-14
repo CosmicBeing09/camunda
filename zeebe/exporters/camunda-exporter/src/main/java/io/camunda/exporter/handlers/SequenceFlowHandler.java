@@ -38,7 +38,7 @@ public class SequenceFlowHandler
 
   @Override
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
-    return record.getIntent().equals(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN);
+    return record.getIntentToWrite().equals(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN);
   }
 
   @Override

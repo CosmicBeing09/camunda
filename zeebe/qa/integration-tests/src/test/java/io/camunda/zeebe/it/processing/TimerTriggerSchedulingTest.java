@@ -87,8 +87,8 @@ public class TimerTriggerSchedulingTest {
     Assertions.assertThat(
             RecordingExporter.timerRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(t -> t.getIntent() == TimerIntent.TRIGGERED)
-                .filter(t -> t.getIntent() == TimerIntent.TRIGGER)
+                .limit(t -> t.getIntentToWrite() == TimerIntent.TRIGGERED)
+                .filter(t -> t.getIntentToWrite() == TimerIntent.TRIGGER)
                 .onlyCommands())
         .describedAs("We only expect a single TRIGGER command")
         .hasSize(1);

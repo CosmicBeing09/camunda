@@ -332,7 +332,7 @@ public final class MappingIncidentTest {
         RecordingExporter.incidentRecords()
             .onlyEvents()
             .withProcessInstanceKey(processInstanceKey)
-            .skipUntil(e -> e.getIntent() == RESOLVED)
+            .skipUntil(e -> e.getIntentToWrite() == RESOLVED)
             .withIntent(IncidentIntent.CREATED)
             .getFirst();
 
@@ -374,7 +374,7 @@ public final class MappingIncidentTest {
         RecordingExporter.incidentRecords()
             .onlyEvents()
             .withProcessInstanceKey(processInstanceKey)
-            .skipUntil(e -> e.getIntent() == RESOLVED)
+            .skipUntil(e -> e.getIntentToWrite() == RESOLVED)
             .withIntent(IncidentIntent.CREATED)
             .getFirst();
 

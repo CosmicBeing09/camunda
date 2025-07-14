@@ -56,21 +56,21 @@ public class ProcessInstanceExportHandler
   @Override
   public void export(final Record<ProcessInstanceRecordValue> record) {
     final var value = record.getValue();
-    if (record.getIntent().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING)) {
+    if (record.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING)) {
       processInstanceWriter.create(map(record));
-    } else if (record.getIntent().equals(ProcessInstanceIntent.ELEMENT_COMPLETED)) {
+    } else if (record.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_COMPLETED)) {
       final OffsetDateTime endDate = DateUtil.toOffsetDateTime(record.getTimestamp());
       processInstanceWriter.finish(
           value.getProcessInstanceKey(), ProcessInstanceState.COMPLETED, endDate);
       historyCleanupService.scheduleProcessForHistoryCleanup(
           value.getProcessInstanceKey(), endDate);
-    } else if (record.getIntent().equals(ProcessInstanceIntent.ELEMENT_TERMINATED)) {
+    } else if (record.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_TERMINATED)) {
       final OffsetDateTime endDate = DateUtil.toOffsetDateTime(record.getTimestamp());
       processInstanceWriter.finish(
           value.getProcessInstanceKey(), ProcessInstanceState.CANCELED, endDate);
       historyCleanupService.scheduleProcessForHistoryCleanup(
           value.getProcessInstanceKey(), endDate);
-    } else if (record.getIntent().equals(ProcessInstanceIntent.ELEMENT_MIGRATED)) {
+    } else if (record.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_MIGRATED)) {
       processInstanceWriter.update(map(record));
     }
   }

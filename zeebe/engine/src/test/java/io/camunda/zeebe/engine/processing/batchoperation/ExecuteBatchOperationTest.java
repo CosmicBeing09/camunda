@@ -33,8 +33,8 @@ public final class ExecuteBatchOperationTest extends AbstractBatchOperationTest 
     assertThat(
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
-                .limitByCount(r -> r.getIntent() == BatchOperationExecutionIntent.EXECUTE, 2))
-        .extracting(Record::getIntent)
+                .limitByCount(r -> r.getIntentToWrite() == BatchOperationExecutionIntent.EXECUTE, 2))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             BatchOperationExecutionIntent.EXECUTE,
             BatchOperationExecutionIntent.EXECUTING,
@@ -46,8 +46,8 @@ public final class ExecuteBatchOperationTest extends AbstractBatchOperationTest 
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.COMPLETED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.COMPLETED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.COMPLETED);
 
     // and we have several cancel process commands
@@ -58,7 +58,7 @@ public final class ExecuteBatchOperationTest extends AbstractBatchOperationTest 
                   .withRecordType(RecordType.COMMAND)
                   .withProcessInstanceKey(key)
                   .getFirst();
-          assertThat(cancelCommand.getIntent()).isEqualTo(ProcessInstanceIntent.CANCEL);
+          assertThat(cancelCommand.getIntentToWrite()).isEqualTo(ProcessInstanceIntent.CANCEL);
           assertThat(cancelCommand.getAuthorizations()).isEqualTo(claims);
         });
   }
@@ -79,7 +79,7 @@ public final class ExecuteBatchOperationTest extends AbstractBatchOperationTest 
     assertThat(
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(BatchOperationExecutionIntent.EXECUTED);
   }
 }

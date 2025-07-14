@@ -539,7 +539,7 @@ public final class ProcessingStateMachine {
     processingResultBuilder.withResponse(
         RecordType.COMMAND_REJECTION,
         typedCommand.getKey(),
-        typedCommand.getIntent(),
+        typedCommand.getIntentToWrite(),
         errorRecord,
         ValueType.ERROR,
         RejectionType.PROCESSING_ERROR,

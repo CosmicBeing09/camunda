@@ -79,7 +79,7 @@ public class ScaleUpTest {
     engine.writeRecords(command, bootstrapPartitions);
 
     // then
-    assertThat(allScaleRecordsForPartition(1).map(Record::getIntent))
+    assertThat(allScaleRecordsForPartition(1).map(Record::getIntentToWrite))
         .containsExactly(
             ScaleIntent.SCALE_UP,
             ScaleIntent.MARK_PARTITION_BOOTSTRAPPED,
@@ -221,7 +221,7 @@ public class ScaleUpTest {
         RecordingExporter.scaleRecords()
             .limit(r -> r.getRecordType() == RecordType.COMMAND_REJECTION)
             .getLast();
-    assertThat(record.getIntent()).isEqualTo(ScaleIntent.STATUS);
+    assertThat(record.getIntentToWrite()).isEqualTo(ScaleIntent.STATUS);
     assertThat(record.getRejectionType()).isEqualTo(RejectionType.INVALID_ARGUMENT);
     assertThat(record.getRejectionReason())
         .contains(
@@ -244,7 +244,7 @@ public class ScaleUpTest {
     // then
     final var record =
         RecordingExporter.scaleRecords()
-            .limit(r -> r.getIntent() == ScaleIntent.STATUS_RESPONSE)
+            .limit(r -> r.getIntentToWrite() == ScaleIntent.STATUS_RESPONSE)
             .getLast();
     assertThat(record.getValue().getDesiredPartitionCount()).isEqualTo(4);
     assertThat(record.getValue().getRedistributedPartitions()).containsExactly(1, 2);
@@ -266,8 +266,8 @@ public class ScaleUpTest {
     // then
     final var finalResponse =
         RecordingExporter.scaleRecords()
-            .skipUntil(r -> r.getIntent() == ScaleIntent.PARTITION_BOOTSTRAPPED)
-            .limit(r -> r.getIntent() == ScaleIntent.STATUS_RESPONSE)
+            .skipUntil(r -> r.getIntentToWrite() == ScaleIntent.PARTITION_BOOTSTRAPPED)
+            .limit(r -> r.getIntentToWrite() == ScaleIntent.STATUS_RESPONSE)
             .getLast();
     assertThat(finalResponse.getValue().getDesiredPartitionCount()).isEqualTo(4);
     assertThat(finalResponse.getValue().getRedistributedPartitions()).containsExactly(1, 2, 3, 4);
@@ -292,7 +292,7 @@ public class ScaleUpTest {
     engine.writeRecords(scaleTo3, bootstrapPartitionsTo3);
 
     // then
-    assertThat(allScaleRecordsForPartition(1).map(Record::getIntent))
+    assertThat(allScaleRecordsForPartition(1).map(Record::getIntentToWrite))
         .hasSize(5)
         .containsSequence(
             ScaleIntent.SCALE_UP,
@@ -319,7 +319,7 @@ public class ScaleUpTest {
     engine.writeRecords(scaleTo4, bootstrapPartitionsTo4);
 
     // then
-    assertThat(allScaleRecordsForPartition(1).map(Record::getIntent))
+    assertThat(allScaleRecordsForPartition(1).map(Record::getIntentToWrite))
         .hasSize(5)
         .containsSequence(
             ScaleIntent.SCALE_UP,
@@ -351,7 +351,7 @@ public class ScaleUpTest {
     bootstrapPartitionsTo3.recordMetadata().requestId(1234);
     // when
     engine.writeRecords(scaleTo3, bootstrapPartitionsTo3);
-    assertThat(allScaleRecordsForPartition(1).map(Record::getIntent)).hasSize(5);
+    assertThat(allScaleRecordsForPartition(1).map(Record::getIntentToWrite)).hasSize(5);
     assertPartitionBootstrappedHasBeenRedistributed();
 
     RecordingExporter.reset();
@@ -363,11 +363,11 @@ public class ScaleUpTest {
     // no additional events are added to the log stream
     final var records =
         RecordingExporter.scaleRecords()
-            .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP)
+            .limit(r -> r.getIntentToWrite() == ScaleIntent.SCALED_UP)
             .filter(r -> r.getPartitionId() == 1);
     assertThat(records)
         .hasSize(2)
-        .map(Record::getIntent)
+        .map(Record::getIntentToWrite)
         .containsSequence(
             ScaleIntent.MARK_PARTITION_BOOTSTRAPPED, ScaleIntent.PARTITION_BOOTSTRAPPED);
 
@@ -377,14 +377,14 @@ public class ScaleUpTest {
 
   private ScaleRecordStream allScaleRecordsForPartition(final int partitionId) {
     return RecordingExporter.scaleRecords()
-        .limit(r -> r.getIntent() == ScaleIntent.SCALED_UP && r.getPartitionId() == partitionId)
+        .limit(r -> r.getIntentToWrite() == ScaleIntent.SCALED_UP && r.getPartitionId() == partitionId)
         .filter(r -> r.getPartitionId() == partitionId);
   }
 
   private void assertPartitionBootstrappedHasBeenRedistributed() {
     assertThat(allScaleRecordsForPartition(2))
         .hasSize(5)
-        .map(Record::getIntent)
+        .map(Record::getIntentToWrite)
         .containsExactly(
             ScaleIntent.SCALE_UP,
             ScaleIntent.SCALING_UP,

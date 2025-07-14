@@ -721,7 +721,7 @@ public class ModifyProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementId("A")
                 .limit("A", ProcessInstanceIntent.ELEMENT_TERMINATED))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_TERMINATING, ProcessInstanceIntent.ELEMENT_TERMINATED);
     // Verifies that the element is activated in the same scope the other element was terminated in.
@@ -1484,7 +1484,7 @@ public class ModifyProcessInstanceTest {
             .toList();
 
     Assertions.assertThat(elementInstanceEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs("Expect the element instance to have been activated")
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -1529,7 +1529,7 @@ public class ModifyProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(elementId, ProcessInstanceIntent.ELEMENT_COMPLETED))
         .describedAs("Expect the element instance to have been completed")
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_COMPLETING, ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
@@ -1572,7 +1572,7 @@ public class ModifyProcessInstanceTest {
                 .withElementId(elementId)
                 .limit(elementId, ProcessInstanceIntent.ELEMENT_TERMINATED)
                 .toList())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_TERMINATING, ProcessInstanceIntent.ELEMENT_TERMINATED);
   }

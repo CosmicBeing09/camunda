@@ -60,7 +60,7 @@ public final class CreateProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementType(BpmnElementType.PROCESS))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_ACTIVATING, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
@@ -103,7 +103,7 @@ public final class CreateProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementType(BpmnElementType.PROCESS))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_ACTIVATING, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
@@ -139,7 +139,7 @@ public final class CreateProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementType(BpmnElementType.PROCESS))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_ACTIVATING, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
@@ -173,7 +173,7 @@ public final class CreateProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementType(BpmnElementType.PROCESS))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_ACTIVATING, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
@@ -234,7 +234,7 @@ public final class CreateProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ACTIVATE_ELEMENT),
@@ -304,7 +304,7 @@ public final class CreateProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSequence(
             tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(BpmnElementType.SEQUENCE_FLOW, ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -340,7 +340,7 @@ public final class CreateProcessInstanceTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -393,7 +393,7 @@ public final class CreateProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementType(BpmnElementType.PROCESS))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_ACTIVATING, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
@@ -451,7 +451,7 @@ public final class CreateProcessInstanceTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSequence(
             tuple(BpmnElementType.PROCESS, processId, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(BpmnElementType.PROCESS, processId, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -476,7 +476,7 @@ public final class CreateProcessInstanceTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSequence(
             tuple(BpmnElementType.PROCESS, processId, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(BpmnElementType.PROCESS, processId, ProcessInstanceIntent.ELEMENT_ACTIVATING),

@@ -289,7 +289,7 @@ public class UserTaskListenersTest {
         "Task Listener job completion with variables payload provided is not yet supported";
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent().equals(IncidentIntent.CREATED))
+                .limit(r -> r.getIntentToWrite().equals(IncidentIntent.CREATED))
                 .onlyCommandRejections())
         .describedAs(
             "Expected to have %d `COMPLETE` job command rejections all having same rejection type and reason",
@@ -982,8 +982,8 @@ public class UserTaskListenersTest {
     assertThat(intents).describedAs("Expected intents not to be empty").isNotEmpty();
     assertThat(
             RecordingExporter.userTaskRecords()
-                .limit(r -> r.getIntent() == intents[intents.length - 1]))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == intents[intents.length - 1]))
+        .extracting(Record::getIntentToWrite)
         .describedAs("Verify the expected sequence of User Task intents")
         .containsSequence(intents);
   }

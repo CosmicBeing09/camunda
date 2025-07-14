@@ -181,7 +181,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated()
                 .filter(
-                    r -> r.getIntent() == ELEMENT_TERMINATED || r.getIntent() == ELEMENT_COMPLETED))
+                    r -> r.getIntentToWrite() == ELEMENT_TERMINATED || r.getIntentToWrite() == ELEMENT_COMPLETED))
         .extracting(r -> r.getValue().getElementId())
         .containsSubsequence(expectedTerminatedElementIds)
         .contains(ELEMENT_ID);
@@ -210,7 +210,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated()
-                .filter(r -> r.getIntent() == ELEMENT_TERMINATED))
+                .filter(r -> r.getIntentToWrite() == ELEMENT_TERMINATED))
         .extracting(r -> r.getValue().getElementId())
         .containsSubsequence(expectedTerminatedElementIds);
   }
@@ -242,7 +242,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated()
-                .filter(r -> r.getIntent() == ELEMENT_TERMINATED))
+                .filter(r -> r.getIntentToWrite() == ELEMENT_TERMINATED))
         .extracting(r -> r.getValue().getElementId())
         .containsSubsequence(expectedTerminatedElementIds);
   }
@@ -278,7 +278,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated()
-                .filter(r -> r.getIntent() == ELEMENT_TERMINATED))
+                .filter(r -> r.getIntentToWrite() == ELEMENT_TERMINATED))
         .extracting(r -> r.getValue().getElementId())
         .containsSubsequence(expectedTerminatedElementIds);
   }

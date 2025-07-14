@@ -112,7 +112,7 @@ public class MigrateTimerEventSubprocessTest {
                 .limit(
                     r ->
                         r.getKey() == processInstanceKey
-                            && r.getIntent() == ProcessInstanceMigrationIntent.MIGRATED)
+                            && r.getIntentToWrite() == ProcessInstanceMigrationIntent.MIGRATED)
                 .timerRecords()
                 .withIntent(TimerIntent.CREATED)
                 .withProcessInstanceKey(processInstanceKey)

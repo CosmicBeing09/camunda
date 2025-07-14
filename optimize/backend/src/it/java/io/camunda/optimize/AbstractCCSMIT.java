@@ -321,7 +321,7 @@ public abstract class AbstractCCSMIT extends AbstractIT {
       final List<? extends ZeebeRecordDto> eventsForElement, final Intent intent) {
     final ZeebeRecordDto startOfElement =
         eventsForElement.stream()
-            .filter(event -> event.getIntent().equals(intent))
+            .filter(event -> event.getIntentToWrite().equals(intent))
             .findFirst()
             .orElseThrow(eventNotFoundExceptionSupplier);
     return OffsetDateTime.ofInstant(
@@ -332,7 +332,7 @@ public abstract class AbstractCCSMIT extends AbstractIT {
       final List<? extends ZeebeRecordDto> eventsForElement, final Intent intent) {
     final ZeebeRecordDto startOfElement =
         eventsForElement.stream()
-            .filter(event -> event.getIntent().equals(intent))
+            .filter(event -> event.getIntentToWrite().equals(intent))
             .sorted(Comparator.comparing(ZeebeRecordDto::getTimestamp))
             .reduce((first, second) -> second)
             .orElseThrow(eventNotFoundExceptionSupplier);
@@ -346,7 +346,7 @@ public abstract class AbstractCCSMIT extends AbstractIT {
         eventsForElement.stream()
             .filter(
                 event ->
-                    event.getIntent().equals(ASSIGNED)
+                    event.getIntentToWrite().equals(ASSIGNED)
                         && ((ZeebeUserTaskRecordDto) event)
                             .getValue()
                             .getAssignee()
@@ -363,7 +363,7 @@ public abstract class AbstractCCSMIT extends AbstractIT {
         eventsForElement.stream()
             .filter(
                 event ->
-                    event.getIntent().equals(ASSIGNED)
+                    event.getIntentToWrite().equals(ASSIGNED)
                         && ((ZeebeUserTaskRecordDto) event)
                             .getValue()
                             .getAssignee()

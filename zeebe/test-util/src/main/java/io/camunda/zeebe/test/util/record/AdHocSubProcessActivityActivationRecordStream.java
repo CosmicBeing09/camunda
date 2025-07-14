@@ -37,7 +37,7 @@ public class AdHocSubProcessActivityActivationRecordStream
   public AdHocSubProcessActivityActivationRecordStream limitToAdHocSubProcessInstanceCompleted() {
     return limit(
         r ->
-            r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED
+            r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED
                 && r.getKey() == Long.parseLong(r.getValue().getAdHocSubProcessInstanceKey()));
   }
 }
