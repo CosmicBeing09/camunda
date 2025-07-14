@@ -47,8 +47,8 @@ public class FlownodeInstanceFilterTransformer
     ofNullable(stringTerms(TREE_PATH, filter.treePaths())).ifPresent(queries::add);
     ofNullable(filter.hasIncident()).ifPresent(f -> queries.add(term(INCIDENT, f)));
     ofNullable(stringTerms(TENANT_ID, filter.tenantIds())).ifPresent(queries::add);
-    ofNullable(stringTerms(START_DATE, filter.startDates())).ifPresent(queries::add);
-    ofNullable(stringTerms(END_DATE, filter.endDates())).ifPresent(queries::add);
+    ofNullable(stringTerms(START_DATE, filter.startDateOperations())).ifPresent(queries::add);
+    ofNullable(stringTerms(END_DATE, filter.endDateOperations())).ifPresent(queries::add);
     return and(queries);
   }
 
