@@ -9,7 +9,7 @@ package io.camunda.it.rdbms.db.fixtures;
 
 import io.camunda.db.rdbms.write.RdbmsWriter;
 import io.camunda.db.rdbms.write.domain.IncidentDbModel;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -31,7 +31,7 @@ public final class IncidentFixtures extends CommonFixtures {
             .jobKey(nextKey())
             .flowNodeId("element-" + nextKey())
             .state(randomEnum(IncidentState.class))
-            .errorType(randomEnum(ErrorType.class))
+            .errorType(randomEnum(ErrorTypeOperations.class))
             .errorMessage("error-" + generateRandomString(20))
             .creationDate(NOW.plus(RANDOM.nextInt(), ChronoUnit.MILLIS))
             .tenantId("tenant-" + generateRandomString(20))

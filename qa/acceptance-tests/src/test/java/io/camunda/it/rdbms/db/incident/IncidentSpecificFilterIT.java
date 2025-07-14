@@ -19,7 +19,7 @@ import io.camunda.db.rdbms.write.RdbmsWriter;
 import io.camunda.it.rdbms.db.fixtures.CommonFixtures;
 import io.camunda.it.rdbms.db.fixtures.IncidentFixtures;
 import io.camunda.it.rdbms.db.util.RdbmsTestConfiguration;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.search.filter.DateValueFilter;
 import io.camunda.search.filter.IncidentFilter;
@@ -60,7 +60,7 @@ public class IncidentSpecificFilterIT {
   @MethodSource("shouldFindIncidentWithSpecificFilterParameters")
   public void shouldFindIncidentWithSpecificFilter(final IncidentFilter filter) {
     createAndSaveRandomIncidents(
-        rdbmsWriter, b -> b.errorType(ErrorType.CONDITION_ERROR).state(IncidentState.RESOLVED));
+        rdbmsWriter, b -> b.errorType(ErrorTypeOperations.CONDITION_ERROR).state(IncidentState.RESOLVED));
     createAndSaveIncident(
         rdbmsWriter,
         IncidentFixtures.createRandomized(
@@ -71,7 +71,7 @@ public class IncidentSpecificFilterIT {
                     .processInstanceKey(3000L)
                     .flowNodeId("sorting-flow-node")
                     .flowNodeInstanceKey(4000L)
-                    .errorType(ErrorType.JOB_NO_RETRIES)
+                    .errorType(ErrorTypeOperations.JOB_NO_RETRIES)
                     .errorMessage("error-message-5000")
                     .state(IncidentState.ACTIVE)
                     .jobKey(6000L)
@@ -96,7 +96,7 @@ public class IncidentSpecificFilterIT {
         new IncidentFilter.Builder().processInstanceKeys(3000L).build(),
         new IncidentFilter.Builder().flowNodeIds("sorting-flow-node").build(),
         new IncidentFilter.Builder().flowNodeInstanceKeys(4000L).build(),
-        new IncidentFilter.Builder().errorTypes(ErrorType.JOB_NO_RETRIES).build(),
+        new IncidentFilter.Builder().errorTypeOperations(ErrorTypeOperations.JOB_NO_RETRIES).build(),
         new IncidentFilter.Builder().errorMessages("error-message-5000").build(),
         new IncidentFilter.Builder().states(IncidentState.ACTIVE).build(),
         new IncidentFilter.Builder().jobKeys(6000L).build(),

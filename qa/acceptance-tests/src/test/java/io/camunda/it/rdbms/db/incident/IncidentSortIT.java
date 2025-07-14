@@ -91,7 +91,7 @@ public class IncidentSortIT {
     testSorting(
         testApplication.getRdbmsService(),
         b -> b.errorType().asc(),
-        Comparator.comparing(it -> it.errorType().name()));
+        Comparator.comparing(it -> it.errorTypeOperations().name()));
   }
 
   @TestTemplate

@@ -13,7 +13,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.camunda.search.entities.IncidentEntity;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.search.entities.ProcessFlowNodeStatisticsEntity;
 import io.camunda.search.entities.SequenceFlowEntity;
@@ -1575,7 +1575,7 @@ public class ProcessInstanceControllerTest extends RestControllerTest {
                         2251799814751221L,
                         "def_id",
                         2251799814751255L,
-                        ErrorType.FORM_NOT_FOUND,
+                        ErrorTypeOperations.FORM_NOT_FOUND,
                         "Form not found",
                         "Activity_07rrek1",
                         2251799814751258L,

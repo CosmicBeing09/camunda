@@ -7,7 +7,7 @@
  */
 package io.camunda.db.rdbms.write.domain;
 
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.util.ObjectBuilder;
 import java.time.OffsetDateTime;
@@ -21,7 +21,7 @@ public record IncidentDbModel(
     Long flowNodeInstanceKey,
     String flowNodeId,
     Long jobKey,
-    ErrorType errorType,
+    ErrorTypeOperations errorType,
     String errorMessage,
     Integer errorMessageHash,
     OffsetDateTime creationDate,
@@ -67,7 +67,7 @@ public record IncidentDbModel(
     private Long flowNodeInstanceKey;
     private String flowNodeId;
     private Long jobKey;
-    private ErrorType errorType;
+    private ErrorTypeOperations errorType;
     private String errorMessage;
     private Integer errorMessageHash;
     private OffsetDateTime creationDate;
@@ -112,7 +112,7 @@ public record IncidentDbModel(
       return this;
     }
 
-    public Builder errorType(final ErrorType errorType) {
+    public Builder errorType(final ErrorTypeOperations errorType) {
       this.errorType = errorType;
       return this;
     }

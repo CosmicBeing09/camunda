@@ -12,7 +12,7 @@ import static io.camunda.exporter.rdbms.utils.ExportUtil.buildTreePath;
 import io.camunda.db.rdbms.write.domain.IncidentDbModel;
 import io.camunda.db.rdbms.write.service.IncidentWriter;
 import io.camunda.exporter.rdbms.RdbmsExportHandler;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -87,14 +87,14 @@ public class IncidentExportHandler implements RdbmsExportHandler<IncidentRecordV
     return key > 0 ? key : null;
   }
 
-  private ErrorType mapErrorType(final io.camunda.zeebe.protocol.record.value.ErrorType errorType) {
+  private ErrorTypeOperations mapErrorType(final io.camunda.zeebe.protocol.record.value.ErrorType errorType) {
     if (errorType == null) {
-      return ErrorType.UNSPECIFIED;
+      return ErrorTypeOperations.UNSPECIFIED;
     }
     try {
-      return ErrorType.valueOf(errorType.name());
+      return ErrorTypeOperations.valueOf(errorType.name());
     } catch (final IllegalArgumentException ex) {
-      return ErrorType.UNKNOWN;
+      return ErrorTypeOperations.UNKNOWN;
     }
   }
 }

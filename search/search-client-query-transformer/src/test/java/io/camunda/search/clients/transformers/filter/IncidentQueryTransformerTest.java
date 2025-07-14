@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.search.filter.DateValueFilter;
 import io.camunda.search.filter.FilterBuilders;
@@ -97,7 +97,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByErrorType() {
-    final var filter = FilterBuilders.incident(f -> f.errorTypes(ErrorType.JOB_NO_RETRIES));
+    final var filter = FilterBuilders.incident(f -> f.errorTypeOperations(ErrorTypeOperations.JOB_NO_RETRIES));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -115,7 +115,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByResourceNotFoundErrorType() {
-    final var filter = FilterBuilders.incident(f -> f.errorTypes(ErrorType.RESOURCE_NOT_FOUND));
+    final var filter = FilterBuilders.incident(f -> f.errorTypeOperations(ErrorTypeOperations.RESOURCE_NOT_FOUND));
 
     // when
     final var searchRequest = transformQuery(filter);

@@ -10,7 +10,7 @@ package io.camunda.search.filter;
 import static io.camunda.util.CollectionUtil.addValuesToList;
 import static io.camunda.util.CollectionUtil.collectValues;
 
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.util.ObjectBuilder;
 import java.util.Collections;
@@ -22,7 +22,7 @@ public record IncidentFilter(
     List<Long> processDefinitionKeys,
     List<String> processDefinitionIds,
     List<Long> processInstanceKeys,
-    List<ErrorType> errorTypes,
+    List<ErrorTypeOperations> errorTypeOperations,
     List<String> errorMessages,
     List<Integer> errorMessageHashes,
     List<String> flowNodeIds,
@@ -40,7 +40,7 @@ public record IncidentFilter(
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
     private List<Long> processInstanceKeys;
-    private List<ErrorType> errorTypes;
+    private List<ErrorTypeOperations> errorTypeOperations;
     private List<String> errorMessages;
     private List<Integer> errorMessageHashes;
     private List<String> flowNodeIds;
@@ -87,12 +87,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder errorTypes(final ErrorType value, final ErrorType... values) {
-      return errorTypes(collectValues(value, values));
+    public Builder errorTypeOperations(final ErrorTypeOperations value, final ErrorTypeOperations... values) {
+      return errorTypeOperations(collectValues(value, values));
     }
 
-    public Builder errorTypes(final List<ErrorType> values) {
-      errorTypes = addValuesToList(errorTypes, values);
+    public Builder errorTypeOperations(final List<ErrorTypeOperations> values) {
+      errorTypeOperations = addValuesToList(errorTypeOperations, values);
       return this;
     }
 
@@ -176,7 +176,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
+          Objects.requireNonNullElse(errorTypeOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),

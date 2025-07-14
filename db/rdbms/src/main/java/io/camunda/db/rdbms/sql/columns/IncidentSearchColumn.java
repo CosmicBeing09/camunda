@@ -19,7 +19,7 @@ public enum IncidentSearchColumn implements SearchColumn<IncidentEntity> {
   FLOW_NODE_INSTANCE_KEY("flowNodeInstanceKey", IncidentEntity::flowNodeInstanceKey),
   FLOW_NODE_ID("flowNodeId", IncidentEntity::flowNodeId),
   CREATION_DATE("creationTime", IncidentEntity::creationTime, DateUtil::fuzzyToOffsetDateTime),
-  ERROR_TYPE("errorType", IncidentEntity::errorType),
+  ERROR_TYPE("errorType", IncidentEntity::errorTypeOperations),
   ERROR_MESSAGE("errorMessage", IncidentEntity::errorMessage),
   STATE("state", IncidentEntity::state),
   JOB_KEY("jobKey", IncidentEntity::jobKey),

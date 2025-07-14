@@ -12,7 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.camunda.search.entities.IncidentEntity;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.search.exception.CamundaSearchException;
 import io.camunda.search.filter.DateValueFilter;
@@ -75,7 +75,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                       23L,
                       "complexProcess",
                       42L,
-                      ErrorType.JOB_NO_RETRIES,
+                      ErrorTypeOperations.JOB_NO_RETRIES,
                       "No retries left.",
                       "elementId",
                       17L,
@@ -111,7 +111,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
           23L,
           "complexProcess",
           42L,
-          ErrorType.JOB_NO_RETRIES,
+          ErrorTypeOperations.JOB_NO_RETRIES,
           "No retries left.",
           "elementId",
           17L,
@@ -222,7 +222,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                         .processDefinitionKeys(23L)
                         .processDefinitionIds("complexProcess")
                         .processInstanceKeys(42L)
-                        .errorTypes(ErrorType.JOB_NO_RETRIES)
+                        .errorTypeOperations(ErrorTypeOperations.JOB_NO_RETRIES)
                         .errorMessages("No retries left.")
                         .flowNodeIds("elementId")
                         .flowNodeInstanceKeys(17L)

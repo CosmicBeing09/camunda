@@ -16,7 +16,7 @@ public record IncidentEntity(
     Long processDefinitionKey,
     String processDefinitionId,
     Long processInstanceKey,
-    ErrorType errorType,
+    ErrorTypeOperations errorTypeOperations,
     String errorMessage,
     String flowNodeId,
     Long flowNodeInstanceKey,
@@ -32,7 +32,7 @@ public record IncidentEntity(
     PENDING
   }
 
-  public enum ErrorType {
+  public enum ErrorTypeOperations {
     UNSPECIFIED,
     UNKNOWN,
     IO_MAPPING_ERROR,

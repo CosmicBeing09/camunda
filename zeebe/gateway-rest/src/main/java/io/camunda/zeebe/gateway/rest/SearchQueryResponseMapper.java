@@ -696,7 +696,7 @@ public final class SearchQueryResponseMapper {
         .processDefinitionKey(KeyUtil.keyToString(t.processDefinitionKey()))
         .processDefinitionId(t.processDefinitionId())
         .processInstanceKey(KeyUtil.keyToString(t.processInstanceKey()))
-        .errorType(IncidentResult.ErrorTypeEnum.fromValue(t.errorType().name()))
+        .errorType(IncidentResult.ErrorTypeEnum.fromValue(t.errorTypeOperations().name()))
         .errorMessage(t.errorMessage())
         .elementId(t.flowNodeId())
         .elementInstanceKey(KeyUtil.keyToString(t.flowNodeInstanceKey()))

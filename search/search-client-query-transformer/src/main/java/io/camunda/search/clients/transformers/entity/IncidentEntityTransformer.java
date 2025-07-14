@@ -7,21 +7,21 @@
  */
 package io.camunda.search.clients.transformers.entity;
 
-import static io.camunda.search.entities.IncidentEntity.ErrorType.CALLED_DECISION_ERROR;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.CALLED_ELEMENT_ERROR;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.CONDITION_ERROR;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.DECISION_EVALUATION_ERROR;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.EXECUTION_LISTENER_NO_RETRIES;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.EXTRACT_VALUE_ERROR;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.FORM_NOT_FOUND;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.IO_MAPPING_ERROR;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.JOB_NO_RETRIES;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.MESSAGE_SIZE_EXCEEDED;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.RESOURCE_NOT_FOUND;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.TASK_LISTENER_NO_RETRIES;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.UNHANDLED_ERROR_EVENT;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.UNKNOWN;
-import static io.camunda.search.entities.IncidentEntity.ErrorType.UNSPECIFIED;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.CALLED_DECISION_ERROR;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.CALLED_ELEMENT_ERROR;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.CONDITION_ERROR;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.DECISION_EVALUATION_ERROR;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.EXECUTION_LISTENER_NO_RETRIES;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.EXTRACT_VALUE_ERROR;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.FORM_NOT_FOUND;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.IO_MAPPING_ERROR;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.JOB_NO_RETRIES;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.MESSAGE_SIZE_EXCEEDED;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.RESOURCE_NOT_FOUND;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.TASK_LISTENER_NO_RETRIES;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.UNHANDLED_ERROR_EVENT;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.UNKNOWN;
+import static io.camunda.search.entities.IncidentEntity.ErrorTypeOperations.UNSPECIFIED;
 import static io.camunda.search.entities.IncidentEntity.IncidentState.ACTIVE;
 import static io.camunda.search.entities.IncidentEntity.IncidentState.MIGRATED;
 import static io.camunda.search.entities.IncidentEntity.IncidentState.PENDING;
@@ -29,7 +29,7 @@ import static io.camunda.search.entities.IncidentEntity.IncidentState.RESOLVED;
 
 import io.camunda.search.clients.transformers.ServiceTransformer;
 import io.camunda.search.entities.IncidentEntity;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 
 public class IncidentEntityTransformer
@@ -68,7 +68,7 @@ public class IncidentEntityTransformer
     };
   }
 
-  private ErrorType toErrorType(final io.camunda.webapps.schema.entities.incident.ErrorType value) {
+  private ErrorTypeOperations toErrorType(final io.camunda.webapps.schema.entities.incident.ErrorType value) {
     if (value == null) {
       return null;
     }

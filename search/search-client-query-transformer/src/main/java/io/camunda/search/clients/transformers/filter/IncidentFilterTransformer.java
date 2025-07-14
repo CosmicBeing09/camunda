@@ -28,7 +28,7 @@ import static io.camunda.webapps.schema.descriptors.template.IncidentTemplate.PR
 import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.clients.transformers.ServiceTransformers;
 import io.camunda.search.clients.transformers.filter.DateValueFilterTransformer.DateFieldFilter;
-import io.camunda.search.entities.IncidentEntity.ErrorType;
+import io.camunda.search.entities.IncidentEntity.ErrorTypeOperations;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
 import io.camunda.search.filter.DateValueFilter;
 import io.camunda.search.filter.IncidentFilter;
@@ -52,7 +52,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
         getProcessDefinitionKeyQuery(filter.processDefinitionKeys());
     final var processDefinitionIdQuery = getProcessDefinitionIds(filter.processDefinitionIds());
     final var processInstanceKeyQuery = getProcessInstanceKeyQuery(filter.processInstanceKeys());
-    final var errorTypeQuery = getErrorTypeQuery(filter.errorTypes());
+    final var errorTypeQuery = getErrorTypeQuery(filter.errorTypeOperations());
     final var errorMessageQuery = getErrorMessageQuery(filter.errorMessages());
     final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIds());
     final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
@@ -119,9 +119,9 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return stringTerms(FLOW_NODE_ID, flowNodeIds);
   }
 
-  private SearchQuery getErrorTypeQuery(final List<ErrorType> errorTypes) {
+  private SearchQuery getErrorTypeQuery(final List<ErrorTypeOperations> errorTypeOperations) {
     return stringTerms(
-        ERROR_TYPE, errorTypes != null ? errorTypes.stream().map(Enum::name).toList() : null);
+        ERROR_TYPE, errorTypeOperations != null ? errorTypeOperations.stream().map(Enum::name).toList() : null);
   }
 
   private SearchQuery getProcessInstanceKeyQuery(final List<Long> processInstanceKeys) {
