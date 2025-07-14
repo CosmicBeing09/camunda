@@ -579,9 +579,9 @@ class UserTaskSearchTest {
   void shouldSortTasksByElementName() {
     // when
     final var resultAsc =
-        camundaClient.newUserTaskSearchRequest().sort(s -> s.elementName().asc()).send().join();
+        camundaClient.newUserTaskSearchRequest().sort(s -> s.name().asc()).send().join();
     final var resultDesc =
-        camundaClient.newUserTaskSearchRequest().sort(s -> s.elementName().desc()).send().join();
+        camundaClient.newUserTaskSearchRequest().sort(s -> s.name().desc()).send().join();
     assertSorted(resultAsc, resultDesc, UserTask::getElementName);
   }
 

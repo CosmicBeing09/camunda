@@ -46,7 +46,7 @@ public class UserTaskSortImpl extends SearchRequestSortBase<UserTaskSort> implem
   }
 
   @Override
-  public UserTaskSort elementName() {
+  public UserTaskSort name() {
     return field("elementName");
   }
 
