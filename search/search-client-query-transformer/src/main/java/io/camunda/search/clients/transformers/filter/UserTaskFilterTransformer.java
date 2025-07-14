@@ -51,7 +51,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
         .ifPresent(queries::add);
     ofNullable(getBpmnProcessIdQuery(filter.bpmnProcessIds())).ifPresent(queries::add);
     ofNullable(getElementIdQuery(filter.elementIds())).ifPresent(queries::add);
-    ofNullable(getElementNameQuery(filter.elementNames())).ifPresent(queries::add);
+    ofNullable(getElementNameQuery(filter.names())).ifPresent(queries::add);
     queries.addAll(getCandidateUsersQuery(filter.candidateUserOperations()));
     queries.addAll(getCandidateGroupsQuery(filter.candidateGroupOperations()));
     queries.addAll(getAssigneesQuery(filter.assigneeOperations()));

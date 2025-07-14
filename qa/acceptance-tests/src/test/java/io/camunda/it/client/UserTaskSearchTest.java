@@ -438,7 +438,7 @@ class UserTaskSearchTest {
     final var result =
         camundaClient.newUserTaskSearchRequest().filter(f -> f.name("P2")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
-    result.items().forEach(item -> assertThat(item.getElementName()).isEqualTo("P2"));
+    result.items().forEach(item -> assertThat(item.getName()).isEqualTo("P2"));
   }
 
   @Test
@@ -582,7 +582,7 @@ class UserTaskSearchTest {
         camundaClient.newUserTaskSearchRequest().sort(s -> s.name().asc()).send().join();
     final var resultDesc =
         camundaClient.newUserTaskSearchRequest().sort(s -> s.name().desc()).send().join();
-    assertSorted(resultAsc, resultDesc, UserTask::getElementName);
+    assertSorted(resultAsc, resultDesc, UserTask::getName);
   }
 
   @Test
