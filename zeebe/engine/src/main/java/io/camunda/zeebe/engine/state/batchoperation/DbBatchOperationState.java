@@ -162,7 +162,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   }
 
   @Override
-  public void pause(final long batchOperationKey) {
+  public void suspend(final long batchOperationKey) {
     LOGGER.trace("Pausing batch operation with key {}", batchOperationKey);
     batchKey.wrapLong(batchOperationKey);
 

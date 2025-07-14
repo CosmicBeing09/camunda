@@ -23,6 +23,6 @@ public class BatchOperationPausedApplier
 
   @Override
   public void applyState(final long pauseKey, final BatchOperationLifecycleManagementRecord value) {
-    batchOperationState.pause(value.getBatchOperationKey());
+    batchOperationState.suspend(value.getBatchOperationKey());
   }
 }
