@@ -64,12 +64,12 @@ public final class VariableDocumentUpdateProcessor
       final Writers writers,
       final MutableUserTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    this.elementInstanceState = processingState.getElementInstanceState();
+    elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;
-    this.processState = processingState.getProcessState();
+    processState = processingState.getProcessState();
     this.keyGenerator = keyGenerator;
-    this.variableBehavior = bpmnBehaviors.variableBehavior();
-    this.jobBehavior = bpmnBehaviors.jobBehavior();
+    variableBehavior = bpmnBehaviors.variableBehavior();
+    jobBehavior = bpmnBehaviors.jobBehavior();
     this.writers = writers;
     this.authCheckBehavior = authCheckBehavior;
   }
@@ -120,8 +120,8 @@ public final class VariableDocumentUpdateProcessor
         return;
       }
 
-      final long key = keyGenerator.nextKey();
-      writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATING, value);
+      final long variableDocKey = keyGenerator.nextKey();
+      writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATING, value);
 
       final var userTaskRecord = userTaskState.getUserTask(userTaskKey);
       if (hasVariables(value)) {
@@ -173,8 +173,8 @@ public final class VariableDocumentUpdateProcessor
           .state()
           .appendFollowUpEvent(scope.getUserTaskKey(), UserTaskIntent.UPDATED, userTaskRecord);
 
-      writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
-      writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);
+      writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATED, value);
+      writers.response().writeEventOnCommand(variableDocKey, VariableDocumentIntent.UPDATED, value, record);
       return;
     }
 
@@ -209,17 +209,17 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final long key = keyGenerator.nextKey();
+    final long variableDocKey = keyGenerator.nextKey();
 
-    writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
-    writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);
+    writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATED, value);
+    writers.response().writeEventOnCommand(variableDocKey, VariableDocumentIntent.UPDATED, value, record);
   }
 
   private static boolean hasVariables(final VariableDocumentRecord record) {
     return !DocumentValue.EMPTY_DOCUMENT.equals(record.getVariablesBuffer());
   }
 
-  private static boolean isCamundaUserTask(ElementInstance elementInstance) {
+  private static boolean isCamundaUserTask(final ElementInstance elementInstance) {
     return elementInstance.getValue().getBpmnElementType() == BpmnElementType.USER_TASK
         && elementInstance.getUserTaskKey() > -1L;
   }
