@@ -92,7 +92,7 @@ public class IncidentSpecificFilterIT {
     return List.of(
         new IncidentFilter.Builder().incidentKeys(1337L).build(),
         new IncidentFilter.Builder().processDefinitionKeys(2000L).build(),
-        new IncidentFilter.Builder().processDefinitionIds("sorting-test-process").build(),
+        new IncidentFilter.Builder().processDefinitionIdOperations("sorting-test-process").build(),
         new IncidentFilter.Builder().processInstanceKeys(3000L).build(),
         new IncidentFilter.Builder().flowNodeIds("sorting-flow-node").build(),
         new IncidentFilter.Builder().flowNodeInstanceKeys(4000L).build(),

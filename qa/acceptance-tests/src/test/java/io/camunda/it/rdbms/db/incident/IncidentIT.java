@@ -83,7 +83,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(original.processDefinitionId()))
+                    b.filter(f -> f.processDefinitionIdOperations(original.processDefinitionId()))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(10))));
 
@@ -109,7 +109,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(processDefinitionId))
+                    b.filter(f -> f.processDefinitionIdOperations(processDefinitionId))
                         .sort(s -> s.creationTime().asc().flowNodeId().asc())
                         .page(p -> p.from(0).size(5))));
 
@@ -148,7 +148,7 @@ public class IncidentIT {
                             f ->
                                 f.incidentKeys(original.incidentKey())
                                     .processInstanceKeys(original.processInstanceKey())
-                                    .processDefinitionIds(original.processDefinitionId())
+                                    .processDefinitionIdOperations(original.processDefinitionId())
                                     .processDefinitionKeys(original.processDefinitionKey())
                                     .states(original.state())
                                     .errorTypes(original.errorType())
