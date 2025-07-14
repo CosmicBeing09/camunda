@@ -124,8 +124,8 @@ public class IncidentIT {
             firstInstance.creationTime(), firstInstance.flowNodeId(), firstInstance.incidentKey());
 
     final var lastInstance = searchResult.items().getLast();
-    assertThat(searchResult.lastSortValues()).hasSize(3);
-    assertThat(searchResult.lastSortValues())
+    assertThat(searchResult.lastSearchAfter()).hasSize(3);
+    assertThat(searchResult.lastSearchAfter())
         .containsExactly(
             lastInstance.creationTime(), lastInstance.flowNodeId(), lastInstance.incidentKey());
   }
