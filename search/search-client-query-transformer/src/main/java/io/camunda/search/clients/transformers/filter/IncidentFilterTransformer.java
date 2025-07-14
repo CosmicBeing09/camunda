@@ -53,7 +53,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var processDefinitionIdQuery = getProcessDefinitionIds(filter.processDefinitionIds());
     final var processInstanceKeyQuery = getProcessInstanceKeyQuery(filter.processInstanceKeys());
     final var errorTypeQuery = getErrorTypeQuery(filter.errorTypes());
-    final var errorMessageQuery = getErrorMessageQuery(filter.errorMessages());
+    final var errorMessageQuery = getErrorMessageQuery(filter.errorMessageOperations());
     final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIds());
     final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
     final var creationTimeQuery = getCreationTimeQuery(filter.creationTime());
@@ -132,8 +132,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return longTerms(PROCESS_DEFINITION_KEY, processDefinitionKeys);
   }
 
-  private SearchQuery getErrorMessageQuery(final List<String> errorMessages) {
-    return stringTerms(ERROR_MSG, errorMessages);
+  private SearchQuery getErrorMessageQuery(final List<String> errorMessageOperations) {
+    return stringTerms(ERROR_MSG, errorMessageOperations);
   }
 
   private SearchQuery getKeyQuery(final List<Long> keys) {

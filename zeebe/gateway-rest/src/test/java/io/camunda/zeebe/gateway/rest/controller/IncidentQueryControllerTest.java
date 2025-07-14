@@ -223,7 +223,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                         .processDefinitionIds("complexProcess")
                         .processInstanceKeys(42L)
                         .errorTypes(ErrorType.JOB_NO_RETRIES)
-                        .errorMessages("No retries left.")
+                        .errorMessageOperations("No retries left.")
                         .flowNodeIds("elementId")
                         .flowNodeInstanceKeys(17L)
                         .creationTime(

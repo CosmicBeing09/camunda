@@ -133,7 +133,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByErrorMessage() {
-    final var filter = FilterBuilders.incident(f -> f.errorMessages("No retries left."));
+    final var filter = FilterBuilders.incident(f -> f.errorMessageOperations("No retries left."));
 
     // when
     final var searchRequest = transformQuery(filter);
