@@ -551,7 +551,7 @@ class IncidentSearchTest {
     final var resultSearchBefore =
         camundaClient
             .newIncidentSearchRequest()
-            .page(p -> p.limit(1).searchBefore(result.page().searchBeforeCursor()))
+            .page(p -> p.limit(1).searchBefore(result.page().startCursor()))
             .send()
             .join();
 
