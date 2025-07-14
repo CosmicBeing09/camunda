@@ -128,7 +128,7 @@ public class DecisionInstanceSortIT {
   public void shouldSortByState(final CamundaRdbmsTestApplication testApplication) {
     testSorting(
         testApplication.getRdbmsService(),
-        b -> b.state().asc(),
+        b -> b.states().asc(),
         Comparator.comparing(DecisionInstanceEntity::state));
   }
 

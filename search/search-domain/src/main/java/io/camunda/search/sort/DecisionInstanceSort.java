@@ -36,7 +36,7 @@ public record DecisionInstanceSort(List<FieldSorting> orderings) implements Sort
       return this;
     }
 
-    public Builder state() {
+    public Builder states() {
       currentOrdering = new FieldSorting("state", null);
       return this;
     }
