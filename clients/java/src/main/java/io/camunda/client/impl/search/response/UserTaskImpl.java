@@ -50,7 +50,7 @@ public class UserTaskImpl implements UserTask {
 
   public UserTaskImpl(final UserTaskResult item) {
     userTaskKey = ParseUtil.parseLongOrNull(item.getUserTaskKey());
-    name = item.getName();
+    elementName = item.getName();
     state = EnumUtil.convert(item.getState(), UserTaskState.class);
     assignee = item.getAssignee();
     elementId = item.getElementId();
@@ -80,7 +80,7 @@ public class UserTaskImpl implements UserTask {
 
   @Override
   public String getName() {
-    return name;
+    return elementName;
   }
 
   @Override
