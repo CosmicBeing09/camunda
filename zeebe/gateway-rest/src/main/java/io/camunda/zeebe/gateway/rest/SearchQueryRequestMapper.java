@@ -1397,7 +1397,7 @@ public final class SearchQueryRequestMapper {
         case ERROR_TYPE -> builder.errorType();
         case ERROR_MESSAGE -> builder.errorMessage();
         case ELEMENT_ID -> builder.flowNodeId();
-        case ELEMENT_INSTANCE_KEY -> builder.flowNodeInstanceKey();
+        case ELEMENT_INSTANCE_KEY -> builder.flowNodeInstanceKeyOperations();
         case CREATION_TIME -> builder.creationTime();
         case STATE -> builder.state();
         case JOB_KEY -> builder.jobKey();

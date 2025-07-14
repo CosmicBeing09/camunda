@@ -225,7 +225,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                         .errorTypes(ErrorType.JOB_NO_RETRIES)
                         .errorMessages("No retries left.")
                         .flowNodeIds("elementId")
-                        .flowNodeInstanceKeys(17L)
+                        .flowNodeInstanceKeyOperations(17L)
                         .creationTime(
                             new DateValueFilter.Builder()
                                 .before(creationTime)

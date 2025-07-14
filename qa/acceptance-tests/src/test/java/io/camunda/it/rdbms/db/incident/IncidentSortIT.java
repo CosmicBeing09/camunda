@@ -156,7 +156,7 @@ public class IncidentSortIT {
         reader
             .search(
                 new IncidentQuery(
-                    new IncidentFilter.Builder().flowNodeInstanceKeys(key).build(),
+                    new IncidentFilter.Builder().flowNodeInstanceKeyOperations(key).build(),
                     IncidentSort.of(sortBuilder),
                     SearchQueryPage.of(b -> b)))
             .items();

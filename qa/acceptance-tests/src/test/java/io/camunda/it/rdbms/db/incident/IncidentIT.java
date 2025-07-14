@@ -154,7 +154,7 @@ public class IncidentIT {
                                     .errorTypes(original.errorType())
                                     .errorMessages(original.errorMessage())
                                     .errorMessageHashes(original.errorMessageHash())
-                                    .flowNodeInstanceKeys(original.flowNodeInstanceKey())
+                                    .flowNodeInstanceKeyOperations(original.flowNodeInstanceKey())
                                     .flowNodeIds(original.flowNodeId())
                                     .jobKeys(original.jobKey())
                                     .tenantIds(original.tenantId())

@@ -95,7 +95,7 @@ public class IncidentSpecificFilterIT {
         new IncidentFilter.Builder().processDefinitionIds("sorting-test-process").build(),
         new IncidentFilter.Builder().processInstanceKeys(3000L).build(),
         new IncidentFilter.Builder().flowNodeIds("sorting-flow-node").build(),
-        new IncidentFilter.Builder().flowNodeInstanceKeys(4000L).build(),
+        new IncidentFilter.Builder().flowNodeInstanceKeyOperations(4000L).build(),
         new IncidentFilter.Builder().errorTypes(ErrorType.JOB_NO_RETRIES).build(),
         new IncidentFilter.Builder().errorMessages("error-message-5000").build(),
         new IncidentFilter.Builder().states(IncidentState.ACTIVE).build(),

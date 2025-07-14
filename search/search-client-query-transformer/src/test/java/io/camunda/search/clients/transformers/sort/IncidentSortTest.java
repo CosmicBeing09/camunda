@@ -31,7 +31,7 @@ public class IncidentSortTest extends AbstractSortTransformerTest {
         new TestArguments("errorType", SortOrder.ASC, s -> s.errorType().asc()),
         new TestArguments("errorMessage", SortOrder.ASC, s -> s.errorMessage().asc()),
         new TestArguments("flowNodeId", SortOrder.ASC, s -> s.flowNodeId().asc()),
-        new TestArguments("flowNodeInstanceKey", SortOrder.ASC, s -> s.flowNodeInstanceKey().asc()),
+        new TestArguments("flowNodeInstanceKey", SortOrder.ASC, s -> s.flowNodeInstanceKeyOperations().asc()),
         new TestArguments("tenantId", SortOrder.ASC, s -> s.tenantId().asc()),
         new TestArguments("creationTime", SortOrder.ASC, s -> s.creationTime().asc()),
         new TestArguments("state", SortOrder.ASC, s -> s.state().asc()),
