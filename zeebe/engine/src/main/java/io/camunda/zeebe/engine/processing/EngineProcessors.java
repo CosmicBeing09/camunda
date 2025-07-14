@@ -579,8 +579,8 @@ public final class EngineProcessors {
 
     UserTaskIntent.commands()
         .forEach(
-            intent ->
-                typedRecordProcessors.onCommand(ValueType.USER_TASK, intent, userTaskProcessor));
+            intentToWrite ->
+                typedRecordProcessors.onCommand(ValueType.USER_TASK, intentToWrite, userTaskProcessor));
   }
 
   private static void addCommandDistributionProcessors(
