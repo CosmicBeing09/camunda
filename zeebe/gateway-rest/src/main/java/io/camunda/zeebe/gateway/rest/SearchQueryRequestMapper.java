@@ -1554,7 +1554,7 @@ public final class SearchQueryRequestMapper {
                 p.size(requestedPage.getLimit())
                     .from(requestedPage.getFrom())
                     .searchAfter(searchAfter)
-                    .searchBefore(searchBefore)));
+                    .before(searchBefore)));
   }
 
   private static <T, B extends SortOption.AbstractBuilder<B> & ObjectBuilder<T>, F>
