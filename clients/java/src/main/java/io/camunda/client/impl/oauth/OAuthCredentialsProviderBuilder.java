@@ -285,7 +285,7 @@ public final class OAuthCredentialsProviderBuilder {
     return this;
   }
 
-  public Path getEntraCertificatePath() {
+  public Path getSslClientCertPath() {
     return entraCertificatePath;
   }
 
