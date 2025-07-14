@@ -1539,12 +1539,12 @@ public final class SearchQueryRequestMapper {
     }
 
     final String searchAfter = requestedPage.getSearchAfter();
-    final String searchBefore = requestedPage.getSearchBefore();
+    final String before = requestedPage.getSearchBefore();
 
-    if (searchAfter != null && searchBefore != null) {
+    if (searchAfter != null && before != null) {
       return Either.left(List.of(ERROR_SEARCH_BEFORE_AND_AFTER));
     }
-    if (requestedPage.getFrom() != null && (searchAfter != null || searchBefore != null)) {
+    if (requestedPage.getFrom() != null && (searchAfter != null || before != null)) {
       return Either.left(List.of(ERROR_SEARCH_BEFORE_AND_AFTER_AND_FROM));
     }
 
@@ -1554,7 +1554,7 @@ public final class SearchQueryRequestMapper {
                 p.size(requestedPage.getLimit())
                     .from(requestedPage.getFrom())
                     .searchAfter(searchAfter)
-                    .searchBefore(searchBefore)));
+                    .before(before)));
   }
 
   private static <T, B extends SortOption.AbstractBuilder<B> & ObjectBuilder<T>, F>

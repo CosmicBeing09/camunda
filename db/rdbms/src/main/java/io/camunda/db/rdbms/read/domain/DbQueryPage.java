@@ -16,8 +16,8 @@ public record DbQueryPage(Integer size, Integer from, List<KeySetPagination> key
 
   public record KeySetPaginationFieldEntry(String fieldName, Operator operator, Object fieldValue) {
 
-    public static Operator determineOperator(final SortOrder order, final boolean isSearchAfter) {
-      if (isSearchAfter) {
+    public static Operator determineOperator(final SortOrder order, final boolean before) {
+      if (before) {
         return order == SortOrder.ASC ? Operator.GREATER : Operator.LOWER;
       }
 
