@@ -514,7 +514,7 @@ class UserTaskSearchTest {
     final var resultBefore =
         camundaClient
             .newUserTaskSearchRequest()
-            .page(p -> p.searchBefore(Collections.singletonList(keyAfter)))
+            .page(p -> p.searchBeforeCursor(Collections.singletonList(keyAfter)))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(1);
@@ -537,10 +537,10 @@ class UserTaskSearchTest {
 
     // Assert First and Last Sort Value matches the first and last item
     // We need to make use of toString, such the test work with ES/OS
-    final List<String> firstSortValues =
-        result.page().firstSortValues().stream().map(Object::toString).toList();
-    String creationDateMillis = convertDateIfNeeded(firstSortValues.getFirst());
-    String userTaskKey = firstSortValues.getLast();
+    final List<String> searchBeforeCursor =
+        result.page().searchBeforeCursor().stream().map(Object::toString).toList();
+    String creationDateMillis = convertDateIfNeeded(searchBeforeCursor.getFirst());
+    String userTaskKey = searchBeforeCursor.getLast();
 
     assertThat(creationDateMillis)
         .isEqualTo(

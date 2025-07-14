@@ -1044,7 +1044,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .page(p -> p.searchBefore(Collections.singletonList(keyAfter)))
+            .page(p -> p.searchBeforeCursor(Collections.singletonList(keyAfter)))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
@@ -1071,7 +1071,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchBefore(Collections.singletonList(keyAfter)))
+            .page(p -> p.searchBeforeCursor(Collections.singletonList(keyAfter)))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
@@ -1463,7 +1463,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchBefore(Collections.singletonList(keyAfter)))
+            .page(p -> p.searchBeforeCursor(Collections.singletonList(keyAfter)))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);

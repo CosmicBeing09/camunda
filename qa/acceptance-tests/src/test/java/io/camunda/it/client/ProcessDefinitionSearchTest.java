@@ -168,7 +168,7 @@ public class ProcessDefinitionSearchTest {
         camundaClient
             .newProcessDefinitionSearchRequest()
             .sort(s -> s.processDefinitionId().desc())
-            .page(p -> p.limit(2).searchBefore(secondPage.page().firstSortValues()))
+            .page(p -> p.limit(2).searchBeforeCursor(secondPage.page().searchBeforeCursor()))
             .send()
             .join();
 
@@ -560,7 +560,7 @@ public class ProcessDefinitionSearchTest {
     final var resultBefore =
         camundaClient
             .newProcessDefinitionSearchRequest()
-            .page(p -> p.searchBefore(Collections.singletonList(keyAfter)))
+            .page(p -> p.searchBeforeCursor(Collections.singletonList(keyAfter)))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
