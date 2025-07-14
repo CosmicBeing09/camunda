@@ -51,21 +51,21 @@ public record IncidentFilter(
     private List<Long> jobKeys;
     private List<String> tenantIds;
 
-    public Builder incidentKeys(final Long value, final Long... values) {
-      return incidentKeys(collectValues(value, values));
+    public Builder incidentKeys(final Long value, final Long... operations) {
+      return incidentKeys(collectValues(value, operations));
     }
 
-    public Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+    public Builder incidentKeys(final List<Long> operations) {
+      incidentKeys = addValuesToList(incidentKeys, operations);
       return this;
     }
 
-    public Builder processDefinitionKeys(final Long value, final Long... values) {
-      return processDefinitionKeys(collectValues(value, values));
+    public Builder processDefinitionKeys(final Long value, final Long... operations) {
+      return processDefinitionKeys(collectValues(value, operations));
     }
 
-    public Builder processDefinitionKeys(final List<Long> values) {
-      processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
+    public Builder processDefinitionKeys(final List<Long> operations) {
+      processDefinitionKeys = addValuesToList(processDefinitionKeys, operations);
       return this;
     }
 
@@ -73,8 +73,8 @@ public record IncidentFilter(
       return processDefinitionIds(collectValues(value, values));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public Builder processDefinitionIds(final List<String> operations) {
+      processDefinitionIds = addValuesToList(processDefinitionIds, operations);
       return this;
     }
 
@@ -82,8 +82,8 @@ public record IncidentFilter(
       return processInstanceKeys(collectValues(value, values));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public Builder processInstanceKeys(final List<Long> operations) {
+      processInstanceKeys = addValuesToList(processInstanceKeys, operations);
       return this;
     }
 
