@@ -128,8 +128,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return longTerms(PROCESS_INSTANCE_KEY, processInstanceKeys);
   }
 
-  private SearchQuery getProcessDefinitionKeyQuery(final List<Long> processDefinitionKeys) {
-    return longTerms(PROCESS_DEFINITION_KEY, processDefinitionKeys);
+  private SearchQuery getProcessDefinitionKeyQuery(final List<Long> processDefinitionKeyOperations) {
+    return longTerms(PROCESS_DEFINITION_KEY, processDefinitionKeyOperations);
   }
 
   private SearchQuery getErrorMessageQuery(final List<String> errorMessages) {
