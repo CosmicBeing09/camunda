@@ -90,8 +90,8 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  public UserTaskFilter elementName(final String elementName) {
-    filter.setElementName(elementName);
+  public UserTaskFilter name(final String name) {
+    filter.setElementName(name);
     return this;
   }
 

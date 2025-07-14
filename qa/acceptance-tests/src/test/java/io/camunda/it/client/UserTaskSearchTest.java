@@ -436,7 +436,7 @@ class UserTaskSearchTest {
   @Test
   public void shouldRetrieveTaskByElementName() {
     final var result =
-        camundaClient.newUserTaskSearchRequest().filter(f -> f.elementName("P2")).send().join();
+        camundaClient.newUserTaskSearchRequest().filter(f -> f.name("P2")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
     result.items().forEach(item -> assertThat(item.getElementName()).isEqualTo("P2"));
   }
