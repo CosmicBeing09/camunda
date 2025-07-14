@@ -1034,7 +1034,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultAfter =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .page(p -> p.searchAfter(result.page().searchAfterCursor()))
+            .page(p -> p.endCursor(result.page().endCursor()))
             .send()
             .join();
 
@@ -1061,7 +1061,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultAfter =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchAfter(result.page().searchAfterCursor()))
+            .page(p -> p.endCursor(result.page().endCursor()))
             .send()
             .join();
 
@@ -1453,7 +1453,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultAfter =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchAfter(result.page().searchAfterCursor()))
+            .page(p -> p.endCursor(result.page().endCursor()))
             .send()
             .join();
 

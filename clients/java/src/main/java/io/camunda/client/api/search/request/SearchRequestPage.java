@@ -26,6 +26,6 @@ public interface SearchRequestPage {
   /** Get previous page before the set of values. */
   SearchRequestPage searchBefore(final String values);
 
-  /** Get next page after the set of values. */
-  SearchRequestPage searchAfter(final String values);
+  /** Get next page after the set of values, indicated by the endCursor. */
+  SearchRequestPage endCursor(final String values);
 }
