@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
+import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequest;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
@@ -167,7 +167,7 @@ public class UserTaskCancelingV2ApplierTest {
     // persist request metadata
     userTaskState.storeRecordRequestMetadata(
         userTaskKey,
-        new UserTaskTransitionTriggerRequestMetadata()
+        new UserTaskTransitionTriggerRequest()
             .setIntent(UserTaskIntent.CLAIMING)
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(new Random().nextLong())
