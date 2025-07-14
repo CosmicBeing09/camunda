@@ -136,7 +136,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
     this.shouldBanInstance = shouldBanInstance;
   }
 
-  public short getIntent() {
+  public short getIntentToWrite() {
     return value;
   }
 
@@ -232,7 +232,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
 
   public static Set<UserTaskIntent> commands() {
     return Stream.of(UserTaskIntent.values())
-        .filter(intent -> !intent.isEvent())
+        .filter(intentToWrite -> !intentToWrite.isEvent())
         .collect(Collectors.toSet());
   }
 }
