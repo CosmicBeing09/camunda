@@ -30,6 +30,7 @@ public class UserTaskImpl implements UserTask {
   private final UserTaskState state;
   private final String assignee;
   private final String elementId;
+  private final String elementName;
   private final Long elementInstanceKey;
   private final List<String> candidateGroup;
   private final List<String> candidateUser;
@@ -49,10 +50,11 @@ public class UserTaskImpl implements UserTask {
 
   public UserTaskImpl(final UserTaskResult item) {
     userTaskKey = ParseUtil.parseLongOrNull(item.getUserTaskKey());
-    name = item.getName();
+    elementName = item.getName();
     state = EnumUtil.convert(item.getState(), UserTaskState.class);
     assignee = item.getAssignee();
     elementId = item.getElementId();
+    elementName = item.getElementName();
     elementInstanceKey = ParseUtil.parseLongOrNull(item.getElementInstanceKey());
     candidateGroup = item.getCandidateGroups();
     candidateUser = item.getCandidateUsers();
@@ -78,7 +80,7 @@ public class UserTaskImpl implements UserTask {
 
   @Override
   public String getName() {
-    return name;
+    return elementName;
   }
 
   @Override
@@ -94,6 +96,11 @@ public class UserTaskImpl implements UserTask {
   @Override
   public String getElementId() {
     return elementId;
+  }
+
+  @Override
+  public String getElementName() {
+    return elementName;
   }
 
   @Override

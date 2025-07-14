@@ -16,7 +16,7 @@ public record AdHocSubProcessActivityEntity(
     String processDefinitionId,
     String adHocSubProcessId,
     String elementId,
-    String elementName,
+    String name,
     ActivityType type,
     String documentation,
     String tenantId) {

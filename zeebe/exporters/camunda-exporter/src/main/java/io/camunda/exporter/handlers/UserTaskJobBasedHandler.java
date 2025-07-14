@@ -182,8 +182,8 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
     if (entity.getFlowNodeBpmnId() != null) {
       updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getFlowNodeBpmnId());
     }
-    if (entity.getFlowNodeName() != null) {
-      updateFields.put(TaskTemplate.FLOW_NODE_NAME, entity.getFlowNodeName());
+    if (entity.getName() != null) {
+      updateFields.put(TaskTemplate.NAME, entity.getName());
     }
     if (entity.getProcessDefinitionId() != null) {
       updateFields.put(TaskTemplate.PROCESS_DEFINITION_ID, entity.getProcessDefinitionId());

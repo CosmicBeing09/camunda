@@ -192,7 +192,7 @@ public class UserTaskServiceTest {
     final var entity = mock(UserTaskEntity.class);
     when(entity.processDefinitionId()).thenReturn("bpid");
     final long flowNodeInstanceKey = 100L;
-    when(entity.elementInstanceKey()).thenReturn(flowNodeInstanceKey);
+    when(entity.instanceKey()).thenReturn(flowNodeInstanceKey);
     final var flowNodeInstanceEntity = mock(FlowNodeInstanceEntity.class);
     when(flowNodeInstanceEntity.treePath()).thenReturn("1/2/3");
     when(client.searchUserTasks(any())).thenReturn(wrapWithSearchQueryResult(entity));

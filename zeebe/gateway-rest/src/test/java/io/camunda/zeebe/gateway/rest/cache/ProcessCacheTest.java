@@ -113,13 +113,13 @@ class ProcessCacheTest {
 
     // then
     verify(processElementProvider).extractElementNames(eq(1L), any());
-    assertThat(actual.elementIdNameMap()).hasSize(2);
-    assertThat(actual.elementIdNameMap())
+    assertThat(actual.idToNameMap()).hasSize(2);
+    assertThat(actual.idToNameMap())
         .containsOnly(entry("id1", "Name 1"), entry("id2", "Name 2"));
     final var cacheMap = getCacheMap();
     assertThat(cacheMap).hasSize(1);
     assertThat(cacheMap).containsOnlyKeys(1L);
-    assertThat(cacheMap.get(1L).elementIdNameMap())
+    assertThat(cacheMap.get(1L).idToNameMap())
         .containsOnly(entry("id1", "Name 1"), entry("id2", "Name 2"));
   }
 
@@ -142,17 +142,17 @@ class ProcessCacheTest {
     verify(processElementProvider).extractElementNames(eq(Set.of(1L, 2L, 3L)), any());
     assertThat(actual).hasSize(3);
     assertThat(actual.keySet()).containsOnly(1L, 2L, 3L);
-    assertThat(actual.get(1L).elementIdNameMap()).containsOnly(entry("id1", "Name 1"));
-    assertThat(actual.get(2L).elementIdNameMap())
+    assertThat(actual.get(1L).idToNameMap()).containsOnly(entry("id1", "Name 1"));
+    assertThat(actual.get(2L).idToNameMap())
         .containsOnly(entry("id21", "Name 21"), entry("id22", "Name 22"));
-    assertThat(actual.get(3L).elementIdNameMap()).containsOnly(entry("id3", "Name 3"));
+    assertThat(actual.get(3L).idToNameMap()).containsOnly(entry("id3", "Name 3"));
     final var cacheMap = getCacheMap();
     assertThat(cacheMap).hasSize(3);
     assertThat(cacheMap).containsOnlyKeys(1L, 2L, 3L);
-    assertThat(cacheMap.get(1L).elementIdNameMap()).containsOnly(entry("id1", "Name 1"));
-    assertThat(cacheMap.get(2L).elementIdNameMap())
+    assertThat(cacheMap.get(1L).idToNameMap()).containsOnly(entry("id1", "Name 1"));
+    assertThat(cacheMap.get(2L).idToNameMap())
         .containsOnly(entry("id21", "Name 21"), entry("id22", "Name 22"));
-    assertThat(cacheMap.get(3L).elementIdNameMap()).containsOnly(entry("id3", "Name 3"));
+    assertThat(cacheMap.get(3L).idToNameMap()).containsOnly(entry("id3", "Name 3"));
   }
 
   @Test
@@ -162,7 +162,7 @@ class ProcessCacheTest {
     final var cacheItem = processCache.getCacheItem(1L);
 
     // when
-    final var actual = cacheItem.getElementName("non-existing");
+    final var actual = cacheItem.getName("non-existing");
 
     // then
     assertThat(actual).isNotNull();

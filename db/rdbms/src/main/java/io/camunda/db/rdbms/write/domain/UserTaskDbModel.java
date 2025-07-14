@@ -115,7 +115,7 @@ public class UserTaskDbModel implements Copyable<UserTaskDbModel> {
     this.elementId = elementId;
   }
 
-  public String elementName() {
+  public String name() {
     return elementName;
   }
 

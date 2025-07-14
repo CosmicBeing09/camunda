@@ -81,7 +81,7 @@ class AdHocSubProcessActivityServicesTest {
               AdHocSubProcessActivityEntity::processDefinitionId,
               AdHocSubProcessActivityEntity::adHocSubProcessId,
               AdHocSubProcessActivityEntity::elementId,
-              AdHocSubProcessActivityEntity::elementName,
+              AdHocSubProcessActivityEntity::name,
               AdHocSubProcessActivityEntity::type,
               AdHocSubProcessActivityEntity::documentation,
               AdHocSubProcessActivityEntity::tenantId)

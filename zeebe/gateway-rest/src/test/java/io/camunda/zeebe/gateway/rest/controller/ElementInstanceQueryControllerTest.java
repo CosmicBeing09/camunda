@@ -140,7 +140,7 @@ public class ElementInstanceQueryControllerTest extends RestControllerTest {
         .thenReturn(elementInstanceServices);
     when(processCache.getElementName(any())).thenReturn("elementName");
     final var processCacheItem = mock(ProcessCacheItem.class);
-    when(processCacheItem.getElementName(any())).thenReturn("elementName");
+    when(processCacheItem.getName(any())).thenReturn("elementName");
     final Map<Long, ProcessCacheItem> processDefinitionMap = mock(HashMap.class);
     when(processDefinitionMap.getOrDefault(any(), any())).thenReturn(processCacheItem);
     when(processCache.getElementNames(any())).thenReturn(processDefinitionMap);

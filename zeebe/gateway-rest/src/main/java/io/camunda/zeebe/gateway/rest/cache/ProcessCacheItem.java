@@ -10,11 +10,11 @@ package io.camunda.zeebe.gateway.rest.cache;
 import java.util.Collections;
 import java.util.Map;
 
-public record ProcessCacheItem(Map<String, String> elementIdNameMap) {
+public record ProcessCacheItem(Map<String, String> idToNameMap) {
 
   public static final ProcessCacheItem EMPTY = new ProcessCacheItem(Collections.emptyMap());
 
-  public String getElementName(final String elementId) {
-    return elementIdNameMap.getOrDefault(elementId, elementId);
+  public String getName(final String elementId) {
+    return idToNameMap.getOrDefault(elementId, elementId);
   }
 }
