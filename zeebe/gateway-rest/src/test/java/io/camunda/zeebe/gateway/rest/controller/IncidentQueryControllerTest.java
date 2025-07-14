@@ -233,7 +233,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                                 .build())
                         .states(IncidentState.ACTIVE)
                         .jobKeys(101L)
-                        .tenantIds("tenantId")
+                        .tenantIdOperations("tenantId")
                         .build())
                 .build());
   }
