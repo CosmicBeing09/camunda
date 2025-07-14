@@ -127,7 +127,7 @@ public final class RetryTypedRecord<T extends UnifiedRecordValue> implements Typ
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getScopeKey() {
     return RecordMetadataEncoder.requestStreamIdNullValue();
   }
 

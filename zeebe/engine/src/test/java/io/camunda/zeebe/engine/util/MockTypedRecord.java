@@ -47,7 +47,7 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getScopeKey() {
     return metadata.getRequestStreamId();
   }
 
