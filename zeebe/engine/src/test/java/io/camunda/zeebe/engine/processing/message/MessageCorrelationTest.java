@@ -665,7 +665,7 @@ public final class MessageCorrelationTest {
 
     // then
     assertThat(RecordingExporter.processInstanceRecords().limitToProcessInstanceCompleted())
-        .filteredOn(r -> r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED)
+        .filteredOn(r -> r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATED)
         .extracting(Record::getValue)
         .extracting(ProcessInstanceRecordValue::getElementId)
         .contains("msg1End")
@@ -690,7 +690,7 @@ public final class MessageCorrelationTest {
 
     // then
     assertThat(RecordingExporter.processInstanceRecords().limitToProcessInstanceCompleted())
-        .filteredOn(r -> r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED)
+        .filteredOn(r -> r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATED)
         .extracting(Record::getValue)
         .extracting(ProcessInstanceRecordValue::getElementId)
         .contains("taskEnd")
@@ -715,7 +715,7 @@ public final class MessageCorrelationTest {
 
     // then
     assertThat(RecordingExporter.processInstanceRecords().limitToProcessInstanceCompleted())
-        .filteredOn(r -> r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATED)
+        .filteredOn(r -> r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATED)
         .extracting(Record::getValue)
         .extracting(ProcessInstanceRecordValue::getElementId)
         .contains("msg2End")
@@ -738,7 +738,7 @@ public final class MessageCorrelationTest {
 
     assertThat(events)
         .filteredOn(r -> r.getValue().getElementId().equals("receive-message"))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -762,7 +762,7 @@ public final class MessageCorrelationTest {
 
     assertThat(events)
         .filteredOn(r -> r.getValue().getElementId().equals("receive-message"))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ACTIVATE_ELEMENT,
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
@@ -786,7 +786,7 @@ public final class MessageCorrelationTest {
             .collect(Collectors.toList());
 
     assertThat(events)
-        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntentToWrite()))
         .containsSequence(
             tuple("task", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("task", ProcessInstanceIntent.TERMINATE_ELEMENT),
@@ -934,7 +934,7 @@ public final class MessageCorrelationTest {
 
     // then
     assertThat(RecordingExporter.records().betweenProcessInstance(processInstanceKey))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(RecordType.COMMAND_REJECTION, ProcessMessageSubscriptionIntent.CORRELATE),
             tuple(RecordType.EVENT, MessageSubscriptionIntent.REJECTED),
@@ -1044,7 +1044,7 @@ public final class MessageCorrelationTest {
         .isTrue();
     assertThat(
             RecordingExporter.records()
-                .limit(record -> record.getIntent() == MessageIntent.EXPIRED)
+                .limit(record -> record.getIntentToWrite() == MessageIntent.EXPIRED)
                 .messageStartEventSubscriptionRecords()
                 .withMessageName(messageName)
                 .withIntent(MessageStartEventSubscriptionIntent.CORRELATED)

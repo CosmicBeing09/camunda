@@ -51,7 +51,7 @@ public class BatchOperationLifecycleManagementHandler
 
   @Override
   public boolean handlesRecord(final Record<BatchOperationLifecycleManagementRecordValue> record) {
-    return EXPORTABLE_INTENTS.contains(record.getIntent());
+    return EXPORTABLE_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override
@@ -69,15 +69,15 @@ public class BatchOperationLifecycleManagementHandler
   public void updateEntity(
       final Record<BatchOperationLifecycleManagementRecordValue> record,
       final BatchOperationEntity entity) {
-    if (record.getIntent().equals(BatchOperationIntent.CANCELED)) {
+    if (record.getIntentToWrite().equals(BatchOperationIntent.CANCELED)) {
       entity
           .setEndDate(DateUtil.toOffsetDateTime(record.getTimestamp()))
           .setState(BatchOperationState.CANCELED);
-    } else if (record.getIntent().equals(BatchOperationIntent.SUSPENDED)) {
+    } else if (record.getIntentToWrite().equals(BatchOperationIntent.SUSPENDED)) {
       entity.setEndDate(null).setState(BatchOperationState.SUSPENDED);
-    } else if (record.getIntent().equals(BatchOperationIntent.RESUMED)) {
+    } else if (record.getIntentToWrite().equals(BatchOperationIntent.RESUMED)) {
       entity.setEndDate(null).setState(BatchOperationState.ACTIVE);
-    } else if (record.getIntent().equals(BatchOperationIntent.COMPLETED)) {
+    } else if (record.getIntentToWrite().equals(BatchOperationIntent.COMPLETED)) {
       entity.setEndDate(null).setState(BatchOperationState.COMPLETED);
     }
   }

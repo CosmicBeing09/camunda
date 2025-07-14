@@ -64,7 +64,7 @@ public class ListViewFlowNodeFromIncidentHandler
   public void updateEntity(
       final Record<IncidentRecordValue> record, final FlowNodeInstanceForListViewEntity entity) {
 
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     final IncidentRecordValue recordValue = record.getValue();
 
     // update activity instance

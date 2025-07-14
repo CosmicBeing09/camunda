@@ -206,8 +206,8 @@ public class TaskListenerIncidentsTest {
     helper.completeJobs(processInstanceKey, listenerType + "_2", listenerType + "_3");
 
     // then
-    assertThat(records().limit(r -> r.getIntent() == terminalActionIntent))
-        .extracting(io.camunda.zeebe.protocol.record.Record::getValueType, Record::getIntent)
+    assertThat(records().limit(r -> r.getIntentToWrite() == terminalActionIntent))
+        .extracting(io.camunda.zeebe.protocol.record.Record::getValueType, Record::getIntentToWrite)
         .describedAs("Expected listener jobs to complete after incident resolution")
         .containsSubsequence(
             tuple(ValueType.JOB, JobIntent.CREATED),

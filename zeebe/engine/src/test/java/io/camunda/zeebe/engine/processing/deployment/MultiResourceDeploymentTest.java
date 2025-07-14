@@ -292,7 +292,7 @@ public class MultiResourceDeploymentTest {
       final long recordsCountBefore =
           RecordingExporter.records()
               .onlyEvents()
-              .filter(r -> r.getIntent() != DeploymentIntent.RECONSTRUCTED_ALL)
+              .filter(r -> r.getIntentToWrite() != DeploymentIntent.RECONSTRUCTED_ALL)
               .limit(record -> record.getPosition() >= firstDeploymentRecord.getPosition())
               .count();
       assertThat(recordsCountBefore)
@@ -351,7 +351,7 @@ public class MultiResourceDeploymentTest {
       final long recordsCountAfter =
           RecordingExporter.records()
               .onlyEvents()
-              .filter(r -> r.getIntent() != DeploymentIntent.RECONSTRUCTED_ALL)
+              .filter(r -> r.getIntentToWrite() != DeploymentIntent.RECONSTRUCTED_ALL)
               .limit(record -> record.getPosition() >= secondDeploymentRecord.getPosition())
               .count();
       assertThat(recordsCountAfter - recordsCountBefore)

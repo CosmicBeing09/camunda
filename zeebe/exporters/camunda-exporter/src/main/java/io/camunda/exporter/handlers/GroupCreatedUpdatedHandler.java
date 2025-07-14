@@ -42,7 +42,7 @@ public class GroupCreatedUpdatedHandler implements ExportHandler<GroupEntity, Gr
   @Override
   public boolean handlesRecord(final Record<GroupRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && SUPPORTED_INTENTS.contains(record.getIntent());
+        && SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override

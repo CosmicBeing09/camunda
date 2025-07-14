@@ -321,11 +321,11 @@ public final class MessageCatchElementTest {
     assertThat(
             RecordingExporter.processMessageSubscriptionRecords()
                 .onlyEvents()
-                .limit(r -> r.getIntent() == ProcessMessageSubscriptionIntent.DELETED)
+                .limit(r -> r.getIntentToWrite() == ProcessMessageSubscriptionIntent.DELETED)
                 .withMessageName(MESSAGE_NAME)
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementInstanceKey(catchEventEntered.getKey())
-                .map(Record::getIntent))
+                .map(Record::getIntentToWrite))
         .as("the lifecycle of the subscription should end with DELETING and DELETED on close")
         .containsSubsequence(
             ProcessMessageSubscriptionIntent.DELETING, ProcessMessageSubscriptionIntent.DELETED);
@@ -383,7 +383,7 @@ public final class MessageCatchElementTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withMessageName(MESSAGE_NAME)
                 .limit(5))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.COMMAND, MessageSubscriptionIntent.CREATE),
             tuple(RecordType.EVENT, MessageSubscriptionIntent.CREATED),
@@ -406,7 +406,7 @@ public final class MessageCatchElementTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withMessageName(MESSAGE_NAME)
                 .limit(5))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.EVENT, ProcessMessageSubscriptionIntent.CREATING),
             tuple(RecordType.COMMAND, ProcessMessageSubscriptionIntent.CREATE),
@@ -430,7 +430,7 @@ public final class MessageCatchElementTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withMessageName(MESSAGE_NAME)
                 .limit(5))
-        .extracting(Record::getIntent, Record::getKey)
+        .extracting(Record::getIntentToWrite, Record::getKey)
         .containsExactly(
             tuple(MessageSubscriptionIntent.CREATE, -1L),
             tuple(MessageSubscriptionIntent.CREATED, messageSubscriptionKey),
@@ -456,10 +456,10 @@ public final class MessageCatchElementTest {
                 .withMessageName(MESSAGE_NAME)
                 .filter(
                     r ->
-                        r.getIntent() != ProcessMessageSubscriptionIntent.CREATE
-                            && r.getIntent() != ProcessMessageSubscriptionIntent.CREATED)
+                        r.getIntentToWrite() != ProcessMessageSubscriptionIntent.CREATE
+                            && r.getIntentToWrite() != ProcessMessageSubscriptionIntent.CREATED)
                 .limit(3))
-        .extracting(Record::getIntent, Record::getKey)
+        .extracting(Record::getIntentToWrite, Record::getKey)
         .containsExactly(
             tuple(ProcessMessageSubscriptionIntent.CREATING, subscriptionKey),
             tuple(ProcessMessageSubscriptionIntent.CORRELATE, -1L),

@@ -94,7 +94,7 @@ public final class ExporterManagerPartitionTest {
 
     @Override
     public void export(final Record<?> record) {
-      if (record.getValueType() == ValueType.JOB && record.getIntent() == JobIntent.CREATED) {
+      if (record.getValueType() == ValueType.JOB && record.getIntentToWrite() == JobIntent.CREATED) {
         EXPORT_LATCH.countDown();
       }
 

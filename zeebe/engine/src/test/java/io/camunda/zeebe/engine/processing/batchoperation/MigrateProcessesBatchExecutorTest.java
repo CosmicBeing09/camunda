@@ -78,8 +78,8 @@ public final class MigrateProcessesBatchExecutorTest extends AbstractBatchOperat
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.COMPLETED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.COMPLETED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.COMPLETED);
 
     // and we have migrate commands
@@ -88,7 +88,7 @@ public final class MigrateProcessesBatchExecutorTest extends AbstractBatchOperat
             .withRecordType(RecordType.COMMAND)
             .withRecordKey(processInstanceKey)
             .getFirst();
-    assertThat(migrationCommand.getIntent()).isEqualTo(ProcessInstanceMigrationIntent.MIGRATE);
+    assertThat(migrationCommand.getIntentToWrite()).isEqualTo(ProcessInstanceMigrationIntent.MIGRATE);
     assertThat(migrationCommand.getAuthorizations()).isEqualTo(claims);
   }
 }

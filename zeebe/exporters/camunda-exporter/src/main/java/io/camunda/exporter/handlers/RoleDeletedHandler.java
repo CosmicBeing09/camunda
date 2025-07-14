@@ -39,7 +39,7 @@ public class RoleDeletedHandler implements ExportHandler<RoleEntity, RoleRecordV
   @Override
   public boolean handlesRecord(final Record<RoleRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && SUPPORTED_INTENTS.contains(record.getIntent());
+        && SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override

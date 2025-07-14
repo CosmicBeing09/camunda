@@ -56,7 +56,7 @@ public class IncidentHandler implements ExportHandler<IncidentEntity, IncidentRe
 
   @Override
   public boolean handlesRecord(final Record<IncidentRecordValue> record) {
-    final var intent = record.getIntent();
+    final var intent = record.getIntentToWrite();
     return !intent.equals(IncidentIntent.RESOLVED);
   }
 
@@ -107,7 +107,7 @@ public class IncidentHandler implements ExportHandler<IncidentEntity, IncidentRe
 
     entity.setTreePath(buildTreePath(record));
 
-    final Intent intent = (record == null) ? null : record.getIntent();
+    final Intent intent = (record == null) ? null : record.getIntentToWrite();
     if (intent == null) {
       LOGGER.warn("Intent is null for incident: id {}", entity.getId());
     }

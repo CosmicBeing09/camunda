@@ -65,7 +65,7 @@ public class ProcessZeebeRecordProcessorElasticSearch {
   public void processDeploymentRecord(
       final Record<DeployedProcessImpl> record, final BulkRequest bulkRequest)
       throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     final DeployedProcessImpl recordValue = record.getValue();
     final String processDefinitionKey = String.valueOf(record.getValue().getProcessDefinitionKey());
     if (STATES_TO_PERSIST.contains(intentStr)) {

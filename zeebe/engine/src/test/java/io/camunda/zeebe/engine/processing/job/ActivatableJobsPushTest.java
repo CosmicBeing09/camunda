@@ -279,9 +279,9 @@ public class ActivatableJobsPushTest {
             records()
                 .onlyEvents()
                 .filter(r -> targetValueTypes.contains(r.getValueType()))
-                .skipUntil(r -> r.getIntent() == expectedIntents[0])
+                .skipUntil(r -> r.getIntentToWrite() == expectedIntents[0])
                 .limit(expectedIntents.length))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs(description)
         .containsExactly(expectedIntents);
   }

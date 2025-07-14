@@ -82,7 +82,7 @@ public class MigrateActivityTest {
     // then
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == ProcessInstanceMigrationIntent.MIGRATED)
+                .limit(r -> r.getIntentToWrite() == ProcessInstanceMigrationIntent.MIGRATED)
                 .processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementId("C"))

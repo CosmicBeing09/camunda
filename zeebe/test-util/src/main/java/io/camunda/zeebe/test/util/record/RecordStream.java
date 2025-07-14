@@ -50,20 +50,20 @@ public final class RecordStream extends ExporterRecordStream<RecordValue, Record
                 && Set.of(
                         ProcessInstanceIntent.ELEMENT_COMPLETED,
                         ProcessInstanceIntent.ELEMENT_TERMINATED)
-                    .contains(r.getIntent()));
+                    .contains(r.getIntentToWrite()));
   }
 
   public RecordStream betweenProcessInstance(final long processInstanceKey) {
     return between(
         r ->
             r.getKey() == processInstanceKey
-                && r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATING,
+                && r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATING,
         r ->
             r.getKey() == processInstanceKey
                 && Set.of(
                         ProcessInstanceIntent.ELEMENT_COMPLETED,
                         ProcessInstanceIntent.ELEMENT_TERMINATED)
-                    .contains(r.getIntent()));
+                    .contains(r.getIntentToWrite()));
   }
 
   public ProcessRecordStream processRecords() {

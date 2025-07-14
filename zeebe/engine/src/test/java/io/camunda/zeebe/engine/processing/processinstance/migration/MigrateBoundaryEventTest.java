@@ -221,17 +221,17 @@ public class MigrateBoundaryEventTest {
     assertThat(
             RecordingExporter.records()
                 .between(
-                    r -> r.getIntent() == ProcessInstanceMigrationIntent.MIGRATE,
-                    r -> r.getIntent() == ProcessMessageSubscriptionIntent.DELETED))
-        .extracting(Record::getIntent)
+                    r -> r.getIntentToWrite() == ProcessInstanceMigrationIntent.MIGRATE,
+                    r -> r.getIntentToWrite() == ProcessMessageSubscriptionIntent.DELETED))
+        .extracting(Record::getIntentToWrite)
         .describedAs("Expect that the message boundary event is unsubscribed after the migration")
         .contains(MessageSubscriptionIntent.DELETE, ProcessMessageSubscriptionIntent.DELETED);
     assertThat(
             RecordingExporter.records()
                 .between(
-                    r -> r.getIntent() == ProcessInstanceMigrationIntent.MIGRATE,
-                    r -> r.getIntent() == ProcessMessageSubscriptionIntent.CREATED))
-        .extracting(Record::getIntent)
+                    r -> r.getIntentToWrite() == ProcessInstanceMigrationIntent.MIGRATE,
+                    r -> r.getIntentToWrite() == ProcessMessageSubscriptionIntent.CREATED))
+        .extracting(Record::getIntentToWrite)
         .describedAs("Expect that the message boundary event is subscribed to after the migration")
         .contains(MessageSubscriptionIntent.CREATED, ProcessMessageSubscriptionIntent.CREATED);
   }

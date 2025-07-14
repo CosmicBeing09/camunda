@@ -42,7 +42,7 @@ public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilde
         .withResponse(
             RecordType.COMMAND_REJECTION,
             command.getKey(),
-            command.getIntent(),
+            command.getIntentToWrite(),
             command.getValue(),
             command.getValueType(),
             type,
@@ -78,7 +78,7 @@ public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilde
   public void writeEvent(final TypedRecord<?> event) {
     writeResponse(
         event.getKey(),
-        event.getIntent(),
+        event.getIntentToWrite(),
         event.getValue(),
         event.getValueType(),
         event.getRequestId(),

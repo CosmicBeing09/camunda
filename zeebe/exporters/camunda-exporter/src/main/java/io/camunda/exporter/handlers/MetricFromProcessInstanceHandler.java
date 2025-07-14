@@ -46,7 +46,7 @@ public class MetricFromProcessInstanceHandler
     final var recordValue = record.getValue();
     final boolean isRootProcessInstance =
         recordValue.getParentProcessInstanceKey() == EMPTY_PARENT_PROCESS_INSTANCE_ID;
-    return isRootProcessInstance && record.getIntent().equals(ELEMENT_ACTIVATING);
+    return isRootProcessInstance && record.getIntentToWrite().equals(ELEMENT_ACTIVATING);
   }
 
   @Override

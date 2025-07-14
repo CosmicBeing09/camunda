@@ -139,7 +139,7 @@ public final class TimerCatchEventTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId("timer"))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ACTIVATE_ELEMENT,
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
@@ -150,7 +150,7 @@ public final class TimerCatchEventTest {
 
     assertThat(
             RecordingExporter.records().betweenProcessInstance(processInstanceKey).timerRecords())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(TimerIntent.CREATED, TimerIntent.TRIGGER, TimerIntent.TRIGGERED);
   }
 

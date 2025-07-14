@@ -77,7 +77,7 @@ public final class CorrelateMessageTest {
     // then
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent().equals(MessageIntent.EXPIRED))
+                .limit(r -> r.getIntentToWrite().equals(MessageIntent.EXPIRED))
                 .filter(
                     r ->
                         List.of(
@@ -85,7 +85,7 @@ public final class CorrelateMessageTest {
                                 ValueType.MESSAGE,
                                 ValueType.MESSAGE_START_EVENT_SUBSCRIPTION)
                             .contains(r.getValueType())))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             MessageStartEventSubscriptionIntent.CREATED,
             MessageCorrelationIntent.CORRELATE,
@@ -111,7 +111,7 @@ public final class CorrelateMessageTest {
     // then
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent().equals(MessageCorrelationIntent.CORRELATED))
+                .limit(r -> r.getIntentToWrite().equals(MessageCorrelationIntent.CORRELATED))
                 .filter(
                     r ->
                         List.of(
@@ -120,7 +120,7 @@ public final class CorrelateMessageTest {
                                 ValueType.PROCESS_MESSAGE_SUBSCRIPTION,
                                 ValueType.MESSAGE)
                             .contains(r.getValueType())))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSubsequence(
             MessageCorrelationIntent.CORRELATE,
             MessageIntent.PUBLISHED,
@@ -353,7 +353,7 @@ public final class CorrelateMessageTest {
         .isTrue();
     assertThat(
             RecordingExporter.records()
-                .limit(record -> record.getIntent() == MessageIntent.EXPIRED)
+                .limit(record -> record.getIntentToWrite() == MessageIntent.EXPIRED)
                 .messageStartEventSubscriptionRecords()
                 .withMessageName(messageName)
                 .withIntent(MessageStartEventSubscriptionIntent.CORRELATED)

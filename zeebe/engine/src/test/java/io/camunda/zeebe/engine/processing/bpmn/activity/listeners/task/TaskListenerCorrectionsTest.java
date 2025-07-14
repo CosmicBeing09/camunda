@@ -724,15 +724,15 @@ public class TaskListenerCorrectionsTest {
     // then: verify the changed attributes for `COMPLETE_TASK_LISTENER` and `CORRECTED` intents
     final Predicate<io.camunda.zeebe.protocol.record.Record<?>> isRelevantUserTaskIntent =
         record ->
-            record.getIntent() == UserTaskIntent.COMPLETE_TASK_LISTENER
-                || record.getIntent() == UserTaskIntent.CORRECTED;
+            record.getIntentToWrite() == UserTaskIntent.COMPLETE_TASK_LISTENER
+                || record.getIntentToWrite() == UserTaskIntent.CORRECTED;
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == terminalActionIntent))
+                .limit(r -> r.getIntentToWrite() == terminalActionIntent))
         .filteredOn(isRelevantUserTaskIntent)
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent,
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite,
             r -> r.getValue().getChangedAttributes())
         .describedAs(
             "Expected corrected attributes to be tracked only for values that were actually modified")
@@ -850,10 +850,10 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(record -> record.getIntentToWrite() == UserTaskIntent.ASSIGNED))
         .as("Verify the user task lifecycle and tracking of `changedAttributes`")
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent,
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite,
             record -> record.getValue().getChangedAttributes())
         .containsSequence(
             tuple(UserTaskIntent.ASSIGNING, List.of("assignee")),
@@ -1001,10 +1001,10 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.UPDATED))
+                .limit(record -> record.getIntentToWrite() == UserTaskIntent.UPDATED))
         .as("Verify the user task record lifecycle and tracking of `changedAttributes`")
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent,
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite,
             record -> record.getValue().getChangedAttributes())
         .containsSequence(
             tuple(UserTaskIntent.UPDATING, List.of("candidateGroupsList", "dueDate", "priority")),
@@ -1210,9 +1210,9 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.COMPLETED))
+                .limit(record -> record.getIntentToWrite() == UserTaskIntent.COMPLETED))
         .as("Verify the user task lifecycle and tracking of `changedAttributes`")
-        .extracting(Record::getIntent, record -> record.getValue().getChangedAttributes())
+        .extracting(Record::getIntentToWrite, record -> record.getValue().getChangedAttributes())
         .containsSequence(
             tuple(UserTaskIntent.COMPLETING, List.of()), // No direct changes at completion
             tuple(
@@ -1282,8 +1282,8 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.COMPLETED))
-        .extracting(Record::getIntent)
+                .limit(record -> record.getIntentToWrite() == UserTaskIntent.COMPLETED))
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(UserTaskIntent.ASSIGNING, UserTaskIntent.ASSIGNED);
   }
 

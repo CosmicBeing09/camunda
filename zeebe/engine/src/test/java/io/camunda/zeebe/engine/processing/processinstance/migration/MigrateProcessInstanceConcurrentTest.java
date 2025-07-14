@@ -119,7 +119,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -186,7 +186,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -279,7 +279,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -355,7 +355,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -461,7 +461,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -557,7 +557,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -666,7 +666,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -762,7 +762,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -854,7 +854,7 @@ public class MigrateProcessInstanceConcurrentTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("end_v2", ProcessInstanceIntent.ELEMENT_COMPLETED),

@@ -38,7 +38,7 @@ public class FormZeebeRecordProcessorOpenSearch {
 
     final FormRecordImpl recordValue = (FormRecordImpl) record.getValue();
 
-    if (record.getIntent().name().equals(FormIntent.CREATED.name())) {
+    if (record.getIntentToWrite().name().equals(FormIntent.CREATED.name())) {
       persistForm(
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
@@ -47,7 +47,7 @@ public class FormZeebeRecordProcessorOpenSearch {
           recordValue.getFormId(),
           false,
           operations);
-    } else if (record.getIntent().name().equals(FormIntent.DELETED.name())) {
+    } else if (record.getIntentToWrite().name().equals(FormIntent.DELETED.name())) {
       persistForm(
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
@@ -57,7 +57,7 @@ public class FormZeebeRecordProcessorOpenSearch {
           true,
           operations);
     } else {
-      LOGGER.info("Form intent {} not supported", record.getIntent().name());
+      LOGGER.info("Form intent {} not supported", record.getIntentToWrite().name());
     }
   }
 

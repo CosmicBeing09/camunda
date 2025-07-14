@@ -180,7 +180,7 @@ public class LinkEventDefinitionTest {
             .asList();
 
     assertThat(processInstanceEvents)
-        .extracting(e -> e.getValue().getElementId(), Record::getIntent)
+        .extracting(e -> e.getValue().getElementId(), Record::getIntentToWrite)
         .contains(tuple("Process_05x4y1u", ProcessInstanceIntent.COMPLETE_ELEMENT));
   }
 

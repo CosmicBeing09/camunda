@@ -42,7 +42,7 @@ public class MappingCreatedUpdatedHandler
   @Override
   public boolean handlesRecord(final Record<MappingRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && SUPPORTED_INTENTS.contains(record.getIntent());
+        && SUPPORTED_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override

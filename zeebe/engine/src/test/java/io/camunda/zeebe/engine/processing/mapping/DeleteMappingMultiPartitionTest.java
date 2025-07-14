@@ -56,9 +56,9 @@ public class DeleteMappingMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2))
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -85,9 +85,9 @@ public class DeleteMappingMultiPartitionTest {
       assertThat(
               RecordingExporter.mappingRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(MappingIntent.DELETED))
+                  .limit(record -> record.getIntentToWrite().equals(MappingIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(MappingIntent.DELETE, MappingIntent.DELETED);
     }
   }
@@ -111,7 +111,7 @@ public class DeleteMappingMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

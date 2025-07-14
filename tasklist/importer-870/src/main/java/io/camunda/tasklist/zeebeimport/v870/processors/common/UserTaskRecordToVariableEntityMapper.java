@@ -39,7 +39,7 @@ public class UserTaskRecordToVariableEntityMapper {
   public List<SnapshotTaskVariableEntity> mapVariables(final Record<UserTaskRecordValue> record) {
     final List<SnapshotTaskVariableEntity> variables = new ArrayList<>();
 
-    if (record.getIntent().equals(Intent.COMPLETED)) {
+    if (record.getIntentToWrite().equals(Intent.COMPLETED)) {
       final UserTaskRecordValue recordValue = record.getValue();
 
       final Map<String, Object> variablesMap = recordValue.getVariables();

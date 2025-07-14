@@ -139,7 +139,7 @@ public class CreateUserTest {
         RecordingExporter.userRecords()
             .withUsername(username)
             .limit(2)
-            .map(Record::getIntent)
+            .map(Record::getIntentToWrite)
             .collect(Collectors.toList());
 
     Assertions.assertThat(intents).containsExactly(UserIntent.CREATE, UserIntent.CREATED);
@@ -150,7 +150,7 @@ public class CreateUserTest {
             .withOwnerId(username)
             .withAuthorizationKey(authorizationKey)
             .limit(2)
-            .map(Record::getIntent)
+            .map(Record::getIntentToWrite)
             .toList();
     Assertions.assertThat(authorizationIntents)
         .containsExactly(AuthorizationIntent.CREATE, AuthorizationIntent.CREATED);

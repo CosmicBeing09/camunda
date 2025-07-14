@@ -308,7 +308,7 @@ public final class CallActivityIncidentTest {
                 .onlyEvents()
                 .withRecordKey(incident.getValue().getElementInstanceKey())
                 .limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_ACTIVATED);
   }
 
@@ -347,7 +347,7 @@ public final class CallActivityIncidentTest {
                 .onlyEvents()
                 .withRecordKey(incident.getValue().getElementInstanceKey())
                 .limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_ACTIVATED);
   }
 

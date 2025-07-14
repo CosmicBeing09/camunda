@@ -27,12 +27,12 @@ public class ResolveIncidentOperationHandler
 
   @Override
   boolean isCompleted(final Record<IncidentRecordValue> record) {
-    return record.getIntent().equals(IncidentIntent.RESOLVED);
+    return record.getIntentToWrite().equals(IncidentIntent.RESOLVED);
   }
 
   @Override
   boolean isFailed(final Record<IncidentRecordValue> record) {
-    return record.getIntent().equals(IncidentIntent.RESOLVE)
+    return record.getIntentToWrite().equals(IncidentIntent.RESOLVE)
         && record.getRejectionType() != RejectionType.NULL_VAL;
   }
 }

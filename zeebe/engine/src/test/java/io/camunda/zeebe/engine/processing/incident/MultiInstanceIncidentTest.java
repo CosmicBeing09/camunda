@@ -263,7 +263,7 @@ public final class MultiInstanceIncidentTest {
             RecordingExporter.processInstanceRecords()
                 .withRecordKey(incident.getValue().getElementInstanceKey())
                 .limit(3))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_ACTIVATED);
   }
 
@@ -315,7 +315,7 @@ public final class MultiInstanceIncidentTest {
                 .betweenProcessInstance(processInstanceKey)
                 .variableRecords()
                 .filter(v -> variableNames.contains(v.getValue().getName())))
-        .extracting(v -> tuple(v.getIntent(), v.getValue().getName(), v.getValue().getValue()))
+        .extracting(v -> tuple(v.getIntentToWrite(), v.getValue().getName(), v.getValue().getValue()))
         .containsExactly(
             tuple(VariableIntent.CREATED, "item", "1"),
             tuple(VariableIntent.CREATED, "loopCounter", "1"),

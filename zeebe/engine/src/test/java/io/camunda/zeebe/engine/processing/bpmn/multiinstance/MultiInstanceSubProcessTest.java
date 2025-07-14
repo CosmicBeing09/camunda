@@ -137,7 +137,7 @@ public final class MultiInstanceSubProcessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withFlowScopeKey(subProcessInstanceKey))
-        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntentToWrite()))
         .containsExactly(
             tuple("sub-process-start", ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple("sub-process-start", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -221,7 +221,7 @@ public final class MultiInstanceSubProcessTest {
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_COMPLETED)
                 .filterRootScope()
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 
@@ -262,7 +262,7 @@ public final class MultiInstanceSubProcessTest {
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_COMPLETED)
                 .filterRootScope()
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 
@@ -299,7 +299,7 @@ public final class MultiInstanceSubProcessTest {
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_COMPLETED)
                 .filterRootScope()
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 
@@ -413,7 +413,7 @@ public final class MultiInstanceSubProcessTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.TERMINATE_ELEMENT),
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_TERMINATED),

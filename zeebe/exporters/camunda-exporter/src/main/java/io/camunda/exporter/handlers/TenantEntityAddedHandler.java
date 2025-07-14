@@ -38,7 +38,7 @@ public class TenantEntityAddedHandler
 
   @Override
   public boolean handlesRecord(final Record<TenantRecordValue> record) {
-    return TenantIntent.ENTITY_ADDED.equals(record.getIntent());
+    return TenantIntent.ENTITY_ADDED.equals(record.getIntentToWrite());
   }
 
   @Override

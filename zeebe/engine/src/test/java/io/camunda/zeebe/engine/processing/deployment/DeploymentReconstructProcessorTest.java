@@ -72,7 +72,7 @@ final class DeploymentReconstructProcessorTest {
     assertThat(resultBuilder.getFollowupRecords())
         .singleElement()
         .satisfies(
-            record -> assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED_ALL));
+            record -> assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED_ALL));
   }
 
   @Test
@@ -100,7 +100,7 @@ final class DeploymentReconstructProcessorTest {
     assertThat(resultBuilder.getFollowupRecords())
         .singleElement()
         .satisfies(
-            record -> assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED_ALL));
+            record -> assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED_ALL));
   }
 
   @Test
@@ -127,7 +127,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(processKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -162,7 +162,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(deploymentKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -207,7 +207,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(deploymentKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -240,7 +240,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(formKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -280,7 +280,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(deploymentKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -325,7 +325,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(deploymentKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -364,7 +364,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(decisionRequirementsKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -406,7 +406,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(deploymentKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -458,7 +458,7 @@ final class DeploymentReconstructProcessorTest {
     // then
     assertEventWithFollowupCommand(
         record -> {
-          assertThat(record.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
+          assertThat(record.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED);
           assertThat(record.getKey()).isEqualTo(deploymentKey);
           assertThat(record.getValue())
               .asInstanceOf(InstanceOfAssertFactories.type(DeploymentRecord.class))
@@ -473,7 +473,7 @@ final class DeploymentReconstructProcessorTest {
   private TypedRecord<DeploymentRecord> mockedCommand() {
     final var command = mock(TypedRecord.class);
     when(command.getValue()).thenReturn(DeploymentRecord.emptyCommandForReconstruction());
-    when(command.getIntent()).thenReturn(DeploymentIntent.RECONSTRUCT);
+    when(command.getIntentToWrite()).thenReturn(DeploymentIntent.RECONSTRUCT);
     return command;
   }
 
@@ -612,7 +612,7 @@ final class DeploymentReconstructProcessorTest {
     // let's run again the processor to make it reach progressState = Done
     processor.processRecord(getCommandAt(eventIndex++));
     final var typedRecord = resultBuilder.getFollowupRecords().get(eventIndex++);
-    assertThat(typedRecord.getIntent()).isEqualTo(DeploymentIntent.RECONSTRUCTED_ALL);
+    assertThat(typedRecord.getIntentToWrite()).isEqualTo(DeploymentIntent.RECONSTRUCTED_ALL);
   }
 
   private TypedRecord<DeploymentRecord> getCommandAt(final int index) {
@@ -621,7 +621,7 @@ final class DeploymentReconstructProcessorTest {
     assertThat(record.getValue()).isInstanceOf(DeploymentRecord.class);
     final var command = mockedCommand();
     when(command.getValue()).thenReturn((DeploymentRecord) record.getValue());
-    when(command.getIntent()).thenReturn(record.getIntent());
+    when(command.getIntentToWrite()).thenReturn(record.getIntentToWrite());
     when(command.getRecordType()).thenReturn(record.getRecordType());
     return command;
   }

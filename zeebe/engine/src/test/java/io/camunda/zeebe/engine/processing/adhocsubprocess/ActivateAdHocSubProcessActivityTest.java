@@ -72,7 +72,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .contains(
             tuple("A", ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED))
@@ -133,7 +133,7 @@ public class ActivateAdHocSubProcessActivityTest {
     ENGINE.signal().withSignalName(signalName).broadcast();
 
     assertThat(recordsUntilSignal(signalName))
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .contains(tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED))
         .doesNotContainAnyElementsOf(
             List.of(tuple("ad-hoc", ProcessInstanceIntent.ELEMENT_COMPLETED)));
@@ -155,7 +155,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .contains(
             tuple("B", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("ad-hoc", ProcessInstanceIntent.ELEMENT_COMPLETED));
@@ -174,7 +174,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.adHocSubProcessActivityActivationRecords()
                 .withAdHocSubProcessInstanceKey(String.valueOf(adHocSubProcessInstanceKey))
                 .limitToAdHocSubProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElements().getFirst().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElements().getFirst().getElementId(), Record::getIntentToWrite)
         .contains(tuple("A", AdHocSubProcessActivityActivationIntent.ACTIVATED));
   }
 
@@ -192,7 +192,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .contains(
             tuple("A", ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -330,7 +330,7 @@ public class ActivateAdHocSubProcessActivityTest {
     return RecordingExporter.records()
         .limit(
             r ->
-                r.getIntent() == SignalIntent.BROADCASTED
+                r.getIntentToWrite() == SignalIntent.BROADCASTED
                     && ((SignalRecord) r.getValue()).getSignalName().equals(signalName))
         .processInstanceRecords()
         .withProcessInstanceKey(processInstanceKey);

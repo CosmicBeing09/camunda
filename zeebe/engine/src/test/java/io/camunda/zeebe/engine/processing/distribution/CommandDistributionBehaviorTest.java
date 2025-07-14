@@ -123,7 +123,7 @@ class CommandDistributionBehaviorTest {
     Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
         .extracting(
             Record::getKey,
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getPartitionId(),
             r -> r.getValue().getIntent())
         .hasSize(3)
@@ -160,7 +160,7 @@ class CommandDistributionBehaviorTest {
     Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
         .extracting(
             Record::getKey,
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getPartitionId(),
             r -> r.getValue().getIntent())
         .hasSize(3)
@@ -196,7 +196,7 @@ class CommandDistributionBehaviorTest {
     // then command distribution is started on partition 1, distribution is enqueued and triggered
     // immediately for partitions 2 and 3
     Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
-        .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
+        .extracting(Record::getKey, Record::getIntentToWrite, r -> r.getValue().getPartitionId())
         .containsExactly(
             tuple(key, CommandDistributionIntent.STARTED, 1),
             tuple(key, CommandDistributionIntent.ENQUEUED, 2),
@@ -238,7 +238,7 @@ class CommandDistributionBehaviorTest {
 
     // then first distribution is triggered immediately and second distribution is enqueued
     Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
-        .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
+        .extracting(Record::getKey, Record::getIntentToWrite, r -> r.getValue().getPartitionId())
         .containsExactly(
             tuple(firstKey, CommandDistributionIntent.STARTED, 1),
             tuple(firstKey, CommandDistributionIntent.ENQUEUED, 2),
@@ -283,7 +283,7 @@ class CommandDistributionBehaviorTest {
       behavior.onAcknowledgeDistribution(123L, record);
 
       Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
-          .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
+          .extracting(Record::getKey, Record::getIntentToWrite, r -> r.getValue().getPartitionId())
           .containsExactly(
               tuple(123L, CommandDistributionIntent.ACKNOWLEDGED, 2),
               tuple(123L, CommandDistributionIntent.FINISH, 1));
@@ -298,7 +298,7 @@ class CommandDistributionBehaviorTest {
       behavior.onAcknowledgeDistribution(123L, record);
 
       Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
-          .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
+          .extracting(Record::getKey, Record::getIntentToWrite, r -> r.getValue().getPartitionId())
           .containsExactly(tuple(123L, CommandDistributionIntent.ACKNOWLEDGED, 2));
     }
 
@@ -317,7 +317,7 @@ class CommandDistributionBehaviorTest {
       behavior.onAcknowledgeDistribution(123L, record);
 
       Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
-          .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
+          .extracting(Record::getKey, Record::getIntentToWrite, r -> r.getValue().getPartitionId())
           .containsExactly(
               tuple(123L, CommandDistributionIntent.ACKNOWLEDGED, 2),
               tuple(124L, CommandDistributionIntent.DISTRIBUTING, 2),

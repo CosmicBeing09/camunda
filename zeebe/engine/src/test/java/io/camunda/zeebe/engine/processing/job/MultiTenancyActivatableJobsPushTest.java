@@ -112,7 +112,7 @@ public class MultiTenancyActivatableJobsPushTest {
     for (final long piKey : activeProcessInstances) {
       final var processInstanceRecordStream = records().betweenProcessInstance(piKey);
       assertThat(processInstanceRecordStream)
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSequence(eventOrder);
     }
   }

@@ -62,7 +62,7 @@ public class AddEntityTenantMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 4)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 4)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.TENANT
@@ -70,7 +70,7 @@ public class AddEntityTenantMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == TenantIntent.ADD_ENTITY)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 r.getValue() instanceof CommandDistributionRecordValue
@@ -94,9 +94,9 @@ public class AddEntityTenantMultiPartitionTest {
       assertThat(
               RecordingExporter.tenantRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.ENTITY_ADDED))
+                  .limit(record -> record.getIntentToWrite().equals(TenantIntent.ENTITY_ADDED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(TenantIntent.ADD_ENTITY, TenantIntent.ENTITY_ADDED);
     }
   }
@@ -125,7 +125,7 @@ public class AddEntityTenantMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 4)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 4)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

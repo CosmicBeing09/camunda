@@ -85,7 +85,7 @@ public final class MultipleEventSubprocessTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .onlyEvents()
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple("event_sub_proc_timer", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("event_sub_task_timer", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -174,7 +174,7 @@ public final class MultipleEventSubprocessTest {
 
     completeJob(processInstanceKey, "timerTask");
     assertThat(RecordingExporter.processInstanceRecords().limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getElementId(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple("event_sub_task_timer", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("end_proc", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -203,7 +203,7 @@ public final class MultipleEventSubprocessTest {
 
     // then
     assertThat(RecordingExporter.processInstanceRecords().limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),

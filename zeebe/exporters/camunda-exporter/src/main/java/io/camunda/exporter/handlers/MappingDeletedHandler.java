@@ -36,7 +36,7 @@ public class MappingDeletedHandler implements ExportHandler<MappingEntity, Mappi
   @Override
   public boolean handlesRecord(final Record<MappingRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && MappingIntent.DELETED.equals(record.getIntent());
+        && MappingIntent.DELETED.equals(record.getIntentToWrite());
   }
 
   @Override

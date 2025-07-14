@@ -121,6 +121,6 @@ public final class RecordStream extends StreamWrapper<LoggedEvent, RecordStream>
     return onlyProcessInstanceRecords()
         .onlyEvents()
         .filter(r -> elementIdBuffer.equals(r.getValue().getElementIdBuffer()))
-        .map(r -> (ProcessInstanceIntent) r.getIntent());
+        .map(r -> (ProcessInstanceIntent) r.getIntentToWrite());
   }
 }

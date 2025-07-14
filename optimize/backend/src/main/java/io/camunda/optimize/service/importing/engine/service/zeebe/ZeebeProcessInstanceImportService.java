@@ -75,7 +75,7 @@ public class ZeebeProcessInstanceImportService
                           zeebeRecord.getValue().getBpmnElementType();
                       return bpmnElementType != null && !TYPES_TO_IGNORE.contains(bpmnElementType);
                     })
-                .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntent()))
+                .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntentToWrite()))
                 .collect(
                     Collectors.groupingBy(
                         zeebeRecord -> zeebeRecord.getValue().getProcessInstanceKey(),
@@ -121,7 +121,7 @@ public class ZeebeProcessInstanceImportService
                 BpmnElementType.PROCESS.equals(zeebeRecord.getValue().getBpmnElementType()))
         .forEach(
             processInstance -> {
-              switch (processInstance.getIntent()) {
+              switch (processInstance.getIntentToWrite()) {
                 case ELEMENT_COMPLETED:
                   updateStateIfValidTransition(
                       instanceToAdd, ProcessInstanceConstants.COMPLETED_STATE);
@@ -139,7 +139,7 @@ public class ZeebeProcessInstanceImportService
                   break;
                 default:
                   throw new OptimizeRuntimeException(
-                      "Unsupported intent: " + processInstance.getIntent());
+                      "Unsupported intent: " + processInstance.getIntentToWrite());
               }
               updateDurationIfCompleted(instanceToAdd);
             });
@@ -162,7 +162,7 @@ public class ZeebeProcessInstanceImportService
               final FlowNodeInstanceDto flowNodeForKey =
                   flowNodeInstancesByRecordKey.getOrDefault(
                       recordKey, createSkeletonFlowNodeInstance(zeebeFlowNodeInstanceRecord));
-              final ProcessInstanceIntent instanceIntent = zeebeFlowNodeInstanceRecord.getIntent();
+              final ProcessInstanceIntent instanceIntent = zeebeFlowNodeInstanceRecord.getIntentToWrite();
               if (instanceIntent == ELEMENT_COMPLETED) {
                 flowNodeForKey.setEndDate(zeebeFlowNodeInstanceRecord.getDateForTimestamp());
               } else if (instanceIntent == ELEMENT_TERMINATED) {

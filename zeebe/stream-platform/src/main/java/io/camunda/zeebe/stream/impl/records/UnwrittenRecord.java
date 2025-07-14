@@ -49,7 +49,7 @@ public class UnwrittenRecord implements TypedRecord {
   }
 
   @Override
-  public Intent getIntent() {
+  public Intent getIntentToWrite() {
     return metadata.getIntent();
   }
 

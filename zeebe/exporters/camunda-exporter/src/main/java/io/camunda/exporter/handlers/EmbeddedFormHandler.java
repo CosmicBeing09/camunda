@@ -40,7 +40,7 @@ public class EmbeddedFormHandler implements ExportHandler<EmbeddedFormBatch, Pro
 
   @Override
   public boolean handlesRecord(final Record<Process> record) {
-    return record.getIntent().equals(ProcessIntent.CREATED);
+    return record.getIntentToWrite().equals(ProcessIntent.CREATED);
   }
 
   @Override

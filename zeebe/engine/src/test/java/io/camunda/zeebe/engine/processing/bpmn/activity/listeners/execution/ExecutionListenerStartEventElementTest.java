@@ -141,7 +141,7 @@ public class ExecutionListenerStartEventElementTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -200,7 +200,7 @@ public class ExecutionListenerStartEventElementTest {
                 .betweenProcessInstance(processInstanceKey)
                 .withValueTypes(ValueType.JOB, ValueType.VARIABLE)
                 .onlyEvents())
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSequence(
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.COMPLETED),

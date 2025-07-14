@@ -34,8 +34,8 @@ public class EventFromIncidentHandler extends AbstractEventHandler<IncidentRecor
 
   @Override
   public boolean handlesRecord(final Record<IncidentRecordValue> record) {
-    return record.getIntent().equals(IncidentIntent.CREATED)
-        || record.getIntent().equals(IncidentIntent.RESOLVED);
+    return record.getIntentToWrite().equals(IncidentIntent.CREATED)
+        || record.getIntentToWrite().equals(IncidentIntent.RESOLVED);
   }
 
   @Override

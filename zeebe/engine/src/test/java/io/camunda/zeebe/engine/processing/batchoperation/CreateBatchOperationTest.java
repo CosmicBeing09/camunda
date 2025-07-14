@@ -50,7 +50,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
             .getFirst();
 
     assertThat(result.getRejectionType()).isEqualTo(RejectionType.INVALID_ARGUMENT);
-    assertThat(result.getIntent()).isEqualTo(BatchOperationIntent.CREATE);
+    assertThat(result.getIntentToWrite()).isEqualTo(BatchOperationIntent.CREATE);
   }
 
   @Test
@@ -74,7 +74,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
             .getFirst();
 
     assertThat(result.getRejectionType()).isEqualTo(RejectionType.INVALID_ARGUMENT);
-    assertThat(result.getIntent()).isEqualTo(BatchOperationIntent.CREATE);
+    assertThat(result.getIntentToWrite()).isEqualTo(BatchOperationIntent.CREATE);
   }
 
   @Test
@@ -112,15 +112,15 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     assertThat(
             RecordingExporter.batchOperationCreationRecords()
                 .withBatchOperationKey(batchOperationKey)
-                .limit(record -> record.getIntent().equals(BatchOperationIntent.CREATED)))
-        .extracting(Record::getIntent)
+                .limit(record -> record.getIntentToWrite().equals(BatchOperationIntent.CREATED)))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.CREATED);
 
     assertThat(
             RecordingExporter.batchOperationChunkRecords()
                 .withBatchOperationKey(batchOperationKey)
-                .limit(record -> record.getIntent().equals(BatchOperationChunkIntent.CREATED)))
-        .extracting(Record::getIntent)
+                .limit(record -> record.getIntentToWrite().equals(BatchOperationChunkIntent.CREATED)))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationChunkIntent.CREATE, BatchOperationChunkIntent.CREATED);
   }
 

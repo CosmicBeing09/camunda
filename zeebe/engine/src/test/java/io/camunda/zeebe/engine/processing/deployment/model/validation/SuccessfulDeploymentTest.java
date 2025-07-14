@@ -87,7 +87,7 @@ public final class SuccessfulDeploymentTest {
     final var deployment = performDeployment.apply(engine.deployment());
 
     // then
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
     assertThat(deployment.getValue().getProcessesMetadata()).hasSize(1);
   }
 

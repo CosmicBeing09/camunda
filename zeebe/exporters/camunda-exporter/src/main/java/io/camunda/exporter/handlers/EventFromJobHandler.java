@@ -44,7 +44,7 @@ public class EventFromJobHandler extends AbstractEventHandler<JobRecordValue> {
 
   @Override
   public boolean handlesRecord(final Record<JobRecordValue> record) {
-    final JobIntent intent = (JobIntent) record.getIntent();
+    final JobIntent intent = (JobIntent) record.getIntentToWrite();
     return JOB_EVENTS.contains(intent);
   }
 

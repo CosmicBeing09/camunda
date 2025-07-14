@@ -52,7 +52,7 @@ public class LinkEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.INTERMEDIATE_THROW_EVENT, ELEMENT_COMPLETING),
             tuple(BpmnElementType.INTERMEDIATE_THROW_EVENT, ELEMENT_COMPLETED),
@@ -126,7 +126,7 @@ public class LinkEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("throwA", ELEMENT_COMPLETING),
             tuple("throwA", ELEMENT_COMPLETED),

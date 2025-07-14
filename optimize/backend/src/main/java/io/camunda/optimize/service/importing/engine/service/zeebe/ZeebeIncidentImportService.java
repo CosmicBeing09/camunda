@@ -60,7 +60,7 @@ public class ZeebeIncidentImportService
       final List<ZeebeIncidentRecordDto> zeebeRecords) {
     final List<ProcessInstanceDto> optimizeDtos =
         zeebeRecords.stream()
-            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntent()))
+            .filter(zeebeRecord -> INTENTS_TO_IMPORT.contains(zeebeRecord.getIntentToWrite()))
             .collect(
                 Collectors.groupingBy(
                     zeebeRecord -> zeebeRecord.getValue().getProcessInstanceKey()))
@@ -96,11 +96,11 @@ public class ZeebeIncidentImportService
           final long recordKey = incident.getKey();
           final IncidentDto incidentForKey =
               incidentsByRecordKey.getOrDefault(recordKey, createSkeletonIncident(incident));
-          if (incident.getIntent() == IncidentIntent.CREATED
+          if (incident.getIntentToWrite() == IncidentIntent.CREATED
               && incidentForKey.getIncidentStatus() != IncidentStatus.RESOLVED) {
             incidentForKey.setIncidentStatus(IncidentStatus.OPEN);
             incidentForKey.setCreateTime(dateForTimestamp(incident));
-          } else if (incident.getIntent() == IncidentIntent.RESOLVED) {
+          } else if (incident.getIntentToWrite() == IncidentIntent.RESOLVED) {
             incidentForKey.setIncidentStatus(IncidentStatus.RESOLVED);
             incidentForKey.setEndTime(dateForTimestamp(incident));
           }

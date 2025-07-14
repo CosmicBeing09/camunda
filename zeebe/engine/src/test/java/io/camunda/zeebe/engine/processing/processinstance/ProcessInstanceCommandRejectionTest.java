@@ -654,7 +654,7 @@ public final class ProcessInstanceCommandRejectionTest {
             .getFirst();
 
     Assertions.assertThat(rejection)
-        .hasIntent(command.getIntent())
+        .hasIntent(command.getIntentToWrite())
         .hasSourceRecordPosition(command.getPosition())
         .hasRejectionType(RejectionType.INVALID_STATE)
         .hasRejectionReason(rejectionReason);

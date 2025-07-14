@@ -38,7 +38,7 @@ public class AuthorizationDeletedHandler
   @Override
   public boolean handlesRecord(final Record<AuthorizationRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && record.getIntent().equals(AuthorizationIntent.DELETED);
+        && record.getIntentToWrite().equals(AuthorizationIntent.DELETED);
   }
 
   @Override

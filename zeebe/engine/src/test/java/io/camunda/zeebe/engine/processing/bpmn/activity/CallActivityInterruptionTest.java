@@ -106,7 +106,7 @@ public class CallActivityInterruptionTest {
             RecordingExporter.records()
                 .betweenProcessInstance(processInstanceKey)
                 .processInstanceRecords())
-        .extracting(r -> tuple(r.getRecordType(), r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getRecordType(), r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(COMMAND, BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.TERMINATE_ELEMENT),
             tuple(EVENT, BpmnElementType.CALL_ACTIVITY, ProcessInstanceIntent.ELEMENT_TERMINATING),

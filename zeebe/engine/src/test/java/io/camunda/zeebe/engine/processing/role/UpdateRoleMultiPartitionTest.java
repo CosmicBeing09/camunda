@@ -47,7 +47,7 @@ public class UpdateRoleMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.ROLE
@@ -55,7 +55,7 @@ public class UpdateRoleMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == RoleIntent.UPDATE)))
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent,
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -82,9 +82,9 @@ public class UpdateRoleMultiPartitionTest {
       assertThat(
               RecordingExporter.roleRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(RoleIntent.UPDATED))
+                  .limit(record -> record.getIntentToWrite().equals(RoleIntent.UPDATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(RoleIntent.UPDATE, RoleIntent.UPDATED);
     }
   }
@@ -99,7 +99,7 @@ public class UpdateRoleMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

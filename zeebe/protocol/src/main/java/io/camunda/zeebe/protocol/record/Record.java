@@ -57,9 +57,9 @@ public interface Record<T extends RecordValue> extends JsonSerializable {
   long getTimestamp();
 
   /**
-   * @return the intent of the record
+   * @return the intent to write of the record
    */
-  Intent getIntent();
+  Intent getIntentToWrite();
 
   /**
    * @return the partition ID on which the record was published

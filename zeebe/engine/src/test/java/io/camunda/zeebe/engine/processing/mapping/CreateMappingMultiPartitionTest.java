@@ -54,9 +54,9 @@ public class CreateMappingMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED)))
+                .limit(record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -83,9 +83,9 @@ public class CreateMappingMultiPartitionTest {
       assertThat(
               RecordingExporter.mappingRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(MappingIntent.CREATED))
+                  .limit(record -> record.getIntentToWrite().equals(MappingIntent.CREATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsExactly(MappingIntent.CREATE, MappingIntent.CREATED);
     }
   }
@@ -108,7 +108,7 @@ public class CreateMappingMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 1)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

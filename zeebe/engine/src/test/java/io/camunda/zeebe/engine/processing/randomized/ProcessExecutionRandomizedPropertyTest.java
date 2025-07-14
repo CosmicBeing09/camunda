@@ -99,9 +99,9 @@ public class ProcessExecutionRandomizedPropertyTest {
         .limit(
             p ->
                 p.getValue().getBpmnElementType().equals(BpmnElementType.PROCESS)
-                    && p.getIntent().equals(ProcessInstanceIntent.ELEMENT_COMPLETED))
+                    && p.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_COMPLETED))
         .filter(p -> !p.getValue().getBpmnElementType().equals(BpmnElementType.PROCESS))
-        .filter(p -> p.getIntent().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING))
+        .filter(p -> p.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING))
         .forEach(
             r -> {
               final var v = r.getValue();

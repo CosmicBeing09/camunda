@@ -27,19 +27,19 @@ public class AuthorizationExportHandler implements RdbmsExportHandler<Authorizat
 
   @Override
   public boolean canExport(final Record<AuthorizationRecordValue> record) {
-    return record.getIntent() == AuthorizationIntent.CREATED
-        || record.getIntent() == AuthorizationIntent.UPDATED
-        || record.getIntent() == AuthorizationIntent.DELETED;
+    return record.getIntentToWrite() == AuthorizationIntent.CREATED
+        || record.getIntentToWrite() == AuthorizationIntent.UPDATED
+        || record.getIntentToWrite() == AuthorizationIntent.DELETED;
   }
 
   @Override
   public void export(final Record<AuthorizationRecordValue> record) {
     final AuthorizationRecordValue value = record.getValue();
-    switch (record.getIntent()) {
+    switch (record.getIntentToWrite()) {
       case AuthorizationIntent.CREATED -> authorizationWriter.createAuthorization(map(value));
       case AuthorizationIntent.UPDATED -> authorizationWriter.updateAuthorization(map(value));
       case AuthorizationIntent.DELETED -> authorizationWriter.deleteAuthorization(map(value));
-      default -> LOG.warn("Unexpected intent {} for authorization record", record.getIntent());
+      default -> LOG.warn("Unexpected intent {} for authorization record", record.getIntentToWrite());
     }
   }
 

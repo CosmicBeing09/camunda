@@ -348,7 +348,7 @@ public final class JobFailIncidentTest {
             .collect(Collectors.toList());
 
     assertThat(jobEvents)
-        .extracting(Record::getRecordType, Record::getValueType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getValueType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.EVENT, ValueType.JOB, JobIntent.CREATED),
             tuple(RecordType.COMMAND, ValueType.JOB, JobIntent.FAIL),

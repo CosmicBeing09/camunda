@@ -381,7 +381,7 @@ public class ModifyProcessInstanceTerminationTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to terminate the elements and propagate to their flow scopes")
         .containsSubsequence(
             tuple(BpmnElementType.USER_TASK, "A", ProcessInstanceIntent.ELEMENT_TERMINATED),
@@ -512,7 +512,7 @@ public class ModifyProcessInstanceTerminationTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to terminate the element and its flow scope")
         .containsSequence(
             tuple(BpmnElementType.USER_TASK, "A", ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -593,7 +593,7 @@ public class ModifyProcessInstanceTerminationTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Ensure the precondition of a pending activation")
         .containsSubsequence(
             tuple(BpmnElementType.USER_TASK, "B", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -673,7 +673,7 @@ public class ModifyProcessInstanceTerminationTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to terminate the event subprocess and all containing elements")
         .containsSequence(
             tuple(
@@ -765,7 +765,7 @@ public class ModifyProcessInstanceTerminationTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to terminate the subprocess and all containing elements")
         .containsSequence(
             tuple(
@@ -837,7 +837,7 @@ public class ModifyProcessInstanceTerminationTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expect to terminate the callActivity and all containing elements")
         .containsSequence(
             tuple(
@@ -916,9 +916,9 @@ public class ModifyProcessInstanceTerminationTest {
             RecordingExporter.processInstanceRecords()
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
-                .skipUntil(r -> r.getIntent() == ProcessInstanceIntent.ELEMENT_TERMINATING)
+                .skipUntil(r -> r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_TERMINATING)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expect that all active instances of the multi-instance have been terminated")
         .containsSequence(
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -990,9 +990,9 @@ public class ModifyProcessInstanceTerminationTest {
             RecordingExporter.processInstanceRecords()
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
-                .skipUntil(r -> r.getIntent() == ProcessInstanceIntent.ELEMENT_TERMINATING)
+                .skipUntil(r -> r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_TERMINATING)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expect that all active instances of the multi-instance have been terminated")
         .containsSequence(
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -1070,9 +1070,9 @@ public class ModifyProcessInstanceTerminationTest {
             RecordingExporter.processInstanceRecords()
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
-                .skipUntil(r -> r.getIntent() == ProcessInstanceIntent.ELEMENT_TERMINATING)
+                .skipUntil(r -> r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_TERMINATING)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expect that all active instances of the multi-instance have been terminated")
         .containsSequence(
             tuple(BpmnElementType.MULTI_INSTANCE_BODY, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -1188,7 +1188,7 @@ public class ModifyProcessInstanceTerminationTest {
                 .withElementId(elementId)
                 .limit(elementId, ProcessInstanceIntent.ELEMENT_TERMINATED)
                 .toList())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             ProcessInstanceIntent.ELEMENT_TERMINATING, ProcessInstanceIntent.ELEMENT_TERMINATED);
   }

@@ -568,7 +568,7 @@ public final class EngineRule extends ExternalResource {
     Awaitility.await(
             String.format(
                 "Await the %s.%s to be processed at position %d",
-                record.getValueType(), record.getIntent(), recordPosition))
+                record.getValueType(), record.getIntentToWrite(), recordPosition))
         .untilAsserted(
             () ->
                 assertThat(getLastProcessedPosition())

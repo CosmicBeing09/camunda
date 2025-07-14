@@ -79,7 +79,7 @@ public class TaskListenerTestHelper {
                 .limitToProcessInstanceCompleted())
         .extracting(
             r -> r.getValue().getBpmnElementType(),
-            io.camunda.zeebe.protocol.record.Record::getIntent)
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
@@ -216,8 +216,8 @@ public class TaskListenerTestHelper {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == intents[intents.length - 1]))
-        .extracting(io.camunda.zeebe.protocol.record.Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == intents[intents.length - 1]))
+        .extracting(io.camunda.zeebe.protocol.record.Record::getIntentToWrite)
         .describedAs("Verify the expected sequence of User Task intents")
         .containsSequence(intents);
   }

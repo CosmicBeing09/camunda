@@ -39,7 +39,7 @@ public class TenantEntityRemovedHandler
   @Override
   public boolean handlesRecord(final Record<TenantRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && TenantIntent.ENTITY_REMOVED.equals(record.getIntent());
+        && TenantIntent.ENTITY_REMOVED.equals(record.getIntentToWrite());
   }
 
   @Override

@@ -37,14 +37,14 @@ public class JobExportHandler implements RdbmsExportHandler<JobRecordValue> {
 
   @Override
   public boolean canExport(final Record<JobRecordValue> record) {
-    return record.getIntent() != null
-        && record.getIntent() instanceof final JobIntent intent
+    return record.getIntentToWrite() != null
+        && record.getIntentToWrite() instanceof final JobIntent intent
         && EXPORTABLE_INTENTS.contains(intent);
   }
 
   @Override
   public void export(final Record<JobRecordValue> record) {
-    if (record.getIntent().equals(JobIntent.CREATED)) {
+    if (record.getIntentToWrite().equals(JobIntent.CREATED)) {
       jobWriter.create(map(record));
     } else {
       jobWriter.update(map(record));
@@ -56,7 +56,7 @@ public class JobExportHandler implements RdbmsExportHandler<JobRecordValue> {
         .jobKey(record.getKey())
         .processInstanceKey(record.getValue().getProcessInstanceKey())
         .retries(record.getValue().getRetries())
-        .state(record.getIntent().name())
+        .state(record.getIntentToWrite().name())
         .partitionId(record.getPartitionId())
         .build();
   }

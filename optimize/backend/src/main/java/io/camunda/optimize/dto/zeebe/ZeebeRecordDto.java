@@ -236,7 +236,7 @@ public abstract class ZeebeRecordDto<VALUE extends RecordValue, INTENT extends I
         + ", value="
         + getValue()
         + ", intent="
-        + getIntent()
+        + getIntentToWrite()
         + ", authorizations="
         + getAuthorizations()
         + ", operationReference="

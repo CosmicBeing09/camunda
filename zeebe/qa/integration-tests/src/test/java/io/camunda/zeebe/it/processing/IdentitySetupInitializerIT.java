@@ -105,7 +105,7 @@ final class IdentitySetupInitializerIT {
 
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent().equals(ClockIntent.RESET))
+                .limit(r -> r.getIntentToWrite().equals(ClockIntent.RESET))
                 .identitySetupRecords()
                 .withIntent(IdentitySetupIntent.INITIALIZED))
         .hasSize(1)

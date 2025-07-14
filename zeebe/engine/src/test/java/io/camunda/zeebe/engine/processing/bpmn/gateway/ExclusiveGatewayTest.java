@@ -238,7 +238,7 @@ public final class ExclusiveGatewayTest {
             .asList();
 
     assertThat(processEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -309,7 +309,7 @@ public final class ExclusiveGatewayTest {
             .collect(Collectors.toList());
 
     assertThat(completedEvents)
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsExactly(
             tuple(BpmnElementType.EXCLUSIVE_GATEWAY, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.EXCLUSIVE_GATEWAY, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -342,7 +342,7 @@ public final class ExclusiveGatewayTest {
         ENGINE.processInstance().ofBpmnProcessId(processId).withVariable("foo", 10).create();
     assertThat(
             RecordingExporter.incidentRecords().withProcessInstanceKey(processInstanceKey).limit(1))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED);
 
     // when
@@ -353,7 +353,7 @@ public final class ExclusiveGatewayTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.EXCLUSIVE_GATEWAY, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -362,7 +362,7 @@ public final class ExclusiveGatewayTest {
 
     assertThat(
             RecordingExporter.incidentRecords().withProcessInstanceKey(processInstanceKey).limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }
 
@@ -453,7 +453,7 @@ public final class ExclusiveGatewayTest {
                         record.stream().filter(r -> r.getValueType() == ValueType.PROCESS_INSTANCE))
                     .extracting(
                         r -> ((ProcessInstanceRecordValue) r.getValue()).getElementId(),
-                        Record::getIntent)
+                        Record::getIntentToWrite)
                     .containsSubsequence(
                         tuple("xor", ProcessInstanceIntent.ELEMENT_COMPLETED),
                         tuple("s3", ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN),
@@ -462,6 +462,6 @@ public final class ExclusiveGatewayTest {
             "Expect that the default flow's condition `= nonexisting_variable` is not evaluated and no incident is created")
         .satisfies(
             r ->
-                assertThat(r).extracting(Record::getIntent).doesNotContain(IncidentIntent.CREATED));
+                assertThat(r).extracting(Record::getIntentToWrite).doesNotContain(IncidentIntent.CREATED));
   }
 }

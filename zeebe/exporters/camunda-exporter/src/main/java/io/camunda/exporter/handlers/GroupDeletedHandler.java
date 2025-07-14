@@ -38,7 +38,7 @@ public class GroupDeletedHandler implements ExportHandler<GroupEntity, GroupReco
   @Override
   public boolean handlesRecord(final Record<GroupRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && GroupIntent.DELETED.equals(record.getIntent());
+        && GroupIntent.DELETED.equals(record.getIntentToWrite());
   }
 
   @Override

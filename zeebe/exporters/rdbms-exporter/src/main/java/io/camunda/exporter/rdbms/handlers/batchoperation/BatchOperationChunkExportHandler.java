@@ -32,7 +32,7 @@ public class BatchOperationChunkExportHandler
   @Override
   public boolean canExport(final Record<BatchOperationChunkRecordValue> record) {
     return record.getValueType() == ValueType.BATCH_OPERATION_CHUNK
-        && record.getIntent().equals(BatchOperationChunkIntent.CREATE);
+        && record.getIntentToWrite().equals(BatchOperationChunkIntent.CREATE);
   }
 
   @Override

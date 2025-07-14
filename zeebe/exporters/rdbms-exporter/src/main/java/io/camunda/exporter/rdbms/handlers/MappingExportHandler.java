@@ -30,14 +30,14 @@ public class MappingExportHandler implements RdbmsExportHandler<MappingRecordVal
 
   @Override
   public boolean canExport(final Record<MappingRecordValue> record) {
-    return MAPPING_INTENT.contains(record.getIntent());
+    return MAPPING_INTENT.contains(record.getIntentToWrite());
   }
 
   @Override
   public void export(final Record<MappingRecordValue> record) {
-    if (record.getIntent().equals(MappingIntent.CREATED)) {
+    if (record.getIntentToWrite().equals(MappingIntent.CREATED)) {
       mappingWriter.create(map(record));
-    } else if (record.getIntent().equals(MappingIntent.DELETED)) {
+    } else if (record.getIntentToWrite().equals(MappingIntent.DELETED)) {
       mappingWriter.delete(record.getValue().getMappingId());
     }
   }

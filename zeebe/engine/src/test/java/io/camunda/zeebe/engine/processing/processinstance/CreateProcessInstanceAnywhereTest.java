@@ -58,7 +58,7 @@ public class CreateProcessInstanceAnywhereTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expected to start process instance at end event")
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -108,7 +108,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expected to start process instance at both tasks")
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -165,7 +165,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expected to start process instance at task inside subprocess")
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -234,7 +234,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expected to start process instance at both tasks inside subprocess")
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -305,7 +305,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("Expected to start process instance at task inside nested subprocess")
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -540,7 +540,7 @@ public class CreateProcessInstanceAnywhereTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expected to activate the subprocess twice")
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -589,7 +589,7 @@ public class CreateProcessInstanceAnywhereTest {
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expected to activate the subprocess twice")
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -678,7 +678,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -774,7 +774,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -843,7 +843,7 @@ public class CreateProcessInstanceAnywhereTest {
         .extracting(
             record -> record.getValue().getElementId(),
             record -> record.getValue().getBpmnElementType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSequence(
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -855,7 +855,7 @@ public class CreateProcessInstanceAnywhereTest {
                 .limitToProcessInstance(processInstanceKey)
                 .processMessageSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs("Expected to create the message subscription only once")
         .containsOnlyOnce(ProcessMessageSubscriptionIntent.CREATING);
 
@@ -864,7 +864,7 @@ public class CreateProcessInstanceAnywhereTest {
                 .limitToProcessInstance(processInstanceKey)
                 .timerRecords()
                 .withProcessInstanceKey(processInstanceKey))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .describedAs("Expected to create the timer only once")
         .containsOnlyOnce(TimerIntent.CREATED);
   }
@@ -893,7 +893,7 @@ public class CreateProcessInstanceAnywhereTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit("fork", ProcessInstanceIntent.ELEMENT_COMPLETED))
-        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(record -> record.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .describedAs("Expected to start process instance at parallel gateway")
         .containsSequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),

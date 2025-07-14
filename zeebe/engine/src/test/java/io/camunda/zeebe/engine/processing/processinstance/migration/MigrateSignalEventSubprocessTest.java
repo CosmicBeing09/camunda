@@ -113,7 +113,7 @@ public class MigrateSignalEventSubprocessTest {
                 .limit(
                     r ->
                         r.getKey() == processInstanceKey
-                            && r.getIntent() == ProcessInstanceMigrationIntent.MIGRATED)
+                            && r.getIntentToWrite() == ProcessInstanceMigrationIntent.MIGRATED)
                 .signalSubscriptionRecords()
                 .withIntent(SignalSubscriptionIntent.CREATED)
                 .withProcessDefinitionKey(targetProcessDefinitionKey)

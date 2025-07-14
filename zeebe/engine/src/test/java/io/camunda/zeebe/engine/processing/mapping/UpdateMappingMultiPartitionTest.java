@@ -60,9 +60,9 @@ public class UpdateMappingMultiPartitionTest {
               RecordingExporter.mappingRecords()
                   .withPartitionId(partitionId)
                   .skip(2)
-                  .limit(record -> record.getIntent().equals(MappingIntent.UPDATED))
+                  .limit(record -> record.getIntentToWrite().equals(MappingIntent.UPDATED))
                   .toList())
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsExactly(MappingIntent.UPDATE, MappingIntent.UPDATED);
     }
   }
@@ -94,7 +94,7 @@ public class UpdateMappingMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 1)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 1)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

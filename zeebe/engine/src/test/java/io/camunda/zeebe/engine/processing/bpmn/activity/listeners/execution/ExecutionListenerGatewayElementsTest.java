@@ -174,7 +174,7 @@ public class ExecutionListenerGatewayElementsTest {
           .extracting(
               r -> r.getValue().getElementId(),
               r -> r.getValue().getBpmnElementType(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsSubsequence(
               tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(
@@ -387,7 +387,7 @@ public class ExecutionListenerGatewayElementsTest {
           .extracting(
               r -> r.getValue().getElementId(),
               r -> r.getValue().getBpmnElementType(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsSubsequence(
               tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple("start", BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -454,7 +454,7 @@ public class ExecutionListenerGatewayElementsTest {
           .extracting(
               r -> r.getValue().getElementId(),
               r -> r.getValue().getBpmnElementType(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsSubsequence(
               tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple("start", BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -526,7 +526,7 @@ public class ExecutionListenerGatewayElementsTest {
           .extracting(
               r -> r.getValue().getElementId(),
               r -> r.getValue().getBpmnElementType(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsSubsequence(
               tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple("start", BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),

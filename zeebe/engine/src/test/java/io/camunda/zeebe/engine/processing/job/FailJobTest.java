@@ -190,7 +190,7 @@ public final class FailJobTest {
     // and the job lifecycle is correct
     final List<Record> jobEvents = jobRecords().limit(3).collect(Collectors.toList());
     assertThat(jobEvents)
-        .extracting(Record::getRecordType, Record::getValueType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getValueType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.EVENT, ValueType.JOB, JobIntent.CREATED),
             tuple(RecordType.COMMAND, ValueType.JOB, FAIL),
@@ -200,7 +200,7 @@ public final class FailJobTest {
         RecordingExporter.jobBatchRecords().limit(4).collect(Collectors.toList());
 
     assertThat(jobActivateCommands)
-        .extracting(Record::getRecordType, Record::getValueType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getValueType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.COMMAND, ValueType.JOB_BATCH, JobBatchIntent.ACTIVATE),
             tuple(RecordType.EVENT, ValueType.JOB_BATCH, JobBatchIntent.ACTIVATED),

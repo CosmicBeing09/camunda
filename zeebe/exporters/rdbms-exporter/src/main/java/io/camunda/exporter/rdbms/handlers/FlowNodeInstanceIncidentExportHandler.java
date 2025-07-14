@@ -34,8 +34,8 @@ public class FlowNodeInstanceIncidentExportHandler
   public boolean canExport(final Record<IncidentRecordValue> record) {
     return record.getValueType() == ValueType.INCIDENT
         && record.getValue().getElementInstanceKey() > 0
-        && (record.getIntent() == IncidentIntent.CREATED
-            || record.getIntent() == IncidentIntent.RESOLVED);
+        && (record.getIntentToWrite() == IncidentIntent.CREATED
+            || record.getIntentToWrite() == IncidentIntent.RESOLVED);
   }
 
   @Override
@@ -44,13 +44,13 @@ public class FlowNodeInstanceIncidentExportHandler
 
     for (final List<Long> elementPair : value.getElementInstancePath()) {
       final var flowNodeInstanceKey = elementPair.get(1);
-      if (record.getIntent().equals(IncidentIntent.CREATED)) {
+      if (record.getIntentToWrite().equals(IncidentIntent.CREATED)) {
         if (flowNodeInstanceKey == value.getElementInstanceKey()) {
           flowNodeInstanceWriter.createIncident(flowNodeInstanceKey, record.getKey());
         } else {
           flowNodeInstanceWriter.createSubprocessIncident(flowNodeInstanceKey);
         }
-      } else if (record.getIntent().equals(IncidentIntent.RESOLVED)) {
+      } else if (record.getIntentToWrite().equals(IncidentIntent.RESOLVED)) {
         if (flowNodeInstanceKey == value.getElementInstanceKey()) {
           flowNodeInstanceWriter.resolveIncident(flowNodeInstanceKey);
         } else {
@@ -59,7 +59,7 @@ public class FlowNodeInstanceIncidentExportHandler
       } else {
         LOGGER.warn(
             "Unexpected incident intent {} for record {}/{}",
-            record.getIntent(),
+            record.getIntentToWrite(),
             record.getPartitionId(),
             record.getPosition());
       }

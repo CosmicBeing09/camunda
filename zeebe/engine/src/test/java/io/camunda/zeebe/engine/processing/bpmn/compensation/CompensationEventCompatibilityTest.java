@@ -195,7 +195,7 @@ public class CompensationEventCompatibilityTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 scenario.bpmnElementType,
@@ -246,7 +246,7 @@ public class CompensationEventCompatibilityTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.END_EVENT,

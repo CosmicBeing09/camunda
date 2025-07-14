@@ -66,21 +66,21 @@ public final class ProcessInstanceRecordStream
   public ProcessInstanceRecordStream limitToProcessInstanceCompleted() {
     return limit(
         r ->
-            r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED
+            r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED
                 && r.getKey() == r.getValue().getProcessInstanceKey());
   }
 
   public ProcessInstanceRecordStream limitToProcessInstanceTerminated() {
     return limit(
         r ->
-            r.getIntent() == ProcessInstanceIntent.ELEMENT_TERMINATED
+            r.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_TERMINATED
                 && r.getKey() == r.getValue().getProcessInstanceKey());
   }
 
   public ProcessInstanceRecordStream limit(
       final String elementId, final ProcessInstanceIntent intent) {
     return limit(
-        r -> r.getValue().getElementId().equals(elementId) && r.getIntent().equals(intent));
+        r -> r.getValue().getElementId().equals(elementId) && r.getIntentToWrite().equals(intent));
   }
 
   public ProcessInstanceRecordStream withElementType(final BpmnElementType elementType) {

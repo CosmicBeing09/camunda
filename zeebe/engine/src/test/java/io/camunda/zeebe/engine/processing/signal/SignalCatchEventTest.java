@@ -72,7 +72,7 @@ public class SignalCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ELEMENT_ID, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(ELEMENT_ID, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -110,7 +110,7 @@ public class SignalCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("task", ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple("task", ProcessInstanceIntent.ELEMENT_TERMINATED),
@@ -154,7 +154,7 @@ public class SignalCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("task", ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple("task", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -199,7 +199,7 @@ public class SignalCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("task", ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple("task", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -246,7 +246,7 @@ public class SignalCatchEventTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ELEMENT_ID, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(ELEMENT_ID, ProcessInstanceIntent.ELEMENT_COMPLETED),

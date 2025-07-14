@@ -80,7 +80,7 @@ public class JobZeebeRecordProcessor {
       final Consumer<Record<? extends RecordValue>> recordProcessor) {
     if (records.size() >= 1) {
       for (int i = records.size() - 1; i >= 0; i--) {
-        final String intentStr = records.get(i).getIntent().name();
+        final String intentStr = records.get(i).getIntentToWrite().name();
         if (events.contains(intentStr)) {
           if (i > 0 && FAILED_JOB_EVENTS.contains(intentStr)) {
             recordProcessor.accept(records.get(i - 1));
@@ -105,7 +105,7 @@ public class JobZeebeRecordProcessor {
             .setTenantId(recordValue.getTenantId())
             .setType(recordValue.getType())
             .setWorker(recordValue.getWorker())
-            .setState(record.getIntent().name())
+            .setState(record.getIntentToWrite().name())
             .setRetries(recordValue.getRetries())
             .setErrorMessage(recordValue.getErrorMessage())
             .setErrorCode(recordValue.getErrorCode())
@@ -122,7 +122,7 @@ public class JobZeebeRecordProcessor {
       jobEntity.setDeadline(DateUtil.toOffsetDateTime(Instant.ofEpochMilli(jobDeadline)));
     }
 
-    if (FAILED_JOB_EVENTS.contains(record.getIntent().name())) {
+    if (FAILED_JOB_EVENTS.contains(record.getIntentToWrite().name())) {
       // set flowNodeId to null to not overwrite it (because zeebe puts an error message there)
       jobEntity.setFlowNodeId(null);
       if (recordValue.getRetries() > 0) {

@@ -138,7 +138,7 @@ public class ResourceDeletionTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
         .describedAs("Process Instance should be completed")
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.BUSINESS_RULE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.BUSINESS_RULE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -180,7 +180,7 @@ public class ResourceDeletionTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
         .describedAs("Process Instance should be completed")
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.BUSINESS_RULE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.BUSINESS_RULE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -213,10 +213,10 @@ public class ResourceDeletionTest {
     assertThat(
             RecordingExporter.records()
                 .onlyEvents()
-                .filter(r -> r.getIntent() != DeploymentIntent.RECONSTRUCTED_ALL)
-                .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED)))
+                .filter(r -> r.getIntentToWrite() != DeploymentIntent.RECONSTRUCTED_ALL)
+                .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED)))
         .describedAs("Should write events in correct order")
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessIntent.CREATED,
             DeploymentIntent.CREATED,
@@ -785,9 +785,9 @@ public class ResourceDeletionTest {
   private void verifyResourceDeletionRecords(final long key) {
     assertThat(
             RecordingExporter.resourceDeletionRecords()
-                .limit(r -> r.getIntent().equals(ResourceDeletionIntent.DELETED)))
+                .limit(r -> r.getIntentToWrite().equals(ResourceDeletionIntent.DELETED)))
         .describedAs("Expect resource to be deleted")
-        .extracting(Record::getIntent, r -> r.getValue().getResourceKey())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getResourceKey())
         .containsOnly(
             tuple(ResourceDeletionIntent.DELETE, key),
             tuple(ResourceDeletionIntent.DELETING, key),
@@ -916,7 +916,7 @@ public class ResourceDeletionTest {
                 .withElementType(BpmnElementType.PROCESS)
                 .onlyEvents()
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsExactly(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -945,7 +945,7 @@ public class ResourceDeletionTest {
   private void verifyNoTimersAreCancelled() {
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == ResourceDeletionIntent.DELETED)
+                .limit(r -> r.getIntentToWrite() == ResourceDeletionIntent.DELETED)
                 .timerRecords()
                 .withIntent(TimerIntent.CANCELED)
                 .exists())
@@ -986,7 +986,7 @@ public class ResourceDeletionTest {
   private void verifyNoMessageStartEventSubscriptionsAreDeleted() {
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == ResourceDeletionIntent.DELETED)
+                .limit(r -> r.getIntentToWrite() == ResourceDeletionIntent.DELETED)
                 .messageStartEventSubscriptionRecords()
                 .withIntent(MessageStartEventSubscriptionIntent.DELETED)
                 .exists())
@@ -1027,7 +1027,7 @@ public class ResourceDeletionTest {
   private void verifyNoSignalStartEventSubscriptionsAreDeleted() {
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == ResourceDeletionIntent.DELETED)
+                .limit(r -> r.getIntentToWrite() == ResourceDeletionIntent.DELETED)
                 .signalSubscriptionRecords()
                 .withIntent(SignalSubscriptionIntent.DELETED)
                 .exists())

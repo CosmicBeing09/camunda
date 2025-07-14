@@ -120,7 +120,7 @@ public class DecisionEvaluationZeebeRecordProcessor {
 
   private DecisionInstanceState getState(
       final Record record, final DecisionEvaluationRecordValue decisionEvaluation, final int i) {
-    if (record.getIntent().name().equals(DecisionEvaluationIntent.FAILED.name())
+    if (record.getIntentToWrite().name().equals(DecisionEvaluationIntent.FAILED.name())
         && i == decisionEvaluation.getEvaluatedDecisions().size()) {
       return DecisionInstanceState.FAILED;
     } else {

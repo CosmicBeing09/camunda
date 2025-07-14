@@ -82,11 +82,11 @@ public final class CallActivityTest {
 
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == IncidentIntent.CREATED)
+                .limit(r -> r.getIntentToWrite() == IncidentIntent.CREATED)
                 .processInstanceRecords()
                 .onlyEvents()
                 .withElementId("call-activity"))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(ProcessInstanceIntent.ELEMENT_ACTIVATING)
         .doesNotContain(
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -141,7 +141,7 @@ public final class CallActivityTest {
                 .withProcessInstanceKey(processInstance.getProcessInstanceKey())
                 .limitToProcessInstanceCompleted()
                 .withElementId("call-activity"))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,
@@ -191,11 +191,11 @@ public final class CallActivityTest {
 
     assertThat(
             RecordingExporter.records()
-                .limit(r -> r.getIntent() == IncidentIntent.CREATED)
+                .limit(r -> r.getIntentToWrite() == IncidentIntent.CREATED)
                 .processInstanceRecords()
                 .onlyEvents()
                 .withElementId("call-activity"))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             ProcessInstanceIntent.ELEMENT_ACTIVATING,
             ProcessInstanceIntent.ELEMENT_ACTIVATED,

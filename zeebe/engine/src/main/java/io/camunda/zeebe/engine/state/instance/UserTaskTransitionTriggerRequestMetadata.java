@@ -48,7 +48,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
 
   private final EnumProperty<ValueType> triggerTypeProperty =
       new EnumProperty<>("triggerType", ValueType.class);
-  private final StringProperty intentProperty = new StringProperty("intent");
+  private final StringProperty intentToWriteProperty = new StringProperty("intent");
   private final LongProperty requestIdProperty = new LongProperty("requestId", -1);
   private final IntegerProperty requestStreamIdProperty =
       new IntegerProperty("requestStreamId", -1);
@@ -56,7 +56,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
   public UserTaskTransitionTriggerRequestMetadata() {
     super(4);
     declareProperty(triggerTypeProperty)
-        .declareProperty(intentProperty)
+        .declareProperty(intentToWriteProperty)
         .declareProperty(requestIdProperty)
         .declareProperty(requestStreamIdProperty);
   }
@@ -86,9 +86,9 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    *
    * @return The user task intent (e.g., `ASSIGN`, `CLAIM`, `UPDATE`, `COMPLETE` etc.).
    */
-  public Intent getIntent() {
+  public Intent getIntentToWrite() {
     return Intent.fromProtocolValue(
-        triggerTypeProperty.getValue(), BufferUtil.bufferAsString(intentProperty.getValue()));
+        triggerTypeProperty.getValue(), BufferUtil.bufferAsString(intentToWriteProperty.getValue()));
   }
 
   /**
@@ -98,7 +98,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setIntent(final Intent intent) {
-    intentProperty.setValue(intent.name());
+    intentToWriteProperty.setValue(intent.name());
     return this;
   }
 

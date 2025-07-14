@@ -33,8 +33,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.CANCELED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.CANCELED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.CANCELED);
 
     // and no follow op up command to execute again
@@ -42,7 +42,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(BatchOperationExecutionIntent.EXECUTE);
   }
 
@@ -60,8 +60,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.SUSPENDED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.SUSPENDED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.SUSPENDED);
 
     // and no follow op up command to execute again
@@ -69,7 +69,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(BatchOperationExecutionIntent.EXECUTE);
   }
 
@@ -94,8 +94,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.SUSPENDED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.SUSPENDED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.SUSPENDED);
 
     // and that we have no executed event
@@ -103,7 +103,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(BatchOperationExecutionIntent.EXECUTED);
   }
 
@@ -125,8 +125,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
                 .withBatchOperationKey(batchOperationKey)
                 .withRejectionType(RejectionType.NOT_FOUND)
                 .onlyCommandRejections()
-                .limit(r -> r.getIntent() == BatchOperationIntent.SUSPEND))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.SUSPEND))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.SUSPEND);
 
     // and no follow op up command to execute again
@@ -134,7 +134,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(BatchOperationExecutionIntent.EXECUTE);
   }
 
@@ -155,7 +155,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsSequence(
             BatchOperationIntent.SUSPENDED,
             BatchOperationIntent.RESUMED,
@@ -166,8 +166,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationExecutionIntent.EXECUTED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationExecutionIntent.EXECUTED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationExecutionIntent.EXECUTED);
   }
 
@@ -187,8 +187,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
                 .withBatchOperationKey(batchOperationKey)
                 .withRejectionType(RejectionType.NOT_FOUND)
                 .onlyCommandRejections()
-                .limit(r -> r.getIntent() == BatchOperationIntent.RESUME))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.RESUME))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.RESUME);
 
     // and no follow-up command to execute again
@@ -196,7 +196,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .doesNotContain(BatchOperationExecutionIntent.EXECUTE);
   }
 
@@ -219,8 +219,8 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
                 .withBatchOperationKey(batchOperationKey)
                 .withRejectionType(RejectionType.INVALID_STATE)
                 .onlyCommandRejections()
-                .limit(r -> r.getIntent() == BatchOperationIntent.RESUME))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.RESUME))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.RESUME);
   }
 
@@ -246,10 +246,10 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .onlyCommandRejections()
                 .withBatchOperationKey(batchOperationKey)
-                .limit(r -> r.getIntent() == BatchOperationIntent.CANCEL))
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.CANCEL))
         .allSatisfy(
             r -> {
-              assertThat(r.getIntent()).isEqualTo(BatchOperationIntent.CANCEL);
+              assertThat(r.getIntentToWrite()).isEqualTo(BatchOperationIntent.CANCEL);
               assertThat(r.getRejectionType()).isEqualTo(RejectionType.FORBIDDEN);
             });
   }
@@ -276,10 +276,10 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .onlyCommandRejections()
                 .withBatchOperationKey(batchOperationKey)
-                .limit(r -> r.getIntent() == BatchOperationIntent.SUSPEND))
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.SUSPEND))
         .allSatisfy(
             r -> {
-              assertThat(r.getIntent()).isEqualTo(BatchOperationIntent.SUSPEND);
+              assertThat(r.getIntentToWrite()).isEqualTo(BatchOperationIntent.SUSPEND);
               assertThat(r.getRejectionType()).isEqualTo(RejectionType.FORBIDDEN);
             });
   }
@@ -309,10 +309,10 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
             RecordingExporter.batchOperationLifecycleRecords()
                 .onlyCommandRejections()
                 .withBatchOperationKey(batchOperationKey)
-                .limit(r -> r.getIntent() == BatchOperationIntent.RESUME))
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.RESUME))
         .allSatisfy(
             r -> {
-              assertThat(r.getIntent()).isEqualTo(BatchOperationIntent.RESUME);
+              assertThat(r.getIntentToWrite()).isEqualTo(BatchOperationIntent.RESUME);
               assertThat(r.getRejectionType()).isEqualTo(RejectionType.FORBIDDEN);
             });
   }

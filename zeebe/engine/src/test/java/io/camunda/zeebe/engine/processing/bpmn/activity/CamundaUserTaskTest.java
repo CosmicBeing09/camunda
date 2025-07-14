@@ -88,7 +88,7 @@ public final class CamundaUserTaskTest {
                 .withElementType(BpmnElementType.USER_TASK)
                 .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -689,8 +689,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.ASSIGNING),
             tuple(ValueType.USER_TASK, UserTaskIntent.ASSIGNED));
@@ -721,7 +721,7 @@ public final class CamundaUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.TERMINATE_ELEMENT),
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -733,8 +733,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.CANCELED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.CANCELED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.CANCELING),
             tuple(ValueType.USER_TASK, UserTaskIntent.CANCELED));
@@ -760,8 +760,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.ASSIGNED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.CLAIMING),
             tuple(ValueType.USER_TASK, UserTaskIntent.ASSIGNED));
@@ -806,8 +806,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.UPDATED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.UPDATING),
             tuple(ValueType.USER_TASK, UserTaskIntent.UPDATED));
@@ -861,7 +861,7 @@ public final class CamundaUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -871,8 +871,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.COMPLETED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.COMPLETED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETING),
             tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETED));
@@ -893,7 +893,7 @@ public final class CamundaUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -903,8 +903,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.COMPLETED))
-        .extracting(Record::getValueType, Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.COMPLETED))
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETING),
             tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETED));
@@ -931,7 +931,7 @@ public final class CamundaUserTaskTest {
         ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).withVariable("foo", 10).create();
     assertThat(
             RecordingExporter.incidentRecords().withProcessInstanceKey(processInstanceKey).limit(1))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED);
 
     // when
@@ -942,7 +942,7 @@ public final class CamundaUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceTerminated())
-        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
+        .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntentToWrite()))
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_TERMINATING),
             tuple(BpmnElementType.USER_TASK, ProcessInstanceIntent.ELEMENT_TERMINATING),
@@ -951,7 +951,7 @@ public final class CamundaUserTaskTest {
 
     assertThat(
             RecordingExporter.incidentRecords().withProcessInstanceKey(processInstanceKey).limit(2))
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(IncidentIntent.CREATED, IncidentIntent.RESOLVED);
   }
 
@@ -1060,8 +1060,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
-        .extracting(Record::getIntent, r -> r.getValue().getChangedAttributes())
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.UPDATED))
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getChangedAttributes())
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
@@ -1101,7 +1101,7 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.variableRecords().withProcessInstanceKey(processInstanceKey).limit(3))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getScopeKey(),
             r -> r.getValue().getName(),
             r -> r.getValue().getValue())
@@ -1114,8 +1114,8 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
-        .extracting(Record::getIntent, r -> r.getValue().getChangedAttributes())
+                .limit(r -> r.getIntentToWrite() == UserTaskIntent.UPDATED))
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getChangedAttributes())
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(

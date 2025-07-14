@@ -71,7 +71,7 @@ public class ActivateAdHocSubProcessActivityTest {
     client.newBroadcastSignalCommand().signalName("setup_signal").send().join();
 
     assertThat(recordsUpToSignal("setup_signal"))
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .describedAs("Expect ad-hoc sub-process to be activated")
         .contains(tuple(AD_HOC_SUB_PROCESS_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_ACTIVATED))
         .describedAs("Expect no activities to be activated")
@@ -100,7 +100,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstance.getProcessInstanceKey())
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .describedAs("Expect activated activities and whole process to be completed")
         .contains(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -141,7 +141,7 @@ public class ActivateAdHocSubProcessActivityTest {
 
     // then1
     assertThat(recordsUpToSignal("signal1"))
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .describedAs(
             "Expect ad-hoc process instance not to be completed until completion condition is not met")
         .contains(
@@ -171,7 +171,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstance.getProcessInstanceKey())
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .describedAs("Expect activated activities and whole process to be completed")
         .contains(
             tuple("ServiceTask", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -197,7 +197,7 @@ public class ActivateAdHocSubProcessActivityTest {
     client.newBroadcastSignalCommand().signalName("setup_signal").send().join();
 
     assertThat(recordsUpToSignal("setup_signal"))
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .describedAs("Expect ad-hoc sub-process to be activated")
         .contains(tuple(AD_HOC_SUB_PROCESS_ELEMENT_ID, ProcessInstanceIntent.ELEMENT_ACTIVATED))
         .describedAs("Expect no activities to be activated")
@@ -226,7 +226,7 @@ public class ActivateAdHocSubProcessActivityTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstance.getProcessInstanceKey())
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .describedAs("Expect service task to be terminated after completion of A")
         .contains(
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -308,7 +308,7 @@ public class ActivateAdHocSubProcessActivityTest {
     return RecordingExporter.records()
         .limit(
             r ->
-                r.getIntent() == SignalIntent.BROADCASTED
+                r.getIntentToWrite() == SignalIntent.BROADCASTED
                     && ((SignalRecord) r.getValue()).getSignalName().equals(signalName))
         .processInstanceRecords()
         .withProcessInstanceKey(processInstance.getProcessInstanceKey());

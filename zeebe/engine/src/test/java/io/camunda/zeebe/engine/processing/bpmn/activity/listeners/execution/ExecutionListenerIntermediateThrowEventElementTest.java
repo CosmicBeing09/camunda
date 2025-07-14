@@ -124,7 +124,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -375,7 +375,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -458,7 +458,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.SUB_PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -532,7 +532,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
           .extracting(
               r -> r.getValue().getElementId(),
               r -> r.getValue().getBpmnElementType(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsSubsequence(
               tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATING),
               tuple("A", BpmnElementType.SERVICE_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),

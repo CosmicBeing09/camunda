@@ -43,7 +43,7 @@ public class ProcessExportHandler implements RdbmsExportHandler<Process> {
   public boolean canExport(final Record<Process> record) {
     // do not react on ProcessEvent.DELETED to keep historic data
     return record.getValueType() == ValueType.PROCESS
-        && record.getIntent() == ProcessIntent.CREATED;
+        && record.getIntentToWrite() == ProcessIntent.CREATED;
   }
 
   @Override

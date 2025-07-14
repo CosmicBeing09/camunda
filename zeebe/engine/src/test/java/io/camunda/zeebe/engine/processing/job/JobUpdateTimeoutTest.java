@@ -207,7 +207,7 @@ public class JobUpdateTimeoutTest {
 
     assertThat(jobEvents).extracting(Record::getKey).contains(jobKey);
     assertThat(jobEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             JobIntent.CREATED, JobIntent.TIMEOUT_UPDATED, JobIntent.TIME_OUT, JobIntent.TIMED_OUT);
   }
@@ -235,7 +235,7 @@ public class JobUpdateTimeoutTest {
 
     assertThat(jobEvents).extracting(Record::getKey).contains(jobKey);
     assertThat(jobEvents)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(
             JobIntent.CREATED, JobIntent.TIMEOUT_UPDATED, JobIntent.TIME_OUT, JobIntent.TIMED_OUT);
   }

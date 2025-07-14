@@ -25,6 +25,6 @@ public class OperationFromIncidentHandler extends AbstractOperationHandler<Incid
 
   @Override
   public boolean handlesRecord(final Record<IncidentRecordValue> record) {
-    return IncidentIntent.RESOLVED.equals(record.getIntent());
+    return IncidentIntent.RESOLVED.equals(record.getIntentToWrite());
   }
 }

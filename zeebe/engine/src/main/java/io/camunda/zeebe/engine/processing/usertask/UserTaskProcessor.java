@@ -92,7 +92,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   @Override
   public void processRecord(final TypedRecord<UserTaskRecord> command) {
-    final UserTaskIntent intent = (UserTaskIntent) command.getIntent();
+    final UserTaskIntent intent = (UserTaskIntent) command.getIntentToWrite();
     switch (intent) {
       case CREATE, ASSIGN, CLAIM, UPDATE, COMPLETE, CANCEL ->
           processOperationCommand(command, intent);
@@ -231,7 +231,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     final var metadata =
         new UserTaskTransitionTriggerRequestMetadata()
-            .setIntent(command.getIntent())
+            .setIntent(command.getIntentToWrite())
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
@@ -256,25 +256,25 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   private void writeRejectionForCommand(
       final TypedRecord<UserTaskRecord> command,
       final UserTaskRecord persistedRecord,
-      final UserTaskIntent intent) {
+      final UserTaskIntent intentToWrite) {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var recordRequestMetadata =
         userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
 
-    stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
+    stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intentToWrite, persistedRecord);
     recordRequestMetadata.ifPresent(
         metadata -> {
           switch (metadata.getTriggerType()) {
             case USER_TASK ->
                 responseWriter.writeRejection(
                     command.getKey(),
-                    mapDeniedIntentToResponseIntent(intent),
+                    mapDeniedIntentToResponseIntent(intentToWrite),
                     command.getValue(),
                     command.getValueType(),
                     RejectionType.INVALID_STATE,
                     mapDeniedIntentToResponseRejectionReason(
-                        intent,
+                        intentToWrite,
                         persistedRecord.getUserTaskKey(),
                         command.getValue().getDeniedReason()),
                     metadata.getRequestId(),

@@ -49,7 +49,7 @@ public class CreateUserMultiPartitionTest {
     assertThat(
             RecordingExporter.records()
                 .withPartitionId(1)
-                .limit(record -> record.getIntent().equals(CommandDistributionIntent.FINISHED))
+                .limit(record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED))
                 .filter(
                     record ->
                         record.getValueType() == ValueType.USER
@@ -57,7 +57,7 @@ public class CreateUserMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == UserIntent.CREATE)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -85,9 +85,9 @@ public class CreateUserMultiPartitionTest {
               RecordingExporter.userRecords()
                   .withUsername(username)
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(UserIntent.CREATED))
+                  .limit(record -> record.getIntentToWrite().equals(UserIntent.CREATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsExactly(UserIntent.CREATE, UserIntent.CREATED);
     }
   }

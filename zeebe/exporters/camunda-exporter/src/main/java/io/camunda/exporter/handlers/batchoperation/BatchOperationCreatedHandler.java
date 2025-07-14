@@ -40,7 +40,7 @@ public class BatchOperationCreatedHandler
 
   @Override
   public boolean handlesRecord(final Record<BatchOperationCreationRecordValue> record) {
-    return record.getIntent().equals(BatchOperationIntent.CREATED);
+    return record.getIntentToWrite().equals(BatchOperationIntent.CREATED);
   }
 
   @Override

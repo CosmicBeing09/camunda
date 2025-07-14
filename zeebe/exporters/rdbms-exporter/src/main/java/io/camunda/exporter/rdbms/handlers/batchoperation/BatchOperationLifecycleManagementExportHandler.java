@@ -37,22 +37,22 @@ public class BatchOperationLifecycleManagementExportHandler
   @Override
   public boolean canExport(final Record<BatchOperationLifecycleManagementRecordValue> record) {
     return record.getValueType() == ValueType.BATCH_OPERATION_LIFECYCLE_MANAGEMENT
-        && EXPORTABLE_INTENTS.contains(record.getIntent());
+        && EXPORTABLE_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override
   public void export(final Record<BatchOperationLifecycleManagementRecordValue> record) {
     final var value = record.getValue();
     final var batchOperationId = String.valueOf(value.getBatchOperationKey());
-    if (record.getIntent().equals(BatchOperationIntent.CANCELED)) {
+    if (record.getIntentToWrite().equals(BatchOperationIntent.CANCELED)) {
       batchOperationWriter.cancel(
           batchOperationId, DateUtil.toOffsetDateTime(record.getTimestamp()));
-    } else if (record.getIntent().equals(BatchOperationIntent.SUSPENDED)) {
+    } else if (record.getIntentToWrite().equals(BatchOperationIntent.SUSPENDED)) {
       batchOperationWriter.suspend(batchOperationId);
-    } else if (record.getIntent().equals(BatchOperationIntent.COMPLETED)) {
+    } else if (record.getIntentToWrite().equals(BatchOperationIntent.COMPLETED)) {
       batchOperationWriter.finish(
           batchOperationId, DateUtil.toOffsetDateTime(record.getTimestamp()));
-    } else if (record.getIntent().equals(BatchOperationIntent.RESUMED)) {
+    } else if (record.getIntentToWrite().equals(BatchOperationIntent.RESUMED)) {
       batchOperationWriter.resume(batchOperationId);
     }
   }

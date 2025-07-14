@@ -67,7 +67,7 @@ public class JobHandler implements ExportHandler<JobEntity, JobRecordValue> {
 
   @Override
   public boolean handlesRecord(final Record<JobRecordValue> record) {
-    final JobIntent intent = (JobIntent) record.getIntent();
+    final JobIntent intent = (JobIntent) record.getIntentToWrite();
     return JOB_EVENTS.contains(intent);
   }
 
@@ -95,7 +95,7 @@ public class JobHandler implements ExportHandler<JobEntity, JobRecordValue> {
         .setTenantId(recordValue.getTenantId())
         .setType(recordValue.getType())
         .setWorker(recordValue.getWorker())
-        .setState(record.getIntent().name())
+        .setState(record.getIntentToWrite().name())
         .setRetries(recordValue.getRetries())
         .setErrorMessage(recordValue.getErrorMessage())
         .setErrorCode(recordValue.getErrorCode())
@@ -104,7 +104,7 @@ public class JobHandler implements ExportHandler<JobEntity, JobRecordValue> {
         .setJobKind(recordValue.getJobKind().name())
         .setFlowNodeId(recordValue.getElementId());
 
-    if (record.getIntent() == JobIntent.COMPLETED) {
+    if (record.getIntentToWrite() == JobIntent.COMPLETED) {
       entity
           .setDenied(recordValue.getResult().isDenied())
           .setDeniedReason(recordValue.getResult().getDeniedReason());
@@ -118,7 +118,7 @@ public class JobHandler implements ExportHandler<JobEntity, JobRecordValue> {
       entity.setDeadline(DateUtil.toOffsetDateTime(Instant.ofEpochMilli(jobDeadline)));
     }
 
-    if (FAILED_JOB_EVENTS.contains(record.getIntent())) {
+    if (FAILED_JOB_EVENTS.contains(record.getIntentToWrite())) {
       // set flowNodeId to null to not overwrite it (because zeebe puts an error message there)
       entity.setFlowNodeId(null);
       if (recordValue.getRetries() > 0) {

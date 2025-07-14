@@ -42,7 +42,7 @@ public class EventFromProcessInstanceHandler
 
   @Override
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
-    return PROCESS_INSTANCE_STATES.contains(record.getIntent());
+    return PROCESS_INSTANCE_STATES.contains(record.getIntentToWrite());
   }
 
   @Override

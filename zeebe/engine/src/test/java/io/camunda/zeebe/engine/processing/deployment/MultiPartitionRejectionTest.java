@@ -76,7 +76,7 @@ public class MultiPartitionRejectionTest {
             RecordingExporter.records()
                 .limit(r -> r.getRecordType() == RecordType.COMMAND_REJECTION)
                 .collect(Collectors.toList()))
-        .extracting(Record::getIntent, Record::getRecordType)
+        .extracting(Record::getIntentToWrite, Record::getRecordType)
         .doesNotContain(
             tuple(ProcessIntent.CREATED, RecordType.EVENT),
             tuple(DeploymentIntent.CREATED, RecordType.EVENT));

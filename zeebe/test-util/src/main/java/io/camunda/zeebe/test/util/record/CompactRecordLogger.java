@@ -206,7 +206,7 @@ public class CompactRecordLogger {
 
     intentChars =
         this.records.stream()
-            .map(Record::getIntent)
+            .map(Record::getIntentToWrite)
             .map(Intent::name)
             .map(this::abbreviate)
             .mapToInt(String::length)
@@ -342,7 +342,7 @@ public class CompactRecordLogger {
         .append(" ")
         .append(rightPad(abbreviate(valueType.name()), valueTypeChars))
         .append(" ")
-        .append(rightPad(abbreviate(record.getIntent().name()), intentChars))
+        .append(rightPad(abbreviate(record.getIntentToWrite().name()), intentChars))
         .append(BLOCK_SEPARATOR);
   }
 
@@ -421,7 +421,7 @@ public class CompactRecordLogger {
 
     final var result = new StringBuilder();
 
-    if (record.getIntent() != IncidentIntent.RESOLVE) {
+    if (record.getIntentToWrite() != IncidentIntent.RESOLVE) {
       result.append(value.getErrorType()).append(" ").append(value.getErrorMessage()).append(", ");
 
       if (value.getJobKey() != -1) {
@@ -959,7 +959,7 @@ public class CompactRecordLogger {
             .append(value.getIntent())
             .append(" ");
 
-    final var intent = (CommandDistributionIntent) record.getIntent();
+    final var intent = (CommandDistributionIntent) record.getIntentToWrite();
     final var targetPartitionWord =
         switch (intent) {
           case STARTED, FINISH, FINISHED, CONTINUATION_REQUESTED, CONTINUE, CONTINUED -> "on";
@@ -996,7 +996,7 @@ public class CompactRecordLogger {
     final var value = (ClockRecordValue) record.getValue();
 
     final var clockValue =
-        switch (record.getIntent()) {
+        switch (record.getIntentToWrite()) {
           case ClockIntent.PIN, ClockIntent.PINNED -> formatPinnedTime(value.getTime());
           case ClockIntent.RESET, ClockIntent.RESETTED -> "system time";
           default -> value.getTime();

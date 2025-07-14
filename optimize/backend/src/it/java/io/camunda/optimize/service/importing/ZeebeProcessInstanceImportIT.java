@@ -930,15 +930,15 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
       final List<ZeebeProcessInstanceRecordDto> eventsForElement) {
     final ZeebeProcessInstanceRecordDto startOfElement =
         eventsForElement.stream()
-            .filter(event -> event.getIntent().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING))
+            .filter(event -> event.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING))
             .findFirst()
             .orElseThrow(eventNotFoundExceptionSupplier);
     final ZeebeProcessInstanceRecordDto endOfElement =
         eventsForElement.stream()
             .filter(
                 event ->
-                    event.getIntent().equals(ProcessInstanceIntent.ELEMENT_COMPLETED)
-                        || event.getIntent().equals(ProcessInstanceIntent.ELEMENT_TERMINATED))
+                    event.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_COMPLETED)
+                        || event.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_TERMINATED))
             .findFirst()
             .orElseThrow(eventNotFoundExceptionSupplier);
     return endOfElement.getTimestamp() - startOfElement.getTimestamp();
@@ -948,7 +948,7 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
       final List<ZeebeProcessInstanceRecordDto> eventsForElement) {
     final ZeebeProcessInstanceRecordDto startOfElement =
         eventsForElement.stream()
-            .filter(event -> event.getIntent().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING))
+            .filter(event -> event.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_ACTIVATING))
             .findFirst()
             .orElseThrow(eventNotFoundExceptionSupplier);
     return OffsetDateTime.ofInstant(
@@ -961,8 +961,8 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
         eventsForElement.stream()
             .filter(
                 event ->
-                    event.getIntent().equals(ProcessInstanceIntent.ELEMENT_COMPLETED)
-                        || event.getIntent().equals(ProcessInstanceIntent.ELEMENT_TERMINATED))
+                    event.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_COMPLETED)
+                        || event.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_TERMINATED))
             .findFirst()
             .orElseThrow(eventNotFoundExceptionSupplier);
     return OffsetDateTime.ofInstant(

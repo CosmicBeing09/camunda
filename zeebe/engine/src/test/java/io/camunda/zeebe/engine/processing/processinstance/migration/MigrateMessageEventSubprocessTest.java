@@ -119,7 +119,7 @@ public class MigrateMessageEventSubprocessTest {
                 .limit(
                     r ->
                         r.getKey() == processInstanceKey
-                            && r.getIntent() == ProcessInstanceMigrationIntent.MIGRATED)
+                            && r.getIntentToWrite() == ProcessInstanceMigrationIntent.MIGRATED)
                 .messageSubscriptionRecords()
                 .withIntent(MessageSubscriptionIntent.CREATED)
                 .withMessageName("msg")

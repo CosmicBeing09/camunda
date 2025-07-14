@@ -41,21 +41,21 @@ public class IncidentExportHandler implements RdbmsExportHandler<IncidentRecordV
   @Override
   public boolean canExport(final Record<IncidentRecordValue> record) {
     return record.getValueType() == ValueType.INCIDENT
-        && INCIDENT_INTENTS.contains(record.getIntent());
+        && INCIDENT_INTENTS.contains(record.getIntentToWrite());
   }
 
   @Override
   public void export(final Record<IncidentRecordValue> record) {
-    if (record.getIntent().equals(IncidentIntent.CREATED)) {
+    if (record.getIntentToWrite().equals(IncidentIntent.CREATED)) {
       incidentWriter.create(map(record));
-    } else if (record.getIntent().equals(IncidentIntent.RESOLVED)) {
+    } else if (record.getIntentToWrite().equals(IncidentIntent.RESOLVED)) {
       incidentWriter.resolve(record.getKey());
-    } else if (record.getIntent().equals(IncidentIntent.MIGRATED)) {
+    } else if (record.getIntentToWrite().equals(IncidentIntent.MIGRATED)) {
       incidentWriter.update(map(record));
     } else {
       LOGGER.warn(
           "Unexpected incident intent {} for record {}/{}",
-          record.getIntent(),
+          record.getIntentToWrite(),
           record.getPartitionId(),
           record.getPosition());
     }

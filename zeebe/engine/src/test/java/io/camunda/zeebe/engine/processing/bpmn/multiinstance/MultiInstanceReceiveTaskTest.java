@@ -133,7 +133,7 @@ public final class MultiInstanceReceiveTaskTest {
             RecordingExporter.processInstanceRecords()
                 .filterRootScope()
                 .limitToProcessInstanceCompleted())
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .contains(ProcessInstanceIntent.ELEMENT_COMPLETED);
   }
 

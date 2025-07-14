@@ -24,19 +24,19 @@ public class VariableExportHandler implements RdbmsExportHandler<VariableRecordV
 
   @Override
   public boolean canExport(final Record<VariableRecordValue> record) {
-    return record.getIntent() == VariableIntent.CREATED
-        || record.getIntent() == VariableIntent.UPDATED
-        || record.getIntent() == VariableIntent.MIGRATED;
+    return record.getIntentToWrite() == VariableIntent.CREATED
+        || record.getIntentToWrite() == VariableIntent.UPDATED
+        || record.getIntentToWrite() == VariableIntent.MIGRATED;
   }
 
   @Override
   public void export(final Record<VariableRecordValue> record) {
     final VariableRecordValue value = record.getValue();
-    if (record.getIntent() == VariableIntent.CREATED) {
+    if (record.getIntentToWrite() == VariableIntent.CREATED) {
       variableWriter.create(map(record.getKey(), record));
-    } else if (record.getIntent() == VariableIntent.UPDATED) {
+    } else if (record.getIntentToWrite() == VariableIntent.UPDATED) {
       variableWriter.update(map(record.getKey(), record));
-    } else if (record.getIntent() == VariableIntent.MIGRATED) {
+    } else if (record.getIntentToWrite() == VariableIntent.MIGRATED) {
       variableWriter.migrateToProcess(record.getKey(), value.getBpmnProcessId());
     }
   }

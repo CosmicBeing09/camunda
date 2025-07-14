@@ -64,7 +64,7 @@ public class ProcessZeebeRecordProcessorOpenSearch {
   public void processDeploymentRecord(
       final Record<DeployedProcessImpl> record, final List<BulkOperation> operations)
       throws PersistenceException {
-    final String intentStr = record.getIntent().name();
+    final String intentStr = record.getIntentToWrite().name();
     final String processDefinitionKey = String.valueOf(record.getValue().getProcessDefinitionKey());
 
     if (STATES_TO_PERSIST.contains(intentStr)) {

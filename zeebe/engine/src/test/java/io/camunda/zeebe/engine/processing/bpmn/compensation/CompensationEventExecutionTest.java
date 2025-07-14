@@ -82,7 +82,7 @@ public class CompensationEventExecutionTest {
                 .limitToProcessInstanceCompleted())
         .extracting(
             r -> r.getValue().getBpmnElementType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getBpmnEventType())
         .containsSubsequence(
             tuple(
@@ -133,7 +133,7 @@ public class CompensationEventExecutionTest {
                 .limitToProcessInstanceCompleted())
         .extracting(
             r -> r.getValue().getBpmnElementType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getBpmnEventType())
         .containsSubsequence(
             tuple(
@@ -233,7 +233,7 @@ public class CompensationEventExecutionTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(3))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getThrowEventId(),
             r -> r.getValue().getThrowEventInstanceKey(),
             r -> r.getValue().getCompensationHandlerInstanceKey())
@@ -298,7 +298,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(
@@ -392,7 +392,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(
@@ -490,7 +490,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(
@@ -523,7 +523,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(6))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler2"));
@@ -572,7 +572,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(
@@ -629,7 +629,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent,
+            Record::getIntentToWrite,
             r -> r.getValue().getElementId())
         .containsSubsequence(
             tuple(
@@ -657,7 +657,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(3))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.DELETED, "CompensationHandler"));
@@ -682,7 +682,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(2))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .contains(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.DELETED));
   }
@@ -708,7 +708,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(2))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .contains(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.DELETED));
   }
@@ -747,7 +747,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(8))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .contains(
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler2"));
@@ -777,7 +777,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(4))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensableActivityId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensableActivityId())
         .contains(
             tuple(CompensationSubscriptionIntent.DELETED, "embedded-subprocess"),
             tuple(CompensationSubscriptionIntent.DELETED, "ActivityToCompensate"));
@@ -813,7 +813,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(5))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler2"),
             tuple(CompensationSubscriptionIntent.DELETED, "CompensationHandler"));
@@ -850,7 +850,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.SERVICE_TASK,
@@ -884,7 +884,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(20))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
@@ -897,7 +897,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -942,7 +942,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(8))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler"));
@@ -951,7 +951,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -982,7 +982,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
 
@@ -990,7 +990,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(6))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.TRIGGERED, ""),
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler"));
@@ -1035,7 +1035,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(9))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler2"),
@@ -1045,7 +1045,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -1074,7 +1074,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(6))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.CREATED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.DELETED, "CompensationHandler"));
@@ -1083,7 +1083,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -1141,7 +1141,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -1214,7 +1214,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("B", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("B", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1278,7 +1278,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("Undo-A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1336,7 +1336,7 @@ public class CompensationEventExecutionTest {
     ENGINE.job().ofInstance(processInstanceKey).withType("Undo-A").complete();
 
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -1393,7 +1393,7 @@ public class CompensationEventExecutionTest {
 
     // then
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.TRIGGERED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_COMPLETING),
@@ -1493,7 +1493,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(3))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.COMPLETED, "CompensationHandler"));
@@ -1502,7 +1502,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -1532,7 +1532,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(3))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.CREATED, "CompensationHandler"),
             tuple(CompensationSubscriptionIntent.TRIGGERED, "CompensationHandler"),
@@ -1542,7 +1542,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -1573,7 +1573,7 @@ public class CompensationEventExecutionTest {
     jobKeys.stream().skip(1).forEach(key -> ENGINE.job().withKey(key).complete());
 
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.CREATED),
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.DELETED),
@@ -1628,7 +1628,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("B", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1685,7 +1685,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("B", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1737,7 +1737,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1786,7 +1786,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("compensation-throw-event-2", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -1834,7 +1834,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -1894,7 +1894,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("subprocess", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -1957,7 +1957,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("subprocess", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -2013,7 +2013,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("subprocess", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -2066,7 +2066,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -2119,7 +2119,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.END_EVENT,
@@ -2189,7 +2189,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.SUB_PROCESS,
@@ -2252,7 +2252,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("subprocess", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -2302,7 +2302,7 @@ public class CompensationEventExecutionTest {
             r -> r.getValue().getBpmnProcessId(),
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 PROCESS_ID,
@@ -2378,7 +2378,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.CALL_ACTIVITY,
@@ -2456,7 +2456,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -2515,7 +2515,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnProcessId(),
             r -> r.getValue().getElementId(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(CHILD_PROCESS_ID, "B", ProcessInstanceIntent.ELEMENT_COMPLETED),
             tuple(PROCESS_ID, "A", ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -2565,7 +2565,7 @@ public class CompensationEventExecutionTest {
             r -> r.getValue().getElementId(),
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 "compensation-throw-event",
@@ -2650,7 +2650,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.END_EVENT,
@@ -2703,7 +2703,7 @@ public class CompensationEventExecutionTest {
 
     // then
     assertThat(RecordingExporter.records().limitToProcessInstance(processInstanceKey))
-        .extracting(Record::getValueType, Record::getIntent)
+        .extracting(Record::getValueType, Record::getIntentToWrite)
         .containsSubsequence(
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.CREATED),
             tuple(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionIntent.DELETED),
@@ -2733,7 +2733,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(7))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.CREATED, "undoA"),
             tuple(CompensationSubscriptionIntent.CREATED, "undoB"),
@@ -2747,7 +2747,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -2769,7 +2769,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.compensationSubscriptionRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(6))
-        .extracting(Record::getIntent, r -> r.getValue().getCompensationHandlerId())
+        .extracting(Record::getIntentToWrite, r -> r.getValue().getCompensationHandlerId())
         .containsSubsequence(
             tuple(CompensationSubscriptionIntent.CREATED, "undoA"),
             tuple(CompensationSubscriptionIntent.TRIGGERED, "undoA"),
@@ -2782,7 +2782,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_COMPLETED));
   }
@@ -2828,7 +2828,7 @@ public class CompensationEventExecutionTest {
         .extracting(
             r -> r.getValue().getBpmnElementType(),
             r -> r.getValue().getBpmnEventType(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .containsSubsequence(
             tuple(
                 BpmnElementType.EVENT_SUB_PROCESS,
@@ -2919,7 +2919,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -2983,7 +2983,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -3061,7 +3061,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -3126,7 +3126,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -3204,7 +3204,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -3271,7 +3271,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("compensation-throw-event", ProcessInstanceIntent.ELEMENT_ACTIVATED),
@@ -3324,7 +3324,7 @@ public class CompensationEventExecutionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+        .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple("A", ProcessInstanceIntent.ELEMENT_ACTIVATED),
             tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),

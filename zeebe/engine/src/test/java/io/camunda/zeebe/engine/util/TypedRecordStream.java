@@ -39,6 +39,6 @@ public final class TypedRecordStream<T extends UnifiedRecordValue>
   }
 
   public TypedRecordStream<T> withIntent(final Intent intent) {
-    return new TypedRecordStream<>(filter(r -> r.getIntent() == intent));
+    return new TypedRecordStream<>(filter(r -> r.getIntentToWrite() == intent));
   }
 }

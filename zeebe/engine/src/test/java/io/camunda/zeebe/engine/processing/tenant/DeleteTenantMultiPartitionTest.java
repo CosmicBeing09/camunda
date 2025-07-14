@@ -44,7 +44,7 @@ public class DeleteTenantMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.TENANT
@@ -52,7 +52,7 @@ public class DeleteTenantMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == TenantIntent.DELETE)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 r.getValue() instanceof CommandDistributionRecordValue
@@ -76,9 +76,9 @@ public class DeleteTenantMultiPartitionTest {
       assertThat(
               RecordingExporter.tenantRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(TenantIntent.DELETED))
+                  .limit(record -> record.getIntentToWrite().equals(TenantIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(TenantIntent.DELETE, TenantIntent.DELETED);
     }
   }
@@ -98,7 +98,7 @@ public class DeleteTenantMultiPartitionTest {
     engine.tenant().deleteTenant(tenantId).delete().getValue();
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

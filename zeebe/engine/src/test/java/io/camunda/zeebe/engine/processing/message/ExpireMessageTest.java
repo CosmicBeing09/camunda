@@ -231,8 +231,8 @@ public final class ExpireMessageTest {
         RecordingExporter.records()
             // Speed up assertion. Otherwise, it waits 5 seconds for more EXPIRED records.
             .between(
-                r -> r.getIntent() == MessageBatchIntent.EXPIRE,
-                r -> r.getIntent() == SignalIntent.BROADCASTED)
+                r -> r.getIntentToWrite() == MessageBatchIntent.EXPIRE,
+                r -> r.getIntentToWrite() == SignalIntent.BROADCASTED)
             .withIntent(MessageIntent.EXPIRED)
             .withSourceRecordPosition(
                 expireBatchMessageCommand.getPosition()) // only filter by the batch

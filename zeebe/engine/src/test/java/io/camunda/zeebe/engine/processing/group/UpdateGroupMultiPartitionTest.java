@@ -48,7 +48,7 @@ public class UpdateGroupMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.GROUP
@@ -56,7 +56,7 @@ public class UpdateGroupMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == GroupIntent.UPDATE)))
         .extracting(
-            io.camunda.zeebe.protocol.record.Record::getIntent,
+            io.camunda.zeebe.protocol.record.Record::getIntentToWrite,
             io.camunda.zeebe.protocol.record.Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -83,9 +83,9 @@ public class UpdateGroupMultiPartitionTest {
       assertThat(
               RecordingExporter.groupRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(GroupIntent.UPDATED))
+                  .limit(record -> record.getIntentToWrite().equals(GroupIntent.UPDATED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(GroupIntent.UPDATE, GroupIntent.UPDATED);
     }
   }
@@ -101,7 +101,7 @@ public class UpdateGroupMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

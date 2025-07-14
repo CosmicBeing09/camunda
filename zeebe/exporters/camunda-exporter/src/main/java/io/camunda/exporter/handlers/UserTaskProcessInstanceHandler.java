@@ -40,7 +40,7 @@ public class UserTaskProcessInstanceHandler
 
   @Override
   public boolean handlesRecord(final Record<ProcessInstanceRecordValue> record) {
-    return record.getIntent().equals(ELEMENT_ACTIVATING)
+    return record.getIntentToWrite().equals(ELEMENT_ACTIVATING)
         && record.getValue().getBpmnElementType() != null
         && record.getValue().getBpmnElementType().equals(BpmnElementType.PROCESS);
   }

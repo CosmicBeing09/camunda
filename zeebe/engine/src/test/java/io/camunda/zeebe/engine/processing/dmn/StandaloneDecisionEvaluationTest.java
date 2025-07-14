@@ -56,7 +56,7 @@ public class StandaloneDecisionEvaluationTest {
             .evaluate();
 
     // then
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
     assertThat(record.getValue())
         .hasDecisionOutput(EXPECTED_DECISION_OUTPUT)
         .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -72,7 +72,7 @@ public class StandaloneDecisionEvaluationTest {
         ENGINE.decision().ofDecisionId(DECISION_ID).expectFailure().evaluate();
 
     // then
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.FAILED);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.FAILED);
     assertThat(record.getValue())
         .hasFailedDecisionId(DECISION_ID)
         .hasEvaluationFailureMessage(EXPECTED_FAILURE_MSG)
@@ -101,7 +101,7 @@ public class StandaloneDecisionEvaluationTest {
             .findFirst()
             .get()
             .getVersion();
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
     assertThat(record.getValue())
         .hasDecisionOutput(EXPECTED_DECISION_OUTPUT)
         .hasDecisionVersion(deployedVersion)
@@ -129,7 +129,7 @@ public class StandaloneDecisionEvaluationTest {
             .evaluate();
 
     // then
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
     assertThat(record.getValue())
         .hasDecisionOutput(EXPECTED_DECISION_OUTPUT)
         .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -143,7 +143,7 @@ public class StandaloneDecisionEvaluationTest {
 
     // then
     assertThat(record.getRejectionType()).isEqualTo(RejectionType.INVALID_ARGUMENT);
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
     assertThat(record.getRejectionReason())
         .isEqualTo("Expected either a decision id or a valid decision key, but none provided");
     assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -160,7 +160,7 @@ public class StandaloneDecisionEvaluationTest {
 
     // then
     assertThat(record.getRejectionType()).isEqualTo(RejectionType.NOT_FOUND);
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
     assertThat(record.getRejectionReason())
         .isEqualTo(
             "Expected to evaluate decision '"
@@ -182,7 +182,7 @@ public class StandaloneDecisionEvaluationTest {
 
     // then
     assertThat(record.getRejectionType()).isEqualTo(RejectionType.NOT_FOUND);
-    assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
+    assertThat(record.getIntentToWrite()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
     assertThat(record.getRejectionReason())
         .isEqualTo(
             "Expected to evaluate decision '"

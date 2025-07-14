@@ -357,7 +357,7 @@ public final class ProcessInstanceVariableTest {
         .extracting(
             record ->
                 tuple(
-                    record.getIntent(),
+                    record.getIntentToWrite(),
                     record.getValue().getProcessDefinitionKey(),
                     record.getValue().getName(),
                     record.getValue().getValue()))

@@ -101,7 +101,7 @@ public final class SignalSubscriptionTest {
             .asList();
 
     final List<Intent> intents =
-        subscriptions.stream().map(Record::getIntent).collect(Collectors.toList());
+        subscriptions.stream().map(Record::getIntentToWrite).collect(Collectors.toList());
 
     assertThat(intents)
         .containsExactly(

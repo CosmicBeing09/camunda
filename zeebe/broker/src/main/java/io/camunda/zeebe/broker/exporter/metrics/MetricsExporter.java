@@ -115,7 +115,7 @@ public class MetricsExporter implements Exporter {
   }
 
   private void handleProcessInstanceRecord(final Record<?> record, final long recordKey) {
-    final var currentIntent = record.getIntent();
+    final var currentIntent = record.getIntentToWrite();
 
     if (currentIntent == ProcessInstanceIntent.ELEMENT_ACTIVATING
         && isProcessInstanceRecord(record)) {
@@ -130,7 +130,7 @@ public class MetricsExporter implements Exporter {
   }
 
   private void handleJobRecord(final Record<?> record, final long recordKey) {
-    final var currentIntent = record.getIntent();
+    final var currentIntent = record.getIntentToWrite();
 
     if (currentIntent == JobIntent.CREATED) {
       jobCache.store(recordKey, record.getTimestamp());
@@ -142,7 +142,7 @@ public class MetricsExporter implements Exporter {
   }
 
   private void handleJobBatchRecord(final Record<?> record) {
-    final var currentIntent = record.getIntent();
+    final var currentIntent = record.getIntentToWrite();
 
     if (currentIntent == JobBatchIntent.ACTIVATED) {
       final var value = (JobBatchRecordValue) record.getValue();

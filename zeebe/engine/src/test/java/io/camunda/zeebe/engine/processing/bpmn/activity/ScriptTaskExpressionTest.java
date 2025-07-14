@@ -79,7 +79,7 @@ public final class ScriptTaskExpressionTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.SCRIPT_TASK)
                 .limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsSequence(
             tuple(RecordType.COMMAND, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(RecordType.EVENT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
@@ -159,7 +159,7 @@ public final class ScriptTaskExpressionTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.SCRIPT_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.SCRIPT_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -193,7 +193,7 @@ public final class ScriptTaskExpressionTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withTenantId(tenantId)
                 .limitToProcessInstanceCompleted())
-        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+        .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
         .containsSubsequence(
             tuple(BpmnElementType.SCRIPT_TASK, ProcessInstanceIntent.ELEMENT_COMPLETING),
             tuple(BpmnElementType.SCRIPT_TASK, ProcessInstanceIntent.ELEMENT_COMPLETED),

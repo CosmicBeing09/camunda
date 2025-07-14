@@ -308,7 +308,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
         new CommandDistributionRecord()
             .setPartitionId(currentPartitionId)
             .setValueType(command.getValueType())
-            .setIntent(command.getIntent());
+            .setIntent(command.getIntentToWrite());
 
     final int receiverPartitionId = Protocol.decodePartitionId(distributionKey);
     sideEffectWriter.appendSideEffect(
@@ -518,7 +518,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
     @Override
     public <T extends UnifiedRecordValue> void distribute(final TypedRecord<T> command) {
       distributeCommand(
-          queue, key, command.getValueType(), command.getIntent(), command.getValue(), partitions);
+          queue, key, command.getValueType(), command.getIntentToWrite(), command.getValue(), partitions);
     }
 
     @Override
@@ -536,7 +536,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
     @Override
     public <T extends UnifiedRecordValue> void continueWith(final TypedRecord<T> command) {
       requestContinuation(
-          queue, key, command.getValueType(), command.getIntent(), command.getValue());
+          queue, key, command.getValueType(), command.getIntentToWrite(), command.getValue());
     }
 
     @Override

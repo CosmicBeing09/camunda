@@ -411,7 +411,7 @@ public final class TestStreams {
     }
 
     public FluentLogWriter record(final CopiedRecord record) {
-      intent(record.getIntent());
+      intent(record.getIntentToWrite());
       key(record.getKey());
       sourceRecordPosition(record.getSourceRecordPosition());
       recordType(record.getRecordType());

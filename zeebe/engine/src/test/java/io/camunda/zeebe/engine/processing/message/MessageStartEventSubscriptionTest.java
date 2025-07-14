@@ -90,7 +90,7 @@ public final class MessageStartEventSubscriptionTest {
         RecordingExporter.messageStartEventSubscriptionRecords().limit(3).asList();
 
     final List<Intent> intents =
-        subscriptions.stream().map(Record::getIntent).collect(Collectors.toList());
+        subscriptions.stream().map(Record::getIntentToWrite).collect(Collectors.toList());
 
     assertThat(intents)
         .containsExactly(
@@ -136,7 +136,7 @@ public final class MessageStartEventSubscriptionTest {
 
     // then
     assertThat(RecordingExporter.messageStartEventSubscriptionRecords().limit(3))
-        .extracting(Record::getRecordType, Record::getIntent)
+        .extracting(Record::getRecordType, Record::getIntentToWrite)
         .containsExactly(
             tuple(RecordType.EVENT, MessageStartEventSubscriptionIntent.CREATED),
             tuple(RecordType.EVENT, MessageStartEventSubscriptionIntent.CORRELATED),
@@ -161,7 +161,7 @@ public final class MessageStartEventSubscriptionTest {
 
     // then
     assertThat(RecordingExporter.messageStartEventSubscriptionRecords().limit(3))
-        .extracting(Record::getIntent, Record::getKey)
+        .extracting(Record::getIntentToWrite, Record::getKey)
         .containsExactly(
             tuple(MessageStartEventSubscriptionIntent.CREATED, subscriptionKey),
             tuple(MessageStartEventSubscriptionIntent.CORRELATED, subscriptionKey),

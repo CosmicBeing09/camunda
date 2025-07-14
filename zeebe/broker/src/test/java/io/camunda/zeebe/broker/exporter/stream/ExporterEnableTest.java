@@ -160,7 +160,7 @@ public class ExporterEnableTest {
                 assertThat(exporters.get(EXPORTER_ID_2).getExportedRecords())
                     .hasSize(1)
                     .first()
-                    .extracting(Record::getIntent)
+                    .extracting(Record::getIntentToWrite)
                     .isEqualTo(JobIntent.CREATED));
     assertThat(exporters.get(EXPORTER_ID_2).metadata())
         .describedAs("Exporter 2 restarts with the metadata of exporter 1")
@@ -219,7 +219,7 @@ public class ExporterEnableTest {
                 assertThat(exporters.get(EXPORTER_ID_2).getExportedRecords())
                     .hasSize(1)
                     .first()
-                    .extracting(Record::getIntent)
+                    .extracting(Record::getIntentToWrite)
                     .isEqualTo(JobIntent.COMPLETED));
   }
 

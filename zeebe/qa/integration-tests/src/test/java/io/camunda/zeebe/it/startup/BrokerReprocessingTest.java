@@ -700,7 +700,7 @@ public final class BrokerReprocessingTest {
               // not using RecordingExporter.jobRecords cause it is blocking
               return RecordingExporter.getRecords().stream()
                   .filter(r -> r.getValueType() == ValueType.JOB)
-                  .anyMatch(r -> r.getIntent() == JobIntent.TIMED_OUT);
+                  .anyMatch(r -> r.getIntentToWrite() == JobIntent.TIMED_OUT);
             });
   }
 }

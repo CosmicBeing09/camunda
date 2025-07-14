@@ -38,7 +38,7 @@ public class RoleMemberRemovedHandler implements ExportHandler<RoleMemberEntity,
   @Override
   public boolean handlesRecord(final Record<RoleRecordValue> record) {
     return getHandledValueType() == record.getValueType()
-        && record.getIntent() == RoleIntent.ENTITY_REMOVED;
+        && record.getIntentToWrite() == RoleIntent.ENTITY_REMOVED;
   }
 
   @Override

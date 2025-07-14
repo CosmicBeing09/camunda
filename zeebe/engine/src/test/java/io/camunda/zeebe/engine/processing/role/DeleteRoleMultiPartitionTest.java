@@ -48,7 +48,7 @@ public class DeleteRoleMultiPartitionTest {
             RecordingExporter.records()
                 .withPartitionId(1)
                 .limitByCount(
-                    record -> record.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                    record -> record.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .filter(
                     record ->
                         record.getValueType() == ValueType.ROLE
@@ -56,7 +56,7 @@ public class DeleteRoleMultiPartitionTest {
                                 && ((CommandDistributionRecordValue) record.getValue()).getIntent()
                                     == RoleIntent.DELETE)))
         .extracting(
-            Record::getIntent,
+            Record::getIntentToWrite,
             Record::getRecordType,
             r ->
                 // We want to verify the partition id where the creation was distributing to and
@@ -83,9 +83,9 @@ public class DeleteRoleMultiPartitionTest {
       assertThat(
               RecordingExporter.roleRecords()
                   .withPartitionId(partitionId)
-                  .limit(record -> record.getIntent().equals(RoleIntent.DELETED))
+                  .limit(record -> record.getIntentToWrite().equals(RoleIntent.DELETED))
                   .collect(Collectors.toList()))
-          .extracting(Record::getIntent)
+          .extracting(Record::getIntentToWrite)
           .containsSubsequence(RoleIntent.DELETE, RoleIntent.DELETED);
     }
   }
@@ -101,7 +101,7 @@ public class DeleteRoleMultiPartitionTest {
     // then
     assertThat(
             RecordingExporter.commandDistributionRecords()
-                .limitByCount(r -> r.getIntent().equals(CommandDistributionIntent.FINISHED), 2)
+                .limitByCount(r -> r.getIntentToWrite().equals(CommandDistributionIntent.FINISHED), 2)
                 .withIntent(CommandDistributionIntent.ENQUEUED))
         .extracting(r -> r.getValue().getQueueId())
         .containsOnly(DistributionQueue.IDENTITY.getQueueId());

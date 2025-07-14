@@ -62,8 +62,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands()
-                .limit(r -> r.getIntent() == BatchOperationExecutionIntent.EXECUTE))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationExecutionIntent.EXECUTE))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationExecutionIntent.EXECUTE);
 
     // and we have a modify command
@@ -72,7 +72,7 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             .withRecordType(RecordType.COMMAND)
             .withRecordKey(processInstanceKey)
             .getFirst();
-    assertThat(modificationCommand.getIntent()).isEqualTo(ProcessInstanceModificationIntent.MODIFY);
+    assertThat(modificationCommand.getIntentToWrite()).isEqualTo(ProcessInstanceModificationIntent.MODIFY);
     assertThat(modificationCommand.getAuthorizations()).isEqualTo(claims);
   }
 
@@ -115,8 +115,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.COMPLETED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.COMPLETED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.COMPLETED);
 
     // and a follow op up command to execute again
@@ -124,8 +124,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands()
-                .limit(r -> r.getIntent() == BatchOperationExecutionIntent.EXECUTE))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationExecutionIntent.EXECUTE))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationExecutionIntent.EXECUTE);
 
     // and we have a modified event
@@ -133,8 +133,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.processInstanceModificationRecords()
                 .withRecordKey(processInstanceKey)
                 .onlyCommandRejections()
-                .limit(r -> r.getIntent() == ProcessInstanceModificationIntent.MODIFY))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == ProcessInstanceModificationIntent.MODIFY))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(ProcessInstanceModificationIntent.MODIFY);
   }
 
@@ -152,8 +152,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.batchOperationLifecycleRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyEvents()
-                .limit(r -> r.getIntent() == BatchOperationIntent.COMPLETED))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationIntent.COMPLETED))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationIntent.COMPLETED);
 
     // and a follow op up command to execute again
@@ -161,8 +161,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.batchOperationExecutionRecords()
                 .withBatchOperationKey(batchOperationKey)
                 .onlyCommands()
-                .limit(r -> r.getIntent() == BatchOperationExecutionIntent.EXECUTE))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == BatchOperationExecutionIntent.EXECUTE))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(BatchOperationExecutionIntent.EXECUTE);
 
     // and we have a modified event
@@ -170,8 +170,8 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
             RecordingExporter.processInstanceModificationRecords()
                 .withRecordKey(42L)
                 .onlyCommandRejections()
-                .limit(r -> r.getIntent() == ProcessInstanceModificationIntent.MODIFY))
-        .extracting(Record::getIntent)
+                .limit(r -> r.getIntentToWrite() == ProcessInstanceModificationIntent.MODIFY))
+        .extracting(Record::getIntentToWrite)
         .containsSequence(ProcessInstanceModificationIntent.MODIFY);
   }
 }

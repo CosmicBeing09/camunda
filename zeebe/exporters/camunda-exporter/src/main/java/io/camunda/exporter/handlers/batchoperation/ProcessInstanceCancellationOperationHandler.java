@@ -31,12 +31,12 @@ public class ProcessInstanceCancellationOperationHandler
   boolean isCompleted(final Record<ProcessInstanceRecordValue> record) {
     return record.getValueType() == ValueType.PROCESS_INSTANCE
         && record.getValue().getBpmnElementType() == BpmnElementType.PROCESS
-        && record.getIntent().equals(ProcessInstanceIntent.ELEMENT_TERMINATED);
+        && record.getIntentToWrite().equals(ProcessInstanceIntent.ELEMENT_TERMINATED);
   }
 
   @Override
   boolean isFailed(final Record<ProcessInstanceRecordValue> record) {
-    return record.getIntent().equals(ProcessInstanceIntent.CANCEL)
+    return record.getIntentToWrite().equals(ProcessInstanceIntent.CANCEL)
         && record.getRejectionType() != RejectionType.NULL_VAL;
   }
 }

@@ -39,7 +39,7 @@ public class DecisionInstanceExportHandler
   @Override
   public boolean canExport(final Record<DecisionEvaluationRecordValue> record) {
     return record.getValueType() == ValueType.DECISION_EVALUATION
-        && record.getIntent() == DecisionEvaluationIntent.EVALUATED;
+        && record.getIntentToWrite() == DecisionEvaluationIntent.EVALUATED;
   }
 
   @Override
@@ -59,7 +59,7 @@ public class DecisionInstanceExportHandler
       final Record<DecisionEvaluationRecordValue> record,
       final DecisionEvaluationRecordValue decisionEvaluation,
       final int i) {
-    if (record.getIntent().name().equals(DecisionEvaluationIntent.FAILED.name())
+    if (record.getIntentToWrite().name().equals(DecisionEvaluationIntent.FAILED.name())
         && i == decisionEvaluation.getEvaluatedDecisions().size()) {
       return DecisionInstanceState.FAILED;
     } else {

@@ -115,7 +115,7 @@ public class ExecutionListenerEndEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -227,7 +227,7 @@ public class ExecutionListenerEndEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -285,7 +285,7 @@ public class ExecutionListenerEndEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntent)
+          .extracting(r -> r.getValue().getBpmnElementType(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple(BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(BpmnElementType.START_EVENT, ProcessInstanceIntent.ELEMENT_COMPLETED),
@@ -335,7 +335,7 @@ public class ExecutionListenerEndEventElementTest {
           .extracting(
               r -> r.getValue().getElementId(),
               r -> r.getValue().getBpmnElementType(),
-              Record::getIntent)
+              Record::getIntentToWrite)
           .containsSubsequence(
               tuple(PROCESS_ID, BpmnElementType.PROCESS, ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(
@@ -458,7 +458,7 @@ public class ExecutionListenerEndEventElementTest {
               RecordingExporter.processInstanceRecords()
                   .withProcessInstanceKey(processInstanceKey)
                   .limitToProcessInstanceCompleted())
-          .extracting(r -> r.getValue().getElementId(), Record::getIntent)
+          .extracting(r -> r.getValue().getElementId(), Record::getIntentToWrite)
           .containsSubsequence(
               tuple("event-subprocess", ProcessInstanceIntent.ELEMENT_ACTIVATED),
               tuple(endEventElementId, ProcessInstanceIntent.ELEMENT_ACTIVATING),

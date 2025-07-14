@@ -52,7 +52,7 @@ public class UserTaskExportHandler implements RdbmsExportHandler<UserTaskRecordV
 
   @Override
   public boolean canExport(final Record<UserTaskRecordValue> record) {
-    if (record.getIntent() != null && record.getIntent() instanceof final UserTaskIntent intent) {
+    if (record.getIntentToWrite() != null && record.getIntentToWrite() instanceof final UserTaskIntent intent) {
       return EXPORTABLE_INTENTS.contains(intent);
     }
 
@@ -62,7 +62,7 @@ public class UserTaskExportHandler implements RdbmsExportHandler<UserTaskRecordV
   @Override
   public void export(final Record<UserTaskRecordValue> record) {
     final UserTaskRecordValue value = record.getValue();
-    switch (record.getIntent()) {
+    switch (record.getIntentToWrite()) {
       case CREATED -> userTaskWriter.create(map(record, UserTaskState.CREATED, null));
       case CANCELED ->
           userTaskWriter.update(

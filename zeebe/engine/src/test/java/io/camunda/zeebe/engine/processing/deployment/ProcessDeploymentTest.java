@@ -90,11 +90,11 @@ public final class ProcessDeploymentTest {
     // then
     final var deploymentPartitionRecords =
         RecordingExporter.records()
-            .limit(r -> r.getIntent() == DeploymentIntent.CREATED)
+            .limit(r -> r.getIntentToWrite() == DeploymentIntent.CREATED)
             .collect(Collectors.toList());
 
     assertThat(deploymentPartitionRecords)
-        .extracting(Record::getIntent, Record::getRecordType)
+        .extracting(Record::getIntentToWrite, Record::getRecordType)
         .containsExactly(
             tuple(DeploymentIntent.CREATE, RecordType.COMMAND),
             tuple(ProcessIntent.CREATED, RecordType.EVENT),
@@ -110,11 +110,11 @@ public final class ProcessDeploymentTest {
     // then
     final var deploymentRecords =
         RecordingExporter.records()
-            .limit(r -> r.getIntent() == DeploymentIntent.CREATED)
+            .limit(r -> r.getIntentToWrite() == DeploymentIntent.CREATED)
             .collect(Collectors.toList());
 
     assertThat(deploymentRecords)
-        .extracting(Record::getIntent, Record::getRecordType)
+        .extracting(Record::getIntentToWrite, Record::getRecordType)
         .containsExactly(
             tuple(DeploymentIntent.CREATE, RecordType.COMMAND),
             tuple(ProcessIntent.CREATED, RecordType.EVENT),
@@ -124,13 +124,13 @@ public final class ProcessDeploymentTest {
         RecordingExporter.records()
             .skipUntil(
                 r ->
-                    r.getIntent() == DeploymentIntent.CREATE
+                    r.getIntentToWrite() == DeploymentIntent.CREATE
                         && r.getPosition() == duplicatedDeployment.getSourceRecordPosition())
-            .limit(r -> r.getIntent() == DeploymentIntent.CREATED)
+            .limit(r -> r.getIntentToWrite() == DeploymentIntent.CREATED)
             .collect(Collectors.toList());
 
     assertThat(duplicatedDeploymentRecords)
-        .extracting(Record::getIntent, Record::getRecordType)
+        .extracting(Record::getIntentToWrite, Record::getRecordType)
         .containsExactly(
             tuple(DeploymentIntent.CREATE, RecordType.COMMAND),
             tuple(DeploymentIntent.CREATED, RecordType.EVENT));
@@ -216,10 +216,10 @@ public final class ProcessDeploymentTest {
         .contains("process.bpmn", "process2.bpmn");
 
     final var deploymentPartitionRecords =
-        RecordingExporter.records().limit(r -> r.getIntent() == DeploymentIntent.CREATED).toList();
+        RecordingExporter.records().limit(r -> r.getIntentToWrite() == DeploymentIntent.CREATED).toList();
 
     assertThat(deploymentPartitionRecords)
-        .extracting(Record::getIntent, Record::getRecordType)
+        .extracting(Record::getIntentToWrite, Record::getRecordType)
         .containsExactly(
             tuple(DeploymentIntent.CREATE, RecordType.COMMAND),
             tuple(ProcessIntent.CREATED, RecordType.EVENT),
@@ -291,7 +291,7 @@ public final class ProcessDeploymentTest {
         ENGINE.deployment().withXmlResource(process).deploy();
 
     // then
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
   }
 
   @Test
@@ -306,7 +306,7 @@ public final class ProcessDeploymentTest {
         ENGINE.deployment().withXmlResource(process).deploy();
 
     // then
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
   }
 
   @Test
@@ -323,7 +323,7 @@ public final class ProcessDeploymentTest {
         ENGINE.deployment().withXmlResource(process).deploy();
 
     // then
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
   }
 
   @Test
@@ -519,7 +519,7 @@ public final class ProcessDeploymentTest {
         ENGINE.deployment().withXmlResource(modelInstance).deploy();
 
     // then
-    assertThat(deployment.getIntent()).isEqualTo(DeploymentIntent.CREATED);
+    assertThat(deployment.getIntentToWrite()).isEqualTo(DeploymentIntent.CREATED);
   }
 
   @Test

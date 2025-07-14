@@ -57,24 +57,24 @@ public class FlowNodeExportHandler implements RdbmsExportHandler<ProcessInstance
   @Override
   public boolean canExport(final Record<ProcessInstanceRecordValue> record) {
     return record.getValueType() == ValueType.PROCESS_INSTANCE
-        && FLOW_NODE_INTENT.contains(record.getIntent())
+        && FLOW_NODE_INTENT.contains(record.getIntentToWrite())
         && !UNHANDLED_BPMN_TYPES.contains(record.getValue().getBpmnElementType());
   }
 
   @Override
   public void export(final Record<ProcessInstanceRecordValue> record) {
     final var value = record.getValue();
-    if (record.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATING) {
+    if (record.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_ACTIVATING) {
       flowNodeInstanceWriter.create(map(record, value));
-    } else if (record.getIntent() == ProcessInstanceIntent.ELEMENT_MIGRATED
-        || record.getIntent() == ProcessInstanceIntent.ANCESTOR_MIGRATED) {
+    } else if (record.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_MIGRATED
+        || record.getIntentToWrite() == ProcessInstanceIntent.ANCESTOR_MIGRATED) {
       flowNodeInstanceWriter.update(map(record, value));
-    } else if (record.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED) {
+    } else if (record.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_COMPLETED) {
       flowNodeInstanceWriter.finish(
           record.getKey(),
           FlowNodeState.COMPLETED,
           DateUtil.toOffsetDateTime(record.getTimestamp()));
-    } else if (record.getIntent() == ProcessInstanceIntent.ELEMENT_TERMINATED) {
+    } else if (record.getIntentToWrite() == ProcessInstanceIntent.ELEMENT_TERMINATED) {
       flowNodeInstanceWriter.finish(
           record.getKey(),
           FlowNodeState.TERMINATED,

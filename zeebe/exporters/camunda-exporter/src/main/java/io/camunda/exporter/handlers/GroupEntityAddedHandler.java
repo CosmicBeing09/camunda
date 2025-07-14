@@ -38,7 +38,7 @@ public class GroupEntityAddedHandler implements ExportHandler<GroupMemberEntity,
   @Override
   public boolean handlesRecord(final Record<GroupRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && GroupIntent.ENTITY_ADDED.equals(record.getIntent());
+        && GroupIntent.ENTITY_ADDED.equals(record.getIntentToWrite());
   }
 
   @Override

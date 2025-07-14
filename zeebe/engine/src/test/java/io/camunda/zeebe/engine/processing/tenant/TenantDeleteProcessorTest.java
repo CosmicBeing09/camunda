@@ -116,7 +116,7 @@ public class TenantDeleteProcessorTest {
     assertThat(deletedTenant).hasTenantId(tenantId);
     assertThat(tenantRecords).hasSize(2);
     assertThat(tenantRecords)
-        .extracting(Record::getIntent)
+        .extracting(Record::getIntentToWrite)
         .containsExactly(TenantIntent.ENTITY_REMOVED, TenantIntent.DELETED);
   }
 }

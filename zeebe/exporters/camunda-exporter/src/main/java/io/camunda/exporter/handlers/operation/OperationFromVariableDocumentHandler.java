@@ -26,6 +26,6 @@ public class OperationFromVariableDocumentHandler
 
   @Override
   public boolean handlesRecord(final Record<VariableDocumentRecordValue> record) {
-    return VariableDocumentIntent.UPDATED.equals(record.getIntent());
+    return VariableDocumentIntent.UPDATED.equals(record.getIntentToWrite());
   }
 }

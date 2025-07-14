@@ -193,7 +193,7 @@ public final class JobThrowErrorTest {
             r -> r.getValue().getName(),
             r -> r.getValue().getValue(),
             r -> r.getValue().getScopeKey(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("The variables are created at the error catch event.")
         .containsExactly(tuple("foo", "\"bar\"", errorEvent.getKey(), VariableIntent.CREATED));
   }
@@ -248,7 +248,7 @@ public final class JobThrowErrorTest {
             r -> r.getValue().getName(),
             r -> r.getValue().getValue(),
             r -> r.getValue().getScopeKey(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "The variables are created at the error catch event, and with an output mapping to created at the process instance.")
         .containsExactly(
@@ -310,7 +310,7 @@ public final class JobThrowErrorTest {
             r -> r.getValue().getName(),
             r -> r.getValue().getValue(),
             r -> r.getValue().getScopeKey(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("The variables are created at the error catch event.")
         .containsExactly(tuple("foo", "\"bar\"", errorEvent.getKey(), VariableIntent.CREATED));
   }
@@ -371,7 +371,7 @@ public final class JobThrowErrorTest {
             r -> r.getValue().getName(),
             r -> r.getValue().getValue(),
             r -> r.getValue().getScopeKey(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs(
             "The variables are created at the error catch event, and with an output mapping to created at the process instance.")
         .containsExactly(
@@ -419,7 +419,7 @@ public final class JobThrowErrorTest {
             r -> r.getValue().getName(),
             r -> r.getValue().getValue(),
             r -> r.getValue().getScopeKey(),
-            Record::getIntent)
+            Record::getIntentToWrite)
         .describedAs("With event sub process the variables are created at the process instance")
         .containsExactly(tuple("foo", "\"bar\"", processInstanceKey, VariableIntent.CREATED));
   }

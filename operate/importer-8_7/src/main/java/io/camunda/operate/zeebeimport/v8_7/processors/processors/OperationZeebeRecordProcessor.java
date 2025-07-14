@@ -30,7 +30,7 @@ public class OperationZeebeRecordProcessor {
 
   public void processVariableDocumentRecords(final Record record, final BatchRequest batchRequest)
       throws PersistenceException {
-    if (!VARIABLE_DOCUMENT_STATES.contains(record.getIntent().name())) {
+    if (!VARIABLE_DOCUMENT_STATES.contains(record.getIntentToWrite().name())) {
       return;
     }
     operationsManager.completeOperation(record.getKey(), null, null, null, batchRequest);

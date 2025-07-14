@@ -60,8 +60,8 @@ public class JobZeebeRecordProcessorOpenSearch {
   public void processJobRecord(final Record record, final List<BulkOperation> operations) {
     final JobRecordValueImpl recordValue = (JobRecordValueImpl) record.getValue();
     if (recordValue.getType().equals(Protocol.USER_TASK_JOB_TYPE)) {
-      if (record.getIntent() != null
-          && !record.getIntent().name().equals(Intent.TIMED_OUT.name())) {
+      if (record.getIntentToWrite() != null
+          && !record.getIntentToWrite().name().equals(Intent.TIMED_OUT.name())) {
         operations.add(persistTask(record, recordValue));
       }
     }
@@ -152,7 +152,7 @@ public class JobZeebeRecordProcessorOpenSearch {
             e);
       }
     }
-    final Intent intent = (Intent) record.getIntent();
+    final Intent intent = (Intent) record.getIntentToWrite();
     switch (intent) {
       case CANCELED ->
           entity
