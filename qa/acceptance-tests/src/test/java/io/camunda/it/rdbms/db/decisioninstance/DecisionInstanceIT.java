@@ -101,8 +101,8 @@ public class DecisionInstanceIT {
             firstInstance.decisionDefinitionName(),
             firstInstance.decisionInstanceId());
     final var lastInstance = searchResult.items().getLast();
-    assertThat(searchResult.lastSortValues()).hasSize(3);
-    assertThat(searchResult.lastSortValues())
+    assertThat(searchResult.lastSearchAfter()).hasSize(3);
+    assertThat(searchResult.lastSearchAfter())
         .containsExactly(
             lastInstance.evaluationDate(),
             lastInstance.decisionDefinitionName(),
