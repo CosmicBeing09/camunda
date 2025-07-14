@@ -151,7 +151,7 @@ public class IncidentIT {
                                     .processDefinitionIds(original.processDefinitionId())
                                     .processDefinitionKeys(original.processDefinitionKey())
                                     .states(original.state())
-                                    .errorTypes(original.errorType())
+                                    .errorTypeOperations(original.errorType())
                                     .errorMessages(original.errorMessage())
                                     .errorMessageHashes(original.errorMessageHash())
                                     .flowNodeInstanceKeys(original.flowNodeInstanceKey())
