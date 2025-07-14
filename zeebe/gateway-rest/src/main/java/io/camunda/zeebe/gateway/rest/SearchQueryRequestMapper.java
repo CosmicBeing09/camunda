@@ -1032,7 +1032,7 @@ public final class SearchQueryRequestMapper {
           .ifPresent(builder::states);
       Optional.ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::bpmnProcessIds);
       Optional.ofNullable(filter.getElementId()).ifPresent(builder::elementIds);
-      Optional.ofNullable(filter.getElementName()).ifPresent(builder::elementNames);
+      Optional.ofNullable(filter.getElementName()).ifPresent(builder::names);
       Optional.ofNullable(filter.getAssignee())
           .map(mapToOperations(String.class))
           .ifPresent(builder::assigneeOperations);
