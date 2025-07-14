@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CamundaContainerRuntimeBuilder {
+public class CamundaRuntimeBuilder {
 
   private ContainerFactory containerFactory = new ContainerFactory();
 
@@ -54,129 +54,129 @@ public class CamundaContainerRuntimeBuilder {
 
   // ============ For testing =================
 
-  CamundaContainerRuntimeBuilder withContainerFactory(final ContainerFactory containerFactory) {
+  CamundaRuntimeBuilder withContainerFactory(final ContainerFactory containerFactory) {
     this.containerFactory = containerFactory;
     return this;
   }
 
   // ============ Configuration options =================
 
-  public CamundaContainerRuntimeBuilder withCamundaDockerImageName(final String dockerImageName) {
+  public CamundaRuntimeBuilder withCamundaDockerImageName(final String dockerImageName) {
     camundaDockerImageName = dockerImageName;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withCamundaDockerImageVersion(
+  public CamundaRuntimeBuilder withCamundaDockerImageVersion(
       final String dockerImageVersion) {
     camundaDockerImageVersion = dockerImageVersion;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withElasticsearchDockerImageName(
+  public CamundaRuntimeBuilder withElasticsearchDockerImageName(
       final String dockerImageName) {
     elasticsearchDockerImageName = dockerImageName;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withElasticsearchDockerImageVersion(
+  public CamundaRuntimeBuilder withElasticsearchDockerImageVersion(
       final String dockerImageVersion) {
     elasticsearchDockerImageVersion = dockerImageVersion;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsDockerImageName(
+  public CamundaRuntimeBuilder withConnectorsDockerImageName(
       final String dockerImageName) {
     connectorsDockerImageName = dockerImageName;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsDockerImageVersion(
+  public CamundaRuntimeBuilder withConnectorsDockerImageVersion(
       final String dockerImageVersion) {
     connectorsDockerImageVersion = dockerImageVersion;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withCamundaEnv(final Map<String, String> envVars) {
+  public CamundaRuntimeBuilder withCamundaEnv(final Map<String, String> envVars) {
     camundaEnvVars.putAll(envVars);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withCamundaEnv(final String name, final String value) {
+  public CamundaRuntimeBuilder withCamundaEnv(final String name, final String value) {
     camundaEnvVars.put(name, value);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withElasticsearchEnv(final Map<String, String> envVars) {
+  public CamundaRuntimeBuilder withElasticsearchEnv(final Map<String, String> envVars) {
     elasticsearchEnvVars.putAll(envVars);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withElasticsearchEnv(
+  public CamundaRuntimeBuilder withElasticsearchEnv(
       final String name, final String value) {
     elasticsearchEnvVars.put(name, value);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsEnv(final Map<String, String> envVars) {
+  public CamundaRuntimeBuilder withConnectorsEnv(final Map<String, String> envVars) {
     connectorsEnvVars.putAll(envVars);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsEnv(final String name, final String value) {
+  public CamundaRuntimeBuilder withConnectorsEnv(final String name, final String value) {
     connectorsEnvVars.put(name, value);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withCamundaExposedPort(final int port) {
+  public CamundaRuntimeBuilder withCamundaExposedPort(final int port) {
     camundaExposedPorts.add(port);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withElasticsearchExposedPort(final int port) {
+  public CamundaRuntimeBuilder withElasticsearchExposedPort(final int port) {
     elasticsearchExposedPorts.add(port);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsExposedPort(final int port) {
+  public CamundaRuntimeBuilder withConnectorsExposedPort(final int port) {
     connectorsExposedPorts.add(port);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withCamundaLogger(final String loggerName) {
+  public CamundaRuntimeBuilder withCamundaLogger(final String loggerName) {
     camundaLoggerName = loggerName;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withElasticsearchLogger(final String loggerName) {
+  public CamundaRuntimeBuilder withElasticsearchLogger(final String loggerName) {
     elasticsearchLoggerName = loggerName;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsLogger(final String loggerName) {
+  public CamundaRuntimeBuilder withConnectorsLogger(final String loggerName) {
     connectorsLoggerName = loggerName;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsEnabled(final boolean enabled) {
+  public CamundaRuntimeBuilder withConnectorsEnabled(final boolean enabled) {
     connectorsEnabled = enabled;
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsSecret(
+  public CamundaRuntimeBuilder withConnectorsSecret(
       final String name, final String value) {
     connectorsSecrets.put(name, value);
     return this;
   }
 
-  public CamundaContainerRuntimeBuilder withConnectorsSecrets(final Map<String, String> secrets) {
+  public CamundaRuntimeBuilder withConnectorsSecrets(final Map<String, String> secrets) {
     connectorsSecrets.putAll(secrets);
     return this;
   }
 
   // ============ Build =================
 
-  public CamundaContainerRuntime build() {
-    return new CamundaContainerRuntime(this, containerFactory);
+  public CamundaRuntime build() {
+    return new CamundaRuntime(this, containerFactory);
   }
 
   // ============ Getters =================

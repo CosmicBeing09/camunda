@@ -31,8 +31,8 @@ import io.camunda.process.test.impl.containers.ConnectorsContainer;
 import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
 import io.camunda.process.test.impl.proxy.ZeebeClientProxy;
-import io.camunda.process.test.impl.runtime.CamundaContainerRuntime;
-import io.camunda.process.test.impl.runtime.CamundaContainerRuntimeBuilder;
+import io.camunda.process.test.impl.runtime.CamundaRuntime;
+import io.camunda.process.test.impl.runtime.CamundaRuntimeBuilder;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultCollector;
 import io.camunda.process.test.impl.testresult.ProcessTestResult;
 import io.camunda.spring.client.event.CamundaClientClosingEvent;
@@ -66,9 +66,9 @@ public class ExecutionListenerTest {
   private static final Consumer<String> NOOP = s -> {};
 
   @Mock(answer = Answers.RETURNS_SELF)
-  private CamundaContainerRuntimeBuilder camundaContainerRuntimeBuilder;
+  private CamundaRuntimeBuilder camundaContainerRuntimeBuilder;
 
-  @Mock private CamundaContainerRuntime camundaContainerRuntime;
+  @Mock private CamundaRuntime camundaContainerRuntime;
   @Mock private CamundaContainer camundaContainer;
   @Mock private ConnectorsContainer connectorsContainer;
 
