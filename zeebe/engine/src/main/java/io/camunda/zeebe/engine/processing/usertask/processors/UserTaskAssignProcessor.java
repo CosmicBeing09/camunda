@@ -74,10 +74,10 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
-      final var recordRequestMetadata = userTaskState.findAsyncRequest(userTaskKey);
+      final var asyncRequest = userTaskState.findAsyncRequest(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
 
-      recordRequestMetadata.ifPresent(
+      asyncRequest.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,
