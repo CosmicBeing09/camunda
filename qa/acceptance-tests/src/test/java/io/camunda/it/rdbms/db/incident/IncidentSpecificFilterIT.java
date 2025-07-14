@@ -105,6 +105,6 @@ public class IncidentSpecificFilterIT {
                 new DateValueFilter(
                     NOW.minus(1, ChronoUnit.MILLIS), NOW.plus(1, ChronoUnit.MILLIS)))
             .build(),
-        new IncidentFilter.Builder().tenantIds("sorting-tenant1").build());
+        new IncidentFilter.Builder().tenantIdOperations("sorting-tenant1").build());
   }
 }
