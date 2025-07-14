@@ -64,20 +64,20 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
   /**
    * Returns the type of request that triggered the user task transition.
    *
-   * @return The trigger type (for instance: `USER_TASK` or `VARIABLE_DOCUMENT`).
+   * @return The value type (for instance: `USER_TASK` or `VARIABLE_DOCUMENT`).
    */
-  public ValueType getTriggerType() {
+  public ValueType getValueType() {
     return triggerTypeProperty.getValue();
   }
 
   /**
    * Sets the type of request that triggered the user task transition.
    *
-   * @param triggerType The trigger type (`USER_TASK` or `VARIABLE_DOCUMENT`).
+   * @param valueType The value type (`USER_TASK` or `VARIABLE_DOCUMENT`).
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setTriggerType(final ValueType triggerType) {
-    triggerTypeProperty.setValue(triggerType);
+  public UserTaskTransitionTriggerRequestMetadata setValueType(final ValueType valueType) {
+    triggerTypeProperty.setValue(valueType);
     return this;
   }
 
