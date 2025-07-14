@@ -19,7 +19,7 @@ public record SearchQueryPage(Integer from, Integer size, String after, String s
   public static final SearchQueryPage NO_ENTITIES_QUERY = new SearchQueryPage(0, 0, null, null);
 
   public boolean isNextPage() {
-    return after != null || !isPreviousPage();
+    return searchAfter != null || !isPreviousPage();
   }
 
   public boolean isPreviousPage() {
@@ -28,7 +28,7 @@ public record SearchQueryPage(Integer from, Integer size, String after, String s
 
   public String startNextPageAfter() {
     if (isNextPage()) {
-      return after;
+      return searchAfter;
     } else if (isPreviousPage()) {
       return searchBefore;
     }
@@ -39,7 +39,7 @@ public record SearchQueryPage(Integer from, Integer size, String after, String s
     return new Builder()
         .from(from)
         .size(size)
-        .searchAfter(after)
+        .searchAfter(searchAfter)
         .searchBefore(searchBefore)
         .build();
   }
