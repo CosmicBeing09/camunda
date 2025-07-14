@@ -227,7 +227,7 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
-  public Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequestMetadata(
+  public Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequest(
       final long key) {
     userTaskKey.wrapLong(key);
     return Optional.ofNullable(
