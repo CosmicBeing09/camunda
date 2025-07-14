@@ -84,7 +84,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var asyncRequest = userTaskState.findAsyncRequest(userTaskKey);
+    final var asyncRequest = userTaskState.asyncRequest(userTaskKey);
     if (asyncRequest.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "

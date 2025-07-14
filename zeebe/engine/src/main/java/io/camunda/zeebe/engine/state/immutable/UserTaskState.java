@@ -23,7 +23,7 @@ public interface UserTaskState {
 
   UserTaskIntermediateStateValue getIntermediateState(final long userTaskKey);
 
-  Optional<UserTaskTransitionTriggerRequestMetadata> findAsyncRequest(
+  Optional<UserTaskTransitionTriggerRequestMetadata> asyncRequest(
       final long userTaskKey);
 
   Optional<String> findInitialAssignee(long key);

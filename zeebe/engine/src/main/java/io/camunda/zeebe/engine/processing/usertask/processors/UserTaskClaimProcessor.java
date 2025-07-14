@@ -87,7 +87,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
-      final var asyncRequest = userTaskState.findAsyncRequest(userTaskKey);
+      final var asyncRequest = userTaskState.asyncRequest(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
 
       asyncRequest.ifPresent(

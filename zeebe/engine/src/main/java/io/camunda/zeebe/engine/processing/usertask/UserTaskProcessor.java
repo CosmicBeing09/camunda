@@ -260,7 +260,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var asyncRequest =
-        userTaskState.findAsyncRequest(persistedRecord.getUserTaskKey());
+        userTaskState.asyncRequest(persistedRecord.getUserTaskKey());
 
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
     asyncRequest.ifPresent(
