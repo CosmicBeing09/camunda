@@ -687,7 +687,7 @@ public final class SearchQueryRequestMapper {
       ofNullable(filter.getBatchOperationId())
           .map(mapToOperations(String.class))
           .ifPresent(builder::batchOperationIdOperations);
-      ofNullable(filter.getState()).map(StateEnum::toString).ifPresent(builder::state);
+      ofNullable(filter.getState()).map(StateEnum::toString).ifPresent(builder::states);
       ofNullable(filter.getOperationType())
           .map(BatchOperationTypeEnum::toString)
           .ifPresent(builder::operationTypes);
