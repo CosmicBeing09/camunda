@@ -73,7 +73,7 @@ public interface MutableProcessingState extends ProcessingState {
   MutableMigrationState getMigrationState();
 
   @Override
-  MutableUserTaskState getUserTaskState();
+  MutableUserTaskState getAsyncRequestState();
 
   @Override
   MutableCompensationSubscriptionState getCompensationSubscriptionState();

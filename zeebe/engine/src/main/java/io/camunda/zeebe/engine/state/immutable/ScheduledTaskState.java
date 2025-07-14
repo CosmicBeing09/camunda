@@ -23,7 +23,7 @@ public interface ScheduledTaskState {
 
   PendingProcessMessageSubscriptionState getPendingProcessMessageSubscriptionState();
 
-  UserTaskState getUserTaskState();
+  AsyncRequestState getUserTaskState();
 
   BatchOperationState getBatchOperationState();
 }

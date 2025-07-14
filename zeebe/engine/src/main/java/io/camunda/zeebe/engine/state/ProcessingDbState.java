@@ -293,7 +293,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableUserTaskState getUserTaskState() {
+  public MutableUserTaskState getAsyncRequestState() {
     return userTaskState;
   }
 

@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.variable.mapping.VariableValue.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
@@ -54,7 +54,7 @@ public final class CamundaUserTaskTest {
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =
       new RecordingExporterTestWatcher();
 
-  private UserTaskState userTaskState;
+  private AsyncRequestState userTaskState;
 
   private static BpmnModelInstance process() {
     return process(b -> {});
@@ -70,7 +70,7 @@ public final class CamundaUserTaskTest {
 
   @Before
   public void setUp() {
-    userTaskState = ENGINE.getProcessingState().getUserTaskState();
+    userTaskState = ENGINE.getProcessingState().getAsyncRequestState();
   }
 
   @Test

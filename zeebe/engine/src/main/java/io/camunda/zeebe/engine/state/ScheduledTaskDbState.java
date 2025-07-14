@@ -12,6 +12,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.batchoperation.DbBatchOperationState;
 import io.camunda.zeebe.engine.state.deployment.DbDeploymentState;
 import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
 import io.camunda.zeebe.engine.state.immutable.BatchOperationState;
 import io.camunda.zeebe.engine.state.immutable.DeploymentState;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
@@ -21,7 +22,6 @@ import io.camunda.zeebe.engine.state.immutable.PendingMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.PendingProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
 import io.camunda.zeebe.engine.state.immutable.TimerInstanceState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.instance.DbJobState;
 import io.camunda.zeebe.engine.state.instance.DbTimerInstanceState;
 import io.camunda.zeebe.engine.state.instance.DbUserTaskState;
@@ -42,7 +42,7 @@ public final class ScheduledTaskDbState implements ScheduledTaskState {
   private final DeploymentState deploymentState;
   private final PendingMessageSubscriptionState pendingMessageSubscriptionState;
   private final PendingProcessMessageSubscriptionState pendingProcessMessageSubscriptionState;
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final BatchOperationState batchOperationState;
 
   public ScheduledTaskDbState(
@@ -103,7 +103,7 @@ public final class ScheduledTaskDbState implements ScheduledTaskState {
   }
 
   @Override
-  public UserTaskState getUserTaskState() {
+  public AsyncRequestState getUserTaskState() {
     return userTaskState;
   }
 

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
 import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
@@ -48,7 +48,7 @@ public class UserTaskCancelingV2ApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCancelingApplier = new UserTaskCancelingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 

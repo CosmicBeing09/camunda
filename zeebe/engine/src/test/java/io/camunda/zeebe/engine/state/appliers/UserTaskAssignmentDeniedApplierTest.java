@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.appliers;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
@@ -38,7 +38,7 @@ public class UserTaskAssignmentDeniedApplierTest {
   @BeforeEach
   public void setup() {
     userTaskAssignmentDeniedApplierApplier = new UserTaskAssignmentDeniedApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 

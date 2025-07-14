@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.camunda.zeebe.db.ZeebeDbInconsistentException;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
@@ -39,7 +39,7 @@ public class UserTaskStateTest {
   @Before
   public void setUp() {
     final MutableProcessingState processingState = stateRule.getProcessingState();
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
   }
 
   @Test

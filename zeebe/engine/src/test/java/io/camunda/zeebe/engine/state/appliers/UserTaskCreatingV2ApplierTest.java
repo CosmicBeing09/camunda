@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
@@ -35,7 +35,7 @@ public class UserTaskCreatingV2ApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCreatingV2Applier = new UserTaskCreatingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
   }
 
   @Test

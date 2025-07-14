@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMe
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import java.util.Optional;
 
-public interface UserTaskState {
+public interface AsyncRequestState {
 
   LifecycleState getLifecycleState(final long userTaskKey);
 

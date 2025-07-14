@@ -15,11 +15,11 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUse
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -31,7 +31,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
 
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
-  private final UserTaskState userTaskState;
+  private final AsyncRequestState userTaskState;
   private final StateWriter stateWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
   private final BpmnJobBehavior jobBehavior;
@@ -45,13 +45,13 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
       final BpmnJobBehavior jobBehavior) {
     elementInstanceState = state.getElementInstanceState();
     processState = state.getProcessState();
-    userTaskState = state.getUserTaskState();
+    userTaskState = state.getAsyncRequestState();
     stateWriter = writers.state();
     preconditionChecker =
         new UserTaskCommandPreconditionChecker(
             List.of(LifecycleState.CREATING),
             "create",
-            state.getUserTaskState(),
+            state.getAsyncRequestState(),
             authCheckBehavior);
     this.userTaskBehavior = userTaskBehavior;
     this.jobBehavior = jobBehavior;

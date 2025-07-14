@@ -38,7 +38,7 @@ public class UserTaskCanceledApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCanceledApplier = new UserTaskCanceledApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getAsyncRequestState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 
