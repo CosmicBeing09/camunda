@@ -109,7 +109,7 @@ public class DeleteGroupMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
     final var name = UUID.randomUUID().toString();
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, GroupIntent.CREATE));
     final var groupId = UUID.randomUUID().toString();

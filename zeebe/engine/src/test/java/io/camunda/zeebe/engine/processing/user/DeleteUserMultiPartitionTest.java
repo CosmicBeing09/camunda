@@ -140,7 +140,7 @@ public class DeleteUserMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the user creation distribution is intercepted
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, UserIntent.CREATE));
 

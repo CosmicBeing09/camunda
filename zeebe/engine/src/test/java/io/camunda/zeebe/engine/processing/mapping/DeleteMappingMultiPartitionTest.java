@@ -116,7 +116,7 @@ public class DeleteMappingMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(
             partition -> engine.interceptInterPartitionIntent(partition, MappingIntent.CREATE));

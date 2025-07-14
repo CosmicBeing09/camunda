@@ -144,7 +144,7 @@ public class AddEntityTenantMultiPartitionTest {
         .create()
         .getKey();
 
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, TenantIntent.CREATE));
 

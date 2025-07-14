@@ -75,8 +75,8 @@ public class ScaleUpProcessor implements TypedRecordProcessor<ScaleRecord> {
     }
 
     final var requestedPartitionCount = command.getValue().getDesiredPartitionCount();
-    final var currentPartitionsInRoutingState = routingState.currentPartitions();
-    final var desiredPartitionsInRoutingState = routingState.desiredPartitions();
+    final var currentPartitionsInRoutingState = routingState.currentPartitionIds();
+    final var desiredPartitionsInRoutingState = routingState.desiredPartitionIds();
 
     final var allPartitionsInRoutingState = new HashSet<>();
     allPartitionsInRoutingState.addAll(currentPartitionsInRoutingState);

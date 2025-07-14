@@ -118,7 +118,7 @@ public class UpdateTenantMultiPartitionTest {
   @Test
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, TenantIntent.CREATE));
     final var tenantId = UUID.randomUUID().toString();

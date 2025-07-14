@@ -85,7 +85,7 @@ public class DeploymentRedistributorTest {
 
     // Add pending deployment distributions for partitions 1, 2, and 3
     routingState
-        .desiredPartitions()
+        .desiredPartitionIds()
         .forEach(
             partition -> deploymentState.addPendingDeploymentDistribution(recordKey, partition));
   }

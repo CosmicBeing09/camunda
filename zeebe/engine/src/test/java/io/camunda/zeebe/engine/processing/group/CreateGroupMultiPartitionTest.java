@@ -102,7 +102,7 @@ public class CreateGroupMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the role creation distribution is intercepted
 
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, RoleIntent.CREATE));
 

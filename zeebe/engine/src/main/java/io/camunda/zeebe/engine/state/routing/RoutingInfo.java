@@ -100,7 +100,7 @@ public interface RoutingInfo {
       if (!routingState.isInitialized()) {
         return fallback.partitions();
       }
-      return routingState.currentPartitions();
+      return routingState.currentPartitionIds();
     }
 
     @Override
@@ -108,7 +108,7 @@ public interface RoutingInfo {
       if (!routingState.isInitialized()) {
         return fallback.partitions();
       }
-      return routingState.desiredPartitions();
+      return routingState.desiredPartitionIds();
     }
 
     @Override

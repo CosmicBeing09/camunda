@@ -36,13 +36,13 @@ public final class DbRoutingState implements MutableRoutingState {
   }
 
   @Override
-  public Set<Integer> currentPartitions() {
+  public Set<Integer> currentPartitionIds() {
     key.wrapString(CURRENT_KEY);
     return columnFamily.get(key).getPartitions();
   }
 
   @Override
-  public Set<Integer> desiredPartitions() {
+  public Set<Integer> desiredPartitionIds() {
     key.wrapString(DESIRED_KEY);
     final var desiredRoutingInfo = columnFamily.get(key);
     if (desiredRoutingInfo == null) {

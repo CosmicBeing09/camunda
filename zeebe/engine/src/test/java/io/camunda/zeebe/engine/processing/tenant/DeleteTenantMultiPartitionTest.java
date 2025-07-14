@@ -108,7 +108,7 @@ public class DeleteTenantMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // when
     final var tenantId = UUID.randomUUID().toString();
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, TenantIntent.CREATE));
     final var tenantKey =

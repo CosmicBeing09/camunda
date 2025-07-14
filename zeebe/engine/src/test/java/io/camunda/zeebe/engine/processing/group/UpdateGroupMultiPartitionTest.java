@@ -111,7 +111,7 @@ public class UpdateGroupMultiPartitionTest {
   public void distributionShouldNotOvertakeOtherCommandsInSameQueue() {
     // given the group creation distribution is intercepted
 
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, GroupIntent.CREATE));
     final var groupId = UUID.randomUUID().toString();

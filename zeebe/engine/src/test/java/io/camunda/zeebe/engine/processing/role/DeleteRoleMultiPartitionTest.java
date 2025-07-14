@@ -112,7 +112,7 @@ public class DeleteRoleMultiPartitionTest {
     // when
     final var name = UUID.randomUUID().toString();
     final var roleId = Strings.newRandomValidIdentityId();
-    engine.getProcessingState().getRoutingState().currentPartitions().stream()
+    engine.getProcessingState().getRoutingState().currentPartitionIds().stream()
         .skip(1)
         .forEach(partition -> engine.interceptInterPartitionIntent(partition, RoleIntent.CREATE));
     engine.role().newRole(roleId).withName(name).create();
