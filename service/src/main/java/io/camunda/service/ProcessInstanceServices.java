@@ -311,7 +311,7 @@ public final class ProcessInstanceServices
                 authentication, Authorization.of(a -> a.processDefinition().readProcessInstance())))
         .searchIncidents(
             new IncidentQuery.Builder()
-                .filter(new IncidentFilter.Builder().treePaths(treePath).build())
+                .filter(new IncidentFilter.Builder().treePath(treePath).build())
                 .build())
         .items();
   }

@@ -57,7 +57,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
     final var creationTimeQuery = getCreationTimeQuery(filter.creationTime());
     final var stateQuery = getStateQuery(filter.states());
-    final var treePathQuery = getTreePathQuery(filter.treePaths());
+    final var treePathQuery = getTreePathQuery(filter.treePath());
     final var jobKeyQuery = getJobKeyQuery(filter.jobKeys());
     final var tenantIdQuery = getTenantIdQuery(filter.tenantIds());
     final var errorMessageHashesQuery = getErrorMessageHashesQuery(filter.errorMessageHashes());
@@ -91,8 +91,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return stringTerms("state", states != null ? states.stream().map(Enum::name).toList() : null);
   }
 
-  private SearchQuery getTreePathQuery(final List<String> treePaths) {
-    return stringTerms("treePath", treePaths);
+  private SearchQuery getTreePathQuery(final List<String> treePath) {
+    return stringTerms("treePath", treePath);
   }
 
   private SearchQuery getCreationTimeQuery(final DateValueFilter filter) {
