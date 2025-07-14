@@ -44,9 +44,9 @@ public interface BatchOperationMapper {
   record BatchOperationUpdateDto(
       String batchOperationKey, BatchOperationState state, OffsetDateTime endDate) {}
 
-  record BatchOperationUpdateTotalCountDto(String batchOperationKey, int operationsTotalCount) {}
+  record BatchOperationUpdateTotalCountDto(String batchOperationId, int operationsTotalCount) {}
 
-  record BatchOperationUpdateCountsDto(String batchOperationKey, long itemKey) {}
+  record BatchOperationUpdateCountsDto(String batchOperationId, long itemKey) {}
 
   record BatchOperationItemsDto(String batchOperationKey, List<BatchOperationItemDbModel> items) {}
 
