@@ -713,7 +713,7 @@ public final class SearchQueryResponseMapper {
         .name(name)
         .processInstanceKey(KeyUtil.keyToString(t.processInstanceKey()))
         .processDefinitionKey(KeyUtil.keyToString(t.processDefinitionKey()))
-        .elementInstanceKey(KeyUtil.keyToString(t.elementInstanceKey()))
+        .elementInstanceKey(KeyUtil.keyToString(t.instanceKey()))
         .processDefinitionId(t.processDefinitionId())
         .state(UserTaskResult.StateEnum.fromValue(t.state().name()))
         .assignee(t.assignee())

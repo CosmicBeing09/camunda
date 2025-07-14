@@ -157,7 +157,7 @@ public final class UserTaskServices
     final var userTask = getByKey(userTaskKey);
 
     // Retrieve the tree path for the flow node instance associated to the user task
-    final String treePath = fetchFlowNodeTreePath(userTask.elementInstanceKey());
+    final String treePath = fetchFlowNodeTreePath(userTask.instanceKey());
 
     // Convert the tree path to a list of scope keys
     final List<Long> treePathList =

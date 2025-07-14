@@ -25,7 +25,7 @@ public record UserTaskEntity(
     Long formKey,
     Long processDefinitionKey,
     Long processInstanceKey,
-    Long elementInstanceKey,
+    Long instanceKey,
     String tenantId,
     OffsetDateTime dueDate,
     OffsetDateTime followUpDate,

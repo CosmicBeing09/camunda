@@ -18,7 +18,7 @@ public enum UserTaskSearchColumn implements SearchColumn<UserTaskEntity> {
   COMPLETION_DATE("completionDate", UserTaskEntity::completionDate),
   ELEMENT_ID("elementId", UserTaskEntity::elementId),
   NAME("elementName", UserTaskEntity::name),
-  ELEMENT_INSTANCE_KEY("elementInstanceKey", UserTaskEntity::elementInstanceKey),
+  ELEMENT_INSTANCE_KEY("elementInstanceKey", UserTaskEntity::instanceKey),
   TENANT_ID("tenantId", UserTaskEntity::tenantId),
   ASSIGNEE("assignee", UserTaskEntity::assignee),
   FORM_KEY("formKey", UserTaskEntity::formKey),
