@@ -169,7 +169,7 @@ public class UserTaskCancelingV2ApplierTest {
         userTaskKey,
         new UserTaskTransitionTriggerRequestMetadata()
             .setIntent(UserTaskIntent.CLAIMING)
-            .setTriggerType(ValueType.USER_TASK)
+            .setValueType(ValueType.USER_TASK)
             .setRequestId(new Random().nextLong())
             .setRequestStreamId(new Random().nextInt()));
 
