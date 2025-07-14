@@ -205,7 +205,7 @@ public class AuthorizationIT {
                 b ->
                     b.filter(f -> f.ownerType("ITEST"))
                         .sort(sort)
-                        .page(p -> p.searchAfter(firstPage.searchAfterCursor()))));
+                        .page(p -> p.searchAfter(firstPage.afterCursor()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(5);
