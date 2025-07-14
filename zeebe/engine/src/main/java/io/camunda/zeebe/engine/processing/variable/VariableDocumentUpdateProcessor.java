@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
+import io.camunda.zeebe.engine.state.instance.UserTaskCancellation;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.msgpack.spec.MsgpackReaderException;
@@ -64,12 +64,12 @@ public final class VariableDocumentUpdateProcessor
       final Writers writers,
       final MutableUserTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    this.elementInstanceState = processingState.getElementInstanceState();
+    elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;
-    this.processState = processingState.getProcessState();
+    processState = processingState.getProcessState();
     this.keyGenerator = keyGenerator;
-    this.variableBehavior = bpmnBehaviors.variableBehavior();
-    this.jobBehavior = bpmnBehaviors.jobBehavior();
+    variableBehavior = bpmnBehaviors.variableBehavior();
+    jobBehavior = bpmnBehaviors.jobBehavior();
     this.writers = writers;
     this.authCheckBehavior = authCheckBehavior;
   }
@@ -219,7 +219,7 @@ public final class VariableDocumentUpdateProcessor
     return !DocumentValue.EMPTY_DOCUMENT.equals(record.getVariablesBuffer());
   }
 
-  private static boolean isCamundaUserTask(ElementInstance elementInstance) {
+  private static boolean isCamundaUserTask(final ElementInstance elementInstance) {
     return elementInstance.getValue().getBpmnElementType() == BpmnElementType.USER_TASK
         && elementInstance.getUserTaskKey() > -1L;
   }
@@ -232,16 +232,16 @@ public final class VariableDocumentUpdateProcessor
 
   void storeRecordRequestMetadata(
       final long userTaskKey, final TypedRecord<VariableDocumentRecord> command) {
-    if (!command.hasRequestMetadata()) {
+    if (!command.hasRequestContext()) {
       return;
     }
 
     final var metadata =
-        new UserTaskTransitionTriggerRequestMetadata()
+        new UserTaskCancellation()
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.VARIABLE_DOCUMENT)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
-    userTaskState.storeRecordRequestMetadata(userTaskKey, metadata);
+    userTaskState.storeTriggerData(userTaskKey, metadata);
   }
 }

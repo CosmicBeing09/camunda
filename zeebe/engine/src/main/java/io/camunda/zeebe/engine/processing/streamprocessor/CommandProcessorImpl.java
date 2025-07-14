@@ -71,7 +71,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
 
     final boolean shouldRespond = wrappedProcessor.onCommand(command, this);
 
-    final boolean respond = shouldRespond && command.hasRequestMetadata();
+    final boolean respond = shouldRespond && command.hasRequestContext();
 
     if (isAccepted) {
       stateWriter.appendFollowUpEvent(entityKey, newState, updatedValue);

@@ -28,7 +28,7 @@ public interface TypedRecord<T extends UnifiedRecordValue> extends Record<T> {
 
   int getLength();
 
-  default boolean hasRequestMetadata() {
+  default boolean hasRequestContext() {
     return getRequestId() != RecordMetadataEncoder.requestIdNullValue()
         && getRequestStreamId() != RecordMetadataEncoder.requestStreamIdNullValue();
   }

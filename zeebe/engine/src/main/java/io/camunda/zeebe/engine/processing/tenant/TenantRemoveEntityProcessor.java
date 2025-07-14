@@ -173,7 +173,7 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
       final RejectionType type,
       final String errorMessage) {
     rejectionWriter.appendRejection(command, type, errorMessage);
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequestContext()) {
       responseWriter.writeRejectionOnCommand(command, type, errorMessage);
     }
   }

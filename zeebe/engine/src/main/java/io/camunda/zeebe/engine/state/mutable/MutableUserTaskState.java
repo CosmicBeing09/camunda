@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.mutable;
 
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.instance.UserTaskCancellation;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import java.util.function.Consumer;
 
@@ -31,10 +31,10 @@ public interface MutableUserTaskState extends UserTaskState {
 
   void deleteIntermediateStateIfExists(final long userTaskKey);
 
-  void storeRecordRequestMetadata(
-      final long userTaskKey, final UserTaskTransitionTriggerRequestMetadata recordRequestMetadata);
+  void storeTriggerData(
+      final long userTaskKey, final UserTaskCancellation recordRequestMetadata);
 
-  void deleteRecordRequestMetadata(final long userTaskKey);
+  void deleteMetadata(final long userTaskKey);
 
   void storeInitialAssignee(final long userTaskKey, String assignee);
 

@@ -77,14 +77,14 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequestContext()) {
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.UPDATED, userTaskRecord, command);
       return;
     }
 
-    final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
+    final var recordRequestMetadata = userTaskState.findInitialAssignee(userTaskKey);
     if (recordRequestMetadata.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "

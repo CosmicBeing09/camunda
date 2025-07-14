@@ -80,7 +80,7 @@ public final class AuthorizationCheckBehavior {
       return Either.right(null);
     }
 
-    if (!request.getCommand().hasRequestMetadata()
+    if (!request.getCommand().hasRequestContext()
         && request.getCommand().getOperationReference() == operationReferenceNullValue()) {
       // The command is written by Zeebe internally. Internal Zeebe commands are always authorized
       return Either.right(null);
@@ -343,7 +343,7 @@ public final class AuthorizationCheckBehavior {
       return true;
     }
 
-    if (!command.hasRequestMetadata()) {
+    if (!command.hasRequestContext()) {
       // The command is written by Zeebe internally. Internal Zeebe commands are always allowed to
       // access all tenants
       return true;

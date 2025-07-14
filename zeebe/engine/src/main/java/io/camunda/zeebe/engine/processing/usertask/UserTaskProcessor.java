@@ -29,7 +29,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
+import io.camunda.zeebe.engine.state.instance.UserTaskCancellation;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
@@ -225,17 +225,17 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void storeUserTaskRecordRequestMetadata(final TypedRecord<UserTaskRecord> command) {
-    if (!command.hasRequestMetadata()) {
+    if (!command.hasRequestContext()) {
       return;
     }
 
     final var metadata =
-        new UserTaskTransitionTriggerRequestMetadata()
+        new UserTaskCancellation()
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
             .setRequestStreamId(command.getRequestStreamId());
-    userTaskState.storeRecordRequestMetadata(command.getValue().getUserTaskKey(), metadata);
+    userTaskState.storeTriggerData(command.getValue().getUserTaskKey(), metadata);
   }
 
   private void handleCommandRejection(
@@ -260,7 +260,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var recordRequestMetadata =
-        userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
+        userTaskState.findInitialAssignee(persistedRecord.getUserTaskKey());
 
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
     recordRequestMetadata.ifPresent(

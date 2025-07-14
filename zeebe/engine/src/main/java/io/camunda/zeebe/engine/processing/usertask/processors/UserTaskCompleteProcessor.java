@@ -80,7 +80,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
       final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequestContext()) {
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
@@ -98,11 +98,11 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
        * Note: It's important to retrieve this metadata from the user task state before appending
        * the "COMPLETED" event, as it will be cleared by the "COMPLETED" event applier.
        */
-      final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
+      final var initialAssigneeRecord = userTaskState.findInitialAssignee(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
-      recordRequestMetadata.ifPresent(
+      initialAssigneeRecord.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,

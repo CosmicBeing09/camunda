@@ -110,7 +110,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequestContext()) {
       responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord, command);
     }
 

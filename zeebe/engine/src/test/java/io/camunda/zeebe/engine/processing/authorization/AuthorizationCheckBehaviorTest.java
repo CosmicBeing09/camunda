@@ -408,7 +408,7 @@ final class AuthorizationCheckBehaviorTest {
             Map.of(
                 USER_TOKEN_CLAIMS,
                 Map.of(firstClaimName, firstClaimValue, secondClaimName, secondClaimValue)));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
 
     // then
     EitherAssert.assertThat(
@@ -455,7 +455,7 @@ final class AuthorizationCheckBehaviorTest {
         .thenReturn(
             Map.of(
                 USER_TOKEN_CLAIMS, Map.of(claimName, List.of(firstClaimValue, secondClaimValue))));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
 
     // then
     EitherAssert.assertThat(
@@ -515,7 +515,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations())
         .thenReturn(Map.of(USER_TOKEN_CLAIMS, Map.of("nested", Map.of("claim", claimValue))));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
 
     // when
     final var request =
@@ -762,7 +762,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations())
         .thenReturn(Map.of(USER_TOKEN_CLAIMS, Map.of(claimName, claimValue)));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
     return command;
   }
 
@@ -841,21 +841,21 @@ final class AuthorizationCheckBehaviorTest {
   private TypedRecord<?> mockCommand(final String username) {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithAnonymousUser() {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithClientId(final String clientId) {
     final var command = mock(TypedRecord.class);
     when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_CLIENT_ID, clientId));
-    when(command.hasRequestMetadata()).thenReturn(true);
+    when(command.hasRequestContext()).thenReturn(true);
     return command;
   }
 

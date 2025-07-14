@@ -83,7 +83,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequestContext()) {
       responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord, command);
     }
 
