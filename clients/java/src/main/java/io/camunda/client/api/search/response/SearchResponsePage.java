@@ -24,5 +24,5 @@ public interface SearchResponsePage {
   String searchBeforeCursor();
 
   /** The sort values of the last item in the returned page. */
-  String searchAfterCursor();
+  String endCursor();
 }

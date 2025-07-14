@@ -503,7 +503,7 @@ class UserTaskSearchTest {
     final var resultAfter =
         camundaClient
             .newUserTaskSearchRequest()
-            .page(p -> p.searchAfter(result.page().searchAfterCursor()))
+            .page(p -> p.searchAfter(result.page().endCursor()))
             .send()
             .join();
 
