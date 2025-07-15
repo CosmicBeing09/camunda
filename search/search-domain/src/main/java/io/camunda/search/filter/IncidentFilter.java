@@ -51,66 +51,66 @@ public record IncidentFilter(
     private List<Long> jobKeys;
     private List<String> tenantIds;
 
-    public Builder incidentKeys(final Long value, final Long... values) {
-      return incidentKeys(collectValues(value, values));
+    public Builder incidentKeys(final Long value, final Long... operations) {
+      return incidentKeys(collectValues(value, operations));
     }
 
-    public Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+    public Builder incidentKeys(final List<Long> operations) {
+      incidentKeys = addValuesToList(incidentKeys, operations);
       return this;
     }
 
-    public Builder processDefinitionKeys(final Long value, final Long... values) {
-      return processDefinitionKeys(collectValues(value, values));
+    public Builder processDefinitionKeys(final Long value, final Long... operations) {
+      return processDefinitionKeys(collectValues(value, operations));
     }
 
-    public Builder processDefinitionKeys(final List<Long> values) {
-      processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
+    public Builder processDefinitionKeys(final List<Long> operations) {
+      processDefinitionKeys = addValuesToList(processDefinitionKeys, operations);
       return this;
     }
 
-    public Builder processDefinitionIds(final String value, final String... values) {
-      return processDefinitionIds(collectValues(value, values));
+    public Builder processDefinitionIds(final String value, final String... operations) {
+      return processDefinitionIds(collectValues(value, operations));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public Builder processDefinitionIds(final List<String> operations) {
+      processDefinitionIds = addValuesToList(processDefinitionIds, operations);
       return this;
     }
 
-    public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeys(collectValues(value, values));
+    public Builder processInstanceKeys(final Long value, final Long... operations) {
+      return processInstanceKeys(collectValues(value, operations));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public Builder processInstanceKeys(final List<Long> operations) {
+      processInstanceKeys = addValuesToList(processInstanceKeys, operations);
       return this;
     }
 
-    public Builder errorTypes(final ErrorType value, final ErrorType... values) {
-      return errorTypes(collectValues(value, values));
+    public Builder errorTypes(final ErrorType value, final ErrorType... operations) {
+      return errorTypes(collectValues(value, operations));
     }
 
-    public Builder errorTypes(final List<ErrorType> values) {
-      errorTypes = addValuesToList(errorTypes, values);
+    public Builder errorTypes(final List<ErrorType> operations) {
+      errorTypes = addValuesToList(errorTypes, operations);
       return this;
     }
 
-    public Builder errorMessages(final String value, final String... values) {
-      return errorMessages(collectValues(value, values));
+    public Builder errorMessages(final String value, final String... operations) {
+      return errorMessages(collectValues(value, operations));
     }
 
-    public Builder errorMessages(final List<String> values) {
-      errorMessages = addValuesToList(errorMessages, values);
+    public Builder errorMessages(final List<String> operations) {
+      errorMessages = addValuesToList(errorMessages, operations);
       return this;
     }
 
-    public Builder errorMessageHashes(final Integer value, final Integer... values) {
-      return errorMessageHashes(collectValues(value, values));
+    public Builder errorMessageHashes(final Integer value, final Integer... operations) {
+      return errorMessageHashes(collectValues(value, operations));
     }
 
-    public Builder errorMessageHashes(final List<Integer> values) {
-      errorMessageHashes = addValuesToList(errorMessageHashes, values);
+    public Builder errorMessageHashes(final List<Integer> operations) {
+      errorMessageHashes = addValuesToList(errorMessageHashes, operations);
       return this;
     }
 
@@ -119,30 +119,30 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder flowNodeIds(final String value, final String... values) {
-      return flowNodeIds(collectValues(value, values));
+    public Builder flowNodeIds(final String value, final String... operations) {
+      return flowNodeIds(collectValues(value, operations));
     }
 
-    public Builder flowNodeIds(final List<String> values) {
-      flowNodeIds = addValuesToList(flowNodeIds, values);
+    public Builder flowNodeIds(final List<String> operations) {
+      flowNodeIds = addValuesToList(flowNodeIds, operations);
       return this;
     }
 
-    public Builder flowNodeInstanceKeys(final Long value, final Long... values) {
-      return flowNodeInstanceKeys(collectValues(value, values));
+    public Builder flowNodeInstanceKeys(final Long value, final Long... operations) {
+      return flowNodeInstanceKeys(collectValues(value, operations));
     }
 
-    public Builder flowNodeInstanceKeys(final List<Long> values) {
-      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
+    public Builder flowNodeInstanceKeys(final List<Long> operations) {
+      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, operations);
       return this;
     }
 
-    public Builder states(final IncidentState value, final IncidentState... values) {
-      return states(collectValues(value, values));
+    public Builder states(final IncidentState value, final IncidentState... operations) {
+      return states(collectValues(value, operations));
     }
 
-    public Builder states(final List<IncidentState> values) {
-      states = addValuesToList(states, values);
+    public Builder states(final List<IncidentState> operations) {
+      states = addValuesToList(states, operations);
       return this;
     }
 
@@ -151,21 +151,21 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder jobKeys(final Long value, final Long... values) {
-      return jobKeys(collectValues(value, values));
+    public Builder jobKeys(final Long value, final Long... operations) {
+      return jobKeys(collectValues(value, operations));
     }
 
-    public Builder jobKeys(final List<Long> values) {
-      jobKeys = addValuesToList(jobKeys, values);
+    public Builder jobKeys(final List<Long> operations) {
+      jobKeys = addValuesToList(jobKeys, operations);
       return this;
     }
 
-    public Builder tenantIds(final String value, final String... values) {
-      return tenantIds(collectValues(value, values));
+    public Builder tenantIds(final String value, final String... operations) {
+      return tenantIds(collectValues(value, operations));
     }
 
-    public Builder tenantIds(final List<String> values) {
-      tenantIds = addValuesToList(tenantIds, values);
+    public Builder tenantIds(final List<String> operations) {
+      tenantIds = addValuesToList(tenantIds, operations);
       return this;
     }
 
