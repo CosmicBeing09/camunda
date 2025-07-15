@@ -58,40 +58,40 @@ public record FlowNodeInstanceFilter(
     private List<String> startDates;
     private List<String> endDates;
 
-    public FlowNodeInstanceFilter.Builder flowNodeInstanceKeys(final List<Long> values) {
-      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
+    public FlowNodeInstanceFilter.Builder flowNodeInstanceKeys(final List<Long> operations) {
+      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder flowNodeInstanceKeys(final Long... values) {
-      return flowNodeInstanceKeys(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder flowNodeInstanceKeys(final Long... operations) {
+      return flowNodeInstanceKeys(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public FlowNodeInstanceFilter.Builder processInstanceKeys(final List<Long> operations) {
+      processInstanceKeys = addValuesToList(processInstanceKeys, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder processInstanceKeys(final Long... values) {
-      return processInstanceKeys(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder processInstanceKeys(final Long... operations) {
+      return processInstanceKeys(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder processDefinitionKeys(final List<Long> values) {
-      processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
+    public FlowNodeInstanceFilter.Builder processDefinitionKeys(final List<Long> operations) {
+      processDefinitionKeys = addValuesToList(processDefinitionKeys, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder processDefinitionKeys(final Long... values) {
-      return processDefinitionKeys(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder processDefinitionKeys(final Long... operations) {
+      return processDefinitionKeys(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public FlowNodeInstanceFilter.Builder processDefinitionIds(final List<String> operations) {
+      processDefinitionIds = addValuesToList(processDefinitionIds, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder processDefinitionIds(final String... values) {
-      return processDefinitionIds(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder processDefinitionIds(final String... operations) {
+      return processDefinitionIds(collectValuesAsList(operations));
     }
 
     public FlowNodeInstanceFilter.Builder stateOperations(
@@ -100,8 +100,8 @@ public record FlowNodeInstanceFilter(
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder states(final String value, final String... values) {
-      return stateOperations(FilterUtil.mapDefaultToOperation(value, values));
+    public FlowNodeInstanceFilter.Builder states(final String value, final String... operations) {
+      return stateOperations(FilterUtil.mapDefaultToOperation(value, operations));
     }
 
     @SafeVarargs
@@ -110,40 +110,40 @@ public record FlowNodeInstanceFilter(
       return stateOperations(collectValues(operation, operations));
     }
 
-    public FlowNodeInstanceFilter.Builder types(final List<FlowNodeType> values) {
-      types = addValuesToList(types, values);
+    public FlowNodeInstanceFilter.Builder types(final List<FlowNodeType> operations) {
+      types = addValuesToList(types, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder types(final FlowNodeType... values) {
-      return types(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder types(final FlowNodeType... operations) {
+      return types(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder flowNodeIds(final List<String> values) {
-      flowNodeIds = addValuesToList(flowNodeIds, values);
+    public FlowNodeInstanceFilter.Builder flowNodeIds(final List<String> operations) {
+      flowNodeIds = addValuesToList(flowNodeIds, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder flowNodeIds(final String... values) {
-      return flowNodeIds(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder flowNodeIds(final String... operations) {
+      return flowNodeIds(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder flowNodeNames(final List<String> values) {
-      flowNodeNames = addValuesToList(flowNodeNames, values);
+    public FlowNodeInstanceFilter.Builder flowNodeNames(final List<String> operations) {
+      flowNodeNames = addValuesToList(flowNodeNames, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder flowNodeNames(final String... values) {
-      return flowNodeNames(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder flowNodeNames(final String... operations) {
+      return flowNodeNames(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder treePaths(final List<String> values) {
-      treePaths = addValuesToList(treePaths, values);
+    public FlowNodeInstanceFilter.Builder treePaths(final List<String> operations) {
+      treePaths = addValuesToList(treePaths, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder treePaths(final String... values) {
-      return treePaths(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder treePaths(final String... operations) {
+      return treePaths(collectValuesAsList(operations));
     }
 
     public FlowNodeInstanceFilter.Builder hasIncident(final Boolean value) {
@@ -151,40 +151,40 @@ public record FlowNodeInstanceFilter(
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+    public FlowNodeInstanceFilter.Builder incidentKeys(final List<Long> operations) {
+      incidentKeys = addValuesToList(incidentKeys, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder incidentKeys(final Long... values) {
-      return incidentKeys(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder incidentKeys(final Long... operations) {
+      return incidentKeys(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder tenantIds(final List<String> values) {
-      tenantIds = addValuesToList(tenantIds, values);
+    public FlowNodeInstanceFilter.Builder tenantIds(final List<String> operations) {
+      tenantIds = addValuesToList(tenantIds, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder tenantIds(final String... values) {
-      return tenantIds(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder tenantIds(final String... operations) {
+      return tenantIds(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final List<String> values) {
-      startDates = addValuesToList(startDates, values);
+    public FlowNodeInstanceFilter.Builder startDates(final List<String> operations) {
+      startDates = addValuesToList(startDates, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final String... values) {
-      return startDates(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder startDates(final String... operations) {
+      return startDates(collectValuesAsList(operations));
     }
 
-    public FlowNodeInstanceFilter.Builder endDates(final List<String> values) {
-      endDates = addValuesToList(endDates, values);
+    public FlowNodeInstanceFilter.Builder endDates(final List<String> operations) {
+      endDates = addValuesToList(endDates, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder endDates(final String... values) {
-      return endDates(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder endDates(final String... operations) {
+      return endDates(collectValuesAsList(operations));
     }
 
     @Override
