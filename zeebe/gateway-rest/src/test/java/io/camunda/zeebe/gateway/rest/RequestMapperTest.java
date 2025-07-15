@@ -26,7 +26,7 @@ import io.camunda.zeebe.auth.Authorization;
 import io.camunda.zeebe.gateway.protocol.rest.MigrateProcessInstanceMappingInstruction;
 import io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceFilter;
 import io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceMigrationBatchOperationInstruction;
-import io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceMigrationInstruction;
+import io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceMigrationPlan;
 import io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceModificationBatchOperationInstruction;
 import io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceModificationMoveBatchOperationInstruction;
 import io.camunda.zeebe.util.Either;
@@ -210,15 +210,15 @@ class RequestMapperTest {
   @Test
   void shouldMapToProcessInstanceMigrationBatchOperationRequest() {
     // given
-    final var migrationInstruction = new ProcessInstanceMigrationInstruction();
-    migrationInstruction.setTargetProcessDefinitionKey("123");
+    final var migrationPlan = new ProcessInstanceMigrationPlan();
+    migrationPlan.setTargetProcessDefinitionKey("123");
     final var mappingInstruction = new MigrateProcessInstanceMappingInstruction();
     mappingInstruction.setSourceElementId("source1");
     mappingInstruction.setTargetElementId("target1");
-    migrationInstruction.setMappingInstructions(List.of(mappingInstruction));
+    migrationPlan.setMappingInstructions(List.of(mappingInstruction));
 
     final var batchOperationInstruction = new ProcessInstanceMigrationBatchOperationInstruction();
-    batchOperationInstruction.setMigrationPlan(migrationInstruction);
+    batchOperationInstruction.setMigrationPlan(migrationPlan);
     final var filter = new ProcessInstanceFilter();
     batchOperationInstruction.setFilter(filter);
 
@@ -243,15 +243,15 @@ class RequestMapperTest {
   @Test
   void shouldReturnProblemDetailForInvalidInput() {
     // given
-    final var migrationInstruction = new ProcessInstanceMigrationInstruction();
-    migrationInstruction.setTargetProcessDefinitionKey("123");
+    final var migrationPlan = new ProcessInstanceMigrationPlan();
+    migrationPlan.setTargetProcessDefinitionKey("123");
     final var mappingInstruction = new MigrateProcessInstanceMappingInstruction();
     mappingInstruction.setSourceElementId(null);
     mappingInstruction.setTargetElementId(null);
-    migrationInstruction.setMappingInstructions(List.of(mappingInstruction));
+    migrationPlan.setMappingInstructions(List.of(mappingInstruction));
 
     final var batchOperationInstruction = new ProcessInstanceMigrationBatchOperationInstruction();
-    batchOperationInstruction.setMigrationPlan(migrationInstruction);
+    batchOperationInstruction.setMigrationPlan(migrationPlan);
     final var filter = new ProcessInstanceFilter();
     batchOperationInstruction.setFilter(filter);
 
