@@ -163,8 +163,8 @@ public class TaskEntity
     return flowNodeName;
   }
 
-  public TaskEntity setFlowNodeName(final String flowNodeName) {
-    this.flowNodeName = flowNodeName;
+  public TaskEntity setFlowNodeName(final String name) {
+    this.flowNodeName = name;
     return this;
   }
 
