@@ -21,13 +21,13 @@ public class SearchResponsePageImpl implements SearchResponsePage {
 
   private final long totalItems;
   private final String searchBeforeCursor;
-  private final String searchAfterCursor;
+  private final String endCursor;
 
   public SearchResponsePageImpl(
-      final long totalItems, final String searchBeforeCursor, final String searchAfterCursor) {
+      final long totalItems, final String searchBeforeCursor, final String endCursor) {
     this.totalItems = totalItems;
     this.searchBeforeCursor = searchBeforeCursor;
-    this.searchAfterCursor = searchAfterCursor;
+    this.endCursor = endCursor;
   }
 
   @Override
@@ -42,6 +42,6 @@ public class SearchResponsePageImpl implements SearchResponsePage {
 
   @Override
   public String searchAfterCursor() {
-    return searchAfterCursor;
+    return endCursor;
   }
 }
