@@ -31,7 +31,7 @@ public record IncidentFilter(
     List<IncidentState> states,
     String treePath,
     List<Long> jobKeys,
-    List<String> tenantIds)
+    List<String> tenantIdOperations)
     implements FilterBase {
 
   public static final class Builder implements ObjectBuilder<IncidentFilter> {
@@ -49,7 +49,7 @@ public record IncidentFilter(
     private List<IncidentState> states;
     private String treePath;
     private List<Long> jobKeys;
-    private List<String> tenantIds;
+    private List<String> tenantIdOperations;
 
     public Builder incidentKeys(final Long value, final Long... values) {
       return incidentKeys(collectValues(value, values));
@@ -160,12 +160,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder tenantIds(final String value, final String... values) {
-      return tenantIds(collectValues(value, values));
+    public Builder tenantIdOperations(final String value, final String... values) {
+      return tenantIdOperations(collectValues(value, values));
     }
 
-    public Builder tenantIds(final List<String> values) {
-      tenantIds = addValuesToList(tenantIds, values);
+    public Builder tenantIdOperations(final List<String> values) {
+      tenantIdOperations = addValuesToList(tenantIdOperations, values);
       return this;
     }
 
@@ -185,7 +185,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(states, Collections.emptyList()),
           treePath,
           Objects.requireNonNullElse(jobKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(tenantIds, Collections.emptyList()));
+          Objects.requireNonNullElse(tenantIdOperations, Collections.emptyList()));
     }
   }
 }
