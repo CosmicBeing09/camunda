@@ -20,7 +20,7 @@ import java.util.Objects;
 public record IncidentFilter(
     List<Long> incidentKeys,
     List<Long> processDefinitionKeys,
-    List<String> processDefinitionIds,
+    List<String> processDefinitionIdOperations,
     List<Long> processInstanceKeys,
     List<ErrorType> errorTypes,
     List<String> errorMessages,
@@ -38,7 +38,7 @@ public record IncidentFilter(
 
     private List<Long> incidentKeys;
     private List<Long> processDefinitionKeys;
-    private List<String> processDefinitionIds;
+    private List<String> processDefinitionIdOperations;
     private List<Long> processInstanceKeys;
     private List<ErrorType> errorTypes;
     private List<String> errorMessages;
@@ -69,12 +69,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder processDefinitionIds(final String value, final String... values) {
-      return processDefinitionIds(collectValues(value, values));
+    public Builder processDefinitionIdOperations(final String value, final String... values) {
+      return processDefinitionIdOperations(collectValues(value, values));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public Builder processDefinitionIdOperations(final List<String> values) {
+      processDefinitionIdOperations = addValuesToList(processDefinitionIdOperations, values);
       return this;
     }
 
@@ -174,7 +174,7 @@ public record IncidentFilter(
       return new IncidentFilter(
           Objects.requireNonNullElse(incidentKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
+          Objects.requireNonNullElse(processDefinitionIdOperations, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
           Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
