@@ -39,7 +39,7 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   }
 
   public void wrap(final AsyncRequestMetadataRecord record) {
-    requestKeyProperty.setValue(record.getRequestKey());
+    requestKeyProperty.setValue(record.getScopeKey());
     valueTypeProperty.setValue(record.getValueType());
     intentProperty.setValue(record.getIntent().value());
     requestIdProperty.setValue(record.getRequestId());
@@ -48,12 +48,12 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   }
 
   @Override
-  public long getRequestKey() {
+  public long getScopeKey() {
     return requestKeyProperty.getValue();
   }
 
-  public AsyncRequestMetadataRecord setRequestKey(final long requestKey) {
-    requestKeyProperty.setValue(requestKey);
+  public AsyncRequestMetadataRecord setScopeKey(final long scopeKey) {
+    requestKeyProperty.setValue(scopeKey);
     return this;
   }
 
