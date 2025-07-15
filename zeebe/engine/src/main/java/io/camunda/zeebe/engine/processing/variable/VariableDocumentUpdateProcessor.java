@@ -43,10 +43,10 @@ public final class VariableDocumentUpdateProcessor
     implements TypedRecordProcessor<VariableDocumentRecord> {
 
   private static final String ERROR_MESSAGE_SCOPE_NOT_FOUND =
-      "Expected to update variables for element with key '%d', but no such element was found";
+      "Expected to update variables for element with variableDocKey '%d', but no such element was found";
 
   private static final String INVALID_USER_TASK_STATE_MESSAGE =
-      "Expected to trigger update transition for user task with key '%d', but it is in state '%s'";
+      "Expected to trigger update transition for user task with variableDocKey '%d', but it is in state '%s'";
 
   private final ElementInstanceState elementInstanceState;
   private final MutableUserTaskState userTaskState;
@@ -111,23 +111,23 @@ public final class VariableDocumentUpdateProcessor
     final String tenantId = scope.getValue().getTenantId();
 
     if (isCamundaUserTask(scope)) {
-      final long userTaskKey = scope.getUserTaskKey();
-      final var lifecycleState = userTaskState.getLifecycleState(userTaskKey);
+      final long userTaskVariableDocKey = scope.getUserTaskKey();
+      final var lifecycleState = userTaskState.getLifecycleState(userTaskVariableDocKey);
       if (lifecycleState != LifecycleState.CREATED) {
-        final var reason = INVALID_USER_TASK_STATE_MESSAGE.formatted(userTaskKey, lifecycleState);
+        final var reason = INVALID_USER_TASK_STATE_MESSAGE.formatted(userTaskVariableDocKey, lifecycleState);
         writers.rejection().appendRejection(record, RejectionType.INVALID_STATE, reason);
         writers.response().writeRejectionOnCommand(record, RejectionType.INVALID_STATE, reason);
         return;
       }
 
-      final long key = keyGenerator.nextKey();
-      writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATING, value);
+      final long variableDocKey = keyGenerator.nextKey();
+      writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATING, value);
 
-      final var userTaskRecord = userTaskState.getUserTask(userTaskKey);
+      final var userTaskRecord = userTaskState.getUserTask(userTaskVariableDocKey);
       if (hasVariables(value)) {
         userTaskRecord.setVariables(value.getVariablesBuffer()).setVariablesChanged();
       }
-      writers.state().appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskRecord);
+      writers.state().appendFollowUpEvent(userTaskVariableDocKey, UserTaskIntent.UPDATING, userTaskRecord);
 
       final var userTaskElement =
           processState.getFlowElement(
@@ -137,7 +137,7 @@ public final class VariableDocumentUpdateProcessor
               ExecutableUserTask.class);
 
       if (userTaskElement.hasTaskListeners(ZeebeTaskListenerEventType.updating)) {
-        storeRecordRequestMetadata(userTaskKey, record);
+        storeRecordRequestMetadata(userTaskVariableDocKey, record);
 
         final var listener =
             userTaskElement.getTaskListeners(ZeebeTaskListenerEventType.updating).getFirst();
@@ -173,8 +173,8 @@ public final class VariableDocumentUpdateProcessor
           .state()
           .appendFollowUpEvent(scope.getUserTaskKey(), UserTaskIntent.UPDATED, userTaskRecord);
 
-      writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
-      writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);
+      writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATED, value);
+      writers.response().writeEventOnCommand(variableDocKey, VariableDocumentIntent.UPDATED, value, record);
       return;
     }
 
@@ -209,10 +209,10 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final long key = keyGenerator.nextKey();
+    final long variableDocKey = keyGenerator.nextKey();
 
-    writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
-    writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);
+    writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATED, value);
+    writers.response().writeEventOnCommand(variableDocKey, VariableDocumentIntent.UPDATED, value, record);
   }
 
   private static boolean hasVariables(final VariableDocumentRecord record) {
