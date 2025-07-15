@@ -25,7 +25,7 @@ public record IncidentFilter(
     List<ErrorType> errorTypes,
     List<String> errorMessages,
     List<Integer> errorMessageHashes,
-    List<String> flowNodeIds,
+    List<String> flowNodeIdOperations,
     List<Long> flowNodeInstanceKeys,
     DateValueFilter creationTime,
     List<IncidentState> states,
@@ -43,7 +43,7 @@ public record IncidentFilter(
     private List<ErrorType> errorTypes;
     private List<String> errorMessages;
     private List<Integer> errorMessageHashes;
-    private List<String> flowNodeIds;
+    private List<String> flowNodeIdOperations;
     private List<Long> flowNodeInstanceKeys;
     private DateValueFilter creationTimeFilter;
     private List<IncidentState> states;
@@ -119,12 +119,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder flowNodeIds(final String value, final String... values) {
-      return flowNodeIds(collectValues(value, values));
+    public Builder flowNodeIdOperations(final String value, final String... values) {
+      return flowNodeIdOperations(collectValues(value, values));
     }
 
-    public Builder flowNodeIds(final List<String> values) {
-      flowNodeIds = addValuesToList(flowNodeIds, values);
+    public Builder flowNodeIdOperations(final List<String> values) {
+      flowNodeIdOperations = addValuesToList(flowNodeIdOperations, values);
       return this;
     }
 
@@ -179,7 +179,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
-          Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),
+          Objects.requireNonNullElse(flowNodeIdOperations, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeInstanceKeys, Collections.emptyList()),
           creationTimeFilter,
           Objects.requireNonNullElse(states, Collections.emptyList()),
