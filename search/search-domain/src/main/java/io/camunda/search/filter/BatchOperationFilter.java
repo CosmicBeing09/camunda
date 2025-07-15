@@ -34,8 +34,8 @@ public record BatchOperationFilter(
       return this;
     }
 
-    public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, values));
+    public Builder batchOperationIds(final String value, final String... operations) {
+      return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, operations));
     }
 
     public Builder replaceBatchOperationIdOperations(final List<Operation<String>> operations) {
@@ -49,21 +49,21 @@ public record BatchOperationFilter(
       return batchOperationIdOperations(collectValues(operation, operations));
     }
 
-    public Builder operationTypes(final String value, final String... values) {
-      return operationTypes(collectValues(value, values));
+    public Builder operationTypes(final String value, final String... operations) {
+      return operationTypes(collectValues(value, operations));
     }
 
-    public Builder operationTypes(final List<String> values) {
-      operationTypes = addValuesToList(operationTypes, values);
+    public Builder operationTypes(final List<String> operations) {
+      operationTypes = addValuesToList(operationTypes, operations);
       return this;
     }
 
-    public Builder state(final String value, final String... values) {
-      return state(collectValues(value, values));
+    public Builder state(final String value, final String... operations) {
+      return state(collectValues(value, operations));
     }
 
-    public Builder state(final List<String> values) {
-      state = addValuesToList(state, values);
+    public Builder state(final List<String> operations) {
+      state = addValuesToList(state, operations);
       return this;
     }
 
