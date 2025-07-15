@@ -92,13 +92,13 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   @Override
   public void processRecord(final TypedRecord<UserTaskRecord> command) {
-    final UserTaskIntent intent = (UserTaskIntent) command.getIntent();
-    switch (intent) {
+    final UserTaskIntent intentToWrite = (UserTaskIntent) command.getIntent();
+    switch (intentToWrite) {
       case CREATE, ASSIGN, CLAIM, UPDATE, COMPLETE, CANCEL ->
-          processOperationCommand(command, intent);
+          processOperationCommand(command, intentToWrite);
       case COMPLETE_TASK_LISTENER -> processCompleteTaskListener(command);
       case DENY_TASK_LISTENER -> processDenyTaskListener(command);
-      default -> throw new UnsupportedOperationException("Unexpected user task intent: " + intent);
+      default -> throw new UnsupportedOperationException("Unexpected user task intent: " + intentToWrite);
     }
   }
 
@@ -164,13 +164,13 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void processOperationCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskIntent intent) {
-    final var commandProcessor = commandProcessors.getCommandProcessor(intent);
+      final TypedRecord<UserTaskRecord> command, final UserTaskIntent intentToWrite) {
+    final var commandProcessor = commandProcessors.getCommandProcessor(intentToWrite);
 
     if (isRetriedCommand(command)) {
       // Skip `validateCommand` and `onCommand` invocations for retried command,
       // as it was already validated during the original execution
-      finalizeCommandOrCreateTaskListenerJob(commandProcessor, command, command.getValue(), intent);
+      finalizeCommandOrCreateTaskListenerJob(commandProcessor, command, command.getValue(), intentToWrite);
     } else {
       commandProcessor
           .validateCommand(command)
@@ -181,7 +181,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
           .ifRightOrLeft(
               persistedRecord ->
                   finalizeCommandOrCreateTaskListenerJob(
-                      commandProcessor, command, persistedRecord, intent),
+                      commandProcessor, command, persistedRecord, intentToWrite),
               rejection -> handleCommandRejection(command, rejection));
     }
   }
@@ -190,10 +190,10 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
       final UserTaskCommandProcessor processor,
       final TypedRecord<UserTaskRecord> command,
       final UserTaskRecord persistedRecord,
-      final UserTaskIntent intent) {
+      final UserTaskIntent intentToWrite) {
 
     final var userTaskElement = getUserTaskElement(persistedRecord);
-    final var eventType = mapIntentToEventType(intent);
+    final var eventType = mapIntentToEventType(intentToWrite);
 
     if (userTaskElement.hasTaskListeners(eventType)) {
       /*
@@ -256,25 +256,25 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   private void writeRejectionForCommand(
       final TypedRecord<UserTaskRecord> command,
       final UserTaskRecord persistedRecord,
-      final UserTaskIntent intent) {
+      final UserTaskIntent intentToWrite) {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
     final var recordRequestMetadata =
         userTaskState.findRecordRequestMetadata(persistedRecord.getUserTaskKey());
 
-    stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
+    stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intentToWrite, persistedRecord);
     recordRequestMetadata.ifPresent(
         metadata -> {
           switch (metadata.getTriggerType()) {
             case USER_TASK ->
                 responseWriter.writeRejection(
                     command.getKey(),
-                    mapDeniedIntentToResponseIntent(intent),
+                    mapDeniedIntentToResponseIntent(intentToWrite),
                     command.getValue(),
                     command.getValueType(),
                     RejectionType.INVALID_STATE,
                     mapDeniedIntentToResponseRejectionReason(
-                        intent,
+                        intentToWrite,
                         persistedRecord.getUserTaskKey(),
                         command.getValue().getDeniedReason()),
                     metadata.getRequestId(),
@@ -322,15 +322,15 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
         ExecutableUserTask.class);
   }
 
-  private ZeebeTaskListenerEventType mapIntentToEventType(final UserTaskIntent intent) {
-    return switch (intent) {
+  private ZeebeTaskListenerEventType mapIntentToEventType(final UserTaskIntent intentToWrite) {
+    return switch (intentToWrite) {
       case CREATE -> ZeebeTaskListenerEventType.creating;
       case ASSIGN, CLAIM -> ZeebeTaskListenerEventType.assigning;
       case UPDATE -> ZeebeTaskListenerEventType.updating;
       case COMPLETE -> ZeebeTaskListenerEventType.completing;
       case CANCEL -> ZeebeTaskListenerEventType.canceling;
       default ->
-          throw new IllegalArgumentException("Unexpected user task intent: '%s'".formatted(intent));
+          throw new IllegalArgumentException("Unexpected user task intent: '%s'".formatted(intentToWrite));
     };
   }
 
@@ -348,24 +348,24 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     };
   }
 
-  private UserTaskIntent mapDeniedIntentToResponseIntent(final UserTaskIntent intent) {
-    return switch (intent) {
+  private UserTaskIntent mapDeniedIntentToResponseIntent(final UserTaskIntent intentToWrite) {
+    return switch (intentToWrite) {
       case COMPLETION_DENIED -> UserTaskIntent.COMPLETE;
       case ASSIGNMENT_DENIED -> UserTaskIntent.ASSIGN;
       case UPDATE_DENIED -> UserTaskIntent.UPDATE;
       default ->
-          throw new IllegalArgumentException("Unexpected user task intent: '%s'".formatted(intent));
+          throw new IllegalArgumentException("Unexpected user task intent: '%s'".formatted(intentToWrite));
     };
   }
 
   private String mapDeniedIntentToResponseRejectionReason(
-      final UserTaskIntent intent, final long userTaskKey, final String deniedReason) {
-    return switch (intent) {
+      final UserTaskIntent intentToWrite, final long userTaskKey, final String deniedReason) {
+    return switch (intentToWrite) {
       case COMPLETION_DENIED -> USER_TASK_COMPLETION_REJECTION.formatted(userTaskKey, deniedReason);
       case ASSIGNMENT_DENIED -> USER_TASK_ASSIGNMENT_REJECTION.formatted(userTaskKey, deniedReason);
       case UPDATE_DENIED -> USER_TASK_UPDATE_REJECTION.formatted(userTaskKey, deniedReason);
       default ->
-          throw new IllegalArgumentException("Unexpected user task intent: '%s'".formatted(intent));
+          throw new IllegalArgumentException("Unexpected user task intent: '%s'".formatted(intentToWrite));
     };
   }
 
