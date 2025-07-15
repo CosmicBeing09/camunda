@@ -30,7 +30,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TestWatcher;
 
-public class CreateAuthorizationMultipartitionTest {
+public class CreateAuthorizationMultPartitionTest {
 
   private static final int PARTITION_COUNT = 3;
 
