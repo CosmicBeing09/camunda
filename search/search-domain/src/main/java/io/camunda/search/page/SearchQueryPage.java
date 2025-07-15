@@ -10,7 +10,7 @@ package io.camunda.search.page;
 import io.camunda.util.ObjectBuilder;
 import java.util.function.Function;
 
-public record SearchQueryPage(Integer from, Integer size, String searchAfter, String searchBefore) {
+public record SearchQueryPage(Integer from, Integer size, String after, String searchBefore) {
 
   public static final Integer DEFAULT_FROM = 0;
   public static final Integer DEFAULT_SIZE = 100;
@@ -19,7 +19,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
   public static final SearchQueryPage NO_ENTITIES_QUERY = new SearchQueryPage(0, 0, null, null);
 
   public boolean isNextPage() {
-    return searchAfter != null || !isPreviousPage();
+    return after != null || !isPreviousPage();
   }
 
   public boolean isPreviousPage() {
@@ -28,7 +28,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
 
   public String startNextPageAfter() {
     if (isNextPage()) {
-      return searchAfter;
+      return after;
     } else if (isPreviousPage()) {
       return searchBefore;
     }
@@ -39,7 +39,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
     return new Builder()
         .from(from)
         .size(size)
-        .searchAfter(searchAfter)
+        .after(after)
         .searchBefore(searchBefore)
         .build();
   }
@@ -52,7 +52,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
 
     private Integer from = DEFAULT_FROM;
     private Integer size = DEFAULT_SIZE;
-    private String searchAfter;
+    private String after;
     private String searchBefore;
 
     public Builder from(final Integer value) {
@@ -65,8 +65,8 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
       return this;
     }
 
-    public Builder searchAfter(final String value) {
-      searchAfter = value;
+    public Builder after(final String value) {
+      after = value;
       return this;
     }
 
@@ -79,7 +79,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
     public SearchQueryPage build() {
       final var sanitizedFrom = (from == null) ? DEFAULT_FROM : Math.max(0, from);
       final var sanitizedSize = (size == null) ? DEFAULT_SIZE : Math.max(0, size);
-      return new SearchQueryPage(sanitizedFrom, sanitizedSize, searchAfter, searchBefore);
+      return new SearchQueryPage(sanitizedFrom, sanitizedSize, after, searchBefore);
     }
   }
 }
