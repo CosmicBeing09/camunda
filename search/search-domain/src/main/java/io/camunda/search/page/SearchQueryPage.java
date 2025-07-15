@@ -10,7 +10,7 @@ package io.camunda.search.page;
 import io.camunda.util.ObjectBuilder;
 import java.util.function.Function;
 
-public record SearchQueryPage(Integer from, Integer size, String searchAfter, String searchBefore) {
+public record SearchQueryPage(Integer from, Integer size, String searchAfter, String before) {
 
   public static final Integer DEFAULT_FROM = 0;
   public static final Integer DEFAULT_SIZE = 100;
@@ -23,14 +23,14 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
   }
 
   public boolean isPreviousPage() {
-    return searchBefore != null;
+    return before != null;
   }
 
   public String startNextPageAfter() {
     if (isNextPage()) {
       return searchAfter;
     } else if (isPreviousPage()) {
-      return searchBefore;
+      return before;
     }
     return null;
   }
@@ -40,7 +40,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
         .from(from)
         .size(size)
         .searchAfter(searchAfter)
-        .searchBefore(searchBefore)
+        .before(before)
         .build();
   }
 
@@ -53,7 +53,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
     private Integer from = DEFAULT_FROM;
     private Integer size = DEFAULT_SIZE;
     private String searchAfter;
-    private String searchBefore;
+    private String before;
 
     public Builder from(final Integer value) {
       from = value;
@@ -70,8 +70,8 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
       return this;
     }
 
-    public Builder searchBefore(final String value) {
-      searchBefore = value;
+    public Builder before(final String value) {
+      before = value;
       return this;
     }
 
@@ -79,7 +79,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
     public SearchQueryPage build() {
       final var sanitizedFrom = (from == null) ? DEFAULT_FROM : Math.max(0, from);
       final var sanitizedSize = (size == null) ? DEFAULT_SIZE : Math.max(0, size);
-      return new SearchQueryPage(sanitizedFrom, sanitizedSize, searchAfter, searchBefore);
+      return new SearchQueryPage(sanitizedFrom, sanitizedSize, searchAfter, before);
     }
   }
 }
