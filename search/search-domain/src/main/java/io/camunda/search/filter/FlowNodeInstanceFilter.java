@@ -33,7 +33,7 @@ public record FlowNodeInstanceFilter(
     List<Long> incidentKeys,
     List<String> tenantIds,
     List<String> startDates,
-    List<String> endDates)
+    List<String> endDateOperations)
     implements FilterBase {
 
   public static FlowNodeInstanceFilter of(
@@ -56,7 +56,7 @@ public record FlowNodeInstanceFilter(
     private List<Long> incidentKeys;
     private List<String> tenantIds;
     private List<String> startDates;
-    private List<String> endDates;
+    private List<String> endDateOperations;
 
     public FlowNodeInstanceFilter.Builder flowNodeInstanceKeys(final List<Long> values) {
       flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
@@ -178,13 +178,13 @@ public record FlowNodeInstanceFilter(
       return startDates(collectValuesAsList(values));
     }
 
-    public FlowNodeInstanceFilter.Builder endDates(final List<String> values) {
-      endDates = addValuesToList(endDates, values);
+    public FlowNodeInstanceFilter.Builder endDateOperations(final List<String> values) {
+      endDateOperations = addValuesToList(endDateOperations, values);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder endDates(final String... values) {
-      return endDates(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder endDateOperations(final String... values) {
+      return endDateOperations(collectValuesAsList(values));
     }
 
     @Override
@@ -203,7 +203,7 @@ public record FlowNodeInstanceFilter(
           Objects.requireNonNullElse(incidentKeys, Collections.emptyList()),
           Objects.requireNonNullElse(tenantIds, Collections.emptyList()),
           Objects.requireNonNullElse(startDates, Collections.emptyList()),
-          Objects.requireNonNullElse(endDates, Collections.emptyList()));
+          Objects.requireNonNullElse(endDateOperations, Collections.emptyList()));
     }
   }
 }
