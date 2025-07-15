@@ -1,4 +1,4 @@
-/*
+/********************************************
  * Copyright © 2017 camunda services GmbH (info@camunda.com)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,7 +68,7 @@ public final class OAuthCredentialsProviderBuilder {
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
-  private Path entraCertificatePath;
+  private Path getSslClientCertPath;
   private String entraCertificatePassword;
 
   /** Client id to be used when requesting access token from OAuth authorization server. */
@@ -278,15 +278,15 @@ public final class OAuthCredentialsProviderBuilder {
     return readTimeout;
   }
 
-  public OAuthCredentialsProviderBuilder entraCertificatePath(final String entraCertificatePath) {
-    if (entraCertificatePath != null) {
-      this.entraCertificatePath = Paths.get(entraCertificatePath);
+  public OAuthCredentialsProviderBuilder getSslClientCertPath(final String getSslClientCertPath) {
+    if (getSslClientCertPath != null) {
+      this.getSslClientCertPath = Paths.get(getSslClientCertPath);
     }
     return this;
   }
 
-  public Path getEntraCertificatePath() {
-    return entraCertificatePath;
+  public Path getSslClientCertPath() {
+    return getSslClientCertPath;
   }
 
   public OAuthCredentialsProviderBuilder entraCertificatePassword(
@@ -302,8 +302,8 @@ public final class OAuthCredentialsProviderBuilder {
   public boolean entraConfigurationProvided() {
     return entraCertificatePassword != null
         && !entraCertificatePassword.isEmpty()
-        && entraCertificatePath != null
-        && entraCertificatePath.toFile().exists();
+        && getSslClientCertPath != null
+        && getSslClientCertPath.toFile().exists();
   }
 
   public OAuthCredentialsProviderBuilder applyEnvironmentOverrides(
@@ -327,7 +327,7 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyMSEntraConfiguration() {
-    applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
+    applyEnvironmentValueIfNotNull(this::getSslClientCertPath, ENTRA_ENV_CERTIFICATE_PATH);
     applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
@@ -410,7 +410,7 @@ public final class OAuthCredentialsProviderBuilder {
         // loading the certificate from the provided path to ensure it exists and is valid
         final KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(
-            Files.newInputStream(Paths.get(entraCertificatePath.toAbsolutePath().toString())),
+            Files.newInputStream(Paths.get(getSslClientCertPath.toAbsolutePath().toString())),
             entraCertificatePassword.toCharArray());
       } else {
         Objects.requireNonNull(clientSecret, String.format(INVALID_ARGUMENT_MSG, "client secret"));
