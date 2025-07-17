@@ -101,7 +101,7 @@ public class IncidentSpecificFilterIT {
         new IncidentFilter.Builder().states(IncidentState.ACTIVE).build(),
         new IncidentFilter.Builder().jobKeys(6000L).build(),
         new IncidentFilter.Builder()
-            .creationTime(
+            .creationTimeFilter(
                 new DateValueFilter(
                     NOW.minus(1, ChronoUnit.MILLIS), NOW.plus(1, ChronoUnit.MILLIS)))
             .build(),
