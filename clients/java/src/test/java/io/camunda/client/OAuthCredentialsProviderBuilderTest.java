@@ -85,7 +85,7 @@ public final class OAuthCredentialsProviderBuilderTest {
         .audience("a")
         .clientId("b")
         .clientSecret("c")
-        .credentialsCachePath(tmpDir.toString())
+        .credentialsCacheFilePath(tmpDir.toString())
         .authorizationServerUrl("http://some.url");
 
     // then

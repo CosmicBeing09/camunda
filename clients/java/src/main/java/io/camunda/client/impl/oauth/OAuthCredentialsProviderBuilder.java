@@ -63,13 +63,13 @@ public final class OAuthCredentialsProviderBuilder {
   private String keystoreKeyPassword;
   private Path truststorePath;
   private String truststorePassword;
-  private String credentialsCachePath;
+  private String credentialsCacheFilePath;
   private File credentialsCache;
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
-  private Path entraCertificatePath;
-  private String entraCertificatePassword;
+  private Path sslClientCertificatePath;
+  private String sslClientCertificatePassword;
 
   /** Client id to be used when requesting access token from OAuth authorization server. */
   public OAuthCredentialsProviderBuilder clientId(final String clientId) {
@@ -220,13 +220,13 @@ public final class OAuthCredentialsProviderBuilder {
    * The location for the credentials cache file. If none (or null) is specified the default will be
    * $HOME/.camunda/credentials
    */
-  public OAuthCredentialsProviderBuilder credentialsCachePath(final String cachePath) {
-    credentialsCachePath = cachePath;
+  public OAuthCredentialsProviderBuilder credentialsCacheFilePath(final String cachePath) {
+    credentialsCacheFilePath = cachePath;
     return this;
   }
 
   /**
-   * @see OAuthCredentialsProviderBuilder#credentialsCachePath(String)
+   * @see OAuthCredentialsProviderBuilder#credentialsCacheFilePath(String)
    */
   File getCredentialsCache() {
     return credentialsCache;
@@ -278,32 +278,32 @@ public final class OAuthCredentialsProviderBuilder {
     return readTimeout;
   }
 
-  public OAuthCredentialsProviderBuilder entraCertificatePath(final String entraCertificatePath) {
-    if (entraCertificatePath != null) {
-      this.entraCertificatePath = Paths.get(entraCertificatePath);
+  public OAuthCredentialsProviderBuilder sslClientCertificatePath(final String sslClientCertificatePath) {
+    if (sslClientCertificatePath != null) {
+      this.sslClientCertificatePath = Paths.get(sslClientCertificatePath);
     }
     return this;
   }
 
-  public Path getEntraCertificatePath() {
-    return entraCertificatePath;
+  public Path getSslClientCertificatePath() {
+    return sslClientCertificatePath;
   }
 
-  public OAuthCredentialsProviderBuilder entraCertificatePassword(
+  public OAuthCredentialsProviderBuilder sslClientCertificatePassword(
       final String entraCertificatePassword) {
-    this.entraCertificatePassword = entraCertificatePassword;
+    sslClientCertificatePassword = entraCertificatePassword;
     return this;
   }
 
-  public String getEntraCertificatePassword() {
-    return entraCertificatePassword;
+  public String getSslClientCertificatePassword() {
+    return sslClientCertificatePassword;
   }
 
   public boolean entraConfigurationProvided() {
-    return entraCertificatePassword != null
-        && !entraCertificatePassword.isEmpty()
-        && entraCertificatePath != null
-        && entraCertificatePath.toFile().exists();
+    return sslClientCertificatePassword != null
+        && !sslClientCertificatePassword.isEmpty()
+        && sslClientCertificatePath != null
+        && sslClientCertificatePath.toFile().exists();
   }
 
   public OAuthCredentialsProviderBuilder applyEnvironmentOverrides(
@@ -327,8 +327,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyMSEntraConfiguration() {
-    applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
-    applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
+    applyEnvironmentValueIfNotNull(this::sslClientCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
+    applyEnvironmentValueIfNotNull(this::sslClientCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
   private void checkEnvironmentOverrides() {
@@ -369,7 +369,7 @@ public final class OAuthCredentialsProviderBuilder {
         OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_SECRET,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_SECRET);
     applyEnvironmentValueIfNotNull(
-        this::credentialsCachePath,
+        this::credentialsCacheFilePath,
         OAUTH_ENV_CACHE_PATH,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_CACHE_PATH);
     applyEnvironmentValueIfNotNull(
@@ -383,8 +383,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyDefaults() {
-    if (credentialsCachePath == null) {
-      credentialsCachePath =
+    if (credentialsCacheFilePath == null) {
+      credentialsCacheFilePath =
           Paths.get(System.getProperty("user.home"), ".camunda", "credentials")
               .toAbsolutePath()
               .toString();
@@ -410,8 +410,8 @@ public final class OAuthCredentialsProviderBuilder {
         // loading the certificate from the provided path to ensure it exists and is valid
         final KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(
-            Files.newInputStream(Paths.get(entraCertificatePath.toAbsolutePath().toString())),
-            entraCertificatePassword.toCharArray());
+            Files.newInputStream(Paths.get(sslClientCertificatePath.toAbsolutePath().toString())),
+            sslClientCertificatePassword.toCharArray());
       } else {
         Objects.requireNonNull(clientSecret, String.format(INVALID_ARGUMENT_MSG, "client secret"));
       }
@@ -429,7 +429,7 @@ public final class OAuthCredentialsProviderBuilder {
         throw new IllegalArgumentException("Truststore path does not exist: " + keystorePath);
       }
 
-      credentialsCache = new File(credentialsCachePath);
+      credentialsCache = new File(credentialsCacheFilePath);
 
       if (credentialsCache.isDirectory()) {
         throw new IllegalArgumentException(
