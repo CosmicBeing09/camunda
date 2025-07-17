@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Objects;
 
 public record IncidentFilter(
-    List<Long> incidentKeys,
-    List<Long> processDefinitionKeys,
-    List<String> processDefinitionIds,
+    List<Long> incidentKeyFilters,
+    List<Long> processDefinitionKeyFilters,
+    List<String> processDefinitionIdFilters,
     List<Long> processInstanceKeys,
     List<ErrorType> errorTypes,
     List<String> errorMessages,
@@ -36,7 +36,7 @@ public record IncidentFilter(
 
   public static final class Builder implements ObjectBuilder<IncidentFilter> {
 
-    private List<Long> incidentKeys;
+    private List<Long> incidentKeyFilters;
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
     private List<Long> processInstanceKeys;
@@ -56,7 +56,7 @@ public record IncidentFilter(
     }
 
     public Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+      incidentKeyFilters = addValuesToList(incidentKeyFilters, values);
       return this;
     }
 
@@ -120,10 +120,10 @@ public record IncidentFilter(
     }
 
     public Builder flowNodeIds(final String value, final String... values) {
-      return flowNodeIds(collectValues(value, values));
+      return flowNodeIdOperations(collectValues(value, values));
     }
 
-    public Builder flowNodeIds(final List<String> values) {
+    public Builder flowNodeIdOperations(final List<String> values) {
       flowNodeIds = addValuesToList(flowNodeIds, values);
       return this;
     }
@@ -172,7 +172,7 @@ public record IncidentFilter(
     @Override
     public IncidentFilter build() {
       return new IncidentFilter(
-          Objects.requireNonNullElse(incidentKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(incidentKeyFilters, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
