@@ -82,7 +82,7 @@ public record UserTaskFilter(
       return this;
     }
 
-    public Builder elementNames(final String... values) {
+    public Builder names(final String... values) {
       return elementNames(collectValuesAsList(values));
     }
 
