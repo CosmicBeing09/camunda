@@ -161,10 +161,10 @@ public record IncidentFilter(
     }
 
     public Builder tenantIds(final String value, final String... values) {
-      return tenantIds(collectValues(value, values));
+      return tenantIdOperations(collectValues(value, values));
     }
 
-    public Builder tenantIds(final List<String> values) {
+    public Builder tenantIdOperations(final List<String> values) {
       tenantIds = addValuesToList(tenantIds, values);
       return this;
     }
