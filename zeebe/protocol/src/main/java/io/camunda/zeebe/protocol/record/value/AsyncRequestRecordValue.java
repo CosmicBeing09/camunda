@@ -32,7 +32,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @ImmutableProtocol(builder = ImmutableAsyncRequestMetadataRecordValue.Builder.class)
-public interface AsyncRequestMetadataRecordValue extends RecordValue {
+public interface AsyncRequestRecordValue extends RecordValue {
 
   /** The key of the original request command. */
   long getRequestKey();
