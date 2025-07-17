@@ -33,13 +33,13 @@ public class UserTaskAssignedV2ApplierTest {
   private MutableUserTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
-  private AppliersTestSetupHelper testSetup;
+  private TestSetupHelper testSetup;
 
   @BeforeEach
   public void setup() {
     userTaskAssignedV2Applier = new UserTaskAssignedV2Applier(processingState);
     userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    testSetup = new TestSetupHelper(processingState);
   }
 
   @Test

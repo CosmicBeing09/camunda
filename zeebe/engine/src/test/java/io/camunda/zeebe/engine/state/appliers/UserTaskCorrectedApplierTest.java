@@ -36,13 +36,13 @@ public class UserTaskCorrectedApplierTest {
   private MutableUserTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
-  private AppliersTestSetupHelper testSetup;
+  private TestSetupHelper testSetup;
 
   @BeforeEach
   public void setup() {
     userTaskCorrectedApplier = new UserTaskCorrectedApplier(processingState);
     userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    testSetup = new TestSetupHelper(processingState);
   }
 
   /**
