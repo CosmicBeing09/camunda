@@ -15,12 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationItemFilter(
-    List<String> batchOperationIds,
-    List<Long> itemKeys,
-    List<Long> processInstanceKeys,
-    List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationItemFilter> {
 
@@ -48,10 +43,10 @@ public record BatchOperationItemFilter(
     }
 
     public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeys(collectValues(value, values));
+      return processInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
+    public Builder processInstanceKeyOperations(final List<Long> values) {
       processInstanceKeys = addValuesToList(processInstanceKeys, values);
       return this;
     }
@@ -75,3 +70,9 @@ public record BatchOperationItemFilter(
     }
   }
 }
+    implements
+public record BatchOperationItemFilter(
+    List<String> batchOperationIds,
+    List<Long> itemKeys,
+    List<Long> processInstanceKeys,
+    List<String> state)
