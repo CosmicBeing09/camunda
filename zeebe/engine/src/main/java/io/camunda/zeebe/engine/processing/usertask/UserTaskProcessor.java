@@ -265,7 +265,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     stateWriter.appendFollowUpEvent(persistedRecord.getUserTaskKey(), intent, persistedRecord);
     recordRequestMetadata.ifPresent(
         metadata -> {
-          switch (metadata.getTriggerType()) {
+          switch (metadata.getValueType()) {
             case USER_TASK ->
                 responseWriter.writeRejection(
                     command.getKey(),
@@ -309,7 +309,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
             default ->
                 throw new IllegalArgumentException(
                     "Unexpected user task transition trigger type: '%s'"
-                        .formatted(metadata.getTriggerType()));
+                        .formatted(metadata.getValueType()));
           }
         });
   }
