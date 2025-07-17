@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.process.test.impl.assertions.CamundaDataSource;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
-import io.camunda.process.test.impl.configuration.CamundaContainerRuntimeConfiguration;
+import io.camunda.process.test.impl.configuration.CamundaRuntimeConfiguration;
 import io.camunda.process.test.impl.extension.CamundaProcessTestContextImpl;
 import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
@@ -222,12 +222,12 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
   }
 
   private CamundaContainerRuntime buildRuntime(final TestContext testContext) {
-    final CamundaContainerRuntimeConfiguration runtimeConfiguration =
-        testContext.getApplicationContext().getBean(CamundaContainerRuntimeConfiguration.class);
+    final CamundaRuntimeConfiguration runtimeConfiguration =
+        testContext.getApplicationContext().getBean(CamundaRuntimeConfiguration.class);
 
     containerRuntimeBuilder
-        .withCamundaDockerImageVersion(runtimeConfiguration.getCamundaVersion())
-        .withCamundaDockerImageName(runtimeConfiguration.getCamundaDockerImageName())
+        .withCamundaDockerImageVersion(runtimeConfiguration.getVersion())
+        .withCamundaDockerImageName(runtimeConfiguration.getImageName())
         .withCamundaEnv(runtimeConfiguration.getCamundaEnvVars());
 
     runtimeConfiguration
