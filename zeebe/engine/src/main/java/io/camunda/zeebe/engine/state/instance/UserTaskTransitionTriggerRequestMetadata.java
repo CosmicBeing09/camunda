@@ -46,19 +46,19 @@ import io.camunda.zeebe.util.buffer.BufferUtil;
  */
 public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject implements DbValue {
 
-  private final EnumProperty<ValueType> triggerTypeProperty =
+  private final EnumProperty<ValueType> sourceRecordTypeProperty =
       new EnumProperty<>("triggerType", ValueType.class);
-  private final StringProperty intentProperty = new StringProperty("intent");
-  private final LongProperty requestIdProperty = new LongProperty("requestId", -1);
-  private final IntegerProperty requestStreamIdProperty =
+  private final StringProperty sourceIntentProperty = new StringProperty("intent");
+  private final LongProperty sourceRecordKeyProperty = new LongProperty("requestId", -1);
+  private final IntegerProperty sourcePartitionIdProperty =
       new IntegerProperty("requestStreamId", -1);
 
   public UserTaskTransitionTriggerRequestMetadata() {
     super(4);
-    declareProperty(triggerTypeProperty)
-        .declareProperty(intentProperty)
-        .declareProperty(requestIdProperty)
-        .declareProperty(requestStreamIdProperty);
+    declareProperty(sourceRecordTypeProperty)
+        .declareProperty(sourceIntentProperty)
+        .declareProperty(sourceRecordKeyProperty)
+        .declareProperty(sourcePartitionIdProperty);
   }
 
   /**
@@ -67,7 +67,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The trigger type (for instance: `USER_TASK` or `VARIABLE_DOCUMENT`).
    */
   public ValueType getTriggerType() {
-    return triggerTypeProperty.getValue();
+    return sourceRecordTypeProperty.getValue();
   }
 
   /**
@@ -77,7 +77,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setTriggerType(final ValueType triggerType) {
-    triggerTypeProperty.setValue(triggerType);
+    sourceRecordTypeProperty.setValue(triggerType);
     return this;
   }
 
@@ -88,7 +88,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    */
   public Intent getIntent() {
     return Intent.fromProtocolValue(
-        triggerTypeProperty.getValue(), BufferUtil.bufferAsString(intentProperty.getValue()));
+        sourceRecordTypeProperty.getValue(), BufferUtil.bufferAsString(sourceIntentProperty.getValue()));
   }
 
   /**
@@ -98,7 +98,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setIntent(final Intent intent) {
-    intentProperty.setValue(intent.name());
+    sourceIntentProperty.setValue(intent.name());
     return this;
   }
 
@@ -108,7 +108,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The request ID.
    */
   public long getRequestId() {
-    return requestIdProperty.getValue();
+    return sourceRecordKeyProperty.getValue();
   }
 
   /**
@@ -118,7 +118,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setRequestId(final long requestId) {
-    requestIdProperty.setValue(requestId);
+    sourceRecordKeyProperty.setValue(requestId);
     return this;
   }
 
@@ -128,7 +128,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The request stream ID.
    */
   public int getRequestStreamId() {
-    return requestStreamIdProperty.getValue();
+    return sourcePartitionIdProperty.getValue();
   }
 
   /**
@@ -138,7 +138,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setRequestStreamId(final int requestStreamId) {
-    requestStreamIdProperty.setValue(requestStreamId);
+    sourcePartitionIdProperty.setValue(requestStreamId);
     return this;
   }
 }
