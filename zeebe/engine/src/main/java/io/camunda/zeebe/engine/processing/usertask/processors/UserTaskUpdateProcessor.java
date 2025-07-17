@@ -77,15 +77,15 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequest()) {
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.UPDATED, userTaskRecord, command);
       return;
     }
 
-    final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-    if (recordRequestMetadata.isEmpty()) {
+    final var requestContext = userTaskState.findRecordRequest(userTaskKey);
+    if (requestContext.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "
               + "This may indicate a problem with how the update was triggered. "
@@ -96,8 +96,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var metadata = recordRequestMetadata.get();
-    switch (metadata.getTriggerType()) {
+    final var request = requestContext.get();
+    switch (request.getTriggerType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
         responseWriter.writeResponse(
@@ -105,8 +105,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             UserTaskIntent.UPDATED,
             userTaskRecord,
             ValueType.USER_TASK,
-            metadata.getRequestId(),
-            metadata.getRequestStreamId());
+            request.getRequestId(),
+            request.getRequestStreamId());
       }
       case VARIABLE_DOCUMENT -> {
         // Update triggered by a VariableDocument command.
@@ -140,13 +140,13 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             VariableDocumentIntent.UPDATED,
             variableDocumentRecord,
             ValueType.VARIABLE_DOCUMENT,
-            metadata.getRequestId(),
-            metadata.getRequestStreamId());
+            request.getRequestId(),
+            request.getRequestStreamId());
       }
       default ->
           throw new IllegalArgumentException(
               "Unexpected user task transition trigger type: '%s'"
-                  .formatted(metadata.getTriggerType()));
+                  .formatted(request.getTriggerType()));
     }
   }
 
