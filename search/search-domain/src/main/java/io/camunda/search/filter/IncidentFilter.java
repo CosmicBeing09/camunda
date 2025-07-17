@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.Objects;
 
 public record IncidentFilter(
-    List<Long> incidentKeys,
-    List<Long> processDefinitionKeys,
-    List<String> processDefinitionIds,
-    List<Long> processInstanceKeys,
+    List<Long> incidentKeyOperations,
+    List<Long> processDefinitionKeyOperations,
+    List<String> processDefinitionIdOperations,
+    List<Long> processInstanceKeyOperations,
     List<ErrorType> errorTypes,
     List<String> errorMessages,
     List<Integer> errorMessageHashes,
@@ -36,10 +36,10 @@ public record IncidentFilter(
 
   public static final class Builder implements ObjectBuilder<IncidentFilter> {
 
-    private List<Long> incidentKeys;
-    private List<Long> processDefinitionKeys;
-    private List<String> processDefinitionIds;
-    private List<Long> processInstanceKeys;
+    private List<Long> incidentKeyOperations;
+    private List<Long> processDefinitionKeyOperations;
+    private List<String> processDefinitionIdOperations;
+    private List<Long> processInstanceKeyOperations;
     private List<ErrorType> errorTypes;
     private List<String> errorMessages;
     private List<Integer> errorMessageHashes;
@@ -56,7 +56,7 @@ public record IncidentFilter(
     }
 
     public Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+      incidentKeyOperations = addValuesToList(incidentKeyOperations, values);
       return this;
     }
 
@@ -65,16 +65,16 @@ public record IncidentFilter(
     }
 
     public Builder processDefinitionKeys(final List<Long> values) {
-      processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
+      processDefinitionKeyOperations = addValuesToList(processDefinitionKeyOperations, values);
       return this;
     }
 
     public Builder processDefinitionIds(final String value, final String... values) {
-      return processDefinitionIds(collectValues(value, values));
+      return processDefinitionIdOperations(collectValues(value, values));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public Builder processDefinitionIdOperations(final List<String> values) {
+      processDefinitionIdOperations = addValuesToList(processDefinitionIdOperations, values);
       return this;
     }
 
@@ -83,7 +83,7 @@ public record IncidentFilter(
     }
 
     public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+      processInstanceKeyOperations = addValuesToList(processInstanceKeyOperations, values);
       return this;
     }
 
@@ -172,10 +172,10 @@ public record IncidentFilter(
     @Override
     public IncidentFilter build() {
       return new IncidentFilter(
-          Objects.requireNonNullElse(incidentKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
-          Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(incidentKeyOperations, Collections.emptyList()),
+          Objects.requireNonNullElse(processDefinitionKeyOperations, Collections.emptyList()),
+          Objects.requireNonNullElse(processDefinitionIdOperations, Collections.emptyList()),
+          Objects.requireNonNullElse(processInstanceKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
