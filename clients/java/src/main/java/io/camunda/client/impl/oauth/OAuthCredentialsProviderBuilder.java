@@ -295,7 +295,7 @@ public final class OAuthCredentialsProviderBuilder {
     return this;
   }
 
-  public String getEntraCertificatePassword() {
+  public String getSslClientCertPassword() {
     return entraCertificatePassword;
   }
 
