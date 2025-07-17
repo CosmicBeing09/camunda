@@ -50,7 +50,7 @@ public enum MappingIntent implements Intent {
 
   public static Intent from(final short value) {
     return Arrays.stream(values())
-        .filter(m -> m.value() == value)
+        .filter(m -> m.getValue() == value)
         .findFirst()
         .map(Intent.class::cast)
         .orElse(Intent.UNKNOWN);

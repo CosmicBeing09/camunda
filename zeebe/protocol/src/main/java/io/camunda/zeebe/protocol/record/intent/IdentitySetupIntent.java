@@ -26,7 +26,7 @@ public enum IdentitySetupIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

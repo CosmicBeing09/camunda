@@ -60,7 +60,7 @@ public final class CommandResponseWriterImpl implements CommandResponseWriter, B
 
   @Override
   public CommandResponseWriterImpl intent(final Intent intent) {
-    this.intent = intent.value();
+    this.intent = intent.getValue();
     return this;
   }
 

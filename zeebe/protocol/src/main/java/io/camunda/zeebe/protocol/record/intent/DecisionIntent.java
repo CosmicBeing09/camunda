@@ -41,7 +41,7 @@ public enum DecisionIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

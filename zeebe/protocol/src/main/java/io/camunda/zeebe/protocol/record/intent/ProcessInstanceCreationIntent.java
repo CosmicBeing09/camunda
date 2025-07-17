@@ -33,7 +33,7 @@ public enum ProcessInstanceCreationIntent implements Intent, ProcessInstanceRela
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

@@ -200,7 +200,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
 
   public RecordMetadata intent(final Intent intent) {
     this.intent = intent;
-    intentValue = intent.value();
+    intentValue = intent.getValue();
     return this;
   }
 

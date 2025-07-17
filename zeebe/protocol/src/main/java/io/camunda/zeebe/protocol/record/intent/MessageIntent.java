@@ -29,7 +29,7 @@ public enum MessageIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

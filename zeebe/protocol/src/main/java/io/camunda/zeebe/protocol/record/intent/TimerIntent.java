@@ -44,7 +44,7 @@ public enum TimerIntent implements ProcessInstanceRelatedIntent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 
