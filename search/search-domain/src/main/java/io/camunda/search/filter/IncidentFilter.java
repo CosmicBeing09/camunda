@@ -106,10 +106,10 @@ public record IncidentFilter(
     }
 
     public Builder errorMessageHashes(final Integer value, final Integer... values) {
-      return errorMessageHashes(collectValues(value, values));
+      return errorMessageHashOperations(collectValues(value, values));
     }
 
-    public Builder errorMessageHashes(final List<Integer> values) {
+    public Builder errorMessageHashOperations(final List<Integer> values) {
       errorMessageHashes = addValuesToList(errorMessageHashes, values);
       return this;
     }

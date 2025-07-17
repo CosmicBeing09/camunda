@@ -285,7 +285,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
     // Search for active incidents that match the given error message hash codes
     final var incidentFilter =
         FilterBuilders.incident(
-            f -> f.errorMessageHashes(incidentErrorHashCodes).states(IncidentState.ACTIVE));
+            f -> f.errorMessageHashOperations(incidentErrorHashCodes).states(IncidentState.ACTIVE));
 
     final var incidentResult = searchIncidents(IncidentQuery.of(f -> f.filter(incidentFilter)));
 
