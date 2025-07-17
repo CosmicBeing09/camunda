@@ -21,16 +21,16 @@ import java.util.List;
 public class SearchResponsePageImpl implements SearchResponsePage {
 
   private final long totalItems;
-  private final List<Object> firstSortValues;
-  private final List<Object> lastSortValues;
+  private final List<Object> searchBeforeCursor;
+  private final List<Object> searchAfterCursor;
 
   public SearchResponsePageImpl(
       final long totalItems,
-      final List<Object> firstSortValues,
-      final List<Object> lastSortValues) {
+      final List<Object> searchBeforeCursor,
+      final List<Object> searchAfterCursor) {
     this.totalItems = totalItems;
-    this.firstSortValues = firstSortValues;
-    this.lastSortValues = lastSortValues;
+    this.searchBeforeCursor = searchBeforeCursor;
+    this.searchAfterCursor = searchAfterCursor;
   }
 
   @Override
@@ -39,12 +39,12 @@ public class SearchResponsePageImpl implements SearchResponsePage {
   }
 
   @Override
-  public List<Object> firstSortValues() {
-    return firstSortValues;
+  public List<Object> searchBeforeCursor() {
+    return searchBeforeCursor;
   }
 
   @Override
-  public List<Object> lastSortValues() {
-    return lastSortValues;
+  public List<Object> searchAfterCursor() {
+    return searchAfterCursor;
   }
 }
