@@ -96,8 +96,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var metadata = recordRequestMetadata.get();
-    switch (metadata.getTriggerType()) {
+    final var request = recordRequestMetadata.get();
+    switch (request.getTriggerType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
         responseWriter.writeResponse(
@@ -105,8 +105,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             UserTaskIntent.UPDATED,
             userTaskRecord,
             ValueType.USER_TASK,
-            metadata.getRequestId(),
-            metadata.getRequestStreamId());
+            request.getRequestId(),
+            request.getRequestStreamId());
       }
       case VARIABLE_DOCUMENT -> {
         // Update triggered by a VariableDocument command.
@@ -140,13 +140,13 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             VariableDocumentIntent.UPDATED,
             variableDocumentRecord,
             ValueType.VARIABLE_DOCUMENT,
-            metadata.getRequestId(),
-            metadata.getRequestStreamId());
+            request.getRequestId(),
+            request.getRequestStreamId());
       }
       default ->
           throw new IllegalArgumentException(
               "Unexpected user task transition trigger type: '%s'"
-                  .formatted(metadata.getTriggerType()));
+                  .formatted(request.getTriggerType()));
     }
   }
 
