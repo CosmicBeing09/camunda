@@ -12,5 +12,5 @@ import java.util.Map;
 
 public interface UsageMetricState {
 
-  Map<String, List<Long>> getTenantIdPIsMapByEventTime(final long key);
+  Map<String, List<Long>> getActiveMetricBuckets(final long key);
 }
