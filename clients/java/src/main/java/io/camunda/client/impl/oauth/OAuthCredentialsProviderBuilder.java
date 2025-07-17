@@ -278,9 +278,9 @@ public final class OAuthCredentialsProviderBuilder {
     return readTimeout;
   }
 
-  public OAuthCredentialsProviderBuilder entraCertificatePath(final String entraCertificatePath) {
-    if (entraCertificatePath != null) {
-      this.entraCertificatePath = Paths.get(entraCertificatePath);
+  public OAuthCredentialsProviderBuilder sslClientCertPath(final String sslClientCertPath) {
+    if (sslClientCertPath != null) {
+      entraCertificatePath = Paths.get(sslClientCertPath);
     }
     return this;
   }
@@ -327,7 +327,7 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyMSEntraConfiguration() {
-    applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
+    applyEnvironmentValueIfNotNull(this::sslClientCertPath, ENTRA_ENV_CERTIFICATE_PATH);
     applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
 
