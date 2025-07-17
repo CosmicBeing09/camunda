@@ -91,7 +91,7 @@ public class DbUsageMetricStateTest {
         .containsExactlyInAnyOrderEntriesOf(Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, 1L));
 
     // when
-    state.deleteRollingBucket();
+    state.deleteCurrentBucket();
 
     // then
     final var actual = state.getRollingBucket();

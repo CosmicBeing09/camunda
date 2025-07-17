@@ -46,16 +46,16 @@ public class DbUsageMetricState implements MutableUsageMetricState {
 
   @Override
   public UsageMetricStateValue getRollingBucket() {
-    setRollingBucketKeys();
+    setActiveBucketKeys();
     return metricsBucketColumnFamily.get(metricsBucketKey);
   }
 
   public void updateRollingBucket(final UsageMetricStateValue bucket) {
-    setRollingBucketKeys();
+    setActiveBucketKeys();
     metricsBucketColumnFamily.update(metricsBucketKey, bucket);
   }
 
-  private void setRollingBucketKeys() {
+  private void setActiveBucketKeys() {
     metricsBucketKey.setValue(IntervalType.ROLLING);
   }
 
@@ -65,8 +65,8 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public void deleteRollingBucket() {
-    setRollingBucketKeys();
+  public void deleteCurrentBucket() {
+    setActiveBucketKeys();
     metricsBucketColumnFamily.deleteExisting(metricsBucketKey);
   }
 
