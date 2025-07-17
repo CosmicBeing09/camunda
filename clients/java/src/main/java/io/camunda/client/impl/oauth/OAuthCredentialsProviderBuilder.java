@@ -48,7 +48,7 @@ import java.util.Objects;
 
 public final class OAuthCredentialsProviderBuilder {
   public static final String INVALID_ARGUMENT_MSG = "Expected valid %s but none was provided.";
-  private static final String DEFAULT_AUTHZ_SERVER = "https://login.cloud.camunda.io/oauth/token/";
+  private static final String DEFAULT_AUTHORIZATION_SERVER_URL = "https://login.cloud.camunda.io/oauth/token/";
   private static final Duration DEFAULT_CONNECT_TIMEOUT = Duration.ofSeconds(5);
   private static final Duration DEFAULT_READ_TIMEOUT = DEFAULT_CONNECT_TIMEOUT;
 
@@ -63,8 +63,8 @@ public final class OAuthCredentialsProviderBuilder {
   private String keystoreKeyPassword;
   private Path truststorePath;
   private String truststorePassword;
-  private String credentialsCachePath;
-  private File credentialsCache;
+  private String credentialsCacheFilePath;
+  private File credentialsCacheFile;
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
@@ -221,15 +221,15 @@ public final class OAuthCredentialsProviderBuilder {
    * $HOME/.camunda/credentials
    */
   public OAuthCredentialsProviderBuilder credentialsCachePath(final String cachePath) {
-    credentialsCachePath = cachePath;
+    credentialsCacheFilePath = cachePath;
     return this;
   }
 
   /**
    * @see OAuthCredentialsProviderBuilder#credentialsCachePath(String)
    */
-  File getCredentialsCache() {
-    return credentialsCache;
+  File getCredentialsCacheFile() {
+    return credentialsCacheFile;
   }
 
   /**
@@ -306,7 +306,7 @@ public final class OAuthCredentialsProviderBuilder {
         && entraCertificatePath.toFile().exists();
   }
 
-  public OAuthCredentialsProviderBuilder applyEnvironmentOverrides(
+  public OAuthCredentialsProviderBuilder useEnvironmentOverrides(
       final boolean applyEnvironmentOverrides) {
     this.applyEnvironmentOverrides = applyEnvironmentOverrides;
     return this;
@@ -320,13 +320,13 @@ public final class OAuthCredentialsProviderBuilder {
       checkEnvironmentOverrides();
     }
     applyDefaults();
-    applyMSEntraConfiguration();
+    applyEntraConfiguration();
 
     validate();
     return new OAuthCredentialsProvider(this);
   }
 
-  private void applyMSEntraConfiguration() {
+  private void applyEntraConfiguration() {
     applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
     applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
   }
@@ -383,15 +383,15 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyDefaults() {
-    if (credentialsCachePath == null) {
-      credentialsCachePath =
+    if (credentialsCacheFilePath == null) {
+      credentialsCacheFilePath =
           Paths.get(System.getProperty("user.home"), ".camunda", "credentials")
               .toAbsolutePath()
               .toString();
     }
 
     if (authorizationServerUrl == null) {
-      authorizationServerUrl = DEFAULT_AUTHZ_SERVER;
+      authorizationServerUrl = DEFAULT_AUTHORIZATION_SERVER_URL;
     }
 
     if (connectTimeout == null) {
@@ -429,9 +429,9 @@ public final class OAuthCredentialsProviderBuilder {
         throw new IllegalArgumentException("Truststore path does not exist: " + keystorePath);
       }
 
-      credentialsCache = new File(credentialsCachePath);
+      credentialsCacheFile = new File(credentialsCacheFilePath);
 
-      if (credentialsCache.isDirectory()) {
+      if (credentialsCacheFile.isDirectory()) {
         throw new IllegalArgumentException(
             "Expected specified credentials cache to be a file but found directory instead.");
       }
