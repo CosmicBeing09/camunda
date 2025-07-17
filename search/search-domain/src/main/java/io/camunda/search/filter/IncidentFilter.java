@@ -55,8 +55,8 @@ public record IncidentFilter(
       return incidentKeys(collectValues(value, values));
     }
 
-    public Builder incidentKeys(final List<Long> values) {
-      incidentKeys = addValuesToList(incidentKeys, values);
+    public Builder incidentKeys(final List<Long> incidentKeysList) {
+      incidentKeys = addValuesToList(incidentKeys, incidentKeysList);
       return this;
     }
 
@@ -64,8 +64,8 @@ public record IncidentFilter(
       return processDefinitionKeys(collectValues(value, values));
     }
 
-    public Builder processDefinitionKeys(final List<Long> values) {
-      processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
+    public Builder processDefinitionKeys(final List<Long> processDefinitionKeysList) {
+      processDefinitionKeys = addValuesToList(processDefinitionKeys, processDefinitionKeysList);
       return this;
     }
 
@@ -73,8 +73,8 @@ public record IncidentFilter(
       return processDefinitionIds(collectValues(value, values));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
-      processDefinitionIds = addValuesToList(processDefinitionIds, values);
+    public Builder processDefinitionIds(final List<String> processDefinitionIdsList) {
+      processDefinitionIds = addValuesToList(processDefinitionIds, processDefinitionIdsList);
       return this;
     }
 
@@ -82,8 +82,8 @@ public record IncidentFilter(
       return processInstanceKeys(collectValues(value, values));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public Builder processInstanceKeys(final List<Long> processInstanceKeysList) {
+      processInstanceKeys = addValuesToList(processInstanceKeys, processInstanceKeysList);
       return this;
     }
 
@@ -91,8 +91,8 @@ public record IncidentFilter(
       return errorTypes(collectValues(value, values));
     }
 
-    public Builder errorTypes(final List<ErrorType> values) {
-      errorTypes = addValuesToList(errorTypes, values);
+    public Builder errorTypes(final List<ErrorType> errorTypesList) {
+      errorTypes = addValuesToList(errorTypes, errorTypesList);
       return this;
     }
 
@@ -100,8 +100,8 @@ public record IncidentFilter(
       return errorMessages(collectValues(value, values));
     }
 
-    public Builder errorMessages(final List<String> values) {
-      errorMessages = addValuesToList(errorMessages, values);
+    public Builder errorMessages(final List<String> errorMessagesList) {
+      errorMessages = addValuesToList(errorMessages, errorMessagesList);
       return this;
     }
 
@@ -109,8 +109,8 @@ public record IncidentFilter(
       return errorMessageHashes(collectValues(value, values));
     }
 
-    public Builder errorMessageHashes(final List<Integer> values) {
-      errorMessageHashes = addValuesToList(errorMessageHashes, values);
+    public Builder errorMessageHashes(final List<Integer> errorMessageHashesList) {
+      errorMessageHashes = addValuesToList(errorMessageHashes, errorMessageHashesList);
       return this;
     }
 
