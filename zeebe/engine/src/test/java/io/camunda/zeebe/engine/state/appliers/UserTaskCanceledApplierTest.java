@@ -93,7 +93,7 @@ public class UserTaskCanceledApplierTest {
   }
 
   @Test
-  public void shouldCancelUserTaskWhenNoIntermediateStateAndRequestMetadataPresent() {
+  public void shouldCancelUserTaskWhenNoIntermediateStatePresent() {
     // given
     final var userTaskKey = 1;
 
