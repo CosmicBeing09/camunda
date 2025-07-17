@@ -79,7 +79,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByProcessInstanceKey() {
-    final var filter = FilterBuilders.incident(f -> f.processInstanceKeys(42L));
+    final var filter = FilterBuilders.incident(f -> f.processInstanceKeyOperations(42L));
 
     // when
     final var searchRequest = transformQuery(filter);

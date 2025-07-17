@@ -1122,7 +1122,7 @@ public final class SearchQueryRequestMapper {
       ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::processDefinitionIds);
       ofNullable(filter.getProcessInstanceKey())
           .map(KeyUtil::keyToLong)
-          .ifPresent(builder::processInstanceKeys);
+          .ifPresent(builder::processInstanceKeyOperations);
       ofNullable(filter.getErrorType())
           .ifPresent(t -> builder.errorTypes(IncidentEntity.ErrorType.valueOf(t.getValue())));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessages);
