@@ -2129,10 +2129,10 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *  .send();
    * </pre>
    *
-   * @param batchOperationKey the key which identifies the corresponding batch operation
+   * @param batchOperationId the key which identifies the corresponding batch operation
    * @return a builder for the request
    */
-  BatchOperationGetRequest newBatchOperationGetRequest(Long batchOperationKey);
+  BatchOperationGetRequest newBatchOperationGetRequest(Long batchOperationId);
 
   /**
    * Executes a search request to query batch operations.
