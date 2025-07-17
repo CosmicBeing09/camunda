@@ -1135,7 +1135,7 @@ public final class SearchQueryRequestMapper {
       ofNullable(filter.getState())
           .ifPresent(s -> builder.states(IncidentState.valueOf(s.getValue())));
       ofNullable(filter.getJobKey()).map(KeyUtil::keyToLong).ifPresent(builder::jobKeys);
-      ofNullable(filter.getTenantId()).ifPresent(builder::tenantIds);
+      ofNullable(filter.getTenantId()).ifPresent(builder::tenantIdOperations);
     }
     return builder.build();
   }
