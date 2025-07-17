@@ -70,10 +70,10 @@ public record IncidentFilter(
     }
 
     public Builder processDefinitionIds(final String value, final String... values) {
-      return processDefinitionIds(collectValues(value, values));
+      return processDefinitionIdOperations(collectValues(value, values));
     }
 
-    public Builder processDefinitionIds(final List<String> values) {
+    public Builder processDefinitionIdOperations(final List<String> values) {
       processDefinitionIds = addValuesToList(processDefinitionIds, values);
       return this;
     }
