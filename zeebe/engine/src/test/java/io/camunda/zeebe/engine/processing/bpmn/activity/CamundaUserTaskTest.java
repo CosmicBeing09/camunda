@@ -1026,22 +1026,22 @@ public final class CamundaUserTaskTest {
             .withVariables(Map.of("approvalStatus", "PENDING"))
             .create();
 
-    final var createdUserTaskRecord =
+    final var createdUserTask =
         RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
     // when: updating task-scoped variables
-    final var variableUpdateRecord =
+    final var variableUpdate =
         ENGINE
             .variables()
-            .ofScope(createdUserTaskRecord.getValue().getElementInstanceKey())
+            .ofScope(createdUserTask.getValue().getElementInstanceKey())
             .withDocument(Map.of("approvalStatus", "SUBMITTED"))
             .withLocalSemantic()
             .update();
 
     // then: variable update should be successful and trigger the user task update transition
-    Assertions.assertThat(variableUpdateRecord)
+    Assertions.assertThat(variableUpdate)
         .describedAs("Expect variables to be successfully updated for a user task")
         .hasRecordType(RecordType.EVENT)
         .hasIntent(VariableDocumentIntent.UPDATED)
@@ -1050,7 +1050,7 @@ public final class CamundaUserTaskTest {
     Assertions.assertThat(
             RecordingExporter.variableRecords(VariableIntent.CREATED)
                 .withProcessInstanceKey(processInstanceKey)
-                .withScopeKey(createdUserTaskRecord.getValue().getElementInstanceKey())
+                .withScopeKey(createdUserTask.getValue().getElementInstanceKey())
                 .getFirst()
                 .getValue())
         .describedAs("Expect the variable to be created at the local scope of user task element")
@@ -1081,7 +1081,7 @@ public final class CamundaUserTaskTest {
             .withVariables(Map.of("approvalStatus", "PENDING"))
             .create();
 
-    final var createdUserTaskRecord =
+    final var createdUserTask =
         RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
@@ -1089,7 +1089,7 @@ public final class CamundaUserTaskTest {
     // when: updating a process-level variable and creating a new one using `PROPAGATE` semantic
     ENGINE
         .variables()
-        .ofScope(createdUserTaskRecord.getValue().getElementInstanceKey())
+        .ofScope(createdUserTask.getValue().getElementInstanceKey())
         .withDocument(
             Map.of(
                 "approvalStatus", "SUBMITTED",
