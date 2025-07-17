@@ -329,7 +329,7 @@ public class TaskService {
 
     return new String[] {
       TAG_KEY_BPMN_PROCESS_ID, task.getBpmnProcessId(),
-      TAG_KEY_FLOW_NODE_ID, task.getFlowNodeBpmnId(),
+      TAG_KEY_FLOW_NODE_ID, task.getBpmnId(),
       TAG_KEY_USER_ID, keyUserId,
       TAG_KEY_ORGANIZATION_ID, userReader.getCurrentOrganizationId()
     };

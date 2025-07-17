@@ -82,7 +82,7 @@ public class JobZeebeRecordProcessorElasticSearch {
             .setId(String.valueOf(record.getKey()))
             .setKey(record.getKey())
             .setPartitionId(record.getPartitionId())
-            .setFlowNodeBpmnId(recordValue.getElementId())
+            .setBpmnId(recordValue.getElementId())
             .setFlowNodeInstanceId(String.valueOf(recordValue.getElementInstanceKey()))
             .setProcessInstanceId(String.valueOf(recordValue.getProcessInstanceKey()))
             .setBpmnProcessId(recordValue.getBpmnProcessId())
@@ -201,7 +201,7 @@ public class JobZeebeRecordProcessorElasticSearch {
       final Map<String, Object> updateFields = new HashMap<>();
       LOGGER.debug("Task instance: id {}", entity.getId());
       if (intent == Intent.MIGRATED) {
-        updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getFlowNodeBpmnId());
+        updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getBpmnId());
         updateFields.put(TaskTemplate.BPMN_PROCESS_ID, entity.getBpmnProcessId());
         updateFields.put(TaskTemplate.PROCESS_DEFINITION_ID, entity.getProcessDefinitionId());
       } else {
