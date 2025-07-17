@@ -40,7 +40,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
         .from(from)
         .size(size)
         .searchAfter(searchAfter)
-        .searchBefore(searchBefore)
+        .before(searchBefore)
         .build();
   }
 
@@ -70,7 +70,7 @@ public record SearchQueryPage(Integer from, Integer size, String searchAfter, St
       return this;
     }
 
-    public Builder searchBefore(final String value) {
+    public Builder before(final String value) {
       searchBefore = value;
       return this;
     }
