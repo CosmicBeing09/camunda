@@ -97,10 +97,10 @@ public record IncidentFilter(
     }
 
     public Builder errorMessages(final String value, final String... values) {
-      return errorMessages(collectValues(value, values));
+      return errorMessageOperations(collectValues(value, values));
     }
 
-    public Builder errorMessages(final List<String> values) {
+    public Builder errorMessageOperations(final List<String> values) {
       errorMessages = addValuesToList(errorMessages, values);
       return this;
     }
