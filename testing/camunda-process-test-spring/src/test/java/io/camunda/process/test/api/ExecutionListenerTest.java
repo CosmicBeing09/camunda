@@ -25,7 +25,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
-import io.camunda.process.test.impl.configuration.CamundaContainerRuntimeConfiguration;
+import io.camunda.process.test.impl.configuration.CamundaRuntimeConfiguration;
 import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
 import io.camunda.process.test.impl.proxy.CamundaClientProxy;
@@ -108,8 +108,8 @@ public class ExecutionListenerTest {
     when(applicationContext.getBean(ZeebeClientProxy.class)).thenReturn(zeebeClientProxy);
     when(applicationContext.getBean(CamundaProcessTestContextProxy.class))
         .thenReturn(camundaProcessTestContextProxy);
-    when(applicationContext.getBean(CamundaContainerRuntimeConfiguration.class))
-        .thenReturn(new CamundaContainerRuntimeConfiguration());
+    when(applicationContext.getBean(CamundaRuntimeConfiguration.class))
+        .thenReturn(new CamundaRuntimeConfiguration());
   }
 
   @Test
@@ -298,14 +298,14 @@ public class ExecutionListenerTest {
     final CamundaProcessTestExecutionListener listener =
         new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
 
-    final CamundaContainerRuntimeConfiguration runtimeConfiguration =
-        new CamundaContainerRuntimeConfiguration();
-    runtimeConfiguration.setCamundaVersion("8.6.0-custom");
+    final CamundaRuntimeConfiguration runtimeConfiguration =
+        new CamundaRuntimeConfiguration();
+    runtimeConfiguration.setVersion("8.6.0-custom");
     runtimeConfiguration.setCamundaDockerImageName("custom-camunda");
     runtimeConfiguration.setCamundaEnvVars(camundaEnvVars);
     runtimeConfiguration.setCamundaExposedPorts(List.of(100, 200));
 
-    when(applicationContext.getBean(CamundaContainerRuntimeConfiguration.class))
+    when(applicationContext.getBean(CamundaRuntimeConfiguration.class))
         .thenReturn(runtimeConfiguration);
 
     // when
@@ -332,15 +332,15 @@ public class ExecutionListenerTest {
     final CamundaProcessTestExecutionListener listener =
         new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
 
-    final CamundaContainerRuntimeConfiguration runtimeConfiguration =
-        new CamundaContainerRuntimeConfiguration();
+    final CamundaRuntimeConfiguration runtimeConfiguration =
+        new CamundaRuntimeConfiguration();
     runtimeConfiguration.setConnectorsEnabled(true);
     runtimeConfiguration.setConnectorsDockerImageName("custom-connectors");
     runtimeConfiguration.setConnectorsDockerImageVersion("8.6.0-custom");
     runtimeConfiguration.setConnectorsEnvVars(connectorsEnvVars);
     runtimeConfiguration.setConnectorsSecrets(connectorsSecrets);
 
-    when(applicationContext.getBean(CamundaContainerRuntimeConfiguration.class))
+    when(applicationContext.getBean(CamundaRuntimeConfiguration.class))
         .thenReturn(runtimeConfiguration);
 
     // when

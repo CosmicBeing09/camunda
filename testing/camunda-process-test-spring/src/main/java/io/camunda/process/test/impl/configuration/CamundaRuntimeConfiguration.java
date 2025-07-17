@@ -24,50 +24,50 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "io.camunda.process.test")
-public class CamundaContainerRuntimeConfiguration {
+public class CamundaRuntimeConfiguration {
 
-  private String camundaVersion = ContainerRuntimeDefaults.CAMUNDA_VERSION;
-  private String camundaDockerImageName = ContainerRuntimeDefaults.CAMUNDA_DOCKER_IMAGE_NAME;
-  private Map<String, String> camundaEnvVars = Collections.emptyMap();
-  private List<Integer> camundaExposedPorts = Collections.emptyList();
+  private String version = ContainerRuntimeDefaults.CAMUNDA_VERSION;
+  private String imageName = ContainerRuntimeDefaults.CAMUNDA_DOCKER_IMAGE_NAME;
+  private Map<String, String> envVars = Collections.emptyMap();
+  private List<Integer> exposedPorts = Collections.emptyList();
 
   private boolean connectorsEnabled = false;
-  private String connectorsDockerImageName = ContainerRuntimeDefaults.CONNECTORS_DOCKER_IMAGE_NAME;
-  private String connectorsDockerImageVersion =
+  private String connectorsImageName = ContainerRuntimeDefaults.CONNECTORS_DOCKER_IMAGE_NAME;
+  private String connectorsImageVersion =
       ContainerRuntimeDefaults.CONNECTORS_DOCKER_IMAGE_VERSION;
   private Map<String, String> connectorsEnvVars = Collections.emptyMap();
   private Map<String, String> connectorsSecrets = Collections.emptyMap();
 
-  public String getCamundaVersion() {
-    return camundaVersion;
+  public String getVersion() {
+    return version;
   }
 
-  public void setCamundaVersion(final String camundaVersion) {
-    this.camundaVersion = camundaVersion;
+  public void setVersion(final String camundaVersion) {
+    version = camundaVersion;
   }
 
-  public String getCamundaDockerImageName() {
-    return camundaDockerImageName;
+  public String getImageName() {
+    return imageName;
   }
 
   public void setCamundaDockerImageName(final String camundaDockerImageName) {
-    this.camundaDockerImageName = camundaDockerImageName;
+    imageName = camundaDockerImageName;
   }
 
   public Map<String, String> getCamundaEnvVars() {
-    return camundaEnvVars;
+    return envVars;
   }
 
   public void setCamundaEnvVars(final Map<String, String> camundaEnvVars) {
-    this.camundaEnvVars = camundaEnvVars;
+    envVars = camundaEnvVars;
   }
 
   public List<Integer> getCamundaExposedPorts() {
-    return camundaExposedPorts;
+    return exposedPorts;
   }
 
   public void setCamundaExposedPorts(final List<Integer> camundaExposedPorts) {
-    this.camundaExposedPorts = camundaExposedPorts;
+    exposedPorts = camundaExposedPorts;
   }
 
   public boolean isConnectorsEnabled() {
@@ -79,19 +79,19 @@ public class CamundaContainerRuntimeConfiguration {
   }
 
   public String getConnectorsDockerImageName() {
-    return connectorsDockerImageName;
+    return connectorsImageName;
   }
 
   public void setConnectorsDockerImageName(final String connectorsDockerImageName) {
-    this.connectorsDockerImageName = connectorsDockerImageName;
+    connectorsImageName = connectorsDockerImageName;
   }
 
   public String getConnectorsDockerImageVersion() {
-    return connectorsDockerImageVersion;
+    return connectorsImageVersion;
   }
 
   public void setConnectorsDockerImageVersion(final String connectorsDockerImageVersion) {
-    this.connectorsDockerImageVersion = connectorsDockerImageVersion;
+    connectorsImageVersion = connectorsDockerImageVersion;
   }
 
   public Map<String, String> getConnectorsEnvVars() {
