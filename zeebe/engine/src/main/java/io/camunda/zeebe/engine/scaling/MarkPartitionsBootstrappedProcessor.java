@@ -41,21 +41,21 @@ public class MarkPartitionsBootstrappedProcessor implements TypedRecordProcessor
 
   @Override
   public void processRecord(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
-    if (!(routingState.desiredPartitions().size() == scaleUp.getDesiredPartitionCount())) {
+    final var scaleRecord = command.getValue();
+    if (!(routingState.desiredPartitions().size() == scaleRecord.getDesiredPartitionCount())) {
       final var reason =
           String.format(
               "The redistributed partitions do not match the desired partitions. "
                   + "The redistributed partitions are %s, the desired partitions are %s.",
-              scaleUp.getRedistributedPartitions(), routingState.desiredPartitions());
+              scaleRecord.getRedistributedPartitions(), routingState.desiredPartitions());
       rejectionWriter.appendRejection(command, RejectionType.INVALID_ARGUMENT, reason);
       responseWriter.writeRejectionOnCommand(command, RejectionType.INVALID_ARGUMENT, reason);
     }
     final var scalingKey = keyGenerator.nextKey();
-    stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITIONS_BOOTSTRAPPED, scaleUp);
+    stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITIONS_BOOTSTRAPPED, scaleRecord);
     // TODO remove when relocation is needed
     responseWriter.writeEventOnCommand(
-        scalingKey, ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED, scaleUp, command);
-    stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALED_UP, scaleUp);
+        scalingKey, ScaleIntent.MARK_PARTITIONS_BOOTSTRAPPED, scaleRecord, command);
+    stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALED_UP, scaleRecord);
   }
 }
