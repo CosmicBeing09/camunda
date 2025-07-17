@@ -190,7 +190,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     final var date = OffsetDateTime.ofInstant(Instant.now(), ZoneId.systemDefault());
     final var dateFilter = new DateValueFilter.Builder().before(date).after(date).build();
-    final var filter = FilterBuilders.incident(f -> f.creationTime(dateFilter));
+    final var filter = FilterBuilders.incident(f -> f.creationTimeFilter(dateFilter));
 
     // when
     final var searchRequest = transformQuery(filter);
