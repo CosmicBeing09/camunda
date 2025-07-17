@@ -15,18 +15,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationItemFilter(
-    List<String> batchOperationIds,
-    List<Long> itemKeys,
-    List<Long> processInstanceKeys,
-    List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationItemFilter> {
 
     private List<String> batchOperationIds;
     private List<Long> itemKeys;
-    private List<Long> processInstanceKeys;
+    private List<Long> processInstanceKeyOperations;
     private List<String> state;
 
     public Builder batchOperationIds(final String value, final String... values) {
@@ -47,12 +42,12 @@ public record BatchOperationItemFilter(
       return this;
     }
 
-    public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeys(collectValues(value, values));
+    public Builder processInstanceKeyOperations(final Long value, final Long... values) {
+      return processInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public Builder processInstanceKeyOperations(final List<Long> values) {
+      processInstanceKeyOperations = addValuesToList(processInstanceKeyOperations, values);
       return this;
     }
 
@@ -70,8 +65,14 @@ public record BatchOperationItemFilter(
       return new BatchOperationItemFilter(
           Objects.requireNonNullElse(batchOperationIds, Collections.emptyList()),
           Objects.requireNonNullElse(itemKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(processInstanceKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(state, Collections.emptyList()));
     }
   }
 }
+    implements
+public record BatchOperationItemFilter(
+    List<String> batchOperationIds,
+    List<Long> itemKeys,
+    List<Long> processInstanceKeyOperations,
+    List<String> state)
