@@ -45,7 +45,7 @@ public record IncidentFilter(
     private List<Integer> errorMessageHashes;
     private List<String> flowNodeIds;
     private List<Long> flowNodeInstanceKeys;
-    private DateValueFilter creationTimeFilter;
+    private DateValueFilter creationTime;
     private List<IncidentState> states;
     private String treePath;
     private List<Long> jobKeys;
@@ -115,7 +115,7 @@ public record IncidentFilter(
     }
 
     public Builder creationTime(final DateValueFilter value) {
-      creationTimeFilter = value;
+      creationTime = value;
       return this;
     }
 
@@ -181,7 +181,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeInstanceKeys, Collections.emptyList()),
-          creationTimeFilter,
+          creationTime,
           Objects.requireNonNullElse(states, Collections.emptyList()),
           treePath,
           Objects.requireNonNullElse(jobKeys, Collections.emptyList()),
