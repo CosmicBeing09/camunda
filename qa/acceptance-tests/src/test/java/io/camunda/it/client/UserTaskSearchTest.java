@@ -45,13 +45,13 @@ class UserTaskSearchTest {
     deployProcess("process", "simple.bpmn", "test", "", "");
     deployProcess("process-2", "simple-2.bpmn", "test-2", "group", "user");
     deployProcess("process-3", "simple-3.bpmn", "test-3", "", "", "30");
-    delpoyProcessFromResourcePath("/process/bpm_variable_test.bpmn", "bpm_variable_test.bpmn");
-    delpoyProcessFromResourcePath(
+    deployProcessFromResourcePath("/process/bpm_variable_test.bpmn", "bpm_variable_test.bpmn");
+    deployProcessFromResourcePath(
         "/process/bpmn_subprocess_case.bpmn", "bpmn_subprocess_case.bpmn");
 
     deployForm("form/form.form");
-    delpoyProcessFromResourcePath("/process/process_with_form.bpmn", "process_with_form.bpmn");
-    delpoyProcessFromResourcePath("/process/job_worker_process.bpmn", "job_worker_process.bpmn");
+    deployProcessFromResourcePath("/process/process_with_form.bpmn", "process_with_form.bpmn");
+    deployProcessFromResourcePath("/process/job_worker_process.bpmn", "job_worker_process.bpmn");
 
     startProcessInstance("process");
     startProcessInstance("process-2");
@@ -434,7 +434,7 @@ class UserTaskSearchTest {
   }
 
   @Test
-  public void shouldRetrieveTaskByElementName() {
+  public void shouldRetrieveTaskByName() {
     final var result =
         camundaClient.newUserTaskSearchRequest().filter(f -> f.elementName("P2")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
@@ -1400,7 +1400,7 @@ class UserTaskSearchTest {
         .join();
   }
 
-  private static void delpoyProcessFromResourcePath(
+  private static void deployProcessFromResourcePath(
       final String resource, final String resourceName) {
     final InputStream process = UserTaskSearchTest.class.getResourceAsStream(resource);
 
