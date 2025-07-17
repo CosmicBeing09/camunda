@@ -151,7 +151,7 @@ public class OidcAuthOverRestIT {
                             + "/realms/"
                             + KEYCLOAK_REALM
                             + "/protocol/openid-connect/token")
-                    .credentialsCachePath(tempDir.resolve("default").toString())
+                    .credentialsCacheFilePath(tempDir.resolve("default").toString())
                     .build())
             .build();
 
@@ -172,7 +172,7 @@ public class OidcAuthOverRestIT {
                             + "/realms/"
                             + KEYCLOAK_REALM
                             + "/protocol/openid-connect/token")
-                    .credentialsCachePath(tempDir.resolve("restricted").toString())
+                    .credentialsCacheFilePath(tempDir.resolve("restricted").toString())
                     .build())
             .build();
   }

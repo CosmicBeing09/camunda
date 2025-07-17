@@ -88,7 +88,7 @@ public class CredentialsProviderConfiguration {
                 ofNullable(camundaClientProperties.getAuth().getTokenUrl())
                     .map(URI::toString)
                     .orElse(null))
-            .credentialsCachePath(camundaClientProperties.getAuth().getCredentialsCachePath())
+            .credentialsCacheFilePath(camundaClientProperties.getAuth().getCredentialsCachePath())
             .connectTimeout(camundaClientProperties.getAuth().getConnectTimeout())
             .readTimeout(camundaClientProperties.getAuth().getReadTimeout());
 

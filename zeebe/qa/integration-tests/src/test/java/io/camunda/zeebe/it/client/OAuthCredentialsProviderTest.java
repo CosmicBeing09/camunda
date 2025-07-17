@@ -72,7 +72,7 @@ final class OAuthCredentialsProviderTest {
             .audience("zeebe")
             .clientId("zeebe")
             .clientSecret("secret")
-            .credentialsCachePath(cacheDir.resolve("cache").toString())
+            .credentialsCacheFilePath(cacheDir.resolve("cache").toString())
             .authorizationServerUrl(getTokenEndpoint())
             .build();
 
