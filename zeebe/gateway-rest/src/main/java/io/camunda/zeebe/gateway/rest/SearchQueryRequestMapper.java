@@ -1553,7 +1553,7 @@ public final class SearchQueryRequestMapper {
             (p) ->
                 p.size(requestedPage.getLimit())
                     .from(requestedPage.getFrom())
-                    .searchAfter(searchAfter)
+                    .after(searchAfter)
                     .searchBefore(searchBefore)));
   }
 
