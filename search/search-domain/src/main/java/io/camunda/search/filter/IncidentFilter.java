@@ -129,10 +129,10 @@ public record IncidentFilter(
     }
 
     public Builder flowNodeInstanceKeys(final Long value, final Long... values) {
-      return flowNodeInstanceKeys(collectValues(value, values));
+      return flowNodeInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder flowNodeInstanceKeys(final List<Long> values) {
+    public Builder flowNodeInstanceKeyOperations(final List<Long> values) {
       flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
       return this;
     }
