@@ -93,7 +93,7 @@ public final class CheckpointCreateProcessor {
             .rejectionReason("")
             .operationReference(command.getOperationReference()));
 
-    if (command.hasRequestMetadata()) {
+    if (command.hasRequest()) {
       resultBuilder.withResponse(
           RecordType.EVENT,
           command.getKey(),
