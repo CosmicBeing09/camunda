@@ -27,25 +27,25 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
 
-public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor {
+public final class TaskCompleteProcessor implements UserTaskCommandProcessor {
 
   private static final String DEFAULT_ACTION = "complete";
 
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState userTaskState;
+  private final UserTaskState asyncRequestState;
   private final EventHandle eventHandle;
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
   private final TypedResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
-  public UserTaskCompleteProcessor(
+  public TaskCompleteProcessor(
       final ProcessingState state,
       final EventHandle eventHandle,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
     elementInstanceState = state.getElementInstanceState();
-    userTaskState = state.getUserTaskState();
+    asyncRequestState = state.getUserTaskState();
     this.eventHandle = eventHandle;
     stateWriter = writers.state();
     commandWriter = writers.command();
@@ -98,7 +98,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
        * Note: It's important to retrieve this metadata from the user task state before appending
        * the "COMPLETED" event, as it will be cleared by the "COMPLETED" event applier.
        */
-      final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
+      final var recordRequestMetadata = asyncRequestState.findRecordRequestMetadata(userTaskKey);
       stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
