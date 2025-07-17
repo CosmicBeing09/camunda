@@ -21,7 +21,7 @@ public record IncidentFilter(
     List<Long> incidentKeys,
     List<Long> processDefinitionKeys,
     List<String> processDefinitionIds,
-    List<Long> processInstanceKeys,
+    List<Long> processInstanceKeyOperations,
     List<ErrorType> errorTypes,
     List<String> errorMessages,
     List<Integer> errorMessageHashes,
@@ -39,7 +39,7 @@ public record IncidentFilter(
     private List<Long> incidentKeys;
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
-    private List<Long> processInstanceKeys;
+    private List<Long> processInstanceKeyOperations;
     private List<ErrorType> errorTypes;
     private List<String> errorMessages;
     private List<Integer> errorMessageHashes;
@@ -78,12 +78,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeys(collectValues(value, values));
+    public Builder processInstanceKeyOperations(final Long value, final Long... values) {
+      return processInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder processInstanceKeys(final List<Long> values) {
-      processInstanceKeys = addValuesToList(processInstanceKeys, values);
+    public Builder processInstanceKeyOperations(final List<Long> values) {
+      processInstanceKeyOperations = addValuesToList(processInstanceKeyOperations, values);
       return this;
     }
 
@@ -129,10 +129,10 @@ public record IncidentFilter(
     }
 
     public Builder flowNodeInstanceKeys(final Long value, final Long... values) {
-      return flowNodeInstanceKeys(collectValues(value, values));
+      return flowNodeInstanceKeyOperations(collectValues(value, values));
     }
 
-    public Builder flowNodeInstanceKeys(final List<Long> values) {
+    public Builder flowNodeInstanceKeyOperations(final List<Long> values) {
       flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
       return this;
     }
@@ -175,7 +175,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(incidentKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
-          Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(processInstanceKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
