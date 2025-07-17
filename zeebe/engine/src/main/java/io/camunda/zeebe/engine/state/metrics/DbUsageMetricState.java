@@ -56,7 +56,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public void createRPIMetric(
+  public void recordProcessInstanceUsageMetric(
       final long eventTime, final long processInstanceKey, final String tenantId) {
     eventTimeKey.wrapLong(eventTime);
     piKey.wrapLong(processInstanceKey);
@@ -65,7 +65,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public void deleteByEventTime(final long eventTime) {
+  public void deleteUsageMetricsByEventTime(final long eventTime) {
     eventTimeKey.wrapLong(eventTime);
     rPIColumnFamily.whileEqualPrefix(
         eventTimeKey,
