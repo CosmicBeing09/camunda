@@ -79,7 +79,7 @@ public class CredentialsProviderConfiguration {
       final CamundaClientProperties camundaClientProperties) {
     final OAuthCredentialsProviderBuilder credBuilder =
         CredentialsProvider.newCredentialsProviderBuilder()
-            .applyEnvironmentOverrides(false)
+            .useEnvironmentOverrides(false)
             .clientId(camundaClientProperties.getAuth().getClientId())
             .clientSecret(camundaClientProperties.getAuth().getClientSecret())
             .audience(camundaClientProperties.getAuth().getAudience())

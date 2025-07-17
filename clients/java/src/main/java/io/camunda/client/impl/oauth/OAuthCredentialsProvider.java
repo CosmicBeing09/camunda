@@ -101,7 +101,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     truststorePassword = builder.getTruststorePassword();
     clientId = builder.getClientId();
     payload = createParams(builder);
-    credentialsCache = new OAuthCredentialsCache(builder.getCredentialsCache());
+    credentialsCache = new OAuthCredentialsCache(builder.getCredentialsCacheFile());
     connectionTimeout = builder.getConnectTimeout();
     readTimeout = builder.getReadTimeout();
   }
@@ -254,10 +254,10 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
   }
 
   private static String getClientAssertion(
-      String certPath, String certStorePassword, String clientId, String audience) {
+      final String certPath, final String certStorePassword, final String clientId, final String audience) {
     final X509Certificate certificate;
     final Algorithm algorithm;
-    try (FileInputStream stream = new FileInputStream(certPath)) {
+    try (final FileInputStream stream = new FileInputStream(certPath)) {
       final KeyStore keyStore = KeyStore.getInstance("PKCS12");
       final char[] password = certStorePassword.toCharArray();
       keyStore.load(stream, password);
@@ -269,7 +269,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
 
       certificate = (X509Certificate) keyStore.getCertificate(alias);
       algorithm = Algorithm.RSA256(publicKey, privateKey);
-    } catch (IOException | GeneralSecurityException e) {
+    } catch (final IOException | GeneralSecurityException e) {
       throw new RuntimeException("Failed to create client assertion", e);
     }
 
@@ -293,12 +293,12 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
         .sign(algorithm);
   }
 
-  private static String generateX5tThumbprint(X509Certificate certificate) {
+  private static String generateX5tThumbprint(final X509Certificate certificate) {
     try {
       final MessageDigest digest = MessageDigest.getInstance("SHA-1");
       final byte[] encoded = digest.digest(certificate.getEncoded());
       return Base64.getUrlEncoder().withoutPadding().encodeToString(encoded);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new RuntimeException("Failed to generate x5t thumbprint", e);
     }
   }
