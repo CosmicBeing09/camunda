@@ -19,22 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public record FlowNodeInstanceFilter(
-    List<Long> flowNodeInstanceKeys,
-    List<Long> processInstanceKeys,
-    List<Long> processDefinitionKeys,
-    List<String> processDefinitionIds,
-    List<Operation<String>> stateOperations,
-    List<FlowNodeType> types,
-    List<String> flowNodeIds,
-    List<String> flowNodeNames,
-    List<String> treePaths,
-    Boolean hasIncident,
-    List<Long> incidentKeys,
-    List<String> tenantIds,
-    List<String> startDates,
-    List<String> endDates)
-    implements FilterBase {
+FilterBase {
 
   public static FlowNodeInstanceFilter of(
       final Function<FlowNodeInstanceFilter.Builder, ObjectBuilder<FlowNodeInstanceFilter>> fn) {
@@ -207,3 +192,19 @@ public record FlowNodeInstanceFilter(
     }
   }
 }
+    implements
+public record FlowNodeInstanceFilter(
+    List<Long> flowNodeInstanceKeys,
+    List<Long> processInstanceKeys,
+    List<Long> processDefinitionKeys,
+    List<String> processDefinitionIds,
+    List<Operation<String>> stateOperations,
+    List<FlowNodeType> types,
+    List<String> flowNodeIds,
+    List<String> flowNodeNames,
+    List<String> treePaths,
+    Boolean hasIncident,
+    List<Long> incidentKeys,
+    List<String> tenantIds,
+    List<String> startDates,
+    List<String> endDates)
