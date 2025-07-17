@@ -52,7 +52,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
         getProcessDefinitionKeyQuery(filter.processDefinitionKeys());
     final var processDefinitionIdQuery = getProcessDefinitionIds(filter.processDefinitionIds());
     final var processInstanceKeyQuery = getProcessInstanceKeyQuery(filter.processInstanceKeys());
-    final var errorTypeQuery = getErrorTypeQuery(filter.errorTypes());
+    final var errorTypeQuery = getErrorTypeQuery(filter.errorTypeOperations());
     final var errorMessageQuery = getErrorMessageQuery(filter.errorMessages());
     final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIds());
     final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
