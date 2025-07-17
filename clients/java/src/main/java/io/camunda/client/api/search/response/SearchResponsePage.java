@@ -23,7 +23,7 @@ public interface SearchResponsePage {
   Long totalItems();
 
   /** The sort values of the first item in the returned page. */
-  List<Object> firstSortValues();
+  List<Object> searchBeforeCursor();
 
   /** The sort values of the last item in the returned page. */
   List<Object> lastSortValues();

@@ -39,7 +39,7 @@ public class SearchResponsePageImpl implements SearchResponsePage {
   }
 
   @Override
-  public List<Object> firstSortValues() {
+  public List<Object> searchBeforeCursor() {
     return firstSortValues;
   }
 
