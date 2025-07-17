@@ -37,11 +37,11 @@ public class CreateRequestOperationValidatorTest {
 
   @Test
   public void testValidateWithNullOperationType() {
-    final CreateOperationRequestDto operationRequest = new CreateOperationRequestDto(null);
+    final CreateOperationRequestDto request = new CreateOperationRequestDto(null);
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(operationRequest, "123"));
+            InvalidRequestException.class, () -> underTest.validate(request, "123"));
 
     assertThat(exception.getMessage()).isEqualTo("Operation type must be defined.");
   }
