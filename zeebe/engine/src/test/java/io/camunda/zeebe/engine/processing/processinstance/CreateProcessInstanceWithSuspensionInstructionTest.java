@@ -46,13 +46,13 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
   public void shouldSuspendProcessInstanceWhenElementIsCompleted() {
     // given
     final String processId = "process";
-    final String elementToSuspend = "element";
+    final String elementBeforeSuspension = "element";
     ENGINE
         .deployment()
         .withXmlResource(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
-                .manualTask(elementToSuspend)
+                .manualTask(elementBeforeSuspension)
                 .endEvent()
                 .done())
         .deploy();
@@ -62,7 +62,7 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
         ENGINE
             .processInstance()
             .ofBpmnProcessId(processId)
-            .withRuntimeSuspendInstruction(elementToSuspend)
+            .withRuntimeSuspendInstruction(elementBeforeSuspension)
             .create();
 
     // then
@@ -74,12 +74,12 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
             .filter(
                 record ->
                     record.getValue().getElementId().equals(processId)
-                        || record.getValue().getElementId().equals(elementToSuspend));
+                        || record.getValue().getElementId().equals(elementBeforeSuspension));
 
     assertThat(result)
         .extracting(Record::getIntent, record -> record.getValue().getElementId())
         .containsSequence(
-            Tuple.tuple(ProcessInstanceIntent.ELEMENT_COMPLETED, elementToSuspend),
+            Tuple.tuple(ProcessInstanceIntent.ELEMENT_COMPLETED, elementBeforeSuspension),
             Tuple.tuple(ProcessInstanceIntent.ELEMENT_SUSPENDED, processId));
 
     final var processInstanceRecord =
