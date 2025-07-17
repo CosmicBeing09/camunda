@@ -241,8 +241,8 @@ public class JunitExtensionTest {
     extension.beforeEach(extensionContext);
 
     // then
-    verify(store).put(CamundaProcessTestExtension.STORE_KEY_RUNTIME, camundaContainerRuntime);
-    verify(store).put(CamundaProcessTestExtension.STORE_KEY_CONTEXT, camundaProcessTestContext);
+    verify(store).put(CamundaProcessTestExtension.RUNTIME_KEY, camundaContainerRuntime);
+    verify(store).put(CamundaProcessTestExtension.CONTEXT_KEY, camundaProcessTestContext);
   }
 
   @Test

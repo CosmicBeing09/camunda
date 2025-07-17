@@ -74,29 +74,29 @@ public class CamundaProcessTestExtension
   public static final Namespace NAMESPACE = Namespace.create(CamundaProcessTestExtension.class);
 
   /** The JUnit extension store key of the runtime. */
-  public static final String STORE_KEY_RUNTIME = "camunda-process-test-runtime";
+  public static final String RUNTIME_KEY = "camunda-process-test-runtime";
 
   /** The JUnit extension store key of the context. */
-  public static final String STORE_KEY_CONTEXT = "camunda-process-test-context";
+  public static final String CONTEXT_KEY = "camunda-process-test-context";
 
   private static final Logger LOG = LoggerFactory.getLogger(CamundaProcessTestExtension.class);
 
-  private final List<AutoCloseable> createdClients = new ArrayList<>();
+  private final List<AutoCloseable> clients = new ArrayList<>();
 
-  private final CamundaContainerRuntimeBuilder containerRuntimeBuilder;
-  private final CamundaProcessTestResultPrinter processTestResultPrinter;
+  private final CamundaContainerRuntimeBuilder runtimeBuilder;
+  private final CamundaProcessTestResultPrinter resultPrinter;
 
-  private CamundaContainerRuntime containerRuntime;
-  private CamundaProcessTestResultCollector processTestResultCollector;
+  private CamundaContainerRuntime runtime;
+  private CamundaProcessTestResultCollector resultCollector;
 
-  private CamundaManagementClient camundaManagementClient;
-  private CamundaProcessTestContext camundaProcessTestContext;
+  private CamundaManagementClient managementClient;
+  private CamundaProcessTestContext processTestContext;
 
   CamundaProcessTestExtension(
       final CamundaContainerRuntimeBuilder containerRuntimeBuilder,
       final Consumer<String> testResultPrintStream) {
-    this.containerRuntimeBuilder = containerRuntimeBuilder;
-    processTestResultPrinter = new CamundaProcessTestResultPrinter(testResultPrintStream);
+    runtimeBuilder = containerRuntimeBuilder;
+    resultPrinter = new CamundaProcessTestResultPrinter(testResultPrintStream);
   }
 
   /**
@@ -121,30 +121,30 @@ public class CamundaProcessTestExtension
   @Override
   public void beforeAll(final ExtensionContext context) {
     // create runtime
-    containerRuntime = containerRuntimeBuilder.build();
-    containerRuntime.start();
+    runtime = runtimeBuilder.build();
+    runtime.start();
 
-    camundaManagementClient =
+    managementClient =
         new CamundaManagementClient(
-            containerRuntime.getCamundaContainer().getMonitoringApiAddress(),
-            containerRuntime.getCamundaContainer().getRestApiAddress());
+            runtime.getCamundaContainer().getMonitoringApiAddress(),
+            runtime.getCamundaContainer().getRestApiAddress());
 
-    camundaProcessTestContext =
+    processTestContext =
         new CamundaProcessTestContextImpl(
-            containerRuntime.getCamundaContainer(),
-            containerRuntime.getConnectorsContainer(),
-            createdClients::add,
-            camundaManagementClient);
+            runtime.getCamundaContainer(),
+            runtime.getConnectorsContainer(),
+            clients::add,
+            managementClient);
 
     // put in store
     final Store store = context.getStore(NAMESPACE);
-    store.put(STORE_KEY_RUNTIME, containerRuntime);
-    store.put(STORE_KEY_CONTEXT, camundaProcessTestContext);
+    store.put(RUNTIME_KEY, runtime);
+    store.put(CONTEXT_KEY, processTestContext);
   }
 
   @Override
   public void beforeEach(final ExtensionContext context) throws Exception {
-    if (containerRuntime == null) {
+    if (runtime == null) {
       throw new IllegalStateException(
           "The CamundaProcessTestExtension failed to start because the runtime is not created. "
               + "Make sure that you registering the extension on a static field.");
@@ -152,22 +152,22 @@ public class CamundaProcessTestExtension
 
     // inject fields
     try {
-      injectField(context, CamundaClient.class, camundaProcessTestContext::createClient);
-      injectField(context, ZeebeClient.class, camundaProcessTestContext::createZeebeClient);
-      injectField(context, CamundaProcessTestContext.class, () -> camundaProcessTestContext);
+      injectField(context, CamundaClient.class, processTestContext::createClient);
+      injectField(context, ZeebeClient.class, processTestContext::createZeebeClient);
+      injectField(context, CamundaProcessTestContext.class, () -> processTestContext);
     } catch (final Exception e) {
-      closeCreatedClients();
-      containerRuntime.close();
+      closeClients();
+      runtime.close();
       throw e;
     }
 
     // initialize assertions
     final CamundaDataSource dataSource =
-        new CamundaDataSource(camundaProcessTestContext.createClient());
+        new CamundaDataSource(processTestContext.createClient());
     CamundaAssert.initialize(dataSource);
 
     // initialize result collector
-    processTestResultCollector = new CamundaProcessTestResultCollector(dataSource);
+    resultCollector = new CamundaProcessTestResultCollector(dataSource);
   }
 
   private <T> void injectField(
@@ -203,7 +203,7 @@ public class CamundaProcessTestExtension
 
   @Override
   public void afterEach(final ExtensionContext extensionContext) {
-    if (containerRuntime == null) {
+    if (runtime == null) {
       // Skip if the runtime is not created.
       return;
     }
@@ -212,7 +212,7 @@ public class CamundaProcessTestExtension
       printTestResults();
     }
     CamundaAssert.reset();
-    closeCreatedClients();
+    closeClients();
     // final step: delete data
     deleteRuntimeData();
   }
@@ -220,9 +220,9 @@ public class CamundaProcessTestExtension
   private void printTestResults() {
     try {
       // collect test results
-      final ProcessTestResult testResult = processTestResultCollector.collect();
+      final ProcessTestResult testResult = resultCollector.collect();
       // print test results
-      processTestResultPrinter.print(testResult);
+      resultPrinter.print(testResult);
     } catch (final Throwable t) {
       LOG.warn("Failed to collect test results, skipping.", t);
     }
@@ -233,7 +233,7 @@ public class CamundaProcessTestExtension
       LOG.debug("Deleting the runtime data");
       final Instant startTime = Instant.now();
 
-      camundaManagementClient.purgeCluster();
+      managementClient.purgeCluster();
       final Instant endTime = Instant.now();
       final Duration duration = Duration.between(startTime, endTime);
       LOG.debug("Runtime data deleted in {}", duration);
@@ -248,11 +248,11 @@ public class CamundaProcessTestExtension
 
   @Override
   public void afterAll(final ExtensionContext context) throws Exception {
-    if (containerRuntime == null) {
+    if (runtime == null) {
       // Skip if the runtime is not created.
       return;
     }
-    containerRuntime.close();
+    runtime.close();
   }
 
   private static boolean isTestFailed(final ExtensionContext extensionContext) {
@@ -268,7 +268,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withCamundaVersion(final String camundaVersion) {
-    containerRuntimeBuilder
+    runtimeBuilder
         .withCamundaDockerImageVersion(camundaVersion)
         .withConnectorsDockerImageVersion(camundaVersion);
     return this;
@@ -281,7 +281,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withCamundaDockerImageName(final String dockerImageName) {
-    containerRuntimeBuilder.withCamundaDockerImageName(dockerImageName);
+    runtimeBuilder.withCamundaDockerImageName(dockerImageName);
     return this;
   }
 
@@ -292,7 +292,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withCamundaEnv(final Map<String, String> envVars) {
-    containerRuntimeBuilder.withCamundaEnv(envVars);
+    runtimeBuilder.withCamundaEnv(envVars);
     return this;
   }
 
@@ -304,7 +304,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withCamundaEnv(final String name, final String value) {
-    containerRuntimeBuilder.withCamundaEnv(name, value);
+    runtimeBuilder.withCamundaEnv(name, value);
     return this;
   }
 
@@ -315,7 +315,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withCamundaExposedPort(final int port) {
-    containerRuntimeBuilder.withCamundaExposedPort(port);
+    runtimeBuilder.withCamundaExposedPort(port);
     return this;
   }
 
@@ -326,7 +326,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withConnectorsEnabled(final boolean enabled) {
-    containerRuntimeBuilder.withConnectorsEnabled(enabled);
+    runtimeBuilder.withConnectorsEnabled(enabled);
     return this;
   }
 
@@ -337,7 +337,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withConnectorsDockerImageName(final String dockerImageName) {
-    containerRuntimeBuilder.withConnectorsDockerImageName(dockerImageName);
+    runtimeBuilder.withConnectorsDockerImageName(dockerImageName);
     return this;
   }
 
@@ -349,7 +349,7 @@ public class CamundaProcessTestExtension
    */
   public CamundaProcessTestExtension withConnectorsDockerImageVersion(
       final String dockerImageVersion) {
-    containerRuntimeBuilder.withConnectorsDockerImageVersion(dockerImageVersion);
+    runtimeBuilder.withConnectorsDockerImageVersion(dockerImageVersion);
     return this;
   }
 
@@ -360,7 +360,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withConnectorsEnv(final Map<String, String> envVars) {
-    containerRuntimeBuilder.withConnectorsEnv(envVars);
+    runtimeBuilder.withConnectorsEnv(envVars);
     return this;
   }
 
@@ -372,7 +372,7 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withConnectorsEnv(final String name, final String value) {
-    containerRuntimeBuilder.withConnectorsEnv(name, value);
+    runtimeBuilder.withConnectorsEnv(name, value);
     return this;
   }
 
@@ -384,12 +384,12 @@ public class CamundaProcessTestExtension
    * @return the extension builder
    */
   public CamundaProcessTestExtension withConnectorsSecret(final String name, final String value) {
-    containerRuntimeBuilder.withConnectorsSecret(name, value);
+    runtimeBuilder.withConnectorsSecret(name, value);
     return this;
   }
 
-  private void closeCreatedClients() {
-    for (final AutoCloseable client : createdClients) {
+  private void closeClients() {
+    for (final AutoCloseable client : clients) {
       try {
         client.close();
       } catch (final Exception e) {
