@@ -98,7 +98,7 @@ public final class BatchOperationMultiPartitionTest {
   }
 
   @Test
-  public void shouldPauseOnAllPartitions() {
+  public void shouldSuspendOnAllPartitions() {
     // given
     final long batchOperationKey = createDistributedBatchOperation();
 

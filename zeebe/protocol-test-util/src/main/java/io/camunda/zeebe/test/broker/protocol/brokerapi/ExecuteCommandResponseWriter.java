@@ -116,7 +116,7 @@ public final class ExecuteCommandResponseWriter
         .wrap(buffer, offset)
         .recordType(recordType)
         .valueType(valueType)
-        .intent(intent.value())
+        .intent(intent.getValue())
         .partitionId(partitionId)
         .key(key)
         .rejectionType(rejectionType)

@@ -26,7 +26,7 @@ public enum ProcessEventIntent implements ProcessInstanceRelatedIntent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

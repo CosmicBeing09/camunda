@@ -27,7 +27,7 @@ public enum MessageStartEventSubscriptionIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

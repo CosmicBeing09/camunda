@@ -78,7 +78,7 @@ public interface Intent {
   short NULL_VAL = 255;
   Intent UNKNOWN = UnknownIntent.UNKNOWN;
 
-  short value();
+  short getValue();
 
   String name();
 
@@ -321,7 +321,7 @@ public interface Intent {
     UNKNOWN;
 
     @Override
-    public short value() {
+    public short getValue() {
       return NULL_VAL;
     }
 

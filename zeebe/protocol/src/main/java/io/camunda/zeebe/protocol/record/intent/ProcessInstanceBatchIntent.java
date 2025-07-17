@@ -49,7 +49,7 @@ public enum ProcessInstanceBatchIntent implements ProcessInstanceRelatedIntent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

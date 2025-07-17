@@ -41,7 +41,7 @@ public enum FormIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getValue() {
     return value;
   }
 

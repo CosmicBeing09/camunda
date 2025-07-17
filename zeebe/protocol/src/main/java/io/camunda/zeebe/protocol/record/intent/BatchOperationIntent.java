@@ -35,12 +35,33 @@ public enum BatchOperationIntent implements Intent {
     this.value = value;
   }
 
-  public short getIntent() {
+  @Override
+  public short getValue() {
     return value;
   }
 
-  public static Intent from(final short value) {
-    switch (value) {
+  @Override
+  public boolean isEvent() {
+    switch (this) {
+      case CREATED:
+      case STARTED:
+      case FAILED:
+      case PAUSED:
+      case CANCELED:
+      case RESUMED:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  @Override
+  public short value() {
+    return value;
+  }
+
+  public static Intent from(final short fromValue) {
+    switch (fromValue) {
       case 0:
         return CREATE;
       case 1:
@@ -68,26 +89,6 @@ public enum BatchOperationIntent implements Intent {
 
       default:
         return Intent.UNKNOWN;
-    }
-  }
-
-  @Override
-  public short value() {
-    return value;
-  }
-
-  @Override
-  public boolean isEvent() {
-    switch (this) {
-      case CREATED:
-      case STARTED:
-      case FAILED:
-      case PAUSED:
-      case CANCELED:
-      case RESUMED:
-        return true;
-      default:
-        return false;
     }
   }
 }
