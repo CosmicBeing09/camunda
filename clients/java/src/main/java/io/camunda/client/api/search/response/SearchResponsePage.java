@@ -21,8 +21,8 @@ public interface SearchResponsePage {
   Long totalItems();
 
   /** The sort values of the first item in the returned page. */
-  String searchBeforeCursor();
+  String startCursor();
 
   /** The sort values of the last item in the returned page. */
-  String searchAfterCursor();
+  String endCursor();
 }
