@@ -19,17 +19,17 @@ import java.util.List;
 import java.util.Objects;
 
 public record UserTaskFilter(
-    List<Long> userTaskKeys,
-    List<String> elementIds,
-    List<String> elementNames,
-    List<String> bpmnProcessIds,
-    List<Operation<String>> assigneeOperations,
-    List<Operation<Integer>> priorityOperations,
+    List<Long> taskKeys,
+    List<String> ids,
+    List<String> names,
+    List<String> processIds,
+    List<Operation<String>> assigneeOps,
+    List<Operation<Integer>> priorityOps,
     List<String> states,
-    List<Long> processInstanceKeys,
-    List<Long> processDefinitionKeys,
-    List<Operation<String>> candidateUserOperations,
-    List<Operation<String>> candidateGroupOperations,
+    List<Long> instanceKeys,
+    List<Long> definitionKeys,
+    List<Operation<String>> candidateUserOps,
+    List<Operation<String>> candidateGroupOps,
     List<String> tenantIds,
     List<VariableValueFilter> processInstanceVariableFilter,
     List<VariableValueFilter> localVariableFilters,
@@ -82,7 +82,7 @@ public record UserTaskFilter(
       return this;
     }
 
-    public Builder elementNames(final String... values) {
+    public Builder names(final String... values) {
       return elementNames(collectValuesAsList(values));
     }
 

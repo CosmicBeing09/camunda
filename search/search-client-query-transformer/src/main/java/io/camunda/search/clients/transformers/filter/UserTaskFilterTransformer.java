@@ -45,17 +45,17 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
   @Override
   public SearchQuery toSearchQuery(final UserTaskFilter filter) {
     final var queries = new ArrayList<SearchQuery>();
-    ofNullable(getUserTaskKeysQuery(filter.userTaskKeys())).ifPresent(queries::add);
-    ofNullable(getProcessInstanceKeysQuery(filter.processInstanceKeys())).ifPresent(queries::add);
-    ofNullable(getProcessDefinitionKeyQuery(filter.processDefinitionKeys()))
+    ofNullable(getUserTaskKeysQuery(filter.taskKeys())).ifPresent(queries::add);
+    ofNullable(getProcessInstanceKeysQuery(filter.instanceKeys())).ifPresent(queries::add);
+    ofNullable(getProcessDefinitionKeyQuery(filter.definitionKeys()))
         .ifPresent(queries::add);
-    ofNullable(getBpmnProcessIdQuery(filter.bpmnProcessIds())).ifPresent(queries::add);
-    ofNullable(getElementIdQuery(filter.elementIds())).ifPresent(queries::add);
-    ofNullable(getElementNameQuery(filter.elementNames())).ifPresent(queries::add);
-    queries.addAll(getCandidateUsersQuery(filter.candidateUserOperations()));
-    queries.addAll(getCandidateGroupsQuery(filter.candidateGroupOperations()));
-    queries.addAll(getAssigneesQuery(filter.assigneeOperations()));
-    queries.addAll(getPrioritiesQuery(filter.priorityOperations()));
+    ofNullable(getBpmnProcessIdQuery(filter.processIds())).ifPresent(queries::add);
+    ofNullable(getElementIdQuery(filter.ids())).ifPresent(queries::add);
+    ofNullable(getElementNameQuery(filter.names())).ifPresent(queries::add);
+    queries.addAll(getCandidateUsersQuery(filter.candidateUserOps()));
+    queries.addAll(getCandidateGroupsQuery(filter.candidateGroupOps()));
+    queries.addAll(getAssigneesQuery(filter.assigneeOps()));
+    queries.addAll(getPrioritiesQuery(filter.priorityOps()));
     ofNullable(getStateQuery(filter.states())).ifPresent(queries::add);
     ofNullable(getTenantQuery(filter.tenantIds())).ifPresent(queries::add);
     ofNullable(getElementInstanceKeyQuery(filter.elementInstanceKeys())).ifPresent(queries::add);
