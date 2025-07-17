@@ -70,48 +70,48 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
 
   @Override
   public void processNewCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+    final var roleRecord = command.getValue();
     final var authorizationRequest =
         new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
-            .addResourceId(record.getRoleId());
+            .addResourceId(roleRecord.getRoleId());
 
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
-    if (isAuthorized.isLeft()) {
-      final var rejection = isAuthorized.getLeft();
+    final var authorizationResult = authCheckBehavior.authorizationResult(authorizationRequest);
+    if (authorizationResult.isLeft()) {
+      final var rejection = authorizationResult.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
       responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
       return;
     }
 
-    final var persistedRecord = roleState.getRole(record.getRoleId());
-    if (persistedRecord.isEmpty()) {
-      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
+    final var existingRole = roleState.getRole(roleRecord.getRoleId());
+    if (existingRole.isEmpty()) {
+      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
       rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
       responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
-    final var entityId = record.getEntityId();
-    final var entityType = record.getEntityType();
+    final var entityId = roleRecord.getEntityId();
+    final var entityType = roleRecord.getEntityType();
     if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(command))) {
       final var errorMessage =
-          ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, record.getRoleId());
+          ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, roleRecord.getRoleId());
       rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
       responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
-    if (isEntityAssigned(record)) {
+    if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
-          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(record.getEntityId(), record.getRoleId());
+          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
       rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
       responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
-    stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.ENTITY_ADDED, record);
+    stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     responseWriter.writeEventOnCommand(
-        record.getRoleKey(), RoleIntent.ENTITY_ADDED, record, command);
+        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, command);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
@@ -122,13 +122,13 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
 
   @Override
   public void processDistributedCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
-    if (isEntityAssigned(record)) {
+    final var roleRecord = command.getValue();
+    if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
-          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(record.getEntityId(), record.getRoleId());
+          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
       rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
     } else {
-      stateWriter.appendFollowUpEvent(command.getKey(), RoleIntent.ENTITY_ADDED, record);
+      stateWriter.appendFollowUpEvent(command.getKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     }
 
     commandDistributionBehavior.acknowledgeCommand(command);
@@ -149,8 +149,8 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
         (String) command.getAuthorizations().get(Authorization.INTERNAL_GROUPS_ENABLED));
   }
 
-  private boolean isEntityAssigned(final RoleRecord record) {
+  private boolean isEntityAlreadyAssigned(final RoleRecord roleRecord) {
     return membershipState.hasRelation(
-        record.getEntityType(), record.getEntityId(), RelationType.ROLE, record.getRoleId());
+        roleRecord.getEntityType(), roleRecord.getEntityId(), RelationType.ROLE, roleRecord.getRoleId());
   }
 }

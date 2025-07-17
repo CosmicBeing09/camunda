@@ -139,7 +139,7 @@ public class ProcessInstanceMigrationMigrateProcessor
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 processInstance.getValue().getTenantId())
             .addResourceId(processInstance.getValue().getBpmnProcessId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =

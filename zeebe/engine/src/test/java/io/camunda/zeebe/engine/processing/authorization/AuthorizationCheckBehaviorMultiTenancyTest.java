@@ -113,7 +113,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -136,7 +136,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -160,7 +160,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -189,7 +189,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -337,7 +337,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, null, false, false)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -365,7 +365,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, "anotherTenantId")
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     EitherAssert.assertThat(authorized).isLeft();
@@ -390,7 +390,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, anotherTenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isFalse();
@@ -413,7 +413,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, anotherTenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isFalse();
@@ -483,7 +483,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     EitherAssert.assertThat(authorized).isRight();
@@ -506,7 +506,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -530,7 +530,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -558,7 +558,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -587,7 +587,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();

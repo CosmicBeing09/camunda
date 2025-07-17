@@ -91,7 +91,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
         new AuthorizationRequest(
                 command, AuthorizationResourceType.MAPPING_RULE, PermissionType.UPDATE)
             .addResourceId(mappingId);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());

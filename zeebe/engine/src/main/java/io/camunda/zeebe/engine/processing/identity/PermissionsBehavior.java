@@ -53,7 +53,7 @@ public class PermissionsBehavior {
       final TypedRecord<AuthorizationRecord> command, final PermissionType permissionType) {
     final var authorizationRequest =
         new AuthorizationRequest(command, AuthorizationResourceType.AUTHORIZATION, permissionType);
-    return authCheckBehavior.isAuthorized(authorizationRequest).map(unused -> command.getValue());
+    return authCheckBehavior.authorizationResult(authorizationRequest).map(unused -> command.getValue());
   }
 
   public Either<Rejection, PersistedAuthorization> authorizationExists(

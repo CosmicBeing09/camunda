@@ -208,6 +208,6 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 job.getTenantId())
             .addResourceId(job.getBpmnProcessId());
-    return authCheckBehavior.isAuthorized(request).map(unused -> job);
+    return authCheckBehavior.authorizationResult(request).map(unused -> job);
   }
 }

@@ -196,7 +196,7 @@ public final class ProcessInstanceModificationModifyProcessor
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 processInstance.getValue().getTenantId())
             .addResourceId(processInstance.getValue().getBpmnProcessId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =

@@ -99,7 +99,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -117,7 +117,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isFalse();
@@ -181,7 +181,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -229,7 +229,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -277,7 +277,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -303,7 +303,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     EitherAssert.assertThat(authorized).isRight();
@@ -326,7 +326,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     EitherAssert.assertThat(authorized).isRight();
@@ -350,7 +350,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     EitherAssert.assertThat(authorized).isRight();
@@ -368,7 +368,7 @@ final class AuthorizationCheckBehaviorTest {
     final var request =
         new AuthorizationRequest(command, AuthorizationResourceType.RESOURCE, PermissionType.DELETE)
             .addResourceId(UUID.randomUUID().toString());
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     EitherAssert.assertThat(authorized).isLeft();
@@ -412,12 +412,12 @@ final class AuthorizationCheckBehaviorTest {
 
     // then
     EitherAssert.assertThat(
-            authorizationCheckBehavior.isAuthorized(
+            authorizationCheckBehavior.authorizationResult(
                 new AuthorizationRequest(command, resourceType, permissionType)
                     .addResourceId(firstResourceId)))
         .isRight();
     EitherAssert.assertThat(
-            authorizationCheckBehavior.isAuthorized(
+            authorizationCheckBehavior.authorizationResult(
                 new AuthorizationRequest(command, resourceType, permissionType)
                     .addResourceId(secondResourceId)))
         .isRight();
@@ -459,12 +459,12 @@ final class AuthorizationCheckBehaviorTest {
 
     // then
     EitherAssert.assertThat(
-            authorizationCheckBehavior.isAuthorized(
+            authorizationCheckBehavior.authorizationResult(
                 new AuthorizationRequest(command, resourceType, permissionType)
                     .addResourceId(firstResourceId)))
         .isRight();
     EitherAssert.assertThat(
-            authorizationCheckBehavior.isAuthorized(
+            authorizationCheckBehavior.authorizationResult(
                 new AuthorizationRequest(command, resourceType, permissionType)
                     .addResourceId(secondResourceId)))
         .isRight();
@@ -592,7 +592,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -643,7 +643,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -691,7 +691,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -709,7 +709,7 @@ final class AuthorizationCheckBehaviorTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isFalse();

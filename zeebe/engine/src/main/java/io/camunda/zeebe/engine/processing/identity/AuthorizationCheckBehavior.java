@@ -77,7 +77,7 @@ public final class AuthorizationCheckBehavior {
    * @return a {@link Either} containing a {@link RejectionType} if the user is not authorized or
    *     {@link Void} if the user is authorized
    */
-  public Either<Rejection, Void> isAuthorized(final AuthorizationRequest request) {
+  public Either<Rejection, Void> authorizationResult(final AuthorizationRequest request) {
     if (!authorizationsEnabled && !multiTenancyEnabled) {
       return Either.right(null);
     }
