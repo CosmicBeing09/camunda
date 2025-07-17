@@ -36,7 +36,7 @@ public class SearchResponsePageImpl implements SearchResponsePage {
   }
 
   @Override
-  public String searchBeforeCursor() {
+  public String startCursor() {
     return searchBeforeCursor;
   }
 
