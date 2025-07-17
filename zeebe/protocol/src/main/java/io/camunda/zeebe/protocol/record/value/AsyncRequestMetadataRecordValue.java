@@ -35,7 +35,7 @@ import org.immutables.value.Value;
 public interface AsyncRequestMetadataRecordValue extends RecordValue {
 
   /** The key of the original request command. */
-  long getRequestKey();
+  long getScopeKey();
 
   /** The value type of the original request. */
   ValueType getValueType();
