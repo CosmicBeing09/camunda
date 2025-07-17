@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.processing.usertask.processors;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
@@ -35,12 +35,12 @@ public class UserTaskCommandPreconditionChecker {
   private final BiFunction<
           TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
       additionalChecks;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
 
   public UserTaskCommandPreconditionChecker(
       final List<LifecycleState> validLifecycleStates,
       final String intent,
-      final UserTaskState userTaskState,
+      final TaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this(validLifecycleStates, intent, null, userTaskState, authCheckBehavior);
   }
@@ -51,7 +51,7 @@ public class UserTaskCommandPreconditionChecker {
       final BiFunction<
               TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
           additionalChecks,
-      final UserTaskState userTaskState,
+      final TaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.validLifecycleStates = validLifecycleStates;
     this.intent = intent;

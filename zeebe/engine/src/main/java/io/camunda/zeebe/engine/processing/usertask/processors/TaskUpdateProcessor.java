@@ -14,8 +14,8 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseW
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
@@ -28,19 +28,19 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
+public final class TaskUpdateProcessor implements UserTaskCommandProcessor {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UserTaskUpdateProcessor.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(TaskUpdateProcessor.class);
   private static final String DEFAULT_ACTION = "update";
 
   private final StateWriter stateWriter;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final VariableState variableState;
   private final TypedResponseWriter responseWriter;
   private final VariableBehavior variableBehavior;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
-  public UserTaskUpdateProcessor(
+  public TaskUpdateProcessor(
       final ProcessingState state,
       final Writers writers,
       final VariableBehavior variableBehavior,
@@ -84,8 +84,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-    if (recordRequestMetadata.isEmpty()) {
+    final var asyncRequest = userTaskState.findRecordRequestMetadata(userTaskKey);
+    if (asyncRequest.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "
               + "This may indicate a problem with how the update was triggered. "
@@ -96,7 +96,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var metadata = recordRequestMetadata.get();
+    final var metadata = asyncRequest.get();
     switch (metadata.getTriggerType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
