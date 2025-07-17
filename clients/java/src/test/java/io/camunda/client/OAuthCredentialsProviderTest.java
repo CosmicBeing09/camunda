@@ -92,31 +92,29 @@ public final class OAuthCredentialsProviderTest {
           .getResource("idp-ssl/truststore.jks")
           .getPath();
 
-  private static final String TAMPERED_TRUSTSTORE_PATH =
+  private static final String INVALID_TRUSTSTORE_PATH =
       OAuthCredentialsProviderTest.class
           .getClassLoader()
           .getResource("idp-ssl/untruststore.jks")
           .getPath();
 
-  private static final String VALID_IDENTITY_PATH =
+  private static final String IDENTITY_KEYSTORE_PATH =
       OAuthCredentialsProviderTest.class
           .getClassLoader()
           .getResource("idp-ssl/identity.p12")
           .getPath();
 
-  private static final String VALID_CLIENT_PATH =
+  private static final String CLIENT_KEYSTORE_PATH =
       OAuthCredentialsProviderTest.class
           .getClassLoader()
           .getResource("idp-ssl/localhost.p12")
           .getPath();
 
-  private static final String ENTRA_KEYSTORE_PATH =
+  private static final String ENTRA_CLIENT_CERT_PATH =
       OAuthCredentialsProviderTest.class.getClassLoader().getResource("oauth/entra.jks").getPath();
 
   private static final String TRUSTSTORE_PASSWORD = "password";
   private static final String KEYSTORE_PASSWORD = "password";
-  private static final String ENTRA_KEYSTORE_PASSWORD = "mstest";
-
   @RegisterExtension
   static WireMockExtension httpsWiremock =
       WireMockExtension.newInstance()
@@ -127,17 +125,17 @@ public final class OAuthCredentialsProviderTest {
                   .trustStorePath(VALID_TRUSTSTORE_PATH)
                   .trustStorePassword(TRUSTSTORE_PASSWORD)
                   .needClientAuth(true)
-                  .keystorePath(VALID_IDENTITY_PATH)
+                  .keystorePath(IDENTITY_KEYSTORE_PATH)
                   .keystorePassword(KEYSTORE_PASSWORD))
           .build();
-
-  private static final String KEYSTORE_MATERIAL_PASSWORD = "password";
+  private static final String ENTRA_KEYSTORE_PASSWORD = "mstest";
+  private static final String KEY_PASSWORD = "password";
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
   private static final Key<String> AUTH_KEY =
       Key.of("Authorization", Metadata.ASCII_STRING_MARSHALLER);
   private static final ZonedDateTime EXPIRY =
       ZonedDateTime.of(3020, 1, 1, 0, 0, 0, 0, ZoneId.of("Z"));
-  private static final String SECRET = "secret";
+  private static final String CLIENT_SECRET = "secret";
   private static final String JWT_ASSERTION_TYPE =
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
   private static final String AUDIENCE = "endpoint";
@@ -169,7 +167,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -190,7 +188,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .scope(SCOPE)
             .authorizationServerUrl(tokenUrlString())
@@ -213,7 +211,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .scope(scope)
             .authorizationServerUrl(tokenUrlString())
@@ -235,7 +233,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -265,7 +263,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -293,7 +291,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -317,7 +315,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -343,7 +341,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -366,7 +364,7 @@ public final class OAuthCredentialsProviderTest {
     final OAuthCredentialsProvider provider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
-            .clientSecret(SECRET)
+            .clientSecret(CLIENT_SECRET)
             .audience(AUDIENCE)
             .authorizationServerUrl(tokenUrlString())
             .credentialsCachePath(cacheFilePath.toString())
@@ -391,7 +389,7 @@ public final class OAuthCredentialsProviderTest {
         spy(
             new OAuthCredentialsProviderBuilder()
                 .clientId(CLIENT_ID)
-                .clientSecret(SECRET)
+                .clientSecret(CLIENT_SECRET)
                 .audience(AUDIENCE)
                 .authorizationServerUrl(tokenUrlString())
                 .credentialsCachePath(cacheFilePath.toString())
@@ -423,7 +421,7 @@ public final class OAuthCredentialsProviderTest {
 
   private void mockCredentials(final String token, final String scope) {
     final HashMap<String, String> map = new HashMap<>();
-    map.put("client_secret", SECRET);
+    map.put("client_secret", CLIENT_SECRET);
     map.put("client_id", CLIENT_ID);
     map.put("audience", AUDIENCE);
     map.put("grant_type", "client_credentials");
@@ -460,7 +458,7 @@ public final class OAuthCredentialsProviderTest {
     }
   }
 
-  private void mockTokenRequest(boolean withAssertion) {
+  private void mockTokenRequest(final boolean withAssertion) {
     final String assertionRegex = ".*client_assertion\\=[\\._\\-A-Za-z0-9]{400,500}.*";
     final String assertionTypeRegex = ".*client_assertion_type.*";
     final String clientSecret = ".*client_secret.*";
@@ -490,7 +488,7 @@ public final class OAuthCredentialsProviderTest {
                           .withBody(jsonMapper.writeValueAsString(map))
                           .withHeader("Content-Type", "application/json")
                           .withStatus(200)));
-    } catch (JsonProcessingException e) {
+    } catch (final JsonProcessingException e) {
       throw new RuntimeException(e);
     }
   }
@@ -696,7 +694,7 @@ public final class OAuthCredentialsProviderTest {
           .credentialsProvider(
               new OAuthCredentialsProviderBuilder()
                   .clientId(CLIENT_ID)
-                  .clientSecret(SECRET)
+                  .clientSecret(CLIENT_SECRET)
                   .audience(AUDIENCE)
                   .authorizationServerUrl(tokenUrlString())
                   .credentialsCachePath(cacheFilePath.toString())
@@ -753,13 +751,13 @@ public final class OAuthCredentialsProviderTest {
     }
 
     private OAuthCredentialsProviderBuilder initializeCredentialsProviderBuilder(
-        boolean withAssertion, boolean withClientSecret) {
+        final boolean withAssertion, final boolean withClientSecret) {
       OAuthCredentialsProviderBuilder builder =
           new OAuthCredentialsProviderBuilder()
               .clientId(CLIENT_ID)
-              .keystorePath(Paths.get(VALID_CLIENT_PATH))
+              .keystorePath(Paths.get(CLIENT_KEYSTORE_PATH))
               .keystorePassword(KEYSTORE_PASSWORD)
-              .keystoreKeyPassword(KEYSTORE_MATERIAL_PASSWORD)
+              .keystoreKeyPassword(KEY_PASSWORD)
               .truststorePath(Paths.get(VALID_TRUSTSTORE_PATH))
               .truststorePassword(TRUSTSTORE_PASSWORD)
               .audience(AUDIENCE)
@@ -768,11 +766,11 @@ public final class OAuthCredentialsProviderTest {
       if (withAssertion) {
         builder =
             builder
-                .entraCertificatePath(ENTRA_KEYSTORE_PATH)
+                .entraCertificatePath(ENTRA_CLIENT_CERT_PATH)
                 .entraCertificatePassword(ENTRA_KEYSTORE_PASSWORD);
       }
       if (withClientSecret) {
-        builder = builder.clientSecret(SECRET);
+        builder = builder.clientSecret(CLIENT_SECRET);
       }
       return builder;
     }
@@ -819,7 +817,7 @@ public final class OAuthCredentialsProviderTest {
       currentWiremockRuntimeInfo = httpsWiremock.getRuntimeInfo();
       // given
       final OAuthCredentialsProvider provider =
-          initializeBuilderWithSSL().truststorePath(Paths.get(TAMPERED_TRUSTSTORE_PATH)).build();
+          initializeBuilderWithSSL().truststorePath(Paths.get(INVALID_TRUSTSTORE_PATH)).build();
       mockCredentials(ACCESS_TOKEN, null);
 
       assertThatThrownBy(() -> provider.applyCredentials(applier))
@@ -859,10 +857,10 @@ public final class OAuthCredentialsProviderTest {
     private OAuthCredentialsProviderBuilder initializeBuilderWithSSL() {
       return new OAuthCredentialsProviderBuilder()
           .clientId(CLIENT_ID)
-          .clientSecret(SECRET)
-          .keystorePath(Paths.get(VALID_CLIENT_PATH))
+          .clientSecret(CLIENT_SECRET)
+          .keystorePath(Paths.get(CLIENT_KEYSTORE_PATH))
           .keystorePassword(KEYSTORE_PASSWORD)
-          .keystoreKeyPassword(KEYSTORE_MATERIAL_PASSWORD)
+          .keystoreKeyPassword(KEY_PASSWORD)
           .truststorePath(Paths.get(VALID_TRUSTSTORE_PATH))
           .truststorePassword(TRUSTSTORE_PASSWORD)
           .audience(AUDIENCE)
