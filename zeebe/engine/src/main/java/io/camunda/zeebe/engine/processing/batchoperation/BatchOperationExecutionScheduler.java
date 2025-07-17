@@ -220,7 +220,7 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
         () -> !batchOperationState.exists(batchOperation.getKey());
 
     try (final var ignored =
-        metrics.startTotalQueryLatencyMeasure(
+        metrics.startTotalQueryDurationMeasure(
             batchOperation.getKey(), batchOperation.getBatchOperationType())) {
       return switch (batchOperation.getBatchOperationType()) {
         case CANCEL_PROCESS_INSTANCE ->
