@@ -39,7 +39,7 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   }
 
   public void wrap(final AsyncRequestMetadataRecord record) {
-    requestKeyProperty.setValue(record.getRequestKey());
+    requestKeyProperty.setValue(record.getScopeKey());
     valueTypeProperty.setValue(record.getValueType());
     intentProperty.setValue(record.getIntent().value());
     requestIdProperty.setValue(record.getRequestId());
@@ -48,13 +48,8 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   }
 
   @Override
-  public long getRequestKey() {
+  public long getScopeKey() {
     return requestKeyProperty.getValue();
-  }
-
-  public AsyncRequestMetadataRecord setRequestKey(final long requestKey) {
-    requestKeyProperty.setValue(requestKey);
-    return this;
   }
 
   @Override
@@ -75,16 +70,6 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   public AsyncRequestMetadataRecord setIntent(final Intent intent) {
     intentProperty.setValue(intent.value());
     return this;
-  }
-
-  private Intent getIntent(final int intentValue) {
-    if (intentValue < 0 || intentValue > Short.MAX_VALUE) {
-      throw new IllegalStateException(
-          String.format(
-              "Expected to read the intent, but it's persisted value '%d' is not a short integer",
-              intentValue));
-    }
-    return Intent.fromProtocolValue(getValueType(), (short) intentValue);
   }
 
   @Override
@@ -115,5 +100,20 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   public AsyncRequestMetadataRecord setOperationReference(final long operationReference) {
     operationReferenceProperty.setValue(operationReference);
     return this;
+  }
+
+  public AsyncRequestMetadataRecord setRequestKey(final long requestKey) {
+    requestKeyProperty.setValue(requestKey);
+    return this;
+  }
+
+  private Intent getIntent(final int intentValue) {
+    if (intentValue < 0 || intentValue > Short.MAX_VALUE) {
+      throw new IllegalStateException(
+          String.format(
+              "Expected to read the intent, but it's persisted value '%d' is not a short integer",
+              intentValue));
+    }
+    return Intent.fromProtocolValue(getValueType(), (short) intentValue);
   }
 }
