@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.camunda.migration.api.MigrationException;
-import io.camunda.migration.process.MigrationRunner;
+import io.camunda.migration.process.ProcessMigrator;
 import io.camunda.migration.process.TestData;
 import io.camunda.migration.process.adapter.Adapter;
 import io.camunda.migration.process.adapter.ProcessorStep;
@@ -382,7 +382,7 @@ public class MigrationRunnerIT extends AdapterTest {
     }
     // invalid URL
     connectConfiguration.setUrl("http://localhost:3333");
-    final var migrator = new MigrationRunner(properties, connectConfiguration, meterRegistry);
+    final var migrator = new ProcessMigrator(properties, connectConfiguration, meterRegistry);
     properties.getRetry().setMaxRetries(2);
     properties.getRetry().setMinRetryDelay(Duration.ofSeconds(1));
 
