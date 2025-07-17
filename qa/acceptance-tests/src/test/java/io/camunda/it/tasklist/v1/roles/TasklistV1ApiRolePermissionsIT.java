@@ -131,7 +131,7 @@ public class TasklistV1ApiRolePermissionsIT {
                   adminClient
                       .newUserTaskSearchRequest()
                       .filter(
-                          t -> t.processInstanceKey(processInstanceEvent.getProcessInstanceKey()))
+                          t -> t.elementInstanceKey(processInstanceEvent.getProcessInstanceKey()))
                       .send()
                       .join()
                       .items();

@@ -129,7 +129,7 @@ public class AssignUserTaskMigrationIT extends UserTaskMigrationHelper {
               final var tasks =
                   client
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.userTaskKey(userTaskKey))
+                      .filter(f -> f.key(userTaskKey))
                       .send()
                       .join()
                       .items();

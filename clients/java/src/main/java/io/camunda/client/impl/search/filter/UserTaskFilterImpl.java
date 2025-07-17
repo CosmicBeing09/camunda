@@ -43,7 +43,7 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  public UserTaskFilter userTaskKey(final Long value) {
+  public UserTaskFilter key(final Long value) {
     filter.setUserTaskKey(ParseUtil.keyToString(value));
     return this;
   }
@@ -84,13 +84,13 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  public UserTaskFilter elementId(final String elementId) {
+  public UserTaskFilter id(final String elementId) {
     filter.setElementId(elementId);
     return this;
   }
 
   @Override
-  public UserTaskFilter elementName(final String elementName) {
+  public UserTaskFilter name(final String elementName) {
     filter.setElementName(elementName);
     return this;
   }
@@ -124,14 +124,8 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  public UserTaskFilter processDefinitionKey(final Long processDefinitionKey) {
+  public UserTaskFilter definitionKey(final Long processDefinitionKey) {
     filter.setProcessDefinitionKey(ParseUtil.keyToString(processDefinitionKey));
-    return this;
-  }
-
-  @Override
-  public UserTaskFilter processInstanceKey(final Long processInstanceKey) {
-    filter.setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
     return this;
   }
 
@@ -142,7 +136,7 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  public UserTaskFilter bpmnProcessId(final String bpmnProcessId) {
+  public UserTaskFilter processDefinitionId(final String bpmnProcessId) {
     filter.processDefinitionId(bpmnProcessId);
     return this;
   }
@@ -180,10 +174,16 @@ public class UserTaskFilterImpl
     return this;
   }
 
+  @Override
+  public UserTaskFilter elementInstanceKey(final Long processInstanceKey) {
+    filter.setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
+    return this;
+  }
+
   // elementInstanceKey
   @Override
-  public UserTaskFilter elementInstanceKey(final Long elementInstanceKey) {
-    filter.setElementInstanceKey(ParseUtil.keyToString(elementInstanceKey));
+  public UserTaskFilter elementInstanceKey(final Long elementKey) {
+    filter.setElementInstanceKey(ParseUtil.keyToString(elementKey));
     return this;
   }
 

@@ -230,7 +230,7 @@ public class BatchOperationMigrateProcessInstanceTest {
       final ThrowingConsumer<UserTask> assertions) {
     userTaskExistAndMatches(
         client,
-        f -> f.processInstanceKey(processInstanceKey),
+        f -> f.elementInstanceKey(processInstanceKey),
         f -> {
           assertThat(f).hasSize(1);
           assertThat(f.getFirst()).satisfies(assertions);

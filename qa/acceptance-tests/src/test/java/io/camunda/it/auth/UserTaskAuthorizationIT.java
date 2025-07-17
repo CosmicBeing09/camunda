@@ -184,7 +184,7 @@ class UserTaskAuthorizationIT {
   private long getUserTaskKey(final CamundaClient camundaClient, final String processId) {
     return camundaClient
         .newUserTaskSearchRequest()
-        .filter(f -> f.bpmnProcessId(processId))
+        .filter(f -> f.processDefinitionId(processId))
         .send()
         .join()
         .items()
