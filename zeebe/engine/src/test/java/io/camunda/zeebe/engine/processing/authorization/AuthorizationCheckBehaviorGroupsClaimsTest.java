@@ -98,7 +98,7 @@ final class AuthorizationCheckBehaviorGroupsClaimsTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -172,7 +172,7 @@ final class AuthorizationCheckBehaviorGroupsClaimsTest {
     // when
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();
@@ -195,7 +195,7 @@ final class AuthorizationCheckBehaviorGroupsClaimsTest {
     final var request =
         new AuthorizationRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
-    final var authorized = authorizationCheckBehavior.isAuthorized(request);
+    final var authorized = authorizationCheckBehavior.authorizationResult(request);
 
     // then
     assertThat(authorized.isRight()).isTrue();

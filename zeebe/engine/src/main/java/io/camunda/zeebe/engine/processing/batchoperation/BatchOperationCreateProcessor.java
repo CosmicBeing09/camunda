@@ -125,7 +125,7 @@ public final class BatchOperationCreateProcessor
 
     // first check for general CREATE_BATCH_OPERATION permission
     final var isAuthorized =
-        authCheckBehavior.isAuthorized(
+        authCheckBehavior.authorizationResult(
             new AuthorizationRequest(
                 command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.CREATE));
     if (isAuthorized.isLeft()) {
@@ -140,7 +140,7 @@ public final class BatchOperationCreateProcessor
                 PermissionType.CREATE_BATCH_OPERATION_MODIFY_PROCESS_INSTANCE;
             case RESOLVE_INCIDENT -> PermissionType.CREATE_BATCH_OPERATION_RESOLVE_INCIDENT;
           };
-      return authCheckBehavior.isAuthorized(
+      return authCheckBehavior.authorizationResult(
           new AuthorizationRequest(command, AuthorizationResourceType.BATCH_OPERATION, permission));
     }
 

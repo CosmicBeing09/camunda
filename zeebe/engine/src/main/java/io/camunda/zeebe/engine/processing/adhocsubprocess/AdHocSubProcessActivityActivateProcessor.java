@@ -221,6 +221,6 @@ public class AdHocSubProcessActivityActivateProcessor
                 adHocSubProcessElementInstance.getValue().getTenantId())
             .addResourceId(adHocSubProcessElementInstance.getValue().getBpmnProcessId());
 
-    return authCheckBehavior.isAuthorized(authRequest);
+    return authCheckBehavior.authorizationResult(authRequest);
   }
 }

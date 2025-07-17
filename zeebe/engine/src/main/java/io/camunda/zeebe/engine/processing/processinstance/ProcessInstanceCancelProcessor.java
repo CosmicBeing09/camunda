@@ -107,7 +107,7 @@ public final class ProcessInstanceCancelProcessor
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 elementInstance.getValue().getTenantId())
             .addResourceId(elementInstance.getValue().getBpmnProcessId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(request);
+    final var isAuthorized = authCheckBehavior.authorizationResult(request);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =

@@ -59,7 +59,7 @@ class BatchOperationSuspendProcessorTest {
     when(state.getBatchOperationState()).thenReturn(batchOperationState);
 
     final var authCheckBehavior = mock(AuthorizationCheckBehavior.class);
-    when(authCheckBehavior.isAuthorized(any())).thenReturn(Either.right(null));
+    when(authCheckBehavior.authorizationResult(any())).thenReturn(Either.right(null));
 
     when(keyGenerator.nextKey()).thenReturn(1L);
 
