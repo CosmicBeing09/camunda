@@ -217,14 +217,14 @@ class RequestMapperTest {
     mappingInstruction.setTargetElementId("target1");
     migrationInstruction.setMappingInstructions(List.of(mappingInstruction));
 
-    final var batchOperationInstruction = new ProcessInstanceMigrationBatchOperationInstruction();
-    batchOperationInstruction.setMigrationPlan(migrationInstruction);
+    final var batchOperationRequest = new ProcessInstanceMigrationBatchOperationInstruction();
+    batchOperationRequest.setMigrationPlan(migrationInstruction);
     final var filter = new ProcessInstanceFilter();
-    batchOperationInstruction.setFilter(filter);
+    batchOperationRequest.setFilter(filter);
 
     // when
     final Either<ProblemDetail, ProcessInstanceMigrationBatchOperationRequest> result =
-        RequestMapper.toProcessInstanceMigrationBatchOperationRequest(batchOperationInstruction);
+        RequestMapper.toProcessInstanceMigrationBatchOperationRequest(batchOperationRequest);
 
     // then
     assertTrue(result.isRight());
@@ -250,14 +250,14 @@ class RequestMapperTest {
     mappingInstruction.setTargetElementId(null);
     migrationInstruction.setMappingInstructions(List.of(mappingInstruction));
 
-    final var batchOperationInstruction = new ProcessInstanceMigrationBatchOperationInstruction();
-    batchOperationInstruction.setMigrationPlan(migrationInstruction);
+    final var batchOperationRequest = new ProcessInstanceMigrationBatchOperationInstruction();
+    batchOperationRequest.setMigrationPlan(migrationInstruction);
     final var filter = new ProcessInstanceFilter();
-    batchOperationInstruction.setFilter(filter);
+    batchOperationRequest.setFilter(filter);
 
     // when
     final Either<ProblemDetail, ProcessInstanceMigrationBatchOperationRequest> result =
-        RequestMapper.toProcessInstanceMigrationBatchOperationRequest(batchOperationInstruction);
+        RequestMapper.toProcessInstanceMigrationBatchOperationRequest(batchOperationRequest);
 
     // then
     assertTrue(result.isLeft());
@@ -274,13 +274,13 @@ class RequestMapperTest {
             .sourceElementId("source1")
             .targetElementId("target1");
 
-    final var modificationInstruction =
+    final var modificationRequest =
         new ProcessInstanceModificationBatchOperationInstruction()
             .addMoveInstructionsItem(moveInstruction);
 
     // when
     final Either<ProblemDetail, ProcessInstanceModifyBatchOperationRequest> result =
-        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationInstruction);
+        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationRequest);
 
     // then
     assertTrue(result.isRight());
@@ -301,13 +301,13 @@ class RequestMapperTest {
     final var moveInstruction =
         new ProcessInstanceModificationMoveBatchOperationInstruction().sourceElementId("source1");
 
-    final var modificationInstruction =
+    final var modificationRequest =
         new ProcessInstanceModificationBatchOperationInstruction()
             .addMoveInstructionsItem(moveInstruction);
 
     // when
     final Either<ProblemDetail, ProcessInstanceModifyBatchOperationRequest> result =
-        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationInstruction);
+        RequestMapper.toProcessInstanceModifyBatchOperationRequest(modificationRequest);
 
     // then
     assertTrue(result.isLeft());
