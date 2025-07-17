@@ -53,7 +53,7 @@ public interface TaskStore {
         .setPartitionId(taskBefore.getPartitionId())
         .setBpmnProcessId(taskBefore.getBpmnProcessId())
         .setProcessDefinitionId(taskBefore.getProcessDefinitionId())
-        .setFlowNodeBpmnId(taskBefore.getFlowNodeBpmnId())
+        .setBpmnId(taskBefore.getBpmnId())
         .setFlowNodeInstanceId(taskBefore.getFlowNodeInstanceId())
         .setProcessInstanceId(taskBefore.getProcessInstanceId())
         .setCreationTime(taskBefore.getCreationTime())
