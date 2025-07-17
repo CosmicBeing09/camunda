@@ -246,7 +246,7 @@ public class BatchOperationItemProvider {
           createSecurityContext(
               authentication, Authorization.of(a -> a.processDefinition().readProcessInstance()));
       final var page =
-          SearchQueryPageBuilders.page().size(queryPageSize).searchAfter(searchAfter).build();
+          SearchQueryPageBuilders.page().size(queryPageSize).after(searchAfter).build();
       final var query =
           SearchQueryBuilders.processInstanceSearchQuery()
               .filter(filter)
@@ -276,7 +276,7 @@ public class BatchOperationItemProvider {
           createSecurityContext(
               authentication, Authorization.of(a -> a.processDefinition().readProcessInstance()));
       final var page =
-          SearchQueryPageBuilders.page().size(queryPageSize).searchAfter(searchAfter).build();
+          SearchQueryPageBuilders.page().size(queryPageSize).after(searchAfter).build();
       final var query = SearchQueryBuilders.incidentSearchQuery().filter(filter).page(page).build();
 
       final var result =
