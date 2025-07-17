@@ -2203,7 +2203,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    */
-  AddMappingToGroupStep1 newAddMappingToGroupCommand();
+  AddMappingToGroupStep1 newAssignMappingToGroupCommand();
 
   /**
    * Command to unassign a mapping rule from a group.
