@@ -13,11 +13,11 @@ import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 
-public class PartitionsBootstrappedApplier implements TypedEventApplier<ScaleIntent, ScaleRecord> {
+public class PartitionBootstrappedApplier implements TypedEventApplier<ScaleIntent, ScaleRecord> {
 
   private final MutableRoutingState routingState;
 
-  public PartitionsBootstrappedApplier(final MutableProcessingState state) {
+  public PartitionBootstrappedApplier(final MutableProcessingState state) {
     routingState = state.getRoutingState();
   }
 
