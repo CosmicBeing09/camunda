@@ -19,8 +19,8 @@ import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
@@ -56,7 +56,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
 
   private final IncidentState incidentState;
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final TypedResponseWriter responseWriter;
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final JobState jobState;

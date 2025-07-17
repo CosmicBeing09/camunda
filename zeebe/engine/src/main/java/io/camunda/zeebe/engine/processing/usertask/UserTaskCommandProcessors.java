@@ -11,13 +11,13 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
+import io.camunda.zeebe.engine.processing.usertask.processors.TaskUpdateProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskAssignProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCancelProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskClaimProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCompleteProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCreateProcessor;
-import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskUpdateProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
@@ -60,7 +60,7 @@ public final class UserTaskCommandProcessors {
                 UserTaskIntent.CLAIM,
                 new UserTaskClaimProcessor(processingState, writers, authCheckBehavior),
                 UserTaskIntent.UPDATE,
-                new UserTaskUpdateProcessor(
+                new TaskUpdateProcessor(
                     processingState, writers, bpmnBehaviors.variableBehavior(), authCheckBehavior),
                 UserTaskIntent.COMPLETE,
                 new UserTaskCompleteProcessor(
