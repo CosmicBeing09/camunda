@@ -68,7 +68,7 @@ public class ProcessDefinitionStatisticsTest {
                 assertThat(
                         camundaClient
                             .newUserTaskSearchRequest()
-                            .filter(f -> f.processDefinitionKey(processDefinitionKey))
+                            .filter(f -> f.definitionKey(processDefinitionKey))
                             .send()
                             .join()
                             .items())
@@ -895,7 +895,7 @@ public class ProcessDefinitionStatisticsTest {
   private static UserTask getUserTask(final long processDefinitionKey) {
     return camundaClient
         .newUserTaskSearchRequest()
-        .filter(f -> f.processDefinitionKey(processDefinitionKey))
+        .filter(f -> f.definitionKey(processDefinitionKey))
         .send()
         .join()
         .items()

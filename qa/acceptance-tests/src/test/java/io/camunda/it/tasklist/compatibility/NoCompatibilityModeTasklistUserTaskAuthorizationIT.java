@@ -575,7 +575,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               final var result =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.elementInstanceKey(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);
@@ -617,7 +617,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               final var result =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.userTaskKey(userTaskKey).state(COMPLETED))
+                      .filter(f -> f.key(userTaskKey).state(COMPLETED))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);
@@ -699,7 +699,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               final var result =
                   adminClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.userTaskKey(userTaskKey).assignee(c -> c.exists(false)))
+                      .filter(f -> f.key(userTaskKey).assignee(c -> c.exists(false)))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);

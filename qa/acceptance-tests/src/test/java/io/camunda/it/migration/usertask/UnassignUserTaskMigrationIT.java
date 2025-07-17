@@ -119,7 +119,7 @@ public class UnassignUserTaskMigrationIT extends UserTaskMigrationHelper {
               final var tasks =
                   client
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.userTaskKey(taskKey))
+                      .filter(f -> f.key(taskKey))
                       .send()
                       .join()
                       .items();

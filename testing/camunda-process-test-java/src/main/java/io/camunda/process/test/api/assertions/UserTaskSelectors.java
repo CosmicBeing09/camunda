@@ -94,9 +94,9 @@ public class UserTaskSelectors {
 
     @Override
     public void applyFilter(final UserTaskFilter filter) {
-      filter.elementId(elementId);
+      filter.id(elementId);
       if (processInstanceKey != null) {
-        filter.processInstanceKey(processInstanceKey);
+        filter.elementInstanceKey(processInstanceKey);
       }
     }
   }
@@ -132,7 +132,7 @@ public class UserTaskSelectors {
     @Override
     public void applyFilter(final UserTaskFilter filter) {
       if (processInstanceKey != null) {
-        filter.processInstanceKey(processInstanceKey);
+        filter.elementInstanceKey(processInstanceKey);
       }
     }
   }

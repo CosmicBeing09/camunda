@@ -93,7 +93,7 @@ public class UserTaskIT {
     waitForTask(
         client,
         f -> {
-          f.processInstanceKey(processInstanceId);
+          f.elementInstanceKey(processInstanceId);
           f.state(UserTaskState.COMPLETED);
         });
 
@@ -127,7 +127,7 @@ public class UserTaskIT {
     waitForTask(
         client,
         f -> {
-          f.processInstanceKey(processInstanceId);
+          f.elementInstanceKey(processInstanceId);
           f.candidateUser("demoUsers");
         });
 
@@ -160,7 +160,7 @@ public class UserTaskIT {
     waitForTask(
         client,
         f -> {
-          f.processInstanceKey(processInstanceId);
+          f.elementInstanceKey(processInstanceId);
           f.assignee("demo");
         });
 
@@ -189,7 +189,7 @@ public class UserTaskIT {
               final var tasks =
                   client
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceId))
+                      .filter(f -> f.elementInstanceKey(processInstanceId))
                       .send()
                       .join()
                       .items();
@@ -335,7 +335,7 @@ public class UserTaskIT {
       final CamundaClient client, final long processInstanceId) {
     return client
         .newUserTaskSearchRequest()
-        .filter(f -> f.processInstanceKey(processInstanceId))
+        .filter(f -> f.elementInstanceKey(processInstanceId))
         .send()
         .join()
         .items();
@@ -391,7 +391,7 @@ public class UserTaskIT {
             () ->
                 !client
                     .newUserTaskSearchRequest()
-                    .filter(f -> f.processInstanceKey(processInstanceKey))
+                    .filter(f -> f.elementInstanceKey(processInstanceKey))
                     .send()
                     .join()
                     .items()

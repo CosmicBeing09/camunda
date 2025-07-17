@@ -308,7 +308,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
               final var result =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.elementInstanceKey(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);

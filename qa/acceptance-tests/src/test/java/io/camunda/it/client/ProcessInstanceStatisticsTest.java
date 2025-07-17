@@ -55,7 +55,7 @@ public class ProcessInstanceStatisticsTest {
                 assertThat(
                         camundaClient
                             .newUserTaskSearchRequest()
-                            .filter(f -> f.processDefinitionKey(processDefinitionKey))
+                            .filter(f -> f.definitionKey(processDefinitionKey))
                             .send()
                             .join()
                             .items())

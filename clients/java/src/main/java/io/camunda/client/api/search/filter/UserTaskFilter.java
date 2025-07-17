@@ -34,7 +34,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param value the key of the user task
    * @return the updated filter
    */
-  UserTaskFilter userTaskKey(final Long value);
+  UserTaskFilter key(final Long value);
 
   /**
    * Filters user tasks by the specified state.
@@ -82,7 +82,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param taskDefinitionId the task definition ID of the user task
    * @return the updated filter
    */
-  UserTaskFilter elementId(final String taskDefinitionId);
+  UserTaskFilter id(final String taskDefinitionId);
 
   /**
    * Filters user tasks by the specified element name. This only works for data created with 8.8 and
@@ -91,7 +91,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param elementName the element name of the user task
    * @return the updated filter
    */
-  UserTaskFilter elementName(final String elementName);
+  UserTaskFilter name(final String elementName);
 
   /**
    * Filters user tasks by the specified candidate group.
@@ -131,7 +131,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param processDefinitionKey the process definition key of the user task
    * @return the updated filter
    */
-  UserTaskFilter processDefinitionKey(final Long processDefinitionKey);
+  UserTaskFilter definitionKey(final Long processDefinitionKey);
 
   /**
    * Filters user tasks by the specified process instance key.
@@ -139,7 +139,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param processInstanceKey the process instance key of the user task
    * @return the updated filter
    */
-  UserTaskFilter processInstanceKey(final Long processInstanceKey);
+  UserTaskFilter instanceKey(final Long processInstanceKey);
 
   /**
    * Filters user tasks by the specified tenant ID.
@@ -155,7 +155,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param bpmnProcessId from the task
    * @return the updated filter
    */
-  UserTaskFilter bpmnProcessId(final String bpmnProcessId);
+  UserTaskFilter processDefinitionId(final String bpmnProcessId);
 
   /**
    * Filters user tasks by specified Process Instance Variables.
@@ -193,10 +193,10 @@ public interface UserTaskFilter extends SearchRequestFilter {
   /**
    * Filters user tasks by the specified element instance key.
    *
-   * @param elementInstanceKey the element instance key of the user task
+   * @param elementKey the element instance key of the user task
    * @return the updated filter
    */
-  UserTaskFilter elementInstanceKey(final Long elementInstanceKey);
+  UserTaskFilter elementInstanceKey(final Long elementKey);
 
   /**
    * Filters user tasks by the specified creation date.
