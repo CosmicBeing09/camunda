@@ -61,10 +61,10 @@ public record IncidentFilter(
     }
 
     public Builder processDefinitionKeys(final Long value, final Long... values) {
-      return processDefinitionKeys(collectValues(value, values));
+      return processDefinitionKeyOperations(collectValues(value, values));
     }
 
-    public Builder processDefinitionKeys(final List<Long> values) {
+    public Builder processDefinitionKeyOperations(final List<Long> values) {
       processDefinitionKeys = addValuesToList(processDefinitionKeys, values);
       return this;
     }
