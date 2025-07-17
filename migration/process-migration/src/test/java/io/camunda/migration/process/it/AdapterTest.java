@@ -21,7 +21,7 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.camunda.migration.process.MigrationRunner;
+import io.camunda.migration.process.ProcessMigrator;
 import io.camunda.migration.process.TestData;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
 import io.camunda.migration.process.adapter.ProcessorStep;
@@ -57,17 +57,17 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public abstract class AdapterTest {
   protected static final String MISCONFIGURED_PREFIX = "misconfigured";
-  protected static ProcessIndex processIndex;
-  protected static MigrationRepositoryIndex migrationRepositoryIndex;
-  protected static ImportPositionIndex importPositionIndex;
+  protected static ProcessIndex processEntityIndex;
+  protected static MigrationRepositoryIndex stepIndex;
+  protected static ImportPositionIndex positionIndex;
   protected static TestData.MisconfiguredProcessIndex misconfiguredProcessIndex;
   protected static ProcessMigrationProperties properties;
   protected static ElasticsearchClient esClient;
   protected static OpenSearchClient osClient;
-  protected static final ConnectConfiguration ES_CONFIGURATION = new ConnectConfiguration();
-  protected static final ConnectConfiguration OS_CONFIGURATION = new ConnectConfiguration();
-  protected static MigrationRunner osMigrator;
-  protected static MigrationRunner esMigrator;
+  protected static final ConnectConfiguration elasticsearchConfig = new ConnectConfiguration();
+  protected static final ConnectConfiguration openSearchConfig = new ConnectConfiguration();
+  protected static ProcessMigrator osMigrator;
+  protected static ProcessMigrator esMigrator;
 
   protected static MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
@@ -91,42 +91,42 @@ public abstract class AdapterTest {
     properties.getRetry().setMinRetryDelay(Duration.ofMillis(100));
     properties.getRetry().setMaxRetryDelay(Duration.ofMillis(500));
     properties.setImporterFinishedTimeout(Duration.ofSeconds(1));
-    ES_CONFIGURATION.setUrl("http://localhost:" + ES_CONTAINER.getMappedPort(9200));
-    OS_CONFIGURATION.setType("opensearch");
-    OS_CONFIGURATION.setUrl("http://localhost:" + OS_CONTAINER.getMappedPort(9200));
-    final var esConnector = new ElasticsearchConnector(ES_CONFIGURATION);
+    elasticsearchConfig.setUrl("http://localhost:" + ES_CONTAINER.getMappedPort(9200));
+    openSearchConfig.setType("opensearch");
+    openSearchConfig.setUrl("http://localhost:" + OS_CONTAINER.getMappedPort(9200));
+    final var esConnector = new ElasticsearchConnector(elasticsearchConfig);
     esObjectMapper = esConnector.objectMapper();
     esClient = esConnector.createClient();
-    final var osConnector = new OpensearchConnector(OS_CONFIGURATION);
+    final var osConnector = new OpensearchConnector(openSearchConfig);
     osObjectMapper = osConnector.objectMapper();
     osClient = osConnector.createClient();
-    esMigrator = new MigrationRunner(properties, ES_CONFIGURATION, meterRegistry);
-    osMigrator = new MigrationRunner(properties, OS_CONFIGURATION, meterRegistry);
+    esMigrator = new ProcessMigrator(properties, elasticsearchConfig, meterRegistry);
+    osMigrator = new ProcessMigrator(properties, openSearchConfig, meterRegistry);
     createIndices();
   }
 
   private static void createIndices() {
     final OpensearchEngineClient osEngine = new OpensearchEngineClient(osClient, osObjectMapper);
-    processIndex = new ProcessIndex(ES_CONFIGURATION.getIndexPrefix(), false);
-    migrationRepositoryIndex =
-        new MigrationRepositoryIndex(ES_CONFIGURATION.getIndexPrefix(), false);
-    importPositionIndex = new ImportPositionIndex(ES_CONFIGURATION.getIndexPrefix(), false);
+    processEntityIndex = new ProcessIndex(elasticsearchConfig.getIndexPrefix(), false);
+    stepIndex =
+        new MigrationRepositoryIndex(elasticsearchConfig.getIndexPrefix(), false);
+    positionIndex = new ImportPositionIndex(elasticsearchConfig.getIndexPrefix(), false);
     misconfiguredProcessIndex = new TestData.MisconfiguredProcessIndex(MISCONFIGURED_PREFIX, false);
-    osEngine.createIndex(processIndex, new IndexConfiguration());
-    osEngine.createIndex(migrationRepositoryIndex, new IndexConfiguration());
-    osEngine.createIndex(importPositionIndex, new IndexConfiguration());
+    osEngine.createIndex(processEntityIndex, new IndexConfiguration());
+    osEngine.createIndex(stepIndex, new IndexConfiguration());
+    osEngine.createIndex(positionIndex, new IndexConfiguration());
     osEngine.createIndex(misconfiguredProcessIndex, new IndexConfiguration());
 
     final ElasticsearchEngineClient esEngine =
         new ElasticsearchEngineClient(esClient, esObjectMapper);
-    processIndex = new ProcessIndex(ES_CONFIGURATION.getIndexPrefix(), true);
-    migrationRepositoryIndex =
-        new MigrationRepositoryIndex(ES_CONFIGURATION.getIndexPrefix(), true);
-    importPositionIndex = new ImportPositionIndex(ES_CONFIGURATION.getIndexPrefix(), true);
+    processEntityIndex = new ProcessIndex(elasticsearchConfig.getIndexPrefix(), true);
+    stepIndex =
+        new MigrationRepositoryIndex(elasticsearchConfig.getIndexPrefix(), true);
+    positionIndex = new ImportPositionIndex(elasticsearchConfig.getIndexPrefix(), true);
     misconfiguredProcessIndex = new TestData.MisconfiguredProcessIndex(MISCONFIGURED_PREFIX, true);
-    esEngine.createIndex(processIndex, new IndexConfiguration());
-    esEngine.createIndex(migrationRepositoryIndex, new IndexConfiguration());
-    esEngine.createIndex(importPositionIndex, new IndexConfiguration());
+    esEngine.createIndex(processEntityIndex, new IndexConfiguration());
+    esEngine.createIndex(stepIndex, new IndexConfiguration());
+    esEngine.createIndex(positionIndex, new IndexConfiguration());
     esEngine.createIndex(misconfiguredProcessIndex, new IndexConfiguration());
   }
 
@@ -134,28 +134,28 @@ public abstract class AdapterTest {
   public void cleanUp() throws IOException {
     properties.setBatchSize(5);
     if (isElasticsearch) {
-      esMigrator = new MigrationRunner(properties, ES_CONFIGURATION, meterRegistry);
+      esMigrator = new ProcessMigrator(properties, elasticsearchConfig, meterRegistry);
       esClient.deleteByQuery(
           DeleteByQueryRequest.of(
               d ->
                   d.index(
-                          processIndex.getFullQualifiedName(),
-                          migrationRepositoryIndex.getFullQualifiedName(),
-                          importPositionIndex.getFullQualifiedName(),
+                          processEntityIndex.getFullQualifiedName(),
+                          stepIndex.getFullQualifiedName(),
+                          positionIndex.getFullQualifiedName(),
                           misconfiguredProcessIndex.getFullQualifiedName())
                       .conflicts(Conflicts.Proceed)
                       .query(q -> q.matchAll(m -> m))));
       esClient.indices().refresh();
 
     } else {
-      osMigrator = new MigrationRunner(properties, OS_CONFIGURATION, meterRegistry);
+      osMigrator = new ProcessMigrator(properties, openSearchConfig, meterRegistry);
       osClient.deleteByQuery(
           org.opensearch.client.opensearch.core.DeleteByQueryRequest.of(
               d ->
                   d.index(
-                          processIndex.getFullQualifiedName(),
-                          migrationRepositoryIndex.getFullQualifiedName(),
-                          importPositionIndex.getFullQualifiedName(),
+                          processEntityIndex.getFullQualifiedName(),
+                          stepIndex.getFullQualifiedName(),
+                          positionIndex.getFullQualifiedName(),
                           misconfiguredProcessIndex.getFullQualifiedName())
                       .conflicts(org.opensearch.client.opensearch._types.Conflicts.Proceed)
                       .query(q -> q.matchAll(m -> m))));
@@ -215,14 +215,14 @@ public abstract class AdapterTest {
     if (isElasticsearch) {
       esClient.index(
           new co.elastic.clients.elasticsearch.core.IndexRequest.Builder()
-              .index(processIndex.getFullQualifiedName())
+              .index(processEntityIndex.getFullQualifiedName())
               .document(entity)
               .id(entity.getId())
               .build());
     } else {
       osClient.index(
           new org.opensearch.client.opensearch.core.IndexRequest.Builder<>()
-              .index(processIndex.getFullQualifiedName())
+              .index(processEntityIndex.getFullQualifiedName())
               .document(entity)
               .id(entity.getId())
               .build());
@@ -240,7 +240,7 @@ public abstract class AdapterTest {
     if (isElasticsearch) {
       esClient.index(
           new IndexRequest.Builder()
-              .index(migrationRepositoryIndex.getFullQualifiedName())
+              .index(stepIndex.getFullQualifiedName())
               .document(step)
               .id(PROCESSOR_STEP_ID)
               .refresh(Refresh.True)
@@ -248,7 +248,7 @@ public abstract class AdapterTest {
     } else {
       osClient.index(
           new org.opensearch.client.opensearch.core.IndexRequest.Builder<>()
-              .index(migrationRepositoryIndex.getFullQualifiedName())
+              .index(stepIndex.getFullQualifiedName())
               .document(step)
               .id(PROCESSOR_STEP_ID)
               .refresh(org.opensearch.client.opensearch._types.Refresh.True)
@@ -269,7 +269,7 @@ public abstract class AdapterTest {
                               e ->
                                   e.id(imp.getId())
                                       .document(imp)
-                                      .index(importPositionIndex.getFullQualifiedName()))));
+                                      .index(positionIndex.getFullQualifiedName()))));
 
       esClient.bulk(req.build());
     } else {
@@ -285,7 +285,7 @@ public abstract class AdapterTest {
                               e ->
                                   e.id(imp.getId())
                                       .document(imp)
-                                      .index(importPositionIndex.getFullQualifiedName()))));
+                                      .index(positionIndex.getFullQualifiedName()))));
 
       osClient.bulk(req.build());
     }
@@ -325,7 +325,7 @@ public abstract class AdapterTest {
   protected void assertProcessorStepContentIsStored(final String processDefinitionId)
       throws IOException {
     final var records =
-        readRecords(ProcessorStep.class, migrationRepositoryIndex.getFullQualifiedName());
+        readRecords(ProcessorStep.class, stepIndex.getFullQualifiedName());
     assertThat(records.size()).isEqualTo(1);
     assertThat(records.getFirst().getContent()).isEqualTo(String.valueOf(processDefinitionId));
   }
