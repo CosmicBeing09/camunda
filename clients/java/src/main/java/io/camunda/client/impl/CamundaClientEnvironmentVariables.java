@@ -20,7 +20,7 @@ public final class CamundaClientEnvironmentVariables {
   public static final String CA_CERTIFICATE_VAR = "CAMUNDA_CA_CERTIFICATE_PATH";
   public static final String KEEP_ALIVE_VAR = "CAMUNDA_KEEP_ALIVE";
   public static final String OVERRIDE_AUTHORITY_VAR = "CAMUNDA_OVERRIDE_AUTHORITY";
-  public static final String CAMUNDA_CLIENT_WORKER_STREAM_ENABLED =
+  public static final String WORKER_STREAM_ENABLED_VAR =
       "CAMUNDA_CLIENT_WORKER_STREAM_ENABLED";
   public static final String REST_ADDRESS_VAR = "CAMUNDA_REST_ADDRESS";
   public static final String GRPC_ADDRESS_VAR = "CAMUNDA_GRPC_ADDRESS";
@@ -32,19 +32,19 @@ public final class CamundaClientEnvironmentVariables {
       "CAMUNDA_CLIENT_USE_DEFAULT_RETRY_POLICY";
 
   /** OAuth Environment Variables */
-  public static final String OAUTH_ENV_CLIENT_ID = "CAMUNDA_CLIENT_ID";
+  public static final String OAUTH_CLIENT_ID_VAR = "CAMUNDA_CLIENT_ID";
 
-  public static final String OAUTH_ENV_CLIENT_SECRET = "CAMUNDA_CLIENT_SECRET";
-  public static final String OAUTH_ENV_TOKEN_AUDIENCE = "CAMUNDA_TOKEN_AUDIENCE";
-  public static final String OAUTH_ENV_TOKEN_SCOPE = "CAMUNDA_TOKEN_SCOPE";
-  public static final String OAUTH_ENV_AUTHORIZATION_SERVER = "CAMUNDA_AUTHORIZATION_SERVER_URL";
-  public static final String OAUTH_ENV_SSL_CLIENT_KEYSTORE_PATH =
+  public static final String OAUTH_CLIENT_SECRET_VAR = "CAMUNDA_CLIENT_SECRET";
+  public static final String OAUTH_TOKEN_AUDIENCE_VAR = "CAMUNDA_TOKEN_AUDIENCE";
+  public static final String OAUTH_TOKEN_SCOPE_VAR = "CAMUNDA_TOKEN_SCOPE";
+  public static final String OAUTH_AUTHORIZATION_SERVER_URL_VAR = "CAMUNDA_AUTHORIZATION_SERVER_URL";
+  public static final String OAUTH_SSL_CLIENT_KEYSTORE_PATH_VAR =
       "CAMUNDA_SSL_CLIENT_KEYSTORE_PATH";
-  public static final String OAUTH_ENV_SSL_CLIENT_KEYSTORE_SECRET =
+  public static final String OAUTH_SSL_CLIENT_KEYSTORE_SECRET_VAR =
       "CAMUNDA_SSL_CLIENT_KEYSTORE_SECRET";
-  public static final String OAUTH_ENV_SSL_CLIENT_KEYSTORE_KEY_SECRET =
+  public static final String OAUTH_SSL_CLIENT_KEYSTORE_KEY_SECRET_VAR =
       "CAMUNDA_SSL_CLIENT_KEYSTORE_KEY_SECRET";
-  public static final String OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_PATH =
+  public static final String OAUTH_SSL_CLIENT_TRUSTSTORE_PATH_VAR =
       "CAMUNDA_SSL_CLIENT_TRUSTSTORE_PATH";
   public static final String OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_SECRET =
       "CAMUNDA_SSL_CLIENT_TRUSTSTORE_SECRET";
@@ -53,7 +53,7 @@ public final class CamundaClientEnvironmentVariables {
   public static final String OAUTH_ENV_READ_TIMEOUT = "CAMUNDA_AUTH_READ_TIMEOUT";
 
   public static final String ENTRA_ENV_CERTIFICATE_PATH = "ENTRA_CERTIFICATE_PATH";
-  public static final String ENTRA_ENV_CERTIFICATE_PASSWORD = "ENTRA_CERTIFICATE_PASSWORD";
+  public static final String OAUTH_ENV_SSL_CLIENT_CERT_PASSWORD = "ENTRA_CERTIFICATE_PASSWORD";
 
   /** Basic Auth Environment Variables */
   public static final String BASIC_AUTH_ENV_USERNAME = "CAMUNDA_BASIC_AUTH_USERNAME";
