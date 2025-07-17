@@ -13,10 +13,10 @@ import io.camunda.zeebe.msgpack.property.LongProperty;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
-import io.camunda.zeebe.protocol.record.value.AsyncRequestMetadataRecordValue;
+import io.camunda.zeebe.protocol.record.value.AsyncRequestRecordValue;
 
 public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
-    implements AsyncRequestMetadataRecordValue {
+    implements AsyncRequestRecordValue {
 
   private final LongProperty requestKeyProperty = new LongProperty("requestKey", -1);
   private final EnumProperty<ValueType> valueTypeProperty =
@@ -77,16 +77,6 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
     return this;
   }
 
-  private Intent getIntent(final int intentValue) {
-    if (intentValue < 0 || intentValue > Short.MAX_VALUE) {
-      throw new IllegalStateException(
-          String.format(
-              "Expected to read the intent, but it's persisted value '%d' is not a short integer",
-              intentValue));
-    }
-    return Intent.fromProtocolValue(getValueType(), (short) intentValue);
-  }
-
   @Override
   public long getRequestId() {
     return requestIdProperty.getValue();
@@ -115,5 +105,15 @@ public final class AsyncRequestMetadataRecord extends UnifiedRecordValue
   public AsyncRequestMetadataRecord setOperationReference(final long operationReference) {
     operationReferenceProperty.setValue(operationReference);
     return this;
+  }
+
+  private Intent getIntent(final int intentValue) {
+    if (intentValue < 0 || intentValue > Short.MAX_VALUE) {
+      throw new IllegalStateException(
+          String.format(
+              "Expected to read the intent, but it's persisted value '%d' is not a short integer",
+              intentValue));
+    }
+    return Intent.fromProtocolValue(getValueType(), (short) intentValue);
   }
 }
