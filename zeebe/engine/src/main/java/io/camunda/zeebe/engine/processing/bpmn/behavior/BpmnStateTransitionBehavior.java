@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Arrays;
 import java.util.function.Function;
@@ -43,7 +43,7 @@ public final class BpmnStateTransitionBehavior {
   private final ProcessInstanceRecord childInstanceRecord = new ProcessInstanceRecord();
   private final ProcessInstanceRecord followUpInstanceRecord = new ProcessInstanceRecord();
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final BpmnStateBehavior stateBehavior;
   private final Function<BpmnElementType, BpmnElementContainerProcessor<ExecutableFlowElement>>
       processorLookUp;
@@ -53,7 +53,7 @@ public final class BpmnStateTransitionBehavior {
   private final TypedCommandWriter commandWriter;
 
   public BpmnStateTransitionBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final BpmnStateBehavior stateBehavior,
       final ProcessEngineMetrics metrics,
       final Function<BpmnElementType, BpmnElementContainerProcessor<ExecutableFlowElement>>
@@ -92,7 +92,7 @@ public final class BpmnStateTransitionBehavior {
     // generate the key before they write ACTIVATE command, to prepare the state (e.g. set
     // variables) for the upcoming element instance.
     if (context.getElementInstanceKey() == -1) {
-      final var newElementInstanceKey = keyGenerator.nextKey();
+      final var newElementInstanceKey = keyGenerator.nextRecordKey();
       transitionContext =
           context.copy(newElementInstanceKey, context.getRecordValue(), context.getIntent());
     }
@@ -299,7 +299,7 @@ public final class BpmnStateTransitionBehavior {
         .setBpmnEventType(sequenceFlow.getEventType());
 
     // take the sequence flow
-    final var sequenceFlowKey = keyGenerator.nextKey();
+    final var sequenceFlowKey = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(
         sequenceFlowKey, ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN, followUpInstanceRecord);
     final BpmnElementContext sequenceFlowTaken =
@@ -346,7 +346,7 @@ public final class BpmnStateTransitionBehavior {
         .setBpmnElementType(childElement.getElementType())
         .setBpmnEventType(childElement.getEventType());
 
-    final long childInstanceKey = keyGenerator.nextKey();
+    final long childInstanceKey = keyGenerator.nextRecordKey();
     commandWriter.appendFollowUpCommand(
         childInstanceKey, ProcessInstanceIntent.ACTIVATE_ELEMENT, childInstanceRecord);
 
@@ -366,7 +366,7 @@ public final class BpmnStateTransitionBehavior {
             .setBatchElementInstanceKey(context.getElementInstanceKey())
             .setIndex(amount);
 
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextRecordKey();
     commandWriter.appendFollowUpCommand(key, ProcessInstanceBatchIntent.ACTIVATE, record);
   }
 
@@ -380,7 +380,7 @@ public final class BpmnStateTransitionBehavior {
         .setBpmnElementType(element.getElementType())
         .setBpmnEventType(element.getEventType());
 
-    final var elementInstanceKey = keyGenerator.nextKey();
+    final var elementInstanceKey = keyGenerator.nextRecordKey();
     commandWriter.appendFollowUpCommand(
         elementInstanceKey, ProcessInstanceIntent.ACTIVATE_ELEMENT, followUpInstanceRecord);
   }
@@ -403,7 +403,7 @@ public final class BpmnStateTransitionBehavior {
           new ProcessInstanceBatchRecord()
               .setProcessInstanceKey(context.getProcessInstanceKey())
               .setBatchElementInstanceKey(context.getElementInstanceKey());
-      final var key = keyGenerator.nextKey();
+      final var key = keyGenerator.nextRecordKey();
       commandWriter.appendFollowUpCommand(key, ProcessInstanceBatchIntent.TERMINATE, batchRecord);
       return false;
     }
@@ -545,7 +545,7 @@ public final class BpmnStateTransitionBehavior {
   public long createChildProcessInstance(
       final DeployedProcess process, final BpmnElementContext context) {
 
-    final var processInstanceKey = keyGenerator.nextKey();
+    final var processInstanceKey = keyGenerator.nextRecordKey();
 
     childInstanceRecord.reset();
     childInstanceRecord

@@ -23,12 +23,12 @@ import io.camunda.zeebe.protocol.record.intent.GroupIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<GroupRecord> {
 
   private final GroupState groupState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -37,7 +37,7 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
 
   public GroupUpdateProcessor(
       final GroupState groupState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final AuthorizationCheckBehavior authCheckBehavior,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -79,7 +79,7 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
     updateExistingGroup(persistedRecord.get(), record);
     updateState(command, persistedRecord.get());
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextRecordKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

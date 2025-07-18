@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.impl.stream.job.ActivatedJobImpl;
 import io.camunda.zeebe.protocol.impl.stream.job.JobActivationProperties;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.value.JobKind;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import java.time.InstantSource;
 import java.util.Optional;
 import org.agrona.concurrent.UnsafeBuffer;
@@ -43,7 +43,7 @@ public class BpmnJobActivationBehavior {
   private final JobVariablesCollector jobVariablesCollector;
   private final StateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final JobProcessingMetrics jobMetrics;
   private final InstantSource clock;
 
@@ -51,7 +51,7 @@ public class BpmnJobActivationBehavior {
       final JobStreamer jobStreamer,
       final ProcessingState state,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final JobProcessingMetrics jobMetrics,
       final InstantSource clock) {
     this.jobStreamer = jobStreamer;
@@ -83,7 +83,7 @@ public class BpmnJobActivationBehavior {
       setJobProperties(wrappedJobRecord, properties);
       final JobBatchRecord jobBatchRecord = createJobBatchRecord(wrappedJobRecord, properties);
       appendJobToBatch(jobBatchRecord, jobKey, wrappedJobRecord);
-      final var jobBatchKey = keyGenerator.nextKey();
+      final var jobBatchKey = keyGenerator.nextRecordKey();
       stateWriter.appendFollowUpEvent(jobBatchKey, JobBatchIntent.ACTIVATED, jobBatchRecord);
 
       jobVariablesCollector.setJobVariables(properties.fetchVariables(), wrappedJobRecord);

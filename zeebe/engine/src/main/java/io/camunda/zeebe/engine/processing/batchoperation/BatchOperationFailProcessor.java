@@ -20,7 +20,7 @@ import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperation
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,13 +33,13 @@ public final class BatchOperationFailProcessor
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final int partitionId;
 
   public BatchOperationFailProcessor(
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final int partitionId) {
     stateWriter = writers.state();
     commandWriter = writers.command();
@@ -75,7 +75,7 @@ public final class BatchOperationFailProcessor
           BatchOperationIntent.PARTITION_FAILED,
           batchInternalFail);
       commandDistributionBehavior
-          .withKey(keyGenerator.nextKey())
+          .withKey(keyGenerator.nextRecordKey())
           .inQueue(DistributionQueue.BATCH_OPERATION)
           .forPartition(originPartitionId)
           .distribute(

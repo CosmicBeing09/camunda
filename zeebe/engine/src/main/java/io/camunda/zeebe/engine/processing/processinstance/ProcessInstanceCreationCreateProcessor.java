@@ -41,7 +41,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Arrays;
 import java.util.Set;
@@ -76,7 +76,7 @@ public final class ProcessInstanceCreationCreateProcessor
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -88,7 +88,7 @@ public final class ProcessInstanceCreationCreateProcessor
 
   public ProcessInstanceCreationCreateProcessor(
       final ProcessState processState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final BpmnBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,
@@ -167,7 +167,7 @@ public final class ProcessInstanceCreationCreateProcessor
       final CommandControl<ProcessInstanceCreationRecord> controller,
       final ProcessInstanceCreationRecord record,
       final DeployedProcess process) {
-    final long processInstanceKey = keyGenerator.nextKey();
+    final long processInstanceKey = keyGenerator.nextRecordKey();
 
     setVariablesFromDocument(
         record,

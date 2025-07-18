@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import org.agrona.DirectBuffer;
 
@@ -28,13 +28,13 @@ public final class BpmnSignalBehavior {
 
   private final SignalRecord signalRecord =
       new SignalRecord().setVariables(DocumentValue.EMPTY_DOCUMENT);
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final VariableState variableState;
   private final TypedCommandWriter commandWriter;
   private final ExpressionProcessor expressionBehavior;
 
   public BpmnSignalBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final VariableState variableState,
       final Writers writers,
       final ExpressionProcessor expressionBehavior) {
@@ -79,7 +79,7 @@ public final class BpmnSignalBehavior {
     signalRecord.reset();
     signalRecord.setSignalName(signalName).setVariables(variables).setTenantId(tenantId);
 
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextRecordKey();
     commandWriter.appendFollowUpCommand(key, SignalIntent.BROADCAST, signalRecord);
   }
 }

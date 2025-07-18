@@ -19,7 +19,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormMetadataRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.io.IOException;
 import java.util.Optional;
@@ -31,13 +31,13 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
   private static final int INITIAL_VERSION = 1;
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final FormState formState;
 
   public FormResourceTransformer(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final FormState formState) {
@@ -79,7 +79,7 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
               if (metadata.isDuplicate()) {
                 // create new version as the deployment contains at least one other non-duplicate
                 // resource and all resources in a deployment should be versioned together
-                key = keyGenerator.nextKey();
+                key = keyGenerator.nextRecordKey();
                 metadata
                     .setFormKey(key)
                     .setVersion(
@@ -130,7 +130,7 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
       final Form form,
       final DeploymentResource resource,
       final DeploymentRecord deployment) {
-    final LongSupplier newFormKey = keyGenerator::nextKey;
+    final LongSupplier newFormKey = keyGenerator::nextRecordKey;
     final DirectBuffer checksum = checksumGenerator.checksum(resource.getResourceBuffer());
     final String tenantId = deployment.getTenantId();
 

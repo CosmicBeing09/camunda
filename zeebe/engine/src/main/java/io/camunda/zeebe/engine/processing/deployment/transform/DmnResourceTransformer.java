@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource
 import io.camunda.zeebe.protocol.record.intent.DecisionIntent;
 import io.camunda.zeebe.protocol.record.intent.DecisionRequirementsIntent;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.io.ByteArrayInputStream;
@@ -50,13 +50,13 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
 
   private final DecisionEngine decisionEngine = DecisionEngineFactory.createDecisionEngine();
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final DecisionState decisionState;
 
   public DmnResourceTransformer(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final DecisionState decisionState) {
@@ -105,7 +105,7 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
               if (drg.isDuplicate()) {
                 // create new version as the deployment contains at least one other non-duplicate
                 // resource and all resources in a deployment should be versioned together
-                drgKey = keyGenerator.nextKey();
+                drgKey = keyGenerator.nextRecordKey();
                 drg.setDecisionRequirementsKey(drgKey)
                     .setDecisionRequirementsVersion(drg.getDecisionRequirementsVersion() + 1)
                     .setDuplicate(false);
@@ -134,7 +134,7 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
                       decision -> {
                         var decisionKey = decision.getDecisionKey();
                         if (decision.isDuplicate()) {
-                          decisionKey = keyGenerator.nextKey();
+                          decisionKey = keyGenerator.nextRecordKey();
                           decision
                               .setDecisionKey(decisionKey)
                               .setDecisionRequirementsKey(drg.getDecisionRequirementsKey())
@@ -233,7 +233,7 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
       final ParsedDecisionRequirementsGraph parsedDrg,
       final DeploymentRecord deploymentEvent) {
 
-    final LongSupplier newDecisionRequirementsKey = keyGenerator::nextKey;
+    final LongSupplier newDecisionRequirementsKey = keyGenerator::nextRecordKey;
     final DirectBuffer checksum = checksumGenerator.checksum(resource.getResourceBuffer());
     final var drgRecord = deploymentEvent.decisionRequirementsMetadata().add();
 
@@ -276,7 +276,7 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
         .getDecisions()
         .forEach(
             decision -> {
-              final LongSupplier newDecisionKey = keyGenerator::nextKey;
+              final LongSupplier newDecisionKey = keyGenerator::nextRecordKey;
 
               final var decisionRecord = deploymentEvent.decisionsMetadata().add();
               decisionRecord

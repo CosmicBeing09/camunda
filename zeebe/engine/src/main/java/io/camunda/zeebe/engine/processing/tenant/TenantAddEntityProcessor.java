@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 
 public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor<TenantRecord> {
@@ -44,7 +44,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   private final GroupState groupState;
   private final RoleState roleState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -54,7 +54,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   public TenantAddEntityProcessor(
       final ProcessingState state,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     tenantState = state.getTenantState();
@@ -198,7 +198,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
 
   private void distributeCommand(final TypedRecord<TenantRecord> command) {
     commandDistributionBehavior
-        .withKey(keyGenerator.nextKey())
+        .withKey(keyGenerator.nextRecordKey())
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
         .distribute(command);
   }

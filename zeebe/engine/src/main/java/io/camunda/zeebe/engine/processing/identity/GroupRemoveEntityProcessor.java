@@ -27,7 +27,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcessor<GroupRecord> {
   private static final String ENTITY_NOT_ASSIGNED_ERROR_MESSAGE =
@@ -36,7 +36,7 @@ public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcess
   private final MappingState mappingState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -45,7 +45,7 @@ public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcess
   public GroupRemoveEntityProcessor(
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     groupState = processingState.getGroupState();
@@ -108,7 +108,7 @@ public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcess
     stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_REMOVED, record);
     responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_REMOVED, record, command);
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextRecordKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

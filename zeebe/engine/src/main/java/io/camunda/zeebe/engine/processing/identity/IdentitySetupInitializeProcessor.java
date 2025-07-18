@@ -26,18 +26,18 @@ import io.camunda.zeebe.protocol.record.value.RoleRecordValue;
 import io.camunda.zeebe.protocol.record.value.TenantRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserRecordValue;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import java.util.Collection;
 import java.util.List;
 
 @ExcludeAuthorizationCheck
 public final class IdentitySetupInitializeProcessor
     implements TypedRecordProcessor<IdentitySetupRecord> {
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
 
-  public IdentitySetupInitializeProcessor(final Writers writers, final KeyGenerator keyGenerator) {
+  public IdentitySetupInitializeProcessor(final Writers writers, final RecordKeyGenerator keyGenerator) {
     this.keyGenerator = keyGenerator;
     commandWriter = writers.command();
     stateWriter = writers.state();
@@ -45,7 +45,7 @@ public final class IdentitySetupInitializeProcessor
 
   @Override
   public void processRecord(final TypedRecord<IdentitySetupRecord> command) {
-    final var initializationKey = keyGenerator.nextKey();
+    final var initializationKey = keyGenerator.nextRecordKey();
     final var setupRecord = command.getValue();
 
     createRoles(initializationKey, setupRecord.getRoles());

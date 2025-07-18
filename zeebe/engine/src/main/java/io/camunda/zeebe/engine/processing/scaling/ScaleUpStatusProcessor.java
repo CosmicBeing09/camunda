@@ -14,16 +14,16 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord> {
 
   private final Writers writers;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final RoutingState routingState;
 
   public ScaleUpStatusProcessor(
-      final KeyGenerator keyGenerator, final Writers writers, final RoutingState routingState) {
+      final RecordKeyGenerator keyGenerator, final Writers writers, final RoutingState routingState) {
     this.keyGenerator = keyGenerator;
     this.writers = writers;
     this.routingState = routingState;
@@ -31,7 +31,7 @@ public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord>
 
   @Override
   public void processRecord(final TypedRecord<ScaleRecord> command) {
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextRecordKey();
     final var request = command.getValue();
     final var desiredPartitions = routingState.desiredPartitions();
     // The desired partition count in the request can be smaller than the value in the state in case

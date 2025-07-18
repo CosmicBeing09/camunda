@@ -40,7 +40,7 @@ import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
 import org.agrona.DirectBuffer;
@@ -54,7 +54,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final JobProcessingMetrics jobMetrics;
   private final JobBackoffChecker jobBackoffChecker;
   private final VariableBehavior variableBehavior;
@@ -68,7 +68,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   public JobFailProcessor(
       final ProcessingState state,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final JobProcessingMetrics jobMetrics,
       final JobBackoffChecker jobBackoffChecker,
       final BpmnBehaviors bpmnBehaviors,
@@ -188,7 +188,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
         .setProcessDefinitionPath(treePathProperties.processDefinitionPath())
         .setCallingElementPath(treePathProperties.callingElementPath());
 
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), IncidentIntent.CREATED, incidentEvent);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), IncidentIntent.CREATED, incidentEvent);
   }
 
   private ErrorType determineErrorType(final JobRecord jobRecord) {

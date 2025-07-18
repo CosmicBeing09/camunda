@@ -21,8 +21,8 @@ public class FormCreatedV2ApplierTest extends AbstractFormCreatedApplierTest {
   @Test
   void shouldPutFormForDifferentTenants() {
     // given
-    final var formKey = keyGenerator.nextKey();
-    final var deploymentKey = keyGenerator.nextKey();
+    final var formKey = keyGenerator.nextRecordKey();
+    final var deploymentKey = keyGenerator.nextRecordKey();
     final var formId = Strings.newRandomValidBpmnId();
     final var version = 1;
     final var versionTag = "v1.0";

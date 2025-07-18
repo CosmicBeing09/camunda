@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import org.agrona.DirectBuffer;
 
 public class EventTriggerBehavior {
@@ -33,7 +33,7 @@ public class EventTriggerBehavior {
   private final ProcessInstanceRecord eventRecord = new ProcessInstanceRecord();
   private final ProcessEventRecord processEventRecord = new ProcessEventRecord();
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final CatchEventBehavior catchEventBehavior;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
@@ -44,7 +44,7 @@ public class EventTriggerBehavior {
   private final VariableBehavior variableBehavior;
 
   public EventTriggerBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final CatchEventBehavior catchEventBehavior,
       final Writers writers,
       final ProcessingState processingState,
@@ -156,7 +156,7 @@ public class EventTriggerBehavior {
       final long eventScopeKey,
       final DirectBuffer catchEventId,
       final DirectBuffer variables) {
-    final var eventKey = keyGenerator.nextKey();
+    final var eventKey = keyGenerator.nextRecordKey();
     processEventRecord.reset();
     processEventRecord
         .setScopeKey(eventScopeKey)
@@ -237,7 +237,7 @@ public class EventTriggerBehavior {
         .setElementId(triggeredEvent.getId())
         .setBpmnEventType(triggeredEvent.getEventType());
 
-    final var eventInstanceKey = keyGenerator.nextKey();
+    final var eventInstanceKey = keyGenerator.nextRecordKey();
 
     final var elementTreePath =
         stateBehavior.getElementTreePath(eventInstanceKey, flowScopeKey, elementRecord);

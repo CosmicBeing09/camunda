@@ -28,7 +28,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<RoleRecord> {
 
@@ -43,7 +43,7 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   private final MembershipState membershipState;
   private final GroupState groupState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -52,7 +52,7 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   public RoleAddEntityProcessor(
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     roleState = processingState.getRoleState();
@@ -112,7 +112,7 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
     responseWriter.writeEventOnCommand(
         record.getRoleKey(), RoleIntent.ENTITY_ADDED, record, command);
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextRecordKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

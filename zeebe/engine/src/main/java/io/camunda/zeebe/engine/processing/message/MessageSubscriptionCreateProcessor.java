@@ -20,7 +20,7 @@ import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRe
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
 
@@ -36,7 +36,7 @@ public final class MessageSubscriptionCreateProcessor
   private final MessageSubscriptionState subscriptionState;
   private final SubscriptionCommandSender commandSender;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
 
   private MessageSubscriptionRecord subscriptionRecord;
   private final TypedRejectionWriter rejectionWriter;
@@ -49,7 +49,7 @@ public final class MessageSubscriptionCreateProcessor
       final MessageSubscriptionState subscriptionState,
       final SubscriptionCommandSender commandSender,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final InstantSource clock) {
     this.subscriptionState = subscriptionState;
     this.commandSender = commandSender;
@@ -86,7 +86,7 @@ public final class MessageSubscriptionCreateProcessor
 
   private void handleNewSubscription(final SideEffectWriter sideEffectWriter) {
 
-    final var subscriptionKey = keyGenerator.nextKey();
+    final var subscriptionKey = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(
         subscriptionKey, MessageSubscriptionIntent.CREATED, subscriptionRecord);
 

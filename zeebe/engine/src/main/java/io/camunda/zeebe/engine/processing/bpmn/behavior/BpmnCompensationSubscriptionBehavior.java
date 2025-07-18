@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.intent.CompensationSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +45,7 @@ public class BpmnCompensationSubscriptionBehavior {
   private static final Predicate<CompensationSubscription> TRIGGER_ALL_SUBSCRIPTIONS =
       subscription -> true;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final CompensationSubscriptionState compensationSubscriptionState;
   private final ProcessState processState;
@@ -53,7 +53,7 @@ public class BpmnCompensationSubscriptionBehavior {
   private final BpmnStateBehavior stateBehavior;
 
   public BpmnCompensationSubscriptionBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final ProcessingState processingState,
       final Writers writers,
       final BpmnStateBehavior stateBehavior) {
@@ -70,7 +70,7 @@ public class BpmnCompensationSubscriptionBehavior {
 
     if (hasCompensationBoundaryEvent(element) || isFlowScopeWithSubscriptions(context)) {
 
-      final var key = keyGenerator.nextKey();
+      final var key = keyGenerator.nextRecordKey();
       final var elementId = BufferUtil.bufferAsString(element.getId());
 
       final var compensation =
@@ -245,7 +245,7 @@ public class BpmnCompensationSubscriptionBehavior {
         .setBpmnElementType(compensationHandler.getElementType())
         .setBpmnEventType(BpmnEventType.COMPENSATION);
 
-    final long compensationHandlerInstanceKey = keyGenerator.nextKey();
+    final long compensationHandlerInstanceKey = keyGenerator.nextRecordKey();
     commandWriter.appendFollowUpCommand(
         compensationHandlerInstanceKey,
         ProcessInstanceIntent.ACTIVATE_ELEMENT,
@@ -282,7 +282,7 @@ public class BpmnCompensationSubscriptionBehavior {
   private void activateAndCompleteCompensationBoundaryEvent(
       final BpmnElementContext context, final ExecutableBoundaryEvent boundaryEvent) {
 
-    final long boundaryEventKey = keyGenerator.nextKey();
+    final long boundaryEventKey = keyGenerator.nextRecordKey();
 
     final ProcessInstanceRecord boundaryEventRecord = new ProcessInstanceRecord();
     boundaryEventRecord.wrap(context.getRecordValue());

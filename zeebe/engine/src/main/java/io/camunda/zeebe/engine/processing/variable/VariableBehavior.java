@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.variable.IndexedDocument;
 import io.camunda.zeebe.engine.state.variable.VariableInstance;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import java.util.Iterator;
 import org.agrona.DirectBuffer;
 
@@ -29,7 +29,7 @@ public final class VariableBehavior {
 
   private final VariableState variableState;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
 
   private final IndexedDocument indexedDocument = new IndexedDocument();
   private final VariableRecord variableRecord = new VariableRecord();
@@ -37,7 +37,7 @@ public final class VariableBehavior {
   public VariableBehavior(
       final VariableState variableState,
       final StateWriter stateWriter,
-      final KeyGenerator keyGenerator) {
+      final RecordKeyGenerator keyGenerator) {
     this.variableState = variableState;
     this.stateWriter = stateWriter;
     this.keyGenerator = keyGenerator;
@@ -192,7 +192,7 @@ public final class VariableBehavior {
     final VariableInstance variableInstance =
         variableState.getVariableInstanceLocal(record.getScopeKey(), record.getNameBuffer());
     if (variableInstance == null) {
-      final long key = keyGenerator.nextKey();
+      final long key = keyGenerator.nextRecordKey();
       stateWriter.appendFollowUpEvent(key, VariableIntent.CREATED, record);
     } else if (!variableInstance.getValue().equals(record.getValueBuffer())) {
       stateWriter.appendFollowUpEvent(variableInstance.getKey(), VariableIntent.UPDATED, record);

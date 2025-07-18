@@ -18,7 +18,7 @@ import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 /**
  * Decorates a command processor with simple accept and reject logic.
@@ -37,7 +37,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
 
   private final CommandProcessor<T> wrappedProcessor;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedCommandWriter commandWriter;
@@ -54,7 +54,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
 
   public CommandProcessorImpl(
       final CommandProcessor<T> commandProcessor,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers) {
     wrappedProcessor = commandProcessor;
     this.keyGenerator = keyGenerator;
@@ -95,7 +95,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
   @Override
   public long accept(final Intent newState, final T updatedValue) {
     if (entityKey < 0) {
-      entityKey = keyGenerator.nextKey();
+      entityKey = keyGenerator.nextRecordKey();
     }
 
     isAccepted = true;
