@@ -111,7 +111,7 @@ public class OperateInternalApiGroupPermissionsIT {
     addUserToGroup(adminClient, groupId, AUTHORIZED_USERNAME);
 
     adminClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask().endEvent().done(),
             "process.bpmn")

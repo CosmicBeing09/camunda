@@ -48,18 +48,18 @@ public class CamundaManagementClient {
 
   private final CloseableHttpClient httpClient = HttpClients.createDefault();
 
-  private final URI camundaManagementApi;
-  private final URI camundaRestApi;
+  private final URI managementUri;
+  private final URI restUri;
 
   public CamundaManagementClient(final URI camundaManagementApi, final URI camundaRestApi) {
-    this.camundaManagementApi = camundaManagementApi;
-    this.camundaRestApi = camundaRestApi;
+    managementUri = camundaManagementApi;
+    restUri = camundaRestApi;
   }
 
   public Instant getCurrentTime() {
 
     try {
-      final HttpGet request = new HttpGet(camundaManagementApi + CLOCK_ENDPOINT);
+      final HttpGet request = new HttpGet(managementUri + CLOCK_ENDPOINT);
       final CamundaClockResponseDto clockResponseDto =
           sendRequest(request, CamundaClockResponseDto.class);
 
@@ -71,7 +71,7 @@ public class CamundaManagementClient {
 
   public void increaseTime(final Duration timeToAdd) {
 
-    final HttpPost request = new HttpPost(camundaManagementApi + CLOCK_ADD_ENDPOINT);
+    final HttpPost request = new HttpPost(managementUri + CLOCK_ADD_ENDPOINT);
 
     final CamundaAddClockRequestDto requestDto = new CamundaAddClockRequestDto();
     requestDto.setOffsetMilli(timeToAdd.toMillis());
@@ -127,7 +127,7 @@ public class CamundaManagementClient {
   }
 
   private MinimalPlannedOperationsResponseDto startPurge() {
-    final HttpPost purgeRequest = new HttpPost(camundaManagementApi + CLUSTER_PURGE_ENDPOINT);
+    final HttpPost purgeRequest = new HttpPost(managementUri + CLUSTER_PURGE_ENDPOINT);
 
     try {
       return sendRequest(purgeRequest, MinimalPlannedOperationsResponseDto.class);
@@ -137,7 +137,7 @@ public class CamundaManagementClient {
   }
 
   private boolean isPurgeComplete(final long changeId) {
-    final HttpGet clusterStatusRequest = new HttpGet(camundaRestApi + TOPOLOGY_ENDPOINT);
+    final HttpGet clusterStatusRequest = new HttpGet(restUri + TOPOLOGY_ENDPOINT);
 
     try {
       final MinimalTopologyResponseDto minimalTopologyResponse =

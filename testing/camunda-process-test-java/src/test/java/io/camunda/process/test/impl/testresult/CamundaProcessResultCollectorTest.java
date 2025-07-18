@@ -80,7 +80,7 @@ public class CamundaProcessResultCollectorTest {
 
     // then
     assertThat(result).isNotNull();
-    assertThat(result.getProcessInstanceTestResults()).isEmpty();
+    assertThat(result.getResults()).isEmpty();
   }
 
   @Test
@@ -93,13 +93,13 @@ public class CamundaProcessResultCollectorTest {
     final ProcessTestResult result = resultCollector.collect();
 
     // then
-    assertThat(result.getProcessInstanceTestResults())
+    assertThat(result.getResults())
         .hasSize(2)
         .extracting(ProcessInstanceResult::getProcessInstance)
         .extracting(ProcessInstance::getProcessInstanceKey, ProcessInstance::getProcessDefinitionId)
         .contains(tuple(1L, "process-a"), tuple(2L, "process-b"));
 
-    assertThat(result.getProcessInstanceTestResults())
+    assertThat(result.getResults())
         .allMatch(processInstanceResult -> processInstanceResult.getVariables().isEmpty())
         .allMatch(processInstanceResult -> processInstanceResult.getActiveIncidents().isEmpty());
   }
@@ -120,9 +120,9 @@ public class CamundaProcessResultCollectorTest {
     final ProcessTestResult result = resultCollector.collect();
 
     // then
-    assertThat(result.getProcessInstanceTestResults()).hasSize(1);
+    assertThat(result.getResults()).hasSize(1);
 
-    assertThat(result.getProcessInstanceTestResults().get(0).getVariables())
+    assertThat(result.getResults().get(0).getVariables())
         .hasSize(2)
         .containsEntry("var-1", "1")
         .containsEntry("var-2", "2");
@@ -150,7 +150,7 @@ public class CamundaProcessResultCollectorTest {
     final ProcessTestResult result = resultCollector.collect();
 
     // then
-    assertThat(result.getProcessInstanceTestResults().get(0).getVariables())
+    assertThat(result.getResults().get(0).getVariables())
         .hasSize(3)
         .containsEntry("var-1", "1")
         .containsEntry("var-2", null)
@@ -216,16 +216,16 @@ public class CamundaProcessResultCollectorTest {
     final ProcessTestResult result = resultCollector.collect();
 
     // then
-    assertThat(result.getProcessInstanceTestResults()).hasSize(2);
+    assertThat(result.getResults()).hasSize(2);
 
-    assertThat(result.getProcessInstanceTestResults().get(0).getActiveIncidents())
+    assertThat(result.getResults().get(0).getActiveIncidents())
         .hasSize(2)
         .extracting(Incident::getErrorType, Incident::getErrorMessage, Incident::getElementId)
         .contains(
             tuple(IncidentErrorType.JOB_NO_RETRIES, "No retries left.", "A"),
             tuple(IncidentErrorType.EXTRACT_VALUE_ERROR, "Failed to evaluate expression.", "B"));
 
-    assertThat(result.getProcessInstanceTestResults().get(1).getActiveIncidents())
+    assertThat(result.getResults().get(1).getActiveIncidents())
         .hasSize(1)
         .extracting(Incident::getErrorType, Incident::getErrorMessage, Incident::getElementId)
         .contains(
@@ -260,14 +260,14 @@ public class CamundaProcessResultCollectorTest {
     final ProcessTestResult result = resultCollector.collect();
 
     // then
-    assertThat(result.getProcessInstanceTestResults()).hasSize(2);
+    assertThat(result.getResults()).hasSize(2);
 
-    assertThat(result.getProcessInstanceTestResults().get(0).getActiveElementInstances())
+    assertThat(result.getResults().get(0).getActiveElementInstances())
         .hasSize(2)
         .extracting(ElementInstance::getElementId, ElementInstance::getElementName)
         .contains(tuple("A", "element_A"), tuple("B", "element_B"));
 
-    assertThat(result.getProcessInstanceTestResults().get(1).getActiveElementInstances())
+    assertThat(result.getResults().get(1).getActiveElementInstances())
         .hasSize(2)
         .extracting(ElementInstance::getElementId, ElementInstance::getElementName)
         .contains(tuple("C", "element_C"), tuple("D", "element_D"));

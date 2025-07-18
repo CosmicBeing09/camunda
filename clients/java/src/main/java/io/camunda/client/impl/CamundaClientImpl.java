@@ -501,13 +501,13 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public DeployProcessCommandStep1 newDeployCommand() {
+  public DeployProcessCommandStep1 deploy() {
     return new DeployProcessCommandImpl(
         asyncStub, config.getDefaultRequestTimeout(), credentialsProvider::shouldRetryRequest);
   }
 
   @Override
-  public DeployResourceCommandStep1 newDeployResourceCommand() {
+  public DeployResourceCommandStep1 deployResource() {
     return new DeployResourceCommandImpl(
         asyncStub,
         config,

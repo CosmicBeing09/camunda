@@ -71,7 +71,7 @@ public class BasicAuthOverGrpcIT {
     // when then
     final var deploymentEvent =
         defaultUserClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
@@ -95,7 +95,7 @@ public class BasicAuthOverGrpcIT {
       // when
       final var deploymentEvent =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(
                   Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
@@ -119,7 +119,7 @@ public class BasicAuthOverGrpcIT {
     try (final var client = authUtil.createClientGrpc(username, password)) {
       final var deployFuture =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(
                   Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")

@@ -173,7 +173,7 @@ final class ExporterEnableTest {
     // Deployment will be distributed to other partitions as well, ensuring all partitions have some
     // records to export.
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(), "process.bpmn")
         .send()

@@ -103,7 +103,7 @@ public class TasklistV1ApiRolePermissionsIT {
     addUserToRole(adminClient.getConfiguration().getRestAddress(), roleId, AUTHORIZED_USERNAME);
 
     adminClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID)
                 .startEvent()

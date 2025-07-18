@@ -309,7 +309,7 @@ class ProcessInstanceAuthorizationIT {
   }
 
   private static void deployResource(final CamundaClient camundaClient, final String resourceName) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resourceName).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resourceName).send().join();
   }
 
   private static void startProcessInstance(

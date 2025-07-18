@@ -119,7 +119,7 @@ public class CamundaClientBasedAdapter implements TasklistServicesAdapter {
   public void deployResourceWithoutAuthentication(
       final String classpathResource, final String tenantId) {
     final DeployResourceCommandStep2 deployResourceCommandStep2 =
-        camundaClient.newDeployResourceCommand().addResourceFromClasspath(classpathResource);
+        camundaClient.deployResource().addResourceFromClasspath(classpathResource);
     if (tenantService.isMultiTenancyEnabled()) {
       deployResourceCommandStep2.tenantId(tenantId);
     }

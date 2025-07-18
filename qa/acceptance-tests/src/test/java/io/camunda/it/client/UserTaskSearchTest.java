@@ -1325,7 +1325,7 @@ class UserTaskSearchTest {
     final LocalDateTime dayBefore = now.minusDays(1);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -1357,7 +1357,7 @@ class UserTaskSearchTest {
     final LocalDateTime dayBefore = now.minusDays(1);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -1380,14 +1380,14 @@ class UserTaskSearchTest {
     final InputStream process = UserTaskSearchTest.class.getResourceAsStream(resource);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(Bpmn.readModelFromStream(process), resourceName)
         .send()
         .join();
   }
 
   private static void deployForm(final String resource) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resource).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resource).send().join();
   }
 
   private static void startProcessInstance(final String processId) {

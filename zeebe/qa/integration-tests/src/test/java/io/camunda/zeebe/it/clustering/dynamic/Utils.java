@@ -103,7 +103,7 @@ final class Utils {
             .done();
     final var deploymentKey =
         camundaClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(process, "process.bpmn")
             .send()
             .join()

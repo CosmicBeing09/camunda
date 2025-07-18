@@ -163,7 +163,7 @@ public class ProcessMigrationIT {
 
   public Long deployProcessFromClasspath(final CamundaClient client, final String classpath) {
     final var deployment =
-        client.newDeployResourceCommand().addResourceFromClasspath(classpath).send().join();
+        client.deployResource().addResourceFromClasspath(classpath).send().join();
     final var event = deployment.getProcesses().getFirst();
 
     // sync with exported database

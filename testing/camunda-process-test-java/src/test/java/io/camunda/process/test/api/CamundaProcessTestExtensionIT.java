@@ -53,7 +53,7 @@ public class CamundaProcessTestExtensionIT {
             .zeebeOutputExpression("\"ok\"", "result")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =
@@ -87,7 +87,7 @@ public class CamundaProcessTestExtensionIT {
             .endEvent()
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     final ProcessInstanceEvent processInstance =
         client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
@@ -123,7 +123,7 @@ public class CamundaProcessTestExtensionIT {
             .name("end")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =
@@ -155,7 +155,7 @@ public class CamundaProcessTestExtensionIT {
             .name("end")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =

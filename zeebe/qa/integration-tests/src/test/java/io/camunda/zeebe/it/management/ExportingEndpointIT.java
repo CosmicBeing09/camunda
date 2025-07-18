@@ -52,7 +52,7 @@ final class ExportingEndpointIT {
   static void beforeAll() {
     try (final var client = cluster.newClientBuilder().build()) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(
               Bpmn.createExecutableProcess("processId").startEvent().endEvent().done(),
               "process.bpmn")

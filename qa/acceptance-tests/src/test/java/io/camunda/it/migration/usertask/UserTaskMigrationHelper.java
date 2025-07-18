@@ -79,7 +79,7 @@ public abstract class UserTaskMigrationHelper {
             .done();
 
     return client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(process, "task-process.bpmn")
         .send()
         .join()

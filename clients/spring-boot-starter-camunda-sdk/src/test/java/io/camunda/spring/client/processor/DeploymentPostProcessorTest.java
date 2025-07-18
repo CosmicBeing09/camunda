@@ -69,7 +69,7 @@ public class DeploymentPostProcessorTest {
 
     when(resource.getFilename()).thenReturn("1.bpmn");
 
-    when(client.newDeployResourceCommand()).thenReturn(deployStep1);
+    when(client.deployResource()).thenReturn(deployStep1);
 
     when(deploymentPostProcessor.getResources(anyString())).thenReturn(new Resource[] {resource});
 
@@ -101,7 +101,7 @@ public class DeploymentPostProcessorTest {
     when(resources[0].getFilename()).thenReturn("1.bpmn");
     when(resources[1].getFilename()).thenReturn("2.bpmn");
 
-    when(client.newDeployResourceCommand()).thenReturn(deployStep1);
+    when(client.deployResource()).thenReturn(deployStep1);
 
     when(deploymentPostProcessor.getResources("classpath*:/1.bpmn"))
         .thenReturn(new Resource[] {resources[0]});
@@ -140,7 +140,7 @@ public class DeploymentPostProcessorTest {
     when(resources[0].getFilename()).thenReturn("1.bpmn");
     when(resources[1].getFilename()).thenReturn("1.bpmn");
 
-    when(client.newDeployResourceCommand()).thenReturn(deployStep1);
+    when(client.deployResource()).thenReturn(deployStep1);
 
     when(deploymentPostProcessor.getResources("classpath*:/1.bpmn"))
         .thenReturn(new Resource[] {resources[0]});

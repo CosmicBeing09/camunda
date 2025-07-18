@@ -32,7 +32,7 @@ public abstract class ZeebeTestUtil {
   public static String deployProcess(
       final CamundaClient client, final BpmnModelInstance processModel, final String resourceName) {
     final DeployResourceCommandStep2 deployProcessCommandStep1 =
-        client.newDeployResourceCommand().addProcessModel(processModel, resourceName);
+        client.deployResource().addProcessModel(processModel, resourceName);
     final DeploymentEvent deploymentEvent = deployProcessCommandStep1.send().join();
     LOGGER.debug("Deployment of resource [{}] was performed", resourceName);
     return String.valueOf(deploymentEvent.getProcesses().get(0).getProcessDefinitionKey());

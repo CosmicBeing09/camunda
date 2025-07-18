@@ -38,17 +38,17 @@ public class CamundaContainerRuntime implements AutoCloseable {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(CamundaContainerRuntime.class);
 
-  private static final String NETWORK_ALIAS_CAMUNDA = "camunda";
-  private static final String NETWORK_ALIAS_ELASTICSEARCH = "elasticsearch";
+  private static final String CAMUNDA_ALIAS = "camunda";
+  private static final String ELASTIC_ALIAS = "elasticsearch";
   private static final String NETWORK_ALIAS_CONNECTORS = "connectors";
 
   private static final String ELASTICSEARCH_URL =
-      "http://" + NETWORK_ALIAS_ELASTICSEARCH + ":" + ContainerRuntimePorts.ELASTICSEARCH_REST_API;
+      "http://" + ELASTIC_ALIAS + ":" + ContainerRuntimePorts.ELASTICSEARCH_REST_API;
 
   private static final String CAMUNDA_GRPC_API =
-      "http://" + NETWORK_ALIAS_CAMUNDA + ":" + ContainerRuntimePorts.CAMUNDA_GATEWAY_API;
+      "http://" + CAMUNDA_ALIAS + ":" + ContainerRuntimePorts.CAMUNDA_GATEWAY_API;
   private static final String CAMUNDA_REST_API =
-      "http://" + NETWORK_ALIAS_CAMUNDA + ":" + ContainerRuntimePorts.CAMUNDA_REST_API;
+      "http://" + CAMUNDA_ALIAS + ":" + ContainerRuntimePorts.CAMUNDA_REST_API;
 
   private final ContainerFactory containerFactory;
 
@@ -83,7 +83,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
                 builder.getElasticsearchDockerImageVersion())
             .withLogConsumer(createContainerLogger(builder.getElasticsearchLoggerName()))
             .withNetwork(network)
-            .withNetworkAliases(NETWORK_ALIAS_ELASTICSEARCH)
+            .withNetworkAliases(ELASTIC_ALIAS)
             .withEnv(ContainerRuntimeEnvs.ELASTICSEARCH_ENV_XPACK_SECURITY_ENABLED, "false")
             .withEnv(builder.getElasticsearchEnvVars());
 
@@ -101,7 +101,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
             .withLogConsumer(
                 createContainerJsonLogger(builder.getCamundaLoggerName(), CamundaLogEntry.class))
             .withNetwork(network)
-            .withNetworkAliases(NETWORK_ALIAS_CAMUNDA)
+            .withNetworkAliases(CAMUNDA_ALIAS)
             .withEnv(builder.getCamundaEnvVars());
 
     builder.getCamundaExposedPorts().forEach(container::addExposedPort);

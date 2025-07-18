@@ -209,7 +209,7 @@ public final class CreateDeploymentTest {
   }
 
   private DeployResourceCommandStep1 getCommand(final CamundaClient client, final boolean useRest) {
-    final DeployResourceCommandStep1 deployResourceCommand = client.newDeployResourceCommand();
+    final DeployResourceCommandStep1 deployResourceCommand = client.deployResource();
     return useRest ? deployResourceCommand.useRest() : deployResourceCommand.useGrpc();
   }
 }

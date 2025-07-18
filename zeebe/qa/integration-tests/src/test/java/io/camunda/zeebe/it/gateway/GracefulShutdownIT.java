@@ -46,7 +46,7 @@ final class GracefulShutdownIT {
             .endEvent()
             .done();
     try (final var client = cluster.newClientBuilder().build()) {
-      client.newDeployResourceCommand().addProcessModel(model, "process.bpmn").send().join();
+      client.deployResource().addProcessModel(model, "process.bpmn").send().join();
       client.newStreamJobsCommand().jobType(jobType).consumer(activatedJob::set).send();
       client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
 

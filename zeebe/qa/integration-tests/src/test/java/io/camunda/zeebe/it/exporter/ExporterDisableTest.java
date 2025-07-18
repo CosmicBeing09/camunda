@@ -56,7 +56,7 @@ final class ExporterDisableTest {
 
     final var deploymentKey =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess("processId").startEvent().endEvent().done(),
                 "process.bpmn")

@@ -99,7 +99,7 @@ public class ElasticsearchSetupHelperTest {
 
       // to generate some data - especially for ES exporter
       camundaClient
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(
               Bpmn.createExecutableProcess("test").startEvent().endEvent().done(), "process.bpmn")
           .send()

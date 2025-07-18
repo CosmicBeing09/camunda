@@ -55,7 +55,7 @@ final class BannedInstanceIT {
   public void shouldAllowCancelProcessInstanceWhenInstanceIsBanned() {
     // given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
@@ -106,7 +106,7 @@ final class BannedInstanceIT {
   public void shouldNotTriggerTimerEventWhenInstanceIsBanned() {
     // given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
@@ -159,7 +159,7 @@ final class BannedInstanceIT {
   public void shouldAllowCancelBannedInstanceWithIncident() {
     // given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID)
                 .startEvent()

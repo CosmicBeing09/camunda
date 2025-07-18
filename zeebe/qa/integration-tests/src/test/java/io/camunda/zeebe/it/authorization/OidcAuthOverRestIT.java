@@ -185,7 +185,7 @@ public class OidcAuthOverRestIT {
     // when
     final var deploymentEvent =
         defaultMappingClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
@@ -214,7 +214,7 @@ public class OidcAuthOverRestIT {
     // when
     final var deployFuture =
         restrictedClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
@@ -253,7 +253,7 @@ public class OidcAuthOverRestIT {
     // when
     final var deploymentEvent =
         restrictedClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")

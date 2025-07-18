@@ -46,14 +46,14 @@ public class ProcessDefinitionFormDataMigrationIT {
   private static void setup(final DatabaseType databaseType, final CamundaMigrator migrator) {
     migrator
         .getCamundaClient()
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("form/form.form")
         .send()
         .join();
     final var formStartedProcessKey =
         migrator
             .getCamundaClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/process_start_form.bpmn")
             .send()
             .join()
@@ -66,7 +66,7 @@ public class ProcessDefinitionFormDataMigrationIT {
     final var embeddedFormStartedProcessKey =
         migrator
             .getCamundaClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/startedByFormProcess.bpmn")
             .send()
             .join()

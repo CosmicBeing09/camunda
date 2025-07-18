@@ -78,12 +78,12 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
 
   public CamundaContainer withH2() {
     withEnv(CAMUNDA_ENV_DATABASE_TYPE, DATABASE_TYPE)
-        .withEnv(CAMUNDA_ENV_CAMUNDA_DATABASE_URL, databaseUrL(UUID.randomUUID()))
+        .withEnv(CAMUNDA_ENV_CAMUNDA_DATABASE_URL, H2Configuration.databaseUrl(UUID.randomUUID()))
         .withEnv(CAMUNDA_ENV_DATABASE_USERNAME, DATABASE_USERNAME)
         .withEnv(CAMUNDA_ENV_DATABASE_PASSWORD, DATABASE_PASSWORD)
         .withEnv(
             CAMUNDA_ENV_ZEEBE_BROKER_EXPORTERS_RDBMS_CLASSNAME,
-            ZEEBE_BROKER_EXPORTERS_RDBMS_CLASSNAME)
+            EXPORTER_CLASSNAME)
         .withEnv(
             CAMUNDA_ENV_ZEEBE_BROKER_EXPORTERS_RDBMS_ARGS_FLUSH_INTERVAL,
             ZEEBE_BROKER_EXPORTERS_RDBMS_ARGS_FLUSH_INTERVAL)
@@ -137,7 +137,7 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
         .withReadTimeout(DEFAULT_READINESS_TIMEOUT);
   }
 
-  private static boolean isPartitionReady(String response) {
+  private static boolean isPartitionReady(final String response) {
     return response.matches(".*\"partitionId\"\\s*:\\s*1.*")
         && response.matches(".*\"role\"\\s*:\\s*\"leader\".*")
         && response.matches(".*\"health\"\\s*:\\s*\"healthy\".*");
@@ -183,7 +183,7 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
     public static final String DATABASE_TYPE = "rdbms";
     public static final String DATABASE_USERNAME = "sa";
     public static final String DATABASE_PASSWORD = "";
-    public static final String ZEEBE_BROKER_EXPORTERS_RDBMS_CLASSNAME =
+    public static final String EXPORTER_CLASSNAME =
         "io.camunda.exporter.rdbms.RdbmsExporter";
     public static final String ZEEBE_BROKER_EXPORTERS_RDBMS_ARGS_FLUSH_INTERVAL = "PT0S";
     public static final String ZEEBE_BROKER_EXPORTERS_RDBMS_ARGS_DEFAULT_HISTORY_TTL = "PT2S";
@@ -194,7 +194,7 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
     public static final String LOGGING_LEVEL_IO_CAMUNDA_DB_RDBMS = "DEBUG";
     public static final String LOGGING_LEVEL_ORG_MYBATIS = "DEBUG";
 
-    public static String databaseUrL(final UUID uuid) {
+    public static String databaseUrl(final UUID uuid) {
       return "jdbc:h2:mem:cpt+" + uuid + ";DB_CLOSE_DELAY=-1;MODE=PostgreSQL";
     }
   }

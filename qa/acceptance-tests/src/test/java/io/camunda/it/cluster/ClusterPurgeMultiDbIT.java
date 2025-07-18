@@ -320,7 +320,7 @@ public class ClusterPurgeMultiDbIT {
   private long deployProcessModel(final BpmnModelInstance processModel) {
     final var deploymentEvent =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processModel, "test-process.bpmn")
             .send()
             .join();

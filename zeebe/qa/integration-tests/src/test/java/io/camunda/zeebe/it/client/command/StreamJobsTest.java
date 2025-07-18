@@ -242,7 +242,7 @@ final class StreamJobsTest {
 
   private void deployProcess(final BpmnModelInstance process) {
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(process, "sequence.bpmn")
         .tenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
         .send()

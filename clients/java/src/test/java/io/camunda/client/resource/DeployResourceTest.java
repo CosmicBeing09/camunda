@@ -66,7 +66,7 @@ public final class DeployResourceTest extends ClientTest {
     final String path = DeployResourceTest.class.getResource(BPMN_1_FILENAME).getPath();
 
     // when
-    client.newDeployResourceCommand().addResourceFile(path).send().join();
+    client.deployResource().addResourceFile(path).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -81,7 +81,7 @@ public final class DeployResourceTest extends ClientTest {
     final String filename = BPMN_1_FILENAME.substring(1);
 
     // when
-    client.newDeployResourceCommand().addResourceFromClasspath(filename).send().join();
+    client.deployResource().addResourceFromClasspath(filename).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -97,7 +97,7 @@ public final class DeployResourceTest extends ClientTest {
     final InputStream resourceAsStream = DeployResourceTest.class.getResourceAsStream(filename);
 
     // when
-    client.newDeployResourceCommand().addResourceStream(resourceAsStream, filename).send().join();
+    client.deployResource().addResourceStream(resourceAsStream, filename).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -113,7 +113,7 @@ public final class DeployResourceTest extends ClientTest {
     final byte[] bytes = getBytes(filename);
 
     // when
-    client.newDeployResourceCommand().addResourceBytes(bytes, filename).send().join();
+    client.deployResource().addResourceBytes(bytes, filename).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -130,7 +130,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // when
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceString(xml, StandardCharsets.UTF_8, filename)
         .send()
         .join();
@@ -149,7 +149,7 @@ public final class DeployResourceTest extends ClientTest {
     final String xml = new String(getBytes(filename), StandardCharsets.UTF_8);
 
     // when
-    client.newDeployResourceCommand().addResourceStringUtf8(xml, filename).send().join();
+    client.deployResource().addResourceStringUtf8(xml, filename).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -170,7 +170,7 @@ public final class DeployResourceTest extends ClientTest {
     final byte[] expectedBytes = outStream.toByteArray();
 
     // when
-    client.newDeployResourceCommand().addProcessModel(processModel, filename).send().join();
+    client.deployResource().addProcessModel(processModel, filename).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -194,7 +194,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // when
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath(filename1)
         .addResourceFromClasspath(filename2)
         .tenantId(tenantId)
@@ -227,7 +227,7 @@ public final class DeployResourceTest extends ClientTest {
     // when
     final DeploymentEvent response =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFile(filename)
             .tenantId(tenantId)
             .send()
@@ -256,7 +256,7 @@ public final class DeployResourceTest extends ClientTest {
     // when
     final DeploymentEvent response =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath(filename1)
             .addResourceFromClasspath(filename2)
             .tenantId(tenantId)
@@ -313,7 +313,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // when
     final DeploymentEvent response =
-        client.newDeployResourceCommand().addResourceFile(filename).send().join();
+        client.deployResource().addResourceFile(filename).send().join();
 
     // then
     assertThat(response.getKey()).isEqualTo(deploymentKey);
@@ -356,7 +356,7 @@ public final class DeployResourceTest extends ClientTest {
     assertThatThrownBy(
             () ->
                 client
-                    .newDeployResourceCommand()
+                    .deployResource()
                     .addResourceStringUtf8("", "test.bpmn")
                     .send()
                     .join())
@@ -367,7 +367,7 @@ public final class DeployResourceTest extends ClientTest {
   @Test
   public void shouldUseDefaultRequestTimeout() {
     // when
-    client.newDeployResourceCommand().addResourceStringUtf8("", "test.bpmn").send().join();
+    client.deployResource().addResourceStringUtf8("", "test.bpmn").send().join();
 
     // then
     rule.verifyDefaultRequestTimeout();
@@ -380,7 +380,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // when
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceStringUtf8("", "test.bpmn")
         .requestTimeout(requestTimeout)
         .send()
@@ -405,7 +405,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // when
     final DeploymentEvent response =
-        client.newDeployResourceCommand().addResourceFile(filename).send().join();
+        client.deployResource().addResourceFile(filename).send().join();
 
     // then
     assertThat(response.getKey()).isEqualTo(deploymentKey);
@@ -430,7 +430,7 @@ public final class DeployResourceTest extends ClientTest {
     // when
     final DeploymentEvent response =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath(filename1)
             .addResourceFromClasspath(filename2)
             .tenantId(DEFAULT_TENANT)
