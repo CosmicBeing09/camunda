@@ -113,20 +113,23 @@ public class ResourceDeletionDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> authorizationDeleteCommand) {
-    final var value = authorizationDeleteCommand.getValue();
+  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> resourceDeletionCommand) {
+    final var resourceDeletionRecord = resourceDeletionCommand.getValue();
     final long eventKey = keyGenerator.nextKey();
-    stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING, value);
+    stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING,
+        resourceDeletionRecord);
 
-    tryDeleteResources(authorizationDeleteCommand);
+    tryDeleteResources(resourceDeletionCommand);
 
-    stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETED, value);
+    stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETED,
+        resourceDeletionRecord);
     commandDistributionBehavior
         .withKey(eventKey)
         .inQueue(DistributionQueue.DEPLOYMENT)
-        .distribute(authorizationDeleteCommand);
-    responseWriter.writeEventOnCommand(eventKey, ResourceDeletionIntent.DELETING, value,
-        authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
+    responseWriter.writeEventOnCommand(eventKey, ResourceDeletionIntent.DELETING,
+        resourceDeletionRecord,
+        resourceDeletionCommand);
   }
 
   @Override

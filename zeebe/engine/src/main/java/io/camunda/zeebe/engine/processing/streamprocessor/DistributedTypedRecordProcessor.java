@@ -37,9 +37,9 @@ public interface DistributedTypedRecordProcessor<T extends UnifiedRecordValue>
   /**
    * Process a command that is not distributed yet
    *
-   * @param authorizationDeleteCommand the not yet distributed command to process
+   * @param resourceDeletionCommand the not yet distributed command to process
    */
-  void processNewCommand(final TypedRecord<T> authorizationDeleteCommand);
+  void processNewCommand(final TypedRecord<T> resourceDeletionCommand);
 
   /**
    * Process a command that has been distributed. Be aware to not distribute it again!

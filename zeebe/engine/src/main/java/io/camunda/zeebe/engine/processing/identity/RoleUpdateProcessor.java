@@ -52,24 +52,24 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> authorizationDeleteCommand) {
-    final var record = authorizationDeleteCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> resourceDeletionCommand) {
+    final var record = resourceDeletionCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(record.getRoleId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(record.getRoleId());
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -77,13 +77,13 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
     record.setRoleKey(persistedRole.getRoleKey());
     stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.UPDATED, record);
     responseWriter.writeEventOnCommand(record.getRoleKey(), RoleIntent.UPDATED, record,
-        authorizationDeleteCommand);
+        resourceDeletionCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
   }
 
   @Override

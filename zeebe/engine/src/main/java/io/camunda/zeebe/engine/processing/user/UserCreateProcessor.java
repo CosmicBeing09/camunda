@@ -61,39 +61,39 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> authorizationDeleteCommand) {
+  public void processNewCommand(final TypedRecord<UserRecord> resourceDeletionCommand) {
     final var authRequest =
-        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
+        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var username = authorizationDeleteCommand.getValue().getUsername();
+    final var username = resourceDeletionCommand.getValue().getUsername();
     final var user = userState.getUser(username);
 
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, message);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    authorizationDeleteCommand.getValue().setUserKey(key);
+    resourceDeletionCommand.getValue().setUserKey(key);
 
-    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, authorizationDeleteCommand.getValue());
+    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, resourceDeletionCommand.getValue());
     addUserPermissions(key, username);
-    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, authorizationDeleteCommand.getValue(),
-        authorizationDeleteCommand);
+    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, resourceDeletionCommand.getValue(),
+        resourceDeletionCommand);
 
     distributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
   }
 
   @Override

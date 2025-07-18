@@ -57,19 +57,19 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> authorizationDeleteCommand) {
+  public void processNewCommand(final TypedRecord<MappingRecord> resourceDeletionCommand) {
     final var authorizationRequest =
         new AuthorizationRequest(
-            authorizationDeleteCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
+            resourceDeletionCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = authorizationDeleteCommand.getValue();
+    final var record = resourceDeletionCommand.getValue();
     if (record.getMappingId() == null
         || record.getMappingId().isBlank()
         || record.getName() == null
@@ -84,8 +84,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
               record.getClaimValue(),
               record.getName(),
               record.getMappingId());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.NULL_VAL, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.NULL_VAL, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NULL_VAL, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NULL_VAL, errorMessage);
       return;
     }
 
@@ -95,8 +95,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       final var errorMessage =
           MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
               record.getClaimName(), record.getClaimValue());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -104,8 +104,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
     if (persistedMappingWithSameId.isPresent()) {
       final var errorMessage =
           MAPPING_SAME_ID_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getMappingId());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -114,12 +114,12 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
 
     stateWriter.appendFollowUpEvent(key, MappingIntent.CREATED, record);
     responseWriter.writeEventOnCommand(key, MappingIntent.CREATED, record,
-        authorizationDeleteCommand);
+        resourceDeletionCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
   }
 
   @Override

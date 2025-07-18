@@ -74,10 +74,10 @@ public class AdHocSubProcessActivityActivateProcessor
 
   @Override
   public void processRecord(final TypedRecord<AdHocSubProcessActivityActivationRecord> command) {
-    final var adHocSubProcessElementInstance =
+    final var adHocSubProcessInstance =
         elementInstanceState.getInstance(
             Long.parseLong(command.getValue().getAdHocSubProcessInstanceKey()));
-    if (adHocSubProcessElementInstance == null) {
+    if (adHocSubProcessInstance == null) {
       writeRejectionError(
           command,
           RejectionType.NOT_FOUND,
@@ -88,7 +88,7 @@ public class AdHocSubProcessActivityActivateProcessor
       return;
     }
 
-    if (!adHocSubProcessElementInstance.isActive()) {
+    if (!adHocSubProcessInstance.isActive()) {
       writeRejectionError(
           command,
           RejectionType.INVALID_STATE,
@@ -99,9 +99,9 @@ public class AdHocSubProcessActivityActivateProcessor
       return;
     }
 
-    final var authResult = authorize(command, adHocSubProcessElementInstance);
-    if (authResult.isLeft()) {
-      final var rejection = authResult.getLeft();
+    final var authorizationResult = authorize(command, adHocSubProcessInstance);
+    if (authorizationResult.isLeft()) {
+      final var rejection = authorizationResult.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
               ? ERROR_MSG_AD_HOC_SUB_PROCESS_NOT_FOUND.formatted(
@@ -122,7 +122,7 @@ public class AdHocSubProcessActivityActivateProcessor
       return;
     }
 
-    if (!adHocSubProcessElementInstance.isActive()) {
+    if (!adHocSubProcessInstance.isActive()) {
       writeRejectionError(
           command,
           RejectionType.INVALID_STATE,
@@ -136,13 +136,13 @@ public class AdHocSubProcessActivityActivateProcessor
     final var adHocSubProcessDefinition =
         processState
             .getProcessByKeyAndTenant(
-                adHocSubProcessElementInstance.getValue().getProcessDefinitionKey(),
-                adHocSubProcessElementInstance.getValue().getTenantId())
+                adHocSubProcessInstance.getValue().getProcessDefinitionKey(),
+                adHocSubProcessInstance.getValue().getTenantId())
             .getProcess();
 
     final var adHocSubProcessElement =
         adHocSubProcessDefinition.getElementById(
-            adHocSubProcessElementInstance.getValue().getElementId());
+            adHocSubProcessInstance.getValue().getElementId());
     final var adHocActivitiesById =
         ((ExecutableAdHocSubProcess) adHocSubProcessElement).getAdHocActivitiesById();
 
@@ -169,9 +169,9 @@ public class AdHocSubProcessActivityActivateProcessor
       final var elementToActivate =
           adHocSubProcessDefinition.getElementById(elementValue.getElementId());
       final var elementProcessInstanceRecord = new ProcessInstanceRecord();
-      elementProcessInstanceRecord.wrap(adHocSubProcessElementInstance.getValue());
+      elementProcessInstanceRecord.wrap(adHocSubProcessInstance.getValue());
       elementProcessInstanceRecord
-          .setFlowScopeKey(adHocSubProcessElementInstance.getKey())
+          .setFlowScopeKey(adHocSubProcessInstance.getKey())
           .setElementId(elementToActivate.getId())
           .setBpmnElementType(elementToActivate.getElementType())
           .setBpmnEventType(elementToActivate.getEventType());

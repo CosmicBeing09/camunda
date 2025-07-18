@@ -66,25 +66,25 @@ public final class BatchOperationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> authorizationDeleteCommand) {
-    if (isEmptyOrNullFilter(authorizationDeleteCommand)) {
+  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> resourceDeletionCommand) {
+    if (isEmptyOrNullFilter(resourceDeletionCommand)) {
       rejectionWriter.appendRejection(
-          authorizationDeleteCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          resourceDeletionCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       responseWriter.writeRejectionOnCommand(
-          authorizationDeleteCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          resourceDeletionCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
 
-    final var authorizationResult = isAuthorized(authorizationDeleteCommand);
+    final var authorizationResult = isAuthorized(resourceDeletionCommand);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    final var recordValue = authorizationDeleteCommand.getValue();
+    final var recordValue = resourceDeletionCommand.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
     metrics.startTotalLatencyMeasure(key, recordValue.getBatchOperationType());
 
@@ -99,11 +99,11 @@ public final class BatchOperationCreateProcessor
         recordWithKey,
         FollowUpEventMetadata.of(b -> b.batchOperationReference(key)));
     responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey,
-        authorizationDeleteCommand);
+        resourceDeletionCommand);
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(authorizationDeleteCommand.getValueType(), authorizationDeleteCommand.getIntent(), recordWithKey);
+        .distribute(resourceDeletionCommand.getValueType(), resourceDeletionCommand.getIntent(), recordWithKey);
 
     metrics.recordCreated(recordWithKey.getBatchOperationType());
   }

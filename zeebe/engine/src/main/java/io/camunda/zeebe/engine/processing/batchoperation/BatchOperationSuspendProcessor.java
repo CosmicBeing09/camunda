@@ -74,48 +74,48 @@ public final class BatchOperationSuspendProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> authorizationDeleteCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> resourceDeletionCommand) {
     final var request =
         new AuthorizationRequest(
-            authorizationDeleteCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            resourceDeletionCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = authorizationDeleteCommand.getValue();
-    final var batchOperationKey = authorizationDeleteCommand.getValue().getBatchOperationKey();
+    final var recordValue = resourceDeletionCommand.getValue();
+    final var batchOperationKey = resourceDeletionCommand.getValue().getBatchOperationKey();
     final var suspendKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to suspend batch operation with key '{}': {}",
-        authorizationDeleteCommand.getKey(),
+        resourceDeletionCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(authorizationDeleteCommand, batchOperationKey, recordValue);
+      rejectNotFound(resourceDeletionCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be suspended
     if (!batchOperation.get().canSuspend()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(authorizationDeleteCommand, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(resourceDeletionCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
     suspendBatchOperation(suspendKey, recordValue);
     responseWriter.writeEventOnCommand(
-        suspendKey, BatchOperationIntent.SUSPENDED, authorizationDeleteCommand.getValue(),
-        authorizationDeleteCommand);
+        suspendKey, BatchOperationIntent.SUSPENDED, resourceDeletionCommand.getValue(),
+        resourceDeletionCommand);
     commandDistributionBehavior
         .withKey(suspendKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
 
     metrics.recordSuspended(batchOperation.get().getBatchOperationType());
   }

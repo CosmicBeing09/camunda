@@ -52,25 +52,25 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> authorizationDeleteCommand) {
+  public void processNewCommand(final TypedRecord<GroupRecord> resourceDeletionCommand) {
     final var authorizationRequest =
-        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
+        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
 
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = authorizationDeleteCommand.getValue();
+    final var record = resourceDeletionCommand.getValue();
     final var groupId = record.getGroupId();
     final var persistedGroup = groupState.get(groupId);
     if (persistedGroup.isPresent()) {
       final var errorMessage = GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -78,12 +78,12 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
     record.setGroupKey(key);
 
     stateWriter.appendFollowUpEvent(key, GroupIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, authorizationDeleteCommand);
+    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, resourceDeletionCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
   }
 
   @Override

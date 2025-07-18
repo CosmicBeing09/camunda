@@ -42,8 +42,8 @@ public class MessageSubscriptionMigrateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> authorizationDeleteCommand) {
-    migrateMessageSubscription(authorizationDeleteCommand);
+  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> resourceDeletionCommand) {
+    migrateMessageSubscription(resourceDeletionCommand);
   }
 
   @Override

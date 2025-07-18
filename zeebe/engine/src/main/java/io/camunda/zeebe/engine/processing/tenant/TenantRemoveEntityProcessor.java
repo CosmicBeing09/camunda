@@ -65,16 +65,16 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> authorizationDeleteCommand) {
-    final var record = authorizationDeleteCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> resourceDeletionCommand) {
+    final var record = resourceDeletionCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(authorizationDeleteCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(resourceDeletionCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -82,22 +82,22 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
 
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          authorizationDeleteCommand,
+          resourceDeletionCommand,
           RejectionType.NOT_FOUND,
           "Expected to remove entity from tenant '%s', but no tenant with this ID exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!validateEntityAssignment(authorizationDeleteCommand, tenantId)) {
+    if (!validateEntityAssignment(resourceDeletionCommand, tenantId)) {
       return;
     }
 
     final var tenantKey = persistedTenant.get().getTenantKey();
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_REMOVED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_REMOVED, record,
-        authorizationDeleteCommand);
-    distributeCommand(authorizationDeleteCommand);
+        resourceDeletionCommand);
+    distributeCommand(resourceDeletionCommand);
   }
 
   @Override

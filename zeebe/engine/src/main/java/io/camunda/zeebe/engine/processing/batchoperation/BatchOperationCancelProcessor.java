@@ -71,19 +71,19 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> authorizationDeleteCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> resourceDeletionCommand) {
     final var request =
         new AuthorizationRequest(
-            authorizationDeleteCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            resourceDeletionCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = authorizationDeleteCommand.getValue();
+    final var recordValue = resourceDeletionCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
     final var cancelKey = keyGenerator.nextKey();
     LOGGER.debug(
@@ -95,21 +95,21 @@ public final class BatchOperationCancelProcessor
     if (batchOperation.isPresent() && batchOperation.get().canCancel()) {
       cancelBatchOperationEvent(cancelKey, recordValue);
       responseWriter.writeEventOnCommand(
-          cancelKey, BatchOperationIntent.CANCELED, authorizationDeleteCommand.getValue(),
-          authorizationDeleteCommand);
+          cancelKey, BatchOperationIntent.CANCELED, resourceDeletionCommand.getValue(),
+          resourceDeletionCommand);
       commandDistributionBehavior
           .withKey(cancelKey)
           .inQueue(DistributionQueue.BATCH_OPERATION)
-          .distribute(authorizationDeleteCommand);
+          .distribute(resourceDeletionCommand);
 
       metrics.recordCancelled(batchOperation.get().getBatchOperationType());
     } else {
       rejectionWriter.appendRejection(
-          authorizationDeleteCommand,
+          resourceDeletionCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
       responseWriter.writeRejectionOnCommand(
-          authorizationDeleteCommand,
+          resourceDeletionCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
     }

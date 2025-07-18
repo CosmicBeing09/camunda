@@ -128,26 +128,26 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> authorizationDeleteCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> resourceDeletionCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            authorizationDeleteCommand,
+            resourceDeletionCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            authorizationDeleteCommand.getValue().getTenantId(),
+            resourceDeletionCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(authorizationDeleteCommand);
+    transformAndDistributeDeployment(resourceDeletionCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(authorizationDeleteCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(resourceDeletionCommand.getValue());
   }
 
   @Override

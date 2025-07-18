@@ -69,55 +69,55 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> authorizationDeleteCommand) {
-    final var roleRecord = authorizationDeleteCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> resourceDeletionCommand) {
+    final var roleRecord = resourceDeletionCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(roleRecord.getRoleId());
 
     final var authorizationResult = authCheckBehavior.authorizationResult(authorizationRequest);
     if (authorizationResult.isLeft()) {
       final var rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var existingRole = roleState.getRole(roleRecord.getRoleId());
     if (existingRole.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var entityId = roleRecord.getEntityId();
     final var entityType = roleRecord.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(authorizationDeleteCommand))) {
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(resourceDeletionCommand))) {
       final var errorMessage =
           ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, roleRecord.getRoleId());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
-      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
     stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     responseWriter.writeEventOnCommand(
-        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, authorizationDeleteCommand);
+        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, resourceDeletionCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
   }
 
   @Override

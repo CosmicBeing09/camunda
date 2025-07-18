@@ -47,9 +47,9 @@ public class AuthorizationUpdateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> authorizationDeleteCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> resourceDeletionCommand) {
     permissionsBehavior
-        .isAuthorized(authorizationDeleteCommand)
+        .isAuthorized(resourceDeletionCommand)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
@@ -57,16 +57,16 @@ public class AuthorizationUpdateProcessor
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
-                    authorizationDeleteCommand.getValue(),
-                    authorizationDeleteCommand.getValue().getPermissionTypes(),
+                    resourceDeletionCommand.getValue(),
+                    resourceDeletionCommand.getValue().getPermissionTypes(),
                     record.getResourceType(),
                     "Expected to update authorization with permission types '%s' and resource type '%s', but these permissions are not supported. Supported permission types are: '%s'"))
         .flatMap(permissionsBehavior::mappingExists)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(authorizationDeleteCommand, authorizationRecord),
+            authorizationRecord -> writeEventAndDistribute(resourceDeletionCommand, authorizationRecord),
             (rejection) -> {
-              rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
             });
   }
 

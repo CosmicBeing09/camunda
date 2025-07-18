@@ -50,25 +50,25 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> authorizationDeleteCommand) {
-    final var scaleUp = authorizationDeleteCommand.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> resourceDeletionCommand) {
+    final var scaleUp = resourceDeletionCommand.getValue();
 
-    final var optionalRejection = validateCommand(authorizationDeleteCommand);
+    final var optionalRejection = validateCommand(resourceDeletionCommand);
     if (optionalRejection.isPresent()) {
       final var rejection = optionalRejection.get();
-      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
       return;
     }
     final var scalingKey = keyGenerator.nextKey();
-    scaleUp.setBootstrappedAt(authorizationDeleteCommand.getKey());
+    scaleUp.setBootstrappedAt(resourceDeletionCommand.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
     responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp,
-        authorizationDeleteCommand);
+        resourceDeletionCommand);
     commandDistributionBehavior
         .withKey(scalingKey)
         .inQueue(DistributionQueue.SCALING)
-        .distribute(authorizationDeleteCommand);
+        .distribute(resourceDeletionCommand);
   }
 
   @Override

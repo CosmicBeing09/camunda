@@ -49,19 +49,19 @@ public class AuthorizationDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> authorizationDeleteCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> resourceDeletionCommand) {
     permissionsBehavior
-        .isAuthorized(authorizationDeleteCommand, PermissionType.DELETE)
+        .isAuthorized(resourceDeletionCommand, PermissionType.DELETE)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
                     authorizationRecord, AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION))
         .map(PersistedAuthorization::getAuthorizationKey)
         .ifRightOrLeft(
-            authorizationKey -> writeEventAndDistribute(authorizationDeleteCommand, authorizationKey),
+            authorizationKey -> writeEventAndDistribute(resourceDeletionCommand, authorizationKey),
             (rejection) -> {
-              rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
             });
   }
 
