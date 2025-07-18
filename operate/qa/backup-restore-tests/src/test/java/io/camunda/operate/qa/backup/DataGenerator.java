@@ -81,7 +81,7 @@ public class DataGenerator {
   private void init(final BackupRestoreTestContext testContext) {
     camundaClient =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(testContext.getExternalZeebeContactPoint())
+            .deprecatedGatewayAddress(testContext.getExternalZeebeContactPoint())
             .usePlaintext()
             .build();
     esClient = testContext.getEsClient();

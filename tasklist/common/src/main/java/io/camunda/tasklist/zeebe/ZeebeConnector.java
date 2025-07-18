@@ -43,7 +43,7 @@ public class ZeebeConnector {
         "Zeebe Client - Using Gateway Configuration: {}", zeebeProperties.getGatewayAddress());
     final CamundaClientBuilder builder =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(zeebeProperties.getGatewayAddress())
+            .deprecatedGatewayAddress(zeebeProperties.getGatewayAddress())
             // .restAddress(getURIFromString(zeebeProperties.getRestAddress()))
             .restAddress(getURIFromSaaSOrProperties(zeebeProperties.getRestAddress()))
             .defaultJobWorkerMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE);

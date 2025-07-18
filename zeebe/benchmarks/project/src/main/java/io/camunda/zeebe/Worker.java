@@ -173,7 +173,7 @@ public class Worker extends App {
             : workerCfg.getCompletionDelay().multipliedBy(6);
     final CamundaClientBuilder builder =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(appCfg.getBrokerUrl())
+            .deprecatedGatewayAddress(appCfg.getBrokerUrl())
             .numJobWorkerExecutionThreads(workerCfg.getThreads())
             .defaultJobWorkerName(workerCfg.getWorkerName())
             .defaultJobTimeout(timeout)

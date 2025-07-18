@@ -356,7 +356,7 @@ final class RollingUpdateTest {
   private CamundaClient newClient(final ZeebeGatewayNode<?> gateway) {
     return CamundaClient.newClientBuilder()
         .usePlaintext()
-        .gatewayAddress(gateway.getExternalGatewayAddress())
+        .deprecatedGatewayAddress(gateway.getExternalGatewayAddress())
         .build();
   }
 

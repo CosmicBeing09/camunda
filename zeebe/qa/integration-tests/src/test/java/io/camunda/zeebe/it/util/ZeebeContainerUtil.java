@@ -24,12 +24,12 @@ public final class ZeebeContainerUtil {
 
     return CamundaClient.newClientBuilder()
         .usePlaintext()
-        .gatewayAddress(gateway.getExternalGatewayAddress());
+        .deprecatedGatewayAddress(gateway.getExternalGatewayAddress());
   }
 
   public static CamundaClientBuilder newClientBuilder(final ContainerEngine containerEngine) {
     return CamundaClient.newClientBuilder()
         .usePlaintext()
-        .gatewayAddress(containerEngine.getGatewayAddress());
+        .deprecatedGatewayAddress(containerEngine.getGatewayAddress());
   }
 }

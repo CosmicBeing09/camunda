@@ -486,7 +486,7 @@ public final class CamundaClientTest {
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
-            .gatewayAddress(gatewayAddress)
+            .deprecatedGatewayAddress(gatewayAddress)
             .credentialsProvider(credentialsProvider)
             .build()) {
       final CamundaClientConfiguration configuration = client.getConfiguration();

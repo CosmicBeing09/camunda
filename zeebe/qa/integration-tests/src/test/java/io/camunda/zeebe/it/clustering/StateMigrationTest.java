@@ -35,7 +35,7 @@ public class StateMigrationTest {
       new GrpcClientRule(
           config ->
               config
-                  .gatewayAddress(NetUtil.toSocketAddressString(clusteringRule.getGatewayAddress()))
+                  .deprecatedGatewayAddress(NetUtil.toSocketAddressString(clusteringRule.getGatewayAddress()))
                   .defaultRequestTimeout(Duration.ofMinutes(1))
                   .usePlaintext());
 

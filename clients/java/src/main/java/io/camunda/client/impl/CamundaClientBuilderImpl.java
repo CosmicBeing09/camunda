@@ -283,7 +283,7 @@ public final class CamundaClientBuilderImpl
         io.camunda.zeebe.client.ClientProperties.REST_ADDRESS);
 
     BuilderUtils.applyPropertyValueIfNotNull(
-        properties, this::gatewayAddress, io.camunda.zeebe.client.ClientProperties.GATEWAY_ADDRESS);
+        properties, this::deprecatedGatewayAddress, io.camunda.zeebe.client.ClientProperties.GATEWAY_ADDRESS);
 
     BuilderUtils.applyPropertyValueIfNotNull(
         properties,
@@ -414,7 +414,7 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder gatewayAddress(final String gatewayAddress) {
+  public CamundaClientBuilder deprecatedGatewayAddress(final String gatewayAddress) {
     this.gatewayAddress = gatewayAddress;
     grpcAddressUsed = false;
     return this;

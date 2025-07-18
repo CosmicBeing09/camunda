@@ -30,7 +30,7 @@ public class DataGeneratorConfig {
     final String gatewayAddress = dataGeneratorProperties.getZeebeGatewayAddress();
     final CamundaClientBuilder builder =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(gatewayAddress)
+            .deprecatedGatewayAddress(gatewayAddress)
             .defaultJobWorkerMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE)
             .usePlaintext();
     return builder.build();
