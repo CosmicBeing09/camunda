@@ -43,7 +43,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
         longOperations(KEY, filter.incidentKeyOperations()),
         longOperations(PROCESS_DEFINITION_KEY, filter.processDefinitionKeyOperations()),
         stringOperations(BPMN_PROCESS_ID, filter.processDefinitionIdOperations()),
-        longOperations(PROCESS_INSTANCE_KEY, filter.processInstanceKeyOperations()),
+        longOperations(PROCESS_INSTANCE_KEY, filter.searchAfterInstanceKeyOperations()),
         stringOperations(ERROR_TYPE, filter.errorTypeOperations()),
         stringOperations(ERROR_MSG, filter.errorMessageOperations()),
         stringOperations(FLOW_NODE_ID, filter.flowNodeIdOperations()),

@@ -21,7 +21,7 @@ public record IncidentFilter(
     List<Operation<Long>> incidentKeyOperations,
     List<Operation<Long>> processDefinitionKeyOperations,
     List<Operation<String>> processDefinitionIdOperations,
-    List<Operation<Long>> processInstanceKeyOperations,
+    List<Operation<Long>> searchAfterInstanceKeyOperations,
     List<Operation<String>> errorTypeOperations,
     List<Operation<String>> errorMessageOperations,
     List<Operation<Integer>> errorMessageHashOperations,
@@ -39,7 +39,7 @@ public record IncidentFilter(
     private List<Operation<Long>> incidentKeyOperations;
     private List<Operation<Long>> processDefinitionKeyOperations;
     private List<Operation<String>> processDefinitionIdOperations;
-    private List<Operation<Long>> processInstanceKeyOperations;
+    private List<Operation<Long>> searchAfterInstanceKeyOperations;
     private List<Operation<String>> errorTypeOperations;
     private List<Operation<String>> errorMessageOperations;
     private List<Operation<Integer>> errorMessageHashOperations;
@@ -101,7 +101,7 @@ public record IncidentFilter(
     }
 
     public Builder processInstanceKeyOperations(final List<Operation<Long>> operations) {
-      processInstanceKeyOperations = addValuesToList(processInstanceKeyOperations, operations);
+      searchAfterInstanceKeyOperations = addValuesToList(searchAfterInstanceKeyOperations, operations);
       return this;
     }
 
@@ -267,7 +267,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(incidentKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionIdOperations, Collections.emptyList()),
-          Objects.requireNonNullElse(processInstanceKeyOperations, Collections.emptyList()),
+          Objects.requireNonNullElse(searchAfterInstanceKeyOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorTypeOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashOperations, Collections.emptyList()),
