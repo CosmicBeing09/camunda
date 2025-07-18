@@ -19,11 +19,11 @@ class SearchQueryPageTest {
   @ParameterizedTest
   @MethodSource
   void sanitize(
-      final Integer from, final Integer size, final Integer targetFrom, final Integer targetSize) {
+      final Integer from, final Integer size, final Integer expectedFrom, final Integer expectedSize) {
     final var page = new SearchQueryPage.Builder().from(from).size(size).build();
 
-    assertThat(page.from()).isEqualTo(targetFrom);
-    assertThat(page.size()).isEqualTo(targetSize);
+    assertThat(page.from()).isEqualTo(expectedFrom);
+    assertThat(page.size()).isEqualTo(expectedSize);
   }
 
   private static Stream<Arguments> sanitize() {
