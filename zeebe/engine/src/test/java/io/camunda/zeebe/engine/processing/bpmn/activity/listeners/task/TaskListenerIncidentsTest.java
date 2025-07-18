@@ -16,13 +16,13 @@ import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
@@ -60,7 +60,7 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.creating,
         UnaryOperator.identity(),
         ignored -> {},
-        UserTaskIntent.CREATED);
+        TaskIntent.CREATED);
   }
 
   @Test
@@ -70,7 +70,7 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.assigning,
         userTask -> userTask.zeebeAssignee("gandalf"),
         pik -> {},
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -80,7 +80,7 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.assigning,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("bilbo").assign(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -90,7 +90,7 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.assigning,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("bilbo").claim(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -100,7 +100,7 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.updating,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).update(),
-        UserTaskIntent.UPDATED);
+        TaskIntent.UPDATED);
   }
 
   @Test
@@ -118,7 +118,7 @@ public class TaskListenerIncidentsTest {
                     .withLocalSemantic()
                     .expectUpdating()
                     .update(),
-            UserTaskIntent.UPDATED);
+            TaskIntent.UPDATED);
 
     Assertions.assertThat(
             RecordingExporter.variableRecords(VariableIntent.CREATED)
@@ -138,7 +138,7 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.completing,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -147,14 +147,14 @@ public class TaskListenerIncidentsTest {
         ZeebeTaskListenerEventType.canceling,
         UnaryOperator.identity(),
         pik -> ENGINE.processInstance().withInstanceKey(pik).expectTerminating().cancel(),
-        UserTaskIntent.CANCELED);
+        TaskIntent.CANCELED);
   }
 
   private long verifyIncidentCreationOnListenerJobWithoutRetriesAndResolution(
       final ZeebeTaskListenerEventType eventType,
       final UnaryOperator<UserTaskBuilder> userTaskBuilder,
       final Consumer<Long> transitionTrigger,
-      final UserTaskIntent terminalActionIntent) {
+      final TaskIntent terminalActionIntent) {
 
     // given
     final long processInstanceKey =
@@ -213,7 +213,7 @@ public class TaskListenerIncidentsTest {
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.COMPLETE),
             tuple(ValueType.JOB, JobIntent.COMPLETED),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.FAILED),
             // the incident was created & resolved
@@ -223,12 +223,12 @@ public class TaskListenerIncidentsTest {
             // the failed listener job was retried
             tuple(ValueType.JOB, JobIntent.COMPLETE),
             tuple(ValueType.JOB, JobIntent.COMPLETED),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
             // the remaining listener job was completed
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.COMPLETE),
             tuple(ValueType.JOB, JobIntent.COMPLETED),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
             tuple(ValueType.USER_TASK, terminalActionIntent));
     return processInstanceKey;
   }
@@ -240,7 +240,7 @@ public class TaskListenerIncidentsTest {
         "creating_listener_var_name",
         "expression_creating_listener_2",
         ignored -> {},
-        UserTaskIntent.CREATED,
+        TaskIntent.CREATED,
         userTask -> Assertions.assertThat(userTask).hasAction(""));
   }
 
@@ -251,7 +251,7 @@ public class TaskListenerIncidentsTest {
         "completing_listener_var_name",
         "expression_completing_listener_2",
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
-        UserTaskIntent.COMPLETED,
+        TaskIntent.COMPLETED,
         userTask -> Assertions.assertThat(userTask).hasAction("complete"));
   }
 
@@ -262,7 +262,7 @@ public class TaskListenerIncidentsTest {
         "assigning_listener_var_name",
         "expression_assigning_listener_2",
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("me").assign(),
-        UserTaskIntent.ASSIGNED,
+        TaskIntent.ASSIGNED,
         userTask -> Assertions.assertThat(userTask).hasAssignee("me").hasAction("assign"));
   }
 
@@ -273,7 +273,7 @@ public class TaskListenerIncidentsTest {
         "assigning_listener_var_name",
         "expression_assigning_listener_2",
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("me").claim(),
-        UserTaskIntent.ASSIGNED,
+        TaskIntent.ASSIGNED,
         userTask -> Assertions.assertThat(userTask).hasAssignee("me").hasAction("claim"));
   }
 
@@ -284,7 +284,7 @@ public class TaskListenerIncidentsTest {
         "updating_listener_var_name",
         "expression_updating_listener_2",
         pik -> ENGINE.userTask().ofInstance(pik).update(),
-        UserTaskIntent.UPDATED,
+        TaskIntent.UPDATED,
         userTask -> Assertions.assertThat(userTask).hasAction("update"));
   }
 
@@ -304,11 +304,11 @@ public class TaskListenerIncidentsTest {
                     .withLocalSemantic()
                     .expectUpdating()
                     .update(),
-            UserTaskIntent.UPDATED,
+            TaskIntent.UPDATED,
             userTask ->
                 Assertions.assertThat(userTask)
                     .hasAction("")
-                    .hasOnlyChangedAttributes(UserTaskRecord.VARIABLES));
+                    .hasOnlyChangedAttributes(TaskRecord.VARIABLES));
 
     Assertions.assertThat(
             RecordingExporter.variableRecords(VariableIntent.CREATED)
@@ -326,7 +326,7 @@ public class TaskListenerIncidentsTest {
       final String variableName,
       final String variableValue,
       final Consumer<Long> transitionTrigger,
-      final UserTaskIntent expectedIntent,
+      final TaskIntent expectedIntent,
       final Consumer<UserTaskRecordValue> assertion) {
 
     // given
@@ -441,7 +441,7 @@ public class TaskListenerIncidentsTest {
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.ASSIGNED,
+        TaskIntent.ASSIGNED,
         userTask -> Assertions.assertThat(userTask).hasAssignee(assignee).hasAction(""));
   }
 
@@ -513,7 +513,7 @@ public class TaskListenerIncidentsTest {
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.CANCELED,
+        TaskIntent.CANCELED,
         userTask -> assertThat(userTask.getAction()).isEmpty());
   }
 

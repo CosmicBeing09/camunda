@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.JobState.State;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -28,13 +28,13 @@ public class JobCommandPreconditionChecker {
   private final JobState jobState;
   private final String intent;
   private final List<JobCommandCheck> customChecks;
-  private final AuthorizationCheckBehavior authorizationCheckBehavior;
+  private final AccessControlBehavior authorizationCheckBehavior;
 
   public JobCommandPreconditionChecker(
       final JobState jobState,
       final String intent,
       final List<State> validStates,
-      final AuthorizationCheckBehavior authorizationCheckBehavior) {
+      final AccessControlBehavior authorizationCheckBehavior) {
     this(jobState, intent, validStates, List.of(), authorizationCheckBehavior);
   }
 
@@ -43,7 +43,7 @@ public class JobCommandPreconditionChecker {
       final String intent,
       final List<State> validStates,
       final List<JobCommandCheck> customChecks,
-      final AuthorizationCheckBehavior authorizationCheckBehavior) {
+      final AccessControlBehavior authorizationCheckBehavior) {
     this.jobState = jobState;
     this.intent = intent;
     this.validStates = validStates;

@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,21 +49,21 @@ public class UserTaskCanceledApplierTest {
 
     // Initial state of the User Task
     final var initialState =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("initial_user"));
 
     // Apply initial task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, initialState);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, initialState);
 
     // Simulate an update event with a change
     final var updateAttempt =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("update_user"))
             .setCandidateUsersChanged();
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.UPDATING, updateAttempt);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.UPDATING, updateAttempt);
 
     // Ensure the intermediate state is present has the new change
     assertThat(userTaskState.getIntermediateState(userTaskKey).getRecord())
@@ -98,11 +98,11 @@ public class UserTaskCanceledApplierTest {
     final var userTaskKey = 1;
 
     // Initial state of the User Task
-    final var initialState = new UserTaskRecord().setUserTaskKey(userTaskKey);
+    final var initialState = new TaskRecord().setUserTaskKey(userTaskKey);
 
     // Apply initial task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, initialState);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, initialState);
 
     // when
     userTaskCanceledApplier.applyState(userTaskKey, initialState);

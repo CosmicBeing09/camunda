@@ -9,7 +9,7 @@ package io.camunda.optimize;
 
 import static io.camunda.optimize.service.util.configuration.ConfigurationServiceConstants.CCSM_PROFILE;
 import static io.camunda.optimize.util.ZeebeBpmnModels.USER_TASK;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.ASSIGNED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.ASSIGNED;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.Process;
@@ -34,7 +34,7 @@ import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import java.io.InputStream;
 import java.time.Instant;
@@ -210,12 +210,12 @@ public abstract class AbstractCCSMIT extends AbstractIT {
     waitUntilRecordMatchingQueryExported(DatabaseConstants.ZEEBE_USER_TASK_INDEX_NAME, query);
   }
 
-  protected void waitUntilUserTaskRecordWithIntentExported(final UserTaskIntent intent) {
+  protected void waitUntilUserTaskRecordWithIntentExported(final TaskIntent intent) {
     waitUntilUserTaskRecordWithIntentExported(1, intent);
   }
 
   protected void waitUntilUserTaskRecordWithIntentExported(
-      final long minRecordCount, final UserTaskIntent intent) {
+      final long minRecordCount, final TaskIntent intent) {
     final TermsQueryContainer query = new TermsQueryContainer();
     query.addTermQuery(
         ZeebeUserTaskRecordDto.Fields.value + "." + ZeebeUserTaskDataDto.Fields.elementId,
@@ -392,7 +392,7 @@ public abstract class AbstractCCSMIT extends AbstractIT {
     final TermsQueryContainer query = new TermsQueryContainer();
     query.addTermQuery(
         ZeebeUserTaskRecordDto.Fields.intent,
-        ZeebeUserTaskImportService.INTENTS_TO_IMPORT.stream().map(UserTaskIntent::name).toList());
+        ZeebeUserTaskImportService.INTENTS_TO_IMPORT.stream().map(TaskIntent::name).toList());
     return query;
   }
 

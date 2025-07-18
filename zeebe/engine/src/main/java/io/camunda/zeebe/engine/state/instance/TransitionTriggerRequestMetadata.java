@@ -18,7 +18,7 @@ import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 
 /**
- * Represents metadata for tracking the request that triggered a user task transition.
+ * Represents metadata for tracking the request that triggered a transition.
  *
  * <p>This metadata is persisted to ensure that after the user task transition (e.g., assignment,
  * update, or completion) is fully processed, the original request can be properly finalized and
@@ -44,7 +44,7 @@ import io.camunda.zeebe.util.buffer.BufferUtil;
  * <p>This metadata is used to correctly finalize and respond to the original request once the user
  * task transition is completed.
  */
-public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject implements DbValue {
+public class TransitionTriggerRequestMetadata extends UnpackedObject implements DbValue {
 
   private final EnumProperty<ValueType> triggerTypeProperty =
       new EnumProperty<>("triggerType", ValueType.class);
@@ -53,7 +53,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
   private final IntegerProperty requestStreamIdProperty =
       new IntegerProperty("requestStreamId", -1);
 
-  public UserTaskTransitionTriggerRequestMetadata() {
+  public TransitionTriggerRequestMetadata() {
     super(4);
     declareProperty(triggerTypeProperty)
         .declareProperty(intentProperty)
@@ -76,7 +76,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param triggerType The trigger type (`USER_TASK` or `VARIABLE_DOCUMENT`).
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setTriggerType(final ValueType triggerType) {
+  public TransitionTriggerRequestMetadata setTriggerType(final ValueType triggerType) {
     triggerTypeProperty.setValue(triggerType);
     return this;
   }
@@ -97,7 +97,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param intent The intent of the original command.
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setIntent(final Intent intent) {
+  public TransitionTriggerRequestMetadata setIntent(final Intent intent) {
     intentProperty.setValue(intent.name());
     return this;
   }
@@ -117,7 +117,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param requestId The request ID.
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setRequestId(final long requestId) {
+  public TransitionTriggerRequestMetadata setRequestId(final long requestId) {
     requestIdProperty.setValue(requestId);
     return this;
   }
@@ -137,7 +137,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param requestStreamId The request stream ID.
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setRequestStreamId(final int requestStreamId) {
+  public TransitionTriggerRequestMetadata setRequestStreamId(final int requestStreamId) {
     requestStreamIdProperty.setValue(requestStreamId);
     return this;
   }

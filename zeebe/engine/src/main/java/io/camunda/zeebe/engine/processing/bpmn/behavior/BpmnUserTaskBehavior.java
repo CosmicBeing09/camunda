@@ -19,16 +19,16 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedForm;
 import io.camunda.zeebe.engine.state.immutable.FormState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebePriorityDefinition;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import java.time.InstantSource;
 import java.time.ZonedDateTime;
@@ -48,7 +48,7 @@ public final class BpmnUserTaskBehavior {
       EnumSet.complementOf(EnumSet.of(LifecycleState.NOT_FOUND, LifecycleState.CANCELING));
 
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
@@ -57,7 +57,7 @@ public final class BpmnUserTaskBehavior {
   private final InstantSource clock;
 
   public BpmnUserTaskBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final ExpressionProcessor expressionBehavior,
       final BpmnStateBehavior stateBehavior,
@@ -112,7 +112,7 @@ public final class BpmnUserTaskBehavior {
                 evaluatePriorityExpression(userTaskProps.getPriority(), scopeKey).map(p::priority));
   }
 
-  public UserTaskRecord createNewUserTask(
+  public TaskRecord createNewUserTask(
       final BpmnElementContext context,
       final ExecutableUserTask element,
       final UserTaskProperties userTaskProperties) {
@@ -122,7 +122,7 @@ public final class BpmnUserTaskBehavior {
         headerEncoder.encode(element.getUserTaskProperties().getTaskHeaders());
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setVariables(DocumentValue.EMPTY_DOCUMENT)
             .setUserTaskKey(userTaskKey)
             .setAssignee(userTaskProperties.getAssignee())
@@ -143,7 +143,7 @@ public final class BpmnUserTaskBehavior {
             .setPriority(userTaskProperties.getPriority())
             .setCreationTimestamp(clock.millis());
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CREATING, userTaskRecord);
     return userTaskRecord;
   }
 
@@ -309,7 +309,7 @@ public final class BpmnUserTaskBehavior {
     userTaskCanceling(elementInstance).ifPresent(this::userTaskCanceled);
   }
 
-  public Optional<UserTaskRecord> userTaskCanceling(final ElementInstance elementInstance) {
+  public Optional<TaskRecord> userTaskCanceling(final ElementInstance elementInstance) {
     final long userTaskKey = elementInstance.getUserTaskKey();
     if (userTaskKey <= 0) {
       return Optional.empty();
@@ -318,38 +318,38 @@ public final class BpmnUserTaskBehavior {
     if (!CANCELABLE_LIFECYCLE_STATES.contains(lifecycleState)) {
       return Optional.empty();
     }
-    final UserTaskRecord userTask = userTaskState.getUserTask(userTaskKey);
+    final TaskRecord userTask = userTaskState.getUserTask(userTaskKey);
     if (userTask == null) {
       return Optional.empty();
     }
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CANCELING, userTask);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CANCELING, userTask);
     return Optional.of(userTask);
   }
 
-  public void userTaskCanceled(final UserTaskRecord userTaskRecord) {
+  public void userTaskCanceled(final TaskRecord userTaskRecord) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CANCELED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CANCELED, userTaskRecord);
   }
 
-  public void userTaskCreated(final UserTaskRecord userTaskRecord) {
+  public void userTaskCreated(final TaskRecord userTaskRecord) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CREATED, userTaskRecord);
   }
 
-  public void userTaskAssigning(final UserTaskRecord userTaskRecord, final String assignee) {
+  public void userTaskAssigning(final TaskRecord userTaskRecord, final String assignee) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
     if (!userTaskRecord.getAssignee().equals(assignee)) {
       userTaskRecord.setAssignee(assignee);
       userTaskRecord.setAssigneeChanged();
     }
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.ASSIGNING, userTaskRecord);
   }
 
-  public void userTaskAssigned(final UserTaskRecord userTaskRecord, final String assignee) {
+  public void userTaskAssigned(final TaskRecord userTaskRecord, final String assignee) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
     userTaskRecord.setAssignee(assignee);
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.ASSIGNED, userTaskRecord);
   }
 
   public static final class UserTaskProperties {

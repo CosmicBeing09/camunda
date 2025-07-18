@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.JobRecordValue;
 import io.camunda.zeebe.protocol.record.value.ProcessInstanceRecordValue;
@@ -356,7 +356,7 @@ public final class CancelProcessInstanceTest {
     final long processInstanceKey =
         ENGINE.processInstance().ofBpmnProcessId("PROCESS_USER_TASK").create();
     final Record<UserTaskRecordValue> userTaskCreatedEvent =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -376,11 +376,11 @@ public final class CancelProcessInstanceTest {
                 .withProcessInstanceKey(processInstanceKey))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.CANCELING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.CANCELED));
+            tuple(ValueType.USER_TASK, TaskIntent.CANCELING),
+            tuple(ValueType.USER_TASK, TaskIntent.CANCELED));
 
     final Record<UserTaskRecordValue> userTaskCanceledEvent =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CANCELED)
+        RecordingExporter.userTaskRecords(TaskIntent.CANCELED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 

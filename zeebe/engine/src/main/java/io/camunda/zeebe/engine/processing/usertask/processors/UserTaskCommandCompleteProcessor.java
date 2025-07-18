@@ -8,44 +8,44 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
 
-public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor {
+public final class UserTaskCommandCompleteProcessor implements TaskCommandProcessor {
 
-  private static final String DEFAULT_ACTION = "complete";
+  private static final String DEFAULT_USER_TASK_ACTION = "complete";
 
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState userTaskState;
-  private final EventHandle eventHandle;
+  private final TaskState asyncRequestState;
+  private final EventProcessor eventHandle;
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
-  public UserTaskCompleteProcessor(
+  public UserTaskCommandCompleteProcessor(
       final ProcessingState state,
-      final EventHandle eventHandle,
+      final EventProcessor eventHandle,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     elementInstanceState = state.getElementInstanceState();
-    userTaskState = state.getUserTaskState();
+    asyncRequestState = state.getUserTaskState();
     this.eventHandle = eventHandle;
     stateWriter = writers.state();
     commandWriter = writers.command();
@@ -59,33 +59,33 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, TaskRecord> validateCommand(
+      final TypedRecord<TaskRecord> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
     userTaskRecord.setVariables(command.getValue().getVariablesBuffer());
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_USER_TASK_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.COMPLETING, userTaskRecord);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
     if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord, command);
+          userTaskKey, TaskIntent.COMPLETED, userTaskRecord, command);
     } else {
       /*
        * If the request metadata is not present in the received command, it indicates that
@@ -98,15 +98,15 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
        * Note: It's important to retrieve this metadata from the user task state before appending
        * the "COMPLETED" event, as it will be cleared by the "COMPLETED" event applier.
        */
-      final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
+      final var recordRequestMetadata = asyncRequestState.findRecordRequestMetadata(userTaskKey);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
       recordRequestMetadata.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,
-                  UserTaskIntent.COMPLETED,
+                  TaskIntent.COMPLETED,
                   userTaskRecord,
                   ValueType.USER_TASK,
                   metadata.getRequestId(),
@@ -114,7 +114,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
     }
   }
 
-  private void completeElementInstance(final UserTaskRecord userTaskRecord) {
+  private void completeElementInstance(final TaskRecord userTaskRecord) {
     final var userTaskElementInstanceKey = userTaskRecord.getElementInstanceKey();
 
     final ElementInstance userTaskElementInstance =

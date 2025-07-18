@@ -11,15 +11,15 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.message.MessageCorrelateBehavior.MessageData;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.MessageStartEventSubscriptionState;
@@ -34,7 +34,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,15 +45,15 @@ public final class MessageCorrelationCorrelateProcessor
       "Expected to find subscription for message with name '%s' and correlation key '%s', but none was found.";
 
   private final MessageCorrelateBehavior correlateBehavior;
-  private final KeyGenerator keyGenerator;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final RecordKeyProvider keyGenerator;
+  private final AccessControlBehavior authCheckBehavior;
   private final StateWriter stateWriter;
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
 
   public MessageCorrelationCorrelateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final ProcessState processState,
       final BpmnBehaviors bpmnBehaviors,
@@ -61,14 +61,14 @@ public final class MessageCorrelationCorrelateProcessor
       final MessageState messageState,
       final MessageSubscriptionState messageSubscriptionState,
       final SubscriptionCommandSender commandSender,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
     this.keyGenerator = keyGenerator;
     this.authCheckBehavior = authCheckBehavior;
     final var eventHandle =
-        new EventHandle(
+        new EventProcessor(
             keyGenerator,
             eventScopeInstanceState,
             writers,
@@ -94,7 +94,7 @@ public final class MessageCorrelationCorrelateProcessor
           "Expected to correlate message for tenant '%s', but user is not assigned to this tenant."
               .formatted(messageCorrelationRecord.getTenantId());
       rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionFor(command, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -127,7 +127,7 @@ public final class MessageCorrelationCorrelateProcessor
     if (authorizationRejectionOptional.isPresent()) {
       final var rejection = authorizationRejectionOptional.get();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionFor(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -136,7 +136,7 @@ public final class MessageCorrelationCorrelateProcessor
           SUBSCRIPTION_NOT_FOUND.formatted(
               command.getValue().getName(), command.getValue().getCorrelationKey());
       rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionFor(command, RejectionType.NOT_FOUND, errorMessage);
     } else {
       correlatingSubscriptions
           .getFirstMessageStartEventSubscription()
@@ -175,7 +175,7 @@ public final class MessageCorrelationCorrelateProcessor
       final TypedRecord<MessageCorrelationRecord> command,
       final Subscriptions correlatingSubscriptions,
       final String tenantId) {
-    final AtomicReference<AuthorizationRequest> request = new AtomicReference<>();
+    final AtomicReference<AccessControlRequest> request = new AtomicReference<>();
     final AtomicReference<Rejection> rejection = new AtomicReference<>();
 
     final var isAuthorized =
@@ -187,7 +187,7 @@ public final class MessageCorrelationCorrelateProcessor
                       : PermissionType.UPDATE_PROCESS_INSTANCE;
 
               request.set(
-                  new AuthorizationRequest(
+                  new AccessControlRequest(
                       command,
                       AuthorizationResourceType.PROCESS_DEFINITION,
                       permissionType,

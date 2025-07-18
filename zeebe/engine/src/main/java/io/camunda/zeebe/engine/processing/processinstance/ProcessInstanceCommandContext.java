@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.engine.processing.processinstance;
 
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
@@ -51,7 +51,7 @@ public final class ProcessInstanceCommandContext {
     this.elementInstance = elementInstance;
   }
 
-  public TypedResponseWriter getResponseWriter() {
+  public ResponseWriter getResponseWriter() {
     return writers.response();
   }
 
@@ -61,7 +61,7 @@ public final class ProcessInstanceCommandContext {
 
   public void reject(final RejectionType rejectionType, final String reason) {
     writers.rejection().appendRejection(record, rejectionType, reason);
-    writers.response().writeRejectionOnCommand(record, rejectionType, reason);
+    writers.response().writeRejectionFor(record, rejectionType, reason);
   }
 
   public TypedCommandWriter getCommandWriter() {

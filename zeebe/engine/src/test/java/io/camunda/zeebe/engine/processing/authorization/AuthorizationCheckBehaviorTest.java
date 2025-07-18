@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.security.configuration.AuthorizationsConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.state.appliers.AuthorizationCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupEntityAddedApplier;
@@ -57,7 +57,7 @@ final class AuthorizationCheckBehaviorTest {
   @SuppressWarnings("unused") // injected by the extension
   private MutableProcessingState processingState;
 
-  private AuthorizationCheckBehavior authorizationCheckBehavior;
+  private AccessControlBehavior authorizationCheckBehavior;
   private UserCreatedApplier userCreatedApplier;
   private MappingCreatedApplier mappingCreatedApplier;
   private AuthorizationCreatedApplier authorizationCreatedApplier;
@@ -73,7 +73,7 @@ final class AuthorizationCheckBehaviorTest {
     final var authConfig = new AuthorizationsConfiguration();
     authConfig.setEnabled(true);
     securityConfig.setAuthorizations(authConfig);
-    authorizationCheckBehavior = new AuthorizationCheckBehavior(processingState, securityConfig);
+    authorizationCheckBehavior = new AccessControlBehavior(processingState, securityConfig);
 
     userCreatedApplier = new UserCreatedApplier(processingState.getUserState());
     mappingCreatedApplier = new MappingCreatedApplier(processingState.getMappingState());
@@ -98,7 +98,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -116,7 +116,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -141,7 +141,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mockCommand(user.getUsername());
 
     // when
-    final var request = new AuthorizationRequest(command, resourceType, permissionType);
+    final var request = new AccessControlRequest(command, resourceType, permissionType);
     final var resourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -158,7 +158,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mockCommand(user.getUsername());
 
     // when
-    final var request = new AuthorizationRequest(command, resourceType, permissionType);
+    final var request = new AccessControlRequest(command, resourceType, permissionType);
     final var resourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -180,7 +180,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -206,7 +206,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mockCommand(user.getUsername());
 
     // when
-    final var request = new AuthorizationRequest(command, resourceType, permissionType);
+    final var request = new AccessControlRequest(command, resourceType, permissionType);
     final var resourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -228,7 +228,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -255,7 +255,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mockCommand(user.getUsername());
 
     // when
-    final var request = new AuthorizationRequest(command, resourceType, permissionType);
+    final var request = new AccessControlRequest(command, resourceType, permissionType);
     final var resourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -276,7 +276,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -302,7 +302,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -325,7 +325,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -349,7 +349,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -366,7 +366,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, AuthorizationResourceType.RESOURCE, PermissionType.DELETE)
+        new AccessControlRequest(command, AuthorizationResourceType.RESOURCE, PermissionType.DELETE)
             .addResourceId(UUID.randomUUID().toString());
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -413,12 +413,12 @@ final class AuthorizationCheckBehaviorTest {
     // then
     EitherAssert.assertThat(
             authorizationCheckBehavior.isAuthorized(
-                new AuthorizationRequest(command, resourceType, permissionType)
+                new AccessControlRequest(command, resourceType, permissionType)
                     .addResourceId(firstResourceId)))
         .isRight();
     EitherAssert.assertThat(
             authorizationCheckBehavior.isAuthorized(
-                new AuthorizationRequest(command, resourceType, permissionType)
+                new AccessControlRequest(command, resourceType, permissionType)
                     .addResourceId(secondResourceId)))
         .isRight();
   }
@@ -460,12 +460,12 @@ final class AuthorizationCheckBehaviorTest {
     // then
     EitherAssert.assertThat(
             authorizationCheckBehavior.isAuthorized(
-                new AuthorizationRequest(command, resourceType, permissionType)
+                new AccessControlRequest(command, resourceType, permissionType)
                     .addResourceId(firstResourceId)))
         .isRight();
     EitherAssert.assertThat(
             authorizationCheckBehavior.isAuthorized(
-                new AuthorizationRequest(command, resourceType, permissionType)
+                new AccessControlRequest(command, resourceType, permissionType)
                     .addResourceId(secondResourceId)))
         .isRight();
   }
@@ -489,7 +489,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorizations =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -519,7 +519,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorizations =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -543,7 +543,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorizations =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -567,7 +567,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorizations =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -591,7 +591,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -614,7 +614,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var allAuthorizedResourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
     final var directAuthorizedResourceIdentifiers =
@@ -642,7 +642,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -665,7 +665,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var allAuthorizedResourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
     final var directAuthorizedResourceIdentifiers =
@@ -690,7 +690,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -708,7 +708,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType).addResourceId(resourceId);
+        new AccessControlRequest(command, resourceType, permissionType).addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
     // then
@@ -733,7 +733,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mockCommandWithClientId(clientId);
 
     // when
-    final var request = new AuthorizationRequest(command, resourceType, permissionType);
+    final var request = new AccessControlRequest(command, resourceType, permissionType);
     final var resourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 
@@ -750,7 +750,7 @@ final class AuthorizationCheckBehaviorTest {
     final var command = mockCommandWithClientId(clientId);
 
     // when
-    final var request = new AuthorizationRequest(command, resourceType, permissionType);
+    final var request = new AccessControlRequest(command, resourceType, permissionType);
     final var resourceIdentifiers =
         authorizationCheckBehavior.getAllAuthorizedResourceIdentifiers(request);
 

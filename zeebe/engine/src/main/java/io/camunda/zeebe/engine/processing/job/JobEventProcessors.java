@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.processing.job;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
@@ -33,12 +33,12 @@ public final class JobEventProcessors {
       final JobProcessingMetrics jobMetrics,
       final EngineConfiguration config,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
 
     final var keyGenerator = processingState.getKeyGenerator();
 
-    final EventHandle eventHandle =
-        new EventHandle(
+    final EventProcessor eventHandle =
+        new EventProcessor(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

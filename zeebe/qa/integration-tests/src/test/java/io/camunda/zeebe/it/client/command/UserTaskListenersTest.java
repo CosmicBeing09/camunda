@@ -26,13 +26,13 @@ import io.camunda.zeebe.it.util.ZeebeAssertHelper;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.IncidentRecordValue;
@@ -175,7 +175,7 @@ public class UserTaskListenersTest {
           assertThat(userTask.getCandidateUsersList()).containsExactly("frodo", "samwise");
           assertThat(userTask.getPriority()).isEqualTo(88);
           assertThat(userTask.getChangedAttributes())
-              .containsExactly(UserTaskRecord.CANDIDATE_USERS, UserTaskRecord.PRIORITY);
+              .containsExactly(TaskRecord.CANDIDATE_USERS, TaskRecord.PRIORITY);
           assertThat(userTask.getAction()).isEqualTo(action);
         });
   }
@@ -195,14 +195,14 @@ public class UserTaskListenersTest {
     client.newWorker().jobType("my_canceling_listener").handler(completeListenerJobHandler).open();
 
     final var createdUserTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withRecordKey(userTaskKey)
             .getFirst()
             .getValue();
     final long processInstanceKey = createdUserTask.getProcessInstanceKey();
 
     // wait until the user task enters the ASSIGNING transition
-    RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNING).withRecordKey(userTaskKey).await();
+    RecordingExporter.userTaskRecords(TaskIntent.ASSIGNING).withRecordKey(userTaskKey).await();
 
     // when: cancel the process instance
     final var cancelProcessInstanceFuture =
@@ -384,7 +384,7 @@ public class UserTaskListenersTest {
 
     // and: verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.UPDATING, UserTaskIntent.DENY_TASK_LISTENER, UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATING, TaskIntent.DENY_TASK_LISTENER, TaskIntent.UPDATE_DENIED);
   }
 
   @Test
@@ -447,7 +447,7 @@ public class UserTaskListenersTest {
 
     // and: verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.UPDATING, UserTaskIntent.DENY_TASK_LISTENER, UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATING, TaskIntent.DENY_TASK_LISTENER, TaskIntent.UPDATE_DENIED);
 
     assertThat(
             RecordingExporter.variableDocumentRecords(VariableDocumentIntent.UPDATE_DENIED)
@@ -510,9 +510,9 @@ public class UserTaskListenersTest {
 
     // verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED);
   }
 
   @Test
@@ -559,9 +559,9 @@ public class UserTaskListenersTest {
 
     // verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED);
   }
 
   @Test
@@ -617,9 +617,9 @@ public class UserTaskListenersTest {
 
     // verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.ASSIGNMENT_DENIED);
+        TaskIntent.ASSIGNING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.ASSIGNMENT_DENIED);
   }
 
   @Test
@@ -666,12 +666,12 @@ public class UserTaskListenersTest {
                     .setPriority(99))
             .setCorrectedAttributes(
                 Arrays.asList(
-                    UserTaskRecord.ASSIGNEE,
-                    UserTaskRecord.DUE_DATE,
-                    UserTaskRecord.FOLLOW_UP_DATE,
-                    UserTaskRecord.CANDIDATE_USERS,
-                    UserTaskRecord.CANDIDATE_GROUPS,
-                    UserTaskRecord.PRIORITY));
+                    TaskRecord.ASSIGNEE,
+                    TaskRecord.DUE_DATE,
+                    TaskRecord.FOLLOW_UP_DATE,
+                    TaskRecord.CANDIDATE_USERS,
+                    TaskRecord.CANDIDATE_GROUPS,
+                    TaskRecord.PRIORITY));
 
     // TL job should be successfully completed with expected JobResult
     ZeebeAssertHelper.assertJobCompleted(
@@ -771,11 +771,11 @@ public class UserTaskListenersTest {
           assertThat(userTask.getChangedAttributes())
               .describedAs("Changed attributes should reflect only actual modifications")
               .containsExactly(
-                  UserTaskRecord.ASSIGNEE,
-                  UserTaskRecord.CANDIDATE_GROUPS,
-                  UserTaskRecord.CANDIDATE_USERS,
-                  UserTaskRecord.DUE_DATE,
-                  UserTaskRecord.FOLLOW_UP_DATE);
+                  TaskRecord.ASSIGNEE,
+                  TaskRecord.CANDIDATE_GROUPS,
+                  TaskRecord.CANDIDATE_USERS,
+                  TaskRecord.DUE_DATE,
+                  TaskRecord.FOLLOW_UP_DATE);
 
           // Verify unchanged attribute
           assertThat(userTask.getPriority())
@@ -823,12 +823,12 @@ public class UserTaskListenersTest {
                     .setPriority(80))
             .setCorrectedAttributes(
                 Arrays.asList(
-                    UserTaskRecord.ASSIGNEE,
-                    UserTaskRecord.DUE_DATE,
-                    UserTaskRecord.FOLLOW_UP_DATE,
-                    UserTaskRecord.CANDIDATE_USERS,
-                    UserTaskRecord.CANDIDATE_GROUPS,
-                    UserTaskRecord.PRIORITY));
+                    TaskRecord.ASSIGNEE,
+                    TaskRecord.DUE_DATE,
+                    TaskRecord.FOLLOW_UP_DATE,
+                    TaskRecord.CANDIDATE_USERS,
+                    TaskRecord.CANDIDATE_GROUPS,
+                    TaskRecord.PRIORITY));
 
     // TL job should be successfully completed with the result "denied" set correctly and
     // corrections as expected
@@ -886,10 +886,10 @@ public class UserTaskListenersTest {
                     .setPriority(80))
             .setCorrectedAttributes(
                 Arrays.asList(
-                    UserTaskRecord.ASSIGNEE,
-                    UserTaskRecord.FOLLOW_UP_DATE,
-                    UserTaskRecord.CANDIDATE_USERS,
-                    UserTaskRecord.PRIORITY));
+                    TaskRecord.ASSIGNEE,
+                    TaskRecord.FOLLOW_UP_DATE,
+                    TaskRecord.CANDIDATE_USERS,
+                    TaskRecord.PRIORITY));
 
     // TL job should be successfully completed with the result "denied" set correctly and
     // corrections as expected
@@ -934,7 +934,7 @@ public class UserTaskListenersTest {
         .open();
 
     final long processInstanceKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withRecordKey(userTaskKey)
             .getFirst()
             .getValue()
@@ -963,7 +963,7 @@ public class UserTaskListenersTest {
           assertThat(userTask.getPriority()).isEqualTo(3);
           assertThat(userTask.getChangedAttributes())
               .describedAs("Only corrected attributes should be reported as changed")
-              .containsExactly(UserTaskRecord.ASSIGNEE, UserTaskRecord.PRIORITY);
+              .containsExactly(TaskRecord.ASSIGNEE, TaskRecord.PRIORITY);
         });
   }
 
@@ -978,7 +978,7 @@ public class UserTaskListenersTest {
                     .isEqualTo(1));
   }
 
-  private void assertUserTaskIntentsSequence(final UserTaskIntent... intents) {
+  private void assertUserTaskIntentsSequence(final TaskIntent... intents) {
     assertThat(intents).describedAs("Expected intents not to be empty").isNotEmpty();
     assertThat(
             RecordingExporter.userTaskRecords()

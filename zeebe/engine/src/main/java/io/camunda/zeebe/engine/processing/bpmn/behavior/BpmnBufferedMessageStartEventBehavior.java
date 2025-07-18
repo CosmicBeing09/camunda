@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.bpmn.behavior;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import java.time.InstantSource;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
@@ -28,23 +28,23 @@ public final class BpmnBufferedMessageStartEventBehavior {
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
 
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
   private final InstantSource clock;
 
   public BpmnBufferedMessageStartEventBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final EventTriggerBehavior eventTriggerBehavior,
       final BpmnStateBehavior stateBehavior,
       final Writers writers,
       final InstantSource clock) {
     messageState = processingState.getMessageState();
     processState = processingState.getProcessState();
-    messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
+    messageStartEventSubscriptionState = processingState.getStartEventSubscriptionState();
     this.clock = clock;
 
     eventHandle =
-        new EventHandle(
+        new EventProcessor(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

@@ -8,11 +8,11 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
@@ -31,17 +31,17 @@ public class UserTaskCommandPreconditionChecker {
 
   private final List<LifecycleState> validLifecycleStates;
   private final String intent;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final BiFunction<
-          TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
+          TypedRecord<TaskRecord>, TaskRecord, Either<Rejection, TaskRecord>>
       additionalChecks;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
 
   public UserTaskCommandPreconditionChecker(
       final List<LifecycleState> validLifecycleStates,
       final String intent,
-      final UserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final TaskState userTaskState,
+      final AccessControlBehavior authCheckBehavior) {
     this(validLifecycleStates, intent, null, userTaskState, authCheckBehavior);
   }
 
@@ -49,10 +49,10 @@ public class UserTaskCommandPreconditionChecker {
       final List<LifecycleState> validLifecycleStates,
       final String intent,
       final BiFunction<
-              TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
+              TypedRecord<TaskRecord>, TaskRecord, Either<Rejection, TaskRecord>>
           additionalChecks,
-      final UserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final TaskState userTaskState,
+      final AccessControlBehavior authCheckBehavior) {
     this.validLifecycleStates = validLifecycleStates;
     this.intent = intent;
     this.authCheckBehavior = authCheckBehavior;
@@ -60,7 +60,7 @@ public class UserTaskCommandPreconditionChecker {
     this.userTaskState = userTaskState;
   }
 
-  protected Either<Rejection, UserTaskRecord> check(final TypedRecord<UserTaskRecord> command) {
+  protected Either<Rejection, TaskRecord> check(final TypedRecord<TaskRecord> command) {
     final long userTaskKey = command.getKey();
     final var persistedRecord =
         userTaskState.getUserTask(userTaskKey, authCheckBehavior.getAuthorizedTenantIds(command));
@@ -73,7 +73,7 @@ public class UserTaskCommandPreconditionChecker {
     }
 
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_USER_TASK,

@@ -10,7 +10,6 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import io.camunda.zeebe.dmn.DecisionEvaluationResult;
 import io.camunda.zeebe.dmn.ParsedDecisionRequirementsGraph;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -24,7 +23,7 @@ import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
 import io.camunda.zeebe.protocol.impl.record.value.decision.DecisionEvaluationRecord;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
@@ -32,22 +31,22 @@ import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 
 /** Provides decision behavior to the BPMN processors */
-public final class BpmnDecisionBehavior {
+public final class DecisionBehavior {
 
-  private final DecisionBehavior decisionBehavior;
+  private final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableState variableState;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
 
-  public BpmnDecisionBehavior(
-      final DecisionBehavior decisionBehavior,
+  public DecisionBehavior(
+      final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior,
       final ProcessingState processingState,
       final EventTriggerBehavior eventTriggerBehavior,
       final StateWriter stateWriter,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final ExpressionProcessor expressionBehavior,
       final BpmnStateBehavior stateBehavior) {
 

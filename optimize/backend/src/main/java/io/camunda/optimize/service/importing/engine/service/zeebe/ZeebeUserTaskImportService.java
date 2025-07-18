@@ -11,10 +11,10 @@ import static io.camunda.optimize.dto.optimize.importing.UserTaskIdentityOperati
 import static io.camunda.optimize.dto.optimize.importing.UserTaskIdentityOperationType.UNCLAIM_OPERATION_TYPE;
 import static io.camunda.optimize.service.db.DatabaseConstants.ZEEBE_USER_TASK_INDEX_NAME;
 import static io.camunda.optimize.service.util.importing.ZeebeConstants.FLOW_NODE_TYPE_USER_TASK;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.ASSIGNED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.CANCELED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.COMPLETED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.CREATING;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.ASSIGNED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.CANCELED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.COMPLETED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.CREATING;
 
 import io.camunda.optimize.dto.optimize.ProcessInstanceDto;
 import io.camunda.optimize.dto.optimize.persistence.AssigneeOperationDto;
@@ -25,7 +25,7 @@ import io.camunda.optimize.service.db.DatabaseClient;
 import io.camunda.optimize.service.db.reader.ProcessDefinitionReader;
 import io.camunda.optimize.service.db.writer.ProcessInstanceWriter;
 import io.camunda.optimize.service.util.configuration.ConfigurationService;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.netty.util.internal.StringUtil;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -43,7 +43,7 @@ import org.slf4j.Logger;
 public class ZeebeUserTaskImportService
     extends ZeebeProcessInstanceSubEntityImportService<ZeebeUserTaskRecordDto> {
 
-  public static final Set<UserTaskIntent> INTENTS_TO_IMPORT =
+  public static final Set<TaskIntent> INTENTS_TO_IMPORT =
       Set.of(CREATING, ASSIGNED, COMPLETED, CANCELED);
   private static final Logger LOG =
       org.slf4j.LoggerFactory.getLogger(ZeebeUserTaskImportService.class);
@@ -107,7 +107,7 @@ public class ZeebeUserTaskImportService
               userTaskInstancesByKey.getOrDefault(
                   recordKey,
                   createSkeletonUserTaskInstance(zeebeUserTaskInstanceRecord.getValue()));
-          final UserTaskIntent userTaskRecordIntent = zeebeUserTaskInstanceRecord.getIntent();
+          final TaskIntent userTaskRecordIntent = zeebeUserTaskInstanceRecord.getIntent();
           if (userTaskRecordIntent == CREATING) {
             userTaskForKey.setStartDate(zeebeUserTaskInstanceRecord.getDateForTimestamp());
             if (!StringUtil.isNullOrEmpty(zeebeUserTaskInstanceRecord.getValue().getAssignee())) {

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.timer;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEvent;
@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.Instant;
@@ -52,11 +52,11 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
   private final ElementInstanceState elementInstanceState;
   private final MutableTimerInstanceState timerInstanceState;
   private final ExpressionProcessor expressionProcessor;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
 
   public TimerTriggerProcessor(
       final MutableProcessingState processingState,
@@ -72,7 +72,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
     timerInstanceState = processingState.getTimerState();
     keyGenerator = processingState.getKeyGenerator();
     eventHandle =
-        new EventHandle(
+        new EventProcessor(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

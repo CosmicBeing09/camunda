@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
@@ -43,7 +43,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
 import io.camunda.zeebe.stream.api.ProcessingResultBuilder;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.Duration;
@@ -70,7 +70,7 @@ public final class MessageStreamProcessorTest {
   @Before
   public void setup() {
     mockInterpartitionCommandSender = mock(InterPartitionCommandSender.class);
-    final var mockKeyGenerator = mock(KeyGenerator.class);
+    final var mockKeyGenerator = mock(RecordKeyProvider.class);
     final var mockDistributionState = mock(DistributionState.class);
     final var mockProcessingResultBuilder = mock(ProcessingResultBuilder.class);
     final var mockEventAppliers = mock(EventAppliers.class);
@@ -92,7 +92,7 @@ public final class MessageStreamProcessorTest {
         (typedRecordProcessors, processingContext) -> {
           final var processingState = processingContext.getProcessingState();
           final var scheduledTaskState = processingContext.getScheduledTaskStateFactory();
-          final var mockAuthCheckBehavior = mock(AuthorizationCheckBehavior.class);
+          final var mockAuthCheckBehavior = mock(AccessControlBehavior.class);
           when(mockAuthCheckBehavior.isAuthorized(any())).thenReturn(Either.right(null));
           MessageEventProcessors.addMessageProcessors(
               mock(BpmnBehaviors.class),

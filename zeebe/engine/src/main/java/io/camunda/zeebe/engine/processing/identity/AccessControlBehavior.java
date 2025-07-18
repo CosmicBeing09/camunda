@@ -34,7 +34,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class AuthorizationCheckBehavior {
+public final class AccessControlBehavior {
 
   public static final String FORBIDDEN_ERROR_MESSAGE =
       "Insufficient permissions to perform operation '%s' on resource '%s'";
@@ -54,7 +54,7 @@ public final class AuthorizationCheckBehavior {
   private final boolean authorizationsEnabled;
   private final boolean multiTenancyEnabled;
 
-  public AuthorizationCheckBehavior(
+  public AccessControlBehavior(
       final ProcessingState processingState, final SecurityConfiguration securityConfig) {
     authorizationState = processingState.getAuthorizationState();
     mappingState = processingState.getMappingState();
@@ -67,7 +67,7 @@ public final class AuthorizationCheckBehavior {
    * Checks if a user is Authorized to perform an action on a resource. The user key is taken from
    * the authorizations of the command.
    *
-   * <p>The caller of this method should provide an {@link AuthorizationRequest}. This object
+   * <p>The caller of this method should provide an {@link AccessControlRequest}. This object
    * contains the data required to do the check.
    *
    * @param request the authorization request to check authorization for. This contains the command,
@@ -75,7 +75,7 @@ public final class AuthorizationCheckBehavior {
    * @return a {@link Either} containing a {@link RejectionType} if the user is not authorized or
    *     {@link Void} if the user is authorized
    */
-  public Either<Rejection, Void> isAuthorized(final AuthorizationRequest request) {
+  public Either<Rejection, Void> isAuthorized(final AccessControlRequest request) {
     if (!authorizationsEnabled && !multiTenancyEnabled) {
       return Either.right(null);
     }
@@ -125,7 +125,7 @@ public final class AuthorizationCheckBehavior {
    * @return an {@link Either} containing a {@link Rejection} or {@link Void}
    */
   private Either<Rejection, Void> isEntityAuthorized(
-      final AuthorizationRequest request,
+      final AccessControlRequest request,
       final EntityType entityType,
       final Collection<String> entityIds) {
     if (multiTenancyEnabled && request.isTenantOwnedResource()) {
@@ -179,7 +179,7 @@ public final class AuthorizationCheckBehavior {
     return Optional.ofNullable(authorizedAnonymousUserClaim).map(Boolean.class::cast).orElse(false);
   }
 
-  private Optional<String> getUsername(final AuthorizationRequest request) {
+  private Optional<String> getUsername(final AccessControlRequest request) {
     return getUsername(request.getCommand());
   }
 
@@ -188,7 +188,7 @@ public final class AuthorizationCheckBehavior {
         (String) command.getAuthorizations().get(Authorization.AUTHORIZED_USERNAME));
   }
 
-  private Optional<String> getClientId(final AuthorizationRequest request) {
+  private Optional<String> getClientId(final AccessControlRequest request) {
     return getClientId(request.getCommand());
   }
 
@@ -226,7 +226,7 @@ public final class AuthorizationCheckBehavior {
                             .stream())));
   }
 
-  public Set<String> getAllAuthorizedResourceIdentifiers(final AuthorizationRequest request) {
+  public Set<String> getAllAuthorizedResourceIdentifiers(final AccessControlRequest request) {
     if (!authorizationsEnabled || isAuthorizedAnonymousUser(request.getCommand())) {
       return Set.of(WILDCARD_PERMISSION);
     }
@@ -387,7 +387,7 @@ public final class AuthorizationCheckBehavior {
         : new AuthenticatedAuthorizedTenants(tenantsOfMapping);
   }
 
-  private Stream<PersistedMapping> getPersistedMappings(final AuthorizationRequest request) {
+  private Stream<PersistedMapping> getPersistedMappings(final AccessControlRequest request) {
     return getPersistedMappings(request.getCommand());
   }
 
@@ -398,7 +398,7 @@ public final class AuthorizationCheckBehavior {
     return MappingRuleMatcher.matchingRules(mappingState.getAll().stream(), claims);
   }
 
-  public static final class AuthorizationRequest {
+  public static final class AccessControlRequest {
     private final TypedRecord<?> command;
     private final AuthorizationResourceType resourceType;
     private final PermissionType permissionType;
@@ -407,7 +407,7 @@ public final class AuthorizationCheckBehavior {
     private final boolean isNewResource;
     private final boolean isTenantOwnedResource;
 
-    public AuthorizationRequest(
+    public AccessControlRequest(
         final TypedRecord<?> command,
         final AuthorizationResourceType resourceType,
         final PermissionType permissionType,
@@ -424,7 +424,7 @@ public final class AuthorizationCheckBehavior {
       this.isTenantOwnedResource = isTenantOwnedResource;
     }
 
-    public AuthorizationRequest(
+    public AccessControlRequest(
         final TypedRecord<?> command,
         final AuthorizationResourceType resourceType,
         final PermissionType permissionType,
@@ -433,7 +433,7 @@ public final class AuthorizationCheckBehavior {
       this(command, resourceType, permissionType, tenantId, isNewResource, true);
     }
 
-    public AuthorizationRequest(
+    public AccessControlRequest(
         final TypedRecord<?> command,
         final AuthorizationResourceType resourceType,
         final PermissionType permissionType,
@@ -441,7 +441,7 @@ public final class AuthorizationCheckBehavior {
       this(command, resourceType, permissionType, tenantId, false, true);
     }
 
-    public AuthorizationRequest(
+    public AccessControlRequest(
         final TypedRecord<?> command,
         final AuthorizationResourceType resourceType,
         final PermissionType permissionType) {
@@ -468,7 +468,7 @@ public final class AuthorizationCheckBehavior {
       return isTenantOwnedResource;
     }
 
-    public AuthorizationRequest addResourceId(final String resourceId) {
+    public AccessControlRequest addResourceId(final String resourceId) {
       resourceIds.add(resourceId);
       return this;
     }
@@ -499,7 +499,7 @@ public final class AuthorizationCheckBehavior {
 
   public static class ForbiddenException extends RuntimeException {
 
-    public ForbiddenException(final AuthorizationRequest authRequest) {
+    public ForbiddenException(final AccessControlRequest authRequest) {
       super(authRequest.getForbiddenErrorMessage());
     }
 

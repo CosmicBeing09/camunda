@@ -78,7 +78,7 @@ public class MessageSubscriptionSentTimeMigrationTest {
       // then
       verify(mockProcessingState.getMigrationState())
           .migrateMessageSubscriptionSentTime(
-              mockProcessingState.getMessageSubscriptionState(),
+              mockProcessingState.getSubscriptionState(),
               mockProcessingState.getPendingMessageSubscriptionState());
 
       verifyNoMoreInteractions(mockProcessingState.getMigrationState());

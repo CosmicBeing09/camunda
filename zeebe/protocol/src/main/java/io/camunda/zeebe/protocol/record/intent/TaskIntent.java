@@ -19,7 +19,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
+public enum TaskIntent implements ProcessInstanceRelatedIntent {
   CREATING(0),
   CREATED(1),
 
@@ -127,11 +127,11 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
   private final short value;
   private final boolean shouldBanInstance;
 
-  UserTaskIntent(final int value) {
+  TaskIntent(final int value) {
     this(value, true);
   }
 
-  UserTaskIntent(final int value, final boolean shouldBanInstance) {
+  TaskIntent(final int value, final boolean shouldBanInstance) {
     this.value = (short) value;
     this.shouldBanInstance = shouldBanInstance;
   }
@@ -230,8 +230,8 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
     return shouldBanInstance;
   }
 
-  public static Set<UserTaskIntent> commands() {
-    return Stream.of(UserTaskIntent.values())
+  public static Set<TaskIntent> commands() {
+    return Stream.of(TaskIntent.values())
         .filter(intent -> !intent.isEvent())
         .collect(Collectors.toSet());
   }

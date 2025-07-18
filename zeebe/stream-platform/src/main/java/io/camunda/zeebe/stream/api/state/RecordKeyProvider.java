@@ -9,7 +9,7 @@ package io.camunda.zeebe.stream.api.state;
 
 /** Generate unique keys. Should be used for records only. */
 @FunctionalInterface
-public interface KeyGenerator {
+public interface RecordKeyProvider {
 
   /**
    * Returns the next key of a record and updates the key generator.

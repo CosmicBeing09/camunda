@@ -7,11 +7,11 @@
  */
 package io.camunda.zeebe.engine.processing.job;
 
-import static io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.WILDCARD_PERMISSION;
+import static io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.WILDCARD_PERMISSION;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
@@ -48,7 +48,7 @@ final class JobBatchCollector {
 
   private final JobState jobState;
   private final JobVariablesCollector jobVariablesCollector;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final Predicate<Integer> canWriteEventOfLength;
 
   /**
@@ -60,7 +60,7 @@ final class JobBatchCollector {
   JobBatchCollector(
       final ProcessingState state,
       final Predicate<Integer> canWriteEventOfLength,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     jobState = state.getJobState();
     this.canWriteEventOfLength = canWriteEventOfLength;
     jobVariablesCollector = new JobVariablesCollector(state);
@@ -97,7 +97,7 @@ final class JobBatchCollector {
     // here and only check if the requester has the correct permissions to access the jobs
     final var authorizedProcessIds =
         authCheckBehavior.getAllAuthorizedResourceIdentifiers(
-            new AuthorizationRequest(
+            new AccessControlRequest(
                 record,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE));

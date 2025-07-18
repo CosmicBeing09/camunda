@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowElement;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
@@ -56,7 +56,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   private final TypedRejectionWriter rejectionWriter;
   private final SideEffectWriter sideEffectWriter;
 
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
 
   public ProcessMessageSubscriptionCorrelateProcessor(
       final ProcessMessageSubscriptionState subscriptionState,
@@ -74,7 +74,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
     rejectionWriter = writers.rejection();
     sideEffectWriter = writers.sideEffect();
     eventHandle =
-        new EventHandle(
+        new EventProcessor(
             processingState.getKeyGenerator(),
             processingState.getEventScopeInstanceState(),
             writers,

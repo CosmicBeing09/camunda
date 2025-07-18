@@ -40,10 +40,10 @@ import io.camunda.zeebe.protocol.record.intent.ResourceDeletionIntent;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
@@ -469,7 +469,7 @@ public final class RecordingExporter implements Exporter {
     return new UserTaskRecordStream(records(ValueType.USER_TASK, UserTaskRecordValue.class));
   }
 
-  public static UserTaskRecordStream userTaskRecords(final UserTaskIntent intent) {
+  public static UserTaskRecordStream userTaskRecords(final TaskIntent intent) {
     return userTaskRecords().withIntent(intent);
   }
 

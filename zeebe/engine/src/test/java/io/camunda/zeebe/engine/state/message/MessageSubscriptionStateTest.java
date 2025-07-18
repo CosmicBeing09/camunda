@@ -32,7 +32,7 @@ public final class MessageSubscriptionStateTest {
   public void setUp() {
 
     final MutableProcessingState processingState = stateRule.getProcessingState();
-    state = processingState.getMessageSubscriptionState();
+    state = processingState.getSubscriptionState();
   }
 
   @Test

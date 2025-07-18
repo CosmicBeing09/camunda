@@ -7,12 +7,12 @@
  */
 package io.camunda.zeebe.engine.state.appliers;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.List;
 import java.util.stream.Stream;
 import org.assertj.core.api.Assertions;
@@ -58,22 +58,22 @@ public class UserTaskCorrectedApplierTest {
     return Stream.of(
         Arguments.of(1, List.of(), LifecycleState.CREATING),
         Arguments.of(
-            2, List.of(UserTaskIntent.CREATING, UserTaskIntent.CREATED), LifecycleState.ASSIGNING),
+            2, List.of(TaskIntent.CREATING, TaskIntent.CREATED), LifecycleState.ASSIGNING),
         Arguments.of(
-            3, List.of(UserTaskIntent.CREATING, UserTaskIntent.CREATED), LifecycleState.UPDATING),
+            3, List.of(TaskIntent.CREATING, TaskIntent.CREATED), LifecycleState.UPDATING),
         Arguments.of(
-            4, List.of(UserTaskIntent.CREATING, UserTaskIntent.CREATED), LifecycleState.COMPLETING),
+            4, List.of(TaskIntent.CREATING, TaskIntent.CREATED), LifecycleState.COMPLETING),
         Arguments.of(
-            5, List.of(UserTaskIntent.CREATING, UserTaskIntent.CREATED), LifecycleState.CLAIMING));
+            5, List.of(TaskIntent.CREATING, TaskIntent.CREATED), LifecycleState.CLAIMING));
   }
 
   @ParameterizedTest(name = "on {2}")
   @MethodSource("testCases")
   void shouldCorrectIntermediateUserTaskDataOnIntent(
-      final long userTaskKey, final List<UserTaskIntent> setup, final LifecycleState state) {
+      final long userTaskKey, final List<TaskIntent> setup, final LifecycleState state) {
     // given
     final var given =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee("initial")
             .setCandidateGroupsList(List.of("initial"))
@@ -109,7 +109,7 @@ public class UserTaskCorrectedApplierTest {
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey).getRecord())
         .describedAs("Expect that intermediate state is updated")
         .isEqualTo(
-            new UserTaskRecord()
+            new TaskRecord()
                 .setUserTaskKey(userTaskKey)
                 .setAssignee("overwritten")
                 .setCandidateGroupsList(List.of("overwritten"))
@@ -127,14 +127,14 @@ public class UserTaskCorrectedApplierTest {
         .isEqualTo(state);
   }
 
-  private static UserTaskIntent mapLifecycleStateToIntent(final LifecycleState state) {
+  private static TaskIntent mapLifecycleStateToIntent(final LifecycleState state) {
     return switch (state) {
-      case CREATING -> UserTaskIntent.CREATING;
-      case ASSIGNING -> UserTaskIntent.ASSIGNING;
-      case CLAIMING -> UserTaskIntent.CLAIMING;
-      case UPDATING -> UserTaskIntent.UPDATING;
-      case CANCELING -> UserTaskIntent.CANCELING;
-      case COMPLETING -> UserTaskIntent.COMPLETING;
+      case CREATING -> TaskIntent.CREATING;
+      case ASSIGNING -> TaskIntent.ASSIGNING;
+      case CLAIMING -> TaskIntent.CLAIMING;
+      case UPDATING -> TaskIntent.UPDATING;
+      case CANCELING -> TaskIntent.CANCELING;
+      case COMPLETING -> TaskIntent.COMPLETING;
       default ->
           throw new IllegalArgumentException(
               "Unexpected lifecycle state %s received".formatted(state));

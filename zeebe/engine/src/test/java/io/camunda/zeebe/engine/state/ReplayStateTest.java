@@ -18,7 +18,7 @@ import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.JobBatchRecordValue;
 import io.camunda.zeebe.protocol.record.value.JobRecordValue;
@@ -345,7 +345,7 @@ public final class ReplayStateTest {
                 engine -> {
                   engine.processInstance().ofBpmnProcessId(PROCESS_ID).create();
                   final Record<UserTaskRecordValue> userTask =
-                      RecordingExporter.userTaskRecords(UserTaskIntent.CREATED).getFirst();
+                      RecordingExporter.userTaskRecords(TaskIntent.CREATED).getFirst();
                   assertThat(userTask.getValue().getFormKey()).isGreaterThan(-1L);
                   return userTask;
                 }),

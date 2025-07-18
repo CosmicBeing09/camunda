@@ -13,7 +13,7 @@ import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,16 +21,16 @@ public final class TypedRecordProcessors {
 
   private final RecordProcessorMap recordProcessorMap = new RecordProcessorMap();
   private final List<StreamProcessorLifecycleAware> lifecycleListeners = new ArrayList<>();
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final Writers writers;
 
-  private TypedRecordProcessors(final KeyGenerator keyGenerator, final Writers writers) {
+  private TypedRecordProcessors(final RecordKeyProvider keyGenerator, final Writers writers) {
     this.keyGenerator = keyGenerator;
     this.writers = writers;
   }
 
   public static TypedRecordProcessors processors(
-      final KeyGenerator keyGenerator, final Writers writers) {
+      final RecordKeyProvider keyGenerator, final Writers writers) {
     return new TypedRecordProcessors(keyGenerator, writers);
   }
 

@@ -56,7 +56,7 @@ public interface Intent {
           ProcessInstanceBatchIntent.class,
           FormIntent.class,
           ResourceIntent.class,
-          UserTaskIntent.class,
+          TaskIntent.class,
           ProcessInstanceMigrationIntent.class,
           CompensationSubscriptionIntent.class,
           MessageCorrelationIntent.class,
@@ -155,7 +155,7 @@ public interface Intent {
       case RESOURCE:
         return ResourceIntent.from(intent);
       case USER_TASK:
-        return UserTaskIntent.from(intent);
+        return TaskIntent.from(intent);
       case PROCESS_INSTANCE_MIGRATION:
         return ProcessInstanceMigrationIntent.from(intent);
       case COMPENSATION_SUBSCRIPTION:
@@ -264,7 +264,7 @@ public interface Intent {
       case RESOURCE:
         return ResourceIntent.valueOf(intent);
       case USER_TASK:
-        return UserTaskIntent.valueOf(intent);
+        return TaskIntent.valueOf(intent);
       case PROCESS_INSTANCE_MIGRATION:
         return ProcessInstanceMigrationIntent.valueOf(intent);
       case COMPENSATION_SUBSCRIPTION:

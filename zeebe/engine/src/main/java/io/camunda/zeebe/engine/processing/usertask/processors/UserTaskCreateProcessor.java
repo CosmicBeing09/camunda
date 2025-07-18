@@ -12,26 +12,26 @@ import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
 
-public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
+public class UserTaskCreateProcessor implements TaskCommandProcessor {
 
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final StateWriter stateWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
   private final BpmnJobBehavior jobBehavior;
@@ -40,7 +40,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
   public UserTaskCreateProcessor(
       final ProcessingState state,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final BpmnUserTaskBehavior userTaskBehavior,
       final BpmnJobBehavior jobBehavior) {
     elementInstanceState = state.getElementInstanceState();
@@ -58,14 +58,14 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, TaskRecord> validateCommand(
+      final TypedRecord<TaskRecord> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {
 
     // Current assumption: there can not be corrections of the assignee if there is an initial
     // assignee.
@@ -78,7 +78,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
             initialAssignee -> {
               final var valueWithoutAssignee = userTaskRecord.copy().unsetAssignee();
               stateWriter.appendFollowUpEvent(
-                  userTaskKey, UserTaskIntent.CREATED, valueWithoutAssignee);
+                  userTaskKey, TaskIntent.CREATED, valueWithoutAssignee);
 
               // clean up the changed attributes because we have already finished the creation,
               // and are now starting a new transition to assigning
@@ -89,10 +89,10 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
                 // if no initial assignee -> keep the assignee on the UT record in CREATED event
                 // it could be a corrected assignee or no assignee at all
                 stateWriter.appendFollowUpEvent(
-                    userTaskKey, UserTaskIntent.CREATED, userTaskRecord));
+                    userTaskKey, TaskIntent.CREATED, userTaskRecord));
   }
 
-  private void assignUserTask(final UserTaskRecord userTaskRecord, final String assignee) {
+  private void assignUserTask(final TaskRecord userTaskRecord, final String assignee) {
     userTaskBehavior.userTaskAssigning(userTaskRecord, assignee);
 
     final var element =
@@ -113,7 +113,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
         .ifPresentOrElse(
             listener ->
                 jobBehavior.createNewTaskListenerJob(
-                    context, userTaskRecord, listener, List.of(UserTaskRecord.ASSIGNEE)),
+                    context, userTaskRecord, listener, List.of(TaskRecord.ASSIGNEE)),
             () -> userTaskBehavior.userTaskAssigned(userTaskRecord, assignee));
   }
 }

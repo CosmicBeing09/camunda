@@ -9,12 +9,12 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,17 +50,17 @@ public class UserTaskAssignedV2ApplierTest {
     final String assignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee(assignee)
             .setElementInstanceKey(elementInstanceKey);
 
     // assignee is present in the creating event
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
-    final UserTaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, userTaskRecord);
+    final TaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
     // but we clear the assignee for created event
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, recordWithoutAssignee);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.ASSIGNING, userTaskRecord);
 
     // when
     userTaskAssignedV2Applier.applyState(userTaskKey, userTaskRecord);
@@ -79,17 +79,17 @@ public class UserTaskAssignedV2ApplierTest {
     final String initialAssignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee(initialAssignee)
             .setElementInstanceKey(elementInstanceKey);
 
     // assignee is present in the creating event
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, userTaskRecord);
     // but we clear the assignee for created event
-    final UserTaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
+    final TaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, recordWithoutAssignee);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.ASSIGNING, userTaskRecord);
 
     assertThat(userTaskState.getIntermediateState(userTaskKey).getRecord().getAssignee())
         .describedAs("Expect intermediate user task to be stored without assignee")

@@ -13,11 +13,11 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.test.util.Strings;
@@ -37,11 +37,11 @@ public final class UpdateUserTaskTest {
   private static final int DEFAULT_PRIORITY = 50;
   private static final List<String> ALL_UPDATABLE_ATTRIBUTES =
       List.of(
-          UserTaskRecord.CANDIDATE_GROUPS,
-          UserTaskRecord.CANDIDATE_USERS,
-          UserTaskRecord.DUE_DATE,
-          UserTaskRecord.FOLLOW_UP_DATE,
-          UserTaskRecord.PRIORITY);
+          TaskRecord.CANDIDATE_GROUPS,
+          TaskRecord.CANDIDATE_USERS,
+          TaskRecord.DUE_DATE,
+          TaskRecord.FOLLOW_UP_DATE,
+          TaskRecord.PRIORITY);
 
   @Rule
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =
@@ -66,7 +66,7 @@ public final class UpdateUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -77,11 +77,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -101,7 +101,7 @@ public final class UpdateUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -113,11 +113,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -169,11 +169,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -185,7 +185,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.CANDIDATE_GROUPS));
+                    .hasOnlyChangedAttributes(TaskRecord.CANDIDATE_GROUPS));
   }
 
   @Test
@@ -215,11 +215,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -231,7 +231,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.CANDIDATE_USERS));
+                    .hasOnlyChangedAttributes(TaskRecord.CANDIDATE_USERS));
   }
 
   @Test
@@ -257,11 +257,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -273,7 +273,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("updated_dueDate")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.DUE_DATE));
+                    .hasOnlyChangedAttributes(TaskRecord.DUE_DATE));
   }
 
   @Test
@@ -303,11 +303,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -319,7 +319,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("updated_followUpDate")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.FOLLOW_UP_DATE));
+                    .hasOnlyChangedAttributes(TaskRecord.FOLLOW_UP_DATE));
   }
 
   @Test
@@ -346,11 +346,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -362,7 +362,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(newPriority)
-                    .hasOnlyChangedAttributes(UserTaskRecord.PRIORITY));
+                    .hasOnlyChangedAttributes(TaskRecord.PRIORITY));
   }
 
   @Test
@@ -388,11 +388,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -438,11 +438,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -491,11 +491,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -510,9 +510,9 @@ public final class UpdateUserTaskTest {
                     .describedAs(
                         "Expect `changedAttributes` to include only the actually updated attributes")
                     .hasOnlyChangedAttributes(
-                        UserTaskRecord.CANDIDATE_GROUPS,
-                        UserTaskRecord.DUE_DATE,
-                        UserTaskRecord.PRIORITY));
+                        TaskRecord.CANDIDATE_GROUPS,
+                        TaskRecord.DUE_DATE,
+                        TaskRecord.PRIORITY));
   }
 
   @Test
@@ -535,11 +535,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")
@@ -549,7 +549,7 @@ public final class UpdateUserTaskTest {
                     .describedAs("Expect that unknown attributes are not tracked")
                     .doesNotHaveChangedAttributes(unknownAttributeName)
                     .hasOnlyChangedAttributes(
-                        UserTaskRecord.CANDIDATE_GROUPS, UserTaskRecord.PRIORITY));
+                        TaskRecord.CANDIDATE_GROUPS, TaskRecord.PRIORITY));
   }
 
   @Test
@@ -591,11 +591,11 @@ public final class UpdateUserTaskTest {
     // then
     Assertions.assertThat(updatingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.UPDATING);
+        .hasIntent(TaskIntent.UPDATING);
 
     final var updatingRecordValue = updatingRecord.getValue();
     final var updatedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED).getFirst().getValue();
 
     assertThat(List.of(updatingRecordValue, updatedRecordValue))
         .describedAs("Ensure both UPDATING and UPDATED records have consistent attribute values")

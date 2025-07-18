@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 import io.camunda.security.configuration.AuthorizationsConfiguration;
 import io.camunda.security.configuration.MultiTenancyConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.appliers.AuthorizationCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupCreatedApplier;
@@ -62,7 +62,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
   @SuppressWarnings("unused") // injected by the extension
   private MutableProcessingState processingState;
 
-  private AuthorizationCheckBehavior authorizationCheckBehavior;
+  private AccessControlBehavior authorizationCheckBehavior;
   private UserCreatedApplier userCreatedApplier;
   private MappingCreatedApplier mappingCreatedApplier;
   private AuthorizationCreatedApplier authorizationCreatedApplier;
@@ -83,7 +83,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var multiTenancyConfig = new MultiTenancyConfiguration();
     multiTenancyConfig.setEnabled(true);
     securityConfig.setMultiTenancy(multiTenancyConfig);
-    authorizationCheckBehavior = new AuthorizationCheckBehavior(processingState, securityConfig);
+    authorizationCheckBehavior = new AccessControlBehavior(processingState, securityConfig);
 
     userCreatedApplier = new UserCreatedApplier(processingState.getUserState());
     mappingCreatedApplier = new MappingCreatedApplier(processingState.getMappingState());
@@ -111,7 +111,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -134,7 +134,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -158,7 +158,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -187,7 +187,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -336,7 +336,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, null, false, false)
+        new AccessControlRequest(command, resourceType, permissionType, null, false, false)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -364,7 +364,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, "anotherTenantId")
+        new AccessControlRequest(command, resourceType, permissionType, "anotherTenantId")
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -389,7 +389,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, anotherTenantId)
+        new AccessControlRequest(command, resourceType, permissionType, anotherTenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -412,7 +412,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, anotherTenantId)
+        new AccessControlRequest(command, resourceType, permissionType, anotherTenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -483,7 +483,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -506,7 +506,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -530,7 +530,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -558,7 +558,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 
@@ -587,7 +587,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // when
     final var request =
-        new AuthorizationRequest(command, resourceType, permissionType, tenantId)
+        new AccessControlRequest(command, resourceType, permissionType, tenantId)
             .addResourceId(resourceId);
     final var authorized = authorizationCheckBehavior.isAuthorized(request);
 

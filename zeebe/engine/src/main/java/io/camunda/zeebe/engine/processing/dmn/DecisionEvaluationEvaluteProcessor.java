@@ -11,12 +11,12 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.protocol.impl.record.value.decision.DecisionEvaluationRecord;
@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
@@ -38,16 +38,16 @@ public class DecisionEvaluationEvaluteProcessor
 
   private final DecisionBehavior decisionBehavior;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final ResponseWriter responseWriter;
+  private final AccessControlBehavior authCheckBehavior;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
 
   public DecisionEvaluationEvaluteProcessor(
       final DecisionBehavior decisionBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
 
     this.decisionBehavior = decisionBehavior;
     this.keyGenerator = keyGenerator;
@@ -67,7 +67,7 @@ public class DecisionEvaluationEvaluteProcessor
       final var decision = decisionOrFailure.get();
       final var decisionId = bufferAsString(decision.getDecisionId());
       final var authRequest =
-          new AuthorizationRequest(
+          new AccessControlRequest(
                   command,
                   AuthorizationResourceType.DECISION_DEFINITION,
                   PermissionType.CREATE_DECISION_INSTANCE,
@@ -79,10 +79,10 @@ public class DecisionEvaluationEvaluteProcessor
         final var rejection = isAuthorized.getLeft();
         final String errorMessage =
             RejectionType.NOT_FOUND.equals(rejection.type())
-                ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+                ? AccessControlBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                     "evaluate a decision", record.getDecisionKey(), "such decision")
                 : rejection.reason();
-        responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
+        responseWriter.writeRejectionFor(command, rejection.type(), errorMessage);
         rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
         return;
       }
@@ -120,7 +120,7 @@ public class DecisionEvaluationEvaluteProcessor
             },
             rejection -> {
               final String reason = rejection.reason();
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), reason);
+              responseWriter.writeRejectionFor(command, rejection.type(), reason);
               rejectionWriter.appendRejection(command, rejection.type(), reason);
             });
   }

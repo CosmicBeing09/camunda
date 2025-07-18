@@ -17,11 +17,11 @@ import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import io.camunda.zeebe.test.util.record.RecordingExporterTestWatcher;
 import java.util.HashMap;
@@ -43,12 +43,12 @@ public class TaskListenerCorrectionsTest {
 
   private static final List<String> ALL_CORRECTABLE_ATTRIBUTES =
       List.of(
-          UserTaskRecord.ASSIGNEE,
-          UserTaskRecord.CANDIDATE_GROUPS,
-          UserTaskRecord.CANDIDATE_USERS,
-          UserTaskRecord.DUE_DATE,
-          UserTaskRecord.FOLLOW_UP_DATE,
-          UserTaskRecord.PRIORITY);
+          TaskRecord.ASSIGNEE,
+          TaskRecord.CANDIDATE_GROUPS,
+          TaskRecord.CANDIDATE_USERS,
+          TaskRecord.DUE_DATE,
+          TaskRecord.FOLLOW_UP_DATE,
+          TaskRecord.PRIORITY);
 
   @Rule public final TestWatcher watcher = new RecordingExporterTestWatcher();
   private final TaskListenerTestHelper helper = new TaskListenerTestHelper(ENGINE);
@@ -154,7 +154,7 @@ public class TaskListenerCorrectionsTest {
                         .zeebeTaskListener(l -> l.eventType(eventType).type(listenerType + "_2"))));
 
     final var userTaskRecord =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATING)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATING)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
     final var userTask = userTaskRecord.getValue();
@@ -187,7 +187,7 @@ public class TaskListenerCorrectionsTest {
 
     // then
     Assertions.assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.CORRECTED)
+            RecordingExporter.userTaskRecords(TaskIntent.CORRECTED)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getValue())
@@ -232,7 +232,7 @@ public class TaskListenerCorrectionsTest {
 
     // then
     Assertions.assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.CORRECTED)
+            RecordingExporter.userTaskRecords(TaskIntent.CORRECTED)
                 .withProcessInstanceKey(processInstanceKey)
                 .skip(1)
                 .getFirst()
@@ -270,15 +270,15 @@ public class TaskListenerCorrectionsTest {
         true,
         ignore -> {},
         List.of(
-            UserTaskIntent.CREATING,
-            UserTaskIntent.CREATED,
-            UserTaskIntent.ASSIGNING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.ASSIGNED));
+            TaskIntent.CREATING,
+            TaskIntent.CREATED,
+            TaskIntent.ASSIGNING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.ASSIGNED));
   }
 
   @Test
@@ -288,13 +288,13 @@ public class TaskListenerCorrectionsTest {
         false,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").assign(),
         List.of(
-            UserTaskIntent.ASSIGNING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.ASSIGNED));
+            TaskIntent.ASSIGNING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.ASSIGNED));
   }
 
   @Test
@@ -304,13 +304,13 @@ public class TaskListenerCorrectionsTest {
         false,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").claim(),
         List.of(
-            UserTaskIntent.CLAIMING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.ASSIGNED));
+            TaskIntent.CLAIMING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.ASSIGNED));
   }
 
   @Test
@@ -328,13 +328,13 @@ public class TaskListenerCorrectionsTest {
                 .withFollowUpDate("2095-09-21T11:22:33+02:00")
                 .update(),
         List.of(
-            UserTaskIntent.UPDATING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.UPDATED));
+            TaskIntent.UPDATING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.UPDATED));
   }
 
   @Test
@@ -351,13 +351,13 @@ public class TaskListenerCorrectionsTest {
                 .expectUpdating()
                 .update(),
         List.of(
-            UserTaskIntent.UPDATING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.UPDATED));
+            TaskIntent.UPDATING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.UPDATED));
   }
 
   @Test
@@ -367,13 +367,13 @@ public class TaskListenerCorrectionsTest {
         false,
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
         List.of(
-            UserTaskIntent.COMPLETING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.COMPLETED));
+            TaskIntent.COMPLETING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.COMPLETED));
   }
 
   @Test
@@ -383,13 +383,13 @@ public class TaskListenerCorrectionsTest {
         false,
         pik -> ENGINE.processInstance().withInstanceKey(pik).expectTerminating().cancel(),
         List.of(
-            UserTaskIntent.CANCELING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CANCELED));
+            TaskIntent.CANCELING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CANCELED));
   }
 
   @Test
@@ -399,13 +399,13 @@ public class TaskListenerCorrectionsTest {
         false,
         ignore -> {},
         List.of(
-            UserTaskIntent.CREATING,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CORRECTED,
-            UserTaskIntent.COMPLETE_TASK_LISTENER,
-            UserTaskIntent.CREATED));
+            TaskIntent.CREATING,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CORRECTED,
+            TaskIntent.COMPLETE_TASK_LISTENER,
+            TaskIntent.CREATED));
   }
 
   /**
@@ -435,7 +435,7 @@ public class TaskListenerCorrectionsTest {
       final ZeebeTaskListenerEventType eventType,
       final boolean isAssigneeConfiguredOnTaskCreation,
       final Consumer<Long> transitionTrigger,
-      final List<UserTaskIntent> expectedUserTaskIntents) {
+      final List<TaskIntent> expectedUserTaskIntents) {
 
     // given: a process instance with a user task configured with listeners and initial properties
     final long processInstanceKey =
@@ -457,7 +457,7 @@ public class TaskListenerCorrectionsTest {
 
     final var userTaskKey =
         String.valueOf(
-            RecordingExporter.userTaskRecords(UserTaskIntent.CREATING)
+            RecordingExporter.userTaskRecords(TaskIntent.CREATING)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getKey());
@@ -559,20 +559,20 @@ public class TaskListenerCorrectionsTest {
 
     // Step 4: Validate the complete sequence of user task lifecycle intents
     helper.assertUserTaskIntentsSequence(
-        processInstanceKey, expectedUserTaskIntents.toArray(UserTaskIntent[]::new));
+        processInstanceKey, expectedUserTaskIntents.toArray(TaskIntent[]::new));
   }
 
   @Test
   public void
       shouldTrackChangedAttributesOnlyForActuallyCorrectedValuesOnTaskAssignmentAfterCreation() {
     verifyChangedAttributesAreTrackedOnlyForActuallyCorrectedValues(
-        ZeebeTaskListenerEventType.assigning, true, ignored -> {}, UserTaskIntent.ASSIGNED);
+        ZeebeTaskListenerEventType.assigning, true, ignored -> {}, TaskIntent.ASSIGNED);
   }
 
   @Test
   public void shouldTrackChangedAttributesOnlyForActuallyCorrectedValuesOnTaskCreation() {
     verifyChangedAttributesAreTrackedOnlyForActuallyCorrectedValues(
-        ZeebeTaskListenerEventType.creating, false, ignored -> {}, UserTaskIntent.CREATED);
+        ZeebeTaskListenerEventType.creating, false, ignored -> {}, TaskIntent.CREATED);
   }
 
   @Test
@@ -581,7 +581,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.assigning,
         false,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").assign(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -590,7 +590,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.assigning,
         false,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").claim(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -599,7 +599,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.updating,
         false,
         pik -> ENGINE.userTask().ofInstance(pik).update(),
-        UserTaskIntent.UPDATED);
+        TaskIntent.UPDATED);
   }
 
   @Test
@@ -608,7 +608,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.completing,
         false,
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -617,7 +617,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.canceling,
         false,
         pik -> ENGINE.processInstance().withInstanceKey(pik).expectTerminating().cancel(),
-        UserTaskIntent.CANCELED);
+        TaskIntent.CANCELED);
   }
 
   /**
@@ -645,7 +645,7 @@ public class TaskListenerCorrectionsTest {
       final ZeebeTaskListenerEventType eventType,
       final boolean isAssigneeConfiguredOnTaskCreation,
       final Consumer<Long> transitionTrigger,
-      final UserTaskIntent terminalActionIntent) {
+      final TaskIntent terminalActionIntent) {
 
     // given: a process instance with a user task configured with listeners and initial properties
     final long processInstanceKey =
@@ -724,8 +724,8 @@ public class TaskListenerCorrectionsTest {
     // then: verify the changed attributes for `COMPLETE_TASK_LISTENER` and `CORRECTED` intents
     final Predicate<io.camunda.zeebe.protocol.record.Record<?>> isRelevantUserTaskIntent =
         record ->
-            record.getIntent() == UserTaskIntent.COMPLETE_TASK_LISTENER
-                || record.getIntent() == UserTaskIntent.CORRECTED;
+            record.getIntent() == TaskIntent.COMPLETE_TASK_LISTENER
+                || record.getIntent() == TaskIntent.CORRECTED;
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
@@ -738,17 +738,17 @@ public class TaskListenerCorrectionsTest {
             "Expected corrected attributes to be tracked only for values that were actually modified")
         .containsExactly(
             // Listener 1: all attributes corrected
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, ALL_CORRECTABLE_ATTRIBUTES),
-            tuple(UserTaskIntent.CORRECTED, ALL_CORRECTABLE_ATTRIBUTES),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, ALL_CORRECTABLE_ATTRIBUTES),
+            tuple(TaskIntent.CORRECTED, ALL_CORRECTABLE_ATTRIBUTES),
             // Listener 2: attributes corrected again to the same values
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, ALL_CORRECTABLE_ATTRIBUTES),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, ALL_CORRECTABLE_ATTRIBUTES),
             // No `CORRECTED` event was fired because the attributes' values were unchanged
             // Listener 3: partially corrected attributes
             tuple(
-                UserTaskIntent.COMPLETE_TASK_LISTENER,
+                TaskIntent.COMPLETE_TASK_LISTENER,
                 List.of("candidateGroupsList", "dueDate", "followUpDate", "priority")),
             // `followUpDate` isn't present as it has the same value as the previous correction
-            tuple(UserTaskIntent.CORRECTED, List.of("candidateGroupsList", "dueDate", "priority")));
+            tuple(TaskIntent.CORRECTED, List.of("candidateGroupsList", "dueDate", "priority")));
   }
 
   @Test
@@ -850,32 +850,32 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(record -> record.getIntent() == TaskIntent.ASSIGNED))
         .as("Verify the user task lifecycle and tracking of `changedAttributes`")
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             record -> record.getValue().getChangedAttributes())
         .containsSequence(
-            tuple(UserTaskIntent.ASSIGNING, List.of("assignee")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("dueDate", "priority")),
-            tuple(UserTaskIntent.CORRECTED, List.of("dueDate", "priority")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("assignee", "priority")),
-            tuple(UserTaskIntent.CORRECTED, List.of("assignee", "priority")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("candidateGroupsList")),
-            tuple(UserTaskIntent.CORRECTED, List.of("candidateGroupsList")),
+            tuple(TaskIntent.ASSIGNING, List.of("assignee")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("dueDate", "priority")),
+            tuple(TaskIntent.CORRECTED, List.of("dueDate", "priority")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("assignee", "priority")),
+            tuple(TaskIntent.CORRECTED, List.of("assignee", "priority")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("candidateGroupsList")),
+            tuple(TaskIntent.CORRECTED, List.of("candidateGroupsList")),
             // As a result, `changedAttributes` contains only `dueDate` and `candidateGroupsList`
             // because these are the only properties that differ from the original values of the
             // created user task. All other properties were either unchanged or reset to their
             // initial values that were before task assignment using the corrections.
-            tuple(UserTaskIntent.ASSIGNED, List.of("candidateGroupsList", "dueDate")));
+            tuple(TaskIntent.ASSIGNED, List.of("candidateGroupsList", "dueDate")));
 
     final var createdUserTaskValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
     final var assignedUserTaskValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -1001,30 +1001,30 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.UPDATED))
+                .limit(record -> record.getIntent() == TaskIntent.UPDATED))
         .as("Verify the user task record lifecycle and tracking of `changedAttributes`")
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent,
             record -> record.getValue().getChangedAttributes())
         .containsSequence(
-            tuple(UserTaskIntent.UPDATING, List.of("candidateGroupsList", "dueDate", "priority")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("dueDate", "followUpDate")),
-            tuple(UserTaskIntent.CORRECTED, List.of("dueDate", "followUpDate")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("priority")),
-            tuple(UserTaskIntent.CORRECTED, List.of("priority")),
+            tuple(TaskIntent.UPDATING, List.of("candidateGroupsList", "dueDate", "priority")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("dueDate", "followUpDate")),
+            tuple(TaskIntent.CORRECTED, List.of("dueDate", "followUpDate")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("priority")),
+            tuple(TaskIntent.CORRECTED, List.of("priority")),
             tuple(
-                UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("candidateGroupsList", "assignee")),
-            tuple(UserTaskIntent.CORRECTED, List.of("candidateGroupsList", "assignee")),
+                TaskIntent.COMPLETE_TASK_LISTENER, List.of("candidateGroupsList", "assignee")),
+            tuple(TaskIntent.CORRECTED, List.of("candidateGroupsList", "assignee")),
             // As a result, `changedAttributes` in UPDATED record contains `assignee`, `dueDate`,
             // `followUpDate` and `candidateGroupsList` because these are the only properties that
             // differ from the user task values before update. All other properties were either
             // unchanged or reset to their initial values before finalizing update transition.
             tuple(
-                UserTaskIntent.UPDATED,
+                TaskIntent.UPDATED,
                 List.of("assignee", "candidateGroupsList", "dueDate", "followUpDate")));
 
     final var updatedUserTaskValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED)
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -1080,7 +1080,7 @@ public class TaskListenerCorrectionsTest {
             new JobResult()
                 .setCorrections(
                     new JobResultCorrections().setDueDate("corrected_due").setPriority(80))
-                .setCorrectedAttributes(List.of(UserTaskRecord.DUE_DATE, UserTaskRecord.PRIORITY)))
+                .setCorrectedAttributes(List.of(TaskRecord.DUE_DATE, TaskRecord.PRIORITY)))
         .complete();
 
     // then: second listener sees cumulative changes
@@ -1101,19 +1101,19 @@ public class TaskListenerCorrectionsTest {
         .withResult(
             new JobResult()
                 .setCorrections(new JobResultCorrections().setPriority(50))
-                .setCorrectedAttributes(List.of(UserTaskRecord.PRIORITY)))
+                .setCorrectedAttributes(List.of(TaskRecord.PRIORITY)))
         .complete();
 
     // then: verify final task record contains only changed attributes that differ from initial
     // state
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.UPDATED,
+        TaskIntent.UPDATED,
         userTask ->
             Assertions.assertThat(userTask)
                 .hasVariables(Map.of("status", "APPROVED"))
                 .hasDueDate("corrected_due")
-                .hasOnlyChangedAttributes(UserTaskRecord.DUE_DATE, UserTaskRecord.VARIABLES)
+                .hasOnlyChangedAttributes(TaskRecord.DUE_DATE, TaskRecord.VARIABLES)
                 .hasAction(""));
   }
 
@@ -1210,24 +1210,24 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.COMPLETED))
+                .limit(record -> record.getIntent() == TaskIntent.COMPLETED))
         .as("Verify the user task lifecycle and tracking of `changedAttributes`")
         .extracting(Record::getIntent, record -> record.getValue().getChangedAttributes())
         .containsSequence(
-            tuple(UserTaskIntent.COMPLETING, List.of()), // No direct changes at completion
+            tuple(TaskIntent.COMPLETING, List.of()), // No direct changes at completion
             tuple(
-                UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("candidateGroupsList", "priority")),
-            tuple(UserTaskIntent.CORRECTED, List.of("candidateGroupsList", "priority")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("assignee")),
-            tuple(UserTaskIntent.CORRECTED, List.of("assignee")),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, List.of("dueDate", "priority")),
-            tuple(UserTaskIntent.CORRECTED, List.of("dueDate", "priority")),
+                TaskIntent.COMPLETE_TASK_LISTENER, List.of("candidateGroupsList", "priority")),
+            tuple(TaskIntent.CORRECTED, List.of("candidateGroupsList", "priority")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("assignee")),
+            tuple(TaskIntent.CORRECTED, List.of("assignee")),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, List.of("dueDate", "priority")),
+            tuple(TaskIntent.CORRECTED, List.of("dueDate", "priority")),
             // Final `changedAttributes` only includes attributes corrected by listeners.
             // `priority` isn't listed as it was reverted to its default value by the 3d listener
-            tuple(UserTaskIntent.COMPLETED, List.of("assignee", "candidateGroupsList", "dueDate")));
+            tuple(TaskIntent.COMPLETED, List.of("assignee", "candidateGroupsList", "dueDate")));
 
     final var completedUserTaskValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.COMPLETED)
+        RecordingExporter.userTaskRecords(TaskIntent.COMPLETED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -1268,7 +1268,7 @@ public class TaskListenerCorrectionsTest {
     // then: ensure assignee was corrected
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.CREATED,
+        TaskIntent.CREATED,
         task ->
             Assertions.assertThat(task)
                 .describedAs("Expect the corrected assignee to be present.")
@@ -1282,9 +1282,9 @@ public class TaskListenerCorrectionsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(record -> record.getIntent() == UserTaskIntent.COMPLETED))
+                .limit(record -> record.getIntent() == TaskIntent.COMPLETED))
         .extracting(Record::getIntent)
-        .doesNotContain(UserTaskIntent.ASSIGNING, UserTaskIntent.ASSIGNED);
+        .doesNotContain(TaskIntent.ASSIGNING, TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -1293,7 +1293,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.assigning,
         u -> u.zeebeAssignee("initial_assignee"),
         ignored -> {},
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -1302,7 +1302,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.assigning,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").assign(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -1311,7 +1311,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.assigning,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").claim(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -1320,7 +1320,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.updating,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).update(),
-        UserTaskIntent.UPDATED);
+        TaskIntent.UPDATED);
   }
 
   @Test
@@ -1329,7 +1329,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.completing,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -1338,7 +1338,7 @@ public class TaskListenerCorrectionsTest {
         ZeebeTaskListenerEventType.canceling,
         u -> u,
         pik -> ENGINE.processInstance().withInstanceKey(pik).expectTerminating().cancel(),
-        UserTaskIntent.CANCELED);
+        TaskIntent.CANCELED);
   }
 
   @Test
@@ -1378,7 +1378,7 @@ public class TaskListenerCorrectionsTest {
     // then
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.CREATED,
+        TaskIntent.CREATED,
         userTaskRecord ->
             Assertions.assertThat(userTaskRecord)
                 .describedAs(
@@ -1402,14 +1402,14 @@ public class TaskListenerCorrectionsTest {
   public void
       shouldPersistCorrectedUserTaskDataWhenCreatingTaskListenerCompletedWithNoInitialAssignee() {
     testPersistCorrectedUserTaskDataWhenAllTaskListenersCompleted(
-        ZeebeTaskListenerEventType.creating, u -> u, ignored -> {}, UserTaskIntent.CREATED);
+        ZeebeTaskListenerEventType.creating, u -> u, ignored -> {}, TaskIntent.CREATED);
   }
 
   private void testPersistCorrectedUserTaskDataWhenAllTaskListenersCompleted(
       final ZeebeTaskListenerEventType eventType,
       final UnaryOperator<UserTaskBuilder> userTaskBuilder,
       final Consumer<Long> transitionTrigger,
-      final UserTaskIntent expectedUserTaskIntent) {
+      final TaskIntent expectedUserTaskIntent) {
     // given
     final long processInstanceKey =
         helper.createProcessInstance(
@@ -1497,7 +1497,7 @@ public class TaskListenerCorrectionsTest {
             .withResult(
                 new JobResult()
                     .setCorrections(new JobResultCorrections().setAssignee("new_assignee"))
-                    .setCorrectedAttributes(List.of(UserTaskRecord.ASSIGNEE)))
+                    .setCorrectedAttributes(List.of(TaskRecord.ASSIGNEE)))
             .expectRejection()
             .complete();
 

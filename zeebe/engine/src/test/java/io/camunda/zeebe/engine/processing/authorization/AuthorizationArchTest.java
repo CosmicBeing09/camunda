@@ -20,8 +20,8 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.conditions.ArchConditions;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.identity.PermissionsBehavior;
 import io.camunda.zeebe.engine.processing.job.DefaultJobCommandPreconditionGuard;
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
@@ -29,7 +29,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor.CommandControl;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandPreconditionChecker;
-import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandProcessor;
+import io.camunda.zeebe.engine.processing.usertask.processors.TaskCommandProcessor;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -64,7 +64,7 @@ public class AuthorizationArchTest {
             // Not all processors use the TypedRecordProcessor interface. We also need to check
             // the CommandProcessor and the UserTaskCommandProcessor interfaces.
             .or(Predicates.implement(CommandProcessor.class))
-            .or(Predicates.implement(UserTaskCommandProcessor.class))
+            .or(Predicates.implement(TaskCommandProcessor.class))
             .test(javaClass);
       }
     };
@@ -86,7 +86,7 @@ public class AuthorizationArchTest {
       public void check(final JavaClass item, final ConditionEvents events) {
         // The processor should directly check authorizations
         ArchConditions.callMethod(
-                AuthorizationCheckBehavior.class, "isAuthorized", AuthorizationRequest.class)
+                AccessControlBehavior.class, "isAuthorized", AccessControlRequest.class)
             // Or the processor should have delegated authorization to the JobUpdateBehaviour
             .or(
                 ArchConditions.callMethod(

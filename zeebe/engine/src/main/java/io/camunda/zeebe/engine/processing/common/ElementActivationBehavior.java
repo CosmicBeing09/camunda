@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
@@ -37,7 +37,7 @@ public final class ElementActivationBehavior {
 
   public static final long NO_ANCESTOR_SCOPE_KEY = -1L;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
   private final BpmnStateBehavior stateBehavior;
@@ -46,7 +46,7 @@ public final class ElementActivationBehavior {
   private final ElementInstanceState elementInstanceState;
 
   public ElementActivationBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CatchEventBehavior catchEventBehavior,
       final ElementInstanceState elementInstanceState,

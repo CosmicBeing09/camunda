@@ -60,7 +60,7 @@ public class DbMigrationStateTest {
     // when
     final var migrationState = processingState.getMigrationState();
     migrationState.migrateMessageSubscriptionSentTime(
-        processingState.getMessageSubscriptionState(),
+        processingState.getSubscriptionState(),
         processingState.getPendingMessageSubscriptionState());
 
     // then
@@ -71,7 +71,7 @@ public class DbMigrationStateTest {
         .describedAs("Column family MESSAGE_SUBSCRIPTION_BY_SENT_TIME is empty")
         .isTrue();
 
-    final var subscriptionState = processingState.getMessageSubscriptionState();
+    final var subscriptionState = processingState.getSubscriptionState();
 
     // the correlating subscription has correlating = true in persistent state
     final var migratedSubscriptionInCorrelation =

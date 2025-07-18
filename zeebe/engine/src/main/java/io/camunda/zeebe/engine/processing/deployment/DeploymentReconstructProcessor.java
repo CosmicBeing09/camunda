@@ -35,7 +35,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord.R
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Collection;
 import java.util.HashSet;
@@ -53,7 +53,7 @@ import org.agrona.collections.MutableReference;
 public class DeploymentReconstructProcessor implements TypedRecordProcessor<DeploymentRecord> {
   private static final long NO_DEPLOYMENT_KEY = -1;
   private final DeploymentResourceUtil resourceUtil = new DeploymentResourceUtil();
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final DeploymentState deploymentState;
   private final ProcessState processState;
   private final FormState formState;
@@ -64,7 +64,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
   private final DeploymentRecord cachedDeploymentRecordCommand = new DeploymentRecord();
 
   public DeploymentReconstructProcessor(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final ProcessingState processingState,
       final Writers writers) {
     this.keyGenerator = keyGenerator;

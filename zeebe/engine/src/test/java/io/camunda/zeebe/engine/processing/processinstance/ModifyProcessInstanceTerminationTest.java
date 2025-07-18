@@ -24,8 +24,8 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
@@ -1205,7 +1205,7 @@ public class ModifyProcessInstanceTerminationTest {
   private void assertThatUserTaskIsCancelled(
       final long processInstanceKey, final String elementId) {
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.CANCELED)
+            RecordingExporter.userTaskRecords(TaskIntent.CANCELED)
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementId(elementId)
                 .exists())

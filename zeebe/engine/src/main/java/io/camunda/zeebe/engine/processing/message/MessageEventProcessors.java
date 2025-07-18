@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.message;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageCorrelationIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.InstantSource;
 import java.util.function.Supplier;
@@ -44,18 +44,18 @@ public final class MessageEventProcessors {
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior commandDistributionBehavior,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
 
     final MutableMessageState messageState = processingState.getMessageState();
     final MutableMessageCorrelationState messageCorrelationState =
         processingState.getMessageCorrelationState();
     final MutableMessageSubscriptionState subscriptionState =
-        processingState.getMessageSubscriptionState();
+        processingState.getSubscriptionState();
     final MutableMessageStartEventSubscriptionState startEventSubscriptionState =
-        processingState.getMessageStartEventSubscriptionState();
+        processingState.getStartEventSubscriptionState();
     final MutableEventScopeInstanceState eventScopeInstanceState =
         processingState.getEventScopeInstanceState();
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final RecordKeyProvider keyGenerator = processingState.getKeyGenerator();
     final var processState = processingState.getProcessState();
 
     typedRecordProcessors

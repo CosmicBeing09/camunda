@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationExecutionIntent;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.BatchOperationType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -47,7 +47,7 @@ public final class BatchOperationExecuteProcessor
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final int partitionId;
   private final BatchOperationState batchOperationState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
 
   private final Map<BatchOperationType, BatchOperationExecutor> handlers;
 
@@ -55,7 +55,7 @@ public final class BatchOperationExecuteProcessor
       final Writers writers,
       final ProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final int partitionId,
       final Map<BatchOperationType, BatchOperationExecutor> handlers) {
     commandWriter = writers.command();

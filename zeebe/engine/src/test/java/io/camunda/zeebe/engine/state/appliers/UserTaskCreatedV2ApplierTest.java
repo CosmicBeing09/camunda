@@ -10,13 +10,13 @@ package io.camunda.zeebe.engine.state.appliers;
 import static io.camunda.zeebe.msgpack.value.StringValue.EMPTY_STRING;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -52,10 +52,10 @@ public class UserTaskCreatedV2ApplierTest {
     final long elementInstanceKey = new Random().nextLong();
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new TaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate a user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, userTaskRecord);
 
     // verify initial state
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -78,13 +78,13 @@ public class UserTaskCreatedV2ApplierTest {
     final String initialAssignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee(initialAssignee)
             .setElementInstanceKey(elementInstanceKey);
 
     // simulate a user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, userTaskRecord);
 
     // when
     userTaskCreatedV2Applier.applyState(userTaskKey, userTaskRecord);
@@ -106,18 +106,18 @@ public class UserTaskCreatedV2ApplierTest {
 
     // user task record with assignee set
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee("initial_assignee")
             .setElementInstanceKey(elementInstanceKey);
 
     // simulate a user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, userTaskRecord);
 
     // simulate corrections
     testSetup.applyEventToState(
         userTaskKey,
-        UserTaskIntent.CORRECTED,
+        TaskIntent.CORRECTED,
         userTaskRecord
             .setCandidateGroupsList(List.of("overwritten"))
             .setCandidateGroupsChanged()

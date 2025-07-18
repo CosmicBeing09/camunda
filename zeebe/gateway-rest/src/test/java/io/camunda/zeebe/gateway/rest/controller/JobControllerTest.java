@@ -25,7 +25,7 @@ import io.camunda.zeebe.gateway.rest.RestControllerTest;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -446,12 +446,12 @@ public class JobControllerTest extends RestControllerTest {
 
     assertThat(jobResultArgumentCaptor.getValue().getCorrectedAttributes())
         .containsExactly(
-            UserTaskRecord.ASSIGNEE,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.PRIORITY);
+            TaskRecord.ASSIGNEE,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.PRIORITY);
   }
 
   @Test
@@ -501,10 +501,10 @@ public class JobControllerTest extends RestControllerTest {
 
     assertThat(jobResultArgumentCaptor.getValue().getCorrectedAttributes())
         .containsExactly(
-            UserTaskRecord.ASSIGNEE,
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.PRIORITY);
+            TaskRecord.ASSIGNEE,
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.PRIORITY);
   }
 
   @Test
@@ -556,7 +556,7 @@ public class JobControllerTest extends RestControllerTest {
                 .setPriority(-1));
 
     assertThat(jobResultArgumentCaptor.getValue().getCorrectedAttributes())
-        .containsExactly(UserTaskRecord.DUE_DATE, UserTaskRecord.CANDIDATE_GROUPS);
+        .containsExactly(TaskRecord.DUE_DATE, TaskRecord.CANDIDATE_GROUPS);
   }
 
   @Test

@@ -13,11 +13,11 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.test.util.Strings;
@@ -57,7 +57,7 @@ public class ClaimUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -68,11 +68,11 @@ public class ClaimUserTaskTest {
     // then
     Assertions.assertThat(claimingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.CLAIMING);
+        .hasIntent(TaskIntent.CLAIMING);
 
     final var claimingRecordValue = claimingRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED).getFirst().getValue();
 
     assertThat(List.of(claimingRecordValue, assignedRecordValue))
         .describedAs(
@@ -84,7 +84,7 @@ public class ClaimUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction(DEFAULT_ACTION)
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(TaskRecord.ASSIGNEE)
                     .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
   }
 
@@ -94,7 +94,7 @@ public class ClaimUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -111,11 +111,11 @@ public class ClaimUserTaskTest {
     // then
     Assertions.assertThat(claimingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.CLAIMING);
+        .hasIntent(TaskIntent.CLAIMING);
 
     final var claimingRecordValue = claimingRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED).getFirst().getValue();
 
     assertThat(List.of(claimingRecordValue, assignedRecordValue))
         .describedAs(
@@ -127,7 +127,7 @@ public class ClaimUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction("customAction")
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(TaskRecord.ASSIGNEE)
                     .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
   }
 
@@ -169,7 +169,7 @@ public class ClaimUserTaskTest {
     ENGINE.deployment().withXmlResource(process(b -> b.zeebeAssignee("foo"))).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -193,7 +193,7 @@ public class ClaimUserTaskTest {
     ENGINE.deployment().withXmlResource(process(b -> b.zeebeAssignee("foo"))).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -213,7 +213,7 @@ public class ClaimUserTaskTest {
     ENGINE.deployment().withXmlResource(process(b -> b.zeebeAssignee(initialAssignee))).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -225,12 +225,12 @@ public class ClaimUserTaskTest {
     // then
     Assertions.assertThat(claimingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.CLAIMING);
+        .hasIntent(TaskIntent.CLAIMING);
 
     final var claimingRecordValue = claimingRecord.getValue();
     final var assignedRecordValue =
         // querying for the first `ASSIGNED` record right after `CLAIMING` record
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .filter(r -> r.getPosition() > claimingRecord.getPosition())
             .getFirst()
             .getValue();
@@ -292,11 +292,11 @@ public class ClaimUserTaskTest {
     // then
     Assertions.assertThat(claimingRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.CLAIMING);
+        .hasIntent(TaskIntent.CLAIMING);
 
     final var claimingRecordValue = claimingRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED).getFirst().getValue();
 
     assertThat(List.of(claimingRecordValue, assignedRecordValue))
         .describedAs(

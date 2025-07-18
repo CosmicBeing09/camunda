@@ -35,12 +35,12 @@ import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +83,7 @@ public final class BpmnJobBehavior {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private final JobRecord jobRecord = new JobRecord().setVariables(DocumentValue.EMPTY_DOCUMENT);
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final JobState jobState;
   private final ExpressionProcessor expressionBehavior;
@@ -95,7 +95,7 @@ public final class BpmnJobBehavior {
   private final BpmnUserTaskBehavior userTaskBehavior;
 
   public BpmnJobBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final JobState jobState,
       final Writers writers,
       final ExpressionProcessor expressionBehavior,
@@ -301,7 +301,7 @@ public final class BpmnJobBehavior {
 
   public void createNewTaskListenerJob(
       final BpmnElementContext context,
-      final UserTaskRecord taskRecordValue,
+      final TaskRecord taskRecordValue,
       final TaskListener listener,
       final List<String> changedAttributes) {
     evaluateTaskListenerJobExpressions(listener.getJobWorkerProperties(), context, taskRecordValue)
@@ -320,7 +320,7 @@ public final class BpmnJobBehavior {
   private Either<Failure, JobProperties> evaluateTaskListenerJobExpressions(
       final JobWorkerProperties jobWorkerProps,
       final BpmnElementContext context,
-      final UserTaskRecord taskRecordValue) {
+      final TaskRecord taskRecordValue) {
     final var scopeKey = context.getElementInstanceKey();
     return Either.<Failure, JobProperties>right(new JobProperties())
         // Evaluate and set basic job properties
@@ -478,7 +478,7 @@ public final class BpmnJobBehavior {
   }
 
   private Map<String, String> extractUserTaskHeaders(
-      final UserTaskRecord userTaskRecord,
+      final TaskRecord userTaskRecord,
       final List<String> changedAttributes,
       final JobWorkerProperties jobWorkerProperties) {
     final var taskHeaders = jobWorkerProperties.getTaskHeaders();

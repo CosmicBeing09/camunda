@@ -8,12 +8,12 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 
 /**
- * Interface for processing user task commands.
+ * Interface for processing task commands.
  *
  * <p>This interface defines the structure for handling various commands related to user tasks in
  * the system. Each command type (e.g., COMPLETE, ASSIGN, CLAIM, etc.) will have its own
@@ -21,7 +21,7 @@ import io.camunda.zeebe.util.Either;
  * command processing (via `onCommand`), and finalization of the command processing (via
  * `onFinalizeCommand`).
  */
-public interface UserTaskCommandProcessor {
+public interface TaskCommandProcessor {
 
   /**
    * Validates the user task command before processing.
@@ -34,8 +34,8 @@ public interface UserTaskCommandProcessor {
    * @param command the user task command to be validated
    * @return Either a rejection if validation fails, or the user task record if validation succeeds
    */
-  default Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  default Either<Rejection, TaskRecord> validateCommand(
+      final TypedRecord<TaskRecord> command) {
     return Either.right(command.getValue());
   }
 
@@ -50,7 +50,7 @@ public interface UserTaskCommandProcessor {
    * @param userTaskRecord the validated user task record that the command acts upon
    */
   default void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {}
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {}
 
   /**
    * Finalizes the processing of the command.
@@ -62,5 +62,5 @@ public interface UserTaskCommandProcessor {
    * @param userTaskRecord the validated user task record that the command acts upon
    */
   default void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {}
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {}
 }

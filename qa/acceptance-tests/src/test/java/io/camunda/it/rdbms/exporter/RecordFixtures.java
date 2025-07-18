@@ -28,7 +28,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationRecordValue;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
@@ -250,7 +250,7 @@ public class RecordFixtures {
 
     return ImmutableRecord.builder()
         .from(recordValueRecord)
-        .withIntent(UserTaskIntent.CREATED)
+        .withIntent(TaskIntent.CREATED)
         .withPosition(position)
         .withTimestamp(System.currentTimeMillis())
         .withPartitionId(1)

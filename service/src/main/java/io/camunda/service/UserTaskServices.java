@@ -33,8 +33,8 @@ import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskAssignmentRequest;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskCompletionRequest;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskUpdateRequest;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -92,7 +92,7 @@ public final class UserTaskServices
     return search(userTaskSearchQuery(fn));
   }
 
-  public CompletableFuture<UserTaskRecord> assignUserTask(
+  public CompletableFuture<TaskRecord> assignUserTask(
       final long userTaskKey,
       final String assignee,
       final String action,
@@ -102,23 +102,23 @@ public final class UserTaskServices
             userTaskKey,
             assignee,
             action,
-            allowOverride ? UserTaskIntent.ASSIGN : UserTaskIntent.CLAIM));
+            allowOverride ? TaskIntent.ASSIGN : TaskIntent.CLAIM));
   }
 
-  public CompletableFuture<UserTaskRecord> completeUserTask(
+  public CompletableFuture<TaskRecord> completeUserTask(
       final long userTaskKey, final Map<String, Object> variables, final String action) {
     return sendBrokerRequest(
         new BrokerUserTaskCompletionRequest(userTaskKey, getDocumentOrEmpty(variables), action));
   }
 
-  public CompletableFuture<UserTaskRecord> unassignUserTask(
+  public CompletableFuture<TaskRecord> unassignUserTask(
       final long userTaskKey, final String action) {
     return sendBrokerRequest(
-        new BrokerUserTaskAssignmentRequest(userTaskKey, "", action, UserTaskIntent.ASSIGN));
+        new BrokerUserTaskAssignmentRequest(userTaskKey, "", action, TaskIntent.ASSIGN));
   }
 
-  public CompletableFuture<UserTaskRecord> updateUserTask(
-      final long userTaskKey, final UserTaskRecord changeset, final String action) {
+  public CompletableFuture<TaskRecord> updateUserTask(
+      final long userTaskKey, final TaskRecord changeset, final String action) {
     return sendBrokerRequest(new BrokerUserTaskUpdateRequest(userTaskKey, changeset, action));
   }
 

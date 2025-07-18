@@ -17,7 +17,7 @@ package io.camunda.zeebe.protocol.record.value;
 
 import io.camunda.zeebe.protocol.record.ImmutableProtocol;
 import io.camunda.zeebe.protocol.record.RecordValueWithVariables;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.List;
 import java.util.Map;
 import org.immutables.value.Value;
@@ -25,7 +25,7 @@ import org.immutables.value.Value;
 /**
  * Represents a user task related event or command.
  *
- * <p>See {@link UserTaskIntent} for intents.
+ * <p>See {@link TaskIntent} for intents.
  */
 @Value.Immutable
 @ImmutableProtocol(builder = ImmutableUserTaskRecordValue.Builder.class)

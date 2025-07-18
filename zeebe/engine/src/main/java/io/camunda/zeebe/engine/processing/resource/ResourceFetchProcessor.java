@@ -7,14 +7,14 @@
  */
 package io.camunda.zeebe.engine.processing.resource;
 
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ForbiddenException;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.ForbiddenException;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedResource;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -33,17 +33,17 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceRecord> {
 
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final StateWriter stateWriter;
   private final ResourceState resourceState;
   private final TenantState tenantState;
-  private final AuthorizationCheckBehavior authorizationCheckBehavior;
+  private final AccessControlBehavior authorizationCheckBehavior;
 
   public ResourceFetchProcessor(
       final Writers writers,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authorizationCheckBehavior) {
+      final AccessControlBehavior authorizationCheckBehavior) {
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
     stateWriter = writers.state();
@@ -137,7 +137,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
   private void checkAuthorization(
       final TypedRecord<ResourceRecord> command, final PersistedResource resource) {
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.RESOURCE,
                 PermissionType.READ,
@@ -153,7 +153,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
       final RejectionType rejectionType,
       final String reason) {
     rejectionWriter.appendRejection(command, rejectionType, reason);
-    responseWriter.writeRejectionOnCommand(command, rejectionType, reason);
+    responseWriter.writeRejectionFor(command, rejectionType, reason);
     return ProcessingError.EXPECTED_ERROR;
   }
 

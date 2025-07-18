@@ -12,7 +12,7 @@ import io.camunda.exporter.utils.ExporterUtil;
 import io.camunda.webapps.schema.entities.MetricEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import java.time.Instant;
 import java.util.List;
@@ -39,7 +39,7 @@ public class TaskCompletedMetricHandler
 
   @Override
   public boolean handlesRecord(final Record<UserTaskRecordValue> record) {
-    return record.getIntent().equals(UserTaskIntent.COMPLETED);
+    return record.getIntent().equals(TaskIntent.COMPLETED);
   }
 
   @Override

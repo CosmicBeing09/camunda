@@ -7,10 +7,10 @@
  */
 package io.camunda.exporter.rdbms.handlers;
 
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.CANCELED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.COMPLETED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.CREATED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.MIGRATED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.CANCELED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.COMPLETED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.CREATED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.MIGRATED;
 
 import io.camunda.db.rdbms.write.domain.UserTaskDbModel;
 import io.camunda.db.rdbms.write.domain.UserTaskDbModel.UserTaskState;
@@ -22,7 +22,7 @@ import io.camunda.zeebe.exporter.common.cache.ExporterEntityCache;
 import io.camunda.zeebe.exporter.common.cache.process.CachedProcessEntity;
 import io.camunda.zeebe.exporter.common.utils.ProcessCacheUtil;
 import io.camunda.zeebe.protocol.record.Record;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import java.time.OffsetDateTime;
 import java.util.Set;
@@ -31,14 +31,14 @@ import org.apache.commons.lang3.StringUtils;
 /** Based on UserTaskRecordToTaskEntityMapper */
 public class UserTaskExportHandler implements RdbmsExportHandler<UserTaskRecordValue> {
 
-  private static final Set<UserTaskIntent> EXPORTABLE_INTENTS =
+  private static final Set<TaskIntent> EXPORTABLE_INTENTS =
       Set.of(
-          UserTaskIntent.CREATED,
-          UserTaskIntent.UPDATED,
-          UserTaskIntent.CANCELED,
-          UserTaskIntent.ASSIGNED,
-          UserTaskIntent.COMPLETED,
-          UserTaskIntent.MIGRATED);
+          TaskIntent.CREATED,
+          TaskIntent.UPDATED,
+          TaskIntent.CANCELED,
+          TaskIntent.ASSIGNED,
+          TaskIntent.COMPLETED,
+          TaskIntent.MIGRATED);
 
   private final UserTaskWriter userTaskWriter;
   private final ExporterEntityCache<Long, CachedProcessEntity> processCache;
@@ -52,7 +52,7 @@ public class UserTaskExportHandler implements RdbmsExportHandler<UserTaskRecordV
 
   @Override
   public boolean canExport(final Record<UserTaskRecordValue> record) {
-    if (record.getIntent() != null && record.getIntent() instanceof final UserTaskIntent intent) {
+    if (record.getIntent() != null && record.getIntent() instanceof final TaskIntent intent) {
       return EXPORTABLE_INTENTS.contains(intent);
     }
 

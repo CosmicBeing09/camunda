@@ -7,12 +7,12 @@
  */
 package io.camunda.zeebe.engine.state.appliers;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.Optional;
 import java.util.Random;
 import org.assertj.core.api.Assertions;
@@ -49,18 +49,18 @@ public class UserTaskAssignmentDeniedApplierTest {
     final var initialAssignee = "initial";
     final var newAssignee = "changed";
 
-    final var given = new UserTaskRecord().setUserTaskKey(userTaskKey);
+    final var given = new TaskRecord().setUserTaskKey(userTaskKey);
 
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, given);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, given);
-
-    testSetup.applyEventToState(
-        userTaskKey, UserTaskIntent.ASSIGNING, given.setAssignee(initialAssignee));
-    testSetup.applyEventToState(
-        userTaskKey, UserTaskIntent.ASSIGNED, given.setAssignee(initialAssignee));
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, given);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, given);
 
     testSetup.applyEventToState(
-        userTaskKey, UserTaskIntent.ASSIGNING, given.setAssignee(newAssignee));
+        userTaskKey, TaskIntent.ASSIGNING, given.setAssignee(initialAssignee));
+    testSetup.applyEventToState(
+        userTaskKey, TaskIntent.ASSIGNED, given.setAssignee(initialAssignee));
+
+    testSetup.applyEventToState(
+        userTaskKey, TaskIntent.ASSIGNING, given.setAssignee(newAssignee));
 
     Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())
         .isEqualTo(initialAssignee);
@@ -91,14 +91,14 @@ public class UserTaskAssignmentDeniedApplierTest {
     final long userTaskKey = new Random().nextLong();
     final var initialAssignee = "initial";
 
-    final var given = new UserTaskRecord().setAssignee(initialAssignee).setUserTaskKey(userTaskKey);
+    final var given = new TaskRecord().setAssignee(initialAssignee).setUserTaskKey(userTaskKey);
 
     // assignee is present in the creating event
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, given);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, given);
     // but we clear the assignee for created event
-    final UserTaskRecord recordWithoutAssignee = given.unsetAssignee();
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, given);
+    final TaskRecord recordWithoutAssignee = given.unsetAssignee();
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, recordWithoutAssignee);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.ASSIGNING, given);
 
     Assertions.assertThat(userTaskState.findInitialAssignee(userTaskKey))
         .describedAs("Expect that initial assignee is stored")

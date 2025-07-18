@@ -19,7 +19,7 @@ import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
@@ -55,7 +55,7 @@ public final class CompleteUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -69,7 +69,7 @@ public final class CompleteUserTaskTest {
 
     Assertions.assertThat(completedRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.COMPLETING);
+        .hasIntent(TaskIntent.COMPLETING);
 
     Assertions.assertThat(recordValue)
         .hasUserTaskKey(userTaskKey)
@@ -83,7 +83,7 @@ public final class CompleteUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -97,7 +97,7 @@ public final class CompleteUserTaskTest {
 
     Assertions.assertThat(completedRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.COMPLETING);
+        .hasIntent(TaskIntent.COMPLETING);
 
     Assertions.assertThat(recordValue)
         .hasUserTaskKey(userTaskKey)
@@ -131,7 +131,7 @@ public final class CompleteUserTaskTest {
     // then
     Assertions.assertThat(completedRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.COMPLETING);
+        .hasIntent(TaskIntent.COMPLETING);
     assertThat(completedRecord.getValue().getVariables()).containsExactly(entry("foo", "bar"));
   }
 
@@ -152,7 +152,7 @@ public final class CompleteUserTaskTest {
     // then
     Assertions.assertThat(completedRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.COMPLETING);
+        .hasIntent(TaskIntent.COMPLETING);
     assertThat(completedRecord.getValue().getVariables()).isEmpty();
   }
 
@@ -173,7 +173,7 @@ public final class CompleteUserTaskTest {
     // then
     Assertions.assertThat(completedRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.COMPLETING);
+        .hasIntent(TaskIntent.COMPLETING);
     assertThat(completedRecord.getValue().getVariables()).isEmpty();
   }
 
@@ -245,7 +245,7 @@ public final class CompleteUserTaskTest {
 
     Assertions.assertThat(completedRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.COMPLETING);
+        .hasIntent(TaskIntent.COMPLETING);
 
     Assertions.assertThat(recordValue).hasTenantId(tenantId);
   }
