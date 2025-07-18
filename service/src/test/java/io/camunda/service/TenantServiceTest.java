@@ -52,7 +52,7 @@ public class TenantServiceTest {
   @BeforeEach
   public void before() {
     stubbedBrokerClient = new StubbedBrokerClient();
-    final Authentication authentication = Authentication.of(builder -> builder.user("foo"));
+    final Authentication authentication = Authentication.of(builder -> builder.username("foo"));
     client = mock(TenantSearchClient.class);
     final SecurityContextProvider securityContextProvider = mock(SecurityContextProvider.class);
     when(client.withSecurityContext(any())).thenReturn(client);
@@ -238,7 +238,7 @@ public class TenantServiceTest {
 
   @Test
   public void shouldThrowForbiddenIfNotAuthorized() {
-    final Authentication auth = Authentication.of(builder -> builder.user("unauthorizedUser"));
+    final Authentication auth = Authentication.of(builder -> builder.username("unauthorizedUser"));
     final var contextProvider = mock(SecurityContextProvider.class);
     when(contextProvider.isAuthorized(any(), any(), any())).thenReturn(false);
 

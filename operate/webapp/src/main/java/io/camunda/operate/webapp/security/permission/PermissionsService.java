@@ -264,7 +264,7 @@ public class PermissionsService {
     final List<String> authenticatedTenantIds = getAuthenticatedUserTenantIds();
     final List<String> authenticatedGroupIds = getAuthenticatedUserGroupIds();
     return new io.camunda.security.auth.Authentication.Builder()
-        .user(authenticatedUsername)
+        .username(authenticatedUsername)
         .roleIds(authenticatedRoleIds)
         .tenants(authenticatedTenantIds)
         .groupIds(authenticatedGroupIds)

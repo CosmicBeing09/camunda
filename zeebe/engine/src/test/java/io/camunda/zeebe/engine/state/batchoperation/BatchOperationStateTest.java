@@ -56,7 +56,7 @@ public class BatchOperationStateTest {
             .processDefinitionVersions(1)
             .build();
     final String username = "bud spencer";
-    final var authentication = Authentication.of(b -> b.user(username));
+    final var authentication = Authentication.of(b -> b.username(username));
     final var record =
         new BatchOperationCreationRecord()
             .setBatchOperationKey(batchOperationKey)

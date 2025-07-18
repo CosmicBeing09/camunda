@@ -41,11 +41,11 @@ public record Authentication(
     private String clientId;
     private final List<String> groupIds = new ArrayList<>();
     private final List<String> roleIds = new ArrayList<>();
-    private final List<String> tenants = new ArrayList<>();
+    private final List<String> tenantIds = new ArrayList<>();
     private final List<String> mappings = new ArrayList<>();
     private Map<String, Object> claims;
 
-    public Builder user(final String value) {
+    public Builder username(final String value) {
       username = value;
       return this;
     }
@@ -83,7 +83,7 @@ public record Authentication(
 
     public Builder tenants(final List<String> values) {
       if (values != null) {
-        tenants.addAll(values);
+        tenantIds.addAll(values);
       }
       return this;
     }
@@ -110,7 +110,7 @@ public record Authentication(
           clientId,
           unmodifiableList(groupIds),
           unmodifiableList(roleIds),
-          unmodifiableList(tenants),
+          unmodifiableList(tenantIds),
           unmodifiableList(mappings),
           claims);
     }
