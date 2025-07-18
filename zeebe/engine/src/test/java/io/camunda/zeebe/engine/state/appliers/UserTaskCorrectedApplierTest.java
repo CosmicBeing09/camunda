@@ -70,7 +70,7 @@ public class UserTaskCorrectedApplierTest {
   @ParameterizedTest(name = "on {2}")
   @MethodSource("testCases")
   void shouldCorrectIntermediateUserTaskDataOnIntent(
-      final long userTaskKey, final List<UserTaskIntent> setup, final LifecycleState state) {
+      final long userTaskKey, final List<UserTaskIntent> setupIntents, final LifecycleState expectedState) {
     // given
     final var given =
         new UserTaskRecord()
@@ -82,11 +82,11 @@ public class UserTaskCorrectedApplierTest {
             .setFollowUpDate("initial")
             .setPriority(1);
 
-    setup.forEach(setupIntent -> testSetup.applyEventToState(userTaskKey, setupIntent, given));
-    testSetup.applyEventToState(userTaskKey, mapLifecycleStateToIntent(state), given);
+    setupIntents.forEach(setupIntent -> testSetup.applyEventToState(userTaskKey, setupIntent, given));
+    testSetup.applyEventToState(userTaskKey, mapLifecycleStateToIntent(expectedState), given);
 
     Assumptions.assumeThat(userTaskState.getUserTask(userTaskKey)).isNotNull();
-    Assumptions.assumeThat(userTaskState.getLifecycleState(userTaskKey)).isEqualTo(state);
+    Assumptions.assumeThat(userTaskState.getLifecycleState(userTaskKey)).isEqualTo(expectedState);
     Assumptions.assumeThat(userTaskState.getIntermediateState(userTaskKey)).isNotNull();
 
     // when
@@ -124,7 +124,7 @@ public class UserTaskCorrectedApplierTest {
                     .isEmpty());
     Assertions.assertThat(userTaskState.getLifecycleState(userTaskKey))
         .describedAs("Expect that lifecycle state is not changed")
-        .isEqualTo(state);
+        .isEqualTo(expectedState);
   }
 
   private static UserTaskIntent mapLifecycleStateToIntent(final LifecycleState state) {
