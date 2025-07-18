@@ -143,7 +143,7 @@ public class ProcessHandlerTest {
     Assertions.assertThat(processEntity.getFlowNodes())
         .filteredOn(flowNode -> flowNode.getId().equals("endEvent"))
         .hasSize(1);
-    assertThat(processEntity.getTenantId()).isEqualTo(processRecordValue.getTenantId());
+    assertThat(processEntity.getTenantIdentifier()).isEqualTo(processRecordValue.getTenantIdentifier());
     assertThat(processEntity.getIsPublic()).isFalse();
     assertThat(processEntity.getFormId()).isNull();
   }
@@ -183,7 +183,7 @@ public class ProcessHandlerTest {
     assertThat(processEntity.getResourceName()).isEqualTo(processRecordValue.getResourceName());
     assertThat(processEntity.getBpmnXml())
         .isEqualTo(new String(processRecordValue.getResource(), StandardCharsets.UTF_8));
-    assertThat(processEntity.getTenantId()).isEqualTo(processRecordValue.getTenantId());
+    assertThat(processEntity.getTenantIdentifier()).isEqualTo(processRecordValue.getTenantIdentifier());
     assertThat(processEntity.getIsPublic()).isTrue();
     assertThat(processEntity.getFormId()).isEqualTo("testForm");
     assertThat(processEntity.getFormKey()).isNull();
@@ -226,7 +226,7 @@ public class ProcessHandlerTest {
     assertThat(processEntity.getResourceName()).isEqualTo(processRecordValue.getResourceName());
     assertThat(processEntity.getBpmnXml())
         .isEqualTo(new String(processRecordValue.getResource(), StandardCharsets.UTF_8));
-    assertThat(processEntity.getTenantId()).isEqualTo(processRecordValue.getTenantId());
+    assertThat(processEntity.getTenantIdentifier()).isEqualTo(processRecordValue.getTenantIdentifier());
     assertThat(processEntity.getIsPublic()).isTrue();
     assertThat(processEntity.getFormId()).isNull();
     assertThat(processEntity.getFormKey()).isEqualTo("camunda-forms:bpmn:testForm");
@@ -269,7 +269,7 @@ public class ProcessHandlerTest {
     assertThat(processEntity.getResourceName()).isEqualTo(processRecordValue.getResourceName());
     assertThat(processEntity.getBpmnXml())
         .isEqualTo(new String(processRecordValue.getResource(), StandardCharsets.UTF_8));
-    assertThat(processEntity.getTenantId()).isEqualTo(processRecordValue.getTenantId());
+    assertThat(processEntity.getTenantIdentifier()).isEqualTo(processRecordValue.getTenantIdentifier());
     assertThat(processEntity.getIsPublic()).isFalse();
     assertThat(processEntity.getFormId()).isNull();
     assertThat(processEntity.getFormKey()).isEqualTo("camunda-forms:bpmn:my-embedded-form-one");

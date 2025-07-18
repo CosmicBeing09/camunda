@@ -146,7 +146,7 @@ public class FlowNodeInstanceMetadataBuilder {
           .setDueDate(task.getDueDate())
           .setFollowUpDate(task.getFollowUpDate())
           .setChangedAttributes(task.getChangedAttributes())
-          .setTenantId(task.getTenantId())
+          .setTenantId(task.getTenantIdentifier())
           .setFormKey(task.getFormKey() != null ? Long.parseLong(task.getFormKey()) : null)
           .setExternalReference(task.getExternalFormReference())
           .setVariables(variablesMap);

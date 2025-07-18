@@ -402,7 +402,7 @@ public class FormDeploymentTest {
         engine.deployment().withXmlClasspathResource(TEST_FORM_1).withTenantId(tenant).deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     assertThat(
             RecordingExporter.formRecords()
                 .withIntent(FormIntent.CREATED)
@@ -412,7 +412,7 @@ public class FormDeploymentTest {
         .extracting(
             FormMetadataValue::getFormId,
             FormMetadataValue::getVersion,
-            FormMetadataValue::getTenantId)
+            FormMetadataValue::getTenantIdentifier)
         .describedAs("Form is created for correct tenant")
         .containsExactly(tuple(TEST_FORM_1_ID, 1, tenant));
   }
@@ -432,13 +432,13 @@ public class FormDeploymentTest {
             .deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     assertThat(RecordingExporter.formRecords().withIntent(FormIntent.CREATED).limit(2))
         .extracting(Record::getValue)
         .extracting(
             FormMetadataValue::getFormId,
             FormMetadataValue::getVersion,
-            FormMetadataValue::getTenantId)
+            FormMetadataValue::getTenantIdentifier)
         .describedAs("Forms are created for correct tenant")
         .containsExactly(tuple(TEST_FORM_1_ID, 1, tenant), tuple(TEST_FORM_2_ID, 1, tenant));
   }
@@ -462,8 +462,8 @@ public class FormDeploymentTest {
     assertThat(deployment1.getValue().getFormMetadata().get(0).getFormKey())
         .describedAs("Created 2 different forms")
         .isNotEqualTo(deployment2.getValue().getFormMetadata().get(0));
-    assertThat(deployment1.getValue().getTenantId()).isEqualTo(tenant1);
-    assertThat(deployment2.getValue().getTenantId()).isEqualTo(tenant2);
+    assertThat(deployment1.getValue().getTenantIdentifier()).isEqualTo(tenant1);
+    assertThat(deployment2.getValue().getTenantIdentifier()).isEqualTo(tenant2);
 
     assertThat(
             RecordingExporter.formRecords()
@@ -474,7 +474,7 @@ public class FormDeploymentTest {
         .extracting(
             FormMetadataValue::getFormId,
             FormMetadataValue::getVersion,
-            FormMetadataValue::getTenantId)
+            FormMetadataValue::getTenantIdentifier)
         .describedAs("Forms are created for correct tenants")
         .containsExactly(tuple(TEST_FORM_1_ID, 1, tenant1), tuple(TEST_FORM_1_ID, 1, tenant2));
   }

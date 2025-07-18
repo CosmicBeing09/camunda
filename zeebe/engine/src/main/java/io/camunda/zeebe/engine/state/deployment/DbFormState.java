@@ -129,17 +129,17 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void storeFormInFormColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormKey.setValue(record.getFormKey());
     dbPersistedForm.wrap(record);
     formsByKey.upsert(tenantAwareFormKey, dbPersistedForm);
     formsByTenantIdAndIdCache.put(
-        new TenantIdAndFormId(record.getTenantId(), record.getFormId()), dbPersistedForm.copy());
+        new TenantIdAndFormId(record.getTenantIdentifier(), record.getFormId()), dbPersistedForm.copy());
   }
 
   @Override
   public void storeFormInFormByIdAndVersionColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormId.setValueFromString(record.getFormId());
     formVersion.setValue(record.getVersion());
     dbPersistedForm.wrap(record);
@@ -148,7 +148,7 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void storeFormInFormKeyByFormIdAndDeploymentKeyColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormKey.setValue(record.getFormKey());
     dbFormId.setValueFromString(record.getFormId());
     dbDeploymentKey.setValue(record.getDeploymentKey());
@@ -160,7 +160,7 @@ public class DbFormState implements MutableFormState {
   public void storeFormInFormKeyByFormIdAndVersionTagColumnFamily(final FormRecord record) {
     final var versionTag = record.getVersionTag();
     if (!versionTag.isBlank()) {
-      tenantIdKey.setValueFromString(record.getTenantId());
+      tenantIdKey.setValueFromString(record.getTenantIdentifier());
       dbFormKey.setValue(record.getFormKey());
       dbFormId.setValueFromString(record.getFormId());
       dbVersionTag.setValueFromString(versionTag);
@@ -171,21 +171,21 @@ public class DbFormState implements MutableFormState {
   @Override
   public void updateLatestVersion(final FormRecord record) {
     versionManager.addResourceVersion(
-        record.getFormId(), record.getVersion(), record.getTenantId());
+        record.getFormId(), record.getVersion(), record.getTenantIdentifier());
   }
 
   @Override
   public void deleteFormInFormsColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormKey.setValue(record.getFormKey());
     formsByKey.deleteExisting(tenantAwareFormKey);
     formsByTenantIdAndIdCache.invalidate(
-        new TenantIdAndFormId(record.getTenantId(), record.getFormId()));
+        new TenantIdAndFormId(record.getTenantIdentifier(), record.getFormId()));
   }
 
   @Override
   public void deleteFormInFormByIdAndVersionColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormId.setValueFromString(record.getFormId());
     formVersion.setValue(record.getVersion());
     formByIdAndVersionColumnFamily.deleteExisting(tenantAwareIdAndVersionKey);
@@ -194,12 +194,12 @@ public class DbFormState implements MutableFormState {
   @Override
   public void deleteFormInFormVersionColumnFamily(final FormRecord record) {
     versionManager.deleteResourceVersion(
-        record.getFormId(), record.getVersion(), record.getTenantId());
+        record.getFormId(), record.getVersion(), record.getTenantIdentifier());
   }
 
   @Override
   public void deleteFormInFormKeyByFormIdAndDeploymentKeyColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormId.setValueFromString(record.getFormId());
     dbDeploymentKey.setValue(record.getDeploymentKey());
     formKeyByFormIdAndDeploymentKeyColumnFamily.deleteIfExists(tenantAwareFormIdAndDeploymentKey);
@@ -207,7 +207,7 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void deleteFormInFormKeyByFormIdAndVersionTagColumnFamily(final FormRecord record) {
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     dbFormId.setValueFromString(record.getFormId());
     dbVersionTag.setValueFromString(record.getVersionTag());
     formKeyByFormIdAndVersionTagColumnFamily.deleteIfExists(tenantAwareFormIdAndVersionTagKey);

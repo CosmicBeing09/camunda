@@ -137,7 +137,7 @@ public class ProcessInstanceMigrationMigrateProcessor
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
-                processInstance.getValue().getTenantId())
+                processInstance.getValue().getTenantIdentifier())
             .addResourceId(processInstance.getValue().getBpmnProcessId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {
@@ -158,11 +158,11 @@ public class ProcessInstanceMigrationMigrateProcessor
 
     final DeployedProcess targetProcessDefinition =
         processState.getProcessByKeyAndTenant(
-            targetProcessDefinitionKey, processInstance.getValue().getTenantId());
+            targetProcessDefinitionKey, processInstance.getValue().getTenantIdentifier());
     final DeployedProcess sourceProcessDefinition =
         processState.getProcessByKeyAndTenant(
             processInstance.getValue().getProcessDefinitionKey(),
-            processInstance.getValue().getTenantId());
+            processInstance.getValue().getTenantIdentifier());
 
     requireNonNullTargetProcessDefinition(targetProcessDefinition, targetProcessDefinitionKey);
     requireNoStartEventInstanceForTargetProcess(
@@ -408,7 +408,7 @@ public class ProcessInstanceMigrationMigrateProcessor
                         .setProcessInstanceKey(elementInstance.getValue().getProcessInstanceKey())
                         .setProcessDefinitionKey(targetProcessDefinition.getKey())
                         .setBpmnProcessId(targetProcessDefinition.getBpmnProcessId())
-                        .setTenantId(elementInstance.getValue().getTenantId())));
+                        .setTenantId(elementInstance.getValue().getTenantIdentifier())));
 
     if (ProcessInstanceIntent.ELEMENT_ACTIVATING != elementInstance.getState()) {
       // Elements in ACTIVATING state haven't subscribed to events yet. We shouldn't subscribe such

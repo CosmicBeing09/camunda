@@ -39,7 +39,7 @@ public class MetricEntity implements ExporterEntity<MetricEntity>, TenantOwned {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

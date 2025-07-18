@@ -95,7 +95,7 @@ public class ProcessInstanceExportHandler
         .processDefinitionKey(value.getProcessDefinitionKey())
         .state(ProcessInstanceState.ACTIVE)
         .startDate(DateUtil.toOffsetDateTime(record.getTimestamp()))
-        .tenantId(value.getTenantId())
+        .tenantId(value.getTenantIdentifier())
         .parentProcessInstanceKey(parentProcessInstanceKey)
         .parentElementInstanceKey(parentElementInstanceKey)
         .version(value.getVersion())

@@ -55,7 +55,7 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
     keyProp.setValue(metadata.getKey());
     resourceNameProp.setValue(metadata.getResourceNameBuffer());
     resourceProp.setValue(BufferUtil.wrapArray(resource));
-    tenantIdProp.setValue(metadata.getTenantId());
+    tenantIdProp.setValue(metadata.getTenantIdentifier());
     deploymentKeyProp.setValue(metadata.getDeploymentKey());
     versionTagProp.setValue(metadata.getVersionTag());
     return this;
@@ -69,6 +69,16 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
   @Override
   public int getVersion() {
     return versionProp.getValue();
+  }
+
+  public ProcessRecord setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return BufferUtil.bufferAsString(versionTagProp.getValue());
   }
 
   @Override
@@ -116,8 +126,8 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
     return this;
   }
 
-  public ProcessRecord setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessRecord setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -195,22 +205,12 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return BufferUtil.bufferAsString(tenantIdProp.getValue());
   }
 
   public ProcessRecord setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return BufferUtil.bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessRecord setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }

@@ -261,8 +261,8 @@ public class ListViewProcessInstanceFromProcessInstanceHandlerTest {
         .isEqualTo(processInstanceRecordValue.getProcessInstanceKey());
     assertThat(processInstanceForListViewEntity.getKey())
         .isEqualTo(processInstanceRecordValue.getProcessInstanceKey());
-    assertThat(processInstanceForListViewEntity.getTenantId())
-        .isEqualTo(processInstanceRecordValue.getTenantId());
+    assertThat(processInstanceForListViewEntity.getTenantIdentifier())
+        .isEqualTo(processInstanceRecordValue.getTenantIdentifier());
     assertThat(processInstanceForListViewEntity.getPartitionId())
         .isEqualTo(processInstanceRecord.getPartitionId());
     assertThat(processInstanceForListViewEntity.getPosition())

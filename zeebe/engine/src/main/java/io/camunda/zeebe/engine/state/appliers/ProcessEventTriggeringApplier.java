@@ -52,6 +52,6 @@ final class ProcessEventTriggeringApplier
           scopeKey, key, targetElementIdBuffer, variables, processInstanceKey);
     }
     eventSubProcessInterruptionMarker.markInstanceIfInterrupted(
-        scopeKey, value.getProcessDefinitionKey(), value.getTenantId(), targetElementIdBuffer);
+        scopeKey, value.getProcessDefinitionKey(), value.getTenantIdentifier(), targetElementIdBuffer);
   }
 }

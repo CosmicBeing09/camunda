@@ -89,7 +89,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
     final var record = command.getValue();
     final var elementInstanceKey = record.getElementInstanceKey();
     final String messageName = record.getMessageName();
-    final String tenantId = record.getTenantId();
+    final String tenantId = record.getTenantIdentifier();
     final ProcessMessageSubscription subscription =
         subscriptionState.getSubscription(
             elementInstanceKey, record.getMessageNameBuffer(), tenantId);
@@ -167,7 +167,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
       final ProcessInstanceRecord elementRecord, final DirectBuffer elementId) {
     return processState.getFlowElement(
         elementRecord.getProcessDefinitionKey(),
-        elementRecord.getTenantId(),
+        elementRecord.getTenantIdentifier(),
         elementId,
         ExecutableFlowElement.class);
   }
@@ -197,7 +197,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
         subscription.getElementInstanceKey(),
         subscription.getBpmnProcessIdBuffer(),
         subscription.getMessageNameBuffer(),
-        subscription.getTenantId());
+        subscription.getTenantIdentifier());
   }
 
   private void sendRejectionCommand(final ProcessMessageSubscriptionRecord subscription) {
@@ -209,6 +209,6 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
         subscription.getMessageKey(),
         subscription.getMessageNameBuffer(),
         subscription.getCorrelationKeyBuffer(),
-        subscription.getTenantId());
+        subscription.getTenantIdentifier());
   }
 }

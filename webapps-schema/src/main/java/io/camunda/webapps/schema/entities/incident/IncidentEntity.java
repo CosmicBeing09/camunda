@@ -204,7 +204,7 @@ public class IncidentEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

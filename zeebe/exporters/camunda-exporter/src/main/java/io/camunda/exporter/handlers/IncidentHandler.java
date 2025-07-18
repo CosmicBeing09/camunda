@@ -103,7 +103,7 @@ public class IncidentHandler implements ExportHandler<IncidentEntity, IncidentRe
         .setState(IncidentState.PENDING)
         .setCreationTime(
             OffsetDateTime.ofInstant(Instant.ofEpochMilli(record.getTimestamp()), ZoneOffset.UTC))
-        .setTenantId(ExporterUtil.tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(ExporterUtil.tenantOrDefault(recordValue.getTenantIdentifier()));
 
     entity.setTreePath(buildTreePath(record));
 

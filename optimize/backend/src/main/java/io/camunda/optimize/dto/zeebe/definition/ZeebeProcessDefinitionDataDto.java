@@ -31,6 +31,49 @@ public class ZeebeProcessDefinitionDataDto implements ProcessMetadataValue {
   }
 
   @Override
+  public String getTenantIdentifier() {
+    return StringUtils.isEmpty(tenantId) ? ZEEBE_DEFAULT_TENANT_ID : tenantId;
+  }
+
+  public byte[] getResource() {
+    return resource;
+  }
+
+  public void setResource(final byte[] resource) {
+    this.resource = resource;
+  }
+
+  @Override
+  public String getBpmnProcessId() {
+    return bpmnProcessId;
+  }
+
+  @Override
+  public int getVersion() {
+    return version;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return versionTag;
+  }
+
+  @Override
+  public long getProcessDefinitionKey() {
+    return processDefinitionKey;
+  }
+
+  @Override
+  public String getResourceName() {
+    return resourceName;
+  }
+
+  @Override
+  public byte[] getChecksum() {
+    return checksum;
+  }
+
+  @Override
   public boolean isDuplicate() {
     // Process Records should never be duplicate in Zeebe
     return false;
@@ -41,57 +84,24 @@ public class ZeebeProcessDefinitionDataDto implements ProcessMetadataValue {
     throw new UnsupportedOperationException("Operation not supported");
   }
 
-  @Override
-  public String getTenantId() {
-    return StringUtils.isEmpty(tenantId) ? ZEEBE_DEFAULT_TENANT_ID : tenantId;
-  }
-
-  public byte[] getResource() {
-    return this.resource;
-  }
-
-  public long getProcessDefinitionKey() {
-    return this.processDefinitionKey;
-  }
-
-  public int getVersion() {
-    return this.version;
-  }
-
-  public byte[] getChecksum() {
-    return this.checksum;
-  }
-
-  public String getResourceName() {
-    return this.resourceName;
-  }
-
-  public String getBpmnProcessId() {
-    return this.bpmnProcessId;
-  }
-
-  public String getVersionTag() {
-    return this.versionTag;
-  }
-
-  public void setResource(final byte[] resource) {
-    this.resource = resource;
-  }
-
-  public void setProcessDefinitionKey(final long processDefinitionKey) {
-    this.processDefinitionKey = processDefinitionKey;
-  }
-
-  public void setVersion(final int version) {
-    this.version = version;
-  }
-
   public void setChecksum(final byte[] checksum) {
     this.checksum = checksum;
   }
 
   public void setResourceName(final String resourceName) {
     this.resourceName = resourceName;
+  }
+
+  public void setProcessDefinitionKey(final long processDefinitionKey) {
+    this.processDefinitionKey = processDefinitionKey;
+  }
+
+  public void setVersionTag(final String versionTag) {
+    this.versionTag = versionTag;
+  }
+
+  public void setVersion(final int version) {
+    this.version = version;
   }
 
   public void setBpmnProcessId(final String bpmnProcessId) {
@@ -102,39 +112,38 @@ public class ZeebeProcessDefinitionDataDto implements ProcessMetadataValue {
     this.tenantId = tenantId;
   }
 
-  public void setVersionTag(final String versionTag) {
-    this.versionTag = versionTag;
-  }
-
-  public String toString() {
-    return "ZeebeProcessDefinitionDataDto(resource="
-        + java.util.Arrays.toString(this.getResource())
-        + ", processDefinitionKey="
-        + this.getProcessDefinitionKey()
-        + ", version="
-        + this.getVersion()
-        + ", checksum="
-        + java.util.Arrays.toString(this.getChecksum())
-        + ", resourceName="
-        + this.getResourceName()
-        + ", bpmnProcessId="
-        + this.getBpmnProcessId()
-        + ", tenantId="
-        + this.getTenantId()
-        + ", versionTag="
-        + this.getVersionTag()
-        + ")";
-  }
-
-  public boolean equals(final Object o) {
-    return org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals(this, o);
-  }
-
   protected boolean canEqual(final Object other) {
     return other instanceof ZeebeProcessDefinitionDataDto;
   }
 
+  @Override
   public int hashCode() {
     return org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode(this);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    return org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals(this, o);
+  }
+
+  @Override
+  public String toString() {
+    return "ZeebeProcessDefinitionDataDto(resource="
+        + java.util.Arrays.toString(getResource())
+        + ", processDefinitionKey="
+        + getProcessDefinitionKey()
+        + ", version="
+        + getVersion()
+        + ", checksum="
+        + java.util.Arrays.toString(getChecksum())
+        + ", resourceName="
+        + getResourceName()
+        + ", bpmnProcessId="
+        + getBpmnProcessId()
+        + ", tenantId="
+        + getTenantIdentifier()
+        + ", versionTag="
+        + getVersionTag()
+        + ")";
   }
 }

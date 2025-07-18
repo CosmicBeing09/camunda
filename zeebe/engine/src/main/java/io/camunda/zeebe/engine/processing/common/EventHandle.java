@@ -119,7 +119,7 @@ public final class EventHandle {
         triggeringProcessEvent(
             elementRecord.getProcessDefinitionKey(),
             elementRecord.getProcessInstanceKey(),
-            elementRecord.getTenantId(),
+            elementRecord.getTenantIdentifier(),
             eventScopeKey,
             catchEvent.getId(),
             variables);
@@ -152,7 +152,7 @@ public final class EventHandle {
     triggeringProcessEvent(
         jobRecord.getProcessDefinitionKey(),
         jobRecord.getProcessInstanceKey(),
-        jobRecord.getTenantId(),
+        jobRecord.getTenantIdentifier(),
         jobRecord.getElementInstanceKey(),
         jobRecord.getElementIdBuffer(),
         jobRecord.getVariablesBuffer());
@@ -162,7 +162,7 @@ public final class EventHandle {
     triggeringProcessEvent(
         userTaskRecord.getProcessDefinitionKey(),
         userTaskRecord.getProcessInstanceKey(),
-        userTaskRecord.getTenantId(),
+        userTaskRecord.getTenantIdentifier(),
         userTaskRecord.getElementInstanceKey(),
         userTaskRecord.getElementIdBuffer(),
         userTaskRecord.getVariablesBuffer());
@@ -201,7 +201,7 @@ public final class EventHandle {
         .setMessageKey(messageKey)
         .setMessageName(messageName)
         .setVariables(variables)
-        .setTenantId(subscription.getTenantId());
+        .setTenantId(subscription.getTenantIdentifier());
 
     stateWriter.appendFollowUpEvent(
         subscriptionKey,
@@ -213,7 +213,7 @@ public final class EventHandle {
         newProcessInstanceKey,
         startEventSubscriptionRecord.getStartEventIdBuffer(),
         variables,
-        subscription.getTenantId());
+        subscription.getTenantIdentifier());
 
     return newProcessInstanceKey;
   }

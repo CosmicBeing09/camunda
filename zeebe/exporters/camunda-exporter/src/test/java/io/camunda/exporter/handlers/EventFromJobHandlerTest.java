@@ -151,7 +151,7 @@ final class EventFromJobHandlerTest {
     assertThat(entity.getFlowNodeInstanceKey()).isEqualTo(elementInstanceKey);
     assertThat(entity.getFlowNodeId()).isEqualTo(elementId);
     assertThat(entity.getBpmnProcessId()).isEqualTo(bpmnProcessId);
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
     assertThat(entity.getPositionJob()).isEqualTo(position);
     assertThat(entity.getMetadata().getJobType()).isEqualTo(jobType);
     assertThat(entity.getMetadata().getJobRetries()).isEqualTo(retries);

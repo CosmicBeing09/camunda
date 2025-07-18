@@ -304,7 +304,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   private ExecutableUserTask getUserTaskElement(final UserTaskRecord userTaskRecord) {
     return processState.getFlowElement(
         userTaskRecord.getProcessDefinitionKey(),
-        userTaskRecord.getTenantId(),
+        userTaskRecord.getTenantIdentifier(),
         userTaskRecord.getElementIdBuffer(),
         ExecutableUserTask.class);
   }

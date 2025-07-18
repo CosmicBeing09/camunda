@@ -414,7 +414,7 @@ public class ResourceDeploymentTest {
         engine.deployment().withXmlClasspathResource(TEST_RESOURCE_1).withTenantId(tenant).deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     assertThat(
             RecordingExporter.resourceRecords()
                 .withIntent(ResourceIntent.CREATED)
@@ -424,7 +424,7 @@ public class ResourceDeploymentTest {
         .extracting(
             ResourceMetadataValue::getResourceId,
             ResourceMetadataValue::getVersion,
-            ResourceMetadataValue::getTenantId)
+            ResourceMetadataValue::getTenantIdentifier)
         .describedAs("Resource is created for correct tenant")
         .containsExactly(tuple(TEST_RESOURCE_1_ID, 1, tenant));
   }
@@ -444,13 +444,13 @@ public class ResourceDeploymentTest {
             .deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     assertThat(RecordingExporter.resourceRecords().withIntent(ResourceIntent.CREATED).limit(2))
         .extracting(Record::getValue)
         .extracting(
             ResourceMetadataValue::getResourceId,
             ResourceMetadataValue::getVersion,
-            ResourceMetadataValue::getTenantId)
+            ResourceMetadataValue::getTenantIdentifier)
         .describedAs("Resources are created for correct tenant")
         .containsExactly(
             tuple(TEST_RESOURCE_1_ID, 1, tenant), tuple(TEST_RESOURCE_2_ID, 1, tenant));
@@ -483,8 +483,8 @@ public class ResourceDeploymentTest {
     assertThat(deployment1.getValue().getResourceMetadata().get(0).getResourceKey())
         .describedAs("Created 2 different resources")
         .isNotEqualTo(deployment2.getValue().getResourceMetadata().get(0));
-    assertThat(deployment1.getValue().getTenantId()).isEqualTo(tenant1);
-    assertThat(deployment2.getValue().getTenantId()).isEqualTo(tenant2);
+    assertThat(deployment1.getValue().getTenantIdentifier()).isEqualTo(tenant1);
+    assertThat(deployment2.getValue().getTenantIdentifier()).isEqualTo(tenant2);
 
     assertThat(
             RecordingExporter.resourceRecords()
@@ -495,7 +495,7 @@ public class ResourceDeploymentTest {
         .extracting(
             ResourceMetadataValue::getResourceId,
             ResourceMetadataValue::getVersion,
-            ResourceMetadataValue::getTenantId)
+            ResourceMetadataValue::getTenantIdentifier)
         .describedAs("Resources are created for correct tenants")
         .containsExactly(
             tuple(TEST_RESOURCE_1_ID, 1, tenant1), tuple(TEST_RESOURCE_1_ID, 1, tenant2));

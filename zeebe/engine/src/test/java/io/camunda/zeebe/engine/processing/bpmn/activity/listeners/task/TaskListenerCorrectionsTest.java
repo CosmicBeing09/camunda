@@ -216,7 +216,7 @@ public class TaskListenerCorrectionsTest {
         .hasProcessDefinitionKey(userTask.getProcessDefinitionKey())
         .hasProcessInstanceKey(userTask.getProcessInstanceKey())
         .hasVariables(userTask.getVariables())
-        .hasTenantId(userTask.getTenantId())
+        .hasTenantId(userTask.getTenantIdentifier())
         .hasUserTaskKey(userTask.getUserTaskKey());
 
     // when
@@ -259,7 +259,7 @@ public class TaskListenerCorrectionsTest {
         .hasProcessDefinitionKey(userTask.getProcessDefinitionKey())
         .hasProcessInstanceKey(userTask.getProcessInstanceKey())
         .hasVariables(userTask.getVariables())
-        .hasTenantId(userTask.getTenantId())
+        .hasTenantId(userTask.getTenantIdentifier())
         .hasUserTaskKey(userTask.getUserTaskKey());
   }
 

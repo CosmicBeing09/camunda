@@ -78,7 +78,7 @@ public class EmbeddedFormHandler implements ExportHandler<EmbeddedFormBatch, Pro
   private List<FormEntity> mapToFormEntities(
       final Record<Process> record, final List<EmbeddedForm> embeddedForms) {
     final var value = record.getValue();
-    final var tenantId = value.getTenantId();
+    final var tenantId = value.getTenantIdentifier();
     final var processDefinitionKey = String.valueOf(value.getProcessDefinitionKey());
     return embeddedForms.stream()
         .map(f -> mapToFormEntity(f, processDefinitionKey, tenantId))

@@ -65,7 +65,7 @@ public class SequenceFlowHandler
         .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setActivityId(recordValue.getElementId())
-        .setTenantId(ExporterUtil.tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(ExporterUtil.tenantOrDefault(recordValue.getTenantIdentifier()));
   }
 
   @Override

@@ -48,7 +48,7 @@ public class DecisionDefinitionExportHandler implements RdbmsExportHandler<Decis
         .version(decision.getVersion())
         .decisionRequirementsId(decision.getDecisionRequirementsId())
         .decisionRequirementsKey(decision.getDecisionRequirementsKey())
-        .tenantId(decision.getTenantId())
+        .tenantId(decision.getTenantIdentifier())
         .build();
   }
 }

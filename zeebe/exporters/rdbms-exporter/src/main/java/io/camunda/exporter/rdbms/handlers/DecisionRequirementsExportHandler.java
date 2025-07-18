@@ -47,7 +47,7 @@ public class DecisionRequirementsExportHandler
         .version(value.getDecisionRequirementsVersion())
         .resourceName(value.getResourceName())
         .xml(new String(value.getResource(), StandardCharsets.UTF_8))
-        .tenantId(value.getTenantId())
+        .tenantId(value.getTenantIdentifier())
         .build();
   }
 }

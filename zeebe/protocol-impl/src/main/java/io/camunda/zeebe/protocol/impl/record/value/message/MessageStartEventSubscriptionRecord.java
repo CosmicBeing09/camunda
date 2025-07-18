@@ -58,7 +58,7 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
     messageKeyProp.setValue(record.getMessageKey());
     correlationKeyProp.setValue(record.getCorrelationKeyBuffer());
     variablesProp.setValue(record.getVariablesBuffer());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
   }
 
   @JsonIgnore
@@ -167,7 +167,7 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

@@ -228,7 +228,7 @@ public class UserTaskVariableHandlerTest {
     assertThat(localVariable.getKey()).isEqualTo(variableRecord.getKey());
     assertThat(localVariable.getName()).isEqualTo(variableRecordValue.getName());
     assertThat(localVariable.getScopeKey()).isEqualTo(variableRecordValue.getScopeKey());
-    assertThat(localVariable.getTenantId()).isEqualTo(variableRecordValue.getTenantId());
+    assertThat(localVariable.getTenantIdentifier()).isEqualTo(variableRecordValue.getTenantIdentifier());
     assertThat(localVariable.getValue()).isEqualTo(variableRecordValue.getValue());
     assertThat(localVariable.getProcessInstanceId()).isEqualTo(processInstanceKey);
     assertThat(localVariable.getIsTruncated()).isFalse();
@@ -246,7 +246,7 @@ public class UserTaskVariableHandlerTest {
     assertThat(processVariable.getKey()).isEqualTo(variableRecord.getKey());
     assertThat(processVariable.getName()).isEqualTo(variableRecordValue.getName());
     assertThat(processVariable.getScopeKey()).isEqualTo(variableRecordValue.getScopeKey());
-    assertThat(processVariable.getTenantId()).isEqualTo(variableRecordValue.getTenantId());
+    assertThat(processVariable.getTenantIdentifier()).isEqualTo(variableRecordValue.getTenantIdentifier());
     assertThat(processVariable.getValue()).isEqualTo(variableRecordValue.getValue());
     assertThat(processVariable.getProcessInstanceId()).isEqualTo(processInstanceKey);
     assertThat(processVariable.getIsTruncated()).isFalse();
@@ -289,7 +289,7 @@ public class UserTaskVariableHandlerTest {
     assertThat(variableEntity.getKey()).isEqualTo(variableRecord.getKey());
     assertThat(variableEntity.getName()).isEqualTo(variableRecordValue.getName());
     assertThat(variableEntity.getScopeKey()).isEqualTo(variableRecordValue.getScopeKey());
-    assertThat(variableEntity.getTenantId()).isEqualTo(variableRecordValue.getTenantId());
+    assertThat(variableEntity.getTenantIdentifier()).isEqualTo(variableRecordValue.getTenantIdentifier());
     assertThat(variableEntity.getValue()).isEqualTo(variableRecordValue.getValue());
     assertThat(variableEntity.getProcessInstanceId()).isEqualTo(processInstanceKey);
     assertThat(variableEntity.getIsTruncated()).isFalse();

@@ -194,7 +194,7 @@ final class JobHandlerTest {
     assertThat(entity.getBpmnProcessId()).isEqualTo(bpmnProcessId);
     assertThat(entity.getFlowNodeInstanceId()).isEqualTo(elementInstanceKey);
     assertThat(entity.getFlowNodeId()).isEqualTo(elementId);
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
     assertThat(entity.getType()).isEqualTo(jobType);
     assertThat(entity.getJobKind()).isEqualTo(jobKind.name());
     assertThat(entity.getListenerEventType()).isEqualTo(jobListenerEventType.name());
@@ -282,7 +282,7 @@ final class JobHandlerTest {
     assertThat(entity.getBpmnProcessId()).isEqualTo(bpmnProcessId);
     assertThat(entity.getFlowNodeInstanceId()).isEqualTo(elementInstanceKey);
     assertThat(entity.getFlowNodeId()).isEqualTo(elementId);
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
     assertThat(entity.getType()).isEqualTo(jobType);
     assertThat(entity.getJobKind()).isEqualTo(jobKind.name());
     assertThat(entity.getListenerEventType()).isEqualTo(jobListenerEventType.name());

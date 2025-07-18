@@ -135,7 +135,7 @@ public final class DeploymentCreateProcessor
             command,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            command.getValue().getTenantId(),
+            command.getValue().getTenantIdentifier(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {
@@ -329,7 +329,7 @@ public final class DeploymentCreateProcessor
       if (!processMetadata.isDuplicate()) {
         final List<ExecutableStartEvent> startEvents =
             processState
-                .getProcessByKeyAndTenant(processMetadata.getKey(), processMetadata.getTenantId())
+                .getProcessByKeyAndTenant(processMetadata.getKey(), processMetadata.getTenantIdentifier())
                 .getProcess()
                 .getStartEvents();
 
@@ -358,7 +358,7 @@ public final class DeploymentCreateProcessor
             NO_ELEMENT_INSTANCE,
             processMetadata.getKey(),
             startEvent.getId(),
-            processMetadata.getTenantId(),
+            processMetadata.getTenantIdentifier(),
             timerOrError.get());
       }
     }
@@ -373,11 +373,11 @@ public final class DeploymentCreateProcessor
       final ProcessMetadata processMetadata, final TimerInstance timer) {
     final DirectBuffer timerBpmnId =
         processState
-            .getProcessByKeyAndTenant(timer.getProcessDefinitionKey(), timer.getTenantId())
+            .getProcessByKeyAndTenant(timer.getProcessDefinitionKey(), timer.getTenantIdentifier())
             .getBpmnProcessId();
 
     if (timerBpmnId.equals(processMetadata.getBpmnProcessIdBuffer())
-        && timer.getTenantId().equals(processMetadata.getTenantId())) {
+        && timer.getTenantIdentifier().equals(processMetadata.getTenantIdentifier())) {
       catchEventBehavior.unsubscribeFromTimerEvent(timer);
     }
   }
@@ -400,7 +400,7 @@ public final class DeploymentCreateProcessor
         .setResourceName(drg.getResourceName())
         .setChecksum(wrapArray(drg.getChecksum()))
         .setResource(resource)
-        .setTenantId(drg.getTenantId());
+        .setTenantId(drg.getTenantIdentifier());
   }
 
   /**

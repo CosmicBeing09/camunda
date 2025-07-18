@@ -58,7 +58,7 @@ public class UserTaskProcessInstanceHandler
   @Override
   public void updateEntity(
       final Record<ProcessInstanceRecordValue> record, final TaskProcessInstanceEntity entity) {
-    entity.setPartitionId(record.getPartitionId()).setTenantId(record.getValue().getTenantId());
+    entity.setPartitionId(record.getPartitionId()).setTenantId(record.getValue().getTenantIdentifier());
     entity.setProcessInstanceId(record.getKey());
     final TaskJoinRelationship join = new TaskJoinRelationship();
     join.setName(TaskJoinRelationshipType.PROCESS.getType());

@@ -104,7 +104,7 @@ public class ZeebeVariableImportService
             getBpmnProcessId(firstRecordValue),
             firstRecordValue.getProcessInstanceKey(),
             firstRecordValue.getProcessDefinitionKey(),
-            firstRecordValue.getTenantId());
+            firstRecordValue.getTenantIdentifier());
     return updateProcessVariables(instanceToAdd, recordsForInstance);
   }
 
@@ -188,7 +188,7 @@ public class ZeebeVariableImportService
               processVariableDto.setVersion(variableRecordDto.getPosition());
               processVariableDto.setType(type);
               processVariableDto.setValue(zeebeVariableDataDto.getValue());
-              processVariableDto.setTenantId(zeebeVariableDataDto.getTenantId());
+              processVariableDto.setTenantId(zeebeVariableDataDto.getTenantIdentifier());
               if (type.equals(STRING_TYPE)) {
                 processVariableDto.setValue(
                     stripExtraDoubleQuotationsIfExist(zeebeVariableDataDto.getValue()));

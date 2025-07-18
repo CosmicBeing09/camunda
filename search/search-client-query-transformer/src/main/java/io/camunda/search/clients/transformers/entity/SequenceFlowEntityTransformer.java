@@ -23,6 +23,6 @@ public class SequenceFlowEntityTransformer
         value.getProcessInstanceKey(),
         value.getProcessDefinitionKey(),
         value.getBpmnProcessId(),
-        value.getTenantId());
+        value.getTenantIdentifier());
   }
 }

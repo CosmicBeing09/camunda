@@ -113,7 +113,7 @@ public final class ProcessInstanceBatchActivateProcessor
         processState
             .getProcessByKeyAndTenant(
                 parentElementInstance.getValue().getProcessDefinitionKey(),
-                parentElementInstance.getValue().getTenantId())
+                parentElementInstance.getValue().getTenantIdentifier())
             .getProcess();
 
     final var parentElement =

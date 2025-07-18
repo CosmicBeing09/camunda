@@ -26,7 +26,7 @@ public class TenantAwareEvaluateDecisionStub
   public BrokerResponse<DecisionEvaluationRecord> handle(
       final BrokerEvaluateDecisionRequest request) throws Exception {
     final var response = new DecisionEvaluationRecord();
-    response.setTenantId(request.getRequestWriter().getTenantId());
+    response.setTenantId(request.getRequestWriter().getTenantIdentifier());
     return new BrokerResponse<>(response, request.getPartitionId(), request.getKey());
   }
 }

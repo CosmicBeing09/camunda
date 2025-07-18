@@ -110,7 +110,7 @@ public final class TimerInstance extends UnpackedObject implements DbValue, Tena
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

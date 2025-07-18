@@ -43,7 +43,7 @@ public class FormExportHandler implements RdbmsExportHandler<Form> {
     return new FormDbModelBuilder()
         .formKey(value.getFormKey())
         .formId(value.getFormId())
-        .tenantId(value.getTenantId())
+        .tenantId(value.getTenantIdentifier())
         .schema(new String(value.getResource(), StandardCharsets.UTF_8))
         .version((long) value.getVersion())
         .isDeleted(false)

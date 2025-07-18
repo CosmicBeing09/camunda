@@ -300,7 +300,7 @@ public class ResourceDeletionDeleteProcessor
 
     final String processId = processRecord.getBpmnProcessId();
     final var latestVersion =
-        processState.getLatestProcessVersion(processId, processRecord.getTenantId());
+        processState.getLatestProcessVersion(processId, processRecord.getTenantIdentifier());
 
     // If we are deleting the latest version we must unsubscribe the start events
     if (latestVersion == process.getVersion()) {
@@ -308,7 +308,7 @@ public class ResourceDeletionDeleteProcessor
 
       final var previousVersion =
           processState.findProcessVersionBefore(
-              processId, latestVersion, processRecord.getTenantId());
+              processId, latestVersion, processRecord.getTenantIdentifier());
       // If there is a previous version we must resubscribe to the previous version's start events.
       if (previousVersion.isPresent()) {
         final var previousProcess =
@@ -377,7 +377,7 @@ public class ResourceDeletionDeleteProcessor
 
   private AuthorizedTenants getAuthorizedTenants(
       final TypedRecord<ResourceDeletionRecord> command) {
-    final String tenantId = command.getValue().getTenantId();
+    final String tenantId = command.getValue().getTenantIdentifier();
     if (tenantId.isEmpty()) {
       return authCheckBehavior.getAuthorizedTenantIds(command);
     }

@@ -53,7 +53,7 @@ public class TaskProcessInstanceEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

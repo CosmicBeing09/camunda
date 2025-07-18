@@ -25,6 +25,6 @@ public class VariableEntityTransformer
         source.getScopeKey(),
         source.getProcessInstanceKey(),
         source.getBpmnProcessId(),
-        source.getTenantId());
+        source.getTenantIdentifier());
   }
 }

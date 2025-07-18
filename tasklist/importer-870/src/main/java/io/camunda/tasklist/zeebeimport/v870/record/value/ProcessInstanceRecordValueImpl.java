@@ -101,7 +101,7 @@ public class ProcessInstanceRecordValueImpl extends RecordValueWithPayloadImpl
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

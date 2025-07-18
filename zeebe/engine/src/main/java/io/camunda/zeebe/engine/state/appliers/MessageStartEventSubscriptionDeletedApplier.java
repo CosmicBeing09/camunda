@@ -27,6 +27,6 @@ public final class MessageStartEventSubscriptionDeletedApplier
   public void applyState(final long key, final MessageStartEventSubscriptionRecord value) {
     final var processDefinitionKey = value.getProcessDefinitionKey();
     subscriptionState.remove(
-        processDefinitionKey, value.getMessageNameBuffer(), value.getTenantId());
+        processDefinitionKey, value.getMessageNameBuffer(), value.getTenantIdentifier());
   }
 }

@@ -77,7 +77,7 @@ public class ProcessZeebeRecordProcessorElasticSearch {
           (formKey, schema) -> {
             try {
               persistForm(
-                  processDefinitionKey, formKey, schema, bulkRequest, recordValue.getTenantId());
+                  processDefinitionKey, formKey, schema, bulkRequest, recordValue.getTenantIdentifier());
             } catch (final PersistenceException e) {
               exceptions.add(e);
             }
@@ -122,7 +122,7 @@ public class ProcessZeebeRecordProcessorElasticSearch {
     processEntity.setKey(process.getProcessDefinitionKey());
     processEntity.setBpmnProcessId(process.getBpmnProcessId());
     processEntity.setVersion(process.getVersion());
-    processEntity.setTenantId(process.getTenantId());
+    processEntity.setTenantId(process.getTenantIdentifier());
     processEntity.setBpmnXml(new String(process.getResource()));
 
     final byte[] byteArray = process.getResource();

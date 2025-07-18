@@ -130,7 +130,7 @@ public class TaskEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

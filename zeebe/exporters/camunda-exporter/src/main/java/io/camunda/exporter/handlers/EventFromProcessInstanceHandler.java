@@ -66,7 +66,7 @@ public class EventFromProcessInstanceHandler
         .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
         .setProcessInstanceKey(recordValue.getProcessInstanceKey())
         .setBpmnProcessId(recordValue.getBpmnProcessId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     if (recordValue.getElementId() != null) {
       entity.setFlowNodeId(recordValue.getElementId());

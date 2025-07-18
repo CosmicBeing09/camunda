@@ -107,7 +107,7 @@ public class JobEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

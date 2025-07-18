@@ -118,7 +118,7 @@ public class UserTaskVariableHandler
         new TaskVariableEntity()
             .setPartitionId(record.getPartitionId())
             .setPosition(record.getPosition())
-            .setTenantId(record.getValue().getTenantId())
+            .setTenantId(record.getValue().getTenantIdentifier())
             .setKey(record.getKey())
             .setProcessInstanceId(record.getValue().getProcessInstanceKey())
             .setScopeKey(record.getValue().getScopeKey())

@@ -35,7 +35,7 @@ public class DraftTaskVariableEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

@@ -89,7 +89,7 @@ public class DecisionDefinitionEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

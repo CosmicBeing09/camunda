@@ -90,14 +90,14 @@ public class VariableResponse {
             variableEntity.getIsPreview()
                 ? variableEntity.getFullValue()
                 : variableEntity.getValue())
-        .setTenantId(variableEntity.getTenantId());
+        .setTenantId(variableEntity.getTenantIdentifier());
   }
 
   public static VariableResponse createFrom(DraftTaskVariableEntity draftTaskVariable) {
     return new VariableResponse()
         .setId(draftTaskVariable.getId())
         .setName(draftTaskVariable.getName())
-        .setTenantId(draftTaskVariable.getTenantId())
+        .setTenantId(draftTaskVariable.getTenantIdentifier())
         .setDraft(
             new VariableResponse.DraftVariableValue().setValue(draftTaskVariable.getFullValue()));
   }
@@ -107,7 +107,7 @@ public class VariableResponse {
         .setId(variableEntity.getId())
         .setName(variableEntity.getName())
         .setValue(variableEntity.getFullValue())
-        .setTenantId(variableEntity.getTenantId());
+        .setTenantId(variableEntity.getTenantIdentifier());
   }
 
   @Override

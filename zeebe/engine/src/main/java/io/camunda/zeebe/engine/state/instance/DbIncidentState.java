@@ -130,7 +130,7 @@ public final class DbIncidentState implements MutableIncidentState {
   public IncidentRecord getIncidentRecord(
       final long incidentKey, final AuthorizedTenants authorizedTenantIds) {
     final IncidentRecord incident = getIncidentRecord(incidentKey);
-    if (incident != null && authorizedTenantIds.isAuthorizedForTenantId(incident.getTenantId())) {
+    if (incident != null && authorizedTenantIds.isAuthorizedForTenantId(incident.getTenantIdentifier())) {
       return incident;
     }
     return null;

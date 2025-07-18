@@ -102,7 +102,7 @@ public class JobZeebeRecordProcessor {
             .setPartitionId(record.getPartitionId())
             .setProcessInstanceKey(recordValue.getProcessInstanceKey())
             .setFlowNodeInstanceId(recordValue.getElementInstanceKey())
-            .setTenantId(recordValue.getTenantId())
+            .setTenantId(recordValue.getTenantIdentifier())
             .setType(recordValue.getType())
             .setWorker(recordValue.getWorker())
             .setState(record.getIntent().name())

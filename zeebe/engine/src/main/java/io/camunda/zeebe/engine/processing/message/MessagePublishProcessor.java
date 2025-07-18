@@ -93,7 +93,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
             command,
             AuthorizationResourceType.MESSAGE,
             PermissionType.CREATE,
-            command.getValue().getTenantId(),
+            command.getValue().getTenantIdentifier(),
             true);
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {
@@ -110,7 +110,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
             messageRecord.getNameBuffer(),
             messageRecord.getCorrelationKeyBuffer(),
             messageRecord.getMessageIdBuffer(),
-            messageRecord.getTenantId())) {
+            messageRecord.getTenantIdentifier())) {
       final String rejectionReason =
           String.format(
               ALREADY_PUBLISHED_MESSAGE, bufferAsString(messageRecord.getMessageIdBuffer()));
@@ -152,6 +152,6 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
         messageCorrelationRecord.getNameBuffer(),
         messageCorrelationRecord.getCorrelationKeyBuffer(),
         messageCorrelationRecord.getVariablesBuffer(),
-        messageCorrelationRecord.getTenantId());
+        messageCorrelationRecord.getTenantIdentifier());
   }
 }

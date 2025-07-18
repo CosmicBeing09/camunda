@@ -67,7 +67,7 @@ public class MultiTenancyEnabledTest extends GatewayTest {
         .describedAs(
             "The rest of this assertion only makes sense when the broker request contains a record that is TenantOwned")
         .isInstanceOf(TenantOwned.class);
-    assertThat(((TenantOwned) brokerRequest.getRequestWriter()).getTenantId())
+    assertThat(((TenantOwned) brokerRequest.getRequestWriter()).getTenantIdentifier())
         .describedAs("The tenant id should be set to the provided tenant")
         .isEqualTo(owningTenantId);
   }

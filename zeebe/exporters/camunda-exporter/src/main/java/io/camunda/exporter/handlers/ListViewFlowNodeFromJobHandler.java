@@ -82,7 +82,7 @@ public class ListViewFlowNodeFromJobHandler
         .setPositionJob(record.getPosition())
         .setActivityId(recordValue.getElementId())
         .setProcessInstanceKey(recordValue.getProcessInstanceKey())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()))
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()))
         .getJoinRelation()
         .setParent(recordValue.getProcessInstanceKey());
 

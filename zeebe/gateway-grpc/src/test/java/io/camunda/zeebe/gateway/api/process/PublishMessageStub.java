@@ -33,7 +33,7 @@ public final class PublishMessageStub
             .setDeadline(requestRecord.getDeadline())
             .setVariables(requestRecord.getVariablesBuffer())
             .setMessageId(requestRecord.getMessageIdBuffer())
-            .setTenantId(requestRecord.getTenantId());
+            .setTenantId(requestRecord.getTenantIdentifier());
 
     return new BrokerResponse<>(responseRecord, 0, 123L);
   }

@@ -35,17 +35,17 @@ public final class DeploymentReconstructedApplier
     deploymentState.storeDeploymentRecord(deploymentKey, value);
     for (final var processMetadata : value.processesMetadata()) {
       processState.setMissingDeploymentKey(
-          processMetadata.getTenantId(), processMetadata.getKey(), deploymentKey);
+          processMetadata.getTenantIdentifier(), processMetadata.getKey(), deploymentKey);
     }
 
     for (final var formMetadata : value.formMetadata()) {
       formState.setMissingDeploymentKey(
-          formMetadata.getTenantId(), formMetadata.getFormKey(), deploymentKey);
+          formMetadata.getTenantIdentifier(), formMetadata.getFormKey(), deploymentKey);
     }
 
     for (final var decisionMetadata : value.decisionsMetadata()) {
       decisionState.setMissingDeploymentKey(
-          decisionMetadata.getTenantId(), decisionMetadata.getDecisionKey(), deploymentKey);
+          decisionMetadata.getTenantIdentifier(), decisionMetadata.getDecisionKey(), deploymentKey);
     }
   }
 }

@@ -188,7 +188,7 @@ public class DbUserTaskState implements MutableUserTaskState {
   @Override
   public UserTaskRecord getUserTask(final long key, final AuthorizedTenants authorizedTenantIds) {
     final UserTaskRecord userTask = getUserTask(key);
-    if (userTask != null && authorizedTenantIds.isAuthorizedForTenantId(userTask.getTenantId())) {
+    if (userTask != null && authorizedTenantIds.isAuthorizedForTenantId(userTask.getTenantIdentifier())) {
       return userTask;
     }
     return null;

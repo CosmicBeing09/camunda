@@ -89,10 +89,10 @@ public final class MessageCorrelationCorrelateProcessor
   public void processRecord(final TypedRecord<MessageCorrelationRecord> command) {
     final var messageCorrelationRecord = command.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(command, messageCorrelationRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(command, messageCorrelationRecord.getTenantIdentifier())) {
       final var message =
           "Expected to correlate message for tenant '%s', but user is not assigned to this tenant."
-              .formatted(messageCorrelationRecord.getTenantId());
+              .formatted(messageCorrelationRecord.getTenantIdentifier());
       rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
       responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
       return;
@@ -109,7 +109,7 @@ public final class MessageCorrelationCorrelateProcessor
             .setName(command.getValue().getName())
             .setCorrelationKey(command.getValue().getCorrelationKey())
             .setVariables(command.getValue().getVariablesBuffer())
-            .setTenantId(command.getValue().getTenantId())
+            .setTenantId(command.getValue().getTenantIdentifier())
             .setTimeToLive(-1L);
     stateWriter.appendFollowUpEvent(messageKey, MessageIntent.PUBLISHED, messageRecord);
 
@@ -123,7 +123,7 @@ public final class MessageCorrelationCorrelateProcessor
 
     final var authorizationRejectionOptional =
         isAuthorizedForAllSubscriptions(
-            command, correlatingSubscriptions, messageCorrelationRecord.getTenantId());
+            command, correlatingSubscriptions, messageCorrelationRecord.getTenantIdentifier());
     if (authorizationRejectionOptional.isPresent()) {
       final var rejection = authorizationRejectionOptional.get();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
@@ -168,7 +168,7 @@ public final class MessageCorrelationCorrelateProcessor
         messageCorrelationRecord.getNameBuffer(),
         messageCorrelationRecord.getCorrelationKeyBuffer(),
         messageCorrelationRecord.getVariablesBuffer(),
-        messageCorrelationRecord.getTenantId());
+        messageCorrelationRecord.getTenantIdentifier());
   }
 
   private Optional<Rejection> isAuthorizedForAllSubscriptions(

@@ -30,7 +30,7 @@ public class ProcessInstanceEntityTransformer
         source.getEndDate(),
         toState(source.getState()),
         source.isIncident(),
-        source.getTenantId(),
+        source.getTenantIdentifier(),
         source.getTreePath());
   }
 

@@ -57,7 +57,7 @@ public class TenantAwareFormLinkingTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.USER_TASK)
                 .limit(2))
-        .extracting(r -> r.getValue().getTenantId())
+        .extracting(r -> r.getValue().getTenantIdentifier())
         .containsOnly(TENANT);
   }
 
@@ -88,7 +88,7 @@ public class TenantAwareFormLinkingTest {
         .extracting(
             r -> r.getValue().getErrorType(),
             r -> r.getValue().getErrorMessage(),
-            r -> r.getValue().getTenantId())
+            r -> r.getValue().getTenantIdentifier())
         .containsExactly(
             tuple(
                 ErrorType.FORM_NOT_FOUND,

@@ -227,7 +227,7 @@ public final class DbMessageState implements MutableMessageState {
     message.setMessageKey(key).setMessage(record);
     messageColumnFamily.insert(messageKey, message);
 
-    tenantIdKey.setValueFromString(record.getTenantId());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
     messageName.setValueFromBuffer(record.getNameBuffer());
     correlationKey.setValueFromBuffer(record.getCorrelationKeyBuffer());
     nameCorrelationMessageColumnFamily.insert(nameCorrelationMessageKey, DbNil.INSTANCE);
@@ -320,7 +320,7 @@ public final class DbMessageState implements MutableMessageState {
     messageKey.setValue(storedMessage.getMessageKey());
     messageColumnFamily.deleteExisting(messageKey);
 
-    tenantIdKey.setValueFromString(storedMessage.getMessage().getTenantId());
+    tenantIdKey.setValueFromString(storedMessage.getMessage().getTenantIdentifier());
     messageName.setValueFromBuffer(storedMessage.getMessage().getNameBuffer());
     correlationKey.setValueFromBuffer(storedMessage.getMessage().getCorrelationKeyBuffer());
 

@@ -578,7 +578,7 @@ public class MultiTenancyMigrationTest {
               MessageRecord::getDeadline,
               MessageRecord::getVariables,
               MessageRecord::getMessageId,
-              MessageRecord::getTenantId)
+              MessageRecord::getTenantIdentifier)
           .containsExactly(
               messageRecord.getName(),
               messageRecord.getCorrelationKey(),
@@ -685,7 +685,7 @@ public class MultiTenancyMigrationTest {
               MessageStartEventSubscriptionRecord::getMessageKey,
               MessageStartEventSubscriptionRecord::getCorrelationKey,
               MessageStartEventSubscriptionRecord::getVariables,
-              MessageStartEventSubscriptionRecord::getTenantId)
+              MessageStartEventSubscriptionRecord::getTenantIdentifier)
           .containsExactly(
               record.getProcessDefinitionKey(),
               record.getBpmnProcessId(),
@@ -763,7 +763,7 @@ public class MultiTenancyMigrationTest {
               MessageSubscriptionRecord::getCorrelationKey,
               MessageSubscriptionRecord::isInterrupting,
               MessageSubscriptionRecord::getVariables,
-              MessageSubscriptionRecord::getTenantId)
+              MessageSubscriptionRecord::getTenantIdentifier)
           .containsExactly(
               record.getProcessInstanceKey(),
               record.getElementInstanceKey(),
@@ -839,7 +839,7 @@ public class MultiTenancyMigrationTest {
               ProcessMessageSubscriptionRecord::isInterrupting,
               ProcessMessageSubscriptionRecord::getVariables,
               ProcessMessageSubscriptionRecord::getElementId,
-              ProcessMessageSubscriptionRecord::getTenantId)
+              ProcessMessageSubscriptionRecord::getTenantIdentifier)
           .containsExactly(
               record.getSubscriptionPartitionId(),
               record.getProcessInstanceKey(),

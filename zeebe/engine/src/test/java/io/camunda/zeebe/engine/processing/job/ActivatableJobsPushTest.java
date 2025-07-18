@@ -301,7 +301,7 @@ public class ActivatableJobsPushTest {
               final JobRecord jobRecord = activatedJob.jobRecord();
               assertThat(jobRecord.getWorkerBuffer()).isEqualTo(worker);
               assertThat(jobRecord.getVariables()).isEqualTo(variables);
-              assertThat(jobRecord.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              assertThat(jobRecord.getTenantIdentifier()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
             });
   }
 }
