@@ -94,7 +94,7 @@ public final class ProcessInstanceBatchActivateProcessor
         elementInstanceState.getInstance(recordValue.getBatchElementInstanceKey());
     final var processDefinition =
         processState
-            .getProcessByKeyAndTenant(
+            .getProcessByProcessDefinitionKeyAndTenant(
                 parentElementInstance.getValue().getProcessDefinitionKey(),
                 parentElementInstance.getValue().getTenantId())
             .getProcess();

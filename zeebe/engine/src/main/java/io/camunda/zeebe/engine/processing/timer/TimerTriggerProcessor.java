@@ -97,7 +97,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
     // this is an additional safeguard to avoid banning unrelated instances
     // as noticed in https://github.com/camunda/camunda/issues/20677
     final var deployedProcess =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, tenantId);
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, tenantId);
     if (deployedProcess == null) {
       rejectionWriter.appendRejection(
           record,

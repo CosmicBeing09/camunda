@@ -17,7 +17,7 @@ import org.agrona.DirectBuffer;
 
 public interface ElementInstanceState {
 
-  ElementInstance getInstance(long key);
+  ElementInstance getInstance(long instanceKey);
 
   List<ElementInstance> getChildren(long parentKey);
 
@@ -31,11 +31,11 @@ public interface ElementInstanceState {
    * exist it will start after.
    *
    * @param parentKey the key of the parent element instance
-   * @param startAtKey the element instance key of child the iteration should start at
+   * @param startAtChildInstanceKey the element instance key of child the iteration should start at
    * @param visitor the visitor which is applied for each child
    */
   void forEachChild(
-      long parentKey, long startAtKey, BiFunction<Long, ElementInstance, Boolean> visitor);
+      long parentKey, long startAtChildInstanceKey, BiFunction<Long, ElementInstance, Boolean> visitor);
 
   /**
    * Applies the provided visitor to each child element of the given parent. The visitor can

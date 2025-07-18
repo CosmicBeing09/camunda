@@ -135,7 +135,7 @@ public class AdHocSubProcessActivityActivateProcessor
 
     final var adHocSubProcessDefinition =
         processState
-            .getProcessByKeyAndTenant(
+            .getProcessByProcessDefinitionKeyAndTenant(
                 adHocSubProcessElementInstance.getValue().getProcessDefinitionKey(),
                 adHocSubProcessElementInstance.getValue().getTenantId())
             .getProcess();

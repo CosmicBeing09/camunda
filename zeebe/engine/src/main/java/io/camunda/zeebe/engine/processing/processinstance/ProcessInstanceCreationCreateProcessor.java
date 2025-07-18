@@ -417,7 +417,7 @@ public final class ProcessInstanceCreationCreateProcessor
   }
 
   private Either<Rejection, DeployedProcess> getProcess(final long key, final String tenantId) {
-    final DeployedProcess process = processState.getProcessByKeyAndTenant(key, tenantId);
+    final DeployedProcess process = processState.getProcessByProcessDefinitionKeyAndTenant(key, tenantId);
     if (process != null) {
       return Either.right(process);
     } else {

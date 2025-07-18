@@ -56,9 +56,9 @@ public class ProcessStateMultiTenantTest {
     processState.putDeployment(tenant2Deployment);
 
     // then
-    var tenant1DeployedProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_1);
+    var tenant1DeployedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_1);
     assertDeployedProcess(tenant1DeployedProcess, TENANT_1, processKey, processId, version);
-    var tenant2DeployedProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_2);
+    var tenant2DeployedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_2);
     assertDeployedProcess(tenant2DeployedProcess, TENANT_2, processKey, processId, version);
 
     tenant1DeployedProcess =
@@ -90,9 +90,9 @@ public class ProcessStateMultiTenantTest {
     processState.putProcess(processKey, tenant2Process);
 
     // then
-    var tenant1DeployedProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_1);
+    var tenant1DeployedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_1);
     assertDeployedProcess(tenant1DeployedProcess, TENANT_1, processKey, processId, version);
-    var tenant2DeployedProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_2);
+    var tenant2DeployedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_2);
     assertDeployedProcess(tenant2DeployedProcess, TENANT_2, processKey, processId, version);
 
     tenant1DeployedProcess =
@@ -192,8 +192,8 @@ public class ProcessStateMultiTenantTest {
     final var tenant2Process = createProcessRecord(TENANT_2, processKey, processId, version);
     processState.putProcess(processKey, tenant1Process);
     processState.putProcess(processKey, tenant2Process);
-    final var tenant1InitialProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_1);
-    final var tenant2InitialProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_2);
+    final var tenant1InitialProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_1);
+    final var tenant2InitialProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_2);
 
     // when
     processState.updateProcessState(tenant1Process, PersistedProcessState.PENDING_DELETION);
@@ -205,11 +205,11 @@ public class ProcessStateMultiTenantTest {
     assertThat(tenant2InitialProcess.getState())
         .describedAs("Tenant 2 started with ACTIVE state")
         .isEqualTo(PersistedProcessState.ACTIVE);
-    final var tenant1UpdatedProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_1);
+    final var tenant1UpdatedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_1);
     assertThat(tenant1UpdatedProcess.getState())
         .describedAs("Tenant 1 state is updated")
         .isEqualTo(PersistedProcessState.PENDING_DELETION);
-    final var tenant2UpdatedProcess = processState.getProcessByKeyAndTenant(processKey, TENANT_2);
+    final var tenant2UpdatedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_2);
     assertThat(tenant2UpdatedProcess.getState())
         .describedAs("Tenant 2 state is unchanged")
         .isEqualTo(PersistedProcessState.ACTIVE);
@@ -229,10 +229,10 @@ public class ProcessStateMultiTenantTest {
     processState.deleteProcess(tenant1Process);
 
     // then
-    assertThat(processState.getProcessByKeyAndTenant(processKey, TENANT_1))
+    assertThat(processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_1))
         .describedAs("Tenant 1 is removed from the state")
         .isNull();
-    assertThat(processState.getProcessByKeyAndTenant(processKey, TENANT_2))
+    assertThat(processState.getProcessByProcessDefinitionKeyAndTenant(processKey, TENANT_2))
         .describedAs("Tenant 2 is not removed from the state")
         .isNotNull();
   }

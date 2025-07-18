@@ -51,7 +51,7 @@ public final class VariableDocumentUpdateProcessor
   private final ElementInstanceState elementInstanceState;
   private final MutableUserTaskState userTaskState;
   private final ProcessState processState;
-  private final KeyGenerator keyGenerator;
+  private final KeyGenerator variableDocumentKeyGenerator;
   private final VariableBehavior variableBehavior;
   private final BpmnJobBehavior jobBehavior;
   private final Writers writers;
@@ -64,12 +64,12 @@ public final class VariableDocumentUpdateProcessor
       final Writers writers,
       final MutableUserTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    this.elementInstanceState = processingState.getElementInstanceState();
+    elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;
-    this.processState = processingState.getProcessState();
-    this.keyGenerator = keyGenerator;
-    this.variableBehavior = bpmnBehaviors.variableBehavior();
-    this.jobBehavior = bpmnBehaviors.jobBehavior();
+    processState = processingState.getProcessState();
+    variableDocumentKeyGenerator = keyGenerator;
+    variableBehavior = bpmnBehaviors.variableBehavior();
+    jobBehavior = bpmnBehaviors.jobBehavior();
     this.writers = writers;
     this.authCheckBehavior = authCheckBehavior;
   }
@@ -78,8 +78,8 @@ public final class VariableDocumentUpdateProcessor
   public void processRecord(final TypedRecord<VariableDocumentRecord> record) {
     final VariableDocumentRecord value = record.getValue();
 
-    final ElementInstance scope = elementInstanceState.getInstance(value.getScopeKey());
-    if (scope == null || scope.isTerminating() || scope.isInFinalState()) {
+    final ElementInstance elementInstance = elementInstanceState.getInstance(value.getScopeKey());
+    if (elementInstance == null || elementInstance.isTerminating() || elementInstance.isInFinalState()) {
       final String reason = String.format(ERROR_MESSAGE_SCOPE_NOT_FOUND, value.getScopeKey());
       writers.rejection().appendRejection(record, RejectionType.NOT_FOUND, reason);
       writers.response().writeRejectionOnCommand(record, RejectionType.NOT_FOUND, reason);
@@ -91,8 +91,8 @@ public final class VariableDocumentUpdateProcessor
                 record,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
-                scope.getValue().getTenantId())
-            .addResourceId(scope.getValue().getBpmnProcessId());
+                elementInstance.getValue().getTenantId())
+            .addResourceId(elementInstance.getValue().getBpmnProcessId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
@@ -100,7 +100,7 @@ public final class VariableDocumentUpdateProcessor
           RejectionType.NOT_FOUND.equals(rejection.type())
               ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                   "update variables for element",
-                  scope.getValue().getProcessInstanceKey(),
+                  elementInstance.getValue().getProcessInstanceKey(),
                   "such element")
               : rejection.reason();
       writers.rejection().appendRejection(record, rejection.type(), errorMessage);
@@ -108,10 +108,10 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final String tenantId = scope.getValue().getTenantId();
+    final String tenantId = elementInstance.getValue().getTenantId();
 
-    if (isCamundaUserTask(scope)) {
-      final long userTaskKey = scope.getUserTaskKey();
+    if (isCamundaUserTask(elementInstance)) {
+      final long userTaskKey = elementInstance.getUserTaskKey();
       final var lifecycleState = userTaskState.getLifecycleState(userTaskKey);
       if (lifecycleState != LifecycleState.CREATED) {
         final var reason = INVALID_USER_TASK_STATE_MESSAGE.formatted(userTaskKey, lifecycleState);
@@ -120,8 +120,8 @@ public final class VariableDocumentUpdateProcessor
         return;
       }
 
-      final long key = keyGenerator.nextKey();
-      writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATING, value);
+      final long variableDocKey = variableDocumentKeyGenerator.nextKey();
+      writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATING, value);
 
       final var userTaskRecord = userTaskState.getUserTask(userTaskKey);
       if (hasVariables(value)) {
@@ -142,7 +142,7 @@ public final class VariableDocumentUpdateProcessor
         final var listener =
             userTaskElement.getTaskListeners(ZeebeTaskListenerEventType.updating).getFirst();
         jobBehavior.createNewTaskListenerJob(
-            buildContext(scope), userTaskRecord, listener, userTaskRecord.getChangedAttributes());
+            buildContext(elementInstance), userTaskRecord, listener, userTaskRecord.getChangedAttributes());
         return;
       }
 
@@ -171,20 +171,20 @@ public final class VariableDocumentUpdateProcessor
 
       writers
           .state()
-          .appendFollowUpEvent(scope.getUserTaskKey(), UserTaskIntent.UPDATED, userTaskRecord);
+          .appendFollowUpEvent(elementInstance.getUserTaskKey(), UserTaskIntent.UPDATED, userTaskRecord);
 
-      writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
-      writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);
+      writers.state().appendFollowUpEvent(variableDocKey, VariableDocumentIntent.UPDATED, value);
+      writers.response().writeEventOnCommand(variableDocKey, VariableDocumentIntent.UPDATED, value, record);
       return;
     }
 
-    final long processDefinitionKey = scope.getValue().getProcessDefinitionKey();
-    final long processInstanceKey = scope.getValue().getProcessInstanceKey();
-    final DirectBuffer bpmnProcessId = scope.getValue().getBpmnProcessIdBuffer();
+    final long processDefinitionKey = elementInstance.getValue().getProcessDefinitionKey();
+    final long processInstanceKey = elementInstance.getValue().getProcessInstanceKey();
+    final DirectBuffer bpmnProcessId = elementInstance.getValue().getBpmnProcessIdBuffer();
     try {
       if (value.getUpdateSemantics() == VariableDocumentUpdateSemantic.LOCAL) {
         variableBehavior.mergeLocalDocument(
-            scope.getKey(),
+            elementInstance.getKey(),
             processDefinitionKey,
             processInstanceKey,
             bpmnProcessId,
@@ -192,7 +192,7 @@ public final class VariableDocumentUpdateProcessor
             value.getVariablesBuffer());
       } else {
         variableBehavior.mergeDocument(
-            scope.getKey(),
+            elementInstance.getKey(),
             processDefinitionKey,
             processInstanceKey,
             bpmnProcessId,
@@ -209,17 +209,17 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final long key = keyGenerator.nextKey();
+    final long variableDocumentKey = variableDocumentKeyGenerator.nextKey();
 
-    writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
-    writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);
+    writers.state().appendFollowUpEvent(variableDocumentKey, VariableDocumentIntent.UPDATED, value);
+    writers.response().writeEventOnCommand(variableDocumentKey, VariableDocumentIntent.UPDATED, value, record);
   }
 
   private static boolean hasVariables(final VariableDocumentRecord record) {
     return !DocumentValue.EMPTY_DOCUMENT.equals(record.getVariablesBuffer());
   }
 
-  private static boolean isCamundaUserTask(ElementInstance elementInstance) {
+  private static boolean isCamundaUserTask(final ElementInstance elementInstance) {
     return elementInstance.getValue().getBpmnElementType() == BpmnElementType.USER_TASK
         && elementInstance.getUserTaskKey() > -1L;
   }
