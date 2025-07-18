@@ -47,9 +47,9 @@ public class AuthorizationUpdateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> groupRemovalCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> userCreateCommand) {
     permissionsBehavior
-        .isAuthorized(groupRemovalCommand)
+        .isAuthorized(userCreateCommand)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
@@ -57,16 +57,16 @@ public class AuthorizationUpdateProcessor
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
-                    groupRemovalCommand.getValue(),
-                    groupRemovalCommand.getValue().getPermissionTypes(),
+                    userCreateCommand.getValue(),
+                    userCreateCommand.getValue().getPermissionTypes(),
                     record.getResourceType(),
                     "Expected to update authorization with permission types '%s' and resource type '%s', but these permissions are not supported. Supported permission types are: '%s'"))
         .flatMap(permissionsBehavior::mappingExists)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(groupRemovalCommand, authorizationRecord),
+            authorizationRecord -> writeEventAndDistribute(userCreateCommand, authorizationRecord),
             (rejection) -> {
-              rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
             });
   }
 

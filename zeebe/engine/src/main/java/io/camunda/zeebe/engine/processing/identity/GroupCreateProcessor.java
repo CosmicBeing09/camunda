@@ -52,25 +52,25 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> groupRemovalCommand) {
+  public void processNewCommand(final TypedRecord<GroupRecord> userCreateCommand) {
     final var authorizationRequest =
-        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
+        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
 
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = groupRemovalCommand.getValue();
+    final var record = userCreateCommand.getValue();
     final var groupId = record.getGroupId();
     final var persistedGroup = groupState.get(groupId);
     if (persistedGroup.isPresent()) {
       final var errorMessage = GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(userCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -78,12 +78,12 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
     record.setGroupKey(key);
 
     stateWriter.appendFollowUpEvent(key, GroupIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, groupRemovalCommand);
+    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, userCreateCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(groupRemovalCommand);
+        .distribute(userCreateCommand);
   }
 
   @Override

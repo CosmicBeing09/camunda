@@ -128,26 +128,26 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> groupRemovalCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> userCreateCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            groupRemovalCommand,
+            userCreateCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            groupRemovalCommand.getValue().getTenantId(),
+            userCreateCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(groupRemovalCommand);
+    transformAndDistributeDeployment(userCreateCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(groupRemovalCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(userCreateCommand.getValue());
   }
 
   @Override

@@ -65,16 +65,16 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> groupRemovalCommand) {
-    final var record = groupRemovalCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> userCreateCommand) {
+    final var record = userCreateCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(groupRemovalCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(userCreateCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -82,22 +82,22 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
 
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          groupRemovalCommand,
+          userCreateCommand,
           RejectionType.NOT_FOUND,
           "Expected to remove entity from tenant '%s', but no tenant with this ID exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!validateEntityAssignment(groupRemovalCommand, tenantId)) {
+    if (!validateEntityAssignment(userCreateCommand, tenantId)) {
       return;
     }
 
     final var tenantKey = persistedTenant.get().getTenantKey();
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_REMOVED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_REMOVED, record,
-        groupRemovalCommand);
-    distributeCommand(groupRemovalCommand);
+        userCreateCommand);
+    distributeCommand(userCreateCommand);
   }
 
   @Override

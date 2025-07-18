@@ -113,20 +113,20 @@ public class ResourceDeletionDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> groupRemovalCommand) {
-    final var value = groupRemovalCommand.getValue();
+  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> userCreateCommand) {
+    final var value = userCreateCommand.getValue();
     final long eventKey = keyGenerator.nextKey();
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING, value);
 
-    tryDeleteResources(groupRemovalCommand);
+    tryDeleteResources(userCreateCommand);
 
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETED, value);
     commandDistributionBehavior
         .withKey(eventKey)
         .inQueue(DistributionQueue.DEPLOYMENT)
-        .distribute(groupRemovalCommand);
+        .distribute(userCreateCommand);
     responseWriter.writeEventOnCommand(eventKey, ResourceDeletionIntent.DELETING, value,
-        groupRemovalCommand);
+        userCreateCommand);
   }
 
   @Override

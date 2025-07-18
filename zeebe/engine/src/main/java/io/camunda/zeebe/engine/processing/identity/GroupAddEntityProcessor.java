@@ -61,60 +61,60 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> groupRemovalCommand) {
-    final var record = groupRemovalCommand.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> userCreateCommand) {
+    final var groupRecord = userCreateCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
-            .addResourceId(record.getGroupId());
+        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+            .addResourceId(groupRecord.getGroupId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var groupId = record.getGroupId();
+    final var groupId = groupRecord.getGroupId();
     final var persistedRecord = groupState.get(groupId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage =
           "Expected to update group with ID '%s', but a group with this ID does not exist."
               .formatted(groupId);
-      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(userCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var groupKey = persistedRecord.get().getGroupKey();
-    final var entityId = record.getEntityId();
-    final var entityType = record.getEntityType();
+    final var entityId = groupRecord.getEntityId();
+    final var entityType = groupRecord.getEntityType();
     if (!isEntityPresent(entityId, entityType)) {
       final var errorMessage =
           "Expected to add an entity with ID '%s' and type '%s' to group with ID '%s', but the entity does not exist."
               .formatted(entityId, entityType, groupId);
-      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(userCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
-    if (isEntityAssigned(record)) {
+    if (isEntityAssigned(groupRecord)) {
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(
-              record.getEntityId(), record.getGroupId());
-      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+              groupRecord.getEntityId(), groupRecord.getGroupId());
+      rejectionWriter.appendRejection(userCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
-    stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_ADDED, record);
-    responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, record,
-        groupRemovalCommand);
+    stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_ADDED, groupRecord);
+    responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, groupRecord,
+        userCreateCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(groupRemovalCommand);
+        .distribute(userCreateCommand);
   }
 
   @Override

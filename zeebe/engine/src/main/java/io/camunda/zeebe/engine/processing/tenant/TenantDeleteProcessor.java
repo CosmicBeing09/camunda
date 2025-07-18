@@ -68,23 +68,23 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> groupRemovalCommand) {
-    final var record = groupRemovalCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> userCreateCommand) {
+    final var record = userCreateCommand.getValue();
     final var tenantId = record.getTenantId();
     final var persistedTenantRecord = tenantState.getTenantById(tenantId);
 
     if (persistedTenantRecord.isEmpty()) {
       rejectCommand(
-          groupRemovalCommand, RejectionType.NOT_FOUND, TENANT_NOT_FOUND_ERROR_MESSAGE.formatted(tenantId));
+          userCreateCommand, RejectionType.NOT_FOUND, TENANT_NOT_FOUND_ERROR_MESSAGE.formatted(tenantId));
       return;
     }
 
     final var authorizationRequest =
-        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.TENANT, PermissionType.DELETE)
+        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.TENANT, PermissionType.DELETE)
             .addResourceId(persistedTenantRecord.get().getTenantId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(groupRemovalCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(userCreateCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -98,8 +98,9 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
     deleteAuthorizations(record);
 
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.DELETED, record);
-    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.DELETED, record, groupRemovalCommand);
-    distributeCommand(groupRemovalCommand);
+    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.DELETED, record,
+        userCreateCommand);
+    distributeCommand(userCreateCommand);
   }
 
   @Override

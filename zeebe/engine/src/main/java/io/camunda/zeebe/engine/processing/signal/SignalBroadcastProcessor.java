@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> groupRemovalCommand) {
+  public void processNewCommand(final TypedRecord<SignalRecord> userCreateCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = groupRemovalCommand.getValue();
+    final var signalRecord = userCreateCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(groupRemovalCommand, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(userCreateCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(userCreateCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(groupRemovalCommand, isStartEvent, subscriptionRecord);
+          checkAuthorization(userCreateCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,21 +110,21 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (groupRemovalCommand.hasRequestMetadata()) {
+    if (userCreateCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
-          groupRemovalCommand);
+          userCreateCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(groupRemovalCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(userCreateCommand);
   }
 
   @Override
   public void processDistributedCommand(final TypedRecord<SignalRecord> command) {
-    final var value = command.getValue();
+    final var signalRecord = command.getValue();
     signalSubscriptionState.visitBySignalName(
-        value.getSignalNameBuffer(),
-        value.getTenantId(),
-        subscription -> activateElement(subscription.getRecord(), value.getVariablesBuffer()));
+        signalRecord.getSignalNameBuffer(),
+        signalRecord.getTenantId(),
+        subscription -> activateElement(subscription.getRecord(), signalRecord.getVariablesBuffer()));
 
     stateWriter.appendFollowUpEvent(command.getKey(), SignalIntent.BROADCASTED, command.getValue());
     commandDistributionBehavior.acknowledgeCommand(command);
