@@ -91,7 +91,7 @@ public class CamundaAssert {
    * @param assertionTimeout the maximum time of an assertion
    * @see #DEFAULT_ASSERTION_TIMEOUT
    */
-  public static void setAssertionTimeout(final Duration assertionTimeout) {
+  public static void setTimeout(final Duration assertionTimeout) {
     Awaitility.setDefaultTimeout(assertionTimeout);
   }
 
@@ -101,7 +101,7 @@ public class CamundaAssert {
    * @param assertionInterval time between two assertion attempts
    * @see #DEFAULT_ASSERTION_INTERVAL
    */
-  public static void setAssertionInterval(final Duration assertionInterval) {
+  public static void setInterval(final Duration assertionInterval) {
     Awaitility.setDefaultPollInterval(assertionInterval);
   }
 
