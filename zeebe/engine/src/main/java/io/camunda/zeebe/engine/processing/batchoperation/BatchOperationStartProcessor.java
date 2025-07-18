@@ -39,6 +39,6 @@ public final class BatchOperationStartProcessor
 
     stateWriter.appendFollowUpEvent(command.getKey(), BatchOperationIntent.STARTED, recordValue);
 
-    metrics.recordStarted(recordValue.getBatchOperationType());
+    metrics.recordStart(recordValue.getBatchOperationType());
   }
 }

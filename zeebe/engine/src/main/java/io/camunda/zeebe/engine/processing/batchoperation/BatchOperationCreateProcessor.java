@@ -104,7 +104,7 @@ public final class BatchOperationCreateProcessor
         .inQueue(DistributionQueue.BATCH_OPERATION)
         .distribute(command.getValueType(), command.getIntent(), recordWithKey);
 
-    metrics.recordCreated(recordWithKey.getBatchOperationType());
+    metrics.recordCreate(recordWithKey.getBatchOperationType());
   }
 
   @Override
