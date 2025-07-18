@@ -78,12 +78,12 @@ public class BatchOperationMetrics {
   }
 
   public void startTotalLatencyMeasure(
-      final Long batchOperationKey, final BatchOperationType batchOperationType) {
-    createLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey, batchOperationType);
+      final Long key, final BatchOperationType batchOperationType) {
+    createLatency(BatchOperationLatency.TOTAL_LATENCY, key, batchOperationType);
   }
 
-  public void stopTotalLatencyMeasure(final Long batchOperationKey) {
-    closeAndRemoveLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey);
+  public void stopTotalLatencyMeasure(final Long key) {
+    closeAndRemoveLatency(BatchOperationLatency.TOTAL_LATENCY, key);
   }
 
   public ResourceSample startTotalQueryLatencyMeasure(
