@@ -9,7 +9,7 @@ package io.camunda.it.rdbms.db.fixtures;
 
 import io.camunda.db.rdbms.write.RdbmsWriter;
 import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel;
-import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel.FlowNodeInstanceDbModelBuilder;
+import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel.Builder;
 import io.camunda.search.entities.FlowNodeInstanceEntity.FlowNodeState;
 import io.camunda.search.entities.FlowNodeInstanceEntity.FlowNodeType;
 import java.time.temporal.ChronoUnit;
@@ -21,10 +21,10 @@ public final class ElementInstanceFixtures extends CommonFixtures {
   private ElementInstanceFixtures() {}
 
   public static FlowNodeInstanceDbModel createRandomized(
-      final Function<FlowNodeInstanceDbModelBuilder, FlowNodeInstanceDbModelBuilder>
+      final Function<Builder, Builder>
           builderFunction) {
     final var builder =
-        new FlowNodeInstanceDbModelBuilder()
+        new Builder()
             .flowNodeInstanceKey(nextKey())
             .processInstanceKey(nextKey())
             .processDefinitionKey(nextKey())
@@ -47,7 +47,7 @@ public final class ElementInstanceFixtures extends CommonFixtures {
 
   public static void createAndSaveRandomElementInstances(
       final RdbmsWriter rdbmsWriter,
-      final Function<FlowNodeInstanceDbModelBuilder, FlowNodeInstanceDbModelBuilder>
+      final Function<Builder, Builder>
           builderFunction) {
     for (int i = 0; i < 20; i++) {
       rdbmsWriter
@@ -67,7 +67,7 @@ public final class ElementInstanceFixtures extends CommonFixtures {
 
   public static FlowNodeInstanceDbModel createAndSaveElementInstance(
       final RdbmsWriter rdbmsWriter,
-      final Function<FlowNodeInstanceDbModelBuilder, FlowNodeInstanceDbModelBuilder>
+      final Function<Builder, Builder>
           builderFunction) {
     final var instance = ElementInstanceFixtures.createRandomized(builderFunction);
     createAndSaveElementInstances(rdbmsWriter, List.of(instance));

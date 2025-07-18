@@ -10,7 +10,7 @@ package io.camunda.exporter.rdbms.handlers;
 import static io.camunda.exporter.rdbms.utils.ExportUtil.buildTreePath;
 
 import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel;
-import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel.FlowNodeInstanceDbModelBuilder;
+import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel.Builder;
 import io.camunda.db.rdbms.write.service.FlowNodeInstanceWriter;
 import io.camunda.exporter.rdbms.RdbmsExportHandler;
 import io.camunda.search.entities.FlowNodeInstanceEntity.FlowNodeState;
@@ -85,7 +85,7 @@ public class FlowNodeExportHandler implements RdbmsExportHandler<ProcessInstance
   private FlowNodeInstanceDbModel map(
       final Record<ProcessInstanceRecordValue> record, final ProcessInstanceRecordValue value) {
     final var processDefinitionKey = value.getProcessDefinitionKey();
-    return new FlowNodeInstanceDbModelBuilder()
+    return new Builder()
         .flowNodeInstanceKey(record.getKey())
         .flowNodeId(value.getElementId())
         .flowNodeName(
