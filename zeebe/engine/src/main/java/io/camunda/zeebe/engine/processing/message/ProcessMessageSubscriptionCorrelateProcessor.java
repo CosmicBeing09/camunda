@@ -84,9 +84,9 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> command) {
+  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> processInstanceRecord) {
 
-    final var record = command.getValue();
+    final var record = processInstanceRecord.getValue();
     final var elementInstanceKey = record.getElementInstanceKey();
     final String messageName = record.getMessageName();
     final String tenantId = record.getTenantId();
@@ -95,16 +95,16 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
             elementInstanceKey, record.getMessageNameBuffer(), tenantId);
 
     if (subscription == null) {
-      rejectCommand(command, RejectionType.NOT_FOUND, NO_SUBSCRIPTION_FOUND_MESSAGE);
+      rejectCommand(processInstanceRecord, RejectionType.NOT_FOUND, NO_SUBSCRIPTION_FOUND_MESSAGE);
       return;
 
     } else if (subscription.isClosing()) {
-      rejectCommand(command, RejectionType.INVALID_STATE, ALREADY_CLOSING_MESSAGE);
+      rejectCommand(processInstanceRecord, RejectionType.INVALID_STATE, ALREADY_CLOSING_MESSAGE);
       return;
 
     } else if (hasAlreadyBeenCorrelated(record, subscription)) {
       rejectionWriter.appendRejection(
-          command, RejectionType.INVALID_STATE, "Already correlated this message");
+          processInstanceRecord, RejectionType.INVALID_STATE, "Already correlated this message");
       // while we don't accept the command on this partition, we still need to acknowledge it to
       // attempt recovering from a previous acknowledgment that didn't make it to the other
       // partition.
@@ -118,7 +118,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
             elementInstance, subscription.getRecord().getElementIdBuffer());
 
     if (!canTriggerElement) {
-      rejectCommand(command, RejectionType.INVALID_STATE, NO_EVENT_OCCURRED_MESSAGE);
+      rejectCommand(processInstanceRecord, RejectionType.INVALID_STATE, NO_EVENT_OCCURRED_MESSAGE);
       return;
     }
 

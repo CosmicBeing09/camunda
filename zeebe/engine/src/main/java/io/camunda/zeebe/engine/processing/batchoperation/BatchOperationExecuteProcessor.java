@@ -75,11 +75,11 @@ public final class BatchOperationExecuteProcessor
 
   @Override
   @SuppressWarnings("checkstyle:MissingSwitchDefault")
-  public void processRecord(final TypedRecord<BatchOperationExecutionRecord> command) {
-    final var executionRecord = command.getValue();
+  public void processRecord(final TypedRecord<BatchOperationExecutionRecord> processInstanceRecord) {
+    final var executionRecord = processInstanceRecord.getValue();
     LOGGER.debug(
         "Processing new command with key '{}' on partition{} : {}",
-        command.getKey(),
+        processInstanceRecord.getKey(),
         partitionId,
         executionRecord);
     final long batchKey = executionRecord.getBatchOperationKey();
@@ -104,8 +104,8 @@ public final class BatchOperationExecuteProcessor
       LOGGER.debug(
           "No items to process for BatchOperation {} on partition {}", batchKey, partitionId);
 
-      appendBatchOperationExecutionExecutedEvent(command.getValue(), Collections.emptySet());
-      appendBatchOperationExecutionCompletedEvent(command.getValue());
+      appendBatchOperationExecutionExecutedEvent(processInstanceRecord.getValue(), Collections.emptySet());
+      appendBatchOperationExecutionCompletedEvent(processInstanceRecord.getValue());
 
       metrics.stopTotalExecutionLatencyMeasure(batchKey);
       return;
@@ -114,24 +114,24 @@ public final class BatchOperationExecuteProcessor
     // This is only done for the first batch operation execution iteration
     metrics.stopStartExecuteLatencyMeasure(batchKey);
 
-    appendBatchOperationExecutionExecutingEvent(command.getValue(), Set.copyOf(entityKeys));
+    appendBatchOperationExecutionExecutingEvent(processInstanceRecord.getValue(), Set.copyOf(entityKeys));
 
     final var handler = handlers.get(batchOperation.getBatchOperationType());
     entityKeys.forEach(entityKey -> handler.execute(entityKey, batchOperation));
 
-    appendBatchOperationExecutionExecutedEvent(command.getValue(), Set.copyOf(entityKeys));
-    appendBatchOperationExecuteCommand(command, batchKey, batchOperation);
+    appendBatchOperationExecutionExecutedEvent(processInstanceRecord.getValue(), Set.copyOf(entityKeys));
+    appendBatchOperationExecuteCommand(processInstanceRecord, batchKey, batchOperation);
 
     metrics.startExecuteCycleLatencyMeasure(batchKey, batchOperation.getBatchOperationType());
-  }
-
-  private PersistedBatchOperation getBatchOperation(final long batchOperationKey) {
-    return batchOperationState.get(batchOperationKey).orElse(null);
   }
 
   @Override
   public boolean shouldProcessResultsInSeparateBatches() {
     return true;
+  }
+
+  private PersistedBatchOperation getBatchOperation(final long batchOperationKey) {
+    return batchOperationState.get(batchOperationKey).orElse(null);
   }
 
   private void appendBatchOperationExecuteCommand(

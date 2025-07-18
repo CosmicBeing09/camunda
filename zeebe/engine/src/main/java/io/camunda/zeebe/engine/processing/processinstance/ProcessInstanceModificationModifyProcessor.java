@@ -172,9 +172,9 @@ public final class ProcessInstanceModificationModifyProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceModificationRecord> command) {
-    final long commandKey = command.getKey();
-    final var value = command.getValue();
+  public void processRecord(final TypedRecord<ProcessInstanceModificationRecord> processInstanceRecord) {
+    final long commandKey = processInstanceRecord.getKey();
+    final var value = processInstanceRecord.getValue();
 
     // if set, the command's key should take precedence over the processInstanceKey
     final long eventKey = commandKey > -1 ? commandKey : value.getProcessInstanceKey();
@@ -184,14 +184,14 @@ public final class ProcessInstanceModificationModifyProcessor
 
     if (processInstance == null) {
       final String reason = String.format(ERROR_MESSAGE_PROCESS_INSTANCE_NOT_FOUND, eventKey);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, reason);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, reason);
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.NOT_FOUND, reason);
+      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.NOT_FOUND, reason);
       return;
     }
 
     final var authRequest =
         new AuthorizationRequest(
-                command,
+            processInstanceRecord,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 processInstance.getValue().getTenantId())
@@ -206,8 +206,8 @@ public final class ProcessInstanceModificationModifyProcessor
                   processInstance.getValue().getProcessInstanceKey(),
                   "such process instance")
               : rejection.reason();
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
-      rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), errorMessage);
+      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), errorMessage);
       return;
     }
 
@@ -216,11 +216,11 @@ public final class ProcessInstanceModificationModifyProcessor
         processState.getProcessByKeyAndTenant(
             processInstanceRecord.getProcessDefinitionKey(), processInstanceRecord.getTenantId());
 
-    final var validationResult = validateCommand(command, process);
+    final var validationResult = validateCommand(processInstanceRecord, process);
     if (validationResult.isLeft()) {
       final var rejection = validationResult.getLeft();
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
       return;
     }
 
@@ -279,7 +279,7 @@ public final class ProcessInstanceModificationModifyProcessor
         eventKey, ProcessInstanceModificationIntent.MODIFIED, extendedRecord);
 
     responseWriter.writeEventOnCommand(
-        eventKey, ProcessInstanceModificationIntent.MODIFIED, extendedRecord, command);
+        eventKey, ProcessInstanceModificationIntent.MODIFIED, extendedRecord, processInstanceRecord);
   }
 
   @Override

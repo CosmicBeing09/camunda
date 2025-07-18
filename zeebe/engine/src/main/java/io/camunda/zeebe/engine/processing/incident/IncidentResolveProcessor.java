@@ -83,19 +83,19 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   }
 
   @Override
-  public void processRecord(final TypedRecord<IncidentRecord> command) {
-    final long key = command.getKey();
-    final var authorizedTenantIds = authCheckBehavior.getAuthorizedTenantIds(command);
+  public void processRecord(final TypedRecord<IncidentRecord> processInstanceRecord) {
+    final long key = processInstanceRecord.getKey();
+    final var authorizedTenantIds = authCheckBehavior.getAuthorizedTenantIds(processInstanceRecord);
     final var incident = incidentState.getIncidentRecord(key, authorizedTenantIds);
     if (incident == null) {
       final var errorMessage = String.format(NO_INCIDENT_FOUND_MSG, key);
-      rejectResolveCommand(command, errorMessage, RejectionType.NOT_FOUND);
+      rejectResolveCommand(processInstanceRecord, errorMessage, RejectionType.NOT_FOUND);
       return;
     }
 
     final var authRequest =
         new AuthorizationRequest(
-                command,
+            processInstanceRecord,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 incident.getTenantId())
@@ -103,25 +103,26 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
       return;
     }
 
     final long jobKey = incident.getJobKey();
     if (isJobRelatedIncident(jobKey) && jobState.getJob(jobKey).getRetries() <= 0) {
       final var errorMessage = String.format(NO_RETRIES_LEFT_MSG, key, jobKey);
-      rejectResolveCommand(command, errorMessage, RejectionType.INVALID_STATE);
+      rejectResolveCommand(processInstanceRecord, errorMessage, RejectionType.INVALID_STATE);
       return;
     }
 
     stateWriter.appendFollowUpEvent(key, IncidentIntent.RESOLVED, incident);
-    responseWriter.writeEventOnCommand(key, IncidentIntent.RESOLVED, incident, command);
+    responseWriter.writeEventOnCommand(key, IncidentIntent.RESOLVED, incident,
+        processInstanceRecord);
 
     publishIncidentRelatedJob(jobKey);
 
     // if it fails, a new incident is raised
-    attemptToContinueProcessProcessing(command, incident);
+    attemptToContinueProcessProcessing(processInstanceRecord, incident);
   }
 
   private void rejectResolveCommand(

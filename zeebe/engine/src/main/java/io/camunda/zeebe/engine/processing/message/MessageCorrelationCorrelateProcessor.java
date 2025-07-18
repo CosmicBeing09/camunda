@@ -86,30 +86,30 @@ public final class MessageCorrelationCorrelateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<MessageCorrelationRecord> command) {
-    final var messageCorrelationRecord = command.getValue();
+  public void processRecord(final TypedRecord<MessageCorrelationRecord> processInstanceRecord) {
+    final var messageCorrelationRecord = processInstanceRecord.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(command, messageCorrelationRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(processInstanceRecord, messageCorrelationRecord.getTenantId())) {
       final var message =
           "Expected to correlate message for tenant '%s', but user is not assigned to this tenant."
               .formatted(messageCorrelationRecord.getTenantId());
-      rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.FORBIDDEN, message);
       return;
     }
 
     final long messageKey = keyGenerator.nextKey();
     messageCorrelationRecord
         .setMessageKey(messageKey)
-        .setRequestId(command.getRequestId())
-        .setRequestStreamId(command.getRequestStreamId());
+        .setRequestId(processInstanceRecord.getRequestId())
+        .setRequestStreamId(processInstanceRecord.getRequestStreamId());
 
     final var messageRecord =
         new MessageRecord()
-            .setName(command.getValue().getName())
-            .setCorrelationKey(command.getValue().getCorrelationKey())
-            .setVariables(command.getValue().getVariablesBuffer())
-            .setTenantId(command.getValue().getTenantId())
+            .setName(processInstanceRecord.getValue().getName())
+            .setCorrelationKey(processInstanceRecord.getValue().getCorrelationKey())
+            .setVariables(processInstanceRecord.getValue().getVariablesBuffer())
+            .setTenantId(processInstanceRecord.getValue().getTenantId())
             .setTimeToLive(-1L);
     stateWriter.appendFollowUpEvent(messageKey, MessageIntent.PUBLISHED, messageRecord);
 
@@ -123,20 +123,20 @@ public final class MessageCorrelationCorrelateProcessor
 
     final var authorizationRejectionOptional =
         isAuthorizedForAllSubscriptions(
-            command, correlatingSubscriptions, messageCorrelationRecord.getTenantId());
+            processInstanceRecord, correlatingSubscriptions, messageCorrelationRecord.getTenantId());
     if (authorizationRejectionOptional.isPresent()) {
       final var rejection = authorizationRejectionOptional.get();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
       return;
     }
 
     if (correlatingSubscriptions.isEmpty()) {
       final var errorMessage =
           SUBSCRIPTION_NOT_FOUND.formatted(
-              command.getValue().getName(), command.getValue().getCorrelationKey());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+              processInstanceRecord.getValue().getName(), processInstanceRecord.getValue().getCorrelationKey());
+      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.NOT_FOUND, errorMessage);
     } else {
       correlatingSubscriptions
           .getFirstMessageStartEventSubscription()
@@ -151,7 +151,7 @@ public final class MessageCorrelationCorrelateProcessor
                     messageKey,
                     MessageCorrelationIntent.CORRELATED,
                     messageCorrelationRecord,
-                    command);
+                    processInstanceRecord);
               });
     }
 

@@ -73,62 +73,62 @@ public class AdHocSubProcessActivityActivateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<AdHocSubProcessActivityActivationRecord> command) {
+  public void processRecord(final TypedRecord<AdHocSubProcessActivityActivationRecord> processInstanceRecord) {
     final var adHocSubProcessInstance =
         elementInstanceState.getInstance(
-            Long.parseLong(command.getValue().getAdHocSubProcessInstanceKey()));
+            Long.parseLong(processInstanceRecord.getValue().getAdHocSubProcessInstanceKey()));
     if (adHocSubProcessInstance == null) {
       writeRejectionError(
-          command,
+          processInstanceRecord,
           RejectionType.NOT_FOUND,
           String.format(
               ERROR_MSG_AD_HOC_SUB_PROCESS_NOT_FOUND,
-              command.getValue().getAdHocSubProcessInstanceKey()));
+              processInstanceRecord.getValue().getAdHocSubProcessInstanceKey()));
 
       return;
     }
 
     if (!adHocSubProcessInstance.isActive()) {
       writeRejectionError(
-          command,
+          processInstanceRecord,
           RejectionType.INVALID_STATE,
           String.format(
               ERROR_MSG_AD_HOC_SUB_PROCESS_IS_NO_ACTIVE,
-              command.getValue().getAdHocSubProcessInstanceKey()));
+              processInstanceRecord.getValue().getAdHocSubProcessInstanceKey()));
 
       return;
     }
 
-    final var authorizationResult = authorize(command, adHocSubProcessInstance);
+    final var authorizationResult = authorize(processInstanceRecord, adHocSubProcessInstance);
     if (authorizationResult.isLeft()) {
       final var rejection = authorizationResult.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
               ? ERROR_MSG_AD_HOC_SUB_PROCESS_NOT_FOUND.formatted(
-                  command.getValue().getAdHocSubProcessInstanceKey())
+                  processInstanceRecord.getValue().getAdHocSubProcessInstanceKey())
               : rejection.reason();
-      writeRejectionError(command, rejection.type(), errorMessage);
+      writeRejectionError(processInstanceRecord, rejection.type(), errorMessage);
 
       return;
     }
 
-    if (hasDuplicateElements(command)) {
+    if (hasDuplicateElements(processInstanceRecord)) {
       writeRejectionError(
-          command,
+          processInstanceRecord,
           RejectionType.INVALID_ARGUMENT,
           String.format(
-              ERROR_MSG_DUPLICATE_ACTIVITIES, command.getValue().getAdHocSubProcessInstanceKey()));
+              ERROR_MSG_DUPLICATE_ACTIVITIES, processInstanceRecord.getValue().getAdHocSubProcessInstanceKey()));
 
       return;
     }
 
     if (!adHocSubProcessInstance.isActive()) {
       writeRejectionError(
-          command,
+          processInstanceRecord,
           RejectionType.INVALID_STATE,
           String.format(
               ERROR_MSG_AD_HOC_SUB_PROCESS_IS_NOT_ACTIVE,
-              command.getValue().getAdHocSubProcessInstanceKey()));
+              processInstanceRecord.getValue().getAdHocSubProcessInstanceKey()));
 
       return;
     }
@@ -148,24 +148,24 @@ public class AdHocSubProcessActivityActivateProcessor
 
     // check that the given elements exist within the ad-hoc sub-process
     final var elementsNotInAdHocSubProcess =
-        command.getValue().elements().stream()
+        processInstanceRecord.getValue().elements().stream()
             .map(AdHocSubProcessActivityActivationElement::getElementId)
             .filter(elementId -> !adHocActivitiesById.containsKey(elementId))
             .toList();
     if (!elementsNotInAdHocSubProcess.isEmpty()) {
       writeRejectionError(
-          command,
+          processInstanceRecord,
           RejectionType.NOT_FOUND,
           String.format(
               ERROR_MSG_ELEMENTS_NOT_FOUND,
-              command.getValue().getAdHocSubProcessInstanceKey(),
+              processInstanceRecord.getValue().getAdHocSubProcessInstanceKey(),
               elementsNotInAdHocSubProcess));
 
       return;
     }
 
     // activate the elements
-    for (final var elementValue : command.getValue().getElements()) {
+    for (final var elementValue : processInstanceRecord.getValue().getElements()) {
       final var elementToActivate =
           adHocSubProcessDefinition.getElementById(elementValue.getElementId());
       final var elementProcessInstanceRecord = new ProcessInstanceRecord();
@@ -184,13 +184,13 @@ public class AdHocSubProcessActivityActivateProcessor
     }
 
     stateWriter.appendFollowUpEvent(
-        command.getKey(), AdHocSubProcessActivityActivationIntent.ACTIVATED, command.getValue());
+        processInstanceRecord.getKey(), AdHocSubProcessActivityActivationIntent.ACTIVATED, processInstanceRecord.getValue());
 
     responseWriter.writeEventOnCommand(
-        command.getKey(),
+        processInstanceRecord.getKey(),
         AdHocSubProcessActivityActivationIntent.ACTIVATED,
-        command.getValue(),
-        command);
+        processInstanceRecord.getValue(),
+        processInstanceRecord);
   }
 
   private void writeRejectionError(

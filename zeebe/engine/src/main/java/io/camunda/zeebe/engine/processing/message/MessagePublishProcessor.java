@@ -87,23 +87,23 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
   }
 
   @Override
-  public void processRecord(final TypedRecord<MessageRecord> command) {
+  public void processRecord(final TypedRecord<MessageRecord> processInstanceRecord) {
     final var authRequest =
         new AuthorizationRequest(
-            command,
+            processInstanceRecord,
             AuthorizationResourceType.MESSAGE,
             PermissionType.CREATE,
-            command.getValue().getTenantId(),
+            processInstanceRecord.getValue().getTenantId(),
             true);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
       return;
     }
 
-    messageRecord = command.getValue();
+    messageRecord = processInstanceRecord.getValue();
 
     if (messageRecord.hasMessageId()
         && messageState.exist(
@@ -115,11 +115,11 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
           String.format(
               ALREADY_PUBLISHED_MESSAGE, bufferAsString(messageRecord.getMessageIdBuffer()));
 
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, rejectionReason);
+      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
       responseWriter.writeRejectionOnCommand(
-          command, RejectionType.ALREADY_EXISTS, rejectionReason);
+          processInstanceRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
     } else {
-      handleNewMessage(command);
+      handleNewMessage(processInstanceRecord);
     }
   }
 

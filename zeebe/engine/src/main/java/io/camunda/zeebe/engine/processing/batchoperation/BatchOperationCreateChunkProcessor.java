@@ -31,11 +31,11 @@ public final class BatchOperationCreateChunkProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<BatchOperationChunkRecord> command) {
-    final var recordValue = command.getValue();
-    LOGGER.debug("Processing new command with key '{}': {}", command.getKey(), recordValue);
+  public void processRecord(final TypedRecord<BatchOperationChunkRecord> processInstanceRecord) {
+    final var recordValue = processInstanceRecord.getValue();
+    LOGGER.debug("Processing new command with key '{}': {}", processInstanceRecord.getKey(), recordValue);
 
     stateWriter.appendFollowUpEvent(
-        command.getKey(), BatchOperationChunkIntent.CREATED, recordValue);
+        processInstanceRecord.getKey(), BatchOperationChunkIntent.CREATED, recordValue);
   }
 }

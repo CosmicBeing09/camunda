@@ -58,9 +58,9 @@ public class DecisionEvaluationEvaluteProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<DecisionEvaluationRecord> command) {
+  public void processRecord(final TypedRecord<DecisionEvaluationRecord> processInstanceRecord) {
 
-    final DecisionEvaluationRecord record = command.getValue();
+    final DecisionEvaluationRecord record = processInstanceRecord.getValue();
     final var decisionOrFailure = getDecision(record);
 
     if (decisionOrFailure.isRight()) {
@@ -68,7 +68,7 @@ public class DecisionEvaluationEvaluteProcessor
       final var decisionId = bufferAsString(decision.getDecisionId());
       final var authRequest =
           new AuthorizationRequest(
-                  command,
+              processInstanceRecord,
                   AuthorizationResourceType.DECISION_DEFINITION,
                   PermissionType.CREATE_DECISION_INSTANCE,
                   record.getTenantId())
@@ -82,8 +82,8 @@ public class DecisionEvaluationEvaluteProcessor
                 ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                     "evaluate a decision", record.getDecisionKey(), "such decision")
                 : rejection.reason();
-        responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
-        rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
+        responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), errorMessage);
+        rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), errorMessage);
         return;
       }
     }
@@ -116,12 +116,12 @@ public class DecisionEvaluationEvaluteProcessor
                   evaluationRecordKey,
                   evaluationRecordTuple.getLeft(),
                   evaluationRecordTuple.getRight(),
-                  command);
+                  processInstanceRecord);
             },
             rejection -> {
               final String reason = rejection.reason();
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), reason);
-              rejectionWriter.appendRejection(command, rejection.type(), reason);
+              responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), reason);
+              rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), reason);
             });
   }
 

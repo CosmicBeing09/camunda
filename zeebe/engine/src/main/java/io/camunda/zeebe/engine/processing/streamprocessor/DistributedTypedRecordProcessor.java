@@ -26,11 +26,11 @@ public interface DistributedTypedRecordProcessor<T extends UnifiedRecordValue>
     extends TypedRecordProcessor<T> {
 
   @Override
-  default void processRecord(final TypedRecord<T> command) {
-    if (command.isCommandDistributed()) {
-      processDistributedCommand(command);
+  default void processRecord(final TypedRecord<T> processInstanceRecord) {
+    if (processInstanceRecord.isCommandDistributed()) {
+      processDistributedCommand(processInstanceRecord);
     } else {
-      processNewCommand(command);
+      processNewCommand(processInstanceRecord);
     }
   }
 
