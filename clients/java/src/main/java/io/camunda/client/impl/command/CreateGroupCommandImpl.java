@@ -19,7 +19,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateGroupCommandStep1;
 import io.camunda.client.api.command.CreateGroupCommandStep1.CreateGroupCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CreateGroupResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -63,7 +63,7 @@ public class CreateGroupCommandImpl implements CreateGroupCommandStep1, CreateGr
   }
 
   @Override
-  public FinalCommandStep<CreateGroupResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<CreateGroupResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

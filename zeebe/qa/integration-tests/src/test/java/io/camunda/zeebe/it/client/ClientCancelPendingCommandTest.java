@@ -41,7 +41,7 @@ final class ClientCancelPendingCommandTest {
             .newActivateJobsCommand()
             .jobType("type")
             .maxJobsToActivate(10)
-            .requestTimeout(Duration.ofHours(1))
+            .timeout(Duration.ofHours(1))
             .send();
     final var registry = ZEEBE.bean(MeterRegistry.class);
     final var blockedRequestCount = LongPollingMetricsDoc.REQUESTS_QUEUED_CURRENT;

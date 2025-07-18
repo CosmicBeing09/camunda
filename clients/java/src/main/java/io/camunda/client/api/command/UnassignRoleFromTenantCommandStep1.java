@@ -28,7 +28,7 @@ public interface UnassignRoleFromTenantCommandStep1 {
   UnassignRoleFromTenantCommandStep2 roleId(String roleId);
 
   interface UnassignRoleFromTenantCommandStep2
-      extends FinalCommandStep<UnassignRoleFromTenantResponse> {
+      extends FinalStep<UnassignRoleFromTenantResponse> {
 
     /**
      * Sets the tenant ID.

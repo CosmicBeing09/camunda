@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.CreateUserResponse;
 
-public interface CreateUserCommandStep1 extends FinalCommandStep<CreateUserResponse> {
+public interface CreateUserCommandStep1 extends FinalStep<CreateUserResponse> {
 
   /**
    * Set the username to create user with.

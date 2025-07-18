@@ -16,7 +16,7 @@
 package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.UserGetRequest;
 import io.camunda.client.api.search.response.User;
 import io.camunda.client.impl.command.ArgumentUtil;
@@ -41,7 +41,7 @@ public class UserGetRequestImpl implements UserGetRequest {
   }
 
   @Override
-  public FinalCommandStep<User> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<User> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

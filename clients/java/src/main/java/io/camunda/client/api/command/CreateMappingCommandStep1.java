@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.CreateMappingResponse;
 
-public interface CreateMappingCommandStep1 extends FinalCommandStep<CreateMappingResponse> {
+public interface CreateMappingCommandStep1 extends FinalStep<CreateMappingResponse> {
 
   /**
    * Set the claim name to create mapping with.

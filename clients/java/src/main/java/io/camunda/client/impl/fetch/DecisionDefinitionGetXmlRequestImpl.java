@@ -36,7 +36,7 @@ public class DecisionDefinitionGetXmlRequestImpl implements DecisionDefinitionGe
   }
 
   @Override
-  public DecisionDefinitionGetXmlRequest requestTimeout(final Duration requestTimeout) {
+  public DecisionDefinitionGetXmlRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

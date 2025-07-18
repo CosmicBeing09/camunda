@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.AssignUserTaskResponse;
 
-public interface AssignUserTaskStep1 extends FinalCommandStep<AssignUserTaskResponse> {
+public interface AssignUserTaskStep1 extends FinalStep<AssignUserTaskResponse> {
 
   /**
    * Set the custom action to assign the user task with.

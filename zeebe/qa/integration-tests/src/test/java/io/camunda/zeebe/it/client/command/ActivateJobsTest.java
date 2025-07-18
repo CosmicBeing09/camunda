@@ -91,7 +91,7 @@ class ActivateJobsTest {
         getCommand(client, useRest)
             .jobType("notExisting")
             .maxJobsToActivate(1)
-            .requestTimeout(Duration.ofSeconds(1))
+            .timeout(Duration.ofSeconds(1))
             .send()
             .join();
 

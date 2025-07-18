@@ -21,7 +21,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CompleteJobCommandStep1;
 import io.camunda.client.api.command.CompleteJobCommandStep1.CompleteJobCommandStep2;
 import io.camunda.client.api.command.CompleteJobResult;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.JobResultCorrections;
 import io.camunda.client.api.response.CompleteJobResponse;
 import io.camunda.client.impl.RetriableClientFutureImpl;
@@ -85,7 +85,7 @@ public final class CompleteJobCommandImpl extends CommandWithVariables<CompleteJ
   }
 
   @Override
-  public FinalCommandStep<CompleteJobResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<CompleteJobResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

@@ -79,5 +79,5 @@ public interface AuthorizationBuilderStep1 {
           CreateAuthorizationCommandStep3,
           CreateAuthorizationCommandStep4,
           CreateAuthorizationCommandStep5,
-          FinalCommandStep<CreateAuthorizationResponse> {}
+      FinalStep<CreateAuthorizationResponse> {}
 }

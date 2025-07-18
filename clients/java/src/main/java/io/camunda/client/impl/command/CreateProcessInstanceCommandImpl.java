@@ -23,7 +23,7 @@ import io.camunda.client.api.command.CommandWithTenantStep;
 import io.camunda.client.api.command.CreateProcessInstanceCommandStep1;
 import io.camunda.client.api.command.CreateProcessInstanceCommandStep1.CreateProcessInstanceCommandStep2;
 import io.camunda.client.api.command.CreateProcessInstanceCommandStep1.CreateProcessInstanceCommandStep3;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -77,7 +77,7 @@ public final class CreateProcessInstanceCommandImpl
     tenantId(config.getDefaultTenantId());
     this.httpClient = httpClient;
     httpRequestConfig = httpClient.newRequestConfig();
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
     useRest = preferRestOverGrpc;
   }
 
@@ -172,7 +172,7 @@ public final class CreateProcessInstanceCommandImpl
   }
 
   @Override
-  public FinalCommandStep<ProcessInstanceEvent> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<ProcessInstanceEvent> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

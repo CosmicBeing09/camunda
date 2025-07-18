@@ -121,5 +121,5 @@ public interface CreateBatchOperationCommandStep1 {
   }
 
   interface CreateBatchOperationCommandStep3<E extends Filter>
-      extends FinalCommandStep<CreateBatchOperationResponse> {}
+      extends FinalStep<CreateBatchOperationResponse> {}
 }

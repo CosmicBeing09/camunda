@@ -56,7 +56,7 @@ public class ProcessInstanceSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<ProcessInstance> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<ProcessInstance> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

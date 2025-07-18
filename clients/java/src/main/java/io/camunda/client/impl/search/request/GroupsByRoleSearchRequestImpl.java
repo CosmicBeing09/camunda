@@ -59,7 +59,7 @@ public class GroupsByRoleSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<Group> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<Group> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

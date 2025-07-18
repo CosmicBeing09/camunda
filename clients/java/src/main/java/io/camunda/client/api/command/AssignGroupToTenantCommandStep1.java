@@ -27,7 +27,7 @@ public interface AssignGroupToTenantCommandStep1 {
    */
   AssignGroupToTenantCommandStep2 groupId(String groupId);
 
-  interface AssignGroupToTenantCommandStep2 extends FinalCommandStep<AssignGroupToTenantResponse> {
+  interface AssignGroupToTenantCommandStep2 extends FinalStep<AssignGroupToTenantResponse> {
 
     /**
      * Sets the tenant ID.

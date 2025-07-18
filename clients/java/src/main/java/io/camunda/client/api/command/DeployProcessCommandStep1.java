@@ -106,7 +106,7 @@ public interface DeployProcessCommandStep1 {
    */
   @Deprecated
   interface DeployProcessCommandBuilderStep2
-      extends DeployProcessCommandStep1, FinalCommandStep<DeploymentEvent> {
+      extends DeployProcessCommandStep1, FinalStep<DeploymentEvent> {
     // the place for new optional parameters
   }
 }

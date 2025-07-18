@@ -99,7 +99,7 @@ public interface DeployResourceCommandStep1
   interface DeployResourceCommandStep2
       extends DeployResourceCommandStep1,
           CommandWithTenantStep<DeployResourceCommandStep2>,
-          FinalCommandStep<DeploymentEvent> {
+      FinalStep<DeploymentEvent> {
     // the place for new optional parameters
   }
 }

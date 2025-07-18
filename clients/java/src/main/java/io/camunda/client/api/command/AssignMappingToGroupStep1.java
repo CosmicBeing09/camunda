@@ -27,7 +27,7 @@ public interface AssignMappingToGroupStep1 {
    */
   AssignMappingToGroupStep2 mappingId(String mappingId);
 
-  interface AssignMappingToGroupStep2 extends FinalCommandStep<AssignMappingToGroupResponse> {
+  interface AssignMappingToGroupStep2 extends FinalStep<AssignMappingToGroupResponse> {
 
     /**
      * Sets the group ID.

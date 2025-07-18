@@ -130,7 +130,7 @@ public class AvailabilityTest {
               .jobType(JOBTYPE)
               .maxJobsToActivate(1)
               .timeout(Duration.ofMinutes(5))
-              .requestTimeout(
+              .timeout(
                   Duration.ofSeconds(
                       5)) // put a lower timeout than gateway timeout to ensure that the test fails
               // if gateway waits on unavailable broker

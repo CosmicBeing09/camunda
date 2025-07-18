@@ -54,7 +54,7 @@ public class UserTaskSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<UserTask> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<UserTask> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

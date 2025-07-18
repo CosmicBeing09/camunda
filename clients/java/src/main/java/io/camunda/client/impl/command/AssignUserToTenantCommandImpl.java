@@ -18,7 +18,7 @@ package io.camunda.client.impl.command;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1.AssignUserToTenantCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.AssignUserToTenantResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -52,7 +52,7 @@ public final class AssignUserToTenantCommandImpl
   }
 
   @Override
-  public FinalCommandStep<AssignUserToTenantResponse> requestTimeout(
+  public FinalStep<AssignUserToTenantResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

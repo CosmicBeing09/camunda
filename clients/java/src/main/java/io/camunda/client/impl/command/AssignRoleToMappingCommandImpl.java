@@ -18,7 +18,7 @@ package io.camunda.client.impl.command;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.AssignRoleToMappingCommandStep1;
 import io.camunda.client.api.command.AssignRoleToMappingCommandStep1.AssignRoleToMappingCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.AssignRoleToMappingResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -52,7 +52,7 @@ public class AssignRoleToMappingCommandImpl
   }
 
   @Override
-  public FinalCommandStep<AssignRoleToMappingResponse> requestTimeout(final Duration timeout) {
+  public FinalStep<AssignRoleToMappingResponse> timeout(final Duration timeout) {
     httpRequestConfig.setResponseTimeout(timeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

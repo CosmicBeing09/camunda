@@ -44,7 +44,7 @@ public final class DeleteResourceTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newDeleteResourceCommand(123).requestTimeout(requestTimeout).send().join();
+    client.newDeleteResourceCommand(123).timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

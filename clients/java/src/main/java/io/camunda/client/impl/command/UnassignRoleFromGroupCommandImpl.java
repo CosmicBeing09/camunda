@@ -16,7 +16,7 @@
 package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.UnassignRoleFromGroupCommandStep1;
 import io.camunda.client.api.command.UnassignRoleFromGroupCommandStep1.UnassignRoleFromGroupCommandStep2;
 import io.camunda.client.api.response.UnassignRoleFromGroupResponse;
@@ -52,7 +52,7 @@ public class UnassignRoleFromGroupCommandImpl
   }
 
   @Override
-  public FinalCommandStep<UnassignRoleFromGroupResponse> requestTimeout(
+  public FinalStep<UnassignRoleFromGroupResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

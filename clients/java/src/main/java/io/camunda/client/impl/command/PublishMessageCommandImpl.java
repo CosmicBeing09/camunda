@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.PublishMessageCommandStep1;
 import io.camunda.client.api.command.PublishMessageCommandStep1.PublishMessageCommandStep2;
 import io.camunda.client.api.command.PublishMessageCommandStep1.PublishMessageCommandStep3;
@@ -127,7 +127,7 @@ public final class PublishMessageCommandImpl extends CommandWithVariables<Publis
   }
 
   @Override
-  public FinalCommandStep<PublishMessageResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<PublishMessageResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

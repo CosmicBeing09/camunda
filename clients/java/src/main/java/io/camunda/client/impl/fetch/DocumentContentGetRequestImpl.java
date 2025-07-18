@@ -19,7 +19,7 @@ import static io.camunda.client.impl.command.ArgumentUtil.ensureNotNull;
 
 import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.DocumentContentGetRequest;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -49,11 +49,11 @@ public class DocumentContentGetRequestImpl implements DocumentContentGetRequest 
     this.documentId = documentId;
     this.storeId = storeId;
     this.contentHash = contentHash;
-    requestTimeout(configuration.getDefaultRequestTimeout());
+    timeout(configuration.getDefaultRequestTimeout());
   }
 
   @Override
-  public FinalCommandStep<InputStream> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<InputStream> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(
         requestTimeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
     return this;

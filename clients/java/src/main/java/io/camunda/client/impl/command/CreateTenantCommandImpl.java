@@ -18,7 +18,7 @@ package io.camunda.client.impl.command;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateTenantCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CreateTenantResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -61,7 +61,7 @@ public final class CreateTenantCommandImpl implements CreateTenantCommandStep1 {
   }
 
   @Override
-  public FinalCommandStep<CreateTenantResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<CreateTenantResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

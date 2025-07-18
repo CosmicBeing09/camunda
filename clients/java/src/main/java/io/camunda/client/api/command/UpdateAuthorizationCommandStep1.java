@@ -79,5 +79,5 @@ public interface UpdateAuthorizationCommandStep1 {
           UpdateAuthorizationCommandStep3,
           UpdateAuthorizationCommandStep4,
           UpdateAuthorizationCommandStep5,
-          FinalCommandStep<UpdateAuthorizationResponse> {}
+      FinalStep<UpdateAuthorizationResponse> {}
 }

@@ -16,7 +16,7 @@
 package io.camunda.spring.client.jobhandling;
 
 import io.camunda.client.api.command.CompleteJobCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.CompleteJobResponse;
 import io.camunda.client.api.worker.JobClient;
@@ -85,7 +85,7 @@ public class JobHandlerInvokingSpringBeans implements JobHandler {
   }
 
   private CommandWrapper createCommandWrapper(
-      final FinalCommandStep<?> command, final ActivatedJob job) {
+      final FinalStep<?> command, final ActivatedJob job) {
     return new CommandWrapper(
         command,
         job,
@@ -98,7 +98,7 @@ public class JobHandlerInvokingSpringBeans implements JobHandler {
     return parameterResolvers.stream().map(resolver -> resolver.resolve(jobClient, job)).toList();
   }
 
-  private FinalCommandStep<CompleteJobResponse> createCompleteCommand(
+  private FinalStep<CompleteJobResponse> createCompleteCommand(
       final JobClient jobClient, final ActivatedJob job, final Object result) {
     final CompleteJobCommandStep1 completeCommand = jobClient.newCompleteCommand(job.getKey());
     return JobHandlingUtil.applyVariables(result, completeCommand);

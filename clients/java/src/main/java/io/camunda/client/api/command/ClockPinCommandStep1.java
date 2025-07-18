@@ -18,7 +18,7 @@ package io.camunda.client.api.command;
 import io.camunda.client.api.response.PinClockResponse;
 import java.time.Instant;
 
-public interface ClockPinCommandStep1 extends FinalCommandStep<PinClockResponse> {
+public interface ClockPinCommandStep1 extends FinalStep<PinClockResponse> {
 
   /**
    * Specifies the exact time to which the Zeebe engine's internal clock should be pinned using an

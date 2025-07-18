@@ -240,7 +240,7 @@ public final class ActivateJobsRestTest extends ClientRestTest {
         .newActivateJobsCommand()
         .jobType("foo")
         .maxJobsToActivate(3)
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
     final JobActivationRequest request = gatewayService.getLastRequest(JobActivationRequest.class);

@@ -22,7 +22,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.ActivateJobsCommandStep1;
 import io.camunda.client.api.command.ActivateJobsCommandStep1.ActivateJobsCommandStep2;
 import io.camunda.client.api.command.ActivateJobsCommandStep1.ActivateJobsCommandStep3;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ActivateJobsResponse;
 import io.camunda.client.impl.RetriableStreamingFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -77,7 +77,7 @@ public final class ActivateJobsCommandImpl
     this.retryPredicate = retryPredicate;
     grpcRequestObjectBuilder = ActivateJobsRequest.newBuilder();
     httpRequestObject = new JobActivationRequest();
-    requestTimeout(config.getDefaultRequestTimeout());
+    timeout(config.getDefaultRequestTimeout());
     timeout(config.getDefaultJobTimeout());
     workerName(config.getDefaultJobWorkerName());
     useRest = config.preferRestOverGrpc();
@@ -139,8 +139,7 @@ public final class ActivateJobsCommandImpl
     return fetchVariables(Arrays.asList(fetchVariables));
   }
 
-  @Override
-  public FinalCommandStep<ActivateJobsResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<ActivateJobsResponse> timeout(final Duration requestTimeout) {
     grpcRequestObjectBuilder.setRequestTimeout(requestTimeout.toMillis());
     httpRequestObject.setRequestTimeout(requestTimeout.toMillis());
     this.requestTimeout = requestTimeout;

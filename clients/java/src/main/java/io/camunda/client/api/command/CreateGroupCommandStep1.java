@@ -27,7 +27,7 @@ public interface CreateGroupCommandStep1 {
    */
   CreateGroupCommandStep2 groupId(String groupId);
 
-  interface CreateGroupCommandStep2 extends FinalCommandStep<CreateGroupResponse> {
+  interface CreateGroupCommandStep2 extends FinalStep<CreateGroupResponse> {
     /**
      * Set the name for the group to be created.
      *

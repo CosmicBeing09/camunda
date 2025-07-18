@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.UpdateUserResponse;
 
-public interface UpdateUserCommandStep1 extends FinalCommandStep<UpdateUserResponse> {
+public interface UpdateUserCommandStep1 extends FinalStep<UpdateUserResponse> {
 
   /**
    * Set the name for the user to be updated.

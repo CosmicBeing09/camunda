@@ -55,7 +55,7 @@ public class VariableSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<Variable> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<Variable> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

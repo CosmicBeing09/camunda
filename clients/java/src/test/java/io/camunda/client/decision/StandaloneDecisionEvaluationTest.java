@@ -255,7 +255,7 @@ public class StandaloneDecisionEvaluationTest extends ClientTest {
     client
         .newEvaluateDecisionCommand()
         .decisionKey(DECISION_KEY)
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

@@ -191,7 +191,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
     client
         .newCreateInstanceCommand()
         .processDefinitionKey(123)
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

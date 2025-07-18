@@ -26,7 +26,7 @@ public interface CreateRoleCommandStep1 {
    */
   CreateRoleCommandStep2 roleId(String roleId);
 
-  interface CreateRoleCommandStep2 extends FinalCommandStep<CreateRoleResponse> {
+  interface CreateRoleCommandStep2 extends FinalStep<CreateRoleResponse> {
     /**
      * Set the name for the role to be created.
      *

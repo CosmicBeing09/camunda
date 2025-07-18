@@ -271,7 +271,7 @@ public final class DeployProcessTest extends ClientTest {
     client
         .deploy()
         .addResourceStringUtf8("", "test.bpmn")
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

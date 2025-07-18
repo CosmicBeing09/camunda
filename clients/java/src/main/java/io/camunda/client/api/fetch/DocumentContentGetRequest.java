@@ -16,7 +16,7 @@
 package io.camunda.client.api.fetch;
 
 import io.camunda.client.api.ExperimentalApi;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import java.io.InputStream;
 
 /**
@@ -25,7 +25,7 @@ import java.io.InputStream;
  * <p>The document content is returned as an {@link InputStream}.
  */
 @ExperimentalApi("https://github.com/camunda/issues/issues/841")
-public interface DocumentContentGetRequest extends FinalCommandStep<InputStream> {
+public interface DocumentContentGetRequest extends FinalStep<InputStream> {
 
   /**
    * Sets the document store ID. If not set, the default document store is used.

@@ -55,7 +55,7 @@ public class UsersSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<User> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<User> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

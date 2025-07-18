@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.api.response.UpdateUserTaskResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -49,7 +49,7 @@ public final class UpdateUserTaskCommandImpl implements UserTaskUpdateBuilder {
   }
 
   @Override
-  public FinalCommandStep<UpdateUserTaskResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<UpdateUserTaskResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -76,7 +76,7 @@ public interface SetVariablesCommandStep1
 
   interface SetVariablesCommandStep2
       extends CommandWithOperationReferenceStep<SetVariablesCommandStep2>,
-          FinalCommandStep<SetVariablesResponse> {
+      FinalStep<SetVariablesResponse> {
     // the place for new optional parameters
 
     /**

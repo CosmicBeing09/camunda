@@ -24,7 +24,7 @@ import io.camunda.client.api.command.CreateBatchOperationCommandStep1.CreateBatc
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1.CreateBatchOperationCommandStep3;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1.ProcessInstanceMigrationStep;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1.ProcessInstanceModificationStep;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.MigrationPlan;
 import io.camunda.client.api.response.CreateBatchOperationResponse;
 import io.camunda.client.api.search.filter.ProcessInstanceFilter;
@@ -105,7 +105,7 @@ public class CreateBatchOperationCommandImpl<E extends Filter>
   }
 
   @Override
-  public FinalCommandStep<CreateBatchOperationResponse> requestTimeout(
+  public FinalStep<CreateBatchOperationResponse> timeout(
       final Duration requestTimeout) {
     ArgumentUtil.ensurePositive("requestTimeout", requestTimeout);
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

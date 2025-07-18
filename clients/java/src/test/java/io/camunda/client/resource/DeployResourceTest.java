@@ -382,7 +382,7 @@ public final class DeployResourceTest extends ClientTest {
     client
         .deployResource()
         .addResourceStringUtf8("", "test.bpmn")
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

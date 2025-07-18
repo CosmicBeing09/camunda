@@ -23,7 +23,7 @@ import java.util.function.UnaryOperator;
 
 public interface CompleteJobCommandStep1
     extends CommandWithCommunicationApiStep<CompleteJobCommandStep1>,
-        FinalCommandStep<CompleteJobResponse>,
+    FinalStep<CompleteJobResponse>,
         CommandWithVariables<CompleteJobCommandStep1> {
 
   /**
@@ -162,7 +162,7 @@ public interface CompleteJobCommandStep1
    */
   CompleteJobCommandStep1 withResult(UnaryOperator<CompleteJobResult> jobResultModifier);
 
-  interface CompleteJobCommandStep2 extends FinalCommandStep<CompleteJobResponse> {
+  interface CompleteJobCommandStep2 extends FinalStep<CompleteJobResponse> {
 
     /**
      * Indicates whether the worker denies the work, i.e. explicitly doesn't approve it. For

@@ -18,7 +18,7 @@ package io.camunda.client.api.command;
 import io.camunda.client.api.response.UpdateUserTaskResponse;
 import java.util.List;
 
-public interface UserTaskUpdateBuilder extends FinalCommandStep<UpdateUserTaskResponse> {
+public interface UserTaskUpdateBuilder extends FinalStep<UpdateUserTaskResponse> {
 
   /**
    * Set the custom action to update the user task with.

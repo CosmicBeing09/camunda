@@ -26,7 +26,7 @@ public interface AssignRoleToClientCommandStep1 {
    */
   AssignRoleToClientCommandStep2 roleId(String roleId);
 
-  interface AssignRoleToClientCommandStep2 extends FinalCommandStep<AssignRoleToClientResponse> {
+  interface AssignRoleToClientCommandStep2 extends FinalStep<AssignRoleToClientResponse> {
 
     /**
      * Sets the client ID.

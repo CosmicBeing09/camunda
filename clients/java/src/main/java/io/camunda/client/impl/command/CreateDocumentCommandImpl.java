@@ -21,7 +21,7 @@ import io.camunda.client.api.ExperimentalApi;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateDocumentCommandStep1;
 import io.camunda.client.api.command.CreateDocumentCommandStep1.CreateDocumentCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DocumentReferenceResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -59,11 +59,11 @@ public class CreateDocumentCommandImpl extends DocumentBuilder
     this.jsonMapper = jsonMapper;
     this.httpClient = httpClient;
     httpRequestConfig = httpClient.newRequestConfig();
-    requestTimeout(configuration.getDefaultRequestTimeout());
+    timeout(configuration.getDefaultRequestTimeout());
   }
 
   @Override
-  public FinalCommandStep<DocumentReferenceResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DocumentReferenceResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(
         requestTimeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
     return this;

@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClientBuilder;
 import io.camunda.client.api.CamundaFuture;
 import java.time.Duration;
 
-public interface FinalCommandStep<T> {
+public interface FinalStep<T> {
 
   /**
    * Sets the request timeout for the command. The default request timeout can be configured using
@@ -28,7 +28,7 @@ public interface FinalCommandStep<T> {
    * @param requestTimeout the request timeout
    * @return the configured command
    */
-  FinalCommandStep<T> requestTimeout(Duration requestTimeout);
+  FinalStep<T> timeout(Duration requestTimeout);
 
   /**
    * Sends the command to the Camunda gateway. This operation is asynchronous. In case of success,

@@ -16,7 +16,7 @@
 package io.camunda.client.impl.worker;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep3;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.StreamJobsResponse;
@@ -55,7 +55,7 @@ final class JobStreamerImpl implements JobStreamer {
   private CamundaFuture<StreamJobsResponse> streamControl;
 
   @GuardedBy("streamLock")
-  private FinalCommandStep<StreamJobsResponse> command;
+  private FinalStep<StreamJobsResponse> command;
 
   @GuardedBy("streamLock")
   private boolean isClosed;
@@ -109,11 +109,11 @@ final class JobStreamerImpl implements JobStreamer {
 
   @Override
   public void openStreamer(final Consumer<ActivatedJob> jobConsumer) {
-    final FinalCommandStep<StreamJobsResponse> command = buildCommand(jobConsumer);
+    final FinalStep<StreamJobsResponse> command = buildCommand(jobConsumer);
     open(command);
   }
 
-  private void open(final FinalCommandStep<StreamJobsResponse> command) {
+  private void open(final FinalStep<StreamJobsResponse> command) {
     try {
       streamLock.lockInterruptibly();
     } catch (final InterruptedException e) {
@@ -150,7 +150,7 @@ final class JobStreamerImpl implements JobStreamer {
     }
   }
 
-  private FinalCommandStep<StreamJobsResponse> buildCommand(
+  private FinalStep<StreamJobsResponse> buildCommand(
       final Consumer<ActivatedJob> jobConsumer) {
     StreamJobsCommandStep3 command =
         jobClient
@@ -165,7 +165,7 @@ final class JobStreamerImpl implements JobStreamer {
       command = command.fetchVariables(fetchVariables);
     }
 
-    return command.requestTimeout(requestTimeout);
+    return command.timeout(requestTimeout);
   }
 
   @GuardedBy("streamLock")

@@ -19,7 +19,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateRoleCommandStep1;
 import io.camunda.client.api.command.CreateRoleCommandStep1.CreateRoleCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CreateRoleResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -62,7 +62,7 @@ public final class CreateRoleCommandImpl implements CreateRoleCommandStep1, Crea
   }
 
   @Override
-  public FinalCommandStep<CreateRoleResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<CreateRoleResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -18,7 +18,7 @@ package io.camunda.client.impl.command;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.ResolveIncidentCommandStep1;
 import io.camunda.client.api.response.ResolveIncidentResponse;
 import io.camunda.client.impl.RetriableClientFutureImpl;
@@ -70,7 +70,7 @@ public final class ResolveIncidentCommandImpl implements ResolveIncidentCommandS
   }
 
   @Override
-  public FinalCommandStep<ResolveIncidentResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<ResolveIncidentResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

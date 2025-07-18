@@ -58,7 +58,7 @@ public class ClientsByRoleSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<Client> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<Client> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

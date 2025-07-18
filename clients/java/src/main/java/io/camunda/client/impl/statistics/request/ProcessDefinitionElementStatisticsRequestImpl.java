@@ -19,7 +19,7 @@ import static io.camunda.client.api.search.request.SearchRequestBuilders.process
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.statistics.filter.ProcessDefinitionStatisticsFilter;
 import io.camunda.client.api.statistics.request.ProcessDefinitionElementStatisticsRequest;
 import io.camunda.client.api.statistics.response.ProcessElementStatistics;
@@ -55,7 +55,7 @@ public class ProcessDefinitionElementStatisticsRequestImpl
   }
 
   @Override
-  public FinalCommandStep<List<ProcessElementStatistics>> requestTimeout(
+  public FinalStep<List<ProcessElementStatistics>> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

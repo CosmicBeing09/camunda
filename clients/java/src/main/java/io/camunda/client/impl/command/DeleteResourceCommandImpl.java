@@ -20,7 +20,7 @@ import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.DeleteResourceCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeleteResourceResponse;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -65,11 +65,11 @@ public class DeleteResourceCommandImpl implements DeleteResourceCommandStep1 {
     useRest = config.preferRestOverGrpc();
     this.resourceKey = resourceKey;
     this.jsonMapper = jsonMapper;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
-  public FinalCommandStep<DeleteResourceResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeleteResourceResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

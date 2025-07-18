@@ -26,7 +26,7 @@ import io.camunda.client.api.command.ClientException;
 import io.camunda.client.api.command.CommandWithTenantStep;
 import io.camunda.client.api.command.DeployResourceCommandStep1;
 import io.camunda.client.api.command.DeployResourceCommandStep1.DeployResourceCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -87,7 +87,7 @@ public final class DeployResourceCommandImpl
     httpRequestConfig = httpClient.newRequestConfig();
     useRest = preferRestOverGrpc;
     this.jsonMapper = jsonMapper;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   /**
@@ -117,7 +117,7 @@ public final class DeployResourceCommandImpl
     useRest = preferRestOverGrpc;
     this.jsonMapper = jsonMapper;
     tenantId(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
@@ -209,7 +209,7 @@ public final class DeployResourceCommandImpl
   }
 
   @Override
-  public FinalCommandStep<DeploymentEvent> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeploymentEvent> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

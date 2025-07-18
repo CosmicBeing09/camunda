@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.CreateTenantResponse;
 
-public interface CreateTenantCommandStep1 extends FinalCommandStep<CreateTenantResponse> {
+public interface CreateTenantCommandStep1 extends FinalStep<CreateTenantResponse> {
   /**
    * Set the tenant ID for the tenant to be created.
    *

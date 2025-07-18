@@ -27,7 +27,7 @@ public interface AssignRoleToGroupCommandStep1 {
    */
   AssignRoleToGroupCommandStep2 roleId(String roleId);
 
-  interface AssignRoleToGroupCommandStep2 extends FinalCommandStep<AssignRoleToGroupResponse> {
+  interface AssignRoleToGroupCommandStep2 extends FinalStep<AssignRoleToGroupResponse> {
 
     /**
      * Sets the group ID.

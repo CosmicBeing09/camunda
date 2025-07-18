@@ -28,7 +28,7 @@ public interface UnassignRoleFromMappingCommandStep1 {
   UnassignRoleFromMappingCommandStep2 roleId(String roleId);
 
   interface UnassignRoleFromMappingCommandStep2
-      extends FinalCommandStep<UnassignRoleFromMappingResponse> {
+      extends FinalStep<UnassignRoleFromMappingResponse> {
 
     /**
      * Sets the mapping ID.

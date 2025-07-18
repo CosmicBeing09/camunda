@@ -67,7 +67,7 @@ public interface CreateProcessInstanceCommandStep1
 
   interface CreateProcessInstanceCommandStep3
       extends CommandWithTenantStep<CreateProcessInstanceCommandStep3>,
-          FinalCommandStep<ProcessInstanceEvent>,
+      FinalStep<ProcessInstanceEvent>,
           CommandWithVariables<CreateProcessInstanceCommandStep3> {
     /**
      * Set the initial variables of the process instance.
@@ -144,7 +144,7 @@ public interface CreateProcessInstanceCommandStep1
   interface CreateProcessInstanceWithResultCommandStep1
       extends CommandWithTenantStep<CreateProcessInstanceWithResultCommandStep1>,
           CommandWithCommunicationApiStep<CreateProcessInstanceWithResultCommandStep1>,
-          FinalCommandStep<ProcessInstanceResult> {
+      FinalStep<ProcessInstanceResult> {
 
     /**
      * Set a list of variables names which should be fetched in the response.

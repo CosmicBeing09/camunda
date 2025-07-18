@@ -88,7 +88,7 @@ public interface UpdateJobCommandStep1 {
    */
   UpdateJobCommandStep2 updateTimeout(Duration timeout);
 
-  interface UpdateJobCommandStep2 extends FinalCommandStep<UpdateJobResponse> {
+  interface UpdateJobCommandStep2 extends FinalStep<UpdateJobResponse> {
     // the place for new optional parameters
   }
 }

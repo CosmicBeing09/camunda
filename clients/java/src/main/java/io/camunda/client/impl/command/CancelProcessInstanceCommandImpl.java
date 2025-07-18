@@ -20,7 +20,7 @@ import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CancelProcessInstanceCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CancelProcessInstanceResponse;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -67,11 +67,11 @@ public final class CancelProcessInstanceCommandImpl implements CancelProcessInst
     httpRequestConfig = httpClient.newRequestConfig();
     httpRequestObject = new io.camunda.client.protocol.rest.CancelProcessInstanceRequest();
     this.httpClient = httpClient;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
-  public FinalCommandStep<CancelProcessInstanceResponse> requestTimeout(
+  public FinalStep<CancelProcessInstanceResponse> timeout(
       final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

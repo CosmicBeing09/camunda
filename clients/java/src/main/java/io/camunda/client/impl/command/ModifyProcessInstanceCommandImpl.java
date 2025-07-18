@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.ModifyProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ModifyProcessInstanceCommandStep1.ModifyProcessInstanceCommandStep3;
 import io.camunda.client.api.response.ModifyProcessInstanceResponse;
@@ -83,7 +83,7 @@ public final class ModifyProcessInstanceCommandImpl
     httpRequestObject = new ProcessInstanceModificationInstruction();
     useRest = config.preferRestOverGrpc();
     this.processInstanceKey = processInstanceKey;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
@@ -283,7 +283,7 @@ public final class ModifyProcessInstanceCommandImpl
   }
 
   @Override
-  public FinalCommandStep<ModifyProcessInstanceResponse> requestTimeout(
+  public FinalStep<ModifyProcessInstanceResponse> timeout(
       final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

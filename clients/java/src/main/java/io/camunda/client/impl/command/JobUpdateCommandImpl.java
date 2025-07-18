@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.JobChangeset;
 import io.camunda.client.api.command.UpdateJobCommandStep1;
 import io.camunda.client.api.command.UpdateJobCommandStep1.UpdateJobCommandStep2;
@@ -47,7 +47,7 @@ public class JobUpdateCommandImpl implements UpdateJobCommandStep1, UpdateJobCom
   }
 
   @Override
-  public FinalCommandStep<UpdateJobResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<UpdateJobResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

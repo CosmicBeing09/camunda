@@ -203,7 +203,7 @@ public class Starter extends App {
               .latestVersion()
               .variables(variables)
               .withResult()
-              .requestTimeout(starterCfg.getWithResultsTimeout())
+              .timeout(starterCfg.getWithResultsTimeout())
               .send());
     } else {
       requestFutures.put(

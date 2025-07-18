@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.DeleteGroupCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeleteGroupResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -38,7 +38,7 @@ public class DeleteGroupCommandImpl implements DeleteGroupCommandStep1 {
   }
 
   @Override
-  public FinalCommandStep<DeleteGroupResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeleteGroupResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -246,7 +246,7 @@ public final class PublishMessageTest extends ClientTest {
         .newPublishMessageCommand()
         .messageName("test")
         .correlationKey("test")
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

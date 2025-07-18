@@ -39,7 +39,7 @@ public class ProcessInstanceGetRequestImpl implements ProcessInstanceGetRequest 
   }
 
   @Override
-  public ProcessInstanceGetRequest requestTimeout(final Duration requestTimeout) {
+  public ProcessInstanceGetRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.MigrateProcessInstanceCommandStep1;
 import io.camunda.client.api.command.MigrateProcessInstanceCommandStep1.MigrateProcessInstanceCommandFinalStep;
 import io.camunda.client.api.command.MigrationPlan;
@@ -75,7 +75,7 @@ public final class MigrateProcessInstanceCommandImpl
     useRest = config.preferRestOverGrpc();
     this.processInstanceKey = processInstanceKey;
     this.jsonMapper = jsonMapper;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
@@ -135,7 +135,7 @@ public final class MigrateProcessInstanceCommandImpl
   }
 
   @Override
-  public FinalCommandStep<MigrateProcessInstanceResponse> requestTimeout(
+  public FinalStep<MigrateProcessInstanceResponse> timeout(
       final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

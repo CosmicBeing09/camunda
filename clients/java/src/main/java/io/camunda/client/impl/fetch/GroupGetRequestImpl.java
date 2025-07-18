@@ -16,7 +16,7 @@
 package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.GroupGetRequest;
 import io.camunda.client.api.search.response.Group;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -33,14 +33,14 @@ public class GroupGetRequestImpl implements GroupGetRequest {
   private final RequestConfig.Builder httpRequestConfig;
   private final String groupId;
 
-  public GroupGetRequestImpl(HttpClient httpClient, String groupId) {
+  public GroupGetRequestImpl(final HttpClient httpClient, final String groupId) {
     this.httpClient = httpClient;
-    this.httpRequestConfig = httpClient.newRequestConfig();
+    httpRequestConfig = httpClient.newRequestConfig();
     this.groupId = groupId;
   }
 
   @Override
-  public FinalCommandStep<Group> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<Group> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -22,7 +22,7 @@ import java.time.Duration;
 import java.util.Map;
 
 public interface CreateDocumentBatchCommandStep1
-    extends FinalCommandStep<DocumentReferenceBatchResponse> {
+    extends FinalStep<DocumentReferenceBatchResponse> {
 
   /**
    * Sets the store ID. If not set, the default store will be used.

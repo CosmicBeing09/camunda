@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.UpdateTenantResponse;
 
-public interface UpdateTenantCommandStep1 extends FinalCommandStep<UpdateTenantResponse> {
+public interface UpdateTenantCommandStep1 extends FinalStep<UpdateTenantResponse> {
 
   /**
    * Set the new name for the tenant.

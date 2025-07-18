@@ -69,7 +69,7 @@ final class LongPollingIT {
               .newActivateJobsCommand()
               .jobType("foo")
               .maxJobsToActivate(1)
-              .requestTimeout(Duration.ofSeconds(30))
+              .timeout(Duration.ofSeconds(30))
               .send();
 
       // wait until the first activate command before starting the process instance to ensure long
@@ -83,7 +83,7 @@ final class LongPollingIT {
       client
           .newCreateInstanceCommand()
           .processDefinitionKey(deploymentEvent.getProcesses().get(0).getProcessDefinitionKey())
-          .requestTimeout(Duration.ofMinutes(1))
+          .timeout(Duration.ofMinutes(1))
           .send()
           .join();
 

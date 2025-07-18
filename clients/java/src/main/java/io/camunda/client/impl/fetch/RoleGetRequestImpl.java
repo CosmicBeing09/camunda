@@ -16,7 +16,7 @@
 package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.RoleGetRequest;
 import io.camunda.client.api.search.response.Role;
 import io.camunda.client.impl.command.ArgumentUtil;
@@ -41,7 +41,7 @@ public class RoleGetRequestImpl implements RoleGetRequest {
   }
 
   @Override
-  public FinalCommandStep<Role> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<Role> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

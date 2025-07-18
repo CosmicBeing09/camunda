@@ -28,7 +28,7 @@ public interface UnassignRoleFromGroupCommandStep1 {
   UnassignRoleFromGroupCommandStep2 roleId(String roleId);
 
   interface UnassignRoleFromGroupCommandStep2
-      extends FinalCommandStep<UnassignRoleFromGroupResponse> {
+      extends FinalStep<UnassignRoleFromGroupResponse> {
     /**
      * Sets the group ID.
      *

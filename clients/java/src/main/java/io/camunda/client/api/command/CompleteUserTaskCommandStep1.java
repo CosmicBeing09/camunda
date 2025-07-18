@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.util.Map;
 
 public interface CompleteUserTaskCommandStep1
-    extends FinalCommandStep<CompleteUserTaskResponse>,
+    extends FinalStep<CompleteUserTaskResponse>,
         CommandWithVariables<CompleteUserTaskCommandStep1> {
 
   /**

@@ -55,7 +55,7 @@ public class DecisionRequirementsSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<DecisionRequirements> requestTimeout(
+  public FinalSearchRequestStep<DecisionRequirements> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

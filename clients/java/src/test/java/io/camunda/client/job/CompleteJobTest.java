@@ -169,7 +169,7 @@ public final class CompleteJobTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newCompleteCommand(123).requestTimeout(requestTimeout).send().join();
+    client.newCompleteCommand(123).timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

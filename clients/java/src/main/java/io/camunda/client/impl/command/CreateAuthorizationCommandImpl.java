@@ -23,7 +23,7 @@ import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizati
 import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep4;
 import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep5;
 import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep6;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CreateAuthorizationResponse;
 import io.camunda.client.api.search.enums.OwnerType;
 import io.camunda.client.api.search.enums.PermissionType;
@@ -100,7 +100,7 @@ public class CreateAuthorizationCommandImpl
   }
 
   @Override
-  public FinalCommandStep<CreateAuthorizationResponse> requestTimeout(
+  public FinalStep<CreateAuthorizationResponse> timeout(
       final Duration requestTimeout) {
     ArgumentUtil.ensurePositive("requestTimeout", requestTimeout);
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

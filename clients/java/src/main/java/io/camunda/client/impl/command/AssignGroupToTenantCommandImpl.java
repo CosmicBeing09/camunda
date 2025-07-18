@@ -51,7 +51,7 @@ public final class AssignGroupToTenantCommandImpl
   }
 
   @Override
-  public AssignGroupToTenantCommandStep2 requestTimeout(final Duration timeout) {
+  public AssignGroupToTenantCommandStep2 timeout(final Duration timeout) {
     httpRequestConfig.setResponseTimeout(timeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

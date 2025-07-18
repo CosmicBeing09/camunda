@@ -56,7 +56,7 @@ public class ProcessDefinitionSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<ProcessDefinition> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<ProcessDefinition> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }
