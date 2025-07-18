@@ -43,14 +43,14 @@ import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.DEFAU
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.DEFAULT_TENANT_ID_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.GRPC_ADDRESS_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.KEEP_ALIVE_VAR;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_CLIENT_ID_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OVERRIDE_AUTHORITY_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.PLAINTEXT_CONNECTION_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.PREFER_REST_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.REST_ADDRESS_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.USE_DEFAULT_RETRY_POLICY_VAR;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.ZEEBE_CLIENT_WORKER_STREAM_ENABLED;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.CLIENT_WORKER_STREAM_ENABLED_VAR;
 import static io.camunda.zeebe.client.impl.util.DataSizeUtil.ONE_KB;
 import static io.camunda.zeebe.client.impl.util.DataSizeUtil.ONE_MB;
 
@@ -579,7 +579,7 @@ public final class ZeebeClientBuilderImpl implements ZeebeClientBuilder, ZeebeCl
         });
 
     BuilderUtils.applyIfNotNull(
-        ZEEBE_CLIENT_WORKER_STREAM_ENABLED,
+        CLIENT_WORKER_STREAM_ENABLED_VAR,
         value -> defaultJobWorkerStreamEnabled(Boolean.parseBoolean(value)));
 
     BuilderUtils.applyIfNotNull(
@@ -614,7 +614,7 @@ public final class ZeebeClientBuilderImpl implements ZeebeClientBuilder, ZeebeCl
 
   private boolean shouldUseDefaultCredentialsProvider() {
     return credentialsProvider == null
-        && Environment.system().get(OAUTH_ENV_CLIENT_ID) != null
+        && Environment.system().get(OAUTH_CLIENT_ID_VAR) != null
         && Environment.system().get(OAUTH_ENV_CLIENT_SECRET) != null;
   }
 

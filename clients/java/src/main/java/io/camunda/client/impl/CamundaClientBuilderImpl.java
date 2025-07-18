@@ -649,7 +649,7 @@ public final class CamundaClientBuilderImpl
     applyEnvironmentValueIfNotNull(
         value -> defaultJobWorkerStreamEnabled(Boolean.parseBoolean(value)),
         CAMUNDA_CLIENT_WORKER_STREAM_ENABLED,
-        ZeebeClientEnvironmentVariables.ZEEBE_CLIENT_WORKER_STREAM_ENABLED);
+        ZeebeClientEnvironmentVariables.CLIENT_WORKER_STREAM_ENABLED_VAR);
     applyEnvironmentValueIfNotNull(
         value -> useDefaultRetryPolicy(Boolean.parseBoolean(value)),
         USE_DEFAULT_RETRY_POLICY_VAR,
@@ -686,7 +686,7 @@ public final class CamundaClientBuilderImpl
   private boolean shouldUseDefaultCredentialsProvider() {
     return credentialsProvider == null
         && (Environment.system().isDefined(OAUTH_ENV_CLIENT_ID)
-            || Environment.system().isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID))
+            || Environment.system().isDefined(ZeebeClientEnvironmentVariables.OAUTH_CLIENT_ID_VAR))
         && (Environment.system().isDefined(OAUTH_ENV_CLIENT_SECRET)
             || Environment.system()
                 .isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET));

@@ -333,7 +333,7 @@ public final class OAuthCredentialsProviderBuilder {
 
   private void checkEnvironmentOverrides() {
     applyEnvironmentValueIfNotNull(
-        this::clientId, OAUTH_ENV_CLIENT_ID, ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID);
+        this::clientId, OAUTH_ENV_CLIENT_ID, ZeebeClientEnvironmentVariables.OAUTH_CLIENT_ID_VAR);
     applyEnvironmentValueIfNotNull(
         this::clientSecret,
         OAUTH_ENV_CLIENT_SECRET,
