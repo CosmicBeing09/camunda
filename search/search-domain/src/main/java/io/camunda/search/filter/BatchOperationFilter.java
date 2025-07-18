@@ -15,9 +15,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationFilter(
-    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationFilter> {
 
@@ -29,8 +27,8 @@ public record BatchOperationFilter(
       return batchOperationIds(collectValues(value, values));
     }
 
-    public Builder batchOperationIds(final List<String> values) {
-      batchOperationIds = addValuesToList(batchOperationIds, values);
+    public Builder batchOperationIds(final List<String> operations) {
+      batchOperationIds = addValuesToList(batchOperationIds, operations);
       return this;
     }
 
@@ -38,8 +36,8 @@ public record BatchOperationFilter(
       return operationTypes(collectValues(value, values));
     }
 
-    public Builder operationTypes(final List<String> values) {
-      operationTypes = addValuesToList(operationTypes, values);
+    public Builder operationTypes(final List<String> operationTypes) {
+      this.operationTypes = addValuesToList(this.operationTypes, operationTypes);
       return this;
     }
 
@@ -47,8 +45,8 @@ public record BatchOperationFilter(
       return state(collectValues(value, values));
     }
 
-    public Builder state(final List<String> values) {
-      state = addValuesToList(state, values);
+    public Builder state(final List<String> states) {
+      state = addValuesToList(state, states);
       return this;
     }
 
@@ -61,3 +59,6 @@ public record BatchOperationFilter(
     }
   }
 }
+    implements
+public record BatchOperationFilter(
+    List<String> batchOperationIds, List<String> operationTypes, List<String> state)
