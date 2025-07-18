@@ -171,7 +171,7 @@ public class TaskStoreElasticSearch implements TaskStore {
   public Map<String, String> getTaskIdsWithIndexByProcessDefinitionId(
       final String processDefinitionId) {
     final var processDefinitionQuery =
-        termQuery(TaskTemplate.PROCESS_DEFINITION_ID, processDefinitionId);
+        termQuery(TaskTemplate.DEFINITION_ID, processDefinitionId);
     final var flownodeInstanceQuery = existsQuery(TaskTemplate.FLOW_NODE_INSTANCE_ID);
     final var finalQuery =
         ElasticsearchUtil.joinWithAnd(processDefinitionQuery, flownodeInstanceQuery);
@@ -495,7 +495,7 @@ public class TaskStoreElasticSearch implements TaskStore {
 
     QueryBuilder taskDefinitionQ = null;
     if (query.getTaskDefinitionId() != null) {
-      taskDefinitionQ = termQuery(TaskTemplate.FLOW_NODE_BPMN_ID, query.getTaskDefinitionId());
+      taskDefinitionQ = termQuery(TaskTemplate.BPMN_ID, query.getTaskDefinitionId());
     }
 
     QueryBuilder candidateGroupQ = null;
@@ -535,7 +535,7 @@ public class TaskStoreElasticSearch implements TaskStore {
     QueryBuilder processDefinitionIdQ = null;
     if (query.getProcessDefinitionId() != null) {
       processDefinitionIdQ =
-          termQuery(TaskTemplate.PROCESS_DEFINITION_ID, query.getProcessDefinitionId());
+          termQuery(TaskTemplate.DEFINITION_ID, query.getProcessDefinitionId());
     }
 
     QueryBuilder followUpQ = null;

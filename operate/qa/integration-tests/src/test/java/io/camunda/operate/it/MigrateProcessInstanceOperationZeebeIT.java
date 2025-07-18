@@ -63,7 +63,7 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
   @Qualifier("operateFlowNodeInstanceTemplate")
   private FlowNodeInstanceTemplate flowNodeInstanceTemplate;
 
-  private Long initialBatchOperationMaxSize;
+  private Long initialBatchSize;
 
   @Autowired private UserTaskReader userTaskReader;
 
@@ -73,20 +73,20 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
     super.before();
     migrateProcessInstanceHandler.setOperateAdapter(operateServicesAdapter);
     mockMvc = mockMvcTestRule.getMockMvc();
-    initialBatchOperationMaxSize = operateProperties.getBatchOperationMaxSize();
+    initialBatchSize = operateProperties.getBatchOperationMaxSize();
   }
 
   @Override
   @After
   public void after() {
-    operateProperties.setBatchOperationMaxSize(initialBatchOperationMaxSize);
+    operateProperties.setBatchOperationMaxSize(initialBatchSize);
 
     super.after();
   }
 
   @Test
   public void testCanMigrateZeebeUserTask() throws Exception {
-    final var processDefinitionKey =
+    final var definitionKey =
         tester
             .deployProcess("three-zeebe-user-tasks.bpmn")
             .waitUntil()
@@ -118,7 +118,7 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
             .setQuery(query)
             .setMigrationPlan(
                 new MigrationPlanDto()
-                    .setTargetProcessDefinitionKey(String.valueOf(processDefinitionKey))
+                    .setTargetProcessDefinitionKey(String.valueOf(definitionKey))
                     .setMappingInstructions(
                         List.of(
                             new MigrationPlanDto.MappingInstruction()

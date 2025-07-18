@@ -660,9 +660,9 @@ public class UserTaskHandlerTest {
     // when
     underTest.flush(taskEntity, mockRequest);
     final Map<String, Object> expectedUpdates = new HashMap<>();
-    expectedUpdates.put(TaskTemplate.PROCESS_DEFINITION_ID, taskEntity.getProcessDefinitionId());
+    expectedUpdates.put(TaskTemplate.DEFINITION_ID, taskEntity.getProcessDefinitionId());
     expectedUpdates.put(TaskTemplate.BPMN_PROCESS_ID, taskEntity.getBpmnProcessId());
-    expectedUpdates.put(TaskTemplate.FLOW_NODE_BPMN_ID, taskEntity.getBpmnId());
+    expectedUpdates.put(TaskTemplate.BPMN_ID, taskEntity.getBpmnId());
     expectedUpdates.put(TaskTemplate.STATE, TaskState.CREATED);
 
     // then

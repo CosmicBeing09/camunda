@@ -100,7 +100,7 @@ public class ElasticsearchHelper implements NoSqlHelper {
                 new SearchSourceBuilder()
                     .query(
                         joinWithAnd(
-                            piId, termQuery(TaskTemplate.FLOW_NODE_BPMN_ID, flowNodeBpmnId)))
+                            piId, termQuery(TaskTemplate.BPMN_ID, flowNodeBpmnId)))
                     .sort(TaskTemplate.CREATION_TIME, SortOrder.DESC));
 
     try {

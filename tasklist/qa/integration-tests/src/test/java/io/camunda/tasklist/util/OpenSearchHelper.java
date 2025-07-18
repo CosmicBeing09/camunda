@@ -84,7 +84,7 @@ public class OpenSearchHelper implements NoSqlHelper {
     }
 
     final Query.Builder flowQ = new Query.Builder();
-    flowQ.term(t -> t.field(TaskTemplate.FLOW_NODE_BPMN_ID).value(FieldValue.of(flowNodeBpmnId)));
+    flowQ.term(t -> t.field(TaskTemplate.BPMN_ID).value(FieldValue.of(flowNodeBpmnId)));
 
     try {
       final Query query;
