@@ -23,7 +23,7 @@ import io.camunda.client.CredentialsProvider;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.ActivateAdHocSubProcessActivitiesCommandStep1;
 import io.camunda.client.api.command.ActivateJobsCommandStep1;
-import io.camunda.client.api.command.AddMappingToGroupStep1;
+import io.camunda.client.api.command.AssignMappingToGroupCommandStep1;
 import io.camunda.client.api.command.AssignGroupToTenantCommandStep1;
 import io.camunda.client.api.command.AssignMappingToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToClientCommandStep1;
@@ -1138,11 +1138,6 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public AddMappingToGroupStep1 newAddMappingToGroupCommand() {
-    return new AddMappingToGroupCommandImpl(httpClient);
-  }
-
-  @Override
   public UnassignMappingFromGroupStep1 newUnassignMappingFromGroupCommand(final String groupId) {
     return new UnassignMappingFromGroupCommandImpl(httpClient, groupId);
   }
@@ -1186,6 +1181,11 @@ public final class CamundaClientImpl implements CamundaClient {
   @Override
   public GroupsByRoleSearchRequest newGroupsByRoleSearchRequest(final String roleId) {
     return new GroupsByRoleSearchRequestImpl(httpClient, jsonMapper, roleId);
+  }
+
+  @Override
+  public AssignMappingToGroupCommandStep1 newAddMappingToGroupCommand() {
+    return new AddMappingToGroupCommandImpl(httpClient);
   }
 
   private JobClient newJobClient() {
