@@ -25,7 +25,7 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class, // Now expecting SearchTermQuery directly
@@ -44,7 +44,7 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class, // Now expecting SearchTermQuery directly
@@ -63,7 +63,7 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class, // Now expecting SearchTermQuery directly
@@ -82,7 +82,7 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class, // Now expecting SearchTermQuery directly
@@ -101,7 +101,7 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     // Ensure the outer query is a SearchBoolQuery
     assertThat(queryVariant)
@@ -111,15 +111,15 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
               assertThat(outerBoolQuery.must()).isNotEmpty();
 
               final SearchQuery nameMustQuery = outerBoolQuery.must().get(0);
-              assertThat(nameMustQuery.queryOption()).isInstanceOf(SearchTermQuery.class);
+              assertThat(nameMustQuery.queryOperations()).isInstanceOf(SearchTermQuery.class);
 
               final SearchQuery valueMustQuery = outerBoolQuery.must().get(1);
-              assertThat(valueMustQuery.queryOption()).isInstanceOf(SearchTermQuery.class);
+              assertThat(valueMustQuery.queryOperations()).isInstanceOf(SearchTermQuery.class);
 
               final SearchTermQuery innerNameTermQuery =
-                  (SearchTermQuery) nameMustQuery.queryOption();
+                  (SearchTermQuery) nameMustQuery.queryOperations();
               final SearchTermQuery innerValueTermQuery =
-                  (SearchTermQuery) valueMustQuery.queryOption();
+                  (SearchTermQuery) valueMustQuery.queryOperations();
 
               // Ensure name query is correct
               assertThat(innerNameTermQuery)

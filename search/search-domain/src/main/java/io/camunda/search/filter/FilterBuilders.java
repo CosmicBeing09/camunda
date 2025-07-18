@@ -199,13 +199,13 @@ public final class FilterBuilders {
     return fn.apply(incident()).build();
   }
 
-  public static BatchOperationFilter.Builder batchOperation() {
+  public static BatchOperationFilter.Builder batchOperationFilters() {
     return new BatchOperationFilter.Builder();
   }
 
-  public static BatchOperationFilter batchOperation(
+  public static BatchOperationFilter batchOperations(
       final Function<BatchOperationFilter.Builder, ObjectBuilder<BatchOperationFilter>> fn) {
-    return fn.apply(batchOperation()).build();
+    return fn.apply(batchOperationFilters()).build();
   }
 
   public static BatchOperationItemFilter.Builder batchOperationItem() {

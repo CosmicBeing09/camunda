@@ -694,7 +694,7 @@ public final class SearchQueryRequestMapper {
 
   private static BatchOperationFilter toBatchOperationFilter(
       final io.camunda.zeebe.gateway.protocol.rest.BatchOperationFilter filter) {
-    final var builder = FilterBuilders.batchOperation();
+    final var builder = FilterBuilders.batchOperationFilters();
 
     if (filter != null) {
       ofNullable(filter.getBatchOperationId())
@@ -1115,14 +1115,14 @@ public final class SearchQueryRequestMapper {
     final var builder = FilterBuilders.incident();
 
     if (filter != null) {
-      ofNullable(filter.getIncidentKey()).map(KeyUtil::keyToLong).ifPresent(builder::incidentKeys);
+      ofNullable(filter.getIncidentKey()).map(KeyUtil::keyToLong).ifPresent(builder::incidentKeyOperations);
       ofNullable(filter.getProcessDefinitionKey())
           .map(KeyUtil::keyToLong)
-          .ifPresent(builder::processDefinitionKeys);
-      ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::processDefinitionIds);
+          .ifPresent(builder::processDefinitionKeyOperations);
+      ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::processDefinitionIdOperations);
       ofNullable(filter.getProcessInstanceKey())
           .map(KeyUtil::keyToLong)
-          .ifPresent(builder::processInstanceKeys);
+          .ifPresent(builder::processInstanceKeyOperations);
       ofNullable(filter.getErrorType())
           .ifPresent(t -> builder.errorTypes(IncidentEntity.ErrorType.valueOf(t.getValue())));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessages);
@@ -1135,7 +1135,7 @@ public final class SearchQueryRequestMapper {
       ofNullable(filter.getState())
           .ifPresent(s -> builder.states(IncidentState.valueOf(s.getValue())));
       ofNullable(filter.getJobKey()).map(KeyUtil::keyToLong).ifPresent(builder::jobKeys);
-      ofNullable(filter.getTenantId()).ifPresent(builder::tenantIds);
+      ofNullable(filter.getTenantId()).ifPresent(builder::tenantIdOperations);
     }
     return builder.build();
   }

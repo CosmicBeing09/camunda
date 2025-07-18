@@ -26,7 +26,7 @@ public record BatchOperationDbQuery(
   public static final class Builder implements ObjectBuilder<BatchOperationDbQuery> {
 
     private static final BatchOperationFilter EMPTY_FILTER =
-        FilterBuilders.batchOperation().build();
+        FilterBuilders.batchOperationFilters().build();
 
     private BatchOperationFilter filter;
     private DbQuerySorting<BatchOperationEntity> sort;
@@ -49,7 +49,7 @@ public record BatchOperationDbQuery(
 
     public Builder filter(
         final Function<BatchOperationFilter.Builder, ObjectBuilder<BatchOperationFilter>> fn) {
-      return filter(FilterBuilders.batchOperation(fn));
+      return filter(FilterBuilders.batchOperations(fn));
     }
 
     public Builder sort(

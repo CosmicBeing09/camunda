@@ -25,13 +25,13 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByIncidentKey() {
-    final var filter = FilterBuilders.incident(f -> f.incidentKeys(1L));
+    final var filter = FilterBuilders.incident(f -> f.incidentKeyOperations(1L));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -43,13 +43,13 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByProcessDefinitionKey() {
-    final var filter = FilterBuilders.incident(f -> f.processDefinitionKeys(5432L));
+    final var filter = FilterBuilders.incident(f -> f.processDefinitionKeyOperations(5432L));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -61,13 +61,13 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByBpmnProcessId() {
-    final var filter = FilterBuilders.incident(f -> f.processDefinitionIds("complexProcess"));
+    final var filter = FilterBuilders.incident(f -> f.processDefinitionIdOperations("complexProcess"));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -79,13 +79,13 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByProcessInstanceKey() {
-    final var filter = FilterBuilders.incident(f -> f.processInstanceKeys(42L));
+    final var filter = FilterBuilders.incident(f -> f.processInstanceKeyOperations(42L));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -103,7 +103,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -121,7 +121,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -139,7 +139,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -157,7 +157,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -175,7 +175,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -196,7 +196,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchRangeQuery.class,
@@ -214,7 +214,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -232,7 +232,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -244,13 +244,13 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByTenantId() {
-    final var filter = FilterBuilders.incident(f -> f.tenantIds("Homer"));
+    final var filter = FilterBuilders.incident(f -> f.tenantIdOperations("Homer"));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -268,7 +268,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,

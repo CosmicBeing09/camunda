@@ -218,10 +218,10 @@ public class IncidentQueryControllerTest extends RestControllerTest {
             new IncidentQuery.Builder()
                 .filter(
                     new IncidentFilter.Builder()
-                        .incidentKeys(5L)
-                        .processDefinitionKeys(23L)
-                        .processDefinitionIds("complexProcess")
-                        .processInstanceKeys(42L)
+                        .incidentKeyOperations(5L)
+                        .processDefinitionKeyOperations(23L)
+                        .processDefinitionIdOperations("complexProcess")
+                        .processInstanceKeyOperations(42L)
                         .errorTypes(ErrorType.JOB_NO_RETRIES)
                         .errorMessages("No retries left.")
                         .flowNodeIds("elementId")
@@ -233,7 +233,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
                                 .build())
                         .states(IncidentState.ACTIVE)
                         .jobKeys(101L)
-                        .tenantIds("tenantId")
+                        .tenantIdOperations("tenantId")
                         .build())
                 .build());
   }

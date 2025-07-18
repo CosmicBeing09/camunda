@@ -90,10 +90,10 @@ public class IncidentSpecificFilterIT {
 
   static List<IncidentFilter> shouldFindIncidentWithSpecificFilterParameters() {
     return List.of(
-        new IncidentFilter.Builder().incidentKeys(1337L).build(),
-        new IncidentFilter.Builder().processDefinitionKeys(2000L).build(),
-        new IncidentFilter.Builder().processDefinitionIds("sorting-test-process").build(),
-        new IncidentFilter.Builder().processInstanceKeys(3000L).build(),
+        new IncidentFilter.Builder().incidentKeyOperations(1337L).build(),
+        new IncidentFilter.Builder().processDefinitionKeyOperations(2000L).build(),
+        new IncidentFilter.Builder().processDefinitionIdOperations("sorting-test-process").build(),
+        new IncidentFilter.Builder().processInstanceKeyOperations(3000L).build(),
         new IncidentFilter.Builder().flowNodeIds("sorting-flow-node").build(),
         new IncidentFilter.Builder().flowNodeInstanceKeys(4000L).build(),
         new IncidentFilter.Builder().errorTypes(ErrorType.JOB_NO_RETRIES).build(),
@@ -105,6 +105,6 @@ public class IncidentSpecificFilterIT {
                 new DateValueFilter(
                     NOW.minus(1, ChronoUnit.MILLIS), NOW.plus(1, ChronoUnit.MILLIS)))
             .build(),
-        new IncidentFilter.Builder().tenantIds("sorting-tenant1").build());
+        new IncidentFilter.Builder().tenantIdOperations("sorting-tenant1").build());
   }
 }

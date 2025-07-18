@@ -20,13 +20,13 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
   @Test
   void shouldQueryByBatchOperationId() {
     // given
-    final var filter = FilterBuilders.batchOperation(f -> f.batchOperationIds("123"));
+    final var filter = FilterBuilders.batchOperations(f -> f.batchOperationIds("123"));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -40,13 +40,13 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
   void shouldQueryLegacyByBatchOperationId() {
     // given
     final var batchIdUuid = UUID.randomUUID().toString();
-    final var filter = FilterBuilders.batchOperation(f -> f.batchOperationIds(batchIdUuid));
+    final var filter = FilterBuilders.batchOperations(f -> f.batchOperationIds(batchIdUuid));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -59,13 +59,13 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
   @Test
   void shouldQueryByState() {
     // given
-    final var filter = FilterBuilders.batchOperation(f -> f.states("ACTIVE"));
+    final var filter = FilterBuilders.batchOperations(f -> f.states("ACTIVE"));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -78,13 +78,13 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
   @Test
   void shouldQueryByOperationType() {
     // given
-    final var filter = FilterBuilders.batchOperation(f -> f.operationTypes("CREATE"));
+    final var filter = FilterBuilders.batchOperations(f -> f.operationTypes("CREATE"));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -98,18 +98,18 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
   void shouldQueryByAllFields() {
     // given
     final var filter =
-        FilterBuilders.batchOperation(
+        FilterBuilders.batchOperations(
             f -> f.batchOperationIds("123").states("ACTIVE").operationTypes("CREATE"));
 
     // when
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(3);
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(0).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(0).queryOperations())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {
@@ -117,7 +117,7 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
               assertThat(t.value().stringValue()).isEqualTo("123");
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOperations())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {
@@ -125,7 +125,7 @@ class BatchOperationFilterTransformerTest extends AbstractTransformerTest {
               assertThat(t.value().stringValue()).isEqualTo("ACTIVE");
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOperations())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {
