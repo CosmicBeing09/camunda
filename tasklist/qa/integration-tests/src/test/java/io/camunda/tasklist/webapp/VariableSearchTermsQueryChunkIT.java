@@ -51,7 +51,7 @@ public class VariableSearchTermsQueryChunkIT extends TasklistZeebeIntegrationTes
         new MockMvcHelper(MockMvcBuilders.webAppContextSetup(context).build(), objectMapper);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("variable_search.bpmn")
         .send()
         .join()

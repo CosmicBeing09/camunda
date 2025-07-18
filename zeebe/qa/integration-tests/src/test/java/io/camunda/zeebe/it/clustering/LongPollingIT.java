@@ -61,7 +61,7 @@ final class LongPollingIT {
 
     try (final var client = cluster.newClientBuilder().build()) {
       final var deploymentEvent =
-          client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+          client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
       // when - send the ActivateJobs request first, before the process instance is created
       final var jobs =

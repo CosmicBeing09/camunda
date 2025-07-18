@@ -103,7 +103,7 @@ public class TasklistV1ApiGroupPermissionsIT {
     addUserToGroup(adminClient, groupId, AUTHORIZED_USERNAME);
 
     adminClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID)
                 .startEvent()

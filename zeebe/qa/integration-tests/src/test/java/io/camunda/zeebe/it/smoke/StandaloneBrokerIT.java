@@ -65,7 +65,7 @@ final class StandaloneBrokerIT {
 
   private ProcessInstanceResult executeProcessInstance(
       final String processId, final BpmnModelInstance process) {
-    client.newDeployResourceCommand().addProcessModel(process, processId + ".bpmn").send().join();
+    client.deployResource().addProcessModel(process, processId + ".bpmn").send().join();
     return client
         .newCreateInstanceCommand()
         .bpmnProcessId(processId)

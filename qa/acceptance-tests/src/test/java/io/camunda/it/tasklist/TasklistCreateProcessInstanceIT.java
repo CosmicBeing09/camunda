@@ -83,7 +83,7 @@ public class TasklistCreateProcessInstanceIT {
 
   private static void deployResource(final CamundaClient camundaClient) {
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("process/startedByFormProcess.bpmn")
         .send()
         .join();

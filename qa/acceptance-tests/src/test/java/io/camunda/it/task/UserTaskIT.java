@@ -305,7 +305,7 @@ public class UserTaskIT {
     // given
     final var form =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("form/form.form")
             .send()
             .join()
@@ -376,7 +376,7 @@ public class UserTaskIT {
             .endEvent()
             .done();
     final DeployResourceCommandStep1.DeployResourceCommandStep2 deployProcessCommandStep1 =
-        camundaClient.newDeployResourceCommand().addProcessModel(process, processId + ".bpmn");
+        camundaClient.deployResource().addProcessModel(process, processId + ".bpmn");
     final DeploymentEvent deploymentEvent = deployProcessCommandStep1.send().join();
     return String.valueOf(deploymentEvent.getProcesses().getFirst().getProcessDefinitionKey());
   }

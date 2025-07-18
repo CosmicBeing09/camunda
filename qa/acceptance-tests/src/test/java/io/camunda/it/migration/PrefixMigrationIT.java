@@ -257,7 +257,7 @@ public class PrefixMigrationIT {
 
     final var event =
         camunda87Client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/service_tasks_v1.bpmn")
             .send()
             .join();

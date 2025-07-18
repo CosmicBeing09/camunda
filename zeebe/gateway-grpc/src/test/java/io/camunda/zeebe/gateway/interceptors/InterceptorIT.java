@@ -143,7 +143,7 @@ final class InterceptorIT {
     try (final var client = createCamundaClient()) {
       final Future<DeploymentEvent> result =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addResourceFromClasspath("processes/one-task-process.bpmn")
               .send();
 

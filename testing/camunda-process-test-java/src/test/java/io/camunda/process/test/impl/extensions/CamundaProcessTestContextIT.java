@@ -463,7 +463,7 @@ public class CamundaProcessTestContextIT {
   void shouldFindBusinessRuleTaskByName() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/decision-table-unique.dmn")
         .send()
         .join();
@@ -489,7 +489,7 @@ public class CamundaProcessTestContextIT {
   void shouldFindBusinessRuleTaskById() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/decision-table-unique.dmn")
         .send()
         .join();
@@ -518,7 +518,7 @@ public class CamundaProcessTestContextIT {
   void shouldFindBusinessRuleTaskByProcessInstanceKey() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/decision-table-unique.dmn")
         .send()
         .join();
@@ -548,7 +548,7 @@ public class CamundaProcessTestContextIT {
   void shouldMatchBusinessRuleWithStringResult() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/simple-decision-table.dmn")
         .send()
         .join();
@@ -575,7 +575,7 @@ public class CamundaProcessTestContextIT {
   void shouldMatchBusinessRuleWithListResult() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/decision-table-collect.dmn")
         .send()
         .join();
@@ -608,7 +608,7 @@ public class CamundaProcessTestContextIT {
   void shouldMatchBusinessRuleWithListResultOfDifferentTypes() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/simple-decision-table-collect.dmn")
         .send()
         .join();
@@ -639,7 +639,7 @@ public class CamundaProcessTestContextIT {
   void shouldEvaluateSimpleDecision() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/simple-decision-table.dmn")
         .send()
         .join();
@@ -659,7 +659,7 @@ public class CamundaProcessTestContextIT {
   void shouldEvaluateComplexDecision() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/complex-decision-table.dmn")
         .send()
         .join();
@@ -690,7 +690,7 @@ public class CamundaProcessTestContextIT {
   void unableToEvaluateDecision() {
     // Given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/faulty-decision-table.dmn")
         .send()
         .join();
@@ -726,7 +726,7 @@ public class CamundaProcessTestContextIT {
   private long deployProcessModel(final BpmnModelInstance processModel) {
     final DeploymentEvent deploymentEvent =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processModel, "test-process.bpmn")
             .send()
             .join();
@@ -736,7 +736,7 @@ public class CamundaProcessTestContextIT {
   private long deployDmnModel(final DmnModelInstance dmnModel) {
     final DeploymentEvent deploymentEvent =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceStream(
                 new ByteArrayInputStream(Dmn.convertToString(dmnModel).getBytes()),
                 "test-decision.dmn")

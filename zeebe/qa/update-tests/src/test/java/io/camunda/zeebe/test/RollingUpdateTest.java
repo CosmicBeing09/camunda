@@ -317,7 +317,7 @@ final class RollingUpdateTest {
 
   private void deployProcess(final CamundaClient client) {
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(PROCESS, "process.bpmn")
         .send()
         .join(10, TimeUnit.SECONDS);

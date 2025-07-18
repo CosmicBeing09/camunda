@@ -69,7 +69,7 @@ public final class EmbeddedGatewayWithOneCpuThreadIT {
     final var process = Bpmn.createExecutableProcess().startEvent().endEvent().done();
 
     // when
-    final var result = client.newDeployCommand().addProcessModel(process, "foo.bpmn").send().join();
+    final var result = client.deploy().addProcessModel(process, "foo.bpmn").send().join();
 
     // then
     assertThat(result).isNotNull();

@@ -135,7 +135,7 @@ public class InheritedBasicAuthAuthorizationIT {
           .isThrownBy(
               () ->
                   client
-                      .newDeployResourceCommand()
+                      .deployResource()
                       .addProcessModel(
                           Bpmn.createExecutableProcess().startEvent().endEvent().done(),
                           "process.bpmn")
@@ -154,7 +154,7 @@ public class InheritedBasicAuthAuthorizationIT {
       Assertions.assertThatThrownBy(
               () ->
                   client
-                      .newDeployResourceCommand()
+                      .deployResource()
                       .addProcessModel(
                           Bpmn.createExecutableProcess().startEvent().endEvent().done(),
                           "process.bpmn")

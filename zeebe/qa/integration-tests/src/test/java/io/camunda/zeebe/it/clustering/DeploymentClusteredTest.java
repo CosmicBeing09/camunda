@@ -79,7 +79,7 @@ public final class DeploymentClusteredTest {
     final DeploymentEvent deploymentEvent =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(PROCESS, "process.bpmn")
             .send()
             .join();
@@ -119,7 +119,7 @@ public final class DeploymentClusteredTest {
     final DeploymentEvent deploymentEvent =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(PROCESS, "process.bpmn")
             .send()
             .join();
@@ -163,7 +163,7 @@ public final class DeploymentClusteredTest {
 
     clientRule
         .getClient()
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("dmn/decision-table.dmn")
         .send()
         .join();

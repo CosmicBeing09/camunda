@@ -273,7 +273,7 @@ class VariableSearchTest {
     final InputStream process = UserTaskSearchTest.class.getResourceAsStream(resource);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(Bpmn.readModelFromStream(process), resourceName)
         .send()
         .join();

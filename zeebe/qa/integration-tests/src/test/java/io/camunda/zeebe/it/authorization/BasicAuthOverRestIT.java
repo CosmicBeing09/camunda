@@ -69,7 +69,7 @@ final class BasicAuthOverRestIT {
     // when then
     final var deploymentEvent =
         defaultUserClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
@@ -93,7 +93,7 @@ final class BasicAuthOverRestIT {
       // when
       final var deploymentEvent =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(
                   Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
@@ -117,7 +117,7 @@ final class BasicAuthOverRestIT {
     try (final var client = authUtil.createClient(username, password)) {
       final var deployFuture =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(
                   Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")

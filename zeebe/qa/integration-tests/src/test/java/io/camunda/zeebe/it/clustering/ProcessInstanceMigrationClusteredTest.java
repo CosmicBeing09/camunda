@@ -86,7 +86,7 @@ public class ProcessInstanceMigrationClusteredTest {
     final DeploymentEvent deploymentEvent =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(SOURCE_PROCESS, "process.bpmn")
             .addProcessModel(TARGET_PROCESS, "targetProcess.bpmn")
             .addProcessModel(TARGET_PROCESS_2, "targetProcess2.bpmn")
@@ -183,7 +183,7 @@ public class ProcessInstanceMigrationClusteredTest {
     final DeploymentEvent deploymentEvent =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId)
                     .startEvent()

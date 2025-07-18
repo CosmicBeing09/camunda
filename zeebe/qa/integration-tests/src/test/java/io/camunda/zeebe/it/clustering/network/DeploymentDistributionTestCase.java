@@ -29,7 +29,7 @@ final class DeploymentDistributionTestCase implements AsymmetricNetworkPartition
   @Override
   public CompletableFuture<?> when(final CamundaClient client) {
     final var process = Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
     return null;
   }
 

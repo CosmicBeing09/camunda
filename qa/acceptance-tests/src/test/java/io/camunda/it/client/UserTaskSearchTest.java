@@ -35,7 +35,7 @@ import org.junit.jupiter.api.Test;
 
 @MultiDbTest
 class UserTaskSearchTest {
-  private static Long userTaskKeyTaskAssigned;
+  private static Long assignedTaskKey;
 
   private static CamundaClient camundaClient;
 
@@ -45,13 +45,13 @@ class UserTaskSearchTest {
     deployProcess("process", "simple.bpmn", "test", "", "");
     deployProcess("process-2", "simple-2.bpmn", "test-2", "group", "user");
     deployProcess("process-3", "simple-3.bpmn", "test-3", "", "", "30");
-    delpoyProcessFromResourcePath("/process/bpm_variable_test.bpmn", "bpm_variable_test.bpmn");
-    delpoyProcessFromResourcePath(
+    deployFromResourcePath("/process/bpm_variable_test.bpmn", "bpm_variable_test.bpmn");
+    deployFromResourcePath(
         "/process/bpmn_subprocess_case.bpmn", "bpmn_subprocess_case.bpmn");
 
     deployForm("form/form.form");
-    delpoyProcessFromResourcePath("/process/process_with_form.bpmn", "process_with_form.bpmn");
-    delpoyProcessFromResourcePath("/process/job_worker_process.bpmn", "job_worker_process.bpmn");
+    deployFromResourcePath("/process/process_with_form.bpmn", "process_with_form.bpmn");
+    deployFromResourcePath("/process/job_worker_process.bpmn", "job_worker_process.bpmn");
 
     startProcessInstance("process");
     startProcessInstance("process-2");
@@ -368,7 +368,7 @@ class UserTaskSearchTest {
         camundaClient.newUserTaskSearchRequest().filter(f -> f.assignee("demo")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
     assertThat(result.items().getFirst().getAssignee()).isEqualTo("demo");
-    assertThat(result.items().getFirst().getUserTaskKey()).isEqualTo(userTaskKeyTaskAssigned);
+    assertThat(result.items().getFirst().getUserTaskKey()).isEqualTo(assignedTaskKey);
   }
 
   @Test
@@ -385,7 +385,7 @@ class UserTaskSearchTest {
     assertThat(result.items()).hasSize(1);
     final var first = result.items().getFirst();
     assertThat(first.getAssignee()).isEqualTo("demo");
-    assertThat(first.getUserTaskKey()).isEqualTo(userTaskKeyTaskAssigned);
+    assertThat(first.getUserTaskKey()).isEqualTo(assignedTaskKey);
   }
 
   @Test
@@ -627,10 +627,10 @@ class UserTaskSearchTest {
   @Test
   void shouldGetUserTaskByKey() {
     // when
-    final var result = camundaClient.newUserTaskGetRequest(userTaskKeyTaskAssigned).send().join();
+    final var result = camundaClient.newUserTaskGetRequest(assignedTaskKey).send().join();
 
     // then
-    assertThat(result.getUserTaskKey()).isEqualTo(userTaskKeyTaskAssigned);
+    assertThat(result.getUserTaskKey()).isEqualTo(assignedTaskKey);
   }
 
   @Test
@@ -1350,7 +1350,7 @@ class UserTaskSearchTest {
     final LocalDateTime dayBefore = now.minusDays(1);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -1382,7 +1382,7 @@ class UserTaskSearchTest {
     final LocalDateTime dayBefore = now.minusDays(1);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -1400,19 +1400,19 @@ class UserTaskSearchTest {
         .join();
   }
 
-  private static void delpoyProcessFromResourcePath(
+  private static void deployFromResourcePath(
       final String resource, final String resourceName) {
     final InputStream process = UserTaskSearchTest.class.getResourceAsStream(resource);
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(Bpmn.readModelFromStream(process), resourceName)
         .send()
         .join();
   }
 
   private static void deployForm(final String resource) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resource).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resource).send().join();
   }
 
   private static void startProcessInstance(final String processId) {
@@ -1427,17 +1427,17 @@ class UserTaskSearchTest {
             () -> {
               final var result = camundaClient.newUserTaskSearchRequest().send().join();
               assertThat(result.items().size()).isEqualTo(8);
-              userTaskKeyTaskAssigned = result.items().getFirst().getUserTaskKey();
+              assignedTaskKey = result.items().getFirst().getUserTaskKey();
             });
 
     camundaClient
-        .newUserTaskAssignCommand(userTaskKeyTaskAssigned)
+        .newUserTaskAssignCommand(assignedTaskKey)
         .assignee("demo")
         .action("assignee")
         .send()
         .join();
 
-    camundaClient.newUserTaskCompleteCommand(userTaskKeyTaskAssigned).send().join();
+    camundaClient.newUserTaskCompleteCommand(assignedTaskKey).send().join();
 
     Awaitility.await("should export Assigned task and Completed to ElasticSearch")
         .atMost(TIMEOUT_DATA_AVAILABILITY)

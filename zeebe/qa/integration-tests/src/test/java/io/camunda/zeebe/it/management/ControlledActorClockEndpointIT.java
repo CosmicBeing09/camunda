@@ -63,7 +63,7 @@ final class ControlledActorClockEndpointIT {
     final var response = httpClient.send(request, newResponseHandler());
 
     // when - producing records
-    camundaClient.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    camundaClient.deployResource().addProcessModel(process, "process.bpmn").send().join();
     RecordingExporter.records().limit(1).await();
 
     // then - records are exported with a timestamp matching the pinned time
@@ -90,7 +90,7 @@ final class ControlledActorClockEndpointIT {
     final var response = httpClient.send(request, newResponseHandler());
 
     // when - producing records
-    camundaClient.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    camundaClient.deployResource().addProcessModel(process, "process.bpmn").send().join();
     RecordingExporter.records().limit(1).await();
 
     // then - records are exported with a timestamp matching the offset time

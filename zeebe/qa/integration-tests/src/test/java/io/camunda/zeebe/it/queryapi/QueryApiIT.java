@@ -73,7 +73,7 @@ final class QueryApiIT {
   static void beforeAll() {
     try (final var client = createCamundaClient("beforeAll")) {
       final var deployment =
-          client.newDeployResourceCommand().addProcessModel(PROCESS, "process.bpmn").send().join();
+          client.deployResource().addProcessModel(PROCESS, "process.bpmn").send().join();
       processDefinitionKey = deployment.getProcesses().get(0).getProcessDefinitionKey();
     }
   }

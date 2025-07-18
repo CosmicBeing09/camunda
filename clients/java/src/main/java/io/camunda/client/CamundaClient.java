@@ -210,9 +210,9 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    * @deprecated since 8 for removal with 8.1, replaced by {@link
-   *     CamundaClient#newDeployResourceCommand()}
+   *     CamundaClient#deployResource()}
    */
-  DeployProcessCommandStep1 newDeployCommand();
+  DeployProcessCommandStep1 deploy();
 
   /**
    * Command to deploy new resources, i.e. BPMN process models and DMN decision models.
@@ -228,7 +228,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    */
-  DeployResourceCommandStep1 newDeployResourceCommand();
+  DeployResourceCommandStep1 deployResource();
 
   /**
    * Command to create/start a new instance of a process.

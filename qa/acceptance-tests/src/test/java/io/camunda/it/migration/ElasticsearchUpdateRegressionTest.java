@@ -91,7 +91,7 @@ public class ElasticsearchUpdateRegressionTest {
     testStandaloneBroker.awaitCompleteTopology();
     final CamundaClient camundaClient = testStandaloneBroker.newClientBuilder().build();
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess("test").startEvent().endEvent().done(), "test.bpmn")
         .send()

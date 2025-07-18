@@ -542,7 +542,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
 
   private static long deployResource(final CamundaClient camundaClient, final String resource) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath(resource)
         .send()
         .join()

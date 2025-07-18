@@ -76,7 +76,7 @@ public final class LargeMessageSizeTest {
     final var deployment =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceStringUtf8(largeProcess, "process.bpmn")
             .send()
             .join();
@@ -158,7 +158,7 @@ public final class LargeMessageSizeTest {
 
     clientRule
         .getClient()
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(modelInstance, "foo.bpmn")
         .send()
         .join();
@@ -230,7 +230,7 @@ public final class LargeMessageSizeTest {
 
     clientRule
         .getClient()
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(modelInstance, "foo.bpmn")
         .send()
         .join();

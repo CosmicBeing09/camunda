@@ -247,7 +247,7 @@ public final class BrokerReprocessingTest {
     final DeploymentEvent deploymentResult =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(PROCESS, "process-2.bpmn")
             .send()
             .join();
@@ -475,7 +475,7 @@ public final class BrokerReprocessingTest {
     final long deployment1Key =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(PROCESS_INCIDENT, "incident.bpmn")
             .send()
             .join()
@@ -488,7 +488,7 @@ public final class BrokerReprocessingTest {
     final long deployment2Key =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(PROCESS_INCIDENT, "incident.bpmn")
             .send()
             .join()
@@ -660,7 +660,7 @@ public final class BrokerReprocessingTest {
     final DeploymentEvent deploymentEvent =
         clientRule
             .getClient()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processTwoTasks, s)
             .send()
             .join();
