@@ -30,7 +30,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceByProcessInstanceKey() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .withResult()
         .requestTimeout(Duration.ofSeconds(123))
@@ -48,7 +48,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceByBpmnProcessIdAndVersion() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId("testProcess")
         .version(123)
         .withResult()
@@ -66,7 +66,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceWithStringVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables("{\"foo\": \"bar\"}")
         .withResult()
@@ -85,7 +85,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
     final String key = "key";
     final String value = "value";
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variable(key, value)
         .withResult()
@@ -102,7 +102,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
   public void shouldUseDefaultTenantId() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId("test")
         .latestVersion()
         .withResult()
@@ -123,7 +123,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .latestVersion()
         .tenantId(tenantId)
@@ -146,7 +146,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .version(version)
         .tenantId(tenantId)
@@ -168,7 +168,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(processDefinitionKey)
         .tenantId(tenantId)
         .withResult()

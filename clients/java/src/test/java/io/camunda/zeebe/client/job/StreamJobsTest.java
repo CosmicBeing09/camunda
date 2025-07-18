@@ -196,8 +196,8 @@ public final class StreamJobsTest extends ClientTest {
     // then
     final StreamActivatedJobsRequest request = gatewayService.getLastRequest();
     assertThat(request.getTimeout())
-        .isEqualTo(client.getConfiguration().getDefaultJobTimeout().toMillis());
-    assertThat(request.getWorker()).isEqualTo(client.getConfiguration().getDefaultJobWorkerName());
+        .isEqualTo(client.getConfiguration().getJobTimeout().toMillis());
+    assertThat(request.getWorker()).isEqualTo(client.getConfiguration().getWorkerName());
     assertThat(request.getFetchVariableList()).isEmpty();
   }
 

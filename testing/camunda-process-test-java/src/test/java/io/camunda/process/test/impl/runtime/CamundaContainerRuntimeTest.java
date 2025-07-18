@@ -21,8 +21,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.containers.ContainerFactory;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class CamundaContainerRuntimeTest {
   @Mock private ContainerFactory containerFactory;
 
   @Mock(answer = Answers.RETURNS_SELF)
-  private CamundaContainer camundaContainer;
+  private Container camundaContainer;
 
   @Mock(answer = Answers.RETURNS_SELF)
   private ConnectorsContainer connectorsContainer;

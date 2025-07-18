@@ -48,7 +48,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     final ProcessInstanceEvent response =
-        client.newCreateInstanceCommand().processDefinitionKey(123).send().join();
+        client.newCreateProcessInstanceCommand().processDefinitionKey(123).send().join();
 
     // then
     assertThat(response.getProcessDefinitionKey()).isEqualTo(123);
@@ -66,7 +66,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   @Test
   public void shouldCreateProcessInstanceByBpmnProcessId() {
     // when
-    client.newCreateInstanceCommand().bpmnProcessId("testProcess").latestVersion().send().join();
+    client.newCreateProcessInstanceCommand().bpmnProcessId("testProcess").latestVersion().send().join();
 
     // then
     final CreateProcessInstanceRequest request = gatewayService.getLastRequest();
@@ -77,7 +77,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   @Test
   public void shouldCreateProcessInstanceByBpmnProcessIdAndVersion() {
     // when
-    client.newCreateInstanceCommand().bpmnProcessId("testProcess").version(123).send().join();
+    client.newCreateProcessInstanceCommand().bpmnProcessId("testProcess").version(123).send().join();
 
     // then
     final CreateProcessInstanceRequest request = gatewayService.getLastRequest();
@@ -89,7 +89,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   public void shouldCreateProcessInstanceWithStringVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables("{\"foo\": \"bar\"}")
         .send()
@@ -110,7 +110,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables(inputStream)
         .send()
@@ -129,7 +129,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
     final String value = "value";
 
     // when
-    client.newCreateInstanceCommand().processDefinitionKey(123).variable(key, value).send().join();
+    client.newCreateProcessInstanceCommand().processDefinitionKey(123).variable(key, value).send().join();
 
     // then
     final CreateProcessInstanceRequest request = gatewayService.getLastRequest();
@@ -141,7 +141,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   public void shouldCreateProcessInstanceWithMapVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables(Collections.singletonMap("foo", "bar"))
         .send()
@@ -157,7 +157,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   public void shouldCreateProcessInstanceWithObjectVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables(new VariableDocument())
         .send()
@@ -177,7 +177,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     assertThatThrownBy(
-            () -> client.newCreateInstanceCommand().processDefinitionKey(123).send().join())
+            () -> client.newCreateProcessInstanceCommand().processDefinitionKey(123).send().join())
         .isInstanceOf(ClientException.class)
         .hasMessageContaining("Invalid request");
   }
@@ -189,7 +189,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .requestTimeout(requestTimeout)
         .send()
@@ -203,7 +203,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   public void shouldAddStartInstruction() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .startBeforeElement(ELEMENT_ID_A)
         .send()
@@ -223,7 +223,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   public void shouldAddMultipleStartInstructions() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .startBeforeElement(ELEMENT_ID_A)
         .startBeforeElement(ELEMENT_ID_B)
@@ -245,7 +245,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
   @Test
   public void shouldUseDefaultTenantId() {
     // when
-    client.newCreateInstanceCommand().bpmnProcessId("test").latestVersion().send().join();
+    client.newCreateProcessInstanceCommand().bpmnProcessId("test").latestVersion().send().join();
 
     // then
     final CreateProcessInstanceRequest request = gatewayService.getLastRequest();
@@ -260,7 +260,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .latestVersion()
         .tenantId(tenantId)
@@ -281,7 +281,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .version(version)
         .tenantId(tenantId)
@@ -301,7 +301,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(processDefinitionKey)
         .tenantId(customTenantId)
         .send()

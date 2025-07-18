@@ -69,12 +69,12 @@ public interface CamundaProcessTestContext {
   /**
    * @return the URI of Camunda's gRPC API address
    */
-  URI getCamundaGrpcAddress();
+  URI getGrpcAddress();
 
   /**
    * @return the URI of Camunda's REST API address
    */
-  URI getCamundaRestAddress();
+  URI getRestAddress();
 
   /**
    * @return the URI of the connectors REST API address

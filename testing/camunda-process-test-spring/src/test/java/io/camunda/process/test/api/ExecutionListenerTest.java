@@ -25,9 +25,9 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
-import io.camunda.process.test.impl.configuration.CamundaContainerRuntimeConfiguration;
-import io.camunda.process.test.impl.containers.CamundaContainer;
+import io.camunda.process.test.impl.configuration.CamundaRuntimeConfiguration;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
 import io.camunda.process.test.impl.proxy.ZeebeClientProxy;
@@ -66,10 +66,10 @@ public class ExecutionListenerTest {
   private static final Consumer<String> NOOP = s -> {};
 
   @Mock(answer = Answers.RETURNS_SELF)
-  private CamundaContainerRuntimeBuilder camundaContainerRuntimeBuilder;
+  private CamundaContainerRuntimeBuilder runtimeBuilder;
 
   @Mock private CamundaContainerRuntime camundaContainerRuntime;
-  @Mock private CamundaContainer camundaContainer;
+  @Mock private Container camundaContainer;
   @Mock private ConnectorsContainer connectorsContainer;
 
   @Mock private CamundaClientProxy camundaClientProxy;
@@ -96,7 +96,7 @@ public class ExecutionListenerTest {
 
   @BeforeEach
   void configureMocks() {
-    when(camundaContainerRuntimeBuilder.build()).thenReturn(camundaContainerRuntime);
+    when(runtimeBuilder.build()).thenReturn(camundaContainerRuntime);
     when(camundaContainerRuntime.getCamundaContainer()).thenReturn(camundaContainer);
     when(camundaContainer.getGrpcApiAddress()).thenReturn(GRPC_API_ADDRESS);
     when(camundaContainer.getRestApiAddress()).thenReturn(REST_API_ADDRESS);
@@ -108,15 +108,15 @@ public class ExecutionListenerTest {
     when(applicationContext.getBean(ZeebeClientProxy.class)).thenReturn(zeebeClientProxy);
     when(applicationContext.getBean(CamundaProcessTestContextProxy.class))
         .thenReturn(camundaProcessTestContextProxy);
-    when(applicationContext.getBean(CamundaContainerRuntimeConfiguration.class))
-        .thenReturn(new CamundaContainerRuntimeConfiguration());
+    when(applicationContext.getBean(CamundaRuntimeConfiguration.class))
+        .thenReturn(new CamundaRuntimeConfiguration());
   }
 
   @Test
   void shouldWireCamundaClientAndZeebeClient() throws Exception {
     // given
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     // when
     listener.beforeTestClass(testContext);
@@ -156,7 +156,7 @@ public class ExecutionListenerTest {
     when(connectorsContainer.getRestApiAddress()).thenReturn(connectorsRestApiAddress);
 
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     // when
     listener.beforeTestClass(testContext);
@@ -169,8 +169,8 @@ public class ExecutionListenerTest {
     final CamundaProcessTestContext camundaProcessTestContext =
         camundaProcessTestContextArgumentCaptor.getValue();
     assertThat(camundaProcessTestContext).isNotNull();
-    assertThat(camundaProcessTestContext.getCamundaGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(camundaProcessTestContext.getCamundaRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(camundaProcessTestContext.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
+    assertThat(camundaProcessTestContext.getRestAddress()).isEqualTo(REST_API_ADDRESS);
     assertThat(camundaProcessTestContext.getConnectorsAddress())
         .isEqualTo(connectorsRestApiAddress);
 
@@ -186,7 +186,7 @@ public class ExecutionListenerTest {
   void shouldConfigureJsonMapper() throws Exception {
     // given
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     when(applicationContext.getBeanNamesForType(JsonMapper.class))
         .thenReturn(new String[] {"camundaJsonMapper"});
@@ -211,7 +211,7 @@ public class ExecutionListenerTest {
   void shouldConfigureJsonMapperForZeebeClient() throws Exception {
     // given
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     when(applicationContext.getBeanNamesForType(JsonMapper.class)).thenReturn(new String[] {});
     when(applicationContext.getBeanNamesForType(io.camunda.zeebe.client.api.JsonMapper.class))
@@ -238,7 +238,7 @@ public class ExecutionListenerTest {
   void shouldStartAndCloseRuntime() throws Exception {
     // given
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     // when
     listener.beforeTestClass(testContext);
@@ -254,7 +254,7 @@ public class ExecutionListenerTest {
   void shouldCloseCamundClientAndZeebeClient() throws Exception {
     // given
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     // when
     listener.beforeTestClass(testContext);
@@ -296,16 +296,16 @@ public class ExecutionListenerTest {
         Map.ofEntries(entry("env-1", "test-1"), entry("env-2", "test-2"));
 
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
-    final CamundaContainerRuntimeConfiguration runtimeConfiguration =
-        new CamundaContainerRuntimeConfiguration();
-    runtimeConfiguration.setCamundaVersion("8.6.0-custom");
-    runtimeConfiguration.setCamundaDockerImageName("custom-camunda");
+    final CamundaRuntimeConfiguration runtimeConfiguration =
+        new CamundaRuntimeConfiguration();
+    runtimeConfiguration.setVersion("8.6.0-custom");
+    runtimeConfiguration.setImageName("custom-camunda");
     runtimeConfiguration.setCamundaEnvVars(camundaEnvVars);
     runtimeConfiguration.setCamundaExposedPorts(List.of(100, 200));
 
-    when(applicationContext.getBean(CamundaContainerRuntimeConfiguration.class))
+    when(applicationContext.getBean(CamundaRuntimeConfiguration.class))
         .thenReturn(runtimeConfiguration);
 
     // when
@@ -313,11 +313,11 @@ public class ExecutionListenerTest {
     listener.beforeTestMethod(testContext);
 
     // then
-    verify(camundaContainerRuntimeBuilder).withCamundaDockerImageVersion("8.6.0-custom");
-    verify(camundaContainerRuntimeBuilder).withCamundaDockerImageName("custom-camunda");
-    verify(camundaContainerRuntimeBuilder).withCamundaEnv(camundaEnvVars);
-    verify(camundaContainerRuntimeBuilder).withCamundaExposedPort(100);
-    verify(camundaContainerRuntimeBuilder).withCamundaExposedPort(200);
+    verify(runtimeBuilder).withCamundaDockerImageVersion("8.6.0-custom");
+    verify(runtimeBuilder).withCamundaDockerImageName("custom-camunda");
+    verify(runtimeBuilder).withCamundaEnv(camundaEnvVars);
+    verify(runtimeBuilder).withCamundaExposedPort(100);
+    verify(runtimeBuilder).withCamundaExposedPort(200);
   }
 
   @Test
@@ -330,17 +330,17 @@ public class ExecutionListenerTest {
         Map.ofEntries(entry("secret-1", "1"), entry("secret-2", "2"));
 
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
-    final CamundaContainerRuntimeConfiguration runtimeConfiguration =
-        new CamundaContainerRuntimeConfiguration();
+    final CamundaRuntimeConfiguration runtimeConfiguration =
+        new CamundaRuntimeConfiguration();
     runtimeConfiguration.setConnectorsEnabled(true);
     runtimeConfiguration.setConnectorsDockerImageName("custom-connectors");
     runtimeConfiguration.setConnectorsDockerImageVersion("8.6.0-custom");
     runtimeConfiguration.setConnectorsEnvVars(connectorsEnvVars);
     runtimeConfiguration.setConnectorsSecrets(connectorsSecrets);
 
-    when(applicationContext.getBean(CamundaContainerRuntimeConfiguration.class))
+    when(applicationContext.getBean(CamundaRuntimeConfiguration.class))
         .thenReturn(runtimeConfiguration);
 
     // when
@@ -348,11 +348,11 @@ public class ExecutionListenerTest {
     listener.beforeTestMethod(testContext);
 
     // then
-    verify(camundaContainerRuntimeBuilder).withConnectorsEnabled(true);
-    verify(camundaContainerRuntimeBuilder).withConnectorsDockerImageName("custom-connectors");
-    verify(camundaContainerRuntimeBuilder).withConnectorsDockerImageVersion("8.6.0-custom");
-    verify(camundaContainerRuntimeBuilder).withConnectorsEnv(connectorsEnvVars);
-    verify(camundaContainerRuntimeBuilder).withConnectorsSecrets(connectorsSecrets);
+    verify(runtimeBuilder).withConnectorsEnabled(true);
+    verify(runtimeBuilder).withConnectorsDockerImageName("custom-connectors");
+    verify(runtimeBuilder).withConnectorsDockerImageVersion("8.6.0-custom");
+    verify(runtimeBuilder).withConnectorsEnv(connectorsEnvVars);
+    verify(runtimeBuilder).withConnectorsSecrets(connectorsSecrets);
   }
 
   @Test
@@ -361,7 +361,7 @@ public class ExecutionListenerTest {
     final StringBuilder outputBuilder = new StringBuilder();
     final CamundaProcessTestExecutionListener listener =
         new CamundaProcessTestExecutionListener(
-            camundaContainerRuntimeBuilder, outputBuilder::append);
+            runtimeBuilder, outputBuilder::append);
 
     when(camundaProcessTestResultCollector.collect()).thenReturn(new ProcessTestResult());
 
@@ -387,7 +387,7 @@ public class ExecutionListenerTest {
     final StringBuilder outputBuilder = new StringBuilder();
     final CamundaProcessTestExecutionListener listener =
         new CamundaProcessTestExecutionListener(
-            camundaContainerRuntimeBuilder, outputBuilder::append);
+            runtimeBuilder, outputBuilder::append);
 
     // when
     listener.beforeTestClass(testContext);
@@ -409,7 +409,7 @@ public class ExecutionListenerTest {
   void shouldPurgeTheClusterInBetweenTests() throws Exception {
     // given
     final CamundaProcessTestExecutionListener listener =
-        new CamundaProcessTestExecutionListener(camundaContainerRuntimeBuilder, NOOP);
+        new CamundaProcessTestExecutionListener(runtimeBuilder, NOOP);
 
     // when
     listener.beforeTestClass(testContext);

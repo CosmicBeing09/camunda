@@ -27,8 +27,8 @@ import io.camunda.process.test.api.assertions.UserTaskSelector;
 import io.camunda.process.test.api.assertions.UserTaskSelectors;
 import io.camunda.process.test.api.mock.JobWorkerMock;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.mock.JobWorkerMockImpl;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.ZeebeClientBuilder;
@@ -62,13 +62,13 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
 
   private static final int TIMEOUT = 40;
 
-  private final CamundaContainer camundaContainer;
+  private final Container camundaContainer;
   private final ConnectorsContainer connectorsContainer;
   private final Consumer<AutoCloseable> clientCreationCallback;
   private final CamundaManagementClient camundaManagementClient;
 
   public CamundaProcessTestContextImpl(
-      final CamundaContainer camundaContainer,
+      final Container camundaContainer,
       final ConnectorsContainer connectorsContainer,
       final Consumer<AutoCloseable> clientCreationCallback,
       final CamundaManagementClient camundaManagementClient) {
@@ -86,10 +86,10 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
   @Override
   public CamundaClient createClient(final Consumer<CamundaClientBuilder> modifier) {
     final CamundaClientBuilder builder =
-        CamundaClient.newClientBuilder()
+        CamundaClient.buildClient()
             .usePlaintext()
-            .grpcAddress(getCamundaGrpcAddress())
-            .restAddress(getCamundaRestAddress());
+            .grpcAddress(getGrpcAddress())
+            .restAddress(getRestAddress());
 
     modifier.accept(builder);
 
@@ -109,8 +109,8 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
     final ZeebeClientBuilder builder =
         ZeebeClient.newClientBuilder()
             .usePlaintext()
-            .grpcAddress(getCamundaGrpcAddress())
-            .restAddress(getCamundaRestAddress());
+            .grpcAddress(getGrpcAddress())
+            .restAddress(getRestAddress());
 
     modifier.accept(builder);
 
@@ -121,12 +121,12 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
   }
 
   @Override
-  public URI getCamundaGrpcAddress() {
+  public URI getGrpcAddress() {
     return camundaContainer.getGrpcApiAddress();
   }
 
   @Override
-  public URI getCamundaRestAddress() {
+  public URI getRestAddress() {
     return camundaContainer.getRestApiAddress();
   }
 

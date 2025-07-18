@@ -198,7 +198,7 @@ public class GatewayAuthenticationNoneIT {
   }
 
   private CamundaClientBuilder createCamundaClientBuilder() {
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.buildClient()
         .grpcAddress(zeebe.grpcAddress())
         .restAddress(zeebe.restAddress())
         .defaultRequestTimeout(Duration.ofMinutes(1))

@@ -115,7 +115,7 @@ public class CamundaClientStarterAutoConfigurationCustomJsonMapperTest {
     assertThat(configuration.getCaCertificatePath()).isEqualTo("aPath");
     assertThat(configuration.isPlaintextConnectionEnabled())
         .isFalse(); // because the grpc address points to https
-    assertThat(configuration.getDefaultJobWorkerMaxJobsActive()).isEqualTo(99);
+    assertThat(configuration.getJobWorkerMaxJobsActive()).isEqualTo(99);
     assertThat(configuration.getDefaultJobPollInterval()).isEqualTo(Duration.ofSeconds(99));
     assertThat(configuration.preferRestOverGrpc()).isFalse();
   }

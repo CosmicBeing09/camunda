@@ -30,7 +30,7 @@ public class CancelProcessInstanceRestTest extends ClientRestTest {
   @Test
   public void shouldSendCancelCommand() {
     // when
-    client.newCancelInstanceCommand(123).send().join();
+    client.newCancelProcessInstanceCommand(123).send().join();
 
     // then
     final CancelProcessInstanceRequest request =
@@ -45,7 +45,7 @@ public class CancelProcessInstanceRestTest extends ClientRestTest {
         RestGatewayPaths.getCancelProcessUrl(123),
         () -> new ProblemDetail().title("Invalid request").status(400));
 
-    assertThatThrownBy(() -> client.newCancelInstanceCommand(123).send().join())
+    assertThatThrownBy(() -> client.newCancelProcessInstanceCommand(123).send().join())
         .isInstanceOf(ProblemException.class)
         .hasMessageContaining("Invalid request");
   }

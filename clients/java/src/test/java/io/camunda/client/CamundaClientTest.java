@@ -100,7 +100,7 @@ public final class CamundaClientTest {
       assertThat(configuration.getGatewayAddress()).isEqualTo(DEFAULT_GATEWAY_ADDRESS);
       assertThat(configuration.getGrpcAddress()).isEqualTo(DEFAULT_GRPC_ADDRESS);
       assertThat(configuration.getRestAddress()).isEqualTo(DEFAULT_REST_ADDRESS);
-      assertThat(configuration.getDefaultJobWorkerMaxJobsActive()).isEqualTo(32);
+      assertThat(configuration.getJobWorkerMaxJobsActive()).isEqualTo(32);
       assertThat(configuration.getNumJobWorkerExecutionThreads()).isEqualTo(1);
       assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("default");
       assertThat(configuration.getDefaultJobTimeout()).isEqualTo(Duration.ofMinutes(5));
@@ -114,7 +114,7 @@ public final class CamundaClientTest {
       assertThat(configuration.getDefaultTenantId())
           .isEqualTo(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
       assertThat(configuration.getDefaultJobWorkerStreamEnabled()).isFalse();
-      assertThat(configuration.getDefaultJobWorkerTenantIds())
+      assertThat(configuration.getJobWorkerTenantIds())
           .containsExactly(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
       assertThat(configuration.preferRestOverGrpc()).isFalse();
     }
@@ -123,13 +123,13 @@ public final class CamundaClientTest {
   @Test
   public void shouldFailIfCertificateDoesNotExist() {
     assertThatThrownBy(
-            () -> CamundaClient.newClientBuilder().caCertificatePath("/wrong/path").build())
+            () -> CamundaClient.buildClient().caCertificatePath("/wrong/path").build())
         .hasCauseInstanceOf(FileNotFoundException.class);
   }
 
   @Test
   public void shouldFailWithEmptyCertificatePath() {
-    assertThatThrownBy(() -> CamundaClient.newClientBuilder().caCertificatePath("").build())
+    assertThatThrownBy(() -> CamundaClient.buildClient().caCertificatePath("").build())
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -436,7 +436,7 @@ public final class CamundaClientTest {
     final String region = "asdf-123";
 
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId(clusterId)
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -459,7 +459,7 @@ public final class CamundaClientTest {
     // given
     final String clusterId = "clusterId";
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId(clusterId)
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -482,7 +482,7 @@ public final class CamundaClientTest {
     final String gatewayAddress = "localhost:10000";
     final NoopCredentialsProvider credentialsProvider = new NoopCredentialsProvider();
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -504,7 +504,7 @@ public final class CamundaClientTest {
     final Properties properties = new Properties();
     properties.putIfAbsent(propertyName, region);
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -527,7 +527,7 @@ public final class CamundaClientTest {
     // given
     final String defaultRegion = "bru-2";
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -549,7 +549,7 @@ public final class CamundaClientTest {
     // given
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try (final CamundaClient client =
-        CamundaClient.newClientBuilder().jobWorkerExecutor(executor, true).build()) {
+        CamundaClient.buildClient().jobWorkerExecutor(executor, true).build()) {
       // when
       client.close();
 
@@ -563,7 +563,7 @@ public final class CamundaClientTest {
     // given
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try (final CamundaClient client =
-        CamundaClient.newClientBuilder().jobWorkerExecutor(executor, false).build()) {
+        CamundaClient.buildClient().jobWorkerExecutor(executor, false).build()) {
       // when
       client.close();
 
@@ -580,7 +580,7 @@ public final class CamundaClientTest {
     final ScheduledThreadPoolExecutor executor = spy(new ScheduledThreadPoolExecutor(1));
     final Duration pollInterval = Duration.ZERO;
     try (final CamundaClient client =
-            CamundaClient.newClientBuilder().jobWorkerExecutor(executor).build();
+            CamundaClient.buildClient().jobWorkerExecutor(executor).build();
         final JobWorker ignored =
             client
                 .newWorker()
@@ -971,7 +971,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds())
+    assertThat(builder.getJobWorkerTenantIds())
         .containsExactly(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
   }
 
@@ -980,13 +980,13 @@ public final class CamundaClientTest {
     // given
     final String overrideTenant = "override-tenant";
     final CamundaClientBuilderImpl builder = new CamundaClientBuilderImpl();
-    builder.defaultJobWorkerTenantIds(Arrays.asList(overrideTenant));
+    builder.defaultTenantIds(Arrays.asList(overrideTenant));
 
     // when
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactly(overrideTenant);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactly(overrideTenant);
   }
 
   @ParameterizedTest
@@ -1008,7 +1008,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
   }
 
   @ParameterizedTest
@@ -1027,7 +1027,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
   }
 
   @ParameterizedTest
@@ -1053,13 +1053,13 @@ public final class CamundaClientTest {
     Environment.system().put(envName, String.join(",", tenantIdList));
     final String setterTenantId = "setter-tenant";
     final CamundaClientBuilderImpl builder = new CamundaClientBuilderImpl();
-    builder.defaultJobWorkerTenantIds(Arrays.asList(setterTenantId));
+    builder.defaultTenantIds(Arrays.asList(setterTenantId));
 
     // when
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
   }
 
   @ParameterizedTest
@@ -1087,7 +1087,7 @@ public final class CamundaClientTest {
 
     // then
     // todo(#14106): verify that tenant ids are set in the request
-    assertThat(client.getConfiguration().getDefaultJobWorkerTenantIds()).isEmpty();
+    assertThat(client.getConfiguration().getJobWorkerTenantIds()).isEmpty();
   }
 
   @Test
@@ -1098,7 +1098,7 @@ public final class CamundaClientTest {
 
     // when
     final CamundaClientCloudBuilderImpl builderWithTenantId =
-        (CamundaClientCloudBuilderImpl) builder.defaultJobWorkerTenantIds(tenantIdList);
+        (CamundaClientCloudBuilderImpl) builder.defaultTenantIds(tenantIdList);
 
     // then
     // todo(#14106): verify that tenant id is set in the builder

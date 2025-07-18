@@ -172,12 +172,12 @@ public class Worker extends App {
             ? appCfg.getWorker().getTimeout()
             : workerCfg.getCompletionDelay().multipliedBy(6);
     final CamundaClientBuilder builder =
-        CamundaClient.newClientBuilder()
+        CamundaClient.buildClient()
             .gatewayAddress(appCfg.getBrokerUrl())
             .numJobWorkerExecutionThreads(workerCfg.getThreads())
             .defaultJobWorkerName(workerCfg.getWorkerName())
             .defaultJobTimeout(timeout)
-            .defaultJobWorkerMaxJobsActive(workerCfg.getCapacity())
+            .defaultMaxJobsActive(workerCfg.getCapacity())
             .defaultJobPollInterval(workerCfg.getPollingDelay())
             .withProperties(System.getProperties())
             .withInterceptors(monitoringInterceptor);

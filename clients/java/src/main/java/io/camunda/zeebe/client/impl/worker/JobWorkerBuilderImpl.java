@@ -70,8 +70,8 @@ public final class JobWorkerBuilderImpl
     this.executorService = executorService;
     this.closeables = closeables;
 
-    timeout = configuration.getDefaultJobTimeout();
-    workerName = configuration.getDefaultJobWorkerName();
+    timeout = configuration.getJobTimeout();
+    workerName = configuration.getWorkerName();
     maxJobsActive = configuration.getDefaultJobWorkerMaxJobsActive();
     pollInterval = configuration.getDefaultJobPollInterval();
     requestTimeout = configuration.getDefaultRequestTimeout();

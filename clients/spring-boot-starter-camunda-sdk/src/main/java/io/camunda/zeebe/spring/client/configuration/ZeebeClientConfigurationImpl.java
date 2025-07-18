@@ -59,7 +59,7 @@ public class ZeebeClientConfigurationImpl implements ZeebeClientConfiguration {
 
   @Override
   public List<String> getDefaultJobWorkerTenantIds() {
-    return camundaClientConfiguration.getDefaultJobWorkerTenantIds();
+    return camundaClientConfiguration.getJobWorkerTenantIds();
   }
 
   @Override
@@ -69,16 +69,16 @@ public class ZeebeClientConfigurationImpl implements ZeebeClientConfiguration {
 
   @Override
   public int getDefaultJobWorkerMaxJobsActive() {
-    return camundaClientConfiguration.getDefaultJobWorkerMaxJobsActive();
+    return camundaClientConfiguration.getJobWorkerMaxJobsActive();
   }
 
   @Override
-  public String getDefaultJobWorkerName() {
+  public String getWorkerName() {
     return camundaClientConfiguration.getDefaultJobWorkerName();
   }
 
   @Override
-  public Duration getDefaultJobTimeout() {
+  public Duration getJobTimeout() {
     return camundaClientConfiguration.getDefaultJobTimeout();
   }
 

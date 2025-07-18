@@ -180,7 +180,7 @@ final class InterceptorIT {
   }
 
   private CamundaClient createCamundaClient() {
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.buildClient()
         .gatewayAddress(
             NetUtil.toSocketAddressString(gateway.getGatewayCfg().getNetwork().toSocketAddress()))
         .usePlaintext()

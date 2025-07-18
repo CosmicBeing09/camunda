@@ -174,7 +174,7 @@ public interface ZeebeClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    */
-  CreateProcessInstanceCommandStep1 newCreateInstanceCommand();
+  CreateProcessInstanceCommandStep1 newCreateProcessInstanceCommand();
 
   /**
    * Command to modify a process instance.
@@ -266,7 +266,7 @@ public interface ZeebeClient extends AutoCloseable, JobClient {
    * @param processInstanceKey the key which identifies the corresponding process instance
    * @return a builder for the command
    */
-  CancelProcessInstanceCommandStep1 newCancelInstanceCommand(long processInstanceKey);
+  CancelProcessInstanceCommandStep1 newCancelProcessInstanceCommand(long processInstanceKey);
 
   /**
    * Command to set and/or update the variables of a given flow element (e.g. process instance,

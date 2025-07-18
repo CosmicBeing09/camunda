@@ -153,12 +153,12 @@ public final class ZeebeClientBuilderImpl implements ZeebeClientBuilder, ZeebeCl
   }
 
   @Override
-  public String getDefaultJobWorkerName() {
+  public String getWorkerName() {
     return defaultJobWorkerName;
   }
 
   @Override
-  public Duration getDefaultJobTimeout() {
+  public Duration getJobTimeout() {
     return defaultJobTimeout;
   }
 

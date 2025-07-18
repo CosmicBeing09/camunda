@@ -38,7 +38,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
     // when
     final ProcessInstanceResult response =
         client
-            .newCreateInstanceCommand()
+            .newCreateProcessInstanceCommand()
             .processDefinitionKey(123)
             .withResult()
             .requestTimeout(Duration.ofSeconds(123))
@@ -70,7 +70,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .withResult()
         .fetchVariables("x")
@@ -89,7 +89,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
   public void shouldCreateProcessInstanceByBpmnProcessIdAndVersion() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId("testProcess")
         .version(123)
         .withResult()
@@ -106,7 +106,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
   public void shouldCreateProcessInstanceWithStringVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables("{\"foo\": \"bar\"}")
         .withResult()
@@ -125,7 +125,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
     final String key = "key";
     final String value = "value";
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variable(key, value)
         .withResult()
@@ -141,7 +141,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
   public void shouldUseDefaultTenantId() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId("test")
         .latestVersion()
         .withResult()
@@ -162,7 +162,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .latestVersion()
         .tenantId(tenantId)
@@ -185,7 +185,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .version(version)
         .tenantId(tenantId)
@@ -207,7 +207,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(processDefinitionKey)
         .tenantId(tenantId)
         .withResult()

@@ -25,9 +25,9 @@ public class ContainerFactory {
     return new ElasticsearchContainer(asDockerImageName(imageName, imageVersion));
   }
 
-  public CamundaContainer createCamundaContainer(
+  public Container createCamundaContainer(
       final String imageName, final String imageVersion) {
-    return new CamundaContainer(asDockerImageName(imageName, imageVersion));
+    return new Container(asDockerImageName(imageName, imageVersion));
   }
 
   public ConnectorsContainer createConnectorsContainer(

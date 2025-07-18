@@ -25,25 +25,25 @@ import org.checkerframework.checker.nullness.qual.Nullable;
  */
 public class CamundaProcessTestContextProxy extends AbstractInvocationHandler {
 
-  private CamundaProcessTestContext delegate;
+  private CamundaProcessTestContext context;
 
-  public void setContext(final CamundaProcessTestContext camundaProcessTestContext) {
-    delegate = camundaProcessTestContext;
+  public void setContext(final CamundaProcessTestContext newContext) {
+    context = newContext;
   }
 
   public void removeContext() {
-    delegate = null;
+    context = null;
   }
 
   @Override
   protected Object handleInvocation(
       final Object proxy, final Method method, @Nullable final Object[] args) throws Throwable {
-    if (delegate == null) {
+    if (context == null) {
       throw new RuntimeException(
           "Cannot invoke "
               + method
               + " on CamundaProcessTestContext, as CamundaProcessTestContext is currently not initialized. Maybe you run outside of a testcase?");
     }
-    return method.invoke(delegate, args);
+    return method.invoke(context, args);
   }
 }

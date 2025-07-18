@@ -143,7 +143,7 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public List<String> getDefaultJobWorkerTenantIds() {
+  public List<String> getJobWorkerTenantIds() {
     return defaultJobWorkerTenantIds;
   }
 
@@ -153,7 +153,7 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public int getDefaultJobWorkerMaxJobsActive() {
+  public int getJobWorkerMaxJobsActive() {
     return jobWorkerMaxJobsActive;
   }
 
@@ -299,7 +299,7 @@ public final class CamundaClientBuilderImpl
 
     BuilderUtils.applyPropertyValueIfNotNull(
         properties,
-        value -> defaultJobWorkerTenantIds(Arrays.asList(value.split(TENANT_ID_LIST_SEPARATOR))),
+        value -> defaultTenantIds(Arrays.asList(value.split(TENANT_ID_LIST_SEPARATOR))),
         DEFAULT_JOB_WORKER_TENANT_IDS,
         io.camunda.zeebe.client.ClientProperties.DEFAULT_JOB_WORKER_TENANT_IDS);
 
@@ -311,7 +311,7 @@ public final class CamundaClientBuilderImpl
 
     BuilderUtils.applyPropertyValueIfNotNull(
         properties,
-        value -> defaultJobWorkerMaxJobsActive(Integer.parseInt(value)),
+        value -> defaultMaxJobsActive(Integer.parseInt(value)),
         JOB_WORKER_MAX_JOBS_ACTIVE,
         io.camunda.zeebe.client.ClientProperties.JOB_WORKER_MAX_JOBS_ACTIVE);
 
@@ -441,13 +441,13 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder defaultJobWorkerTenantIds(final List<String> tenantIds) {
+  public CamundaClientBuilder defaultTenantIds(final List<String> tenantIds) {
     defaultJobWorkerTenantIds = tenantIds;
     return this;
   }
 
   @Override
-  public CamundaClientBuilder defaultJobWorkerMaxJobsActive(final int maxJobsActive) {
+  public CamundaClientBuilder defaultMaxJobsActive(final int maxJobsActive) {
     jobWorkerMaxJobsActive = maxJobsActive;
     return this;
   }
@@ -643,7 +643,7 @@ public final class CamundaClientBuilderImpl
         DEFAULT_TENANT_ID_VAR,
         ZeebeClientEnvironmentVariables.DEFAULT_TENANT_ID_VAR);
     applyEnvironmentValueIfNotNull(
-        value -> defaultJobWorkerTenantIds(Arrays.asList(value.split(TENANT_ID_LIST_SEPARATOR))),
+        value -> defaultTenantIds(Arrays.asList(value.split(TENANT_ID_LIST_SEPARATOR))),
         DEFAULT_JOB_WORKER_TENANT_IDS_VAR,
         ZeebeClientEnvironmentVariables.DEFAULT_JOB_WORKER_TENANT_IDS_VAR);
     applyEnvironmentValueIfNotNull(

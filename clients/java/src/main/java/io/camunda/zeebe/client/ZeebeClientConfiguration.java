@@ -72,12 +72,12 @@ public interface ZeebeClientConfiguration {
   /**
    * @see ZeebeClientBuilder#defaultJobWorkerName(String)
    */
-  String getDefaultJobWorkerName();
+  String getWorkerName();
 
   /**
    * @see ZeebeClientBuilder#defaultJobTimeout(Duration)
    */
-  Duration getDefaultJobTimeout();
+  Duration getJobTimeout();
 
   /**
    * @see ZeebeClientBuilder#defaultJobPollInterval(Duration)

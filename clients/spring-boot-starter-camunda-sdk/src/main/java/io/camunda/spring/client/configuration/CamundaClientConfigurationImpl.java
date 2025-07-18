@@ -93,10 +93,10 @@ public class CamundaClientConfigurationImpl implements CamundaClientConfiguratio
   }
 
   @Override
-  public List<String> getDefaultJobWorkerTenantIds() {
+  public List<String> getJobWorkerTenantIds() {
     return propertyOrDefault(
         camundaClientProperties.getWorker().getDefaults().getTenantIds(),
-        DEFAULT.getDefaultJobWorkerTenantIds());
+        DEFAULT.getJobWorkerTenantIds());
   }
 
   @Override
@@ -106,10 +106,10 @@ public class CamundaClientConfigurationImpl implements CamundaClientConfiguratio
   }
 
   @Override
-  public int getDefaultJobWorkerMaxJobsActive() {
+  public int getJobWorkerMaxJobsActive() {
     return propertyOrDefault(
         camundaClientProperties.getWorker().getDefaults().getMaxJobsActive(),
-        DEFAULT.getDefaultJobWorkerMaxJobsActive());
+        DEFAULT.getJobWorkerMaxJobsActive());
   }
 
   @Override

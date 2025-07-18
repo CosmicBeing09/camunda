@@ -373,7 +373,7 @@ public final class ZeebeClientImpl implements ZeebeClient {
   }
 
   @Override
-  public CreateProcessInstanceCommandStep1 newCreateInstanceCommand() {
+  public CreateProcessInstanceCommandStep1 newCreateProcessInstanceCommand() {
     return new CreateProcessInstanceCommandImpl(
         asyncStub,
         jsonMapper,
@@ -408,7 +408,7 @@ public final class ZeebeClientImpl implements ZeebeClient {
   }
 
   @Override
-  public CancelProcessInstanceCommandStep1 newCancelInstanceCommand(final long processInstanceKey) {
+  public CancelProcessInstanceCommandStep1 newCancelProcessInstanceCommand(final long processInstanceKey) {
     return new CancelProcessInstanceCommandImpl(
         asyncStub,
         processInstanceKey,

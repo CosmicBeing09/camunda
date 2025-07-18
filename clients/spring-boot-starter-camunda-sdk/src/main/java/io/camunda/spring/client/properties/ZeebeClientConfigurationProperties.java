@@ -795,7 +795,7 @@ public class ZeebeClientConfigurationProperties {
   }
 
   public static class Worker {
-    private Integer maxJobsActive = DEFAULT.getDefaultJobWorkerMaxJobsActive();
+    private Integer maxJobsActive = DEFAULT.getJobWorkerMaxJobsActive();
     private Integer threads = DEFAULT.getNumJobWorkerExecutionThreads();
     private String defaultName =
         null; // setting NO default in Spring, as bean/method name is used as default

@@ -15,8 +15,8 @@
  */
 package io.camunda.process.test.impl.runtime;
 
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.containers.ContainerFactory;
 import io.camunda.process.test.impl.runtime.logging.CamundaLogEntry;
 import io.camunda.process.test.impl.runtime.logging.ConnectorsLogEntry;
@@ -53,8 +53,8 @@ public class CamundaContainerRuntime implements AutoCloseable {
   private final ContainerFactory containerFactory;
 
   private final Network network;
-  private final CamundaContainer camundaContainer;
-  private final ConnectorsContainer connectorsContainer;
+  private final Container camunda;
+  private final ConnectorsContainer connectors;
 
   private final boolean connectorsEnabled;
 
@@ -64,8 +64,8 @@ public class CamundaContainerRuntime implements AutoCloseable {
     connectorsEnabled = builder.isConnectorsEnabled();
     network = Network.newNetwork();
 
-    camundaContainer = createCamundaContainer(network, builder);
-    connectorsContainer = createConnectorsContainer(network, builder);
+    camunda = createCamundaContainer(network, builder);
+    connectors = createConnectorsContainer(network, builder);
   }
 
   /*
@@ -92,9 +92,9 @@ public class CamundaContainerRuntime implements AutoCloseable {
     return container;
   }
 
-  private CamundaContainer createCamundaContainer(
+  private Container createCamundaContainer(
       final Network network, final CamundaContainerRuntimeBuilder builder) {
-    final CamundaContainer container =
+    final Container container =
         containerFactory
             .createCamundaContainer(
                 builder.getCamundaDockerImageName(), builder.getCamundaDockerImageVersion())
@@ -132,9 +132,9 @@ public class CamundaContainerRuntime implements AutoCloseable {
 
   public void start() {
     final List<GenericContainer<?>> containers = new ArrayList<>();
-    containers.add(camundaContainer);
+    containers.add(camunda);
     if (connectorsEnabled) {
-      containers.add(connectorsContainer);
+      containers.add(connectors);
     }
 
     LOGGER.info(
@@ -151,12 +151,12 @@ public class CamundaContainerRuntime implements AutoCloseable {
     LOGGER.info("Camunda container runtime started in {}", startupTime);
   }
 
-  public CamundaContainer getCamundaContainer() {
-    return camundaContainer;
+  public Container getCamundaContainer() {
+    return camunda;
   }
 
   public ConnectorsContainer getConnectorsContainer() {
-    return connectorsContainer;
+    return connectors;
   }
 
   @Override
@@ -165,10 +165,10 @@ public class CamundaContainerRuntime implements AutoCloseable {
     final Instant startTime = Instant.now();
 
     if (connectorsEnabled) {
-      connectorsContainer.stop();
+      connectors.stop();
     }
 
-    camundaContainer.stop();
+    camunda.stop();
     network.close();
 
     final Instant endTime = Instant.now();

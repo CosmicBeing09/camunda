@@ -54,7 +54,7 @@ public class ZeebeClientBasedCamundaSpringProcessTestListenerIT {
 
     // when
     final ProcessInstanceEvent processInstance =
-        client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
+        client.newCreateProcessInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
 
     // then
     CamundaAssert.assertThat(processInstance)
@@ -87,7 +87,7 @@ public class ZeebeClientBasedCamundaSpringProcessTestListenerIT {
     client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
 
     final ProcessInstanceEvent processInstance =
-        client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
+        client.newCreateProcessInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
 
     // when
     CamundaAssert.assertThat(processInstance).hasActiveElements(byName("A"));

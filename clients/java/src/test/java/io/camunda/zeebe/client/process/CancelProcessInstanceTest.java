@@ -31,7 +31,7 @@ public final class CancelProcessInstanceTest extends ClientTest {
   @Test
   public void shouldSendCancelCommand() {
     // when
-    client.newCancelInstanceCommand(123).send().join();
+    client.newCancelProcessInstanceCommand(123).send().join();
 
     // then
     final CancelProcessInstanceRequest request = gatewayService.getLastRequest();
@@ -46,7 +46,7 @@ public final class CancelProcessInstanceTest extends ClientTest {
     gatewayService.errorOnRequest(
         CancelProcessInstanceRequest.class, () -> new ClientException("Invalid request"));
 
-    assertThatThrownBy(() -> client.newCancelInstanceCommand(123).send().join())
+    assertThatThrownBy(() -> client.newCancelProcessInstanceCommand(123).send().join())
         .isInstanceOf(ClientException.class)
         .hasMessageContaining("Invalid request");
   }
@@ -57,7 +57,7 @@ public final class CancelProcessInstanceTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newCancelInstanceCommand(123).requestTimeout(requestTimeout).send().join();
+    client.newCancelProcessInstanceCommand(123).requestTimeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);
@@ -66,7 +66,7 @@ public final class CancelProcessInstanceTest extends ClientTest {
   @Test
   public void shouldNotHaveNullResponse() {
     // given
-    final CancelProcessInstanceCommandStep1 command = client.newCancelInstanceCommand(12);
+    final CancelProcessInstanceCommandStep1 command = client.newCancelProcessInstanceCommand(12);
 
     // when
     final CancelProcessInstanceResponse response = command.send().join();

@@ -45,7 +45,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceByProcessInstanceKey() {
     // when
     final ProcessInstanceEvent response =
-        client.newCreateInstanceCommand().processDefinitionKey(123).send().join();
+        client.newCreateProcessInstanceCommand().processDefinitionKey(123).send().join();
 
     // then
     final ProcessInstanceCreationInstruction request =
@@ -56,7 +56,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   @Test
   public void shouldCreateProcessInstanceByBpmnProcessId() {
     // when
-    client.newCreateInstanceCommand().bpmnProcessId("testProcess").latestVersion().send().join();
+    client.newCreateProcessInstanceCommand().bpmnProcessId("testProcess").latestVersion().send().join();
 
     // then
     final ProcessInstanceCreationInstruction request =
@@ -68,7 +68,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   @Test
   public void shouldCreateProcessInstanceByBpmnProcessIdAndVersion() {
     // when
-    client.newCreateInstanceCommand().bpmnProcessId("testProcess").version(123).send().join();
+    client.newCreateProcessInstanceCommand().bpmnProcessId("testProcess").version(123).send().join();
 
     // then
     final ProcessInstanceCreationInstruction request =
@@ -81,7 +81,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceWithStringVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables("{\"foo\": \"bar\"}")
         .send()
@@ -102,7 +102,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables(inputStream)
         .send()
@@ -121,7 +121,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
     final String value = "value";
 
     // when
-    client.newCreateInstanceCommand().processDefinitionKey(123).variable(key, value).send().join();
+    client.newCreateProcessInstanceCommand().processDefinitionKey(123).variable(key, value).send().join();
 
     // then
     final ProcessInstanceCreationInstruction request =
@@ -133,7 +133,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceWithMapVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables(Collections.singletonMap("foo", "bar"))
         .send()
@@ -149,7 +149,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   public void shouldCreateProcessInstanceWithObjectVariables() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .variables(new CreateProcessInstanceRestTest.VariableDocument())
         .send()
@@ -170,7 +170,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
 
     // when
     assertThatThrownBy(
-            () -> client.newCreateInstanceCommand().processDefinitionKey(123).send().join())
+            () -> client.newCreateProcessInstanceCommand().processDefinitionKey(123).send().join())
         .isInstanceOf(ProblemException.class)
         .hasMessageContaining("Invalid request");
   }
@@ -179,7 +179,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   public void shouldAddStartInstruction() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .startBeforeElement(ELEMENT_ID_A)
         .send()
@@ -200,7 +200,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   public void shouldAddMultipleStartInstructions() {
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(123)
         .startBeforeElement(ELEMENT_ID_A)
         .startBeforeElement(ELEMENT_ID_B)
@@ -223,7 +223,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
   @Test
   public void shouldUseDefaultTenantId() {
     // when
-    client.newCreateInstanceCommand().bpmnProcessId("test").latestVersion().send().join();
+    client.newCreateProcessInstanceCommand().bpmnProcessId("test").latestVersion().send().join();
 
     // then
     final ProcessInstanceCreationInstruction request =
@@ -239,7 +239,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .latestVersion()
         .tenantId(tenantId)
@@ -261,7 +261,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .bpmnProcessId(bpmnProcessId)
         .version(version)
         .tenantId(tenantId)
@@ -282,7 +282,7 @@ public class CreateProcessInstanceRestTest extends ClientRestTest {
 
     // when
     client
-        .newCreateInstanceCommand()
+        .newCreateProcessInstanceCommand()
         .processDefinitionKey(processDefinitionKey)
         .tenantId(customTenantId)
         .send()

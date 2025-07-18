@@ -76,8 +76,8 @@ public final class ActivateJobsCommandImpl
     grpcRequestObjectBuilder = ActivateJobsRequest.newBuilder();
     httpRequestObject = new JobActivationRequest();
     requestTimeout(config.getDefaultRequestTimeout());
-    timeout(config.getDefaultJobTimeout());
-    workerName(config.getDefaultJobWorkerName());
+    timeout(config.getJobTimeout());
+    workerName(config.getWorkerName());
     useRest = config.preferRestOverGrpc();
     defaultTenantIds = new HashSet<>(config.getDefaultJobWorkerTenantIds());
     customTenantIds = new HashSet<>();

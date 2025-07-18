@@ -74,8 +74,8 @@ public class CamundaClientConfigurationImplSaasTest {
 
   @Test
   void shouldHaveDefaultJobWorkerTenantIds() {
-    assertThat(camundaClientConfiguration.getDefaultJobWorkerTenantIds())
-        .isEqualTo(DEFAULT.getDefaultJobWorkerTenantIds());
+    assertThat(camundaClientConfiguration.getJobWorkerTenantIds())
+        .isEqualTo(DEFAULT.getJobWorkerTenantIds());
   }
 
   @Test
@@ -86,8 +86,8 @@ public class CamundaClientConfigurationImplSaasTest {
 
   @Test
   void shouldHaveDefaultJobWorkerMaxJobsActive() {
-    assertThat(camundaClientConfiguration.getDefaultJobWorkerMaxJobsActive())
-        .isEqualTo(DEFAULT.getDefaultJobWorkerMaxJobsActive());
+    assertThat(camundaClientConfiguration.getJobWorkerMaxJobsActive())
+        .isEqualTo(DEFAULT.getJobWorkerMaxJobsActive());
   }
 
   @Test
