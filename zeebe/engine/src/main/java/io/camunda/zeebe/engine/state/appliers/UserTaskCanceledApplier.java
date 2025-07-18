@@ -22,7 +22,7 @@ public final class UserTaskCanceledApplier
   private final MutableElementInstanceState elementInstanceState;
 
   public UserTaskCanceledApplier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 

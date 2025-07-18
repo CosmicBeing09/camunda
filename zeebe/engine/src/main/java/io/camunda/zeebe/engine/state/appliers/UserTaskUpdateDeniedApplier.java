@@ -24,7 +24,7 @@ public class UserTaskUpdateDeniedApplier
   private final MutableElementInstanceState elementInstanceState;
 
   public UserTaskUpdateDeniedApplier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 

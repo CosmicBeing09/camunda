@@ -19,7 +19,7 @@ public final class UserTaskMigratedApplier
   private final MutableTaskState userTaskState;
 
   public UserTaskMigratedApplier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Override

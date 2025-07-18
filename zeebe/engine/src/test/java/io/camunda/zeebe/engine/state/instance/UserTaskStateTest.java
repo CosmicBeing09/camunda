@@ -39,7 +39,7 @@ public class UserTaskStateTest {
   @Before
   public void setUp() {
     final MutableAsyncProcessingContext processingState = stateRule.getProcessingState();
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Test

@@ -19,7 +19,7 @@ public class UserTaskClaimingApplier implements TypedEventApplier<UserTaskIntent
   private final MutableTaskState userTaskState;
 
   public UserTaskClaimingApplier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Override

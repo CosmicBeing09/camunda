@@ -23,7 +23,7 @@ public final class TaskUpdatedApplier
   private final MutableElementInstanceState elementInstanceState;
 
   public TaskUpdatedApplier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 

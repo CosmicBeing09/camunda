@@ -35,7 +35,7 @@ public class UserTaskCreatingV2ApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCreatingV2Applier = new UserTaskCreatingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Test

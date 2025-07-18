@@ -48,7 +48,7 @@ public class UserTaskCancelingV2ApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCancelingApplier = new UserTaskCancelingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 

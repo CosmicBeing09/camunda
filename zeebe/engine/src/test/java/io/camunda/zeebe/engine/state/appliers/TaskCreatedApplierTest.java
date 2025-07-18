@@ -41,7 +41,7 @@ public class TaskCreatedApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCreatedV2Applier = new TaskCreatedApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 

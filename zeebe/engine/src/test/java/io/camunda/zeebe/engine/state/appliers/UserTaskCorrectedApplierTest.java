@@ -41,7 +41,7 @@ public class UserTaskCorrectedApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCorrectedApplier = new UserTaskCorrectedApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 

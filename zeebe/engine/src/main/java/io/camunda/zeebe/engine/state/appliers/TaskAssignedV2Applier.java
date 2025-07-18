@@ -24,7 +24,7 @@ public final class TaskAssignedV2Applier
   private final MutableElementInstanceState elementInstanceState;
 
   public TaskAssignedV2Applier(final MutableAsyncProcessingContext processingState) {
-    taskState = processingState.getUserTaskState();
+    taskState = processingState.getTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 

@@ -333,7 +333,7 @@ public final class EngineProcessors {
       final AuthorizationCheckBehavior authCheckBehavior) {
     return new UserTaskProcessor(
         processingState,
-        processingState.getUserTaskState(),
+        processingState.getTaskState(),
         processingState.getKeyGenerator(),
         bpmnBehaviors,
         writers,

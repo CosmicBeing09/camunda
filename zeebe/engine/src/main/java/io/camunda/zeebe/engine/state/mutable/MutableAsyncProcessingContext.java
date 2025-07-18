@@ -73,9 +73,6 @@ public interface MutableAsyncProcessingContext extends ProcessingState {
   MutableMigrationState getMigrationState();
 
   @Override
-  MutableTaskState getUserTaskState();
-
-  @Override
   MutableCompensationSubscriptionState getCompensationSubscriptionState();
 
   @Override
@@ -110,6 +107,8 @@ public interface MutableAsyncProcessingContext extends ProcessingState {
 
   @Override
   MutableUsageMetricState getUsageMetricState();
+
+  MutableTaskState getTaskState();
 
   IdGenerator getKeyGenerator();
 }

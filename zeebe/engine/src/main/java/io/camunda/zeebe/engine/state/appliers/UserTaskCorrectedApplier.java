@@ -19,7 +19,7 @@ public final class UserTaskCorrectedApplier
   private final MutableTaskState userTaskState;
 
   public UserTaskCorrectedApplier(final MutableAsyncProcessingContext state) {
-    userTaskState = state.getUserTaskState();
+    userTaskState = state.getTaskState();
   }
 
   @Override

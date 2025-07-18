@@ -174,7 +174,7 @@ public final class BpmnBehaviorsImpl implements ProcessBehaviors {
             expressionBehavior,
             stateBehavior,
             processingState.getFormState(),
-            processingState.getUserTaskState(),
+            processingState.getTaskState(),
             clock);
 
     jobBehavior =

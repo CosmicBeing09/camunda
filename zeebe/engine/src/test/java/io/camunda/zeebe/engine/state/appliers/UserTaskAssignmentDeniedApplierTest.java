@@ -39,7 +39,7 @@ public class UserTaskAssignmentDeniedApplierTest {
   public void setup() {
     userTaskAssignmentDeniedApplier = new UserTaskAssignmentDeniedApplier(
         asyncProcessingContext);
-    userTaskState = asyncProcessingContext.getUserTaskState();
+    userTaskState = asyncProcessingContext.getTaskState();
     testSetup = new AppliersTestSetupHelper(asyncProcessingContext);
   }
 

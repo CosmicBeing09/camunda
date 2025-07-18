@@ -39,7 +39,7 @@ public class UserTaskUpdateDeniedApplierTest {
   @BeforeEach
   public void setup() {
     userTaskUpdateDeniedApplier = new UserTaskUpdateDeniedApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 

@@ -20,7 +20,7 @@ public final class AsyncTaskUpdatingApplier
   private final MutableTaskState taskState;
 
   public AsyncTaskUpdatingApplier(final MutableAsyncProcessingContext processingState) {
-    taskState = processingState.getUserTaskState();
+    taskState = processingState.getTaskState();
   }
 
   @Override

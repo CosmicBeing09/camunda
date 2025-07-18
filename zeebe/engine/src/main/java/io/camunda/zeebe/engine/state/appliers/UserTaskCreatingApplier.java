@@ -23,7 +23,7 @@ public final class UserTaskCreatingApplier
 
   public UserTaskCreatingApplier(final MutableAsyncProcessingContext processingState) {
     elementInstanceState = processingState.getElementInstanceState();
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Override

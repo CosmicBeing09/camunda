@@ -20,7 +20,7 @@ public final class UserTaskCancelingV1Applier
   private final MutableTaskState userTaskState;
 
   public UserTaskCancelingV1Applier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Override

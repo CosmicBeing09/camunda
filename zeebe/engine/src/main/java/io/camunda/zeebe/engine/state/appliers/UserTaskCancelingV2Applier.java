@@ -24,7 +24,7 @@ public final class UserTaskCancelingV2Applier
   private final MutableElementInstanceState elementInstanceState;
 
   public UserTaskCancelingV2Applier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     variableState = processingState.getVariableState();
     elementInstanceState = processingState.getElementInstanceState();
   }

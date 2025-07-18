@@ -18,7 +18,7 @@ public class TaskCreatedApplier implements TypedEventApplier<UserTaskIntent, Use
   private final MutableTaskState userTaskState;
 
   public TaskCreatedApplier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
   }
 
   @Override
