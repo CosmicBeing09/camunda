@@ -12,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -90,7 +90,7 @@ public final class BpmnJobBehavior {
   private final BpmnStateBehavior stateBehavior;
   private final ResourceState resourceState;
   private final BpmnIncidentBehavior incidentBehavior;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final BpmnUserTaskBehavior userTaskBehavior;
 
@@ -103,7 +103,7 @@ public final class BpmnJobBehavior {
       final ResourceState resourceState,
       final BpmnIncidentBehavior incidentBehavior,
       final BpmnJobActivationBehavior jobActivationBehavior,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final BpmnUserTaskBehavior userTaskBehavior) {
     this.keyGenerator = keyGenerator;
     this.jobState = jobState;

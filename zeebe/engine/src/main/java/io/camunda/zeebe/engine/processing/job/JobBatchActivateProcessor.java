@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.job;
 import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
@@ -48,7 +48,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
   private final TypedResponseWriter responseWriter;
   private final JobBatchCollector jobBatchCollector;
   private final KeyGenerator keyGenerator;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
   private final AuthorizationCheckBehavior authorizationCheckBehavior;
@@ -57,7 +57,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
       final Writers writers,
       final ProcessingState state,
       final KeyGenerator keyGenerator,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
     stateWriter = writers.state();

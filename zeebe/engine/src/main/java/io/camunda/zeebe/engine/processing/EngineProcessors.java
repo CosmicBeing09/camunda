@@ -13,7 +13,7 @@ import io.camunda.search.clients.SearchClientsProxy;
 import io.camunda.zeebe.dmn.DecisionEngineFactory;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.metrics.ProcessEngineMetrics;
 import io.camunda.zeebe.engine.processing.batchoperation.BatchOperationSetupProcessors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
@@ -113,7 +113,7 @@ public final class EngineProcessors {
         new DueDateTimerChecker(
             scheduledTaskStateFactory.get().getTimerState(), featureFlags, clock);
 
-    final var jobMetrics = new JobProcessingMetrics(typedRecordProcessorContext.getMeterRegistry());
+    final var jobMetrics = new ProcessingMetrics(typedRecordProcessorContext.getMeterRegistry());
     final var processEngineMetrics =
         new ProcessEngineMetrics(typedRecordProcessorContext.getMeterRegistry());
     final var distributionMetrics =
@@ -347,7 +347,7 @@ public final class EngineProcessors {
       final RoutingInfo routingInfo,
       final DueDateTimerChecker timerChecker,
       final JobStreamer jobStreamer,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final DecisionBehavior decisionBehavior,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior,

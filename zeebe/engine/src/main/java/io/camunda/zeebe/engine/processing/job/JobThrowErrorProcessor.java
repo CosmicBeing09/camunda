@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.EngineConfiguration.DEFAULT_MAX_ERROR_MESS
 import static io.camunda.zeebe.util.StringUtil.limitString;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventPublicationBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -63,14 +63,14 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
   private final KeyGenerator keyGenerator;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final ProcessState processState;
 
   public JobThrowErrorProcessor(
       final ProcessingState state,
       final BpmnEventPublicationBehavior eventPublicationBehavior,
       final KeyGenerator keyGenerator,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;
     jobState = state.getJobState();

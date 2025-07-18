@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
@@ -98,12 +98,12 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
   private final TaskState userTaskState;
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final EventHandler eventHandle;
 
   public JobCompleteProcessor(
       final ProcessingState state,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final EventHandler eventHandle,
       final AuthorizationCheckBehavior authCheckBehavior) {
     userTaskState = state.getUserTaskState();

@@ -25,12 +25,12 @@ import net.jcip.annotations.NotThreadSafe;
  * first make this thread safe.
  */
 @NotThreadSafe
-public final class JobProcessingMetrics {
+public final class ProcessingMetrics {
 
-  private final Table<JobAction, JobKind, BoundedMeterCache<Counter>> jobEvents = Table.simple();
+  private final Table<JobAction, JobKind, BoundedMeterCache<Counter>> processingEvents = Table.simple();
   private final MeterRegistry registry;
 
-  public JobProcessingMetrics(final MeterRegistry registry) {
+  public ProcessingMetrics(final MeterRegistry registry) {
     this.registry = registry;
   }
 
@@ -40,7 +40,7 @@ public final class JobProcessingMetrics {
 
   public void countJobEvent(
       final JobAction action, final JobKind kind, final String type, final int amount) {
-    jobEvents
+    processingEvents
         .computeIfAbsent(action, kind, this::registerJobEventCounter)
         .get(type)
         .increment(amount);

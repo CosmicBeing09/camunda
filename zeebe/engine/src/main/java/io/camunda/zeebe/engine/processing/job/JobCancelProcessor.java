@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.state.immutable.JobState;
@@ -24,9 +24,9 @@ public final class JobCancelProcessor implements CommandProcessor<JobRecord> {
   public static final String NO_JOB_FOUND_MESSAGE =
       "Expected to cancel job with key '%d', but no such job was found";
   private final JobState jobState;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
 
-  public JobCancelProcessor(final ProcessingState state, final JobProcessingMetrics jobMetrics) {
+  public JobCancelProcessor(final ProcessingState state, final ProcessingMetrics jobMetrics) {
     jobState = state.getJobState();
     this.jobMetrics = jobMetrics;
   }

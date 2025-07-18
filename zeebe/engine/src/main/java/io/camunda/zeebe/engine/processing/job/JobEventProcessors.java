@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
@@ -30,7 +30,7 @@ public final class JobEventProcessors {
       final Supplier<ScheduledTaskState> scheduledTaskStateFactory,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final EngineConfiguration config,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior) {

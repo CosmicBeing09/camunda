@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.bpmn.behavior;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.job.JobVariablesCollector;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer.JobStream;
@@ -44,7 +44,7 @@ public class BpmnJobActivationBehavior {
   private final StateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
   private final KeyGenerator keyGenerator;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final InstantSource clock;
 
   public BpmnJobActivationBehavior(
@@ -52,7 +52,7 @@ public class BpmnJobActivationBehavior {
       final ProcessingState state,
       final Writers writers,
       final KeyGenerator keyGenerator,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final InstantSource clock) {
     this.jobStreamer = jobStreamer;
     this.keyGenerator = keyGenerator;

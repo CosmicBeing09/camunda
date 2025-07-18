@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
@@ -31,14 +31,14 @@ public final class JobTimeOutProcessor implements TypedRecordProcessor<JobRecord
   private final JobState jobState;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final InstantSource clock;
 
   public JobTimeOutProcessor(
       final ProcessingState state,
       final Writers writers,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final BpmnJobActivationBehavior jobActivationBehavior,
       final InstantSource clock) {
     jobState = state.getJobState();
