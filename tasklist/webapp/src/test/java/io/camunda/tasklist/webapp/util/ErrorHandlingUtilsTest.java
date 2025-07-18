@@ -17,7 +17,7 @@ import io.camunda.service.exception.CamundaBrokerException;
 import io.camunda.zeebe.broker.client.api.BrokerRejectionException;
 import io.camunda.zeebe.broker.client.api.dto.BrokerRejection;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.net.SocketTimeoutException;
 import java.util.concurrent.TimeoutException;
 import org.junit.jupiter.api.Test;
@@ -58,7 +58,7 @@ class ErrorHandlingUtilsTest {
         new CamundaBrokerException(
             new BrokerRejectionException(
                 new BrokerRejection(
-                    UserTaskIntent.ASSIGN, 123L, RejectionType.INVALID_STATE, reason)));
+                    TaskIntent.ASSIGN, 123L, RejectionType.INVALID_STATE, reason)));
 
     // When
     final String result = ErrorHandlingUtils.getErrorMessageFromBrokerException(brokerException);

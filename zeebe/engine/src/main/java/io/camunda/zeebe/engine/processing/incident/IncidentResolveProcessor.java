@@ -30,7 +30,7 @@ import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
@@ -231,15 +231,15 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
             });
   }
 
-  private Either<String, UserTaskIntent> getFailedUserTaskCommandIntent(
+  private Either<String, TaskIntent> getFailedUserTaskCommandIntent(
       final LifecycleState lifecycleState) {
     return switch (lifecycleState) {
-      case CREATING -> Either.right(UserTaskIntent.CREATE);
-      case ASSIGNING -> Either.right(UserTaskIntent.ASSIGN);
-      case CLAIMING -> Either.right(UserTaskIntent.CLAIM);
-      case UPDATING -> Either.right(UserTaskIntent.UPDATE);
-      case COMPLETING -> Either.right(UserTaskIntent.COMPLETE);
-      case CANCELING -> Either.right(UserTaskIntent.CANCEL);
+      case CREATING -> Either.right(TaskIntent.CREATE);
+      case ASSIGNING -> Either.right(TaskIntent.ASSIGN);
+      case CLAIMING -> Either.right(TaskIntent.CLAIM);
+      case UPDATING -> Either.right(TaskIntent.UPDATE);
+      case COMPLETING -> Either.right(TaskIntent.COMPLETE);
+      case CANCELING -> Either.right(TaskIntent.CANCEL);
       default ->
           Either.left(String.format(UNEXPECTED_LIFECYCLE_STATE_CONVERSION_MSG, lifecycleState));
     };

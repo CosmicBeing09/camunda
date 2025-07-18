@@ -59,10 +59,10 @@ import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
@@ -443,31 +443,31 @@ public final class EventAppliers implements EventApplier {
   }
 
   private void registerUserTaskAppliers(final MutableProcessingState state) {
-    register(UserTaskIntent.CREATING, new UserTaskCreatingApplier(state));
-    register(UserTaskIntent.CREATING, 2, new UserTaskCreatingV2Applier(state));
-    register(UserTaskIntent.CREATED, new UserTaskCreatedApplier(state));
-    register(UserTaskIntent.CREATED, 2, new UserTaskCreatedV2Applier(state));
-    register(UserTaskIntent.CANCELING, 1, new UserTaskCancelingV1Applier(state));
-    register(UserTaskIntent.CANCELING, 2, new UserTaskCancelingV2Applier(state));
-    register(UserTaskIntent.CANCELED, new UserTaskCanceledApplier(state));
-    register(UserTaskIntent.COMPLETING, 1, new UserTaskCompletingV1Applier(state));
-    register(UserTaskIntent.COMPLETING, 2, new UserTaskCompletingV2Applier(state));
-    register(UserTaskIntent.COMPLETED, 1, new UserTaskCompletedV1Applier(state));
-    register(UserTaskIntent.COMPLETED, 2, new UserTaskCompletedV2Applier(state));
-    register(UserTaskIntent.ASSIGNING, 1, new UserTaskAssigningV1Applier(state));
-    register(UserTaskIntent.ASSIGNING, 2, new UserTaskAssigningV2Applier(state));
-    register(UserTaskIntent.ASSIGNED, 1, new UserTaskAssignedV1Applier(state));
-    register(UserTaskIntent.ASSIGNED, 2, new UserTaskAssignedV2Applier(state));
-    register(UserTaskIntent.CLAIMING, new UserTaskClaimingApplier(state));
-    register(UserTaskIntent.UPDATING, 1, new UserTaskUpdatingV1Applier(state));
-    register(UserTaskIntent.UPDATING, 2, new UserTaskUpdatingV2Applier(state));
-    register(UserTaskIntent.UPDATED, 1, new UserTaskUpdatedV1Applier(state));
-    register(UserTaskIntent.UPDATED, 2, new UserTaskUpdatedV2Applier(state));
-    register(UserTaskIntent.MIGRATED, new UserTaskMigratedApplier(state));
-    register(UserTaskIntent.CORRECTED, new UserTaskCorrectedApplier(state));
-    register(UserTaskIntent.COMPLETION_DENIED, new UserTaskCompletionDeniedApplier(state));
-    register(UserTaskIntent.ASSIGNMENT_DENIED, new UserTaskAssignmentDeniedApplier(state));
-    register(UserTaskIntent.UPDATE_DENIED, new UserTaskUpdateDeniedApplier(state));
+    register(TaskIntent.CREATING, new UserTaskCreatingApplier(state));
+    register(TaskIntent.CREATING, 2, new UserTaskCreatingV2Applier(state));
+    register(TaskIntent.CREATED, new UserTaskCreatedApplier(state));
+    register(TaskIntent.CREATED, 2, new UserTaskCreatedV2Applier(state));
+    register(TaskIntent.CANCELING, 1, new UserTaskCancelingV1Applier(state));
+    register(TaskIntent.CANCELING, 2, new UserTaskCancelingV2Applier(state));
+    register(TaskIntent.CANCELED, new UserTaskCanceledApplier(state));
+    register(TaskIntent.COMPLETING, 1, new UserTaskCompletingV1Applier(state));
+    register(TaskIntent.COMPLETING, 2, new UserTaskCompletingV2Applier(state));
+    register(TaskIntent.COMPLETED, 1, new UserTaskCompletedV1Applier(state));
+    register(TaskIntent.COMPLETED, 2, new UserTaskCompletedV2Applier(state));
+    register(TaskIntent.ASSIGNING, 1, new UserTaskAssigningV1Applier(state));
+    register(TaskIntent.ASSIGNING, 2, new UserTaskAssigningV2Applier(state));
+    register(TaskIntent.ASSIGNED, 1, new UserTaskAssignedV1Applier(state));
+    register(TaskIntent.ASSIGNED, 2, new UserTaskAssignedV2Applier(state));
+    register(TaskIntent.CLAIMING, new UserTaskClaimingApplier(state));
+    register(TaskIntent.UPDATING, 1, new UserTaskUpdatingV1Applier(state));
+    register(TaskIntent.UPDATING, 2, new UserTaskUpdatingV2Applier(state));
+    register(TaskIntent.UPDATED, 1, new UserTaskUpdatedV1Applier(state));
+    register(TaskIntent.UPDATED, 2, new UserTaskUpdatedV2Applier(state));
+    register(TaskIntent.MIGRATED, new UserTaskMigratedApplier(state));
+    register(TaskIntent.CORRECTED, new UserTaskCorrectedApplier(state));
+    register(TaskIntent.COMPLETION_DENIED, new UserTaskCompletionDeniedApplier(state));
+    register(TaskIntent.ASSIGNMENT_DENIED, new UserTaskAssignmentDeniedApplier(state));
+    register(TaskIntent.UPDATE_DENIED, new UserTaskUpdateDeniedApplier(state));
   }
 
   private void registerCompensationSubscriptionApplier(

@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
@@ -71,7 +71,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
     }
     userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CLAIMING, userTaskRecord);
   }
 
   @Override
@@ -83,18 +83,18 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
     userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
     if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.ASSIGNED, userTaskRecord);
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
+          userTaskKey, TaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
       final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.ASSIGNED, userTaskRecord);
 
       recordRequestMetadata.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,
-                  UserTaskIntent.ASSIGNED,
+                  TaskIntent.ASSIGNED,
                   userTaskRecord,
                   ValueType.USER_TASK,
                   metadata.getRequestId(),

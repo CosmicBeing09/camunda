@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.value.JobKind;
@@ -106,7 +106,7 @@ public class TaskListenerBlockedTransitionTest {
 
     // since the user task has an initial assignee, the assignment transition is triggered
     final var assigningUserTaskRecord =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNING)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNING)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -160,15 +160,15 @@ public class TaskListenerBlockedTransitionTest {
     // `COMPLETING` and `COMPLETED` events
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETED);
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.COMPLETED,
+        TaskIntent.COMPLETED,
         userTask ->
             Assertions.assertThat(userTask)
                 .hasAction("my_custom_action")
@@ -200,15 +200,15 @@ public class TaskListenerBlockedTransitionTest {
     // `COMPLETING` and `COMPLETED` events
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.CREATING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.CREATED);
+        TaskIntent.CREATING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.CREATED);
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.CREATED,
+        TaskIntent.CREATED,
         userTask -> Assertions.assertThat(userTask).hasNoChangedAttributes());
   }
 
@@ -254,7 +254,7 @@ public class TaskListenerBlockedTransitionTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .as(
             "Verify the sequence of intents, `assignee`, `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
@@ -264,19 +264,19 @@ public class TaskListenerBlockedTransitionTest {
             r -> r.getValue().getChangedAttributes())
         .containsExactly(
             // assignee should be present in the CREATING
-            tuple(UserTaskIntent.CREATING, assignee, action, List.of()),
+            tuple(TaskIntent.CREATING, assignee, action, List.of()),
             // creating first task listener completion
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
             // creating second task listener completion
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
             // assignee should NOT be present in the CREATED
-            tuple(UserTaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
+            tuple(TaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
             // assignee should be present in the ASSIGNING
-            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(TaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
   }
 
   @Test
@@ -311,15 +311,15 @@ public class TaskListenerBlockedTransitionTest {
     // `ASSIGNING` and `ASSIGNED` events
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.ASSIGNED);
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.ASSIGNED,
+        TaskIntent.ASSIGNED,
         userTask ->
             Assertions.assertThat(userTask)
                 .hasAssignee("me")
@@ -360,7 +360,7 @@ public class TaskListenerBlockedTransitionTest {
 
     // and: user task should be correctly assigned and unassigned
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+            RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(2))
         .describedAs(
@@ -405,15 +405,15 @@ public class TaskListenerBlockedTransitionTest {
     // `UPDATING` and `UPDATED` events
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.UPDATING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.UPDATED);
+        TaskIntent.UPDATING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.UPDATED);
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.UPDATED,
+        TaskIntent.UPDATED,
         userTask ->
             Assertions.assertThat(userTask)
                 .hasAssignee("")
@@ -449,7 +449,7 @@ public class TaskListenerBlockedTransitionTest {
                 listenerType + "_2",
                 listenerType + "_3"));
     final var createdUserTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -492,11 +492,11 @@ public class TaskListenerBlockedTransitionTest {
         .containsExactly(
             tuple(ValueType.VARIABLE_DOCUMENT, VariableDocumentIntent.UPDATE),
             tuple(ValueType.VARIABLE_DOCUMENT, VariableDocumentIntent.UPDATING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.UPDATING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
-            tuple(ValueType.USER_TASK, UserTaskIntent.UPDATED),
+            tuple(ValueType.USER_TASK, TaskIntent.UPDATING),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.UPDATED),
             tuple(ValueType.VARIABLE_DOCUMENT, VariableDocumentIntent.UPDATED));
 
     if (semantic == VariableDocumentUpdateSemantic.LOCAL) {
@@ -508,7 +508,7 @@ public class TaskListenerBlockedTransitionTest {
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.UPDATED,
+        TaskIntent.UPDATED,
         userTask ->
             Assertions.assertThat(userTask)
                 .hasVariables(Map.of("status", "APPROVED"))
@@ -554,8 +554,8 @@ public class TaskListenerBlockedTransitionTest {
             RecordingExporter.userTaskRecords()
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
-                .skipUntil(r -> r.getIntent() == UserTaskIntent.UPDATING)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .skipUntil(r -> r.getIntent() == TaskIntent.UPDATING)
+                .limit(r -> r.getIntent() == TaskIntent.UPDATED))
         .extracting(Record::getValue)
         .allSatisfy(
             userTask -> {
@@ -615,7 +615,7 @@ public class TaskListenerBlockedTransitionTest {
 
     // and: user task should be correctly updated after both update operations
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED)
+            RecordingExporter.userTaskRecords(TaskIntent.UPDATED)
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(2))
         .describedAs(
@@ -648,7 +648,7 @@ public class TaskListenerBlockedTransitionTest {
                 listenerType + "_2",
                 listenerType + "_3"));
     final var userTaskElementInstanceKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue()
@@ -668,7 +668,7 @@ public class TaskListenerBlockedTransitionTest {
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.CANCELED,
+        TaskIntent.CANCELED,
         userTask -> assertThat(userTask.getAction()).isEmpty());
 
     final Predicate<Record<?>> isUserTaskOrProcessInstanceRecordWithUserTaskInstanceKey =
@@ -691,11 +691,11 @@ public class TaskListenerBlockedTransitionTest {
         .containsSequence(
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.TERMINATE_ELEMENT),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_TERMINATING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.CANCELING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
-            tuple(ValueType.USER_TASK, UserTaskIntent.CANCELED),
+            tuple(ValueType.USER_TASK, TaskIntent.CANCELING),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.CANCELED),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.CONTINUE_TERMINATING_ELEMENT),
             tuple(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.ELEMENT_TERMINATED));
   }
@@ -727,10 +727,10 @@ public class TaskListenerBlockedTransitionTest {
 
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.CANCELING,
-        UserTaskIntent.CANCELED);
+        TaskIntent.ASSIGNING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.CANCELING,
+        TaskIntent.CANCELED);
   }
 
   @Test
@@ -764,10 +764,10 @@ public class TaskListenerBlockedTransitionTest {
 
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.CANCELING,
-        UserTaskIntent.CANCELED);
+        TaskIntent.ASSIGNING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.CANCELING,
+        TaskIntent.CANCELED);
   }
 
   @Test
@@ -795,14 +795,14 @@ public class TaskListenerBlockedTransitionTest {
     // `CLAIMING` and `ASSIGNED` events
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.CLAIMING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.CLAIMING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.ASSIGNED);
 
     helper.assertUserTaskRecordWithIntent(
         processInstanceKey,
-        UserTaskIntent.ASSIGNED,
+        TaskIntent.ASSIGNED,
         userTask ->
             Assertions.assertThat(userTask)
                 .hasAssignee("test_user")
@@ -827,7 +827,7 @@ public class TaskListenerBlockedTransitionTest {
                         .zeebeTaskListener(l -> l.assigning().type(listenerType + "_3"))));
 
     // await user task creation
-    RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+    RecordingExporter.userTaskRecords(TaskIntent.CREATED)
         .withProcessInstanceKey(processInstanceKey)
         .await();
 
@@ -846,7 +846,7 @@ public class TaskListenerBlockedTransitionTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .as(
             "Verify the sequence of intents, `assignee`, `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
@@ -855,13 +855,13 @@ public class TaskListenerBlockedTransitionTest {
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())
         .containsExactly(
-            tuple(UserTaskIntent.CREATING, assignee, action, List.of()),
-            tuple(UserTaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
-            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(TaskIntent.CREATING, assignee, action, List.of()),
+            tuple(TaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
+            tuple(TaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
+            tuple(TaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
   }
 
   @Test
@@ -870,7 +870,7 @@ public class TaskListenerBlockedTransitionTest {
         ZeebeTaskListenerEventType.assigning,
         userTask -> userTask.zeebeAssignee("gandalf"),
         ignored -> {},
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -879,7 +879,7 @@ public class TaskListenerBlockedTransitionTest {
         ZeebeTaskListenerEventType.assigning,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("bilbo").assign(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -888,7 +888,7 @@ public class TaskListenerBlockedTransitionTest {
         ZeebeTaskListenerEventType.assigning,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("bilbo").claim(),
-        UserTaskIntent.ASSIGNED);
+        TaskIntent.ASSIGNED);
   }
 
   @Test
@@ -897,7 +897,7 @@ public class TaskListenerBlockedTransitionTest {
         ZeebeTaskListenerEventType.updating,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).update(),
-        UserTaskIntent.UPDATED);
+        TaskIntent.UPDATED);
   }
 
   @Test
@@ -906,7 +906,7 @@ public class TaskListenerBlockedTransitionTest {
         ZeebeTaskListenerEventType.completing,
         UnaryOperator.identity(),
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -915,14 +915,14 @@ public class TaskListenerBlockedTransitionTest {
         ZeebeTaskListenerEventType.canceling,
         UnaryOperator.identity(),
         pik -> ENGINE.processInstance().withInstanceKey(pik).expectTerminating().cancel(),
-        UserTaskIntent.CANCELED);
+        TaskIntent.CANCELED);
   }
 
   private void verifyListenerIsRetriedWhenListenerJobFailed(
       final ZeebeTaskListenerEventType eventType,
       final UnaryOperator<UserTaskBuilder> userTaskBuilder,
       final Consumer<Long> transitionTrigger,
-      final UserTaskIntent terminalActionIntent) {
+      final TaskIntent terminalActionIntent) {
     // given
     final long processInstanceKey =
         helper.createProcessInstance(
@@ -949,11 +949,11 @@ public class TaskListenerBlockedTransitionTest {
             tuple(ValueType.JOB, JobIntent.FAILED),
             tuple(ValueType.JOB, JobIntent.COMPLETE),
             tuple(ValueType.JOB, JobIntent.COMPLETED),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
             tuple(ValueType.JOB, JobIntent.CREATED),
             tuple(ValueType.JOB, JobIntent.COMPLETE),
             tuple(ValueType.JOB, JobIntent.COMPLETED),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETE_TASK_LISTENER),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETE_TASK_LISTENER),
             tuple(ValueType.USER_TASK, terminalActionIntent));
   }
 }

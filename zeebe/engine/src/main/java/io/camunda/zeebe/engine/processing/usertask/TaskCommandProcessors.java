@@ -19,18 +19,18 @@ import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandPro
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCreateProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskUpdateProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public final class UserTaskCommandProcessors {
+public final class TaskCommandProcessors {
 
-  private final Map<UserTaskIntent, UserTaskCommandProcessor> commandToProcessor;
+  private final Map<TaskIntent, UserTaskCommandProcessor> commandToProcessor;
 
-  public UserTaskCommandProcessors(
+  public TaskCommandProcessors(
       final ProcessingState processingState,
       final KeyGenerator keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
@@ -48,33 +48,33 @@ public final class UserTaskCommandProcessors {
     commandToProcessor =
         new EnumMap<>(
             Map.of(
-                UserTaskIntent.CREATE,
+                TaskIntent.CREATE,
                 new UserTaskCreateProcessor(
                     processingState,
                     writers,
                     authCheckBehavior,
                     bpmnBehaviors.userTaskBehavior(),
                     bpmnBehaviors.jobBehavior()),
-                UserTaskIntent.ASSIGN,
+                TaskIntent.ASSIGN,
                 new UserTaskAssignProcessor(processingState, writers, authCheckBehavior),
-                UserTaskIntent.CLAIM,
+                TaskIntent.CLAIM,
                 new UserTaskClaimProcessor(processingState, writers, authCheckBehavior),
-                UserTaskIntent.UPDATE,
+                TaskIntent.UPDATE,
                 new UserTaskUpdateProcessor(
                     processingState, writers, bpmnBehaviors.variableBehavior(), authCheckBehavior),
-                UserTaskIntent.COMPLETE,
+                TaskIntent.COMPLETE,
                 new UserTaskCommandCompleteProcessor(
                     processingState, eventHandle, writers, authCheckBehavior),
-                UserTaskIntent.CANCEL,
+                TaskIntent.CANCEL,
                 new UserTaskCancelProcessor(processingState, writers)));
     validateProcessorsSetup(commandToProcessor);
   }
 
-  public UserTaskCommandProcessor getCommandProcessor(final UserTaskIntent userTaskIntent) {
+  public UserTaskCommandProcessor getCommandProcessor(final TaskIntent userTaskIntent) {
     if (userTaskIntent.isEvent()) {
       throw new IllegalArgumentException(
           "Expected a command, but received an event: '%s'. Valid UserTask commands are: %s"
-              .formatted(userTaskIntent, UserTaskIntent.commands()));
+              .formatted(userTaskIntent, TaskIntent.commands()));
     }
 
     return Optional.ofNullable(commandToProcessor.get(userTaskIntent))
@@ -85,14 +85,14 @@ public final class UserTaskCommandProcessors {
   }
 
   private static void validateProcessorsSetup(
-      final Map<UserTaskIntent, UserTaskCommandProcessor> commandToProcessor) {
+      final Map<TaskIntent, UserTaskCommandProcessor> commandToProcessor) {
     final var missingProcessors =
-        UserTaskIntent.commands().stream()
+        TaskIntent.commands().stream()
             // Exclude COMPLETE_TASK_LISTENER and REJECT_TASK_LISTENER as they don't require a
             // dedicated processor.
             // This intent is handled internally within UserTaskProcessor
-            .filter(intent -> intent != UserTaskIntent.COMPLETE_TASK_LISTENER)
-            .filter(intent -> intent != UserTaskIntent.DENY_TASK_LISTENER)
+            .filter(intent -> intent != TaskIntent.COMPLETE_TASK_LISTENER)
+            .filter(intent -> intent != TaskIntent.DENY_TASK_LISTENER)
             .filter(intent -> !commandToProcessor.containsKey(intent))
             .collect(Collectors.toSet());
 

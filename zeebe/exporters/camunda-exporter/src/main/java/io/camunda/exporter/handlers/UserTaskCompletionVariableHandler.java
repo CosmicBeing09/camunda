@@ -17,7 +17,7 @@ import io.camunda.webapps.schema.entities.ExporterEntity;
 import io.camunda.webapps.schema.entities.usertask.SnapshotTaskVariableEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class UserTaskCompletionVariableHandler
 
   @Override
   public boolean handlesRecord(final Record<UserTaskRecordValue> record) {
-    return UserTaskIntent.COMPLETED.equals(record.getIntent())
+    return TaskIntent.COMPLETED.equals(record.getIntent())
         && record.getValue().getVariables() != null
         && !record.getValue().getVariables().isEmpty();
   }

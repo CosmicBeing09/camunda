@@ -26,7 +26,7 @@ import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebePriorityDefinition;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
 import io.camunda.zeebe.util.Either;
@@ -143,7 +143,7 @@ public final class BpmnUserTaskBehavior {
             .setPriority(userTaskProperties.getPriority())
             .setCreationTimestamp(clock.millis());
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CREATING, userTaskRecord);
     return userTaskRecord;
   }
 
@@ -323,18 +323,18 @@ public final class BpmnUserTaskBehavior {
       return Optional.empty();
     }
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CANCELING, userTask);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CANCELING, userTask);
     return Optional.of(userTask);
   }
 
   public void userTaskCanceled(final UserTaskRecord userTaskRecord) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CANCELED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CANCELED, userTaskRecord);
   }
 
   public void userTaskCreated(final UserTaskRecord userTaskRecord) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.CREATED, userTaskRecord);
   }
 
   public void userTaskAssigning(final UserTaskRecord userTaskRecord, final String assignee) {
@@ -343,13 +343,13 @@ public final class BpmnUserTaskBehavior {
       userTaskRecord.setAssignee(assignee);
       userTaskRecord.setAssigneeChanged();
     }
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.ASSIGNING, userTaskRecord);
   }
 
   public void userTaskAssigned(final UserTaskRecord userTaskRecord, final String assignee) {
     final long userTaskKey = userTaskRecord.getUserTaskKey();
     userTaskRecord.setAssignee(assignee);
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.ASSIGNED, userTaskRecord);
   }
 
   public static final class UserTaskProperties {

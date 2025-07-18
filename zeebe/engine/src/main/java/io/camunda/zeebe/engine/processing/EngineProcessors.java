@@ -72,7 +72,7 @@ import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.intent.ResourceDeletionIntent;
 import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
 import io.camunda.zeebe.util.FeatureFlags;
@@ -577,7 +577,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final TypedRecordProcessor<UserTaskRecord> userTaskProcessor) {
 
-    UserTaskIntent.commands()
+    TaskIntent.commands()
         .forEach(
             intent ->
                 typedRecordProcessors.onCommand(ValueType.USER_TASK, intent, userTaskProcessor));

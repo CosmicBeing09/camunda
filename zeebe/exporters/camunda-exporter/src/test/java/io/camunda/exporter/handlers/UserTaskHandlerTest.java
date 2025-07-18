@@ -27,7 +27,7 @@ import io.camunda.webapps.schema.entities.usertask.TaskState;
 import io.camunda.zeebe.exporter.common.cache.process.CachedProcessEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.ImmutableUserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
@@ -44,14 +44,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class UserTaskHandlerTest {
-  private static final Set<UserTaskIntent> SUPPORTED_INTENTS =
+  private static final Set<TaskIntent> SUPPORTED_INTENTS =
       EnumSet.of(
-          UserTaskIntent.CREATED,
-          UserTaskIntent.COMPLETED,
-          UserTaskIntent.CANCELED,
-          UserTaskIntent.MIGRATED,
-          UserTaskIntent.ASSIGNED,
-          UserTaskIntent.UPDATED);
+          TaskIntent.CREATED,
+          TaskIntent.COMPLETED,
+          TaskIntent.CANCELED,
+          TaskIntent.MIGRATED,
+          TaskIntent.ASSIGNED,
+          TaskIntent.UPDATED);
 
   private final ProtocolFactory factory = new ProtocolFactory();
   private final String indexName = "test-tasklist-task";
@@ -92,7 +92,7 @@ public class UserTaskHandlerTest {
   @Test
   void shouldNotHandleRecord() {
     // given
-    Arrays.stream(UserTaskIntent.values())
+    Arrays.stream(TaskIntent.values())
         .filter(intent -> !SUPPORTED_INTENTS.contains(intent))
         .forEach(
             intent -> {
@@ -117,7 +117,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.CREATED)
+                r.withIntent(TaskIntent.CREATED)
                     .withKey(recordKey)
                     .withValue(
                         ImmutableUserTaskRecordValue.builder()
@@ -147,7 +147,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.CREATED)
+                r.withIntent(TaskIntent.CREATED)
                     .withKey(recordKey)
                     .withValue(
                         ImmutableUserTaskRecordValue.builder()
@@ -266,7 +266,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.CREATED)
+                r.withIntent(TaskIntent.CREATED)
                     .withKey(recordKey)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
@@ -335,7 +335,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.CANCELED)
+                r.withIntent(TaskIntent.CANCELED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -365,7 +365,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.ASSIGNED)
+                r.withIntent(TaskIntent.ASSIGNED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -408,7 +408,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.ASSIGNED)
+                r.withIntent(TaskIntent.ASSIGNED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -461,7 +461,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.ASSIGNED)
+                r.withIntent(TaskIntent.ASSIGNED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -506,7 +506,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -569,7 +569,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -619,7 +619,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.MIGRATED)
+                r.withIntent(TaskIntent.MIGRATED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
 
@@ -646,7 +646,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.MIGRATED)
+                r.withIntent(TaskIntent.MIGRATED)
                     .withKey(111)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
@@ -689,7 +689,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.ASSIGNED)
+                r.withIntent(TaskIntent.ASSIGNED)
                     .withKey(123)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
@@ -730,7 +730,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.ASSIGNED)
+                r.withIntent(TaskIntent.ASSIGNED)
                     .withKey(123)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
@@ -769,7 +769,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis())
                     .withKey(123));
@@ -825,7 +825,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.UPDATED)
+                r.withIntent(TaskIntent.UPDATED)
                     .withValue(taskRecordValue)
                     .withKey(recordKey)
                     .withTimestamp(System.currentTimeMillis()));
@@ -879,7 +879,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.UPDATED)
+                r.withIntent(TaskIntent.UPDATED)
                     .withKey(111)
                     .withValue(taskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));
@@ -895,7 +895,7 @@ public class UserTaskHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.ASSIGNED)
+                r.withIntent(TaskIntent.ASSIGNED)
                     .withKey(111)
                     .withValue(assignTaskRecordValue)
                     .withTimestamp(System.currentTimeMillis()));

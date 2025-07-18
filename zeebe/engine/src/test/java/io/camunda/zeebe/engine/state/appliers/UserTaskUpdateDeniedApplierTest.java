@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,8 +61,8 @@ public class UserTaskUpdateDeniedApplierTest {
             .setPriority(initialPriority);
 
     // Apply initial task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, initialState);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, initialState);
 
     // Simulate an update event with changes
     final var updateAttempt =
@@ -74,7 +74,7 @@ public class UserTaskUpdateDeniedApplierTest {
             .setCandidateUsersChanged()
             .setDueDateChanged()
             .setPriorityChanged();
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.UPDATING, updateAttempt);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.UPDATING, updateAttempt);
 
     // Ensure the state has the new changes
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey).getRecord())

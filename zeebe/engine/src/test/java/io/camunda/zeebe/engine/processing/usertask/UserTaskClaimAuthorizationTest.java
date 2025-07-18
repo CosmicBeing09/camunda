@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
@@ -83,7 +83,7 @@ public class UserTaskClaimAuthorizationTest {
 
     // then
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+            RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
                 .withProcessInstanceKey(processInstanceKey)
                 .exists())
         .isTrue();
@@ -109,7 +109,7 @@ public class UserTaskClaimAuthorizationTest {
 
     // then
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+            RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
                 .withProcessInstanceKey(processInstanceKey)
                 .exists())
         .isTrue();

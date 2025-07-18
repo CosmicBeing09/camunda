@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
@@ -78,7 +78,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
             initialAssignee -> {
               final var valueWithoutAssignee = userTaskRecord.copy().unsetAssignee();
               stateWriter.appendFollowUpEvent(
-                  userTaskKey, UserTaskIntent.CREATED, valueWithoutAssignee);
+                  userTaskKey, TaskIntent.CREATED, valueWithoutAssignee);
 
               // clean up the changed attributes because we have already finished the creation,
               // and are now starting a new transition to assigning
@@ -89,7 +89,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
                 // if no initial assignee -> keep the assignee on the UT record in CREATED event
                 // it could be a corrected assignee or no assignee at all
                 stateWriter.appendFollowUpEvent(
-                    userTaskKey, UserTaskIntent.CREATED, userTaskRecord));
+                    userTaskKey, TaskIntent.CREATED, userTaskRecord));
   }
 
   private void assignUserTask(final UserTaskRecord userTaskRecord, final String assignee) {

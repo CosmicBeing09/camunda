@@ -22,7 +22,7 @@ import io.camunda.zeebe.exporter.common.cache.process.CachedProcessEntity;
 import io.camunda.zeebe.exporter.common.utils.ProcessCacheUtil;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -37,14 +37,14 @@ import org.slf4j.LoggerFactory;
 public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecordValue> {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(UserTaskHandler.class);
-  private static final Set<UserTaskIntent> SUPPORTED_INTENTS =
+  private static final Set<TaskIntent> SUPPORTED_INTENTS =
       EnumSet.of(
-          UserTaskIntent.CREATED,
-          UserTaskIntent.COMPLETED,
-          UserTaskIntent.CANCELED,
-          UserTaskIntent.MIGRATED,
-          UserTaskIntent.ASSIGNED,
-          UserTaskIntent.UPDATED);
+          TaskIntent.CREATED,
+          TaskIntent.COMPLETED,
+          TaskIntent.CANCELED,
+          TaskIntent.MIGRATED,
+          TaskIntent.ASSIGNED,
+          TaskIntent.UPDATED);
   private static final String UNMAPPED_USER_TASK_ATTRIBUTE_WARNING =
       "Attribute update not mapped while importing ZEEBE_USER_TASKS: {}";
 
@@ -81,7 +81,7 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
 
   @Override
   public List<String> generateIds(final Record<UserTaskRecordValue> record) {
-    if (record.getIntent().equals(UserTaskIntent.CREATED)) {
+    if (record.getIntent().equals(TaskIntent.CREATED)) {
       exporterMetadata.setFirstUserTaskKey(TaskImplementation.ZEEBE_USER_TASK, record.getKey());
     }
 
@@ -103,12 +103,12 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
     entity.setKey(record.getKey());
 
     switch (record.getIntent()) {
-      case UserTaskIntent.CREATED -> createTaskEntity(entity, record);
-      case UserTaskIntent.ASSIGNED, UserTaskIntent.UPDATED ->
+      case TaskIntent.CREATED -> createTaskEntity(entity, record);
+      case TaskIntent.ASSIGNED, TaskIntent.UPDATED ->
           updateChangedAttributes(record, entity);
-      case UserTaskIntent.COMPLETED -> handleCompletion(record, entity);
-      case UserTaskIntent.CANCELED -> handleCancellation(record, entity);
-      case UserTaskIntent.MIGRATED -> handleMigration(record, entity);
+      case TaskIntent.COMPLETED -> handleCompletion(record, entity);
+      case TaskIntent.CANCELED -> handleCancellation(record, entity);
+      case TaskIntent.MIGRATED -> handleMigration(record, entity);
       default -> {}
     }
 

@@ -57,10 +57,10 @@ import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.intent.management.CheckpointIntent;
@@ -252,7 +252,7 @@ public final class ValueTypeMapping {
     mapping.put(ValueType.FORM, new Mapping<>(Form.class, FormIntent.class));
     mapping.put(ValueType.RESOURCE, new Mapping<>(Resource.class, ResourceIntent.class));
     mapping.put(
-        ValueType.USER_TASK, new Mapping<>(UserTaskRecordValue.class, UserTaskIntent.class));
+        ValueType.USER_TASK, new Mapping<>(UserTaskRecordValue.class, TaskIntent.class));
     mapping.put(
         ValueType.PROCESS_INSTANCE_MIGRATION,
         new Mapping<>(

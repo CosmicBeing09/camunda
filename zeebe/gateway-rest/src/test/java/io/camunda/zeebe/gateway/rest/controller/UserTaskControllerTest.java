@@ -22,7 +22,7 @@ import io.camunda.zeebe.gateway.rest.cache.ProcessCache;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.Map;
@@ -801,7 +801,7 @@ public class UserTaskControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        UserTaskIntent.COMPLETE, 1L, RejectionType.NOT_FOUND, "Task not found"))));
+                        TaskIntent.COMPLETE, 1L, RejectionType.NOT_FOUND, "Task not found"))));
 
     final var expectedBody =
         """
@@ -840,7 +840,7 @@ public class UserTaskControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        UserTaskIntent.COMPLETE,
+                        TaskIntent.COMPLETE,
                         1L,
                         RejectionType.INVALID_STATE,
                         "Task is not in state CREATED"))));
@@ -883,7 +883,7 @@ public class UserTaskControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        UserTaskIntent.COMPLETE, 1L, parameters.getLeft(), "Just an error"))));
+                        TaskIntent.COMPLETE, 1L, parameters.getLeft(), "Just an error"))));
 
     final var expectedBody =
         """
@@ -926,7 +926,7 @@ public class UserTaskControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        UserTaskIntent.COMPLETE, 1L, parameters.getLeft(), "Just an error"))));
+                        TaskIntent.COMPLETE, 1L, parameters.getLeft(), "Just an error"))));
 
     final var expectedBody =
         """
@@ -969,7 +969,7 @@ public class UserTaskControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        UserTaskIntent.COMPLETE, 1L, parameters.getLeft(), "Just an error"))));
+                        TaskIntent.COMPLETE, 1L, parameters.getLeft(), "Just an error"))));
 
     final var expectedBody =
         """

@@ -20,7 +20,7 @@ import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
@@ -70,9 +70,9 @@ public class TaskListenerDenialsTest {
     // are written after `ASSIGNING` event
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.ASSIGNMENT_DENIED);
+        TaskIntent.ASSIGNING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.ASSIGNMENT_DENIED);
 
     // validate the assignee
     assertThat(
@@ -111,19 +111,19 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent, r -> r.getValue().getAssignee())
         .describedAs("Verify that all task listeners were completed with the correct assignee")
         .containsSequence(
-            tuple(UserTaskIntent.ASSIGNING, "new_assignee"),
-            tuple(UserTaskIntent.DENY_TASK_LISTENER, "new_assignee"),
-            tuple(UserTaskIntent.ASSIGNMENT_DENIED, ""),
-            tuple(UserTaskIntent.ASSIGNING, "new_assignee"),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, "new_assignee"),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, "new_assignee"),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, "new_assignee"),
-            tuple(UserTaskIntent.ASSIGNED, "new_assignee"));
+            tuple(TaskIntent.ASSIGNING, "new_assignee"),
+            tuple(TaskIntent.DENY_TASK_LISTENER, "new_assignee"),
+            tuple(TaskIntent.ASSIGNMENT_DENIED, ""),
+            tuple(TaskIntent.ASSIGNING, "new_assignee"),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, "new_assignee"),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, "new_assignee"),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, "new_assignee"),
+            tuple(TaskIntent.ASSIGNED, "new_assignee"));
   }
 
   @Test
@@ -155,24 +155,24 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .limit(r -> r.getIntent() == TaskIntent.UPDATED))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent, r -> r.getValue().getPriority())
         .describedAs(
             "Verify intents sequence and state of the `priority` property through the user task transitions")
         .containsSequence(
             // Initial state of the user task
-            tuple(UserTaskIntent.CREATED, 50),
+            tuple(TaskIntent.CREATED, 50),
             // First update attempt and rejection by the listener
-            tuple(UserTaskIntent.UPDATING, 80),
-            tuple(UserTaskIntent.DENY_TASK_LISTENER, 80),
+            tuple(TaskIntent.UPDATING, 80),
+            tuple(TaskIntent.DENY_TASK_LISTENER, 80),
             // Priority reverts after rejection
-            tuple(UserTaskIntent.UPDATE_DENIED, 50),
+            tuple(TaskIntent.UPDATE_DENIED, 50),
             // Second update attempt and successful completion
-            tuple(UserTaskIntent.UPDATING, 100),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, 100),
+            tuple(TaskIntent.UPDATING, 100),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, 100),
             // Update was performed successfully
-            tuple(UserTaskIntent.UPDATED, 100));
+            tuple(TaskIntent.UPDATED, 100));
   }
 
   @Test
@@ -199,28 +199,28 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNMENT_DENIED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNMENT_DENIED))
         .extracting(
             io.camunda.zeebe.protocol.record.Record::getIntent, r -> r.getValue().getAssignee())
         .describedAs(
             "Verify that the assignee changes. The assignment of the second assignee should be rejected.")
         .containsSequence(
-            tuple(UserTaskIntent.CREATING, "first_assignee"),
-            tuple(UserTaskIntent.CREATED, ""),
-            tuple(UserTaskIntent.ASSIGNING, "first_assignee"),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, "first_assignee"),
-            tuple(UserTaskIntent.ASSIGNED, "first_assignee"),
-            tuple(UserTaskIntent.ASSIGNING, "second_assignee"),
-            tuple(UserTaskIntent.DENY_TASK_LISTENER, "second_assignee"),
+            tuple(TaskIntent.CREATING, "first_assignee"),
+            tuple(TaskIntent.CREATED, ""),
+            tuple(TaskIntent.ASSIGNING, "first_assignee"),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, "first_assignee"),
+            tuple(TaskIntent.ASSIGNED, "first_assignee"),
+            tuple(TaskIntent.ASSIGNING, "second_assignee"),
+            tuple(TaskIntent.DENY_TASK_LISTENER, "second_assignee"),
             // second assignee was not persisted
-            tuple(UserTaskIntent.ASSIGNMENT_DENIED, "first_assignee"));
+            tuple(TaskIntent.ASSIGNMENT_DENIED, "first_assignee"));
 
     // then: ensure that the assignee value is rolled back to the first successfully assigned
     // assignee
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .filter(r -> r.getIntent() == UserTaskIntent.ASSIGNMENT_DENIED)
+                .filter(r -> r.getIntent() == TaskIntent.ASSIGNMENT_DENIED)
                 .limit(1))
         .extracting(Record::getValue)
         .extracting(UserTaskRecordValue::getAssignee)
@@ -294,9 +294,9 @@ public class TaskListenerDenialsTest {
     // are written right after `UPDATING` event
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.UPDATING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.UPDATE_DENIED);
   }
 
   @Test
@@ -328,9 +328,9 @@ public class TaskListenerDenialsTest {
     // verify that `DENY_TASK_LISTENER` and `UPDATE_DENIED` are written after `UPDATING`
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.UPDATING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.UPDATE_DENIED);
 
     assertThat(
             RecordingExporter.variableDocumentRecords(VariableDocumentIntent.UPDATE_DENIED)
@@ -359,9 +359,9 @@ public class TaskListenerDenialsTest {
     // are written after `COMPLETING` event
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED);
   }
 
   @Test
@@ -389,19 +389,19 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.COMPLETED))
+                .limit(r -> r.getIntent() == TaskIntent.COMPLETED))
         .extracting(Record::getIntent, r -> getDeniedReason(r.getValue()))
         .describedAs(
             "The reason to deny lifecycle transition should be present when task listener denies the work")
         .containsExactly(
-            tuple(UserTaskIntent.CREATING, ""),
-            tuple(UserTaskIntent.CREATED, ""),
-            tuple(UserTaskIntent.COMPLETING, ""),
-            tuple(UserTaskIntent.DENY_TASK_LISTENER, "Reason to deny lifecycle transition"),
-            tuple(UserTaskIntent.COMPLETION_DENIED, "Reason to deny lifecycle transition"),
-            tuple(UserTaskIntent.COMPLETING, ""),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, ""),
-            tuple(UserTaskIntent.COMPLETED, ""));
+            tuple(TaskIntent.CREATING, ""),
+            tuple(TaskIntent.CREATED, ""),
+            tuple(TaskIntent.COMPLETING, ""),
+            tuple(TaskIntent.DENY_TASK_LISTENER, "Reason to deny lifecycle transition"),
+            tuple(TaskIntent.COMPLETION_DENIED, "Reason to deny lifecycle transition"),
+            tuple(TaskIntent.COMPLETING, ""),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, ""),
+            tuple(TaskIntent.COMPLETED, ""));
   }
 
   @Test
@@ -430,19 +430,19 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .extracting(Record::getIntent, r -> getDeniedReason(r.getValue()))
         .describedAs(
             "The reason to deny lifecycle transition should be present when task listener denies the work")
         .containsExactly(
-            tuple(UserTaskIntent.CREATING, ""),
-            tuple(UserTaskIntent.CREATED, ""),
-            tuple(UserTaskIntent.ASSIGNING, ""),
-            tuple(UserTaskIntent.DENY_TASK_LISTENER, "Reason to deny lifecycle transition"),
-            tuple(UserTaskIntent.ASSIGNMENT_DENIED, "Reason to deny lifecycle transition"),
-            tuple(UserTaskIntent.ASSIGNING, ""),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, ""),
-            tuple(UserTaskIntent.ASSIGNED, ""));
+            tuple(TaskIntent.CREATING, ""),
+            tuple(TaskIntent.CREATED, ""),
+            tuple(TaskIntent.ASSIGNING, ""),
+            tuple(TaskIntent.DENY_TASK_LISTENER, "Reason to deny lifecycle transition"),
+            tuple(TaskIntent.ASSIGNMENT_DENIED, "Reason to deny lifecycle transition"),
+            tuple(TaskIntent.ASSIGNING, ""),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, ""),
+            tuple(TaskIntent.ASSIGNED, ""));
   }
 
   @Test
@@ -473,19 +473,19 @@ public class TaskListenerDenialsTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .limit(r -> r.getIntent() == TaskIntent.UPDATED))
         .extracting(Record::getIntent, r -> getDeniedReason(r.getValue()))
         .describedAs(
             "The reason to deny lifecycle transition should be present when task listener denies the work")
         .containsExactly(
-            tuple(UserTaskIntent.CREATING, ""),
-            tuple(UserTaskIntent.CREATED, ""),
-            tuple(UserTaskIntent.UPDATING, ""),
-            tuple(UserTaskIntent.DENY_TASK_LISTENER, "Reason to deny lifecycle transition"),
-            tuple(UserTaskIntent.UPDATE_DENIED, "Reason to deny lifecycle transition"),
-            tuple(UserTaskIntent.UPDATING, ""),
-            tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, ""),
-            tuple(UserTaskIntent.UPDATED, ""));
+            tuple(TaskIntent.CREATING, ""),
+            tuple(TaskIntent.CREATED, ""),
+            tuple(TaskIntent.UPDATING, ""),
+            tuple(TaskIntent.DENY_TASK_LISTENER, "Reason to deny lifecycle transition"),
+            tuple(TaskIntent.UPDATE_DENIED, "Reason to deny lifecycle transition"),
+            tuple(TaskIntent.UPDATING, ""),
+            tuple(TaskIntent.COMPLETE_TASK_LISTENER, ""),
+            tuple(TaskIntent.UPDATED, ""));
   }
 
   @Test
@@ -531,12 +531,12 @@ public class TaskListenerDenialsTest {
     // then: verify that `UPDATING`, `COMPLETE_TASK_LISTENER`, and `UPDATED` events are present
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.UPDATING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.UPDATE_DENIED,
-        UserTaskIntent.UPDATING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.UPDATED);
+        TaskIntent.UPDATING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.UPDATE_DENIED,
+        TaskIntent.UPDATING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.UPDATED);
 
     assertThat(
             RecordingExporter.variableDocumentRecords(VariableDocumentIntent.UPDATE_DENIED)
@@ -575,12 +575,12 @@ public class TaskListenerDenialsTest {
     // are present after `DENY_TASK_LISTENER` and `COMPLETION_DENIED` events
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED,
+        TaskIntent.COMPLETING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -607,14 +607,14 @@ public class TaskListenerDenialsTest {
     // rejection from the first Task Listener
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED,
+        TaskIntent.COMPLETING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -641,14 +641,14 @@ public class TaskListenerDenialsTest {
     // and `COMPLETE_TASK_LISTENER` event was triggered successfully
     helper.assertUserTaskIntentsSequence(
         processInstanceKey,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED,
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.ASSIGNED,
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.COMPLETE_TASK_LISTENER,
-        UserTaskIntent.COMPLETED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED,
+        TaskIntent.ASSIGNING,
+        TaskIntent.ASSIGNED,
+        TaskIntent.COMPLETING,
+        TaskIntent.COMPLETE_TASK_LISTENER,
+        TaskIntent.COMPLETED);
   }
 
   @Test
@@ -657,7 +657,7 @@ public class TaskListenerDenialsTest {
         ZeebeTaskListenerEventType.assigning,
         u -> u.zeebeAssignee("initial_assignee"),
         userTask -> {},
-        UserTaskIntent.ASSIGNMENT_DENIED);
+        TaskIntent.ASSIGNMENT_DENIED);
   }
 
   @Test
@@ -666,7 +666,7 @@ public class TaskListenerDenialsTest {
         ZeebeTaskListenerEventType.assigning,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").assign(),
-        UserTaskIntent.ASSIGNMENT_DENIED);
+        TaskIntent.ASSIGNMENT_DENIED);
   }
 
   @Test
@@ -675,7 +675,7 @@ public class TaskListenerDenialsTest {
         ZeebeTaskListenerEventType.assigning,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).withAssignee("initial_assignee").claim(),
-        UserTaskIntent.ASSIGNMENT_DENIED);
+        TaskIntent.ASSIGNMENT_DENIED);
   }
 
   @Test
@@ -684,7 +684,7 @@ public class TaskListenerDenialsTest {
         ZeebeTaskListenerEventType.updating,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).update(),
-        UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATE_DENIED);
   }
 
   @Test
@@ -701,7 +701,7 @@ public class TaskListenerDenialsTest {
                 .withLocalSemantic()
                 .expectUpdating()
                 .update(),
-        UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATE_DENIED);
   }
 
   @Test
@@ -710,14 +710,14 @@ public class TaskListenerDenialsTest {
         ZeebeTaskListenerEventType.completing,
         u -> u,
         pik -> ENGINE.userTask().ofInstance(pik).complete(),
-        UserTaskIntent.COMPLETION_DENIED);
+        TaskIntent.COMPLETION_DENIED);
   }
 
   private void testRevertCorrectedUserTaskDataWhenTaskListenerDenies(
       final ZeebeTaskListenerEventType eventType,
       final UnaryOperator<UserTaskBuilder> userTaskBuilder,
       final Consumer<Long> transitionTrigger,
-      final UserTaskIntent expectedUserTaskIntent) {
+      final TaskIntent expectedUserTaskIntent) {
     // given
     final long processInstanceKey =
         helper.createProcessInstance(
@@ -796,7 +796,7 @@ public class TaskListenerDenialsTest {
     // given: a process instance with a task listener that doesn't support denying
     final long processInstanceKey =
         helper.createProcessInstance(
-            helper.createUserTaskWithTaskListeners(listenerEventType, this.listenerType));
+            helper.createUserTaskWithTaskListeners(listenerEventType, listenerType));
 
     // trigger transition
     triggerTransition.accept(processInstanceKey);
@@ -806,7 +806,7 @@ public class TaskListenerDenialsTest {
         ENGINE
             .job()
             .ofInstance(processInstanceKey)
-            .withType(this.listenerType)
+            .withType(listenerType)
             .withResult(new JobResult().setDenied(true))
             .expectRejection()
             .complete();

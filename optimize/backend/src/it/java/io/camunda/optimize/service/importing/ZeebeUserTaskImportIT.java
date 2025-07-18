@@ -16,10 +16,10 @@ import static io.camunda.optimize.util.ZeebeBpmnModels.USER_TASK;
 import static io.camunda.optimize.util.ZeebeBpmnModels.createSimpleNativeUserTaskProcess;
 import static io.camunda.optimize.util.ZeebeBpmnModels.createSimpleNativeUserTaskProcessWithAssignee;
 import static io.camunda.optimize.util.ZeebeBpmnModels.createSimpleNativeUserTaskProcessWithCandidateGroup;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.ASSIGNED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.CANCELED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.COMPLETED;
-import static io.camunda.zeebe.protocol.record.intent.UserTaskIntent.CREATING;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.ASSIGNED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.CANCELED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.COMPLETED;
+import static io.camunda.zeebe.protocol.record.intent.TaskIntent.CREATING;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.ProcessInstanceEvent;
@@ -30,7 +30,7 @@ import io.camunda.optimize.dto.optimize.persistence.AssigneeOperationDto;
 import io.camunda.optimize.dto.optimize.query.process.FlowNodeInstanceDto;
 import io.camunda.optimize.dto.zeebe.usertask.ZeebeUserTaskDataDto;
 import io.camunda.optimize.dto.zeebe.usertask.ZeebeUserTaskRecordDto;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.util.Collections;
@@ -200,7 +200,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
         deployAndStartInstanceForProcess(createSimpleNativeUserTaskProcess(TEST_PROCESS, DUE_DATE));
     waitUntilUserTaskRecordWithElementIdExported(USER_TASK);
     zeebeExtension.cancelProcessInstance(instance.getProcessInstanceKey());
-    waitUntilUserTaskRecordWithIntentExported(UserTaskIntent.CANCELED);
+    waitUntilUserTaskRecordWithIntentExported(TaskIntent.CANCELED);
     // remove all zeebe records except userTask ones to test userTask import only
     removeAllZeebeExportRecordsExceptUserTaskRecords();
 
@@ -254,7 +254,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
     removeAllZeebeExportRecordsExceptUserTaskRecords();
     importAllZeebeEntitiesFromScratch();
     zeebeExtension.cancelProcessInstance(instance.getProcessInstanceKey());
-    waitUntilUserTaskRecordWithIntentExported(UserTaskIntent.CANCELED);
+    waitUntilUserTaskRecordWithIntentExported(TaskIntent.CANCELED);
     // remove all zeebe records except userTask ones to test userTask import only
     removeAllZeebeExportRecordsExceptUserTaskRecords();
 
@@ -379,7 +379,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
     importAllZeebeEntitiesFromScratch();
 
     zeebeExtension.cancelProcessInstance(instance.getProcessInstanceKey());
-    waitUntilUserTaskRecordWithIntentExported(UserTaskIntent.CANCELED);
+    waitUntilUserTaskRecordWithIntentExported(TaskIntent.CANCELED);
     removeAllZeebeExportRecordsExceptUserTaskRecords();
 
     // when
@@ -933,7 +933,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
 
   private OffsetDateTime getExpectedStartDateForUserTaskEvents(
       final List<ZeebeUserTaskRecordDto> eventsForElement) {
-    return getTimestampForFirstZeebeEventsWithIntent(eventsForElement, UserTaskIntent.CREATING);
+    return getTimestampForFirstZeebeEventsWithIntent(eventsForElement, TaskIntent.CREATING);
   }
 
   private OffsetDateTime getExpectedEndDateForCompletedUserTaskEvents(
@@ -948,7 +948,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
 
   private OffsetDateTime getExpectedEndDateForCanceledUserTaskEvents(
       final List<ZeebeUserTaskRecordDto> eventsForElement) {
-    return getTimestampForFirstZeebeEventsWithIntent(eventsForElement, UserTaskIntent.CANCELED);
+    return getTimestampForFirstZeebeEventsWithIntent(eventsForElement, TaskIntent.CANCELED);
   }
 
   private long getExpectedTotalDurationForCompletedUserTask(
@@ -1003,7 +1003,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
   }
 
   private String getExpectedIdFromRecords(
-      final List<ZeebeUserTaskRecordDto> eventsForElement, final UserTaskIntent intent) {
+      final List<ZeebeUserTaskRecordDto> eventsForElement, final TaskIntent intent) {
     return eventsForElement.stream()
         .filter(event -> intent.equals(event.getIntent()))
         .findFirst()

@@ -19,7 +19,7 @@ import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
@@ -63,7 +63,7 @@ public final class AssignUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -74,11 +74,11 @@ public final class AssignUserTaskTest {
     // then
     Assertions.assertThat(assigningRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.ASSIGNING);
+        .hasIntent(TaskIntent.ASSIGNING);
 
     final var assigningRecordValue = assigningRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED).getFirst().getValue();
 
     assertThat(List.of(assigningRecordValue, assignedRecordValue))
         .describedAs(
@@ -104,7 +104,7 @@ public final class AssignUserTaskTest {
     // when
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -114,7 +114,7 @@ public final class AssignUserTaskTest {
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .withRecordKey(userTaskKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .as(
             "Verify the sequence of intents, `assignee` `action` and `changedAttributes` properties emitted for the user task")
         .extracting(
@@ -123,12 +123,12 @@ public final class AssignUserTaskTest {
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())
         .containsExactly(
-            tuple(UserTaskIntent.CREATING, assignee, action, List.of()),
-            tuple(UserTaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
+            tuple(TaskIntent.CREATING, assignee, action, List.of()),
+            tuple(TaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
             // The `assignee` property isn't yet available during the `CREATED` event
             // as it becomes effective only during the assignment phase.
-            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(TaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(TaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
   }
 
   @Test
@@ -138,7 +138,7 @@ public final class AssignUserTaskTest {
     ENGINE.deployment().withXmlResource(process(t -> t.zeebeAssignee(assignee))).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -150,11 +150,11 @@ public final class AssignUserTaskTest {
     // then
     Assertions.assertThat(assigningRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.ASSIGNING);
+        .hasIntent(TaskIntent.ASSIGNING);
 
     final var assigningRecordValue = assigningRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .filter(r -> r.getPosition() > assigningRecord.getPosition())
             .getFirst()
             .getValue();
@@ -181,7 +181,7 @@ public final class AssignUserTaskTest {
     ENGINE.deployment().withXmlResource(process()).deploy();
     final long processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final long userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();
@@ -198,11 +198,11 @@ public final class AssignUserTaskTest {
     // then
     Assertions.assertThat(assigningRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.ASSIGNING);
+        .hasIntent(TaskIntent.ASSIGNING);
 
     final var assigningRecordValue = assigningRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED).getFirst().getValue();
 
     assertThat(List.of(assigningRecordValue, assignedRecordValue))
         .describedAs(
@@ -245,7 +245,7 @@ public final class AssignUserTaskTest {
     // then
     final Predicate<Record<UserTaskRecordValue>> untilUserTaskUnassignedRecord =
         r ->
-            r.getIntent() == UserTaskIntent.ASSIGNED
+            r.getIntent() == TaskIntent.ASSIGNED
                 && r.getValue().getAction().equals(unassignAction);
 
     assertThat(
@@ -260,15 +260,15 @@ public final class AssignUserTaskTest {
             r -> r.getValue().getAction(),
             r -> r.getValue().getChangedAttributes())
         .containsExactly(
-            tuple(UserTaskIntent.CREATING, initialAssignee, "", List.of()),
-            tuple(UserTaskIntent.CREATED, "", "", List.of()),
+            tuple(TaskIntent.CREATING, initialAssignee, "", List.of()),
+            tuple(TaskIntent.CREATED, "", "", List.of()),
             // The `assignee` property isn't yet available during the `CREATING/CREATED` events
             // as it becomes effective only during the assignment phase.
-            tuple(UserTaskIntent.ASSIGNING, initialAssignee, "", List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.ASSIGNED, initialAssignee, "", List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(TaskIntent.ASSIGNING, initialAssignee, "", List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(TaskIntent.ASSIGNED, initialAssignee, "", List.of(UserTaskRecord.ASSIGNEE)),
             // records related to user task unassignment
-            tuple(UserTaskIntent.ASSIGNING, "", unassignAction, List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.ASSIGNED, "", unassignAction, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(TaskIntent.ASSIGNING, "", unassignAction, List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(TaskIntent.ASSIGNED, "", unassignAction, List.of(UserTaskRecord.ASSIGNEE)));
   }
 
   @Test
@@ -311,11 +311,11 @@ public final class AssignUserTaskTest {
     // then
     Assertions.assertThat(assigningRecord)
         .hasRecordType(RecordType.EVENT)
-        .hasIntent(UserTaskIntent.ASSIGNING);
+        .hasIntent(TaskIntent.ASSIGNING);
 
     final var assigningRecordValue = assigningRecord.getValue();
     final var assignedRecordValue =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED).getFirst().getValue();
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED).getFirst().getValue();
 
     assertThat(List.of(assigningRecordValue, assignedRecordValue))
         .describedAs(

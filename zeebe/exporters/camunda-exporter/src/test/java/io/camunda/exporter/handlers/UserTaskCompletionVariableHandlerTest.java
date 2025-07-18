@@ -19,7 +19,7 @@ import io.camunda.webapps.schema.descriptors.template.SnapshotTaskVariableTempla
 import io.camunda.webapps.schema.entities.usertask.SnapshotTaskVariableEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.ImmutableUserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
@@ -54,7 +54,7 @@ public class UserTaskCompletionVariableHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withValue(
                         ImmutableUserTaskRecordValue.builder()
                             .withVariables(Map.of("var", "varVal"))
@@ -67,8 +67,8 @@ public class UserTaskCompletionVariableHandlerTest {
   @Test
   void shouldNotHandleRecord() {
     // given
-    Arrays.stream(UserTaskIntent.values())
-        .filter(intent -> !intent.name().equals(UserTaskIntent.COMPLETED.name()))
+    Arrays.stream(TaskIntent.values())
+        .filter(intent -> !intent.name().equals(TaskIntent.COMPLETED.name()))
         .forEach(
             intent -> {
               final Record<UserTaskRecordValue> variableRecord =
@@ -85,7 +85,7 @@ public class UserTaskCompletionVariableHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withValue(ImmutableUserTaskRecordValue.builder().build()));
     // when - then
     assertThat(underTest.handlesRecord(variableRecord)).isFalse();
@@ -98,7 +98,7 @@ public class UserTaskCompletionVariableHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withValue(
                         ImmutableUserTaskRecordValue.builder().withVariables(Map.of()).build()));
     // when - then
@@ -197,7 +197,7 @@ public class UserTaskCompletionVariableHandlerTest {
     return factory.generateRecord(
         ValueType.USER_TASK,
         r ->
-            r.withIntent(UserTaskIntent.COMPLETED)
+            r.withIntent(TaskIntent.COMPLETED)
                 .withValue(
                     ImmutableUserTaskRecordValue.builder()
                         .from(factory.generateObject(UserTaskRecordValue.class))

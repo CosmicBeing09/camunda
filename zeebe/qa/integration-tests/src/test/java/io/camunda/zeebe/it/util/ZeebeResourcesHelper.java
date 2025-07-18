@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import io.camunda.zeebe.util.CloseableSilently;
 import java.time.Duration;
@@ -209,7 +209,7 @@ public class ZeebeResourcesHelper implements CloseableSilently {
     final var processDefinitionKey = deployProcess(modelInstance, tenantId);
     final var processInstanceKey = createProcessInstance(processDefinitionKey, "{}", tenantId);
     final var userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .filter(r -> processInstanceKey == r.getValue().getProcessInstanceKey())
             .map(Record::getKey)
             .findFirst()

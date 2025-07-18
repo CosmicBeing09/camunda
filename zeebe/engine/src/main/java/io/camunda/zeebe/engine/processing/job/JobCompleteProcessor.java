@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -176,12 +176,12 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
         if (value.getResult().isDenied()) {
           userTask.setDeniedReason(value.getResult().getDeniedReason());
           commandWriter.appendFollowUpCommand(
-              userTask.getUserTaskKey(), UserTaskIntent.DENY_TASK_LISTENER, userTask);
+              userTask.getUserTaskKey(), TaskIntent.DENY_TASK_LISTENER, userTask);
         } else {
           userTask.correctAttributes(
               value.getResult().getCorrectedAttributes(), value.getResult().getCorrections());
           commandWriter.appendFollowUpCommand(
-              userTask.getUserTaskKey(), UserTaskIntent.COMPLETE_TASK_LISTENER, userTask);
+              userTask.getUserTaskKey(), TaskIntent.COMPLETE_TASK_LISTENER, userTask);
         }
       }
       default -> {

@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.IncidentRecordValue;
@@ -195,14 +195,14 @@ public class UserTaskListenersTest {
     client.newWorker().jobType("my_canceling_listener").handler(completeListenerJobHandler).open();
 
     final var createdUserTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withRecordKey(userTaskKey)
             .getFirst()
             .getValue();
     final long processInstanceKey = createdUserTask.getProcessInstanceKey();
 
     // wait until the user task enters the ASSIGNING transition
-    RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNING).withRecordKey(userTaskKey).await();
+    RecordingExporter.userTaskRecords(TaskIntent.ASSIGNING).withRecordKey(userTaskKey).await();
 
     // when: cancel the process instance
     final var cancelProcessInstanceFuture =
@@ -384,7 +384,7 @@ public class UserTaskListenersTest {
 
     // and: verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.UPDATING, UserTaskIntent.DENY_TASK_LISTENER, UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATING, TaskIntent.DENY_TASK_LISTENER, TaskIntent.UPDATE_DENIED);
   }
 
   @Test
@@ -447,7 +447,7 @@ public class UserTaskListenersTest {
 
     // and: verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.UPDATING, UserTaskIntent.DENY_TASK_LISTENER, UserTaskIntent.UPDATE_DENIED);
+        TaskIntent.UPDATING, TaskIntent.DENY_TASK_LISTENER, TaskIntent.UPDATE_DENIED);
 
     assertThat(
             RecordingExporter.variableDocumentRecords(VariableDocumentIntent.UPDATE_DENIED)
@@ -510,9 +510,9 @@ public class UserTaskListenersTest {
 
     // verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED);
   }
 
   @Test
@@ -559,9 +559,9 @@ public class UserTaskListenersTest {
 
     // verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.COMPLETING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.COMPLETION_DENIED);
+        TaskIntent.COMPLETING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.COMPLETION_DENIED);
   }
 
   @Test
@@ -617,9 +617,9 @@ public class UserTaskListenersTest {
 
     // verify the expected sequence of User Task intents
     assertUserTaskIntentsSequence(
-        UserTaskIntent.ASSIGNING,
-        UserTaskIntent.DENY_TASK_LISTENER,
-        UserTaskIntent.ASSIGNMENT_DENIED);
+        TaskIntent.ASSIGNING,
+        TaskIntent.DENY_TASK_LISTENER,
+        TaskIntent.ASSIGNMENT_DENIED);
   }
 
   @Test
@@ -934,7 +934,7 @@ public class UserTaskListenersTest {
         .open();
 
     final long processInstanceKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withRecordKey(userTaskKey)
             .getFirst()
             .getValue()
@@ -978,7 +978,7 @@ public class UserTaskListenersTest {
                     .isEqualTo(1));
   }
 
-  private void assertUserTaskIntentsSequence(final UserTaskIntent... intents) {
+  private void assertUserTaskIntentsSequence(final TaskIntent... intents) {
     assertThat(intents).describedAs("Expected intents not to be empty").isNotEmpty();
     assertThat(
             RecordingExporter.userTaskRecords()

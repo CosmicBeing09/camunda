@@ -23,7 +23,7 @@ import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -149,7 +149,7 @@ public final class CamundaUserTaskTest {
             .getFirst();
 
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -176,7 +176,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -199,7 +199,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -228,7 +228,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -252,7 +252,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -278,7 +278,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -295,7 +295,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -315,7 +315,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -337,7 +337,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -359,7 +359,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -376,7 +376,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -401,7 +401,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -418,7 +418,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -443,7 +443,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -460,7 +460,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -482,7 +482,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -499,7 +499,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -524,7 +524,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -541,7 +541,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -558,7 +558,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -583,7 +583,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -600,7 +600,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -625,7 +625,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -645,7 +645,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -662,7 +662,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -681,7 +681,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final UserTaskRecordValue createdUserTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -689,14 +689,14 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.ASSIGNING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.ASSIGNED));
+            tuple(ValueType.USER_TASK, TaskIntent.ASSIGNING),
+            tuple(ValueType.USER_TASK, TaskIntent.ASSIGNED));
 
     Assertions.assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+            RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getValue())
@@ -733,11 +733,11 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.CANCELED))
+                .limit(r -> r.getIntent() == TaskIntent.CANCELED))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.CANCELING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.CANCELED));
+            tuple(ValueType.USER_TASK, TaskIntent.CANCELING),
+            tuple(ValueType.USER_TASK, TaskIntent.CANCELED));
   }
 
   @Test
@@ -752,7 +752,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final UserTaskRecordValue createdUserTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -760,14 +760,14 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.ASSIGNED))
+                .limit(r -> r.getIntent() == TaskIntent.ASSIGNED))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.CLAIMING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.ASSIGNED));
+            tuple(ValueType.USER_TASK, TaskIntent.CLAIMING),
+            tuple(ValueType.USER_TASK, TaskIntent.ASSIGNED));
 
     Assertions.assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+            RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getValue())
@@ -798,7 +798,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final UserTaskRecordValue createdUserTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -806,11 +806,11 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .limit(r -> r.getIntent() == TaskIntent.UPDATED))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.UPDATING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.UPDATED));
+            tuple(ValueType.USER_TASK, TaskIntent.UPDATING),
+            tuple(ValueType.USER_TASK, TaskIntent.UPDATED));
 
     Assertions.assertThat(createdUserTask)
         .hasCandidateGroupsList("foo", "bar")
@@ -821,7 +821,7 @@ public final class CamundaUserTaskTest {
         .hasPriority(90);
 
     Assertions.assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED)
+            RecordingExporter.userTaskRecords(TaskIntent.UPDATED)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getValue())
@@ -871,11 +871,11 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.COMPLETED))
+                .limit(r -> r.getIntent() == TaskIntent.COMPLETED))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETED));
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETING),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETED));
   }
 
   @Test
@@ -903,11 +903,11 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.COMPLETED))
+                .limit(r -> r.getIntent() == TaskIntent.COMPLETED))
         .extracting(Record::getValueType, Record::getIntent)
         .containsSubsequence(
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETING),
-            tuple(ValueType.USER_TASK, UserTaskIntent.COMPLETED));
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETING),
+            tuple(ValueType.USER_TASK, TaskIntent.COMPLETED));
 
     assertThat(
             RecordingExporter.variableRecords().withProcessInstanceKey(processInstanceKey).limit(1))
@@ -965,7 +965,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -990,7 +990,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -1007,7 +1007,7 @@ public final class CamundaUserTaskTest {
 
     // then
     final Record<UserTaskRecordValue> userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -1027,7 +1027,7 @@ public final class CamundaUserTaskTest {
             .create();
 
     final var createdUserTaskRecord =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -1060,13 +1060,13 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .limit(r -> r.getIntent() == TaskIntent.UPDATED))
         .extracting(Record::getIntent, r -> r.getValue().getChangedAttributes())
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
-            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
-            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
+            Tuple.tuple(TaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
+            Tuple.tuple(TaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
   }
 
   @Test
@@ -1082,7 +1082,7 @@ public final class CamundaUserTaskTest {
             .create();
 
     final var createdUserTaskRecord =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst();
 
@@ -1114,12 +1114,12 @@ public final class CamundaUserTaskTest {
     assertThat(
             RecordingExporter.userTaskRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .limit(r -> r.getIntent() == UserTaskIntent.UPDATED))
+                .limit(r -> r.getIntent() == TaskIntent.UPDATED))
         .extracting(Record::getIntent, r -> r.getValue().getChangedAttributes())
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
-            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
-            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
+            Tuple.tuple(TaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
+            Tuple.tuple(TaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
   }
 }

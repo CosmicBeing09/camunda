@@ -44,7 +44,7 @@ import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceMigrationIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -386,7 +386,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       }
       stateWriter.appendFollowUpEvent(
           elementInstance.getUserTaskKey(),
-          UserTaskIntent.MIGRATED,
+          TaskIntent.MIGRATED,
           userTask
               .setProcessDefinitionKey(targetProcessDefinition.getKey())
               .setProcessDefinitionVersion(targetProcessDefinition.getVersion())

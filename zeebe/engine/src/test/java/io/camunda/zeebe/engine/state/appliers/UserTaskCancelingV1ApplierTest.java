@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -52,8 +52,8 @@ public class UserTaskCancelingV1ApplierTest {
         new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate a user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATING, userTaskRecord);
+    testSetup.applyEventToState(userTaskKey, TaskIntent.CREATED, userTaskRecord);
 
     // verify initial state
     assertThat(userTaskState.getLifecycleState(userTaskKey))

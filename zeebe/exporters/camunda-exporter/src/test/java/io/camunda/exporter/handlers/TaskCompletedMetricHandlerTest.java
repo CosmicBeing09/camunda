@@ -18,7 +18,7 @@ import io.camunda.webapps.schema.descriptors.index.MetricIndex;
 import io.camunda.webapps.schema.entities.MetricEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.ImmutableUserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
@@ -48,7 +48,7 @@ public class TaskCompletedMetricHandlerTest {
   void shouldHandleRecord() {
     // given
     final Record<UserTaskRecordValue> processInstanceRecord =
-        generateRecord(UserTaskIntent.COMPLETED);
+        generateRecord(TaskIntent.COMPLETED);
 
     // when - then
     assertThat(underTest.handlesRecord(processInstanceRecord)).isTrue();
@@ -56,8 +56,8 @@ public class TaskCompletedMetricHandlerTest {
 
   @Test
   void shouldNotHandleRecord() {
-    Arrays.stream(UserTaskIntent.values())
-        .filter(intent -> intent != UserTaskIntent.COMPLETED)
+    Arrays.stream(TaskIntent.values())
+        .filter(intent -> intent != TaskIntent.COMPLETED)
         .map(this::generateRecord)
         .forEach(r -> assertThat(underTest.handlesRecord(r)).isFalse());
   }
@@ -65,7 +65,7 @@ public class TaskCompletedMetricHandlerTest {
   @Test
   void shouldGenerateIds() {
     // given
-    final Record<UserTaskRecordValue> userTaskRecord = generateRecord(UserTaskIntent.COMPLETED);
+    final Record<UserTaskRecordValue> userTaskRecord = generateRecord(TaskIntent.COMPLETED);
 
     // when
     final var ids = underTest.generateIds(userTaskRecord);
@@ -97,7 +97,7 @@ public class TaskCompletedMetricHandlerTest {
         factory.generateRecord(
             ValueType.USER_TASK,
             r ->
-                r.withIntent(UserTaskIntent.COMPLETED)
+                r.withIntent(TaskIntent.COMPLETED)
                     .withTimestamp(timestamp)
                     .withValue(recordValue));
 
@@ -128,7 +128,7 @@ public class TaskCompletedMetricHandlerTest {
     verify(mockRequest, times(1)).add(indexName, inputEntity);
   }
 
-  private Record<UserTaskRecordValue> generateRecord(final UserTaskIntent intent) {
+  private Record<UserTaskRecordValue> generateRecord(final TaskIntent intent) {
     final UserTaskRecordValue userTaskRecordValue =
         ImmutableUserTaskRecordValue.builder()
             .from(factory.generateObject(UserTaskRecordValue.class))

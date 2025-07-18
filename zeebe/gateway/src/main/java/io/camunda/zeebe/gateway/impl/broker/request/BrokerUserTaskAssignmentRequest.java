@@ -10,7 +10,7 @@ package io.camunda.zeebe.gateway.impl.broker.request;
 import io.camunda.zeebe.broker.client.api.dto.BrokerExecuteCommand;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import org.agrona.DirectBuffer;
 
 public class BrokerUserTaskAssignmentRequest extends BrokerExecuteCommand<UserTaskRecord> {
@@ -18,7 +18,7 @@ public class BrokerUserTaskAssignmentRequest extends BrokerExecuteCommand<UserTa
   private final UserTaskRecord requestDto = new UserTaskRecord();
 
   public BrokerUserTaskAssignmentRequest(
-      final long key, final String assignee, final String action, final UserTaskIntent intent) {
+      final long key, final String assignee, final String action, final TaskIntent intent) {
     super(ValueType.USER_TASK, intent);
     requestDto.setUserTaskKey(key).setAssignee(assignee).setAction(action);
     request.setKey(key);

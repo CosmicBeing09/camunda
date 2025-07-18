@@ -34,7 +34,7 @@ import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskAssignmentRequ
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskCompletionRequest;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskUpdateRequest;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -102,7 +102,7 @@ public final class UserTaskServices
             userTaskKey,
             assignee,
             action,
-            allowOverride ? UserTaskIntent.ASSIGN : UserTaskIntent.CLAIM));
+            allowOverride ? TaskIntent.ASSIGN : TaskIntent.CLAIM));
   }
 
   public CompletableFuture<UserTaskRecord> completeUserTask(
@@ -114,7 +114,7 @@ public final class UserTaskServices
   public CompletableFuture<UserTaskRecord> unassignUserTask(
       final long userTaskKey, final String action) {
     return sendBrokerRequest(
-        new BrokerUserTaskAssignmentRequest(userTaskKey, "", action, UserTaskIntent.ASSIGN));
+        new BrokerUserTaskAssignmentRequest(userTaskKey, "", action, TaskIntent.ASSIGN));
   }
 
   public CompletableFuture<UserTaskRecord> updateUserTask(

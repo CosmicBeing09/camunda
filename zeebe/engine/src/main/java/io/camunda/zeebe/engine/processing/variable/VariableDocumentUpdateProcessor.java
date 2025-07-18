@@ -29,7 +29,7 @@ import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -127,7 +127,7 @@ public final class VariableDocumentUpdateProcessor
       if (hasVariables(value)) {
         userTaskRecord.setVariables(value.getVariablesBuffer()).setVariablesChanged();
       }
-      writers.state().appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskRecord);
+      writers.state().appendFollowUpEvent(userTaskKey, TaskIntent.UPDATING, userTaskRecord);
 
       final var userTaskElement =
           processState.getFlowElement(
@@ -171,7 +171,7 @@ public final class VariableDocumentUpdateProcessor
 
       writers
           .state()
-          .appendFollowUpEvent(scope.getUserTaskKey(), UserTaskIntent.UPDATED, userTaskRecord);
+          .appendFollowUpEvent(scope.getUserTaskKey(), TaskIntent.UPDATED, userTaskRecord);
 
       writers.state().appendFollowUpEvent(key, VariableDocumentIntent.UPDATED, value);
       writers.response().writeEventOnCommand(key, VariableDocumentIntent.UPDATED, value, record);

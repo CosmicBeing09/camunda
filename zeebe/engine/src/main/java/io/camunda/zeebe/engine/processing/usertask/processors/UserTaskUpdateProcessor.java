@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
@@ -69,7 +69,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     userTaskRecord.wrapChangedAttributesIfValueChanged(command.getValue());
     userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.UPDATING, userTaskRecord);
   }
 
   @Override
@@ -78,9 +78,9 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     final long userTaskKey = command.getKey();
 
     if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.UPDATED, userTaskRecord);
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.UPDATED, userTaskRecord, command);
+          userTaskKey, TaskIntent.UPDATED, userTaskRecord, command);
       return;
     }
 
@@ -92,17 +92,17 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
               + "If the update was triggered by a user task variables update, variables will not be merged. "
               + "Please report this as a bug.",
           userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.UPDATED, userTaskRecord);
       return;
     }
 
     final var metadata = recordRequestMetadata.get();
     switch (metadata.getTriggerType()) {
       case USER_TASK -> {
-        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+        stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.UPDATED, userTaskRecord);
         responseWriter.writeResponse(
             userTaskKey,
-            UserTaskIntent.UPDATED,
+            TaskIntent.UPDATED,
             userTaskRecord,
             ValueType.USER_TASK,
             metadata.getRequestId(),
@@ -121,7 +121,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
                   + "This may be caused by a corrupted or incomplete variable update request. "
                   + "Please report this as a bug.",
               userTaskRecord.getElementInstanceKey());
-          stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+          stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.UPDATED, userTaskRecord);
           return;
         }
 
@@ -130,7 +130,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
         mergeVariables(userTaskRecord, variableDocumentRecord);
 
         // Write follow-up events
-        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+        stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.UPDATED, userTaskRecord);
         final long variableDocumentKey = variableDocumentState.getKey();
         stateWriter.appendFollowUpEvent(
             variableDocumentKey, VariableDocumentIntent.UPDATED, variableDocumentRecord);

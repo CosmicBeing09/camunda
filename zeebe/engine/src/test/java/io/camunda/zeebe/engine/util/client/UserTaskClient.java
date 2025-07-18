@@ -11,7 +11,7 @@ import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.Record;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.test.util.MsgPackUtil;
@@ -177,7 +177,7 @@ public final class UserTaskClient {
   private long findUserTaskKey() {
     if (userTaskKey == DEFAULT_KEY) {
       final Record<UserTaskRecordValue> userTask =
-          RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+          RecordingExporter.userTaskRecords(TaskIntent.CREATED)
               .withProcessInstanceKey(processInstanceKey)
               .getFirst();
 
@@ -198,7 +198,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.ASSIGN,
+            TaskIntent.ASSIGN,
             userTaskRecord.setUserTaskKey(userTaskKey),
             authorizedTenantIds.toArray(new String[0]));
     return expectation.apply(position);
@@ -211,7 +211,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.ASSIGN,
+            TaskIntent.ASSIGN,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
             TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -225,7 +225,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.CLAIM,
+            TaskIntent.CLAIM,
             userTaskRecord.setUserTaskKey(userTaskKey),
             authorizedTenantIds.toArray(new String[0]));
     return expectation.apply(position);
@@ -238,7 +238,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.CLAIM,
+            TaskIntent.CLAIM,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
             TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -255,7 +255,7 @@ public final class UserTaskClient {
                 r.key(userTaskKey)
                     .requestStreamId(DEFAULT_REQUEST_STREAM_ID)
                     .requestId(DEFAULT_REQUEST_ID)
-                    .intent(UserTaskIntent.COMPLETE)
+                    .intent(TaskIntent.COMPLETE)
                     .event(userTaskRecord.setUserTaskKey(userTaskKey))
                     .authorizations(authorizedTenantIds.toArray(new String[0])));
     return expectation.apply(position);
@@ -277,7 +277,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.COMPLETE,
+            TaskIntent.COMPLETE,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
             TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -285,7 +285,7 @@ public final class UserTaskClient {
   }
 
   /**
-   * Sends an {@link UserTaskIntent#UPDATE} command for the user task with the specified attribute
+   * Sends an {@link TaskIntent#UPDATE} command for the user task with the specified attribute
    * values.
    *
    * <p>This method uses the attributes set through the {@code with<AttributeName>()} methods to
@@ -306,7 +306,7 @@ public final class UserTaskClient {
    *     .update();
    * }</pre>
    *
-   * This example constructs and sends an {@link UserTaskIntent#UPDATE} command that updates the
+   * This example constructs and sends an {@link TaskIntent#UPDATE} command that updates the
    * following attributes: {@code candidateGroupsList}, {@code candidateUsersList}, {@code dueDate},
    * and {@code priority}. These attribute names will be included in the {@code changedAttributes}
    * list.
@@ -320,7 +320,7 @@ public final class UserTaskClient {
    *     .update();
    * }</pre>
    *
-   * This example sends an {@link UserTaskIntent#UPDATE} command with all updatable attributes
+   * This example sends an {@link TaskIntent#UPDATE} command with all updatable attributes
    * marked as changed, resulting in all such attributes being reset to their default values.
    *
    * <p>Example 3: Trigger update transition without updating any attributes
@@ -331,11 +331,11 @@ public final class UserTaskClient {
    *     .update();
    * }</pre>
    *
-   * In this example, the {@link UserTaskIntent#UPDATE} command is sent with an empty {@code
+   * In this example, the {@link TaskIntent#UPDATE} command is sent with an empty {@code
    * changedAttributes} list. This triggers the update transition, including the execution of
    * configured {@code updating} listeners, by without updating any user task properties.
    *
-   * @return the {@link UserTaskIntent#UPDATING} record.
+   * @return the {@link TaskIntent#UPDATING} record.
    */
   public Record<UserTaskRecordValue> update() {
     final long userTaskKey = findUserTaskKey();
@@ -344,7 +344,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.UPDATE,
+            TaskIntent.UPDATE,
             userTaskRecord.setUserTaskKey(userTaskKey),
             authorizedTenantIds.toArray(new String[0]));
     return expectation.apply(position);
@@ -356,7 +356,7 @@ public final class UserTaskClient {
    * the provided {@code username} is used to send the command with authorization information.
    *
    * @param username of the user executing the update command
-   * @return the {@link UserTaskIntent#UPDATING} record.
+   * @return the {@link TaskIntent#UPDATING} record.
    */
   public Record<UserTaskRecordValue> update(final String username) {
     final long userTaskKey = findUserTaskKey();
@@ -365,7 +365,7 @@ public final class UserTaskClient {
             userTaskKey,
             DEFAULT_REQUEST_STREAM_ID,
             DEFAULT_REQUEST_ID,
-            UserTaskIntent.UPDATE,
+            TaskIntent.UPDATE,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
             TenantOwned.DEFAULT_TENANT_IDENTIFIER);

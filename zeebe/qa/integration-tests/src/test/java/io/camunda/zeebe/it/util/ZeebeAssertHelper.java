@@ -21,9 +21,9 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.MappingIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.ClockRecordValue;
@@ -166,7 +166,7 @@ public final class ZeebeAssertHelper {
   public static void assertUserTaskCompleted(
       final long userTaskKey, final Consumer<UserTaskRecordValue> consumer) {
     final UserTaskRecordValue userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.COMPLETED)
+        RecordingExporter.userTaskRecords(TaskIntent.COMPLETED)
             .filter(record -> record.getKey() == userTaskKey)
             .findFirst()
             .map(Record::getValue)
@@ -186,7 +186,7 @@ public final class ZeebeAssertHelper {
       final long expectedRecords,
       final Consumer<UserTaskRecordValue> consumer) {
     final UserTaskRecordValue userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .filter(record -> record.getKey() == userTaskKey)
             .limit(expectedRecords)
             .map(Record::getValue)
@@ -207,7 +207,7 @@ public final class ZeebeAssertHelper {
       final long expectedRecords,
       final Consumer<UserTaskRecordValue> consumer) {
     final UserTaskRecordValue userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.UPDATED)
+        RecordingExporter.userTaskRecords(TaskIntent.UPDATED)
             .filter(record -> record.getKey() == userTaskKey)
             .limit(expectedRecords)
             .map(Record::getValue)
@@ -221,7 +221,7 @@ public final class ZeebeAssertHelper {
   public static void assertUserTaskCanceled(
       final long userTaskKey, final Consumer<UserTaskRecordValue> consumer) {
     final UserTaskRecordValue userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CANCELED)
+        RecordingExporter.userTaskRecords(TaskIntent.CANCELED)
             .withRecordKey(userTaskKey)
             .getFirst()
             .getValue();

@@ -16,7 +16,7 @@ import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
@@ -213,7 +213,7 @@ public class MigrateUserTaskTest {
 
     // await user task assignment
     final var userTask =
-        RecordingExporter.userTaskRecords(UserTaskIntent.ASSIGNED)
+        RecordingExporter.userTaskRecords(TaskIntent.ASSIGNED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getValue();
@@ -229,7 +229,7 @@ public class MigrateUserTaskTest {
 
     // then
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.MIGRATED)
+            RecordingExporter.userTaskRecords(TaskIntent.MIGRATED)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getValue())
@@ -293,7 +293,7 @@ public class MigrateUserTaskTest {
                     Map.entry("taskVariable2", "taskVariable2")))
             .create();
 
-    RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+    RecordingExporter.userTaskRecords(TaskIntent.CREATED)
         .withProcessInstanceKey(processInstanceKey)
         .await();
 
@@ -308,7 +308,7 @@ public class MigrateUserTaskTest {
 
     // then
     assertThat(
-            RecordingExporter.userTaskRecords(UserTaskIntent.MIGRATED)
+            RecordingExporter.userTaskRecords(TaskIntent.MIGRATED)
                 .withProcessInstanceKey(processInstanceKey)
                 .getFirst()
                 .getValue())
@@ -379,7 +379,7 @@ public class MigrateUserTaskTest {
 
     // await user task creation
     final var userTaskKey =
-        RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+        RecordingExporter.userTaskRecords(TaskIntent.CREATED)
             .withProcessInstanceKey(processInstanceKey)
             .getFirst()
             .getKey();

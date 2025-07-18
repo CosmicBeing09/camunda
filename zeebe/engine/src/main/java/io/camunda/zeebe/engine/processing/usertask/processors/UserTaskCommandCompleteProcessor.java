@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
@@ -72,7 +72,7 @@ public final class UserTaskCommandCompleteProcessor implements UserTaskCommandPr
     userTaskRecord.setVariables(command.getValue().getVariablesBuffer());
     userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_USER_TASK_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.COMPLETING, userTaskRecord);
   }
 
   @Override
@@ -81,11 +81,11 @@ public final class UserTaskCommandCompleteProcessor implements UserTaskCommandPr
     final long userTaskKey = command.getKey();
 
     if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord, command);
+          userTaskKey, TaskIntent.COMPLETED, userTaskRecord, command);
     } else {
       /*
        * If the request metadata is not present in the received command, it indicates that
@@ -99,14 +99,14 @@ public final class UserTaskCommandCompleteProcessor implements UserTaskCommandPr
        * the "COMPLETED" event, as it will be cleared by the "COMPLETED" event applier.
        */
       final var recordRequestMetadata = asyncRequestState.findRecordRequestMetadata(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, TaskIntent.COMPLETED, userTaskRecord);
       completeElementInstance(userTaskRecord);
 
       recordRequestMetadata.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,
-                  UserTaskIntent.COMPLETED,
+                  TaskIntent.COMPLETED,
                   userTaskRecord,
                   ValueType.USER_TASK,
                   metadata.getRequestId(),

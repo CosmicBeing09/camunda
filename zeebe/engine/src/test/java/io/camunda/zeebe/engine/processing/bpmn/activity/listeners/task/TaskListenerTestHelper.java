@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
-import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
+import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
@@ -108,7 +108,7 @@ public class TaskListenerTestHelper {
 
   BpmnModelInstance createUserTaskWithTaskListenersAndAssignee(
       final ZeebeTaskListenerEventType listenerType,
-      String assignee,
+      final String assignee,
       final String... listenerTypes) {
     return createProcessWithZeebeUserTask(
         taskBuilder -> {
@@ -211,7 +211,7 @@ public class TaskListenerTestHelper {
   }
 
   void assertUserTaskIntentsSequence(
-      final long processInstanceKey, final UserTaskIntent... intents) {
+      final long processInstanceKey, final TaskIntent... intents) {
     assertThat(intents).describedAs("Expected intents not to be empty").isNotEmpty();
     assertThat(
             RecordingExporter.userTaskRecords()
@@ -237,7 +237,7 @@ public class TaskListenerTestHelper {
 
   void assertUserTaskRecordWithIntent(
       final long processInstanceKey,
-      final UserTaskIntent intent,
+      final TaskIntent intent,
       final Consumer<UserTaskRecordValue> consumer) {
     assertThat(
             RecordingExporter.userTaskRecords(intent)
@@ -249,7 +249,7 @@ public class TaskListenerTestHelper {
   }
 
   long getUserTaskElementInstanceKey(final long processInstanceKey) {
-    return RecordingExporter.userTaskRecords(UserTaskIntent.CREATED)
+    return RecordingExporter.userTaskRecords(TaskIntent.CREATED)
         .withProcessInstanceKey(processInstanceKey)
         .getFirst()
         .getValue()
