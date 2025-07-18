@@ -26,7 +26,7 @@ public class DecisionDefinitionWriter {
         new QueueItem(
             ContextType.DECISION_DEFINITION,
             WriteStatementType.INSERT,
-            decisionDefinition.decisionDefinitionKey(),
+            decisionDefinition.key(),
             "io.camunda.db.rdbms.sql.DecisionDefinitionMapper.insert",
             decisionDefinition));
   }
