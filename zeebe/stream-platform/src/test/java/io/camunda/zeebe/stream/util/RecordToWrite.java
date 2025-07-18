@@ -41,10 +41,10 @@ public final class RecordToWrite implements LogAppendEntry {
   private static final long DEFAULT_KEY = 1;
 
   private final RecordMetadata recordMetadata;
-  private UnifiedRecordValue unifiedRecordValue;
+  private UnifiedRecordValue recordValue;
 
   private long key = DEFAULT_KEY;
-  private int sourceIndex = -1;
+  private int sourceRecordIndex = -1;
 
   private RecordToWrite(final RecordMetadata recordMetadata) {
     this.recordMetadata = recordMetadata;
@@ -90,19 +90,19 @@ public final class RecordToWrite implements LogAppendEntry {
             .setType("type")
             .setMaxJobsToActivate(1);
 
-    unifiedRecordValue = jobBatchRecord;
+    recordValue = jobBatchRecord;
     return this;
   }
 
   public RecordToWrite job(final JobIntent intent, final JobRecordValue value) {
     recordMetadata.valueType(ValueType.JOB).intent(intent);
-    unifiedRecordValue = (JobRecord) value;
+    recordValue = (JobRecord) value;
     return this;
   }
 
   public RecordToWrite message(final MessageIntent intent, final MessageRecordValue message) {
     recordMetadata.valueType(ValueType.MESSAGE).intent(intent);
-    unifiedRecordValue = (MessageRecord) message;
+    recordValue = (MessageRecord) message;
     return this;
   }
 
@@ -110,27 +110,27 @@ public final class RecordToWrite implements LogAppendEntry {
       final ProcessMessageSubscriptionIntent intent,
       final ProcessMessageSubscriptionRecordValue message) {
     recordMetadata.valueType(ValueType.PROCESS_MESSAGE_SUBSCRIPTION).intent(intent);
-    unifiedRecordValue = (ProcessMessageSubscriptionRecord) message;
+    recordValue = (ProcessMessageSubscriptionRecord) message;
     return this;
   }
 
   public RecordToWrite timer(final TimerIntent intent, final TimerRecordValue value) {
     recordMetadata.valueType(ValueType.TIMER).intent(intent);
-    unifiedRecordValue = (TimerRecord) value;
+    recordValue = (TimerRecord) value;
     return this;
   }
 
   public RecordToWrite processInstance(
       final ProcessInstanceIntent intent, final ProcessInstanceRecordValue value) {
     recordMetadata.valueType(ValueType.PROCESS_INSTANCE).intent(intent);
-    unifiedRecordValue = (ProcessInstanceRecord) value;
+    recordValue = (ProcessInstanceRecord) value;
     return this;
   }
 
   public RecordToWrite variable(
       final VariableDocumentIntent intent, final VariableDocumentRecordValue value) {
     recordMetadata.valueType(ValueType.VARIABLE_DOCUMENT).intent(intent);
-    unifiedRecordValue = (VariableDocumentRecord) value;
+    recordValue = (VariableDocumentRecord) value;
     return this;
   }
 
@@ -138,7 +138,7 @@ public final class RecordToWrite implements LogAppendEntry {
     recordMetadata
         .valueType(ValueType.PROCESS_INSTANCE_MODIFICATION)
         .intent(ProcessInstanceModificationIntent.MODIFY);
-    unifiedRecordValue = (ProcessInstanceModificationRecord) value;
+    recordValue = (ProcessInstanceModificationRecord) value;
     return this;
   }
 
@@ -169,7 +169,7 @@ public final class RecordToWrite implements LogAppendEntry {
    * @return this
    */
   public RecordToWrite causedBy(final int index) {
-    sourceIndex = index;
+    sourceRecordIndex = index;
     return this;
   }
 
@@ -185,7 +185,7 @@ public final class RecordToWrite implements LogAppendEntry {
 
   @Override
   public int sourceIndex() {
-    return sourceIndex;
+    return sourceRecordIndex;
   }
 
   @Override
@@ -195,6 +195,6 @@ public final class RecordToWrite implements LogAppendEntry {
 
   @Override
   public UnifiedRecordValue recordValue() {
-    return unifiedRecordValue;
+    return recordValue;
   }
 }
