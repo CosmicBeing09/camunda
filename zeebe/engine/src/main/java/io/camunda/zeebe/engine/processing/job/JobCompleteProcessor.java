@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.job;
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
 import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -99,12 +99,12 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
   private final JobProcessingMetrics jobMetrics;
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
 
   public JobCompleteProcessor(
       final ProcessingState state,
       final JobProcessingMetrics jobMetrics,
-      final EventHandle eventHandle,
+      final EventProcessor eventHandle,
       final AccessControlBehavior authCheckBehavior) {
     userTaskState = state.getUserTaskState();
     elementInstanceState = state.getElementInstanceState();

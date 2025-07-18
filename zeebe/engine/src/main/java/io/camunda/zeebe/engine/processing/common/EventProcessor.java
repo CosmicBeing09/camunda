@@ -29,7 +29,7 @@ import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
-public final class EventHandle {
+public final class EventProcessor {
 
   private static final DirectBuffer NO_VARIABLES = new UnsafeBuffer();
 
@@ -46,7 +46,7 @@ public final class EventHandle {
   private final EventTriggerBehavior eventTriggerBehavior;
   private final BpmnStateBehavior stateBehavior;
 
-  public EventHandle(
+  public EventProcessor(
       final RecordKeyProvider keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final Writers writers,
@@ -91,7 +91,7 @@ public final class EventHandle {
    * @param variables the variables/payload of the event (can be empty)
    * @return the key of the process event
    */
-  private long triggeringProcessEvent(
+  private long triggerProcessEvent(
       final long processDefinitionKey,
       final long processInstanceKey,
       final String tenantId,
@@ -116,7 +116,7 @@ public final class EventHandle {
       final DirectBuffer variables) {
 
     final var processEventKey =
-        triggeringProcessEvent(
+        triggerProcessEvent(
             elementRecord.getProcessDefinitionKey(),
             elementRecord.getProcessInstanceKey(),
             elementRecord.getTenantId(),
@@ -149,7 +149,7 @@ public final class EventHandle {
   }
 
   public void triggeringProcessEvent(final JobRecord jobRecord) {
-    triggeringProcessEvent(
+    triggerProcessEvent(
         jobRecord.getProcessDefinitionKey(),
         jobRecord.getProcessInstanceKey(),
         jobRecord.getTenantId(),
@@ -159,7 +159,7 @@ public final class EventHandle {
   }
 
   public void triggeringProcessEvent(final UserTaskRecord userTaskRecord) {
-    triggeringProcessEvent(
+    triggerProcessEvent(
         userTaskRecord.getProcessDefinitionKey(),
         userTaskRecord.getProcessInstanceKey(),
         userTaskRecord.getTenantId(),
@@ -225,7 +225,7 @@ public final class EventHandle {
       final DirectBuffer variablesBuffer,
       final String tenantId) {
 
-    triggeringProcessEvent(
+    triggerProcessEvent(
         processDefinitionKey,
         processInstanceKey,
         tenantId,

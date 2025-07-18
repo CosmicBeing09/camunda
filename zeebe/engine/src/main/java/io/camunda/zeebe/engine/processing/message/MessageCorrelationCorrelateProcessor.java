@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.message.MessageCorrelateBehavior.MessageData;
@@ -68,7 +68,7 @@ public final class MessageCorrelationCorrelateProcessor
     this.keyGenerator = keyGenerator;
     this.authCheckBehavior = authCheckBehavior;
     final var eventHandle =
-        new EventHandle(
+        new EventProcessor(
             keyGenerator,
             eventScopeInstanceState,
             writers,

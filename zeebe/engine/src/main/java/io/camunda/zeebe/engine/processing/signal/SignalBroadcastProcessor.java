@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.signal;
 
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEvent;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
@@ -38,7 +38,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
 
   private final StateWriter stateWriter;
   private final RecordKeyProvider keyGenerator;
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
   private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final SignalSubscriptionState signalSubscriptionState;
@@ -65,7 +65,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
     elementInstanceState = processingState.getElementInstanceState();
     this.authCheckBehavior = authCheckBehavior;
     eventHandle =
-        new EventHandle(
+        new EventProcessor(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import static io.camunda.zeebe.util.EnsureUtil.ensureNotNullOrEmpty;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEvent;
@@ -32,7 +32,7 @@ import org.agrona.DirectBuffer;
 public final class BpmnEventPublicationBehavior {
 
   private final ElementInstanceState elementInstanceState;
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
   private final CatchEventAnalyzer catchEventAnalyzer;
   private final StateWriter stateWriter;
   private final RecordKeyProvider keyGenerator;
@@ -45,7 +45,7 @@ public final class BpmnEventPublicationBehavior {
       final Writers writers) {
     elementInstanceState = processingState.getElementInstanceState();
     eventHandle =
-        new EventHandle(
+        new EventProcessor(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

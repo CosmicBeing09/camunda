@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventProcessor;
 import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -33,7 +33,7 @@ public final class UserTaskCommandCompleteProcessor implements UserTaskCommandPr
 
   private final ElementInstanceState elementInstanceState;
   private final TaskState asyncRequestState;
-  private final EventHandle eventHandle;
+  private final EventProcessor eventHandle;
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
   private final ResponseWriter responseWriter;
@@ -41,7 +41,7 @@ public final class UserTaskCommandCompleteProcessor implements UserTaskCommandPr
 
   public UserTaskCommandCompleteProcessor(
       final ProcessingState state,
-      final EventHandle eventHandle,
+      final EventProcessor eventHandle,
       final Writers writers,
       final AccessControlBehavior authCheckBehavior) {
     elementInstanceState = state.getElementInstanceState();
