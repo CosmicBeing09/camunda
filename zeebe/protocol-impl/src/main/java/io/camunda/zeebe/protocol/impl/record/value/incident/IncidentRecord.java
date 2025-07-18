@@ -81,17 +81,17 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getErrorMessageBuffer() {
-    return errorMessageProp.getValue();
+    return errorMessageProp.getBuffer();
   }
 
   @Override
@@ -101,12 +101,12 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
 
   @Override
   public String getErrorMessage() {
-    return BufferUtil.bufferAsString(errorMessageProp.getValue());
+    return BufferUtil.bufferAsString(errorMessageProp.getBuffer());
   }
 
   @Override
   public String getBpmnProcessId() {
-    return BufferUtil.bufferAsString(bpmnProcessIdProp.getValue());
+    return BufferUtil.bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   public IncidentRecord setBpmnProcessId(final DirectBuffer directBuffer) {
@@ -131,7 +131,7 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
 
   @Override
   public String getElementId() {
-    return BufferUtil.bufferAsString(elementIdProp.getValue());
+    return BufferUtil.bufferAsString(elementIdProp.getBuffer());
   }
 
   public IncidentRecord setElementId(final DirectBuffer elementId) {
@@ -239,7 +239,7 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
 
   @Override
   public String getTenantId() {
-    return BufferUtil.bufferAsString(tenantIdProp.getValue());
+    return BufferUtil.bufferAsString(tenantIdProp.getBuffer());
   }
 
   public IncidentRecord setTenantId(final String tenantId) {

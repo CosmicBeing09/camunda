@@ -56,7 +56,7 @@ public final class TenantRecord extends UnifiedRecordValue implements TenantReco
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public TenantRecord setTenantId(final String tenantId) {
@@ -71,7 +71,7 @@ public final class TenantRecord extends UnifiedRecordValue implements TenantReco
 
   @Override
   public String getName() {
-    return bufferAsString(nameProp.getValue());
+    return bufferAsString(nameProp.getBuffer());
   }
 
   public TenantRecord setName(final String name) {
@@ -86,7 +86,7 @@ public final class TenantRecord extends UnifiedRecordValue implements TenantReco
 
   @Override
   public String getDescription() {
-    return bufferAsString(descriptionProp.getValue());
+    return bufferAsString(descriptionProp.getBuffer());
   }
 
   public TenantRecord setDescription(final String description) {
@@ -101,7 +101,7 @@ public final class TenantRecord extends UnifiedRecordValue implements TenantReco
 
   @Override
   public String getEntityId() {
-    return bufferAsString(entityIdProp.getValue());
+    return bufferAsString(entityIdProp.getBuffer());
   }
 
   public TenantRecord setEntityId(final String entityId) {
@@ -125,11 +125,11 @@ public final class TenantRecord extends UnifiedRecordValue implements TenantReco
 
   @JsonIgnore
   public DirectBuffer getTenantIdBuffer() {
-    return tenantIdProp.getValue();
+    return tenantIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getNameBuffer() {
-    return nameProp.getValue();
+    return nameProp.getBuffer();
   }
 }

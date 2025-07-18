@@ -49,7 +49,7 @@ public class FormMetadataRecord extends UnifiedRecordValue implements FormMetada
 
   @Override
   public String getFormId() {
-    return bufferAsString(formIdProp.getValue());
+    return bufferAsString(formIdProp.getBuffer());
   }
 
   public FormMetadataRecord setFormId(final String formId) {
@@ -69,7 +69,7 @@ public class FormMetadataRecord extends UnifiedRecordValue implements FormMetada
 
   @Override
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public FormMetadataRecord setVersionTag(final String versionTag) {
@@ -89,7 +89,7 @@ public class FormMetadataRecord extends UnifiedRecordValue implements FormMetada
 
   @Override
   public String getResourceName() {
-    return bufferAsString(resourceNameProp.getValue());
+    return bufferAsString(resourceNameProp.getBuffer());
   }
 
   public FormMetadataRecord setResourceName(final String resourceName) {
@@ -129,12 +129,12 @@ public class FormMetadataRecord extends UnifiedRecordValue implements FormMetada
 
   @JsonIgnore
   public DirectBuffer getFormIdBuffer() {
-    return formIdProp.getValue();
+    return formIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   @JsonIgnore
@@ -144,7 +144,7 @@ public class FormMetadataRecord extends UnifiedRecordValue implements FormMetada
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public FormMetadataRecord setTenantId(final String tenantId) {

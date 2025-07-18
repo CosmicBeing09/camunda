@@ -60,7 +60,7 @@ public final class AuthorizationRecord extends UnifiedRecordValue
 
   @Override
   public String getOwnerId() {
-    return bufferAsString(ownerIdProp.getValue());
+    return bufferAsString(ownerIdProp.getBuffer());
   }
 
   public AuthorizationRecord setOwnerId(final String ownerId) {
@@ -75,7 +75,7 @@ public final class AuthorizationRecord extends UnifiedRecordValue
 
   @Override
   public String getResourceId() {
-    return bufferAsString(resourceIdProp.getValue());
+    return bufferAsString(resourceIdProp.getBuffer());
   }
 
   public AuthorizationRecord setResourceId(final String resourceId) {

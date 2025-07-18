@@ -36,7 +36,7 @@ public final class AdHocSubProcessActivityActivationRecord extends UnifiedRecord
 
   @Override
   public String getAdHocSubProcessInstanceKey() {
-    return BufferUtil.bufferAsString(adHocSubProcessInstanceKey.getValue());
+    return BufferUtil.bufferAsString(adHocSubProcessInstanceKey.getBuffer());
   }
 
   public AdHocSubProcessActivityActivationRecord setAdHocSubProcessInstanceKey(
@@ -65,7 +65,7 @@ public final class AdHocSubProcessActivityActivationRecord extends UnifiedRecord
 
   @Override
   public String getTenantId() {
-    return BufferUtil.bufferAsString(tenantId.getValue());
+    return BufferUtil.bufferAsString(tenantId.getBuffer());
   }
 
   public AdHocSubProcessActivityActivationRecord setTenantId(final String tenantId) {

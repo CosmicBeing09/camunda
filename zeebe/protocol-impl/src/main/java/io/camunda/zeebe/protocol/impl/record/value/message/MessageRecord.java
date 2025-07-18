@@ -55,32 +55,32 @@ public final class MessageRecord extends UnifiedRecordValue implements MessageRe
   }
 
   public boolean hasMessageId() {
-    return messageIdProp.getValue().capacity() > 0;
+    return messageIdProp.getBuffer().capacity() > 0;
   }
 
   @JsonIgnore
   public DirectBuffer getCorrelationKeyBuffer() {
-    return correlationKeyProp.getValue();
+    return correlationKeyProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getMessageIdBuffer() {
-    return messageIdProp.getValue();
+    return messageIdProp.getBuffer();
   }
 
   @Override
   public String getName() {
-    return bufferAsString(nameProp.getValue());
+    return bufferAsString(nameProp.getBuffer());
   }
 
   @Override
   public String getCorrelationKey() {
-    return bufferAsString(correlationKeyProp.getValue());
+    return bufferAsString(correlationKeyProp.getBuffer());
   }
 
   @Override
   public String getMessageId() {
-    return bufferAsString(messageIdProp.getValue());
+    return bufferAsString(messageIdProp.getBuffer());
   }
 
   @Override
@@ -135,7 +135,7 @@ public final class MessageRecord extends UnifiedRecordValue implements MessageRe
 
   @JsonIgnore
   public DirectBuffer getNameBuffer() {
-    return nameProp.getValue();
+    return nameProp.getBuffer();
   }
 
   @Override
@@ -155,7 +155,7 @@ public final class MessageRecord extends UnifiedRecordValue implements MessageRe
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public MessageRecord setTenantId(final String tenantId) {

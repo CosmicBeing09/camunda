@@ -71,12 +71,12 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getMessageNameBuffer() {
-    return messageNameProp.getValue();
+    return messageNameProp.getBuffer();
   }
 
   @JsonIgnore
@@ -121,7 +121,7 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   public ProcessMessageSubscriptionRecord setBpmnProcessId(final DirectBuffer bpmnProcessId) {
@@ -136,12 +136,12 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getMessageName() {
-    return bufferAsString(messageNameProp.getValue());
+    return bufferAsString(messageNameProp.getBuffer());
   }
 
   @Override
   public String getCorrelationKey() {
-    return bufferAsString(correlationKeyProp.getValue());
+    return bufferAsString(correlationKeyProp.getBuffer());
   }
 
   public ProcessMessageSubscriptionRecord setCorrelationKey(final DirectBuffer correlationKey) {
@@ -186,17 +186,17 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getCorrelationKeyBuffer() {
-    return correlationKeyProp.getValue();
+    return correlationKeyProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public ProcessMessageSubscriptionRecord setTenantId(final String tenantId) {

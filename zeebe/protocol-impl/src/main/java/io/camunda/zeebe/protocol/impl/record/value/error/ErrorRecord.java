@@ -52,22 +52,22 @@ public final class ErrorRecord extends UnifiedRecordValue implements ErrorRecord
 
   @JsonIgnore
   public DirectBuffer getExceptionMessageBuffer() {
-    return exceptionMessageProp.getValue();
+    return exceptionMessageProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getStacktraceBuffer() {
-    return stacktraceProp.getValue();
+    return stacktraceProp.getBuffer();
   }
 
   @Override
   public String getExceptionMessage() {
-    return BufferUtil.bufferAsString(exceptionMessageProp.getValue());
+    return BufferUtil.bufferAsString(exceptionMessageProp.getBuffer());
   }
 
   @Override
   public String getStacktrace() {
-    return BufferUtil.bufferAsString(stacktraceProp.getValue());
+    return BufferUtil.bufferAsString(stacktraceProp.getBuffer());
   }
 
   @Override

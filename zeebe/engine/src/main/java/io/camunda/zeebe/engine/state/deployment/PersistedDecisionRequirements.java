@@ -75,11 +75,11 @@ public final class PersistedDecisionRequirements extends UnpackedObject implemen
   }
 
   public DirectBuffer getDecisionRequirementsId() {
-    return decisionRequirementsIdProp.getValue();
+    return decisionRequirementsIdProp.getBuffer();
   }
 
   public DirectBuffer getDecisionRequirementsName() {
-    return decisionRequirementsNameProp.getValue();
+    return decisionRequirementsNameProp.getBuffer();
   }
 
   public int getDecisionRequirementsVersion() {
@@ -91,7 +91,7 @@ public final class PersistedDecisionRequirements extends UnpackedObject implemen
   }
 
   public DirectBuffer getResourceName() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public DirectBuffer getChecksum() {
@@ -103,7 +103,7 @@ public final class PersistedDecisionRequirements extends UnpackedObject implemen
   }
 
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public void setTenantId(final String tenantId) {

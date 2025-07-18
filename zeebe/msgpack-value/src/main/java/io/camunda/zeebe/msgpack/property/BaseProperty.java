@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
   protected final StringValue key;
-  protected final T value;
+  protected final T stringValue;
   protected final T defaultValue;
   protected boolean isSet;
 
@@ -34,7 +34,7 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
     Objects.requireNonNull(value);
 
     key = new StringValue(keyString);
-    this.value = value;
+    stringValue = value;
     this.defaultValue = defaultValue;
   }
 
@@ -45,7 +45,7 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
   @Override
   public void reset() {
     isSet = false;
-    value.reset();
+    stringValue.reset();
   }
 
   public boolean hasValue() {
@@ -58,7 +58,7 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
 
   protected T resolveValue() {
     if (isSet) {
-      return value;
+      return stringValue;
     } else if (defaultValue != null) {
       return defaultValue;
     } else {
@@ -72,12 +72,12 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
   }
 
   public void read(final MsgPackReader reader) {
-    value.read(reader);
+    stringValue.read(reader);
     set();
   }
 
   public void write(final MsgPackWriter writer) {
-    T valueToWrite = value;
+    T valueToWrite = stringValue;
     if (!isSet) {
       valueToWrite = defaultValue;
     }
@@ -103,7 +103,7 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
 
   @Override
   public int hashCode() {
-    return Objects.hash(getKey(), value, defaultValue, isSet);
+    return Objects.hash(getKey(), stringValue, defaultValue, isSet);
   }
 
   @Override
@@ -126,7 +126,7 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
     final StringBuilder builder = new StringBuilder();
     builder.append(key.toString());
     builder.append(" => ");
-    builder.append(value.toString());
+    builder.append(stringValue.toString());
     return builder.toString();
   }
 }

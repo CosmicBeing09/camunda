@@ -56,7 +56,7 @@ public final class ProcessInstanceModificationVariableInstruction extends Object
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   @JsonIgnore

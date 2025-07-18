@@ -50,7 +50,7 @@ public final class UserRecord extends UnifiedRecordValue implements UserRecordVa
 
   @Override
   public String getUsername() {
-    return bufferAsString(usernameProp.getValue());
+    return bufferAsString(usernameProp.getBuffer());
   }
 
   public UserRecord setUsername(final String username) {
@@ -65,7 +65,7 @@ public final class UserRecord extends UnifiedRecordValue implements UserRecordVa
 
   @Override
   public String getName() {
-    return bufferAsString(nameProp.getValue());
+    return bufferAsString(nameProp.getBuffer());
   }
 
   public UserRecord setName(final String name) {
@@ -80,7 +80,7 @@ public final class UserRecord extends UnifiedRecordValue implements UserRecordVa
 
   @Override
   public String getEmail() {
-    return bufferAsString(emailProp.getValue());
+    return bufferAsString(emailProp.getBuffer());
   }
 
   public UserRecord setEmail(final String email) {
@@ -95,7 +95,7 @@ public final class UserRecord extends UnifiedRecordValue implements UserRecordVa
 
   @Override
   public String getPassword() {
-    return bufferAsString(passwordProp.getValue());
+    return bufferAsString(passwordProp.getBuffer());
   }
 
   public UserRecord setPassword(final String password) {
@@ -110,21 +110,21 @@ public final class UserRecord extends UnifiedRecordValue implements UserRecordVa
 
   @JsonIgnore
   public DirectBuffer getUsernameBuffer() {
-    return usernameProp.getValue();
+    return usernameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getNameBuffer() {
-    return nameProp.getValue();
+    return nameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getEmailBuffer() {
-    return emailProp.getValue();
+    return emailProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getPasswordBuffer() {
-    return passwordProp.getValue();
+    return passwordProp.getBuffer();
   }
 }

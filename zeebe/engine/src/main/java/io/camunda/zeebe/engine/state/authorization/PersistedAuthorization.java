@@ -66,7 +66,7 @@ public class PersistedAuthorization extends UnpackedObject implements DbValue {
   }
 
   public String getOwnerId() {
-    return bufferAsString(ownerIdProp.getValue());
+    return bufferAsString(ownerIdProp.getBuffer());
   }
 
   public PersistedAuthorization setOwnerId(final String ownerId) {
@@ -84,7 +84,7 @@ public class PersistedAuthorization extends UnpackedObject implements DbValue {
   }
 
   public String getResourceId() {
-    return bufferAsString(resourceIdProp.getValue());
+    return bufferAsString(resourceIdProp.getBuffer());
   }
 
   public PersistedAuthorization setResourceId(final String resourceId) {

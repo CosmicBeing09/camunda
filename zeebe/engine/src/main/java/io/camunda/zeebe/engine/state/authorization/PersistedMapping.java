@@ -46,7 +46,7 @@ public class PersistedMapping extends UnpackedObject implements DbValue {
   }
 
   public String getClaimName() {
-    return BufferUtil.bufferAsString(claimNameProp.getValue());
+    return BufferUtil.bufferAsString(claimNameProp.getBuffer());
   }
 
   public PersistedMapping setClaimName(final String claimName) {
@@ -55,7 +55,7 @@ public class PersistedMapping extends UnpackedObject implements DbValue {
   }
 
   public String getClaimValue() {
-    return BufferUtil.bufferAsString(claimValueProp.getValue());
+    return BufferUtil.bufferAsString(claimValueProp.getBuffer());
   }
 
   public PersistedMapping setClaimValue(final String claimValue) {
@@ -64,7 +64,7 @@ public class PersistedMapping extends UnpackedObject implements DbValue {
   }
 
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   public PersistedMapping setName(final String name) {
@@ -73,7 +73,7 @@ public class PersistedMapping extends UnpackedObject implements DbValue {
   }
 
   public String getMappingId() {
-    return BufferUtil.bufferAsString(mappingIdProp.getValue());
+    return BufferUtil.bufferAsString(mappingIdProp.getBuffer());
   }
 
   public PersistedMapping setMappingId(final String mappingId) {

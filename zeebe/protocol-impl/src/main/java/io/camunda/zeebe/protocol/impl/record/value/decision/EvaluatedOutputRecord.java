@@ -31,7 +31,7 @@ public final class EvaluatedOutputRecord extends UnifiedRecordValue
 
   @Override
   public String getOutputId() {
-    return bufferAsString(outputIdProp.getValue());
+    return bufferAsString(outputIdProp.getBuffer());
   }
 
   public EvaluatedOutputRecord setOutputId(final String outputId) {
@@ -41,7 +41,7 @@ public final class EvaluatedOutputRecord extends UnifiedRecordValue
 
   @Override
   public String getOutputName() {
-    return bufferAsString(outputNameProp.getValue());
+    return bufferAsString(outputNameProp.getBuffer());
   }
 
   public EvaluatedOutputRecord setOutputName(final String outputName) {
@@ -66,11 +66,11 @@ public final class EvaluatedOutputRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getOutputIdBuffer() {
-    return outputIdProp.getValue();
+    return outputIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getOutputNameBuffer() {
-    return outputNameProp.getValue();
+    return outputNameProp.getBuffer();
   }
 }

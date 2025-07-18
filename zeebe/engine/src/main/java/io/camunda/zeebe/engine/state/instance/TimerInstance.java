@@ -70,7 +70,7 @@ public final class TimerInstance extends UnpackedObject implements DbValue, Tena
   }
 
   public DirectBuffer getHandlerNodeId() {
-    return handlerNodeIdProp.getValue();
+    return handlerNodeIdProp.getBuffer();
   }
 
   public void setHandlerNodeId(final DirectBuffer handlerNodeId) {
@@ -111,7 +111,7 @@ public final class TimerInstance extends UnpackedObject implements DbValue, Tena
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public TimerInstance setTenantId(final String tenantId) {

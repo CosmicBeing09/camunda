@@ -31,7 +31,7 @@ public final class DocumentProperty extends BaseProperty<DocumentValue> {
 
   public void setValue(final DirectBuffer data, final int offset, final int length) {
     try {
-      value.wrap(data, offset, length);
+      stringValue.wrap(data, offset, length);
       isSet = true;
     } catch (final Exception e) {
       throw new MsgpackPropertyException(key, e);

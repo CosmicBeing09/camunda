@@ -61,7 +61,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
 
   @Override
   public String getResourceId() {
-    return BufferUtil.bufferAsString(resourceIdProp.getValue());
+    return BufferUtil.bufferAsString(resourceIdProp.getBuffer());
   }
 
   @Override
@@ -76,7 +76,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
 
   @Override
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public ResourceRecord setVersionTag(final String versionTag) {
@@ -101,7 +101,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
 
   @Override
   public String getResourceName() {
-    return BufferUtil.bufferAsString(resourceNameProp.getValue());
+    return BufferUtil.bufferAsString(resourceNameProp.getBuffer());
   }
 
   @Override
@@ -151,12 +151,12 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
 
   @JsonIgnore
   public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getResourceIdBuffer() {
-    return resourceIdProp.getValue();
+    return resourceIdProp.getBuffer();
   }
 
   @Override
@@ -173,7 +173,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public ResourceRecord setTenantId(final String tenantId) {

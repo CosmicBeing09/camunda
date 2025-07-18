@@ -64,7 +64,7 @@ public final class PersistedForm extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getFormId() {
-    return formIdProp.getValue();
+    return formIdProp.getBuffer();
   }
 
   public int getVersion() {
@@ -72,7 +72,7 @@ public final class PersistedForm extends UnpackedObject implements DbValue {
   }
 
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public long getFormKey() {
@@ -80,7 +80,7 @@ public final class PersistedForm extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getResourceName() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public DirectBuffer getResource() {
@@ -92,7 +92,7 @@ public final class PersistedForm extends UnpackedObject implements DbValue {
   }
 
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public boolean hasDeploymentKey() {

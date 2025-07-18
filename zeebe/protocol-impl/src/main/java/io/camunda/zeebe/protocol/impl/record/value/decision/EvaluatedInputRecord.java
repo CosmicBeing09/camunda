@@ -30,7 +30,7 @@ public final class EvaluatedInputRecord extends UnifiedRecordValue implements Ev
 
   @Override
   public String getInputId() {
-    return bufferAsString(inputIdProp.getValue());
+    return bufferAsString(inputIdProp.getBuffer());
   }
 
   public EvaluatedInputRecord setInputId(final String inputId) {
@@ -40,7 +40,7 @@ public final class EvaluatedInputRecord extends UnifiedRecordValue implements Ev
 
   @Override
   public String getInputName() {
-    return bufferAsString(inputNameProp.getValue());
+    return bufferAsString(inputNameProp.getBuffer());
   }
 
   public EvaluatedInputRecord setInputName(final String inputName) {
@@ -65,11 +65,11 @@ public final class EvaluatedInputRecord extends UnifiedRecordValue implements Ev
 
   @JsonIgnore
   public DirectBuffer getInputIdBuffer() {
-    return inputIdProp.getValue();
+    return inputIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getInputNameBuffer() {
-    return inputNameProp.getValue();
+    return inputNameProp.getBuffer();
   }
 }

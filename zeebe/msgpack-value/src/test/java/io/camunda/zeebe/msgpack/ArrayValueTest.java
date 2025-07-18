@@ -485,7 +485,7 @@ public final class ArrayValueTest {
     }
 
     public String getBar() {
-      return BufferUtil.bufferAsString(barProp.getValue());
+      return BufferUtil.bufferAsString(barProp.getBuffer());
     }
 
     void setBar(final String bar) {

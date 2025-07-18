@@ -61,7 +61,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
 
   @Override
   public String getFormId() {
-    return BufferUtil.bufferAsString(formIdProp.getValue());
+    return BufferUtil.bufferAsString(formIdProp.getBuffer());
   }
 
   public FormRecord setFormId(final String formId) {
@@ -86,7 +86,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
 
   @Override
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public FormRecord setVersionTag(final String versionTag) {
@@ -106,7 +106,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
 
   @Override
   public String getResourceName() {
-    return BufferUtil.bufferAsString(resourceNameProp.getValue());
+    return BufferUtil.bufferAsString(resourceNameProp.getBuffer());
   }
 
   public FormRecord setResourceName(final String resourceName) {
@@ -160,7 +160,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
 
   @JsonIgnore
   public DirectBuffer getFormIdBuffer() {
-    return formIdProp.getValue();
+    return formIdProp.getBuffer();
   }
 
   @Override
@@ -177,7 +177,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
 
   @JsonIgnore
   public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public FormRecord setFormId(final DirectBuffer formId, final int offset, final int length) {
@@ -197,7 +197,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public FormRecord setTenantId(final String tenantId) {

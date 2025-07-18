@@ -106,7 +106,7 @@ public class UnpackedObjectTest {
       assertThat(removedProperty.getValue())
           .describedAs("value of removed property after reading")
           .isEqualTo(42);
-      assertThat(BufferUtil.bufferAsString(sharedProperty.getValue())).isEqualTo("updated");
+      assertThat(BufferUtil.bufferAsString(sharedProperty.getBuffer())).isEqualTo("updated");
     }
 
     @Test

@@ -211,7 +211,7 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getInterruptingElementId() {
-    return interruptingEventKeyProp.getValue();
+    return interruptingEventKeyProp.getBuffer();
   }
 
   public void setInterruptingElementId(final DirectBuffer elementId) {

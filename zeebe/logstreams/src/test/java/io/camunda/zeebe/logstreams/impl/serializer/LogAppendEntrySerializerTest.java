@@ -140,7 +140,7 @@ final class LogAppendEntrySerializerTest {
     }
 
     private String getFoo() {
-      return BufferUtil.bufferAsString(foo.getValue());
+      return BufferUtil.bufferAsString(foo.getBuffer());
     }
 
     private TestValue setFoo(final String value) {

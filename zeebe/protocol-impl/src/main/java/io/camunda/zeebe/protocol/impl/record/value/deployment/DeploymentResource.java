@@ -41,7 +41,7 @@ public final class DeploymentResource extends UnpackedObject
 
   @Override
   public String getResourceName() {
-    return BufferUtil.bufferAsString(resourceNameProp.getValue());
+    return BufferUtil.bufferAsString(resourceNameProp.getBuffer());
   }
 
   public DeploymentResource setResourceName(final String resourceName) {
@@ -69,7 +69,7 @@ public final class DeploymentResource extends UnpackedObject
 
   @JsonIgnore
   public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public DeploymentResource setResource(

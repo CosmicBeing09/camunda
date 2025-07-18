@@ -59,7 +59,7 @@ public final class JobResultCorrections extends UnpackedObject
 
   @JsonIgnore
   public DirectBuffer getAssigneeBuffer() {
-    return assigneeProp.getValue();
+    return assigneeProp.getBuffer();
   }
 
   @Override
@@ -138,11 +138,11 @@ public final class JobResultCorrections extends UnpackedObject
 
   @JsonIgnore
   public DirectBuffer getDueDateBuffer() {
-    return dueDateProp.getValue();
+    return dueDateProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getFollowUpDateBuffer() {
-    return followUpDateProp.getValue();
+    return followUpDateProp.getBuffer();
   }
 }

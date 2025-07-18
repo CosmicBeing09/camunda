@@ -65,7 +65,7 @@ public final class PersistedProcess extends UnpackedObject implements DbValue {
   }
 
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public long getKey() {
@@ -73,11 +73,11 @@ public final class PersistedProcess extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getBpmnProcessId() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   public DirectBuffer getResourceName() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public DirectBuffer getResource() {
@@ -94,7 +94,7 @@ public final class PersistedProcess extends UnpackedObject implements DbValue {
   }
 
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public PersistedProcess setTenantId(final String tenantId) {

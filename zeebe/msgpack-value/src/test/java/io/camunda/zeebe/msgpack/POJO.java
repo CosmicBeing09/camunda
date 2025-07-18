@@ -63,7 +63,7 @@ public final class POJO extends UnpackedObject {
   }
 
   public DirectBuffer getString() {
-    return stringProp.getValue();
+    return stringProp.getBuffer();
   }
 
   public void setString(final DirectBuffer buffer) {

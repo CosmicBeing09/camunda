@@ -322,7 +322,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public String getAssignee() {
-    return bufferAsString(assigneeProp.getValue());
+    return bufferAsString(assigneeProp.getBuffer());
   }
 
   @Override
@@ -343,12 +343,12 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public String getDueDate() {
-    return bufferAsString(dueDateProp.getValue());
+    return bufferAsString(dueDateProp.getBuffer());
   }
 
   @Override
   public String getFollowUpDate() {
-    return bufferAsString(followUpDateProp.getValue());
+    return bufferAsString(followUpDateProp.getBuffer());
   }
 
   @Override
@@ -366,12 +366,12 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public String getAction() {
-    return bufferAsString(actionProp.getValue());
+    return bufferAsString(actionProp.getBuffer());
   }
 
   @Override
   public String getExternalFormReference() {
-    return bufferAsString(externalFormReferenceProp.getValue());
+    return bufferAsString(externalFormReferenceProp.getBuffer());
   }
 
   @Override
@@ -386,7 +386,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public String getElementId() {
-    return bufferAsString(elementIdProp.getValue());
+    return bufferAsString(elementIdProp.getBuffer());
   }
 
   @Override
@@ -396,7 +396,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   @Override
@@ -545,7 +545,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   }
 
   public String getDeniedReason() {
-    return bufferAsString(deniedReasonProp.getValue());
+    return bufferAsString(deniedReasonProp.getBuffer());
   }
 
   public UserTaskRecord setDeniedReason(final String deniedReason) {
@@ -590,7 +590,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public UserTaskRecord setTenantId(final String tenantId) {
@@ -671,17 +671,17 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @JsonIgnore
   public DirectBuffer getAssigneeBuffer() {
-    return assigneeProp.getValue();
+    return assigneeProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getDueDateBuffer() {
-    return dueDateProp.getValue();
+    return dueDateProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getFollowUpDateBuffer() {
-    return followUpDateProp.getValue();
+    return followUpDateProp.getBuffer();
   }
 
   @JsonIgnore
@@ -691,32 +691,32 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getExternalFormReferenceBuffer() {
-    return externalFormReferenceProp.getValue();
+    return externalFormReferenceProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getTenantIdBuffer() {
-    return tenantIdProp.getValue();
+    return tenantIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getActionBuffer() {
-    return actionProp.getValue();
+    return actionProp.getBuffer();
   }
 
   @JsonIgnore
   public String getActionOrDefault(final String defaultAction) {
-    final String action = bufferAsString(actionProp.getValue());
+    final String action = bufferAsString(actionProp.getBuffer());
     return action.isEmpty() ? defaultAction : action;
   }
 

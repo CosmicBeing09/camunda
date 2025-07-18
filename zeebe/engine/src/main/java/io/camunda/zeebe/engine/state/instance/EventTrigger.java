@@ -44,7 +44,7 @@ public final class EventTrigger extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getElementId() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   public EventTrigger setElementId(final DirectBuffer elementId) {

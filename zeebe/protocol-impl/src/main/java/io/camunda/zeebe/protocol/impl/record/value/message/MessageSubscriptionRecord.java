@@ -63,12 +63,12 @@ public final class MessageSubscriptionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getCorrelationKeyBuffer() {
-    return correlationKeyProp.getValue();
+    return correlationKeyProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getMessageNameBuffer() {
-    return messageNameProp.getValue();
+    return messageNameProp.getBuffer();
   }
 
   @Override
@@ -88,17 +88,17 @@ public final class MessageSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   @Override
   public String getMessageName() {
-    return bufferAsString(messageNameProp.getValue());
+    return bufferAsString(messageNameProp.getBuffer());
   }
 
   @Override
   public String getCorrelationKey() {
-    return bufferAsString(correlationKeyProp.getValue());
+    return bufferAsString(correlationKeyProp.getBuffer());
   }
 
   public MessageSubscriptionRecord setCorrelationKey(final DirectBuffer correlationKey) {
@@ -143,7 +143,7 @@ public final class MessageSubscriptionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @Override
@@ -163,7 +163,7 @@ public final class MessageSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public MessageSubscriptionRecord setTenantId(final String tenantId) {

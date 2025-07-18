@@ -61,7 +61,7 @@ public final class EvaluatedDecisionRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionId() {
-    return bufferAsString(decisionIdProp.getValue());
+    return bufferAsString(decisionIdProp.getBuffer());
   }
 
   public EvaluatedDecisionRecord setDecisionId(final String decisionId) {
@@ -71,7 +71,7 @@ public final class EvaluatedDecisionRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionName() {
-    return bufferAsString(decisionNameProp.getValue());
+    return bufferAsString(decisionNameProp.getBuffer());
   }
 
   public EvaluatedDecisionRecord setDecisionName(final String decisionName) {
@@ -101,7 +101,7 @@ public final class EvaluatedDecisionRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionType() {
-    return bufferAsString(decisionTypeProp.getValue());
+    return bufferAsString(decisionTypeProp.getBuffer());
   }
 
   public EvaluatedDecisionRecord setDecisionType(final String decisionType) {
@@ -164,22 +164,22 @@ public final class EvaluatedDecisionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getDecisionIdBuffer() {
-    return decisionIdProp.getValue();
+    return decisionIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getDecisionNameBuffer() {
-    return decisionNameProp.getValue();
+    return decisionNameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getDecisionTypeBuffer() {
-    return decisionTypeProp.getValue();
+    return decisionTypeProp.getBuffer();
   }
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public EvaluatedDecisionRecord setTenantId(final String tenantId) {

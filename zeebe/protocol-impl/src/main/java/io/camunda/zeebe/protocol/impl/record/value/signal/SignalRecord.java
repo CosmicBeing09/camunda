@@ -39,7 +39,7 @@ public final class SignalRecord extends UnifiedRecordValue implements SignalReco
 
   @Override
   public String getSignalName() {
-    return bufferAsString(signalNameProp.getValue());
+    return bufferAsString(signalNameProp.getBuffer());
   }
 
   public SignalRecord setSignalName(final String signalName) {
@@ -54,7 +54,7 @@ public final class SignalRecord extends UnifiedRecordValue implements SignalReco
 
   @JsonIgnore
   public DirectBuffer getSignalNameBuffer() {
-    return signalNameProp.getValue();
+    return signalNameProp.getBuffer();
   }
 
   @Override
@@ -74,7 +74,7 @@ public final class SignalRecord extends UnifiedRecordValue implements SignalReco
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public SignalRecord setTenantId(final String tenantId) {

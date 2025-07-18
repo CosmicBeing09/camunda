@@ -24,7 +24,7 @@ public final class BooleanProperty extends BaseProperty<BooleanValue> {
   }
 
   public void setValue(final boolean value) {
-    this.value.setValue(value);
+    stringValue.setValue(value);
     isSet = true;
   }
 }

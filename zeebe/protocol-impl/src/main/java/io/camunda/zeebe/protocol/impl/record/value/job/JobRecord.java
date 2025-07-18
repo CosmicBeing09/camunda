@@ -152,17 +152,17 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @JsonIgnore
   public DirectBuffer getErrorMessageBuffer() {
-    return errorMessageProp.getValue();
+    return errorMessageProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getErrorCodeBuffer() {
-    return errorCodeProp.getValue();
+    return errorCodeProp.getBuffer();
   }
 
   @Override
   public String getType() {
-    return bufferAsString(typeProp.getValue());
+    return bufferAsString(typeProp.getBuffer());
   }
 
   @Override
@@ -172,7 +172,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @Override
   public String getWorker() {
-    return bufferAsString(workerProp.getValue());
+    return bufferAsString(workerProp.getBuffer());
   }
 
   @Override
@@ -202,17 +202,17 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @Override
   public String getErrorMessage() {
-    return bufferAsString(errorMessageProp.getValue());
+    return bufferAsString(errorMessageProp.getBuffer());
   }
 
   @Override
   public String getErrorCode() {
-    return bufferAsString(errorCodeProp.getValue());
+    return bufferAsString(errorCodeProp.getBuffer());
   }
 
   @Override
   public String getElementId() {
-    return bufferAsString(elementIdProp.getValue());
+    return bufferAsString(elementIdProp.getBuffer());
   }
 
   @Override
@@ -222,7 +222,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   @Override
@@ -385,7 +385,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @JsonIgnore
   public DirectBuffer getTypeBuffer() {
-    return typeProp.getValue();
+    return typeProp.getBuffer();
   }
 
   @Override
@@ -405,12 +405,12 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @JsonIgnore
   public DirectBuffer getWorkerBuffer() {
-    return workerProp.getValue();
+    return workerProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @Override
@@ -425,7 +425,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   public JobRecord setElementId(final DirectBuffer activityId, final int offset, final int length) {
@@ -450,7 +450,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public JobRecord setTenantId(final String tenantId) {

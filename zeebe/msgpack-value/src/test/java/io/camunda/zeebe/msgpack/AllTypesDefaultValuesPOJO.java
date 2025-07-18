@@ -65,7 +65,7 @@ public final class AllTypesDefaultValuesPOJO extends UnpackedObject {
   }
 
   public DirectBuffer getString() {
-    return stringProp.getValue();
+    return stringProp.getBuffer();
   }
 
   public DirectBuffer getPacked() {

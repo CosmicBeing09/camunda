@@ -49,7 +49,7 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
 
   @Override
   public String getResourceId() {
-    return bufferAsString(resourceIdProp.getValue());
+    return bufferAsString(resourceIdProp.getBuffer());
   }
 
   @Override
@@ -64,7 +64,7 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
 
   @Override
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public ResourceMetadataRecord setVersionTag(final String versionTag) {
@@ -89,17 +89,12 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
 
   @Override
   public String getResourceName() {
-    return bufferAsString(resourceNameProp.getValue());
+    return bufferAsString(resourceNameProp.getBuffer());
   }
 
   public ResourceMetadataRecord setResourceName(final String resourceName) {
     resourceNameProp.setValue(resourceName);
     return this;
-  }
-
-  @JsonIgnore
-  public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
   }
 
   @Override
@@ -122,19 +117,24 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
     return this;
   }
 
-  public ResourceMetadataRecord setResourceId(final String resourceId) {
-    resourceIdProp.setValue(resourceId);
-    return this;
-  }
-
   public ResourceMetadataRecord setResourceKey(final long resourceKey) {
     resourceKeyProp.setValue(resourceKey);
     return this;
   }
 
+  public ResourceMetadataRecord setResourceId(final String resourceId) {
+    resourceIdProp.setValue(resourceId);
+    return this;
+  }
+
+  @JsonIgnore
+  public DirectBuffer getResourceNameBuffer() {
+    return resourceNameProp.getBuffer();
+  }
+
   @JsonIgnore
   public DirectBuffer getResourceIdBuffer() {
-    return resourceIdProp.getValue();
+    return resourceIdProp.getBuffer();
   }
 
   @JsonIgnore
@@ -144,7 +144,7 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public ResourceMetadataRecord setTenantId(final String tenantId) {
