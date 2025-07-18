@@ -23,11 +23,11 @@ public class UserTaskReader extends AbstractEntityReader<UserTaskEntity> {
 
   private static final Logger LOG = LoggerFactory.getLogger(UserTaskReader.class);
 
-  private final UserTaskMapper userTaskMapper;
+  private final UserTaskMapper mapper;
 
-  public UserTaskReader(final UserTaskMapper userTaskMapper) {
+  public UserTaskReader(final UserTaskMapper mapper) {
     super(UserTaskSearchColumn.values());
-    this.userTaskMapper = userTaskMapper;
+    this.mapper = mapper;
   }
 
   public Optional<UserTaskEntity> findOne(final long userTaskKey) {
@@ -43,9 +43,9 @@ public class UserTaskReader extends AbstractEntityReader<UserTaskEntity> {
             b -> b.filter(query.filter()).sort(dbSort).page(convertPaging(dbSort, query.page())));
 
     LOG.trace("[RDBMS DB] Search for users with filter {}", dbQuery);
-    final var totalHits = userTaskMapper.count(dbQuery);
+    final var totalHits = mapper.count(dbQuery);
     final var hits =
-        userTaskMapper.search(dbQuery).stream().map(UserTaskEntityMapper::toEntity).toList();
+        mapper.search(dbQuery).stream().map(UserTaskEntityMapper::toEntity).toList();
     return buildSearchQueryResult(totalHits, hits, dbSort);
   }
 }
