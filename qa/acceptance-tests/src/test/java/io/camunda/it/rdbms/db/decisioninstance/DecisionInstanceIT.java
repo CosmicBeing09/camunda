@@ -81,10 +81,10 @@ public class DecisionInstanceIT {
     final var searchResult =
         decisionInstanceReader.search(
             DecisionInstanceQuery.of(
-                b ->
-                    b.filter(
-                            f ->
-                                f.decisionDefinitionKeys(
+                queryBuilder ->
+                    queryBuilder.filter(
+                            filterBuilder ->
+                                filterBuilder.decisionDefinitionKeys(
                                     decisionDefinition.decisionDefinitionKey()))
                         .sort(s -> s.evaluationDate().asc().decisionDefinitionName().asc())
                         .page(p -> p.from(0).size(5))));
