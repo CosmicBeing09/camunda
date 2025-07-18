@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperation
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationItem;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationLifecycleManagementRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceMigrationPlan;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationPlan;
 import io.camunda.zeebe.protocol.impl.record.value.clock.ClockRecord;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
@@ -3288,7 +3288,7 @@ final class JsonSerializableToJsonTest {
                     .setModificationPlan(
                         new BatchOperationProcessInstanceModificationPlan()
                             .addMoveInstruction(
-                                new BatchOperationProcessInstanceModificationMoveInstruction()
+                                new BatchOperationProcessInstanceModificationMoveRequest()
                                     .setSourceElementId("sourceTask")
                                     .setTargetElementId("targetTask")))
                     .setAuthentication(

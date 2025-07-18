@@ -36,7 +36,7 @@ import io.camunda.zeebe.gateway.impl.broker.request.BrokerMigrateProcessInstance
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerModifyProcessInstanceRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceMigrationPlan;
-import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveInstruction;
+import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationMoveRequest;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationProcessInstanceModificationPlan;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationStartInstruction;
@@ -326,5 +326,5 @@ public final class ProcessInstanceServices
 
   public record ProcessInstanceModifyBatchOperationRequest(
       ProcessInstanceFilter filter,
-      List<BatchOperationProcessInstanceModificationMoveInstruction> moveInstructions) {}
+      List<BatchOperationProcessInstanceModificationMoveRequest> moveInstructions) {}
 }
