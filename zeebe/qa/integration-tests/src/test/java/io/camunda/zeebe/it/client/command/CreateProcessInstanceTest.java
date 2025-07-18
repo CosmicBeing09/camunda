@@ -65,9 +65,9 @@ public final class CreateProcessInstanceTest {
         getCommand(client, useRest).bpmnProcessId(processId).latestVersion().send().join();
 
     // then
-    assertThat(processInstance.getBpmnProcessId()).isEqualTo(processId);
+    assertThat(processInstance.getProcessId()).isEqualTo(processId);
     assertThat(processInstance.getVersion()).isEqualTo(2);
-    assertThat(processInstance.getProcessDefinitionKey()).isEqualTo(secondProcessDefinitionKey);
+    assertThat(processInstance.getDefinitionKey()).isEqualTo(secondProcessDefinitionKey);
   }
 
   @ParameterizedTest
@@ -82,9 +82,9 @@ public final class CreateProcessInstanceTest {
         getCommand(client, useRest).bpmnProcessId(processId).version(1).send().join();
 
     // then instance is created of first process version
-    assertThat(processInstance.getBpmnProcessId()).isEqualTo(processId);
+    assertThat(processInstance.getProcessId()).isEqualTo(processId);
     assertThat(processInstance.getVersion()).isEqualTo(1);
-    assertThat(processInstance.getProcessDefinitionKey()).isEqualTo(firstProcessDefinitionKey);
+    assertThat(processInstance.getDefinitionKey()).isEqualTo(firstProcessDefinitionKey);
   }
 
   @ParameterizedTest
@@ -98,9 +98,9 @@ public final class CreateProcessInstanceTest {
         getCommand(client, useRest).processDefinitionKey(firstProcessDefinitionKey).send().join();
 
     // then
-    assertThat(processInstance.getBpmnProcessId()).isEqualTo(processId);
+    assertThat(processInstance.getProcessId()).isEqualTo(processId);
     assertThat(processInstance.getVersion()).isEqualTo(1);
-    assertThat(processInstance.getProcessDefinitionKey()).isEqualTo(firstProcessDefinitionKey);
+    assertThat(processInstance.getDefinitionKey()).isEqualTo(firstProcessDefinitionKey);
   }
 
   @ParameterizedTest

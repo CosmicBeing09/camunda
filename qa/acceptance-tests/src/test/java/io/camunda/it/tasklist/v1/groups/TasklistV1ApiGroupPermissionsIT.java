@@ -121,7 +121,7 @@ public class TasklistV1ApiGroupPermissionsIT {
             .latestVersion()
             .send()
             .join();
-    processDefinitionKey = processInstanceEvent.getProcessDefinitionKey();
+    processDefinitionKey = processInstanceEvent.getDefinitionKey();
     await()
         .atMost(CamundaMultiDBExtension.TIMEOUT_DATA_AVAILABILITY)
         .ignoreExceptions()

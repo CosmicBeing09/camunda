@@ -67,9 +67,9 @@ public class ZeebeIncidentImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(deployedInstance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(deployedInstance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(deployedInstance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(deployedInstance.getBpmnProcessId());
+                  .isEqualTo(deployedInstance.getProcessId());
               assertThat(savedInstance.getProcessDefinitionVersion())
                   .isEqualTo(String.valueOf(deployedInstance.getVersion()));
               assertThat(savedInstance.getDataSource().getName())
@@ -266,7 +266,7 @@ public class ZeebeIncidentImportIT extends AbstractCCSMIT {
             .orElse(null);
     final IncidentDto incident = new IncidentDto();
     incident.setId(String.valueOf(createdRecord.getKey()));
-    incident.setDefinitionKey(deployedInstance.getBpmnProcessId());
+    incident.setDefinitionKey(deployedInstance.getProcessId());
     incident.setDefinitionVersion(String.valueOf(deployedInstance.getVersion()));
     incident.setTenantId(ZEEBE_DEFAULT_TENANT_ID);
     incident.setProcessInstanceId(null);

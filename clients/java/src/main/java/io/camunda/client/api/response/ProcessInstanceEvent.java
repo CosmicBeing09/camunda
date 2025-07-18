@@ -20,10 +20,10 @@ import io.camunda.client.api.ExperimentalApi;
 public interface ProcessInstanceEvent {
 
   /** Key of the process which this instance was created for */
-  long getProcessDefinitionKey();
+  long getDefinitionKey();
 
   /** BPMN process id of the process which this instance was created for */
-  String getBpmnProcessId();
+  String getProcessId();
 
   /** Version of the process which this instance was created for */
   int getVersion();

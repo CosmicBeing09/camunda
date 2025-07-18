@@ -45,12 +45,12 @@ public final class CreateProcessInstanceResponseImpl implements ProcessInstanceE
   }
 
   @Override
-  public long getProcessDefinitionKey() {
+  public long getDefinitionKey() {
     return processDefinitionKey;
   }
 
   @Override
-  public String getBpmnProcessId() {
+  public String getProcessId() {
     return bpmnProcessId;
   }
 

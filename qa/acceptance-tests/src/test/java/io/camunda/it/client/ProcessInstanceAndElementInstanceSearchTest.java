@@ -126,11 +126,11 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final String bpmnProcessId = "service_tasks_v1";
     final ProcessInstanceEvent processInstanceEvent =
         PROCESS_INSTANCES.stream()
-            .filter(p -> Objects.equals(bpmnProcessId, p.getBpmnProcessId()))
+            .filter(p -> Objects.equals(bpmnProcessId, p.getProcessId()))
             .findFirst()
             .orElseThrow();
     final long processInstanceKey = processInstanceEvent.getProcessInstanceKey();
-    final long processDefinitionKey = processInstanceEvent.getProcessDefinitionKey();
+    final long processDefinitionKey = processInstanceEvent.getDefinitionKey();
 
     // when
     final var result = camundaClient.newProcessInstanceGetRequest(processInstanceKey).send().join();
@@ -188,7 +188,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     // given
     final List<String> expectedBpmnProcessIds =
         new ArrayList<>(
-            PROCESS_INSTANCES.stream().map(ProcessInstanceEvent::getBpmnProcessId).toList());
+            PROCESS_INSTANCES.stream().map(ProcessInstanceEvent::getProcessId).toList());
     expectedBpmnProcessIds.add("child_process_v1");
 
     // when
@@ -286,7 +286,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final String bpmnProcessId = "service_tasks_v1";
     final long processInstanceKey =
         PROCESS_INSTANCES.stream()
-            .filter(p -> Objects.equals(bpmnProcessId, p.getBpmnProcessId()))
+            .filter(p -> Objects.equals(bpmnProcessId, p.getProcessId()))
             .findFirst()
             .orElseThrow()
             .getProcessInstanceKey();
@@ -310,7 +310,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final String bpmnProcessId = "service_tasks_v1";
     final Set<Long> processInstanceKeys =
         PROCESS_INSTANCES.stream()
-            .filter(p -> Objects.equals(bpmnProcessId, p.getBpmnProcessId()))
+            .filter(p -> Objects.equals(bpmnProcessId, p.getProcessId()))
             .map(ProcessInstanceEvent::getProcessInstanceKey)
             .collect(Collectors.toSet());
 
@@ -335,7 +335,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final String bpmnProcessId = "service_tasks";
     final List<Long> processInstanceKeys =
         PROCESS_INSTANCES.stream()
-            .filter(p -> p.getBpmnProcessId().startsWith(bpmnProcessId))
+            .filter(p -> p.getProcessId().startsWith(bpmnProcessId))
             .map(ProcessInstanceEvent::getProcessInstanceKey)
             .toList();
 
@@ -449,11 +449,11 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final String bpmnProcessId = "service_tasks_v1";
     final ProcessInstanceEvent processInstanceEvent =
         PROCESS_INSTANCES.stream()
-            .filter(p -> Objects.equals(bpmnProcessId, p.getBpmnProcessId()))
+            .filter(p -> Objects.equals(bpmnProcessId, p.getProcessId()))
             .findFirst()
             .orElseThrow();
     final long processInstanceKey = processInstanceEvent.getProcessInstanceKey();
-    final long processDefinitionKey = processInstanceEvent.getProcessDefinitionKey();
+    final long processDefinitionKey = processInstanceEvent.getDefinitionKey();
 
     // when
     final var result =
@@ -735,7 +735,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     // given
     final long parentProcessInstanceKey =
         PROCESS_INSTANCES.stream()
-            .filter(p -> Objects.equals("parent_process_v1", p.getBpmnProcessId()))
+            .filter(p -> Objects.equals("parent_process_v1", p.getProcessId()))
             .findFirst()
             .orElseThrow()
             .getProcessInstanceKey();
@@ -759,7 +759,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     // given
     final List<String> expectedBpmnProcessIds =
         new ArrayList<>(
-            PROCESS_INSTANCES.stream().map(ProcessInstanceEvent::getBpmnProcessId).toList());
+            PROCESS_INSTANCES.stream().map(ProcessInstanceEvent::getProcessId).toList());
     expectedBpmnProcessIds.add("child_process_v1");
     expectedBpmnProcessIds.sort(Comparator.reverseOrder());
 
