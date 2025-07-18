@@ -50,11 +50,11 @@ public class CamundaRuntimeConfiguration {
     return imageName;
   }
 
-  public void setCamundaDockerImageName(final String camundaDockerImageName) {
+  public void setImageName(final String camundaDockerImageName) {
     imageName = camundaDockerImageName;
   }
 
-  public Map<String, String> getCamundaEnvVars() {
+  public Map<String, String> getEnvVars() {
     return envVars;
   }
 

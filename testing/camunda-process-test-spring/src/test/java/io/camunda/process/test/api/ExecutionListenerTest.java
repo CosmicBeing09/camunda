@@ -301,7 +301,7 @@ public class ExecutionListenerTest {
     final CamundaRuntimeConfiguration runtimeConfiguration =
         new CamundaRuntimeConfiguration();
     runtimeConfiguration.setVersion("8.6.0-custom");
-    runtimeConfiguration.setCamundaDockerImageName("custom-camunda");
+    runtimeConfiguration.setImageName("custom-camunda");
     runtimeConfiguration.setCamundaEnvVars(camundaEnvVars);
     runtimeConfiguration.setCamundaExposedPorts(List.of(100, 200));
 

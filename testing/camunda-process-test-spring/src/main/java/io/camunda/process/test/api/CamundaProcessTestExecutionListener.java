@@ -228,7 +228,7 @@ public class CamundaProcessTestExecutionListener implements TestExecutionListene
     runtimeBuilder
         .withCamundaDockerImageVersion(runtimeConfiguration.getVersion())
         .withCamundaDockerImageName(runtimeConfiguration.getImageName())
-        .withCamundaEnv(runtimeConfiguration.getCamundaEnvVars());
+        .withCamundaEnv(runtimeConfiguration.getEnvVars());
 
     runtimeConfiguration
         .getCamundaExposedPorts()
