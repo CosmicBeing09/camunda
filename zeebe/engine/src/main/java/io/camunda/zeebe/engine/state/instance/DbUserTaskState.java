@@ -51,9 +51,9 @@ public class DbUserTaskState implements MutableUserTaskState {
   private final ColumnFamily<DbLong, UserTaskIntermediateStateValue>
       userTasksIntermediateStatesColumnFamily;
 
-  private final UserTaskTransitionTriggerRequestMetadata userTaskTransitionTriggerRequestMetadata =
-      new UserTaskTransitionTriggerRequestMetadata();
-  private final ColumnFamily<DbLong, UserTaskTransitionTriggerRequestMetadata>
+  private final AsyncTransitionTriggerMetadata userTaskTransitionTriggerRequestMetadata =
+      new AsyncTransitionTriggerMetadata();
+  private final ColumnFamily<DbLong, AsyncTransitionTriggerMetadata>
       userTasksTransitionTriggerRequestMetadataColumnFamily;
 
   private final DbString initialAssignee = new DbString();
@@ -166,7 +166,7 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public void storeRecordRequestMetadata(
-      final long key, final UserTaskTransitionTriggerRequestMetadata recordRequestMetadata) {
+      final long key, final AsyncTransitionTriggerMetadata recordRequestMetadata) {
     userTaskKey.wrapLong(key);
     userTasksTransitionTriggerRequestMetadataColumnFamily.insert(
         userTaskKey, recordRequestMetadata);
@@ -227,7 +227,7 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
-  public Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequestMetadata(
+  public Optional<AsyncTransitionTriggerMetadata> findRecordRequestMetadata(
       final long key) {
     userTaskKey.wrapLong(key);
     return Optional.ofNullable(

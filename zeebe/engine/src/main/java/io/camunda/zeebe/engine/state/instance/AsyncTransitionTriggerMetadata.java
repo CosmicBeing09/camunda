@@ -44,18 +44,18 @@ import io.camunda.zeebe.util.buffer.BufferUtil;
  * <p>This metadata is used to correctly finalize and respond to the original request once the user
  * task transition is completed.
  */
-public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject implements DbValue {
+public class AsyncTransitionTriggerMetadata extends UnpackedObject implements DbValue {
 
-  private final EnumProperty<ValueType> triggerTypeProperty =
+  private final EnumProperty<ValueType> requestSourceTypeProperty =
       new EnumProperty<>("triggerType", ValueType.class);
   private final StringProperty intentProperty = new StringProperty("intent");
   private final LongProperty requestIdProperty = new LongProperty("requestId", -1);
   private final IntegerProperty requestStreamIdProperty =
       new IntegerProperty("requestStreamId", -1);
 
-  public UserTaskTransitionTriggerRequestMetadata() {
+  public AsyncTransitionTriggerMetadata() {
     super(4);
-    declareProperty(triggerTypeProperty)
+    declareProperty(requestSourceTypeProperty)
         .declareProperty(intentProperty)
         .declareProperty(requestIdProperty)
         .declareProperty(requestStreamIdProperty);
@@ -67,7 +67,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The trigger type (for instance: `USER_TASK` or `VARIABLE_DOCUMENT`).
    */
   public ValueType getTriggerType() {
-    return triggerTypeProperty.getValue();
+    return requestSourceTypeProperty.getValue();
   }
 
   /**
@@ -76,8 +76,8 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param triggerType The trigger type (`USER_TASK` or `VARIABLE_DOCUMENT`).
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setTriggerType(final ValueType triggerType) {
-    triggerTypeProperty.setValue(triggerType);
+  public AsyncTransitionTriggerMetadata setTriggerType(final ValueType triggerType) {
+    requestSourceTypeProperty.setValue(triggerType);
     return this;
   }
 
@@ -88,7 +88,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    */
   public Intent getIntent() {
     return Intent.fromProtocolValue(
-        triggerTypeProperty.getValue(), BufferUtil.bufferAsString(intentProperty.getValue()));
+        requestSourceTypeProperty.getValue(), BufferUtil.bufferAsString(intentProperty.getValue()));
   }
 
   /**
@@ -97,7 +97,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param intent The intent of the original command.
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setIntent(final Intent intent) {
+  public AsyncTransitionTriggerMetadata setIntent(final Intent intent) {
     intentProperty.setValue(intent.name());
     return this;
   }
@@ -117,7 +117,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param requestId The request ID.
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setRequestId(final long requestId) {
+  public AsyncTransitionTriggerMetadata setRequestId(final long requestId) {
     requestIdProperty.setValue(requestId);
     return this;
   }
@@ -137,7 +137,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @param requestStreamId The request stream ID.
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setRequestStreamId(final int requestStreamId) {
+  public AsyncTransitionTriggerMetadata setRequestStreamId(final int requestStreamId) {
     requestStreamIdProperty.setValue(requestStreamId);
     return this;
   }
