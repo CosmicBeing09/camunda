@@ -141,7 +141,7 @@ public class RdbmsSearchClient implements SearchClientsProxy {
   public SearchQueryResult<MappingEntity> searchMappings(final MappingQuery filter) {
     LOG.debug("[RDBMS Search Client] Search for mappings: {}", filter);
 
-    return rdbmsService.getMappingReader().search(filter);
+    return rdbmsService.getMappingReader().find(filter);
   }
 
   @Override
@@ -151,7 +151,7 @@ public class RdbmsSearchClient implements SearchClientsProxy {
     // search without size boundary to find all items
     return rdbmsService
         .getMappingReader()
-        .search(
+        .find(
             MappingQuery.of(
                 b ->
                     b.filter(query.filter())

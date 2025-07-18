@@ -77,7 +77,7 @@ public class MappingSpecificFilterIT {
     assignMappingToGroup(anotherGroup.groupId(), mapping3.mappingId());
 
     final var mappings =
-        mappingReader.search(
+        mappingReader.find(
             new MappingQuery(
                 new MappingFilter.Builder().groupId(group.groupId()).build(),
                 MappingSort.of(b -> b),
@@ -106,7 +106,7 @@ public class MappingSpecificFilterIT {
     addMappingToRole(anotherRole.roleId(), mappingId3);
 
     final var mappings =
-        mappingReader.search(
+        mappingReader.find(
             new MappingQuery(
                 new MappingFilter.Builder().roleId(role.roleId()).build(),
                 MappingSort.of(b -> b),
