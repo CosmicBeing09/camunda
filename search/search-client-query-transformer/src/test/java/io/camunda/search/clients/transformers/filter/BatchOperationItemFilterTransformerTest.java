@@ -33,7 +33,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -53,7 +53,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -72,7 +72,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -91,7 +91,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -112,7 +112,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -137,7 +137,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermsQuery.class,
@@ -162,14 +162,14 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             t -> {
               assertThat(t.mustNot()).isNotEmpty();
             });
-    final var mustNotQuery = ((SearchBoolQuery) queryVariant).mustNot().get(0).queryOption();
+    final var mustNotQuery = ((SearchBoolQuery) queryVariant).mustNot().get(0).queryOperation();
     assertThat(mustNotQuery)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -194,11 +194,11 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(4);
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(0).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(0).queryOperation())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {
@@ -206,7 +206,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
               assertThat(t.value().stringValue()).isEqualTo("123");
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOperation())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {
@@ -214,7 +214,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
               assertThat(t.value().stringValue()).isEqualTo("SCHEDULED");
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOperation())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {
@@ -222,7 +222,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
               assertThat(t.value().longValue()).isEqualTo(123L);
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(3).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(3).queryOperation())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             t -> {

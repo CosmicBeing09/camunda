@@ -12,7 +12,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.query;
 import io.camunda.util.ObjectBuilder;
 import java.util.function.Function;
 
-public final record SearchQuery(SearchQueryOption queryOption) {
+public final record SearchQuery(SearchQueryOption queryOperation) {
 
   public static SearchQuery of(final Function<Builder, ObjectBuilder<SearchQuery>> fn) {
     return query(fn);
@@ -20,10 +20,10 @@ public final record SearchQuery(SearchQueryOption queryOption) {
 
   public static final class Builder implements ObjectBuilder<SearchQuery> {
 
-    private SearchQueryOption queryOption;
+    private SearchQueryOption queryOperation;
 
     public Builder bool(final SearchBoolQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -33,7 +33,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder constantScore(final SearchConstantScoreQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -44,7 +44,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder exists(final SearchExistsQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -54,7 +54,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder hasChild(final SearchHasChildQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -64,7 +64,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder ids(final SearchIdsQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -73,7 +73,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder match(final SearchMatchQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -83,17 +83,17 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder matchAll() {
-      queryOption = new SearchMatchAllQuery.Builder().build();
+      queryOperation = new SearchMatchAllQuery.Builder().build();
       return this;
     }
 
     public Builder matchNone(final SearchMatchNoneQuery query) {
-      queryOption = new SearchMatchNoneQuery.Builder().build();
+      queryOperation = new SearchMatchNoneQuery.Builder().build();
       return this;
     }
 
     public Builder prefix(final SearchPrefixQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -103,7 +103,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder range(final SearchRangeQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -113,7 +113,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder term(final SearchTermQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -123,7 +123,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder terms(final SearchTermsQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -133,7 +133,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder wildcard(final SearchWildcardQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -143,7 +143,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     public Builder hasParent(final SearchHasParentQuery query) {
-      queryOption = query;
+      queryOperation = query;
       return this;
     }
 
@@ -154,7 +154,7 @@ public final record SearchQuery(SearchQueryOption queryOption) {
 
     @Override
     public SearchQuery build() {
-      return new SearchQuery(queryOption);
+      return new SearchQuery(queryOperation);
     }
   }
 }

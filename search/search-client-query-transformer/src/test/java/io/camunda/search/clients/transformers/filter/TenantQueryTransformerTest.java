@@ -108,7 +108,7 @@ public class TenantQueryTransformerTest extends AbstractTransformerTest {
         FilterBuilders.tenant((f) -> f.memberIds(Set.of("test-member-id")).childMemberType(USER));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).queryOperation();
 
     // then
     final var memberTypeQuery =

@@ -37,7 +37,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 2);
   }
 
@@ -52,10 +52,10 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     final var searchBoolQuery = assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 3);
     assertIsSearchHasParentTermQuery(
-        searchBoolQuery.must().get(2).queryOption(), "parentProcessInstanceKey", 567L);
+        searchBoolQuery.must().get(2).queryOperation(), "parentProcessInstanceKey", 567L);
   }
 
   @Test
@@ -69,10 +69,10 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     final var searchBoolQuery = assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 3);
     assertIsSearchHasParentTermQuery(
-        searchBoolQuery.must().get(2).queryOption(), "parentFlowNodeInstanceKey", 567L);
+        searchBoolQuery.must().get(2).queryOperation(), "parentFlowNodeInstanceKey", 567L);
   }
 
   @Test
@@ -90,13 +90,13 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     final var searchBoolQuery = assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 3);
     final var hasParentQuery =
-        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOption());
+        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOperation());
     final var parentBoolQuery = assertIsSearchBoolQuery(hasParentQuery, 2);
     assertThat(parentBoolQuery.must()).hasSize(2);
-    assertThat(parentBoolQuery.must().get(0).queryOption())
+    assertThat(parentBoolQuery.must().get(0).queryOperation())
         .isInstanceOfSatisfying(
             SearchRangeQuery.class,
             (searchRangeQuery) -> {
@@ -106,7 +106,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
               assertThat(searchRangeQuery.format()).isEqualTo("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
             });
 
-    assertThat(parentBoolQuery.must().get(1).queryOption())
+    assertThat(parentBoolQuery.must().get(1).queryOperation())
         .isInstanceOfSatisfying(
             SearchRangeQuery.class,
             (searchRangeQuery) -> {
@@ -128,10 +128,10 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     final var searchBoolQuery = assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 3);
     final var hasParentQuery =
-        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOption());
+        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOperation());
     assertIsSearchTermQuery(hasParentQuery, "state", "ACTIVE");
   }
 
@@ -146,10 +146,10 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     final var searchBoolQuery = assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 3);
     final var hasParentQuery =
-        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOption());
+        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOperation());
     assertThat(hasParentQuery)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -170,10 +170,10 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     final var searchBoolQuery = assertIsSearchBoolQueryWithDefaultFilter(queryVariant, 3);
     final var hasParentQuery =
-        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOption());
+        assertIsSearchHasParentQuery(searchBoolQuery.must().get(2).queryOperation());
     assertIsSearchTermQuery(hasParentQuery, "tenantId", "tenant");
   }
 
@@ -214,9 +214,9 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
       final SearchQueryOption queryVariant, final int size) {
     final var searchBoolQuery = assertIsSearchBoolQuery(queryVariant, size);
     assertIsSearchTermQuery(
-        searchBoolQuery.must().get(0).queryOption(), "joinRelation", "activity");
+        searchBoolQuery.must().get(0).queryOperation(), "joinRelation", "activity");
     assertIsSearchHasParentTermQuery(
-        searchBoolQuery.must().get(1).queryOption(),
+        searchBoolQuery.must().get(1).queryOperation(),
         "processDefinitionKey",
         PROCESS_DEFINITION_KEY);
     return searchBoolQuery;
@@ -242,7 +242,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
             SearchHasParentQuery.class,
             (searchHasParentQuery) ->
                 assertThat(searchHasParentQuery.parentType()).isEqualTo("processInstance"));
-    return ((SearchHasParentQuery) searchQueryOption).query().queryOption();
+    return ((SearchHasParentQuery) searchQueryOption).query().queryOperation();
   }
 
   private void assertIsSearchHasParentTermQuery(
