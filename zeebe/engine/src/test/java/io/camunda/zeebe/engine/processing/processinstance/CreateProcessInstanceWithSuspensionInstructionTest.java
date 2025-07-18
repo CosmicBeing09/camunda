@@ -412,13 +412,13 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
   public void shouldNotAllowToModifySuspendedProcessInstance() {
     // given
     final String processId = "process";
-    final String elementToSuspend = "element";
+    final String elementBeforeSuspension = "element";
     ENGINE
         .deployment()
         .withXmlResource(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
-                .manualTask(elementToSuspend)
+                .manualTask(elementBeforeSuspension)
                 .manualTask("anotherManualTask")
                 .endEvent()
                 .done())
@@ -428,7 +428,7 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
         ENGINE
             .processInstance()
             .ofBpmnProcessId(processId)
-            .withRuntimeSuspendInstruction(elementToSuspend)
+            .withRuntimeSuspendInstruction(elementBeforeSuspension)
             .create();
 
     // when
@@ -455,20 +455,20 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
   public void shouldSuspendWhenInterruptingBoundaryEventActivated() {
     // given
     final String processId = "process";
-    final String elementToSuspend = "element";
+    final String elementBeforeSuspension = "element";
     ENGINE
         .deployment()
         .withXmlResource(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
-                .serviceTask(elementToSuspend, t -> t.zeebeJobType("jobType"))
+                .serviceTask(elementBeforeSuspension, t -> t.zeebeJobType("jobType"))
                 .boundaryEvent("boundary")
                 .cancelActivity(true)
                 .message(
                     messageBuilder ->
                         messageBuilder.name("myMessage").zeebeCorrelationKey("=\"myKey\""))
                 .endEvent()
-                .moveToActivity(elementToSuspend)
+                .moveToActivity(elementBeforeSuspension)
                 .endEvent()
                 .done())
         .deploy();
@@ -477,7 +477,7 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
         ENGINE
             .processInstance()
             .ofBpmnProcessId(processId)
-            .withRuntimeSuspendInstruction(elementToSuspend)
+            .withRuntimeSuspendInstruction(elementBeforeSuspension)
             .create();
 
     // when
@@ -493,18 +493,18 @@ public class CreateProcessInstanceWithSuspensionInstructionTest {
         RecordingExporter.processInstanceRecords()
             .withProcessInstanceKey(processInstanceKey)
             .onlyEvents()
-            .limit(elementToSuspend, ProcessInstanceIntent.ELEMENT_TERMINATED)
+            .limit(elementBeforeSuspension, ProcessInstanceIntent.ELEMENT_TERMINATED)
             .filter(
                 record ->
                     record.getValue().getElementId().equals(processId)
-                        || record.getValue().getElementId().equals(elementToSuspend));
+                        || record.getValue().getElementId().equals(elementBeforeSuspension));
 
     assertThat(result)
         .extracting(Record::getIntent, record -> record.getValue().getElementId())
         .containsSequence(
-            Tuple.tuple(ProcessInstanceIntent.ELEMENT_TERMINATING, elementToSuspend),
+            Tuple.tuple(ProcessInstanceIntent.ELEMENT_TERMINATING, elementBeforeSuspension),
             Tuple.tuple(ProcessInstanceIntent.ELEMENT_SUSPENDED, processId),
-            Tuple.tuple(ProcessInstanceIntent.ELEMENT_TERMINATED, elementToSuspend));
+            Tuple.tuple(ProcessInstanceIntent.ELEMENT_TERMINATED, elementBeforeSuspension));
   }
 
   @Test
