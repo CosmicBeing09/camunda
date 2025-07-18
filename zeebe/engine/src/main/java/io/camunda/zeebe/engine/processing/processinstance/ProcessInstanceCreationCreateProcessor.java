@@ -189,7 +189,7 @@ public final class ProcessInstanceCreationCreateProcessor
         .setBpmnProcessId(process.getBpmnProcessId())
         .setVersion(process.getVersion())
         .setProcessDefinitionKey(process.getKey());
-    controller.accept(ProcessInstanceCreationIntent.CREATED, record);
+    controller.accept(ProcessInstanceCreationIntent.CREATED_EVENT, record);
 
     metrics.processInstanceCreated(record);
   }

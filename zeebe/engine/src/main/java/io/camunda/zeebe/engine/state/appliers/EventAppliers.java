@@ -262,7 +262,7 @@ public final class EventAppliers implements EventApplier {
     final var elementInstanceState = state.getElementInstanceState();
 
     register(
-        ProcessInstanceCreationIntent.CREATED,
+        ProcessInstanceCreationIntent.CREATED_EVENT,
         new ProcessInstanceCreationCreatedApplier(processState, elementInstanceState));
   }
 

@@ -184,7 +184,7 @@ public final class PartitionTestClient {
             ValueType.PROCESS_INSTANCE_CREATION, ProcessInstanceCreationIntent.CREATE, record);
 
     assertThat(response.getRecordType()).isEqualTo(RecordType.EVENT);
-    assertThat(response.getIntent()).isEqualTo(ProcessInstanceCreationIntent.CREATED);
+    assertThat(response.getIntent()).isEqualTo(ProcessInstanceCreationIntent.CREATED_EVENT);
 
     return response.readInto(new ProcessInstanceCreationRecord());
   }

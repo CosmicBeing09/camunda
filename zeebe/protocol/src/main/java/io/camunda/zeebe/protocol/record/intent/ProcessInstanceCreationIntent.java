@@ -17,11 +17,11 @@ package io.camunda.zeebe.protocol.record.intent;
 
 public enum ProcessInstanceCreationIntent implements Intent, ProcessInstanceRelatedIntent {
   CREATE(0, false),
-  CREATED(1, true),
+  CREATED_EVENT(1, true),
   CREATE_WITH_AWAITING_RESULT(2, false);
 
   private final short value;
-  private final boolean shouldBanInstance;
+  private final boolean shouldBanInstanceOnError;
 
   ProcessInstanceCreationIntent(final int value, final boolean shouldBanInstance) {
     this((short) value, shouldBanInstance);
@@ -29,7 +29,7 @@ public enum ProcessInstanceCreationIntent implements Intent, ProcessInstanceRela
 
   ProcessInstanceCreationIntent(final short value, final boolean shouldBanInstance) {
     this.value = value;
-    this.shouldBanInstance = shouldBanInstance;
+    shouldBanInstanceOnError = shouldBanInstance;
   }
 
   @Override
@@ -40,7 +40,7 @@ public enum ProcessInstanceCreationIntent implements Intent, ProcessInstanceRela
   @Override
   public boolean isEvent() {
     switch (this) {
-      case CREATED:
+      case CREATED_EVENT:
         return true;
       default:
         return false;
@@ -52,7 +52,7 @@ public enum ProcessInstanceCreationIntent implements Intent, ProcessInstanceRela
       case 0:
         return CREATE;
       case 1:
-        return CREATED;
+        return CREATED_EVENT;
       case 2:
         return CREATE_WITH_AWAITING_RESULT;
       default:
@@ -62,6 +62,6 @@ public enum ProcessInstanceCreationIntent implements Intent, ProcessInstanceRela
 
   @Override
   public boolean shouldBanInstanceOnError() {
-    return shouldBanInstance;
+    return shouldBanInstanceOnError;
   }
 }

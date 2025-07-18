@@ -67,7 +67,7 @@ public final class ProcessInstanceClient {
         SUCCESS_EXPECTATION =
             (position) ->
                 RecordingExporter.processInstanceCreationRecords()
-                    .withIntent(ProcessInstanceCreationIntent.CREATED)
+                    .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
                     .withSourceRecordPosition(position)
                     .getFirst();
 
@@ -202,7 +202,7 @@ public final class ProcessInstanceClient {
               record);
 
       return RecordingExporter.processInstanceCreationRecords()
-          .withIntent(ProcessInstanceCreationIntent.CREATED)
+          .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
           .withSourceRecordPosition(position)
           .getFirst()
           .getValue()
@@ -219,7 +219,7 @@ public final class ProcessInstanceClient {
               username);
 
       return RecordingExporter.processInstanceCreationRecords()
-          .withIntent(ProcessInstanceCreationIntent.CREATED)
+          .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
           .withSourceRecordPosition(position)
           .getFirst()
           .getValue()
