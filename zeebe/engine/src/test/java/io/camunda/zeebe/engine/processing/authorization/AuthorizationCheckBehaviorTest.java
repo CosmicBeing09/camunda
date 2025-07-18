@@ -403,7 +403,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(
             Map.of(
                 USER_TOKEN_CLAIM_PREFIX + firstClaimName,
@@ -453,7 +453,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(
             Map.of(
                 USER_TOKEN_CLAIM_PREFIX + claimName, List.of(firstClaimValue, secondClaimValue)));
@@ -732,7 +732,7 @@ final class AuthorizationCheckBehaviorTest {
 
   private TypedRecord<?> mockCommandWithMapping(final String claimName, final String claimValue) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(Map.of(USER_TOKEN_CLAIM_PREFIX + claimName, claimValue));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
@@ -812,21 +812,21 @@ final class AuthorizationCheckBehaviorTest {
 
   private TypedRecord<?> mockCommand(final String username) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithAnonymousUser() {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithClientId(final String clientId) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_CLIENT_ID, clientId));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_CLIENT_ID, clientId));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }

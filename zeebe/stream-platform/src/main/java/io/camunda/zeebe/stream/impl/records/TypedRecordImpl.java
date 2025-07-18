@@ -89,7 +89,7 @@ public final class TypedRecordImpl implements TypedRecord {
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return metadata.getAuthorization().toDecodedMap();
   }
 
@@ -104,7 +104,7 @@ public final class TypedRecordImpl implements TypedRecord {
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return metadata.getOperationReference();
   }
 

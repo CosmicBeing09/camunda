@@ -105,7 +105,7 @@ public final class ResolveIncidentBatchExecutorTest extends AbstractBatchOperati
             .toList();
     assertThat(incidentCommands).hasSize(1);
     assertThat(incidentCommands.getFirst().getIntent()).isEqualTo(IncidentIntent.RESOLVE);
-    assertThat(incidentCommands.getFirst().getAuthorizations()).isEqualTo(claims);
+    assertThat(incidentCommands.getFirst().getAuthorizationData()).isEqualTo(claims);
   }
 
   @Test

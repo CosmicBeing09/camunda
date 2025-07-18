@@ -91,7 +91,7 @@ public final class CheckpointCreateProcessor {
             .intent(resultIntent)
             .rejectionType(RejectionType.NULL_VAL)
             .rejectionReason("")
-            .operationReference(command.getOperationReference()));
+            .operationReference(command.getOperationKey()));
 
     if (command.hasRequestMetadata()) {
       resultBuilder.withResponse(

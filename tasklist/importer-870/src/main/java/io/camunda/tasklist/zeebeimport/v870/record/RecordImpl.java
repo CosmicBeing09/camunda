@@ -133,12 +133,8 @@ public class RecordImpl<T extends RecordValue> implements Record<T> {
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return authorizations;
-  }
-
-  public void setAuthorizations(final Map<String, Object> authorizations) {
-    this.authorizations = authorizations;
   }
 
   @Override
@@ -170,12 +166,16 @@ public class RecordImpl<T extends RecordValue> implements Record<T> {
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return operationReference;
   }
 
   public void setOperationReference(final long operationReference) {
     this.operationReference = operationReference;
+  }
+
+  public void setAuthorizations(final Map<String, Object> authorizations) {
+    this.authorizations = authorizations;
   }
 
   @Override

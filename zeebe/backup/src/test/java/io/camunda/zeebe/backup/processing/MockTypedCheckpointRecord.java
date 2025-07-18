@@ -69,7 +69,7 @@ record MockTypedCheckpointRecord(
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return Map.of();
   }
 
@@ -84,7 +84,7 @@ record MockTypedCheckpointRecord(
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return -1;
   }
 

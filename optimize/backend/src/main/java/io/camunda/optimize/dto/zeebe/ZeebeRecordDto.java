@@ -100,7 +100,7 @@ public abstract class ZeebeRecordDto<VALUE extends RecordValue, INTENT extends I
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return authorizations;
   }
 
@@ -120,7 +120,7 @@ public abstract class ZeebeRecordDto<VALUE extends RecordValue, INTENT extends I
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return operationReference;
   }
 
@@ -129,20 +129,12 @@ public abstract class ZeebeRecordDto<VALUE extends RecordValue, INTENT extends I
     throw new UnsupportedOperationException("Operation not supported");
   }
 
-  public void setOperationReference(final long operationReference) {
-    this.operationReference = operationReference;
-  }
-
   public void setValue(final VALUE value) {
     this.value = value;
   }
 
   public void setValueType(final ValueType valueType) {
     this.valueType = valueType;
-  }
-
-  public void setAuthorizations(final Map<String, Object> authorizations) {
-    this.authorizations = authorizations;
   }
 
   public void setBrokerVersion(final String brokerVersion) {
@@ -183,6 +175,14 @@ public abstract class ZeebeRecordDto<VALUE extends RecordValue, INTENT extends I
 
   public void setPosition(final long position) {
     this.position = position;
+  }
+
+  public void setOperationReference(final long operationReference) {
+    this.operationReference = operationReference;
+  }
+
+  public void setAuthorizations(final Map<String, Object> authorizations) {
+    this.authorizations = authorizations;
   }
 
   public Long getSequence() {
@@ -238,9 +238,9 @@ public abstract class ZeebeRecordDto<VALUE extends RecordValue, INTENT extends I
         + ", intent="
         + getIntent()
         + ", authorizations="
-        + getAuthorizations()
+        + getAuthorizationData()
         + ", operationReference="
-        + getOperationReference()
+        + getOperationKey()
         + ")";
   }
 

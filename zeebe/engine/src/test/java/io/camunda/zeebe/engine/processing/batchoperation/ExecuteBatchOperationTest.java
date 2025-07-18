@@ -56,7 +56,7 @@ public final class ExecuteBatchOperationTest extends AbstractBatchOperationTest 
           assertThat(cancelCommandList).hasSize(1);
           final var cancelCommand = cancelCommandList.getFirst();
           assertThat(cancelCommand.getIntent()).isEqualTo(ProcessInstanceIntent.CANCEL);
-          assertThat(cancelCommand.getAuthorizations()).isEqualTo(claims);
+          assertThat(cancelCommand.getAuthorizationData()).isEqualTo(claims);
         });
   }
 
