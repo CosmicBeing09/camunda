@@ -84,7 +84,7 @@ public class DataGenerator implements AutoCloseable {
                           b ->
                               b.processInstanceKey(p -> p.in(instanceKeys.stream().toList()))
                                   .state(state))
-                      .page(b -> b.limit(instanceKeys.size()).from(0))
+                      .page(b -> b.limit(instanceKeys.size()).cursor(0))
                       .send();
               assertThat(response)
                   .succeedsWithin(timeout)

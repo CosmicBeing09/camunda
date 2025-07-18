@@ -41,14 +41,14 @@ public class SearchRequestPageImpl
   }
 
   @Override
-  public SearchRequestPage searchBefore(final String values) {
-    page.setSearchBefore(values);
+  public SearchRequestPage searchBefore(final String cursor) {
+    page.setSearchBefore(cursor);
     return this;
   }
 
   @Override
-  public SearchRequestPage searchAfter(final String values) {
-    page.setSearchAfter(values);
+  public SearchRequestPage searchAfter(final String cursor) {
+    page.setSearchAfter(cursor);
     return this;
   }
 

@@ -340,7 +340,7 @@ class VariableSearchTest {
     final var thirdKey = resultAll.items().get(2).getVariableKey();
 
     final var resultSearchFrom =
-        camundaClient.newVariableSearchRequest().page(p -> p.limit(2).from(2)).send().join();
+        camundaClient.newVariableSearchRequest().page(p -> p.limit(2).cursor(2)).send().join();
 
     // then
     assertThat(resultSearchFrom.items().size()).isEqualTo(2);

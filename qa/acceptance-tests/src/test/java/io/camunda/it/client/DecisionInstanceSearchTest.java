@@ -100,7 +100,7 @@ class DecisionInstanceSearchTest {
     final var resultSearchFrom =
         camundaClient
             .newDecisionInstanceSearchRequest()
-            .page(p -> p.limit(2).from(2))
+            .page(p -> p.limit(2).cursor(2))
             .send()
             .join();
 
