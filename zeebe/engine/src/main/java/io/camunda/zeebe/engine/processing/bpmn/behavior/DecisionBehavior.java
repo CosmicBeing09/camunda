@@ -10,9 +10,8 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import io.camunda.zeebe.dmn.DecisionEvaluationResult;
 import io.camunda.zeebe.dmn.ParsedDecisionRequirementsGraph;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCalledDecision;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -32,23 +31,23 @@ import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 
 /** Provides decision behavior to the BPMN processors */
-public final class BpmnDecisionBehavior {
+public final class DecisionBehavior {
 
-  private final DecisionBehavior decisionBehavior;
+  private final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableState variableState;
   private final StateWriter stateWriter;
   private final KeyGenerator keyGenerator;
-  private final ExpressionProcessor expressionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
 
-  public BpmnDecisionBehavior(
-      final DecisionBehavior decisionBehavior,
+  public DecisionBehavior(
+      final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior,
       final ProcessingState processingState,
       final EventTriggerBehavior eventTriggerBehavior,
       final StateWriter stateWriter,
       final KeyGenerator keyGenerator,
-      final ExpressionProcessor expressionBehavior,
+      final ExpressionEvaluator expressionBehavior,
       final BpmnStateBehavior stateBehavior) {
 
     variableState = processingState.getVariableState();

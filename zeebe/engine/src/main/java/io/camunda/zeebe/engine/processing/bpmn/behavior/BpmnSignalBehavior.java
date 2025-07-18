@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.EnsureUtil.ensureNotNull;
 import static io.camunda.zeebe.util.EnsureUtil.ensureNotNullOrEmpty;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSignal;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
@@ -31,13 +31,13 @@ public final class BpmnSignalBehavior {
   private final KeyGenerator keyGenerator;
   private final VariableState variableState;
   private final TypedCommandWriter commandWriter;
-  private final ExpressionProcessor expressionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
 
   public BpmnSignalBehavior(
       final KeyGenerator keyGenerator,
       final VariableState variableState,
       final Writers writers,
-      final ExpressionProcessor expressionBehavior) {
+      final ExpressionEvaluator expressionBehavior) {
     this.keyGenerator = keyGenerator;
     this.expressionBehavior = expressionBehavior;
     this.variableState = variableState;

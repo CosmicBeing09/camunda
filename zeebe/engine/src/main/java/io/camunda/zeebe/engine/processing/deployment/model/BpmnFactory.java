@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.deployment.model;
 import io.camunda.zeebe.el.ExpressionLanguage;
 import io.camunda.zeebe.el.ExpressionLanguageFactory;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.deployment.model.transformation.BpmnTransformer;
 import io.camunda.zeebe.engine.processing.deployment.transform.BpmnValidator;
 import java.time.InstantSource;
@@ -23,7 +23,7 @@ public final class BpmnFactory {
 
   public static BpmnValidator createValidator(
       final InstantSource clock,
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final int validatorResultsOutputMaxSize) {
     return new BpmnValidator(
         createExpressionLanguage(new ZeebeFeelEngineClock(clock)),

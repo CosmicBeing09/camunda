@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
 import io.camunda.zeebe.el.ExpressionLanguage;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ZeebeExpressionValidator.ExpressionVerification;
 import io.camunda.zeebe.model.bpmn.instance.AdHocSubProcess;
 import io.camunda.zeebe.model.bpmn.instance.ConditionExpression;
@@ -36,7 +36,7 @@ import org.camunda.bpm.model.xml.validation.ModelElementValidator;
 public final class ZeebeRuntimeValidators {
 
   public static Collection<ModelElementValidator<?>> getValidators(
-      final ExpressionLanguage expressionLanguage, final ExpressionProcessor expressionProcessor) {
+      final ExpressionLanguage expressionLanguage, final ExpressionEvaluator expressionProcessor) {
     return List.of(
         // ----------------------------------------
         ZeebeExpressionValidator.verifyThat(ZeebeInput.class)

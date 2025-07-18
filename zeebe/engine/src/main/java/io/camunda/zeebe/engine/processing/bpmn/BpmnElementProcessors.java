@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.bpmn;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.container.AdHocSubProcessProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.container.CallActivityProcessor;
@@ -43,7 +43,7 @@ public final class BpmnElementProcessors {
       new EnumMap<>(BpmnElementType.class);
 
   public BpmnElementProcessors(
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior,
       final EngineConfiguration config) {
     // tasks

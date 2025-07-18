@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.deployment.transform;
 
 import io.camunda.zeebe.el.ExpressionLanguage;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ZeebeRuntimeValidators;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.traversal.ModelWalker;
@@ -26,7 +26,7 @@ public final class BpmnValidator {
 
   public BpmnValidator(
       final ExpressionLanguage expressionLanguage,
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final int validatorResultsOutputMaxSize) {
     designTimeAspectValidator = new ValidationVisitor(ZeebeDesignTimeValidators.VALIDATORS);
     runtimeAspectValidator =

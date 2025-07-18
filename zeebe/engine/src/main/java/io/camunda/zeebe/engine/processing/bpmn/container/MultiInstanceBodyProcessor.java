@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.container;
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContainerProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.MultiInstanceOutputCollectionBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMultiInstanceBody;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
@@ -59,7 +59,7 @@ public final class MultiInstanceBodyProcessor
 
   private final MsgPackWriter variableWriter = new MsgPackWriter();
 
-  private final ExpressionProcessor expressionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
   private final BpmnEventSubscriptionBehavior eventSubscriptionBehavior;
   private final BpmnStateBehavior stateBehavior;
@@ -69,7 +69,7 @@ public final class MultiInstanceBodyProcessor
   private final BpmnVariableMappingBehavior variableMappingBehavior;
 
   public MultiInstanceBodyProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     this.stateTransitionBehavior = stateTransitionBehavior;
     eventSubscriptionBehavior = bpmnBehaviors.eventSubscriptionBehavior();
@@ -402,7 +402,7 @@ public final class MultiInstanceBodyProcessor
     final Optional<Expression> completionCondition =
         element.getLoopCharacteristics().getCompletionCondition();
 
-    final ExpressionProcessor primaryContextExpressionProcessor =
+    final ExpressionEvaluator primaryContextExpressionProcessor =
         expressionBehavior.withPrimaryContext(
             (variableName -> getVariable(context.getFlowScopeKey(), variableName)));
     if (completionCondition.isPresent()) {

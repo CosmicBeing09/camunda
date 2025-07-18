@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.deployment.transform;
 import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
 import io.camunda.zeebe.engine.processing.deployment.model.BpmnFactory;
@@ -56,7 +56,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ProcessState processState,
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final boolean enableStraightThroughProcessingLoopDetector,
       final EngineConfiguration config,
       final InstantSource clock) {

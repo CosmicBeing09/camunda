@@ -12,7 +12,7 @@ import static java.util.Map.entry;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.Loggers;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.BpmnDeploymentBindingValidator;
@@ -46,7 +46,7 @@ public final class DeploymentTransformer {
   public DeploymentTransformer(
       final StateWriter stateWriter,
       final ProcessingState processingState,
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final KeyGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final EngineConfiguration config,

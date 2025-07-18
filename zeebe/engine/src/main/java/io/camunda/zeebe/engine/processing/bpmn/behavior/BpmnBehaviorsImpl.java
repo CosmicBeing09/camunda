@@ -12,10 +12,9 @@ import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.ProcessInstanceStateTransitionGuard;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
-import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
@@ -29,10 +28,10 @@ import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import java.time.InstantSource;
 
-public final class BpmnBehaviorsImpl implements BpmnBehaviors {
+public final class BpmnBehaviorsImpl implements ProcessBehaviors {
 
-  private final ExpressionProcessor expressionBehavior;
-  private final BpmnDecisionBehavior bpmnDecisionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
+  private final DecisionBehavior bpmnDecisionBehavior;
   private final BpmnVariableMappingBehavior variableMappingBehavior;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final BpmnEventSubscriptionBehavior eventSubscriptionBehavior;
@@ -57,7 +56,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
       final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final ProcessingMetrics jobMetrics,
-      final DecisionBehavior decisionBehavior,
+      final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior,
       final SubscriptionCommandSender subscriptionCommandSender,
       final RoutingInfo routingInfo,
       final DueDateTimerChecker timerChecker,
@@ -66,7 +65,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
       final AuthorizationCheckBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
     expressionBehavior =
-        new ExpressionProcessor(
+        new ExpressionEvaluator(
             ExpressionLanguageFactory.createExpressionLanguage(new ZeebeFeelEngineClock(clock)),
             new VariableStateEvaluationContextLookup(processingState.getVariableState()));
 
@@ -98,7 +97,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
             stateBehavior);
 
     bpmnDecisionBehavior =
-        new BpmnDecisionBehavior(
+        new DecisionBehavior(
             decisionBehavior,
             processingState,
             eventTriggerBehavior,
@@ -200,12 +199,12 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   }
 
   @Override
-  public ExpressionProcessor expressionBehavior() {
+  public ExpressionEvaluator expressionBehavior() {
     return expressionBehavior;
   }
 
   @Override
-  public BpmnDecisionBehavior bpmnDecisionBehavior() {
+  public DecisionBehavior bpmnDecisionBehavior() {
     return bpmnDecisionBehavior;
   }
 

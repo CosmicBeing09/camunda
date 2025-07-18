@@ -12,10 +12,10 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.wrapArray;
 import static java.util.function.Predicate.not;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor.EvaluationException;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator.EvaluationException;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEventElement;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableStartEvent;
@@ -82,7 +82,7 @@ public final class DeploymentCreateProcessor
   private final TimerInstanceState timerInstanceState;
   private final CatchEventBehavior catchEventBehavior;
   private final KeyGenerator keyGenerator;
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
   private final StateWriter stateWriter;
   private final StartEventSubscriptionManager startEventSubscriptionManager;
   private final TypedRejectionWriter rejectionWriter;
@@ -92,7 +92,7 @@ public final class DeploymentCreateProcessor
 
   public DeploymentCreateProcessor(
       final ProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers,
       final KeyGenerator keyGenerator,
       final FeatureFlags featureFlags,

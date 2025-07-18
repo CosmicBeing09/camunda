@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.variable;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
@@ -60,7 +60,7 @@ public final class VariableDocumentUpdateProcessor
   public VariableDocumentUpdateProcessor(
       final ProcessingState processingState,
       final KeyGenerator keyGenerator,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers,
       final MutableTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {

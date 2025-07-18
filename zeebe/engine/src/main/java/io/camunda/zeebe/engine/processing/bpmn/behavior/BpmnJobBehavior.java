@@ -14,7 +14,7 @@ import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
 import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableJobWorkerElement;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutionListener;
@@ -86,7 +86,7 @@ public final class BpmnJobBehavior {
   private final KeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final JobState jobState;
-  private final ExpressionProcessor expressionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
   private final ResourceState resourceState;
   private final BpmnIncidentBehavior incidentBehavior;
@@ -98,7 +98,7 @@ public final class BpmnJobBehavior {
       final KeyGenerator keyGenerator,
       final JobState jobState,
       final Writers writers,
-      final ExpressionProcessor expressionBehavior,
+      final ExpressionEvaluator expressionBehavior,
       final BpmnStateBehavior stateBehavior,
       final ResourceState resourceState,
       final BpmnIncidentBehavior incidentBehavior,

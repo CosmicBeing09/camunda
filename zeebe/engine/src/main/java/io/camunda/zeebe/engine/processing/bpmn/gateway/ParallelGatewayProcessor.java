@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.bpmn.gateway;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -23,7 +23,7 @@ public final class ParallelGatewayProcessor implements BpmnElementProcessor<Exec
   private final BpmnJobBehavior jobBehavior;
 
   public ParallelGatewayProcessor(
-      final BpmnBehaviors behaviors, final BpmnStateTransitionBehavior stateTransitionBehavior) {
+      final ProcessBehaviors behaviors, final BpmnStateTransitionBehavior stateTransitionBehavior) {
     this.stateTransitionBehavior = stateTransitionBehavior;
     jobBehavior = behaviors.jobBehavior();
   }

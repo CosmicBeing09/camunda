@@ -19,7 +19,7 @@ import static org.mockito.Mockito.when;
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.el.impl.StaticExpression;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableLoopCharacteristics;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMultiInstanceBody;
 import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
@@ -61,7 +61,7 @@ public class MultiInstanceOutputCollectionBehaviorTest {
     when(mockStateBehavior.getLocalVariable(any(), eq(outputCollectionName)))
         .thenReturn(collectionWithSize1);
 
-    final var mockExpressionProcessor = mock(ExpressionProcessor.class);
+    final var mockExpressionProcessor = mock(ExpressionEvaluator.class);
     when(mockExpressionProcessor.evaluateAnyExpression(eq(outputElementExpression), anyLong()))
         .thenReturn(Either.right(elementToAdd));
 
@@ -109,7 +109,7 @@ public class MultiInstanceOutputCollectionBehaviorTest {
     when(mockStateBehavior.getLocalVariable(any(), eq(outputCollectionName)))
         .thenReturn(unexpectedValueType);
 
-    final var mockExpressionProcessor = mock(ExpressionProcessor.class);
+    final var mockExpressionProcessor = mock(ExpressionEvaluator.class);
     when(mockExpressionProcessor.evaluateAnyExpression(eq(outputElementExpression), anyLong()))
         .thenReturn(Either.right(elementToAdd));
 

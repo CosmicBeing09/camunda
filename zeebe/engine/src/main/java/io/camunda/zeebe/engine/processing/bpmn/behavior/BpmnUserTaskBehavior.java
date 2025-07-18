@@ -12,7 +12,7 @@ import static io.camunda.zeebe.model.bpmn.validation.zeebe.ZeebePriorityDefiniti
 
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -50,7 +50,7 @@ public final class BpmnUserTaskBehavior {
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
   private final KeyGenerator keyGenerator;
   private final StateWriter stateWriter;
-  private final ExpressionProcessor expressionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
   private final FormState formState;
   private final MutableTaskState userTaskState;
@@ -59,7 +59,7 @@ public final class BpmnUserTaskBehavior {
   public BpmnUserTaskBehavior(
       final KeyGenerator keyGenerator,
       final Writers writers,
-      final ExpressionProcessor expressionBehavior,
+      final ExpressionEvaluator expressionBehavior,
       final BpmnStateBehavior stateBehavior,
       final FormState formState,
       final MutableTaskState userTaskState,

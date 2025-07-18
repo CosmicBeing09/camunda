@@ -49,7 +49,7 @@ import org.agrona.DirectBuffer;
 
 public final class CatchEventBehavior {
 
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
   private final SubscriptionCommandSender subscriptionCommandSender;
   private final RoutingInfo routingInfo;
   private final StateWriter stateWriter;
@@ -72,7 +72,7 @@ public final class CatchEventBehavior {
   public CatchEventBehavior(
       final ProcessingState processingState,
       final KeyGenerator keyGenerator,
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final SubscriptionCommandSender subscriptionCommandSender,
       final StateWriter stateWriter,
       final SideEffectWriter sideEffectWriter,
@@ -205,7 +205,7 @@ public final class CatchEventBehavior {
   }
 
   private Either<Failure, EvalResult> evalExpressions(
-      final ExpressionProcessor ep,
+      final ExpressionEvaluator ep,
       final ExecutableCatchEvent event,
       final BpmnElementContext context) {
     return Either.<Failure, OngoingEvaluation>right(new OngoingEvaluation(ep, event, context))
@@ -548,7 +548,7 @@ public final class CatchEventBehavior {
    * expressions for a message, and to capture intermediate results of the evaluation
    */
   private static class OngoingEvaluation {
-    private final ExpressionProcessor expressionProcessor;
+    private final ExpressionEvaluator expressionProcessor;
     private final ExecutableCatchEvent event;
     private final BpmnElementContext context;
     private DirectBuffer messageName;
@@ -557,7 +557,7 @@ public final class CatchEventBehavior {
     private DirectBuffer signalName;
 
     public OngoingEvaluation(
-        final ExpressionProcessor expressionProcessor,
+        final ExpressionEvaluator expressionProcessor,
         final ExecutableCatchEvent event,
         final BpmnElementContext context) {
       this.expressionProcessor = expressionProcessor;
@@ -565,7 +565,7 @@ public final class CatchEventBehavior {
       this.context = context;
     }
 
-    private ExpressionProcessor expressionProcessor() {
+    private ExpressionEvaluator expressionProcessor() {
       return expressionProcessor;
     }
 

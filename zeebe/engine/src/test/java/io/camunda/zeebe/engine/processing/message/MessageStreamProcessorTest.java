@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
@@ -95,7 +95,7 @@ public final class MessageStreamProcessorTest {
           final var mockAuthCheckBehavior = mock(AuthorizationCheckBehavior.class);
           when(mockAuthCheckBehavior.isAuthorized(any())).thenReturn(Either.right(null));
           MessageEventProcessors.addMessageProcessors(
-              mock(BpmnBehaviors.class),
+              mock(ProcessBehaviors.class),
               typedRecordProcessors,
               processingState,
               scheduledTaskState,

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
-public final class ExpressionProcessor {
+public final class ExpressionEvaluator {
 
   private static final List<ResultType> INTERVAL_RESULT_TYPES =
       List.of(ResultType.DURATION, ResultType.PERIOD, ResultType.STRING);
@@ -34,13 +34,13 @@ public final class ExpressionProcessor {
   private static final List<ResultType> NULLABLE_DATE_TIME_RESULT_TYPES =
       List.of(ResultType.NULL, ResultType.DATE_TIME, ResultType.STRING);
 
-  private static final EvaluationContext EMPTY_EVALUATION_CONTEXT = x -> null;
+  private static final EvaluationContext NO_OP_EVALUATION_CONTEXT = x -> null;
   private final DirectBuffer resultView = new UnsafeBuffer();
 
   private final ExpressionLanguage expressionLanguage;
   private final EvaluationContextLookup evaluationContextLookup;
 
-  public ExpressionProcessor(
+  public ExpressionEvaluator(
       final ExpressionLanguage expressionLanguage, final EvaluationContextLookup lookup) {
     this.expressionLanguage = expressionLanguage;
     evaluationContextLookup = lookup;
@@ -54,10 +54,10 @@ public final class ExpressionProcessor {
    * @param primaryContext new top level evaluation context
    * @return new instance which uses {@code primaryContext} as new top level evaluation context
    */
-  public ExpressionProcessor withPrimaryContext(final EvaluationContext primaryContext) {
+  public ExpressionEvaluator withPrimaryContext(final EvaluationContext primaryContext) {
     final EvaluationContextLookup combinedLookup =
         scopeKey -> primaryContext.combine(evaluationContextLookup.getContext(scopeKey));
-    return new ExpressionProcessor(expressionLanguage, combinedLookup);
+    return new ExpressionEvaluator(expressionLanguage, combinedLookup);
   }
 
   /**
@@ -67,10 +67,10 @@ public final class ExpressionProcessor {
    * @param secondaryContext fallback evaluation context
    * @return new instance which uses {@code secondaryContext} as fallback
    */
-  public ExpressionProcessor withSecondaryContext(final EvaluationContext secondaryContext) {
+  public ExpressionEvaluator withSecondaryContext(final EvaluationContext secondaryContext) {
     final EvaluationContextLookup combinedLookup =
         scopeKey -> evaluationContextLookup.getContext(scopeKey).combine(secondaryContext);
-    return new ExpressionProcessor(expressionLanguage, combinedLookup);
+    return new ExpressionEvaluator(expressionLanguage, combinedLookup);
   }
 
   /**
@@ -407,7 +407,7 @@ public final class ExpressionProcessor {
 
     final EvaluationContext context;
     if (variableScopeKey < 0) {
-      context = EMPTY_EVALUATION_CONTEXT;
+      context = NO_OP_EVALUATION_CONTEXT;
     } else {
       context = evaluationContextLookup.getContext(variableScopeKey);
     }

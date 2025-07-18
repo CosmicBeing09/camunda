@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.deployment.model.element;
 
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.model.bpmn.util.time.Timer;
 import io.camunda.zeebe.util.Either;
@@ -64,7 +64,7 @@ public class ExecutableReceiveTask extends ExecutableActivity implements Executa
   }
 
   @Override
-  public BiFunction<ExpressionProcessor, Long, Either<Failure, Timer>> getTimerFactory() {
+  public BiFunction<ExpressionEvaluator, Long, Either<Failure, Timer>> getTimerFactory() {
     return (expressionProcessor, context) -> null;
   }
 
