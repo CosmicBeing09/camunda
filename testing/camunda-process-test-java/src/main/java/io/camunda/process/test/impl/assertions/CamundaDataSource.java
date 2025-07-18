@@ -42,7 +42,7 @@ public class CamundaDataSource {
     this.client = client;
   }
 
-  public List<ElementInstance> findElementInstancesByProcessInstanceKey(
+  public List<ElementInstance> findElementsByKey(
       final long processInstanceKey) {
     return findElementInstances(filter -> filter.processInstanceKey(processInstanceKey));
   }
@@ -58,7 +58,7 @@ public class CamundaDataSource {
         .items();
   }
 
-  public List<Variable> findGlobalVariablesByProcessInstanceKey(final long processInstanceKey) {
+  public List<Variable> findGlobalVariablesByKey(final long processInstanceKey) {
     return findVariables(
         filter -> filter.processInstanceKey(processInstanceKey).scopeKey(processInstanceKey));
   }
