@@ -60,7 +60,7 @@ public class AssignMappingToGroupTest {
   }
 
   @Test
-  void shouldAddMappingToGroup() {
+  void shouldAssignMappingToGroup() {
     // when
     client.newAssignMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
 
@@ -95,7 +95,7 @@ public class AssignMappingToGroupTest {
   }
 
   @Test
-  void shouldRejectIfAlreadyAdded() {
+  void shouldRejectIfAlreadyAssigned() {
     // given
     client.newAssignMappingToGroupCommand().mappingId(mappingId).groupId(groupId).send().join();
 
