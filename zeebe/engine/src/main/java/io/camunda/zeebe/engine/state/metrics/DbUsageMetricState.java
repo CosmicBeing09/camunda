@@ -60,7 +60,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
       final long eventTime, final long processInstanceKey, final String tenantId) {
     eventTimeKey.wrapLong(eventTime);
     piKey.wrapLong(processInstanceKey);
-    tenantIdVal.wrapString(tenantId);
+    tenantIdVal.setValueFromString(tenantId);
     rPIColumnFamily.insert(eventTimePiKey, tenantIdVal);
   }
 

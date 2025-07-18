@@ -46,13 +46,13 @@ public final class DbRoutingState implements MutableRoutingState {
 
   @Override
   public Set<Integer> currentPartitions() {
-    key.wrapString(CURRENT_KEY);
+    key.setValueFromString(CURRENT_KEY);
     return columnFamily.get(key).getPartitions();
   }
 
   @Override
   public Set<Integer> desiredPartitions() {
-    key.wrapString(DESIRED_KEY);
+    key.setValueFromString(DESIRED_KEY);
     final var desiredRoutingInfo = columnFamily.get(key);
     if (desiredRoutingInfo == null) {
       return Set.of();
@@ -62,13 +62,13 @@ public final class DbRoutingState implements MutableRoutingState {
 
   @Override
   public MessageCorrelation messageCorrelation() {
-    key.wrapString(CURRENT_KEY);
+    key.setValueFromString(CURRENT_KEY);
     return columnFamily.get(key).getMessageCorrelation();
   }
 
   @Override
   public boolean isInitialized() {
-    key.wrapString(CURRENT_KEY);
+    key.setValueFromString(CURRENT_KEY);
     return columnFamily.exists(key);
   }
 
@@ -89,7 +89,7 @@ public final class DbRoutingState implements MutableRoutingState {
             .boxed()
             .collect(Collectors.toCollection(TreeSet::new));
 
-    key.wrapString(CURRENT_KEY);
+    key.setValueFromString(CURRENT_KEY);
     currentRoutingInfo.reset();
     currentRoutingInfo.setPartitions(partitions);
     currentRoutingInfo.setMessageCorrelation(new MessageCorrelation.HashMod(partitionCount));
@@ -105,16 +105,16 @@ public final class DbRoutingState implements MutableRoutingState {
     desiredRoutingInfo.setMessageCorrelation(currentMessageCorrelation);
 
     setBootstrappedAt(partitions.size(), eventKey);
-    key.wrapString(DESIRED_KEY);
+    key.setValueFromString(DESIRED_KEY);
     columnFamily.upsert(key, desiredRoutingInfo);
   }
 
   @Override
   public boolean activatePartition(final int partitionId) {
-    key.wrapString(DESIRED_KEY);
+    key.setValueFromString(DESIRED_KEY);
     final var desiredState = columnFamily.get(key);
     if (desiredState.getPartitions().contains(partitionId)) {
-      key.wrapString(CURRENT_KEY);
+      key.setValueFromString(CURRENT_KEY);
       final var current = columnFamily.get(key);
       final var newPartitions = new TreeSet<>(current.getPartitions());
       newPartitions.add(partitionId);

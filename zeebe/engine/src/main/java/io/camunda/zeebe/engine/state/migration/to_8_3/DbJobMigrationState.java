@@ -36,7 +36,7 @@ public class DbJobMigrationState {
   public void migrateJobStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.setValueFromString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     /*
     `DEPRECATED_JOB_ACTIVATABLE` -> `JOB_ACTIVATABLE`
@@ -45,7 +45,7 @@ public class DbJobMigrationState {
     iterator.drain(
         from.getActivatableColumnFamily(),
         (key, value) -> {
-          to.jobTypeKey.wrapString(key.first().toString());
+          to.jobTypeKey.setValueFromString(key.first().toString());
           to.fkJob.inner().wrapLong(key.second().inner().getValue());
           to.activatableColumnFamily.insert(to.tenantAwareTypeJobKey, DbNil.INSTANCE);
         });

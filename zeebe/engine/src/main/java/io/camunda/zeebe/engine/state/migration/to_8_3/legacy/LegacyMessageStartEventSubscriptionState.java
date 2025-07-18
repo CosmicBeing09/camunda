@@ -57,7 +57,7 @@ public final class LegacyMessageStartEventSubscriptionState {
   public void put(final long key, final MessageStartEventSubscriptionRecord subscription) {
     messageStartEventSubscription.setKey(key).setRecord(subscription);
 
-    messageName.wrapBuffer(subscription.getMessageNameBuffer());
+    messageName.setValueFromBuffer(subscription.getMessageNameBuffer());
     processDefinitionKey.wrapLong(subscription.getProcessDefinitionKey());
     subscriptionsColumnFamily.upsert(
         messageNameAndProcessDefinitionKey, messageStartEventSubscription);

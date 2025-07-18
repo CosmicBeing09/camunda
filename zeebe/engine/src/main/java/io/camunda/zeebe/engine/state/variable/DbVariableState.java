@@ -124,7 +124,7 @@ public class DbVariableState implements MutableVariableState {
 
     this.scopeKey.wrapLong(scopeKey);
     variableNameView.wrap(name, nameOffset, nameLength);
-    variableName.wrapBuffer(variableNameView);
+    variableName.setValueFromBuffer(variableNameView);
 
     variablesColumnFamily.upsert(scopeKeyVariableNameKey, newVariable);
   }
@@ -155,6 +155,19 @@ public class DbVariableState implements MutableVariableState {
         dbString -> true,
         (dbString, variable1) -> variablesColumnFamily.deleteExisting(scopeKeyVariableNameKey),
         () -> false);
+  }
+
+  @Override
+  public void storeVariableDocumentState(final long key, final VariableDocumentRecord record) {
+    scopeKey.wrapLong(record.getScopeKey());
+    variableDocumentStateToWrite.setKey(key).setRecord(record);
+    variableDocumentStateByScopeKeyColumnFamily.insert(scopeKey, variableDocumentStateToWrite);
+  }
+
+  @Override
+  public void removeVariableDocumentState(final long scopeKey) {
+    this.scopeKey.wrapLong(scopeKey);
+    variableDocumentStateByScopeKeyColumnFamily.deleteIfExists(this.scopeKey);
   }
 
   @Override
@@ -326,19 +339,6 @@ public class DbVariableState implements MutableVariableState {
   }
 
   @Override
-  public void storeVariableDocumentState(final long key, final VariableDocumentRecord record) {
-    scopeKey.wrapLong(record.getScopeKey());
-    variableDocumentStateToWrite.setKey(key).setRecord(record);
-    variableDocumentStateByScopeKeyColumnFamily.insert(scopeKey, variableDocumentStateToWrite);
-  }
-
-  @Override
-  public void removeVariableDocumentState(final long scopeKey) {
-    this.scopeKey.wrapLong(scopeKey);
-    variableDocumentStateByScopeKeyColumnFamily.deleteIfExists(this.scopeKey);
-  }
-
-  @Override
   public Optional<VariableDocumentState> findVariableDocumentState(final long scopeKey) {
     this.scopeKey.wrapLong(scopeKey);
     return Optional.ofNullable(variableDocumentStateByScopeKeyColumnFamily.get(this.scopeKey));
@@ -348,7 +348,7 @@ public class DbVariableState implements MutableVariableState {
       final long scopeKey, final DirectBuffer name, final int nameOffset, final int nameLength) {
     this.scopeKey.wrapLong(scopeKey);
     variableNameView.wrap(name, nameOffset, nameLength);
-    variableName.wrapBuffer(variableNameView);
+    variableName.setValueFromBuffer(variableNameView);
 
     return variablesColumnFamily.get(scopeKeyVariableNameKey);
   }

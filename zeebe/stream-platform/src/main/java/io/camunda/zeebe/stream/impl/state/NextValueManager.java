@@ -44,18 +44,18 @@ public final class NextValueManager {
   }
 
   public void setValue(final String key, final long value) {
-    nextValueKey.wrapString(key);
+    nextValueKey.setValueFromString(key);
     nextValue.set(value);
     nextValueColumnFamily.upsert(nextValueKey, nextValue);
   }
 
   public long getCurrentValue(final String key) {
-    nextValueKey.wrapString(key);
+    nextValueKey.setValueFromString(key);
     return getCurrentValue();
   }
 
   public long getCurrentValue(final DirectBuffer key) {
-    nextValueKey.wrapBuffer(key);
+    nextValueKey.setValueFromBuffer(key);
     return getCurrentValue();
   }
 

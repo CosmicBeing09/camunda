@@ -204,7 +204,7 @@ public class DecisionRequirementsMigrationTest {
     }
 
     private void assertContainsDecisionRequirements(final DecisionRequirementsRecord drgRecord) {
-      dbDecisionRequirementsId.wrapString(drgRecord.getDecisionRequirementsId());
+      dbDecisionRequirementsId.setValueFromString(drgRecord.getDecisionRequirementsId());
       dbDecisionRequirementsKey.wrapLong(drgRecord.getDecisionRequirementsKey());
       dbDecisionRequirementsVersion.wrapInt(drgRecord.getDecisionRequirementsVersion());
       assertThat(decisionRequirementsKeyByIdAndVersion.exists(decisionRequirementsIdAndVersion))

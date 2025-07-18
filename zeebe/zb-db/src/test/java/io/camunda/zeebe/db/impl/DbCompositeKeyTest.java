@@ -67,7 +67,7 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbString, DbLong> compositeKey =
         new DbCompositeKey<>(firstString, secondLong);
 
-    firstString.wrapString("foo");
+    firstString.setValueFromString("foo");
     secondLong.wrapLong(121);
 
     // when
@@ -93,7 +93,7 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbString, DbLong> compositeKey =
         new DbCompositeKey<>(firstString, secondLong);
 
-    firstString.wrapString("foo");
+    firstString.setValueFromString("foo");
     secondLong.wrapLong(121);
 
     // when
@@ -122,7 +122,7 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbCompositeKey<DbString, DbLong>, DbLong> nestedCompositeKey =
         new DbCompositeKey<>(compositeKey, thirdLong);
 
-    firstString.wrapString("foo");
+    firstString.setValueFromString("foo");
     secondLong.wrapLong(121);
     thirdLong.wrapLong(100_234L);
 
@@ -162,7 +162,7 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbCompositeKey<DbString, DbLong>, DbLong> nestedCompositeKey =
         new DbCompositeKey<>(compositeKey, thirdLong);
 
-    firstString.wrapString("foo");
+    firstString.setValueFromString("foo");
     secondLong.wrapLong(121);
     thirdLong.wrapLong(100_234L);
 

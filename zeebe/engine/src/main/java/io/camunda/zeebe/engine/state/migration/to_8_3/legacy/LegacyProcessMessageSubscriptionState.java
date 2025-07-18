@@ -54,7 +54,7 @@ public final class LegacyProcessMessageSubscriptionState {
 
   private void wrapSubscriptionKeys(final long elementInstanceKey, final DirectBuffer messageName) {
     this.elementInstanceKey.wrapLong(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
+    this.messageName.setValueFromBuffer(messageName);
   }
 
   public ColumnFamily<DbCompositeKey<DbLong, DbString>, ProcessMessageSubscription>

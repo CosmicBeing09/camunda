@@ -34,7 +34,7 @@ public class DbSignalSubscriptionMigrationState {
 
   public void migrateSignalSubscriptionStateForMultiTenancy() {
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.setValueFromString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     /*
     `DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY` -> `SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY`
@@ -46,7 +46,7 @@ public class DbSignalSubscriptionMigrationState {
               final var subscriptionKey = key.second().getValue();
               final var signalName = key.first().getBuffer();
 
-              to.signalName.wrapBuffer(signalName);
+              to.signalName.setValueFromBuffer(signalName);
               to.subscriptionKey.wrapLong(subscriptionKey);
 
               to.signalNameAndSubscriptionKeyColumnFamily.insert(
@@ -62,7 +62,7 @@ public class DbSignalSubscriptionMigrationState {
               final var signalName = key.second().getBuffer();
 
               to.subscriptionKey.wrapLong(subscriptionKey);
-              to.signalName.wrapBuffer(signalName);
+              to.signalName.setValueFromBuffer(signalName);
 
               to.subscriptionKeyAndSignalNameColumnFamily.insert(
                   to.tenantAwareSubscriptionKeyAndSignalName, DbNil.INSTANCE);

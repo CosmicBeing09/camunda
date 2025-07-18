@@ -965,7 +965,7 @@ public class MultiTenancyMigrationTest {
           new LegacyProcessState.LegacyProcessVersionManager(1, zeebeDb, transactionContext);
       processIdKey = new DbString();
       final var tenantKey = new DbString();
-      tenantKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      tenantKey.setValueFromString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
       tenantAwareProcessId = new DbTenantAwareKey<>(tenantKey, processIdKey, PlacementType.PREFIX);
       processVersionColumnFamily =
           zeebeDb.createColumnFamily(
@@ -985,7 +985,7 @@ public class MultiTenancyMigrationTest {
       sut.runMigration(new MigrationTaskContextImpl(new ClusterContextImpl(1), processingState));
 
       // then
-      processIdKey.wrapString(processId);
+      processIdKey.setValueFromString(processId);
       final var versionInfo = processVersionColumnFamily.get(tenantAwareProcessId);
       assertThat(versionInfo.getHighestVersion()).isEqualTo(5);
       assertThat(versionInfo.getKnownVersions()).containsExactly(1L, 2L, 3L, 4L, 5L);
@@ -1001,7 +1001,7 @@ public class MultiTenancyMigrationTest {
       sut.runMigration(new MigrationTaskContextImpl(new ClusterContextImpl(1), processingState));
 
       // then
-      processIdKey.wrapString(processId);
+      processIdKey.setValueFromString(processId);
       final var versionInfo = processVersionColumnFamily.get(tenantAwareProcessId);
       assertThat(versionInfo.getHighestVersion()).isEqualTo(0);
       assertThat(versionInfo.getKnownVersions()).isEmpty();

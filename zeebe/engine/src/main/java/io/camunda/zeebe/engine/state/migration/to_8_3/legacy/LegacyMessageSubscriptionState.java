@@ -64,13 +64,13 @@ public final class LegacyMessageSubscriptionState {
 
   public void put(final long key, final MessageSubscriptionRecord record) {
     elementInstanceKey.wrapLong(record.getElementInstanceKey());
-    messageName.wrapBuffer(record.getMessageNameBuffer());
+    messageName.setValueFromBuffer(record.getMessageNameBuffer());
 
     messageSubscription.setKey(key).setRecord(record).setCorrelating(false);
 
     subscriptionColumnFamily.insert(elementKeyAndMessageName, messageSubscription);
 
-    correlationKey.wrapBuffer(record.getCorrelationKeyBuffer());
+    correlationKey.setValueFromBuffer(record.getCorrelationKeyBuffer());
     messageNameAndCorrelationKeyColumnFamily.insert(
         nameCorrelationAndElementInstanceKey, DbNil.INSTANCE);
   }

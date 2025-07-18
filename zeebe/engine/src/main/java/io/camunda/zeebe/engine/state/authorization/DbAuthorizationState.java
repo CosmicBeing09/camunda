@@ -84,9 +84,9 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     authorizationByAuthorizationKeyColumnFamily.insert(
         this.authorizationKey, persistedAuthorization);
 
-    ownerId.wrapString(authorization.getOwnerId());
-    ownerType.wrapString(authorization.getOwnerType().name());
-    resourceType.wrapString(authorization.getResourceType().name());
+    ownerId.setValueFromString(authorization.getOwnerId());
+    ownerType.setValueFromString(authorization.getOwnerType().name());
+    resourceType.setValueFromString(authorization.getResourceType().name());
 
     final var permissions =
         Optional.ofNullable(permissionsColumnFamily.get(ownerTypeOwnerIdAndResourceType))
@@ -140,8 +140,8 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     authorizationByAuthorizationKeyColumnFamily.deleteExisting(this.authorizationKey);
 
     // remove authorization key from owner
-    ownerId.wrapString(persistedAuthorization.getOwnerId());
-    ownerType.wrapString(persistedAuthorization.getOwnerType().name());
+    ownerId.setValueFromString(persistedAuthorization.getOwnerId());
+    ownerType.setValueFromString(persistedAuthorization.getOwnerType().name());
     final var keys = authorizationKeysByOwnerColumnFamily.get(ownerTypeAndOwnerId);
     keys.removeAuthorizationKey(authorizationKey);
     authorizationKeysByOwnerColumnFamily.update(ownerTypeAndOwnerId, keys);
@@ -161,9 +161,9 @@ public class DbAuthorizationState implements MutableAuthorizationState {
       final String ownerId,
       final AuthorizationResourceType resourceType,
       final PermissionType permissionType) {
-    this.ownerType.wrapString(ownerType.name());
-    this.ownerId.wrapString(ownerId);
-    this.resourceType.wrapString(resourceType.name());
+    this.ownerType.setValueFromString(ownerType.name());
+    this.ownerId.setValueFromString(ownerId);
+    this.resourceType.setValueFromString(resourceType.name());
 
     final var persistedPermissions = permissionsColumnFamily.get(ownerTypeOwnerIdAndResourceType);
 
@@ -177,8 +177,8 @@ public class DbAuthorizationState implements MutableAuthorizationState {
   @Override
   public Set<Long> getAuthorizationKeysForOwner(
       final AuthorizationOwnerType ownerType, final String ownerId) {
-    this.ownerType.wrapString(ownerType.name());
-    this.ownerId.wrapString(ownerId);
+    this.ownerType.setValueFromString(ownerType.name());
+    this.ownerId.setValueFromString(ownerId);
     final var keys = authorizationKeysByOwnerColumnFamily.get(ownerTypeAndOwnerId);
     return keys == null ? Collections.emptySet() : keys.getAuthorizationKeys();
   }
@@ -189,9 +189,9 @@ public class DbAuthorizationState implements MutableAuthorizationState {
       final AuthorizationResourceType resourceType,
       final PermissionType permissionType,
       final Set<String> resourceIds) {
-    this.ownerType.wrapString(ownerType.name());
-    this.ownerId.wrapString(ownerId);
-    this.resourceType.wrapString(resourceType.name());
+    this.ownerType.setValueFromString(ownerType.name());
+    this.ownerId.setValueFromString(ownerId);
+    this.resourceType.setValueFromString(resourceType.name());
 
     final var permissions = permissionsColumnFamily.get(ownerTypeOwnerIdAndResourceType);
     permissions.removeResourceIdentifiers(permissionType, resourceIds);
