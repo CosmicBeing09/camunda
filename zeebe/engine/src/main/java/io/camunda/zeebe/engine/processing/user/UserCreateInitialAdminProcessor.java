@@ -71,28 +71,28 @@ public class UserCreateInitialAdminProcessor implements TypedRecordProcessor<Use
 
   @Override
   public void processRecord(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
+    final var userRecord = command.getValue();
     final var adminRoleId = DefaultRole.ADMIN.getId();
 
     checkUserCreateAuthorization(command)
         .flatMap(ignored -> checkRoleUpdateAuthorization(command))
-        .flatMap(ignored -> checkUserDoesNotExist(record.getUsername()))
+        .flatMap(ignored -> checkUserDoesNotExist(userRecord.getUsername()))
         .flatMap(ignored -> checkAdminRoleExists(adminRoleId))
         .flatMap(ignored -> checkAdminRoleHasNoUsers(adminRoleId))
         .ifRightOrLeft(
             ignored -> {
-              final var key = keyGenerator.nextKey();
-              commandWriter.appendFollowUpCommand(key, UserIntent.CREATE, record);
+              final var generatedUserKey = keyGenerator.nextKey();
+              commandWriter.appendFollowUpCommand(generatedUserKey, UserIntent.CREATE, userRecord);
               commandWriter.appendFollowUpCommand(
-                  key,
+                  generatedUserKey,
                   RoleIntent.ADD_ENTITY,
                   new RoleRecord()
                       .setRoleId(adminRoleId)
-                      .setEntityId(record.getUsername())
+                      .setEntityId(userRecord.getUsername())
                       .setEntityType(EntityType.USER));
-              stateWriter.appendFollowUpEvent(key, UserIntent.INITIAL_ADMIN_CREATED, record);
+              stateWriter.appendFollowUpEvent(generatedUserKey, UserIntent.INITIAL_ADMIN_CREATED, userRecord);
               responseWriter.writeEventOnCommand(
-                  key, UserIntent.INITIAL_ADMIN_CREATED, record, command);
+                  generatedUserKey, UserIntent.INITIAL_ADMIN_CREATED, userRecord, command);
             },
             message -> {
               // For this command we always want to reject with FORBIDDEN
