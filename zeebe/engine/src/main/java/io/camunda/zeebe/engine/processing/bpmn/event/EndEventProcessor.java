@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.EnsureUtil.ensureNotNull;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventPublicationBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
@@ -49,7 +49,7 @@ public final class EndEventProcessor implements BpmnElementProcessor<ExecutableE
   private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
 
   public EndEventProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     expressionProcessor = bpmnBehaviors.expressionBehavior();
     eventPublicationBehavior = bpmnBehaviors.eventPublicationBehavior();

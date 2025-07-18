@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 
-public interface BpmnBehaviors {
+public interface BpmnBehaviorProvider {
 
   ExpressionProcessor expressionBehavior();
 
