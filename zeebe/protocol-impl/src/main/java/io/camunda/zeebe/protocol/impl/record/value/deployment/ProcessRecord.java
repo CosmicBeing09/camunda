@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.protocol.impl.record.value.deployment;
 
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_BPMN_PROCESS_ID;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_BPMN_PROCESS_ID;
 import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_KEY;
 import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_VERSION;
 
@@ -24,7 +24,7 @@ import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
 public final class ProcessRecord extends UnifiedRecordValue implements Process {
-  private final StringProperty bpmnProcessIdProp = new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID);
+  private final StringProperty bpmnProcessIdProp = new StringProperty(PROP_BPMN_PROCESS_ID);
   private final IntegerProperty versionProp = new IntegerProperty(PROP_PROCESS_VERSION);
   private final LongProperty keyProp = new LongProperty(PROP_PROCESS_KEY);
   private final StringProperty resourceNameProp = new StringProperty("resourceName");
@@ -69,6 +69,16 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
   @Override
   public int getVersion() {
     return versionProp.getValue();
+  }
+
+  public ProcessRecord setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return BufferUtil.bufferAsString(versionTagProp.getValue());
   }
 
   @Override
@@ -116,8 +126,8 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
     return this;
   }
 
-  public ProcessRecord setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessRecord setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -201,16 +211,6 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
 
   public ProcessRecord setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return BufferUtil.bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessRecord setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }
