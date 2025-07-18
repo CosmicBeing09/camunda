@@ -154,14 +154,14 @@ public class IncidentQueryControllerTest extends RestControllerTest {
   void shouldSearchIncidentWithEmptyQuery() {
     // given
     when(incidentServices.search(any(IncidentQuery.class))).thenReturn(SEARCH_QUERY_RESULT);
-    final var request = "{}";
+    final var searchRequestPayload = "{}";
     // when / then
     webClient
         .post()
         .uri(INCIDENT_SEARCH_URL)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(request)
+        .bodyValue(searchRequestPayload)
         .exchange()
         .expectStatus()
         .isOk()
@@ -176,7 +176,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
   @Test
   void shouldSearchIncidentWithAllFilters() {
     when(incidentServices.search(any(IncidentQuery.class))).thenReturn(SEARCH_QUERY_RESULT);
-    final var request =
+    final var filterRequestPayload =
         """
             {
               "filter":{
@@ -202,7 +202,7 @@ public class IncidentQueryControllerTest extends RestControllerTest {
         .uri(INCIDENT_SEARCH_URL)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(request)
+        .bodyValue(filterRequestPayload)
         .exchange()
         .expectStatus()
         .isOk()
