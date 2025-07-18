@@ -26,7 +26,7 @@ public interface UserTaskState {
   Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequestMetadata(
       final long userTaskKey);
 
-  Optional<String> findInitialAssignee(long key);
+  Optional<String> findInitialAssignee(long userTaskKey);
 
   enum LifecycleState {
     NOT_FOUND((byte) 0),
