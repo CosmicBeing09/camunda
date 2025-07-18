@@ -55,27 +55,27 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ClockRecord> roleCreateCommand) {
+  public void processNewCommand(final TypedRecord<ClockRecord> cancelBatchOperationCommand) {
     final var authRequest =
-        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
+        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var intent = (ClockIntent) roleCreateCommand.getIntent();
-    final var clockRecord = roleCreateCommand.getValue();
+    final var intent = (ClockIntent) cancelBatchOperationCommand.getIntent();
+    final var clockRecord = cancelBatchOperationCommand.getValue();
 
     if (intent == ClockIntent.PIN && clockRecord.getTime() < 0) {
       final var rejectionMessage =
           "Expected pin time to be not negative but it was %d".formatted(clockRecord.getTime());
 
-      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       responseWriter.writeRejectionOnCommand(
-          roleCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+          cancelBatchOperationCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       return;
     }
 
@@ -83,12 +83,13 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (roleCreateCommand.hasRequestMetadata()) {
+    if (cancelBatchOperationCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord,
-          roleCreateCommand);
+          cancelBatchOperationCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(roleCreateCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(
+        cancelBatchOperationCommand);
   }
 
   @Override

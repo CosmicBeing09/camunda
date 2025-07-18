@@ -74,48 +74,48 @@ public final class BatchOperationSuspendProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> roleCreateCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> cancelBatchOperationCommand) {
     final var request =
         new AuthorizationRequest(
-            roleCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            cancelBatchOperationCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = roleCreateCommand.getValue();
-    final var batchOperationKey = roleCreateCommand.getValue().getBatchOperationKey();
+    final var recordValue = cancelBatchOperationCommand.getValue();
+    final var batchOperationKey = cancelBatchOperationCommand.getValue().getBatchOperationKey();
     final var suspendKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to suspend batch operation with key '{}': {}",
-        roleCreateCommand.getKey(),
+        cancelBatchOperationCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(roleCreateCommand, batchOperationKey, recordValue);
+      rejectNotFound(cancelBatchOperationCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be suspended
     if (!batchOperation.get().canSuspend()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(roleCreateCommand, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(cancelBatchOperationCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
     suspendBatchOperation(suspendKey, recordValue);
     responseWriter.writeEventOnCommand(
-        suspendKey, BatchOperationIntent.SUSPENDED, roleCreateCommand.getValue(),
-        roleCreateCommand);
+        suspendKey, BatchOperationIntent.SUSPENDED, cancelBatchOperationCommand.getValue(),
+        cancelBatchOperationCommand);
     commandDistributionBehavior
         .withKey(suspendKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(roleCreateCommand);
+        .distribute(cancelBatchOperationCommand);
 
     metrics.recordSuspended(batchOperation.get().getBatchOperationType());
   }

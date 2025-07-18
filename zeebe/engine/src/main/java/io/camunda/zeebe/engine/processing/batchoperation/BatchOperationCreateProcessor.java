@@ -66,25 +66,25 @@ public final class BatchOperationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> roleCreateCommand) {
-    if (isEmptyOrNullFilter(roleCreateCommand)) {
+  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> cancelBatchOperationCommand) {
+    if (isEmptyOrNullFilter(cancelBatchOperationCommand)) {
       rejectionWriter.appendRejection(
-          roleCreateCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          cancelBatchOperationCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       responseWriter.writeRejectionOnCommand(
-          roleCreateCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          cancelBatchOperationCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
 
-    final var authorizationResult = isAuthorized(roleCreateCommand);
+    final var authorizationResult = isAuthorized(cancelBatchOperationCommand);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    final var recordValue = roleCreateCommand.getValue();
+    final var recordValue = cancelBatchOperationCommand.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
     metrics.startTotalLatencyMeasure(key, recordValue.getBatchOperationType());
 
@@ -99,11 +99,11 @@ public final class BatchOperationCreateProcessor
         recordWithKey,
         FollowUpEventMetadata.of(b -> b.batchOperationReference(key)));
     responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey,
-        roleCreateCommand);
+        cancelBatchOperationCommand);
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(roleCreateCommand.getValueType(), roleCreateCommand.getIntent(), recordWithKey);
+        .distribute(cancelBatchOperationCommand.getValueType(), cancelBatchOperationCommand.getIntent(), recordWithKey);
 
     metrics.recordCreated(recordWithKey.getBatchOperationType());
   }

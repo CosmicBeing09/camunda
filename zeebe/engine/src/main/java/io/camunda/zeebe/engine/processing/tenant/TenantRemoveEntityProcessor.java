@@ -65,16 +65,16 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> roleCreateCommand) {
-    final var record = roleCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> cancelBatchOperationCommand) {
+    final var record = cancelBatchOperationCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(roleCreateCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(cancelBatchOperationCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -82,22 +82,22 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
 
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          roleCreateCommand,
+          cancelBatchOperationCommand,
           RejectionType.NOT_FOUND,
           "Expected to remove entity from tenant '%s', but no tenant with this ID exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!validateEntityAssignment(roleCreateCommand, tenantId)) {
+    if (!validateEntityAssignment(cancelBatchOperationCommand, tenantId)) {
       return;
     }
 
     final var tenantKey = persistedTenant.get().getTenantKey();
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_REMOVED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_REMOVED, record,
-        roleCreateCommand);
-    distributeCommand(roleCreateCommand);
+        cancelBatchOperationCommand);
+    distributeCommand(cancelBatchOperationCommand);
   }
 
   @Override

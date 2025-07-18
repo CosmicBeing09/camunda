@@ -67,19 +67,19 @@ public class MarkPartitionBootstrappedProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> roleCreateCommand) {
-    final var scaleUp = roleCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> cancelBatchOperationCommand) {
+    final var scaleUp = cancelBatchOperationCommand.getValue();
 
-    switch (validate(roleCreateCommand)) {
+    switch (validate(cancelBatchOperationCommand)) {
       case Left(final var tuple) -> {
-        rejectWith(roleCreateCommand, tuple.getLeft(), tuple.getRight());
+        rejectWith(cancelBatchOperationCommand, tuple.getLeft(), tuple.getRight());
       }
       case Right(final var bootstrappedPartition) -> {
         final var scalingKey = keyGenerator.nextKey();
         final var wasAlreadyBootstrapped = areAllPartitionsBootstrapped();
         stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
         responseWriter.writeEventOnCommand(
-            scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp, roleCreateCommand);
+            scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp, cancelBatchOperationCommand);
 
         // now the PARTITION_BOOTSTRAPPED event has been applied to the state, let's check if
         // it was the last partition missing.
@@ -89,7 +89,7 @@ public class MarkPartitionBootstrappedProcessor
         distributionBehavior
             .withKey(scalingKey)
             .inQueue(DistributionQueue.SCALING)
-            .distribute(roleCreateCommand);
+            .distribute(cancelBatchOperationCommand);
       }
     }
   }

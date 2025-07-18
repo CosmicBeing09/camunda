@@ -52,8 +52,8 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> roleCreateCommand) {
-    final var record = roleCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<UserRecord> cancelBatchOperationCommand) {
+    final var record = cancelBatchOperationCommand.getValue();
     final String username = record.getUsername();
     final var persistedUserOptional = userState.getUser(username);
 
@@ -62,21 +62,21 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
           "Expected to update user with username %s, but a user with this username does not exist"
               .formatted(username);
 
-      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var persistedUser = persistedUserOptional.get();
 
     final var authRequest =
-        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
+        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
             .addResourceId(persistedUser.getUsername());
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
       return;
     }
 
@@ -84,13 +84,13 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
 
     stateWriter.appendFollowUpEvent(persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser);
     responseWriter.writeEventOnCommand(
-        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, roleCreateCommand);
+        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, cancelBatchOperationCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(roleCreateCommand);
+        .distribute(cancelBatchOperationCommand);
   }
 
   @Override

@@ -128,26 +128,26 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> roleCreateCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> cancelBatchOperationCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            roleCreateCommand,
+            cancelBatchOperationCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            roleCreateCommand.getValue().getTenantId(),
+            cancelBatchOperationCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(roleCreateCommand);
+    transformAndDistributeDeployment(cancelBatchOperationCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(roleCreateCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(cancelBatchOperationCommand.getValue());
   }
 
   @Override

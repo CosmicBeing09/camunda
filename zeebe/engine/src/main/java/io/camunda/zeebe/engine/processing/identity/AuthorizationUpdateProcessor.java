@@ -47,9 +47,9 @@ public class AuthorizationUpdateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> roleCreateCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> cancelBatchOperationCommand) {
     permissionsBehavior
-        .isAuthorized(roleCreateCommand)
+        .isAuthorized(cancelBatchOperationCommand)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
@@ -57,16 +57,16 @@ public class AuthorizationUpdateProcessor
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
-                    roleCreateCommand.getValue(),
-                    roleCreateCommand.getValue().getPermissionTypes(),
+                    cancelBatchOperationCommand.getValue(),
+                    cancelBatchOperationCommand.getValue().getPermissionTypes(),
                     record.getResourceType(),
                     "Expected to update authorization with permission types '%s' and resource type '%s', but these permissions are not supported. Supported permission types are: '%s'"))
         .flatMap(permissionsBehavior::mappingExists)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(roleCreateCommand, authorizationRecord),
+            authorizationRecord -> writeEventAndDistribute(cancelBatchOperationCommand, authorizationRecord),
             (rejection) -> {
-              rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
             });
   }
 

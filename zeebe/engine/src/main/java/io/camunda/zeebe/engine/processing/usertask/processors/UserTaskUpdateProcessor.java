@@ -84,7 +84,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     final long userTaskKey = command.getKey();
 
     final var expectedValueTypes = Set.of(ValueType.USER_TASK, ValueType.VARIABLE_DOCUMENT);
-    final var asyncRequest =
+    final var optionalAsyncRequest =
         asyncRequestState
             .findAllRequestsByScopeKey(userTaskRecord.getElementInstanceKey())
             .filter(request -> expectedValueTypes.contains(request.valueType()))
@@ -95,7 +95,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             // operations targeting the same user task.
             .findFirst();
 
-    if (asyncRequest.isEmpty()) {
+    if (optionalAsyncRequest.isEmpty()) {
       LOGGER.error(
           "No async request found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "
               + "This may indicate a problem with how the update was triggered. "
@@ -108,8 +108,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       return;
     }
 
-    final var request = asyncRequest.get();
-    switch (request.valueType()) {
+    final var foundAsyncRequest = optionalAsyncRequest.get();
+    switch (foundAsyncRequest.valueType()) {
       case USER_TASK -> {
         stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
         responseWriter.writeResponse(
@@ -117,8 +117,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             UserTaskIntent.UPDATED,
             userTaskRecord,
             ValueType.USER_TASK,
-            request.requestId(),
-            request.requestStreamId());
+            foundAsyncRequest.requestId(),
+            foundAsyncRequest.requestStreamId());
       }
       case VARIABLE_DOCUMENT -> {
         // Update triggered by a VariableDocument command.
@@ -148,22 +148,22 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             variableDocumentKey,
             VariableDocumentIntent.UPDATED,
             variableDocumentRecord,
-            m -> m.operationReference(request.operationReference()));
+            m -> m.operationReference(foundAsyncRequest.operationReference()));
 
         responseWriter.writeResponse(
             variableDocumentKey,
             VariableDocumentIntent.UPDATED,
             variableDocumentRecord,
             ValueType.VARIABLE_DOCUMENT,
-            request.requestId(),
-            request.requestStreamId());
+            foundAsyncRequest.requestId(),
+            foundAsyncRequest.requestStreamId());
       }
       default ->
           throw new IllegalArgumentException(
-              "Unexpected valueType of async request: '%s'".formatted(request.valueType()));
+              "Unexpected valueType of async request: '%s'".formatted(foundAsyncRequest.valueType()));
     }
 
-    stateWriter.appendFollowUpEvent(request.key(), AsyncRequestIntent.PROCESSED, request.record());
+    stateWriter.appendFollowUpEvent(foundAsyncRequest.key(), AsyncRequestIntent.PROCESSED, foundAsyncRequest.record());
   }
 
   private void mergeVariables(

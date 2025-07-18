@@ -49,19 +49,19 @@ public class AuthorizationDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> roleCreateCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> cancelBatchOperationCommand) {
     permissionsBehavior
-        .isAuthorized(roleCreateCommand, PermissionType.DELETE)
+        .isAuthorized(cancelBatchOperationCommand, PermissionType.DELETE)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
                     authorizationRecord, AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION))
         .map(PersistedAuthorization::getAuthorizationKey)
         .ifRightOrLeft(
-            authorizationKey -> writeEventAndDistribute(roleCreateCommand, authorizationKey),
+            authorizationKey -> writeEventAndDistribute(cancelBatchOperationCommand, authorizationKey),
             (rejection) -> {
-              rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
             });
   }
 

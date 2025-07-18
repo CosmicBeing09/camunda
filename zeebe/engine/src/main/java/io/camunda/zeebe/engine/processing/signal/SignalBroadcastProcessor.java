@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> roleCreateCommand) {
+  public void processNewCommand(final TypedRecord<SignalRecord> cancelBatchOperationCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = roleCreateCommand.getValue();
+    final var signalRecord = cancelBatchOperationCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(roleCreateCommand, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(cancelBatchOperationCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(roleCreateCommand, isStartEvent, subscriptionRecord);
+          checkAuthorization(cancelBatchOperationCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,12 +110,13 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (roleCreateCommand.hasRequestMetadata()) {
+    if (cancelBatchOperationCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
-          roleCreateCommand);
+          cancelBatchOperationCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(roleCreateCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(
+        cancelBatchOperationCommand);
   }
 
   @Override
