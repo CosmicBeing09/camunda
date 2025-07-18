@@ -28,20 +28,20 @@ import org.junit.jupiter.api.Test;
 
 public class AuthorizationServiceTest {
 
-  private AuthorizationServices services;
-  private AuthorizationSearchClient client;
+  private AuthorizationServices authorizationServices;
+  private AuthorizationSearchClient authorizationSearchClient;
   private SecurityConfiguration securityConfiguration;
 
   @BeforeEach
   public void before() {
     securityConfiguration = new SecurityConfiguration();
-    client = mock(AuthorizationSearchClient.class);
-    when(client.withSecurityContext(any())).thenReturn(client);
-    services =
+    authorizationSearchClient = mock(AuthorizationSearchClient.class);
+    when(authorizationSearchClient.withSecurityContext(any())).thenReturn(authorizationSearchClient);
+    authorizationServices =
         new AuthorizationServices(
             mock(BrokerClient.class),
             mock(SecurityContextProvider.class),
-            client,
+            authorizationSearchClient,
             null,
             securityConfiguration);
   }
@@ -50,13 +50,13 @@ public class AuthorizationServiceTest {
   public void emptyQueryReturnsAllResults() {
     // given
     final var result = mock(SearchQueryResult.class);
-    when(client.searchAuthorizations(any())).thenReturn(result);
+    when(authorizationSearchClient.searchAuthorizations(any())).thenReturn(result);
 
     final AuthorizationFilter filter = new AuthorizationFilter.Builder().build();
     final var searchQuery = SearchQueryBuilders.authorizationSearchQuery((b) -> b.filter(filter));
 
     // when
-    final var searchQueryResult = services.search(searchQuery);
+    final var searchQueryResult = authorizationServices.search(searchQuery);
 
     // then
     assertThat(searchQueryResult).isEqualTo(result);
@@ -68,7 +68,7 @@ public class AuthorizationServiceTest {
     securityConfiguration.getAuthorizations().setEnabled(true);
 
     // when
-    final var authorizedApplications = services.getAuthorizedApplications(Set.of());
+    final var authorizedApplications = authorizationServices.getAuthorizedApplications(Set.of());
 
     // then
     assertThat(authorizedApplications).isEmpty();
@@ -80,7 +80,7 @@ public class AuthorizationServiceTest {
     securityConfiguration.getAuthorizations().setEnabled(false);
 
     // when
-    final var authorizedApplications = services.getAuthorizedApplications(Set.of());
+    final var authorizedApplications = authorizationServices.getAuthorizedApplications(Set.of());
 
     // then
     assertThat(authorizedApplications).containsExactly("*");
@@ -91,10 +91,10 @@ public class AuthorizationServiceTest {
     // given
     final var entity = mock(AuthorizationEntity.class);
     final var result = new SearchQueryResult<>(1, List.of(entity), Arrays.array(), Arrays.array());
-    when(client.searchAuthorizations(any())).thenReturn(result);
+    when(authorizationSearchClient.searchAuthorizations(any())).thenReturn(result);
 
     // when
-    final var searchQueryResult = services.findAuthorization(entity.authorizationKey());
+    final var searchQueryResult = authorizationServices.findAuthorization(entity.authorizationKey());
 
     // then
     assertThat(searchQueryResult).contains(entity);
@@ -104,10 +104,10 @@ public class AuthorizationServiceTest {
   public void shouldThrownExceptionIfAuthorizationNotFound() {
     // given
     final var authorizationKey = 100L;
-    when(client.searchAuthorizations(any()))
+    when(authorizationSearchClient.searchAuthorizations(any()))
         .thenReturn(new SearchQueryResult<>(0, List.of(), null, null));
 
     // when / then
-    assertThat(services.findAuthorization(authorizationKey)).isEmpty();
+    assertThat(authorizationServices.findAuthorization(authorizationKey)).isEmpty();
   }
 }
