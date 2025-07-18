@@ -52,7 +52,7 @@ final class DeltaEncodedLongArrayValueRandomizedPropertyTest {
 
     // when
     final var output = new StringBuilder();
-    input.writeJSON(output);
+    input.writePropertiesAsJson(output);
 
     // then
     assertThat(output.toString())

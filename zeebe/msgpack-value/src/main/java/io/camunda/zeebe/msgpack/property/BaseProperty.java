@@ -92,10 +92,10 @@ public abstract class BaseProperty<T extends BaseValue> implements Recyclable {
   }
 
   public void writeJSON(final StringBuilder sb) {
-    key.writeJSON(sb);
+    key.writePropertiesAsJson(sb);
     sb.append(":");
     if (hasValue()) {
-      resolveValue().writeJSON(sb);
+      resolveValue().writePropertiesAsJson(sb);
     } else {
       sb.append("\"NO VALID WRITEABLE VALUE\"");
     }

@@ -66,7 +66,7 @@ public final class LogStreamPrinter {
     final UnpackedObject unpackedObject = eventCache.get(metadata.getValueType());
     event.readValue(unpackedObject);
     sb.append(ENTRY_INDENTATION).append("Value:\n");
-    unpackedObject.writeJSON(sb);
+    unpackedObject.writePropertiesAsJson(sb);
     sb.append("\n");
   }
 

@@ -54,7 +54,7 @@ public class BinaryValue extends BaseValue {
   }
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
+  public void writePropertiesAsJson(final StringBuilder builder) {
     final byte[] bytes = new byte[length];
     data.getBytes(0, bytes);
 

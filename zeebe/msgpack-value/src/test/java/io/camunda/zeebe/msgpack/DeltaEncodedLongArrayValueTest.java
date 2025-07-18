@@ -42,7 +42,7 @@ final class DeltaEncodedLongArrayValueTest {
 
     // when
     final var output = new StringBuilder();
-    value.writeJSON(output);
+    value.writePropertiesAsJson(output);
 
     // then
     assertThat(output.toString()).isEqualTo("[1,1000,1234,1238,2127]");
