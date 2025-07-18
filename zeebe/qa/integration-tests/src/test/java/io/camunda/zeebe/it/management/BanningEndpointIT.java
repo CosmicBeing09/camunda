@@ -45,7 +45,7 @@ public class BanningEndpointIT {
     final long processInstanceKey;
     try (final var client = cluster.newClientBuilder().build()) {
       final var process = Bpmn.createExecutableProcess("processId").startEvent().endEvent().done();
-      client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+      client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
       final var result =
           client
@@ -68,7 +68,7 @@ public class BanningEndpointIT {
     final long processInstanceKey;
     try (final var client = cluster.newClientBuilder().build()) {
       final var process = Bpmn.createExecutableProcess("processId").startEvent().endEvent().done();
-      client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+      client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
       final var result =
           client

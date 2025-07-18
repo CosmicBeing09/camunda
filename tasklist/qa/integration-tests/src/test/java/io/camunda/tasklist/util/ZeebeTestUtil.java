@@ -59,7 +59,7 @@ public abstract class ZeebeTestUtil {
     if (classpathResources.length == 0) {
       return null;
     }
-    DeployResourceCommandStep1 deployProcessCommandStep1 = client.newDeployResourceCommand();
+    DeployResourceCommandStep1 deployProcessCommandStep1 = client.deployResource();
     for (final String classpathResource : classpathResources) {
       deployProcessCommandStep1 =
           deployProcessCommandStep1.addResourceFromClasspath(classpathResource).tenantId(tenantId);
@@ -113,7 +113,7 @@ public abstract class ZeebeTestUtil {
       final String resourceName) {
     final DeployResourceCommandStep1.DeployResourceCommandStep2 deployProcessCommandStep1 =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processModel, resourceName)
             .tenantId(tenantId);
     final DeploymentEvent deploymentEvent = deployProcessCommandStep1.send().join();

@@ -211,7 +211,7 @@ public class MigrationITExtension
 
   private void ingestRecordToTriggerImporters(final CamundaClient client) {
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("process/error-end-event.bpmn")
         .send()
         .join();

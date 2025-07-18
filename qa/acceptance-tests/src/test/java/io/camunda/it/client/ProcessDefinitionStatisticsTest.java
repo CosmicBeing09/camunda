@@ -825,7 +825,7 @@ public class ProcessDefinitionStatisticsTest {
   private static DeploymentEvent deployResource(
       final BpmnModelInstance processModel, final String resourceName) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(processModel, resourceName)
         .send()
         .join();

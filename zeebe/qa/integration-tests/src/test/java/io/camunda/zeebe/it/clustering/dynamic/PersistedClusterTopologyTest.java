@@ -92,7 +92,7 @@ public class PersistedClusterTopologyTest {
 
     final var deploymentEvent =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processDefinition, "catch_event_process.bpmn")
             .send()
             .join();

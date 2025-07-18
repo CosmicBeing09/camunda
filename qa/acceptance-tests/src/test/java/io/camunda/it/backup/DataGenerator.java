@@ -207,7 +207,7 @@ public class DataGenerator implements AutoCloseable {
     private void deploy() {
       final var deployResourceCmd =
           camundaClient
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process.createModel(), bpmnProcessId + ".bpmn");
       final var deploymentEvent = deployResourceCmd.send().join();
       LOGGER.debug("Deployed process {} with key {}", bpmnProcessId, deploymentEvent.getKey());

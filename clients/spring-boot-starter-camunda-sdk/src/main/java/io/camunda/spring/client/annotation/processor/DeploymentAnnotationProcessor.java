@@ -80,16 +80,16 @@ public class DeploymentAnnotationProcessor extends AbstractCamundaAnnotationProc
       throw new IllegalArgumentException("No resources found to deploy");
     }
 
-    final DeployResourceCommandStep1 command = client.newDeployResourceCommand();
+    final DeployResourceCommandStep1 command = client.deployResource();
     DeployResourceCommandStep2 commandStep2 = null;
-    for (Resource resource : resources) {
-      try (InputStream inputStream = resource.getInputStream()) {
+    for (final Resource resource : resources) {
+      try (final InputStream inputStream = resource.getInputStream()) {
         if (commandStep2 == null) {
           commandStep2 = command.addResourceStream(inputStream, resource.getFilename());
         } else {
           commandStep2 = commandStep2.addResourceStream(inputStream, resource.getFilename());
         }
-      } catch (IOException e) {
+      } catch (final IOException e) {
         throw new RuntimeException("Error reading resource: " + e.getMessage(), e);
       }
     }

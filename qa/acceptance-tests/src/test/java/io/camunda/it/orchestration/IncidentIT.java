@@ -41,7 +41,7 @@ public class IncidentIT {
   void shouldExportIncident() {
     final var resource =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/error-end-event.bpmn")
             .send()
             .join();
@@ -243,7 +243,7 @@ public class IncidentIT {
             .endEvent()
             .done();
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(parentProcess, "parent.bpmn")
         .addProcessModel(childProcess, "child.bpmn")
         .send()
@@ -255,7 +255,7 @@ public class IncidentIT {
 
     final var resource =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/errorProcess.bpmn")
             .send()
             .join();

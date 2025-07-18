@@ -588,7 +588,7 @@ public class ProcessDefinitionSearchTest {
 
   private static DeploymentEvent deployResource(final String resourceName) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath(resourceName)
         .send()
         .join();

@@ -41,7 +41,7 @@ public class RejectLargeDeploymentTest {
     // when -- deploying the process
     try (final var client = zeebe.newClientBuilder().build()) {
       final var response =
-          client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send();
+          client.deployResource().addProcessModel(process, "process.bpmn").send();
       assertThat((Future<DeploymentEvent>) response).failsWithin(Duration.ofSeconds(5));
     }
 

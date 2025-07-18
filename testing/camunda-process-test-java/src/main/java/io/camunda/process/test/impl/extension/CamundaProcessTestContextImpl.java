@@ -176,7 +176,7 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
         "Mock: Deploy a child process '{}' with result variables {}", childProcessId, variables);
 
     final String resourceName = childProcessId + ".bpmn";
-    client.newDeployResourceCommand().addProcessModel(processModel, resourceName).send().join();
+    client.deployResource().addProcessModel(processModel, resourceName).send().join();
   }
 
   @Override
@@ -293,7 +293,7 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
 
     final String resourceName = decisionId + ".dmn";
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceStream(
             new ByteArrayInputStream(Dmn.convertToString(modelInstance).getBytes()), resourceName)
         .send()

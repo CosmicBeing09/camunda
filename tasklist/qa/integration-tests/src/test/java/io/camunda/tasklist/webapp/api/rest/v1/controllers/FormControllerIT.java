@@ -103,21 +103,21 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
         final var flowNodeBpmnId = "Activity_14emqkd";
 
         camundaClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("formDeployedV1.form")
             .send()
             .join();
 
         v2DeployedData =
             camundaClient
-                .newDeployResourceCommand()
+                .deployResource()
                 .addResourceFromClasspath("formDeployedV2.form")
                 .send()
                 .join();
 
         lastVersionDeployedData =
             camundaClient
-                .newDeployResourceCommand()
+                .deployResource()
                 .addResourceFromClasspath("formDeployedV3.form")
                 .send()
                 .join();

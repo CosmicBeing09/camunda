@@ -62,7 +62,7 @@ final class ContainerClusterSmokeIT {
       // when
       final DeploymentEvent deploymentEvent =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(processModel, "smoke.bpmn")
               .send()
               .join();

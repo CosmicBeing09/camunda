@@ -94,7 +94,7 @@ public class NonDefaultContainerSetupTest {
               .build()) {
         // when
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(process, "process.bpmn")
             .send()
             .join(10, TimeUnit.SECONDS);

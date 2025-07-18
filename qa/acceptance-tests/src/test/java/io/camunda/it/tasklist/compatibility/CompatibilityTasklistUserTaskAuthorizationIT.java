@@ -283,7 +283,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
   }
 
   private static void deployResource(final CamundaClient camundaClient, final String resource) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resource).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resource).send().join();
   }
 
   public static long createProcessInstance(

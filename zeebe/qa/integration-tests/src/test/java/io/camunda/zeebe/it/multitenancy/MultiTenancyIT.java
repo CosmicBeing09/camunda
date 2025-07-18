@@ -197,7 +197,7 @@ public class MultiTenancyIT {
       // when
       final Future<DeploymentEvent> response =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_A)
               .send();
@@ -216,7 +216,7 @@ public class MultiTenancyIT {
       // when
       final Future<DeploymentEvent> result =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_B)
               .send();
@@ -239,7 +239,7 @@ public class MultiTenancyIT {
       // when
       final Future<DeploymentEvent> result =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(DEFAULT_TENANT)
               .send();
@@ -264,7 +264,7 @@ public class MultiTenancyIT {
       // when
       // note that deploy process command is always only for the default tenant
       final Future<DeploymentEvent> result =
-          client.newDeployCommand().addProcessModel(process, "process.bpmn").send();
+          client.deploy().addProcessModel(process, "process.bpmn").send();
 
       // then
       assertThat(result)
@@ -284,7 +284,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       final Future<DeploymentEvent> deploymentResponse =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_A)
               .send();
@@ -312,7 +312,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       final Future<DeploymentEvent> deploymentResponse =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_A)
               .send();
@@ -340,7 +340,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -348,7 +348,7 @@ public class MultiTenancyIT {
     }
     try (final var client = createCamundaClient(USER_TENANT_B)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_B)
           .send()
@@ -360,7 +360,7 @@ public class MultiTenancyIT {
       final var processV2 = Bpmn.createExecutableProcess(processId).startEvent().done();
       final Future<DeploymentEvent> result =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(processV2, "process.bpmn")
               .tenantId(TENANT_B)
               .send();
@@ -382,7 +382,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A_AND_B)) {
       processDefinitionKey =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_A)
               .send()
@@ -414,7 +414,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -449,7 +449,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       processDefinitionKey =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_A)
               .send()
@@ -486,7 +486,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -495,7 +495,7 @@ public class MultiTenancyIT {
 
     try (final var client = createCamundaClient(USER_TENANT_B)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(
               Bpmn.createExecutableProcess("parent")
                   .startEvent()
@@ -536,7 +536,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A_AND_B)) {
       processDefinitionKey =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process, "process.bpmn")
               .tenantId(TENANT_A)
               .send()
@@ -576,7 +576,7 @@ public class MultiTenancyIT {
         Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -607,7 +607,7 @@ public class MultiTenancyIT {
         Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -641,7 +641,7 @@ public class MultiTenancyIT {
         Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -672,7 +672,7 @@ public class MultiTenancyIT {
         Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -703,7 +703,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -738,7 +738,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -777,7 +777,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -817,7 +817,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -857,7 +857,7 @@ public class MultiTenancyIT {
     // given
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -900,7 +900,7 @@ public class MultiTenancyIT {
     final ActivatedJob activatedJob;
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -947,7 +947,7 @@ public class MultiTenancyIT {
     final ActivatedJob activatedJob;
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -997,7 +997,7 @@ public class MultiTenancyIT {
             .done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -1037,7 +1037,7 @@ public class MultiTenancyIT {
     final long incidentKey;
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -1074,7 +1074,7 @@ public class MultiTenancyIT {
   void shouldAllowModifyProcessInstanceForDefaultTenant() {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
-      client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+      client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
       final long processInstanceKey =
           client
@@ -1099,7 +1099,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -1130,7 +1130,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -1167,10 +1167,10 @@ public class MultiTenancyIT {
   void shouldAllowMigrateProcessInstanceForDefaultTenant() {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
-      client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+      client.deployResource().addProcessModel(process, "process.bpmn").send().join();
       final var deploymentResponse =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(migratedProcess, "migrated-process.bpmn")
               .send()
               .join();
@@ -1204,14 +1204,14 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
           .join();
       final var deploymentResponse =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(migratedProcess, "migrated-process.bpmn")
               .tenantId(TENANT_A)
               .send()
@@ -1249,14 +1249,14 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
           .join();
       final var deploymentResponse =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(migratedProcess, "process.bpmn")
               .tenantId(TENANT_A)
               .send()
@@ -1301,7 +1301,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addResourceFromClasspath("dmn/decision-table.dmn")
           .send()
           .join();
@@ -1323,7 +1323,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addResourceFromClasspath("dmn/decision-table.dmn")
           .tenantId(TENANT_A)
           .send()
@@ -1347,7 +1347,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addResourceFromClasspath("dmn/decision-table.dmn")
           .tenantId(TENANT_A)
           .send()
@@ -1379,7 +1379,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()
@@ -1405,7 +1405,7 @@ public class MultiTenancyIT {
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
-          .newDeployResourceCommand()
+          .deployResource()
           .addProcessModel(process, "process.bpmn")
           .tenantId(TENANT_A)
           .send()

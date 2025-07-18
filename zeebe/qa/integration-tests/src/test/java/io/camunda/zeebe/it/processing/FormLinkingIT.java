@@ -45,7 +45,7 @@ final class FormLinkingIT {
     // given
     final DeploymentEvent deployment =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess("form_linking_test")
                     .startEvent()
