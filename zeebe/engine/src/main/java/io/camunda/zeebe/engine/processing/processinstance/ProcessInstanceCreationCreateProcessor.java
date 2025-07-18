@@ -71,7 +71,7 @@ public final class ProcessInstanceCreationCreateProcessor
           BpmnElementType.BOUNDARY_EVENT,
           BpmnElementType.UNSPECIFIED);
 
-  private final ProcessInstanceRecord newProcessInstance = new ProcessInstanceRecord();
+  private final ProcessInstanceRecord processInstanceRecordTemplate = new ProcessInstanceRecord();
 
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
@@ -109,13 +109,13 @@ public final class ProcessInstanceCreationCreateProcessor
       final TypedRecord<ProcessInstanceCreationRecord> command,
       final CommandControl<ProcessInstanceCreationRecord> controller) {
 
-    final ProcessInstanceCreationRecord record = command.getValue();
+    final ProcessInstanceCreationRecord creationRecord = command.getValue();
 
-    getProcess(record)
+    getProcess(creationRecord)
         .flatMap(process -> isAuthorized(command, process))
         .flatMap(process -> validateCommand(command.getValue(), process))
         .ifRightOrLeft(
-            process -> createProcessInstance(controller, record, process),
+            process -> createProcessInstance(controller, creationRecord, process),
             rejection -> controller.reject(rejection.type(), rejection.reason()));
 
     return true;
@@ -355,16 +355,16 @@ public final class ProcessInstanceCreationCreateProcessor
 
   private ProcessInstanceRecord initProcessInstanceRecord(
       final DeployedProcess process, final long processInstanceKey) {
-    newProcessInstance.reset();
-    newProcessInstance.setBpmnProcessId(process.getBpmnProcessId());
-    newProcessInstance.setVersion(process.getVersion());
-    newProcessInstance.setProcessDefinitionKey(process.getKey());
-    newProcessInstance.setProcessInstanceKey(processInstanceKey);
-    newProcessInstance.setBpmnElementType(BpmnElementType.PROCESS);
-    newProcessInstance.setElementId(process.getProcess().getId());
-    newProcessInstance.setFlowScopeKey(-1);
-    newProcessInstance.setTenantId(process.getTenantId());
-    return newProcessInstance;
+    processInstanceRecordTemplate.reset();
+    processInstanceRecordTemplate.setBpmnProcessId(process.getBpmnProcessId());
+    processInstanceRecordTemplate.setVersion(process.getVersion());
+    processInstanceRecordTemplate.setProcessDefinitionKey(process.getKey());
+    processInstanceRecordTemplate.setProcessInstanceKey(processInstanceKey);
+    processInstanceRecordTemplate.setBpmnElementType(BpmnElementType.PROCESS);
+    processInstanceRecordTemplate.setElementId(process.getProcess().getId());
+    processInstanceRecordTemplate.setFlowScopeKey(-1);
+    processInstanceRecordTemplate.setTenantId(process.getTenantId());
+    return processInstanceRecordTemplate;
   }
 
   private Either<Rejection, DeployedProcess> getProcess(
