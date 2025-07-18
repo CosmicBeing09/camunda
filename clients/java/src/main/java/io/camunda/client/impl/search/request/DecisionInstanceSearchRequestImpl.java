@@ -91,7 +91,7 @@ public class DecisionInstanceSearchRequestImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.DecisionInstanceSearchQuery getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.DecisionInstanceSearchQuery getProperty() {
     return request;
   }
 

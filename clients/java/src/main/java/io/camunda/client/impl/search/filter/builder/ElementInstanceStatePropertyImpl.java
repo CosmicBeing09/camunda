@@ -64,7 +64,7 @@ public class ElementInstanceStatePropertyImpl
   }
 
   @Override
-  protected ElementInstanceStateFilterProperty getSearchRequestProperty() {
+  protected ElementInstanceStateFilterProperty getProperty() {
     return filterProperty;
   }
 

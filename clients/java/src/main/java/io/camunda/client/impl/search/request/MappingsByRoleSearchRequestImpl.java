@@ -54,8 +54,8 @@ public class MappingsByRoleSearchRequestImpl
     this.httpClient = httpClient;
     this.jsonMapper = jsonMapper;
     this.roleId = roleId;
-    this.httpRequestConfig = httpClient.newRequestConfig();
-    this.request = new MappingSearchQueryRequest();
+    httpRequestConfig = httpClient.newRequestConfig();
+    request = new MappingSearchQueryRequest();
   }
 
   @Override
@@ -114,7 +114,7 @@ public class MappingsByRoleSearchRequestImpl
   }
 
   @Override
-  protected MappingSearchQueryRequest getSearchRequestProperty() {
+  protected MappingSearchQueryRequest getProperty() {
     return request;
   }
 }

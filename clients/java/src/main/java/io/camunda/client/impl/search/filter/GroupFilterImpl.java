@@ -41,7 +41,7 @@ public class GroupFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.GroupFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.GroupFilter getProperty() {
     return filter;
   }
 }

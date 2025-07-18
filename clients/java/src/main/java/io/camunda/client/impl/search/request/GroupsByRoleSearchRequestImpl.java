@@ -113,7 +113,7 @@ public class GroupsByRoleSearchRequestImpl
   }
 
   @Override
-  protected GroupSearchQueryRequest getSearchRequestProperty() {
+  protected GroupSearchQueryRequest getProperty() {
     return request;
   }
 }

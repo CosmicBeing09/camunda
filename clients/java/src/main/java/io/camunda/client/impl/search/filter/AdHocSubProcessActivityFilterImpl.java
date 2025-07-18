@@ -43,7 +43,7 @@ public class AdHocSubProcessActivityFilterImpl
 
   @Override
   protected io.camunda.client.protocol.rest.AdHocSubProcessActivityFilter
-      getSearchRequestProperty() {
+  getProperty() {
     return filter;
   }
 }

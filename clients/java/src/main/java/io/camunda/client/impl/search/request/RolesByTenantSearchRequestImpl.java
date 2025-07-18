@@ -113,7 +113,7 @@ public class RolesByTenantSearchRequestImpl
   }
 
   @Override
-  protected RoleSearchQueryRequest getSearchRequestProperty() {
+  protected RoleSearchQueryRequest getProperty() {
     return request;
   }
 }

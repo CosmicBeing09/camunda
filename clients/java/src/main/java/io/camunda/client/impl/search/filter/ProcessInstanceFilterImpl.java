@@ -323,7 +323,7 @@ public class ProcessInstanceFilterImpl
       final ProcessInstanceFilterImpl orFilter = new ProcessInstanceFilterImpl();
       fn.accept(orFilter);
       final io.camunda.client.protocol.rest.ProcessInstanceFilter protocolFilter =
-          orFilter.getSearchRequestProperty();
+          orFilter.getProperty();
       final ProcessInstanceFilterFields protocolFilterFields =
           ProcessInstanceFilterMapper.from(protocolFilter);
       filter.add$OrItem(protocolFilterFields);
@@ -332,7 +332,7 @@ public class ProcessInstanceFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.ProcessInstanceFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.ProcessInstanceFilter getProperty() {
     return filter;
   }
 }

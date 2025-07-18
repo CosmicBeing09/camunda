@@ -107,7 +107,7 @@ public class IncidentFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.IncidentFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.IncidentFilter getProperty() {
     return filter;
   }
 }

@@ -73,7 +73,7 @@ public class DecisionDefinitionFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.DecisionDefinitionFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.DecisionDefinitionFilter getProperty() {
     return filter;
   }
 }

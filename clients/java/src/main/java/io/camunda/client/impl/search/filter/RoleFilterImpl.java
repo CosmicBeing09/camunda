@@ -41,7 +41,7 @@ public class RoleFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.RoleFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.RoleFilter getProperty() {
     return filter;
   }
 }

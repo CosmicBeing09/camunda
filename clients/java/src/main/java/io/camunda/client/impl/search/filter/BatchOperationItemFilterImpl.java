@@ -104,7 +104,7 @@ public class BatchOperationItemFilterImpl
   }
 
   @Override
-  protected BatchOperationItemFilter getSearchRequestProperty() {
+  protected BatchOperationItemFilter getProperty() {
     return filter;
   }
 }

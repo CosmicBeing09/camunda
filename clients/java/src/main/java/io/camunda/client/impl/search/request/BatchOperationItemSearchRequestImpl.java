@@ -92,7 +92,7 @@ public class BatchOperationItemSearchRequestImpl
 
   @Override
   protected io.camunda.client.protocol.rest.BatchOperationItemSearchQuery
-      getSearchRequestProperty() {
+  getProperty() {
     return request;
   }
 

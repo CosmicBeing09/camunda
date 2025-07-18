@@ -108,7 +108,7 @@ public class UserTaskSearchRequestImpl
   }
 
   @Override
-  protected UserTaskSearchQuery getSearchRequestProperty() {
+  protected UserTaskSearchQuery getProperty() {
     return request;
   }
 }

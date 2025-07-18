@@ -114,7 +114,7 @@ public class UsersByRoleSearchRequestImpl
   }
 
   @Override
-  protected RoleUserSearchQueryRequest getSearchRequestProperty() {
+  protected RoleUserSearchQueryRequest getProperty() {
     return request;
   }
 }

@@ -110,7 +110,7 @@ public class ElementInstanceSearchRequestImpl
   }
 
   @Override
-  protected ElementInstanceSearchQuery getSearchRequestProperty() {
+  protected ElementInstanceSearchQuery getProperty() {
     return request;
   }
 }

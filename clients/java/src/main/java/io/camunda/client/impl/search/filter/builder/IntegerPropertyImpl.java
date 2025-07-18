@@ -55,7 +55,7 @@ public class IntegerPropertyImpl extends TypedSearchRequestPropertyProvider<Inte
   }
 
   @Override
-  protected IntegerFilterProperty getSearchRequestProperty() {
+  protected IntegerFilterProperty getProperty() {
     return filterProperty;
   }
 

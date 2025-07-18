@@ -244,7 +244,7 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.UserTaskFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.UserTaskFilter getProperty() {
     return filter;
   }
 }

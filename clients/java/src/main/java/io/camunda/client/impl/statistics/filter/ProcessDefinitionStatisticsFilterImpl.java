@@ -260,7 +260,7 @@ public class ProcessDefinitionStatisticsFilterImpl
           new ProcessDefinitionStatisticsFilterImpl();
       fn.accept(orFilter);
       final io.camunda.client.protocol.rest.ProcessDefinitionStatisticsFilter protocolFilter =
-          orFilter.getSearchRequestProperty();
+          orFilter.getProperty();
       final BaseProcessInstanceFilterFields protocolFilterFields =
           ProcessDefinitionStatisticsFilterMapper.from(protocolFilter);
       filter.add$OrItem(protocolFilterFields);
@@ -270,7 +270,7 @@ public class ProcessDefinitionStatisticsFilterImpl
 
   @Override
   protected io.camunda.client.protocol.rest.ProcessDefinitionStatisticsFilter
-      getSearchRequestProperty() {
+  getProperty() {
     return filter;
   }
 }

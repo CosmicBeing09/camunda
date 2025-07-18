@@ -65,7 +65,7 @@ public class BatchOperationStatePropertyImpl
   }
 
   @Override
-  protected BatchOperationStateFilterProperty getSearchRequestProperty() {
+  protected BatchOperationStateFilterProperty getProperty() {
     return filterProperty;
   }
 

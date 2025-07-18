@@ -53,7 +53,7 @@ public class VariableValueFilterImpl
   }
 
   @Override
-  protected VariableValueFilterProperty getSearchRequestProperty() {
+  protected VariableValueFilterProperty getProperty() {
     return filter;
   }
 }

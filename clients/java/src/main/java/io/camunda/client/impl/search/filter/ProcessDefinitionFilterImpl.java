@@ -73,7 +73,7 @@ public class ProcessDefinitionFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.ProcessDefinitionFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.ProcessDefinitionFilter getProperty() {
     return filter;
   }
 }

@@ -53,7 +53,7 @@ public class MappingFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.MappingFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.MappingFilter getProperty() {
     return filter;
   }
 }

@@ -114,7 +114,7 @@ public class ClientsByRoleSearchRequestImpl
   }
 
   @Override
-  protected RoleClientSearchQueryRequest getSearchRequestProperty() {
+  protected RoleClientSearchQueryRequest getProperty() {
     return request;
   }
 }

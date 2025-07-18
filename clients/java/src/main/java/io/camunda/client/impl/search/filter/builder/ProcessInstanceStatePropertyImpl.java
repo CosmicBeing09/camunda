@@ -64,7 +64,7 @@ public class ProcessInstanceStatePropertyImpl
   }
 
   @Override
-  protected ProcessInstanceStateFilterProperty getSearchRequestProperty() {
+  protected ProcessInstanceStateFilterProperty getProperty() {
     return filterProperty;
   }
 

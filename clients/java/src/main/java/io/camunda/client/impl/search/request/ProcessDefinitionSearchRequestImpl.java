@@ -110,7 +110,7 @@ public class ProcessDefinitionSearchRequestImpl
   }
 
   @Override
-  protected ProcessDefinitionSearchQuery getSearchRequestProperty() {
+  protected ProcessDefinitionSearchQuery getProperty() {
     return request;
   }
 }

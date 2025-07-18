@@ -92,7 +92,7 @@ public class DecisionDefinitionSearchRequestImpl
 
   @Override
   protected io.camunda.client.protocol.rest.DecisionDefinitionSearchQuery
-      getSearchRequestProperty() {
+  getProperty() {
     return request;
   }
 

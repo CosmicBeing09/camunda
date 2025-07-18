@@ -110,7 +110,7 @@ public class ProcessInstanceSearchRequestImpl
   }
 
   @Override
-  protected ProcessInstanceSearchQuery getSearchRequestProperty() {
+  protected ProcessInstanceSearchQuery getProperty() {
     return request;
   }
 }

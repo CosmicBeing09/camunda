@@ -109,7 +109,7 @@ public class IncidentSearchRequestImpl
   }
 
   @Override
-  protected IncidentSearchQuery getSearchRequestProperty() {
+  protected IncidentSearchQuery getProperty() {
     return request;
   }
 }

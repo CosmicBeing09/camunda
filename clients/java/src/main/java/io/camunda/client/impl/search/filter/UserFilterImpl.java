@@ -71,7 +71,7 @@ public class UserFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.UserFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.UserFilter getProperty() {
     return filter;
   }
 }
