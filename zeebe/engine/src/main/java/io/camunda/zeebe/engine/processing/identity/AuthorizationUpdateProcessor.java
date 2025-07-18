@@ -47,9 +47,9 @@ public class AuthorizationUpdateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> userCreateCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> authorizationDeleteCommand) {
     permissionsBehavior
-        .isAuthorized(userCreateCommand)
+        .isAuthorized(authorizationDeleteCommand)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
@@ -57,23 +57,23 @@ public class AuthorizationUpdateProcessor
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
-                    userCreateCommand.getValue(),
-                    userCreateCommand.getValue().getPermissionTypes(),
+                    authorizationDeleteCommand.getValue(),
+                    authorizationDeleteCommand.getValue().getPermissionTypes(),
                     record.getResourceType(),
                     "Expected to update authorization with permission types '%s' and resource type '%s', but these permissions are not supported. Supported permission types are: '%s'"))
         .flatMap(permissionsBehavior::mappingExists)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(userCreateCommand, authorizationRecord),
+            authorizationRecord -> writeEventAndDistribute(authorizationDeleteCommand, authorizationRecord),
             (rejection) -> {
-              rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
             });
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> command) {
+  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> distributedDeleteCommand) {
     permissionsBehavior
-        .mappingExists(command.getValue())
+        .mappingExists(distributedDeleteCommand.getValue())
         .flatMap(
             s ->
                 permissionsBehavior.authorizationExists(
@@ -81,13 +81,13 @@ public class AuthorizationUpdateProcessor
         .ifRightOrLeft(
             ignored ->
                 stateWriter.appendFollowUpEvent(
-                    command.getValue().getAuthorizationKey(),
+                    distributedDeleteCommand.getValue().getAuthorizationKey(),
                     AuthorizationIntent.UPDATED,
-                    command.getValue()),
+                    distributedDeleteCommand.getValue()),
             rejection ->
-                rejectionWriter.appendRejection(command, rejection.type(), rejection.reason()));
+                rejectionWriter.appendRejection(distributedDeleteCommand, rejection.type(), rejection.reason()));
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void writeEventAndDistribute(

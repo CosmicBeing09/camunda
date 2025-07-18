@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> userCreateCommand) {
+  public void processNewCommand(final TypedRecord<SignalRecord> authorizationDeleteCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = userCreateCommand.getValue();
+    final var signalRecord = authorizationDeleteCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(userCreateCommand, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(authorizationDeleteCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(userCreateCommand, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(userCreateCommand, isStartEvent, subscriptionRecord);
+          checkAuthorization(authorizationDeleteCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,24 +110,24 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (userCreateCommand.hasRequestMetadata()) {
+    if (authorizationDeleteCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
-          userCreateCommand);
+          authorizationDeleteCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(userCreateCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(authorizationDeleteCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<SignalRecord> command) {
-    final var signalRecord = command.getValue();
+  public void processDistributedCommand(final TypedRecord<SignalRecord> distributedDeleteCommand) {
+    final var signalRecord = distributedDeleteCommand.getValue();
     signalSubscriptionState.visitBySignalName(
         signalRecord.getSignalNameBuffer(),
         signalRecord.getTenantId(),
         subscription -> activateElement(subscription.getRecord(), signalRecord.getVariablesBuffer()));
 
-    stateWriter.appendFollowUpEvent(command.getKey(), SignalIntent.BROADCASTED, command.getValue());
-    commandDistributionBehavior.acknowledgeCommand(command);
+    stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), SignalIntent.BROADCASTED, distributedDeleteCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void checkAuthorization(

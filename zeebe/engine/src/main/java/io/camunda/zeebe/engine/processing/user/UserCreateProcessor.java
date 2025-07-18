@@ -61,57 +61,57 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> userCreateCommand) {
+  public void processNewCommand(final TypedRecord<UserRecord> authorizationDeleteCommand) {
     final var authRequest =
-        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
+        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var username = userCreateCommand.getValue().getUsername();
+    final var username = authorizationDeleteCommand.getValue().getUsername();
     final var user = userState.getUser(username);
 
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
-      rejectionWriter.appendRejection(userCreateCommand, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.ALREADY_EXISTS, message);
+      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    userCreateCommand.getValue().setUserKey(key);
+    authorizationDeleteCommand.getValue().setUserKey(key);
 
-    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, userCreateCommand.getValue());
+    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, authorizationDeleteCommand.getValue());
     addUserPermissions(key, username);
-    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, userCreateCommand.getValue(),
-        userCreateCommand);
+    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, authorizationDeleteCommand.getValue(),
+        authorizationDeleteCommand);
 
     distributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(userCreateCommand);
+        .distribute(authorizationDeleteCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteCommand) {
+    final var record = distributedDeleteCommand.getValue();
 
     userState
         .getUser(record.getUserKey())
         .ifPresentOrElse(
             user -> {
               final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.getUsername());
-              rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, message);
+              rejectionWriter.appendRejection(distributedDeleteCommand, RejectionType.ALREADY_EXISTS, message);
             },
             () -> {
-              stateWriter.appendFollowUpEvent(command.getKey(), UserIntent.CREATED, record);
+              stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), UserIntent.CREATED, record);
             });
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void addUserPermissions(final long key, final String username) {

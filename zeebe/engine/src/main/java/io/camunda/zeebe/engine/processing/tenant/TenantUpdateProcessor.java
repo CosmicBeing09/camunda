@@ -54,34 +54,34 @@ public class TenantUpdateProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> userCreateCommand) {
+  public void processNewCommand(final TypedRecord<TenantRecord> authorizationDeleteCommand) {
 
-    final var record = userCreateCommand.getValue();
+    final var record = authorizationDeleteCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var persistedTenant = tenantState.getTenantById(tenantId);
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          userCreateCommand,
+          authorizationDeleteCommand,
           RejectionType.NOT_FOUND,
           "Expected to update tenant with id '%s', but no tenant with this id exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!isAuthorizedToUpdate(userCreateCommand, persistedTenant.get())) {
+    if (!isAuthorizedToUpdate(authorizationDeleteCommand, persistedTenant.get())) {
       return;
     }
 
     updateExistingTenant(persistedTenant.get(), record);
-    updateStateAndDistribute(userCreateCommand, persistedTenant.get());
+    updateStateAndDistribute(authorizationDeleteCommand, persistedTenant.get());
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> command) {
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteCommand) {
     stateWriter.appendFollowUpEvent(
-        command.getValue().getTenantKey(), TenantIntent.UPDATED, command.getValue());
-    commandDistributionBehavior.acknowledgeCommand(command);
+        distributedDeleteCommand.getValue().getTenantKey(), TenantIntent.UPDATED, distributedDeleteCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private boolean isAuthorizedToUpdate(

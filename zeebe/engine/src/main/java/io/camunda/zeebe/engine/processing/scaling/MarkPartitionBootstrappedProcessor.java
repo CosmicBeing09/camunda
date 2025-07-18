@@ -67,19 +67,19 @@ public class MarkPartitionBootstrappedProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> userCreateCommand) {
-    final var scaleUp = userCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> authorizationDeleteCommand) {
+    final var scaleUp = authorizationDeleteCommand.getValue();
 
-    switch (validate(userCreateCommand)) {
+    switch (validate(authorizationDeleteCommand)) {
       case Left(final var tuple) -> {
-        rejectWith(userCreateCommand, tuple.getLeft(), tuple.getRight());
+        rejectWith(authorizationDeleteCommand, tuple.getLeft(), tuple.getRight());
       }
       case Right(final var bootstrappedPartition) -> {
         final var scalingKey = keyGenerator.nextKey();
         final var wasAlreadyBootstrapped = areAllPartitionsBootstrapped();
         stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
         responseWriter.writeEventOnCommand(
-            scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp, userCreateCommand);
+            scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp, authorizationDeleteCommand);
 
         // now the PARTITION_BOOTSTRAPPED event has been applied to the state, let's check if
         // it was the last partition missing.
@@ -89,27 +89,27 @@ public class MarkPartitionBootstrappedProcessor
         distributionBehavior
             .withKey(scalingKey)
             .inQueue(DistributionQueue.SCALING)
-            .distribute(userCreateCommand);
+            .distribute(authorizationDeleteCommand);
       }
     }
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
-    final var scalingKey = command.getKey();
+  public void processDistributedCommand(final TypedRecord<ScaleRecord> distributedDeleteCommand) {
+    final var scaleUp = distributedDeleteCommand.getValue();
+    final var scalingKey = distributedDeleteCommand.getKey();
     final var wasAlreadyBootstrapped = areAllPartitionsBootstrapped();
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
     // if the partition that has completed bootstrapping is the current one and the command was
     // not already processed, resubscribe to all message start events and signals
-    if (scaleUp.getRedistributedPartitions().contains(command.getPartitionId())
-        && !routingState.currentPartitions().contains(command.getPartitionId())) {
+    if (scaleUp.getRedistributedPartitions().contains(distributedDeleteCommand.getPartitionId())
+        && !routingState.currentPartitions().contains(distributedDeleteCommand.getPartitionId())) {
       subscribeToStartEventsAndSignals();
     }
     if (!wasAlreadyBootstrapped && areAllPartitionsBootstrapped()) {
       stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALED_UP, scaleUp);
     }
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void subscribeToStartEventsAndSignals() {

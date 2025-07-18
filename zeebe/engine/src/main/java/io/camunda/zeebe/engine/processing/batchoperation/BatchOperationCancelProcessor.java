@@ -71,19 +71,19 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> userCreateCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> authorizationDeleteCommand) {
     final var request =
         new AuthorizationRequest(
-            userCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            authorizationDeleteCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = userCreateCommand.getValue();
+    final var recordValue = authorizationDeleteCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
     final var cancelKey = keyGenerator.nextKey();
     LOGGER.debug(
@@ -95,21 +95,21 @@ public final class BatchOperationCancelProcessor
     if (batchOperation.isPresent() && batchOperation.get().canCancel()) {
       cancelBatchOperationEvent(cancelKey, recordValue);
       responseWriter.writeEventOnCommand(
-          cancelKey, BatchOperationIntent.CANCELED, userCreateCommand.getValue(),
-          userCreateCommand);
+          cancelKey, BatchOperationIntent.CANCELED, authorizationDeleteCommand.getValue(),
+          authorizationDeleteCommand);
       commandDistributionBehavior
           .withKey(cancelKey)
           .inQueue(DistributionQueue.BATCH_OPERATION)
-          .distribute(userCreateCommand);
+          .distribute(authorizationDeleteCommand);
 
       metrics.recordCancelled(batchOperation.get().getBatchOperationType());
     } else {
       rejectionWriter.appendRejection(
-          userCreateCommand,
+          authorizationDeleteCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
       responseWriter.writeRejectionOnCommand(
-          userCreateCommand,
+          authorizationDeleteCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
     }
@@ -117,15 +117,15 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
-    final var recordValue = command.getValue();
+      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedDeleteCommand) {
+    final var recordValue = distributedDeleteCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
 
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
       rejectionWriter.appendRejection(
-          command, RejectionType.NOT_FOUND, "Batch operation does not exist!");
-      commandDistributionBehavior.acknowledgeCommand(command);
+          distributedDeleteCommand, RejectionType.NOT_FOUND, "Batch operation does not exist!");
+      commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
       return;
     }
 
@@ -134,7 +134,7 @@ public final class BatchOperationCancelProcessor
         batchOperationKey,
         recordValue);
     cancelBatchOperationEvent(batchOperationKey, recordValue);
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void cancelBatchOperationEvent(

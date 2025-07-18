@@ -81,56 +81,56 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> userCreateCommand) {
-    final var record = userCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<UserRecord> authorizationDeleteCommand) {
+    final var record = authorizationDeleteCommand.getValue();
     final String username = record.getUsername();
     final var persistedUser = userState.getUser(username);
 
     if (persistedUser.isEmpty()) {
       final var rejectionMessage = USER_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(username);
 
-      rejectionWriter.appendRejection(userCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var user = persistedUser.get();
     final var authRequest =
-        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.USER, PermissionType.DELETE)
+        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.USER, PermissionType.DELETE)
             .addResourceId(user.getUsername());
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
       return;
     }
 
     deleteUser(user);
     responseWriter.writeEventOnCommand(
-        user.getUserKey(), UserIntent.DELETED, userCreateCommand.getValue(),
-        userCreateCommand);
+        user.getUserKey(), UserIntent.DELETED, authorizationDeleteCommand.getValue(),
+        authorizationDeleteCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(userCreateCommand);
+        .distribute(authorizationDeleteCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> command) {
-    final var username = command.getValue().getUsername();
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteCommand) {
+    final var username = distributedDeleteCommand.getValue().getUsername();
     userState
         .getUser(username)
         .ifPresentOrElse(
             this::deleteUser,
             () -> {
               final var message = USER_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(username);
-              rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, message);
+              rejectionWriter.appendRejection(distributedDeleteCommand, RejectionType.NOT_FOUND, message);
             });
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void deleteUser(final PersistedUser user) {

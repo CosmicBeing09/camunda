@@ -128,41 +128,41 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> userCreateCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> authorizationDeleteCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            userCreateCommand,
+            authorizationDeleteCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            userCreateCommand.getValue().getTenantId(),
+            authorizationDeleteCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(userCreateCommand);
+    transformAndDistributeDeployment(authorizationDeleteCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(userCreateCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(authorizationDeleteCommand.getValue());
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<DeploymentRecord> command) {
-    if (deploymentState.hasStoredDeploymentRecord(command.getKey())) {
+  public void processDistributedCommand(final TypedRecord<DeploymentRecord> distributedDeleteCommand) {
+    if (deploymentState.hasStoredDeploymentRecord(distributedDeleteCommand.getKey())) {
       // we already processed this deployment, so we can ignore it
-      distributionBehavior.acknowledgeCommand(command);
+      distributionBehavior.acknowledgeCommand(distributedDeleteCommand);
       rejectionWriter.appendRejection(
-          command, RejectionType.ALREADY_EXISTS, "Deployment already exists");
+          distributedDeleteCommand, RejectionType.ALREADY_EXISTS, "Deployment already exists");
       return;
     }
 
-    processDistributedRecord(command);
+    processDistributedRecord(distributedDeleteCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(command.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(distributedDeleteCommand.getValue());
   }
 
   @Override

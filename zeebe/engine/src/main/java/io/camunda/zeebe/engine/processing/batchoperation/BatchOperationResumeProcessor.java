@@ -82,53 +82,53 @@ public final class BatchOperationResumeProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> userCreateCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> authorizationDeleteCommand) {
     final var request =
         new AuthorizationRequest(
-            userCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            authorizationDeleteCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = userCreateCommand.getValue();
-    final var batchOperationKey = userCreateCommand.getValue().getBatchOperationKey();
+    final var recordValue = authorizationDeleteCommand.getValue();
+    final var batchOperationKey = authorizationDeleteCommand.getValue().getBatchOperationKey();
     final var resumeKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to resume a batch operation with key '{}': {}",
-        userCreateCommand.getKey(),
+        authorizationDeleteCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(userCreateCommand, batchOperationKey, recordValue);
+      rejectNotFound(authorizationDeleteCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be resumed
     if (!batchOperation.get().canResume()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(userCreateCommand, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(authorizationDeleteCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
-    resumeBatchOperation(resumeKey, batchOperation.get(), userCreateCommand.getValue());
+    resumeBatchOperation(resumeKey, batchOperation.get(), authorizationDeleteCommand.getValue());
     commandDistributionBehavior
         .withKey(resumeKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(userCreateCommand);
+        .distribute(authorizationDeleteCommand);
 
     metrics.recordResumed(batchOperation.get().getBatchOperationType());
   }
 
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
-    final var recordValue = command.getValue();
+      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedDeleteCommand) {
+    final var recordValue = distributedDeleteCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
 
     // Validation
@@ -138,14 +138,14 @@ public final class BatchOperationResumeProcessor
           "Processing distributed command to resume with key '{}': {}",
           batchOperationKey,
           recordValue);
-      resumeBatchOperation(command.getKey(), batchOperation.get(), recordValue);
+      resumeBatchOperation(distributedDeleteCommand.getKey(), batchOperation.get(), recordValue);
     } else {
       LOGGER.debug(
           "Distributed command to resume a batch operation with key '{}' will be ignored: {}",
           batchOperationKey,
           recordValue);
     }
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   @VisibleForTesting

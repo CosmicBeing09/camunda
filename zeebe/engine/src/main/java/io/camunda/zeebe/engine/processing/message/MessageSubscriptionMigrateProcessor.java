@@ -42,14 +42,14 @@ public class MessageSubscriptionMigrateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> userCreateCommand) {
-    migrateMessageSubscription(userCreateCommand);
+  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> authorizationDeleteCommand) {
+    migrateMessageSubscription(authorizationDeleteCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<MessageSubscriptionRecord> command) {
-    migrateMessageSubscription(command);
-    commandDistributionBehavior.acknowledgeCommand(command);
+  public void processDistributedCommand(final TypedRecord<MessageSubscriptionRecord> distributedDeleteCommand) {
+    migrateMessageSubscription(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void migrateMessageSubscription(final TypedRecord<MessageSubscriptionRecord> command) {

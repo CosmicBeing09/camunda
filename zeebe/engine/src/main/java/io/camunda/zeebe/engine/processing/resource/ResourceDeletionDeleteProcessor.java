@@ -113,31 +113,31 @@ public class ResourceDeletionDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> userCreateCommand) {
-    final var value = userCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> authorizationDeleteCommand) {
+    final var value = authorizationDeleteCommand.getValue();
     final long eventKey = keyGenerator.nextKey();
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING, value);
 
-    tryDeleteResources(userCreateCommand);
+    tryDeleteResources(authorizationDeleteCommand);
 
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETED, value);
     commandDistributionBehavior
         .withKey(eventKey)
         .inQueue(DistributionQueue.DEPLOYMENT)
-        .distribute(userCreateCommand);
+        .distribute(authorizationDeleteCommand);
     responseWriter.writeEventOnCommand(eventKey, ResourceDeletionIntent.DELETING, value,
-        userCreateCommand);
+        authorizationDeleteCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ResourceDeletionRecord> command) {
-    final var value = command.getValue();
-    stateWriter.appendFollowUpEvent(command.getKey(), ResourceDeletionIntent.DELETING, value);
+  public void processDistributedCommand(final TypedRecord<ResourceDeletionRecord> distributedDeleteCommand) {
+    final var value = distributedDeleteCommand.getValue();
+    stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), ResourceDeletionIntent.DELETING, value);
 
-    tryDeleteResources(command);
+    tryDeleteResources(distributedDeleteCommand);
 
-    stateWriter.appendFollowUpEvent(command.getKey(), ResourceDeletionIntent.DELETED, value);
-    commandDistributionBehavior.acknowledgeCommand(command);
+    stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), ResourceDeletionIntent.DELETED, value);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   @Override

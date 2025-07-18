@@ -63,26 +63,26 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> userCreateCommand) {
-    final var record = userCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> authorizationDeleteCommand) {
+    final var record = authorizationDeleteCommand.getValue();
     final String roleId = record.getRoleId();
     final var authorizationRequest =
-        new AuthorizationRequest(userCreateCommand, AuthorizationResourceType.ROLE, PermissionType.DELETE)
+        new AuthorizationRequest(authorizationDeleteCommand, AuthorizationResourceType.ROLE, PermissionType.DELETE)
             .addResourceId(roleId);
 
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(userCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(userCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(authorizationDeleteCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(roleId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleId);
-      rejectionWriter.appendRejection(userCreateCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(userCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(authorizationDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -94,33 +94,34 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
     deleteAuthorizations(record);
 
     stateWriter.appendFollowUpEvent(roleKey, RoleIntent.DELETED, record);
-    responseWriter.writeEventOnCommand(roleKey, RoleIntent.DELETED, record, userCreateCommand);
+    responseWriter.writeEventOnCommand(roleKey, RoleIntent.DELETED, record,
+        authorizationDeleteCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(userCreateCommand);
+        .distribute(authorizationDeleteCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteCommand) {
+    final var record = distributedDeleteCommand.getValue();
     roleState
         .getRole(record.getRoleId())
         .ifPresentOrElse(
             role -> {
-              removeMembers(command.getValue());
-              deleteAuthorizations(command.getValue());
+              removeMembers(distributedDeleteCommand.getValue());
+              deleteAuthorizations(distributedDeleteCommand.getValue());
               stateWriter.appendFollowUpEvent(
-                  command.getKey(), RoleIntent.DELETED, command.getValue());
+                  distributedDeleteCommand.getKey(), RoleIntent.DELETED, distributedDeleteCommand.getValue());
             },
             () -> {
               final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-              rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
   }
 
   private void removeMembers(final RoleRecord record) {
