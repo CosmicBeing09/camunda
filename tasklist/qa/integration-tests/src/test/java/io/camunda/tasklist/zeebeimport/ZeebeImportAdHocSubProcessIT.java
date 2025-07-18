@@ -71,7 +71,7 @@ public class ZeebeImportAdHocSubProcessIT extends TasklistZeebeIntegrationTest {
       final var result =
           mockMvcHelper.doRequest(
               post(TasklistURIs.TASKS_URL_V1.concat("/{taskId}/variables/search"), taskId));
-      switch (entity.getFlowNodeBpmnId()) {
+      switch (entity.getBpmnId()) {
         case "task1" ->
             assertThat(result)
                 .hasOkHttpStatus()

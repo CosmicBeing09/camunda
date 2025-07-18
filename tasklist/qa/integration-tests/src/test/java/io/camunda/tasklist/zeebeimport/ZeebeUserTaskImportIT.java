@@ -76,7 +76,7 @@ public class ZeebeUserTaskImportIT extends TasklistZeebeIntegrationTest {
     assertEquals(TaskState.CREATED, taskEntity.getState());
     assertNotNull(taskEntity.getCreationTime());
     assertEquals(bpmnProcessId, taskEntity.getBpmnProcessId());
-    assertEquals(flowNodeBpmnId, taskEntity.getFlowNodeBpmnId());
+    assertEquals(flowNodeBpmnId, taskEntity.getBpmnId());
     assertEquals(tester.getProcessDefinitionKey(), taskEntity.getProcessDefinitionId());
     assertEquals(tester.getProcessInstanceId(), taskEntity.getProcessInstanceId());
     assertEquals(taskEntity.getPriority(), Integer.valueOf(TaskStore.DEFAULT_PRIORITY));

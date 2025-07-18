@@ -307,7 +307,7 @@ public final class TaskDTO {
             .setAssignee(taskEntity.getAssignee())
             .setBpmnProcessId(taskEntity.getBpmnProcessId())
             .setProcessDefinitionId(taskEntity.getProcessDefinitionId())
-            .setFlowNodeBpmnId(taskEntity.getFlowNodeBpmnId())
+            .setFlowNodeBpmnId(taskEntity.getBpmnId())
             .setFlowNodeInstanceId(taskEntity.getFlowNodeInstanceId())
             .setFormKey(taskEntity.getFormKey())
             .setFormId(taskEntity.getFormId())

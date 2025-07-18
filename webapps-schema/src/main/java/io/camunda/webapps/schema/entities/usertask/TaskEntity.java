@@ -27,7 +27,7 @@ public class TaskEntity
   private int partitionId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String flowNodeBpmnId;
+  private String bpmnId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String flowNodeName;
@@ -150,12 +150,12 @@ public class TaskEntity
     return this;
   }
 
-  public String getFlowNodeBpmnId() {
-    return flowNodeBpmnId;
+  public String getBpmnId() {
+    return bpmnId;
   }
 
   public TaskEntity setFlowNodeBpmnId(final String flowNodeBpmnId) {
-    this.flowNodeBpmnId = flowNodeBpmnId;
+    bpmnId = flowNodeBpmnId;
     return this;
   }
 
