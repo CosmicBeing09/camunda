@@ -46,14 +46,14 @@ public record BatchOperationQuery(
     }
 
     @Override
-    public Builder filter(final BatchOperationFilter value) {
-      filter = value;
+    public Builder filter(final BatchOperationFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final BatchOperationSort value) {
-      sort = value;
+    public Builder sort(final BatchOperationSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

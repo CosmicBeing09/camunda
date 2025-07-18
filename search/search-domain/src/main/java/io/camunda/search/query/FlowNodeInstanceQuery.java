@@ -43,14 +43,14 @@ public record FlowNodeInstanceQuery(
     }
 
     @Override
-    public Builder filter(final FlowNodeInstanceFilter value) {
-      filter = value;
+    public Builder filter(final FlowNodeInstanceFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final FlowNodeInstanceSort value) {
-      sort = value;
+    public Builder sort(final FlowNodeInstanceSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

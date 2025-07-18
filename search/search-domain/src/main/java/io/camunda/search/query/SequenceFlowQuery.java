@@ -47,13 +47,13 @@ public record SequenceFlowQuery(SequenceFlowFilter filter)
     private SequenceFlowFilter filter;
 
     @Override
-    public Builder filter(final SequenceFlowFilter value) {
-      filter = value;
+    public Builder filter(final SequenceFlowFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final NoSort value) {
+    public Builder sort(final NoSort sortValue) {
       return this;
     }
 

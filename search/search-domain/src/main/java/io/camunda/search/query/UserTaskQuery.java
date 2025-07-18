@@ -34,14 +34,14 @@ public final record UserTaskQuery(UserTaskFilter filter, UserTaskSort sort, Sear
     private UserTaskSort sort;
 
     @Override
-    public Builder filter(final UserTaskFilter value) {
-      filter = value;
+    public Builder filter(final UserTaskFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final UserTaskSort value) {
-      sort = value;
+    public Builder sort(final UserTaskSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

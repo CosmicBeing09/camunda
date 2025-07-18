@@ -46,14 +46,14 @@ public record ProcessInstanceQuery(
     private ProcessInstanceQueryResultConfig resultConfig;
 
     @Override
-    public Builder filter(final ProcessInstanceFilter value) {
-      filter = value;
+    public Builder filter(final ProcessInstanceFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final ProcessInstanceSort value) {
-      sort = value;
+    public Builder sort(final ProcessInstanceSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

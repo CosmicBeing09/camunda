@@ -49,14 +49,14 @@ public record DecisionRequirementsQuery(
     private DecisionRequirementsQueryResultConfig resultConfig;
 
     @Override
-    public Builder filter(final DecisionRequirementsFilter value) {
-      filter = value;
+    public Builder filter(final DecisionRequirementsFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final DecisionRequirementsSort value) {
-      sort = value;
+    public Builder sort(final DecisionRequirementsSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

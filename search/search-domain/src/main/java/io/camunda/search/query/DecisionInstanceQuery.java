@@ -46,14 +46,14 @@ public record DecisionInstanceQuery(
     private DecisionInstanceQueryResultConfig resultConfig;
 
     @Override
-    public Builder filter(final DecisionInstanceFilter value) {
-      filter = value;
+    public Builder filter(final DecisionInstanceFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final DecisionInstanceSort value) {
-      sort = value;
+    public Builder sort(final DecisionInstanceSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

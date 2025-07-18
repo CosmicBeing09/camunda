@@ -36,14 +36,14 @@ public record GroupQuery(GroupFilter filter, GroupSort sort, SearchQueryPage pag
     private GroupSort sort;
 
     @Override
-    public GroupQuery.Builder filter(final GroupFilter value) {
-      filter = value;
+    public GroupQuery.Builder filter(final GroupFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public GroupQuery.Builder sort(final GroupSort value) {
-      sort = value;
+    public GroupQuery.Builder sort(final GroupSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

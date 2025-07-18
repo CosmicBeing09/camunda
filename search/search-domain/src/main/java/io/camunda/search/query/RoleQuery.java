@@ -35,14 +35,14 @@ public record RoleQuery(RoleFilter filter, RoleSort sort, SearchQueryPage page)
     private RoleSort sort;
 
     @Override
-    public RoleQuery.Builder filter(final RoleFilter value) {
-      filter = value;
+    public RoleQuery.Builder filter(final RoleFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public RoleQuery.Builder sort(final RoleSort value) {
-      sort = value;
+    public RoleQuery.Builder sort(final RoleSort sortValue) {
+      sort = sortValue;
       return this;
     }
 
