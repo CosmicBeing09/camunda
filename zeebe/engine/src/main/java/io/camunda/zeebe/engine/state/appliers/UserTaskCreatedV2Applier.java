@@ -26,7 +26,7 @@ public class UserTaskCreatedV2Applier implements TypedEventApplier<UserTaskInten
     // Ensure we store any corrections
     final UserTaskRecord userTask = userTaskState.getUserTask(key);
     userTask.wrapChangedAttributes(value, false);
-    userTaskState.update(userTask);
+    userTaskState.updateUserTask(userTask);
 
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
 

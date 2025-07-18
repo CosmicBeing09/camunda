@@ -28,7 +28,7 @@ public final class UserTaskCreatingApplier
 
   @Override
   public void applyState(final long key, final UserTaskRecord value) {
-    userTaskState.create(value);
+    userTaskState.createUserTask(value);
 
     final long elementInstanceKey = value.getElementInstanceKey();
     if (elementInstanceKey > 0) {

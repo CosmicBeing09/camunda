@@ -28,7 +28,7 @@ public final class UserTaskAssignedV1Applier
     final String assignee = value.getAssignee();
     final UserTaskRecord userTask = userTaskState.getUserTask(key);
     userTask.setAssignee(assignee);
-    userTaskState.update(userTask);
+    userTaskState.updateUserTask(userTask);
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
   }
 }
