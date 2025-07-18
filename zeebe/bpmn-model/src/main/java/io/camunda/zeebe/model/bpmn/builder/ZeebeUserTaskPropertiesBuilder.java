@@ -28,7 +28,7 @@ public interface ZeebeUserTaskPropertiesBuilder<B extends ZeebeUserTaskPropertie
    * @param id the id of the form
    * @return the builder object
    */
-  B zeebeFormKey(String format, String location, String id);
+  B formKey(String format, String location, String id);
 
   /**
    * Sets the form key of the build user task.
@@ -36,7 +36,7 @@ public interface ZeebeUserTaskPropertiesBuilder<B extends ZeebeUserTaskPropertie
    * @param formKey the form key to set
    * @return the builder object
    */
-  B zeebeFormKey(String formKey);
+  B formKey(String formKey);
 
   /**
    * Creates a new user task form with the given context, assuming it is of the format camunda-forms

@@ -91,7 +91,7 @@ public class ZeebeExecutionListenersValidationTest {
                 b ->
                     b.receiveTask()
                         .message(mb -> mb.name("message").zeebeCorrelationKeyExpression("foo")))),
-        Arguments.of("userTask", setup(b -> b.userTask().zeebeFormKey("formKey"))));
+        Arguments.of("userTask", setup(b -> b.userTask().formKey("formKey"))));
   }
 
   private static Function<AbstractFlowNodeBuilder<?, ?>, AbstractTaskBuilder<?, ?>> setup(

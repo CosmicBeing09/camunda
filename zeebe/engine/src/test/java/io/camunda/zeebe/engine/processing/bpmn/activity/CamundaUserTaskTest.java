@@ -248,7 +248,7 @@ public final class CamundaUserTaskTest {
 
     ENGINE
         .deployment()
-        .withXmlResource(process(t -> t.zeebeFormKey(formKey).zeebeExternalFormReference("foo")))
+        .withXmlResource(process(t -> t.formKey(formKey).zeebeExternalFormReference("foo")))
         .deploy();
 
     // when
