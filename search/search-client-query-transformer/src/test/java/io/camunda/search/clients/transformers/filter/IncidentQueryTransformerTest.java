@@ -25,7 +25,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByIncidentKey() {
-    final var filter = FilterBuilders.incident(f -> f.incidentKeys(1L));
+    final var filter = FilterBuilders.incident(f -> f.incidentKeyOperations(1L));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -43,7 +43,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByProcessDefinitionKey() {
-    final var filter = FilterBuilders.incident(f -> f.processDefinitionKeys(5432L));
+    final var filter = FilterBuilders.incident(f -> f.processDefinitionKeyOperations(5432L));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -61,7 +61,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByBpmnProcessId() {
-    final var filter = FilterBuilders.incident(f -> f.processDefinitionIds("complexProcess"));
+    final var filter = FilterBuilders.incident(f -> f.bpmnProcessIdOperations("complexProcess"));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -151,7 +151,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByFlowNodeId() {
-    final var filter = FilterBuilders.incident(f -> f.flowNodeIds("flowNodeId-17"));
+    final var filter = FilterBuilders.incident(f -> f.flowNodeIdOperations("flowNodeId-17"));
 
     // when
     final var searchRequest = transformQuery(filter);

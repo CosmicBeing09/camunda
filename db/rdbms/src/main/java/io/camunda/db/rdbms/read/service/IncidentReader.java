@@ -29,7 +29,7 @@ public class IncidentReader extends AbstractEntityReader<IncidentEntity> {
   }
 
   public Optional<IncidentEntity> findOne(final long key) {
-    final var result = search(IncidentQuery.of(b -> b.filter(f -> f.incidentKeys(key))));
+    final var result = search(IncidentQuery.of(b -> b.filter(f -> f.incidentKeyOperations(key))));
     return Optional.ofNullable(result.items()).flatMap(it -> it.stream().findFirst());
   }
 

@@ -51,7 +51,7 @@ public record IncidentFilter(
     private List<Long> jobKeys;
     private List<String> tenantIds;
 
-    public Builder incidentKeys(final Long value, final Long... values) {
+    public Builder incidentKeyOperations(final Long value, final Long... values) {
       return incidentKeys(collectValues(value, values));
     }
 
@@ -60,7 +60,7 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder processDefinitionKeys(final Long value, final Long... values) {
+    public Builder processDefinitionKeyOperations(final Long value, final Long... values) {
       return processDefinitionKeys(collectValues(value, values));
     }
 
@@ -69,7 +69,7 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder processDefinitionIds(final String value, final String... values) {
+    public Builder bpmnProcessIdOperations(final String value, final String... values) {
       return processDefinitionIds(collectValues(value, values));
     }
 
@@ -119,7 +119,7 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder flowNodeIds(final String value, final String... values) {
+    public Builder flowNodeIdOperations(final String value, final String... values) {
       return flowNodeIds(collectValues(value, values));
     }
 
