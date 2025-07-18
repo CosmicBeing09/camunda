@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.function.Function;
 
 public record FlowNodeInstanceDbModel(
-    Long flowNodeInstanceKey,
+    Long instanceKey,
     Long processInstanceKey,
     Long processDefinitionKey,
     String processDefinitionId,
@@ -39,7 +39,7 @@ public record FlowNodeInstanceDbModel(
     return builderFunction
         .apply(
             new FlowNodeInstanceDbModelBuilder()
-                .flowNodeInstanceKey(flowNodeInstanceKey)
+                .flowNodeInstanceKey(instanceKey)
                 .processInstanceKey(processInstanceKey())
                 .processDefinitionKey(processDefinitionKey)
                 .processDefinitionId(processDefinitionId)
@@ -61,7 +61,7 @@ public record FlowNodeInstanceDbModel(
   public static class FlowNodeInstanceDbModelBuilder
       implements ObjectBuilder<FlowNodeInstanceDbModel> {
 
-    private Long flowNodeInstanceKey;
+    private Long instanceKey;
     private Long processInstanceKey;
     private Long processDefinitionKey;
     private String processDefinitionId;
@@ -83,7 +83,7 @@ public record FlowNodeInstanceDbModel(
 
     // Builder methods for each field
     public FlowNodeInstanceDbModelBuilder flowNodeInstanceKey(final Long key) {
-      flowNodeInstanceKey = key;
+      instanceKey = key;
       return this;
     }
 
@@ -170,7 +170,7 @@ public record FlowNodeInstanceDbModel(
     @Override
     public FlowNodeInstanceDbModel build() {
       return new FlowNodeInstanceDbModel(
-          flowNodeInstanceKey,
+          instanceKey,
           processInstanceKey,
           processDefinitionKey,
           processDefinitionId,

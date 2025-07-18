@@ -39,7 +39,7 @@ public class FlowNodeInstanceWriter {
         new QueueItem(
             ContextType.FLOW_NODE,
             WriteStatementType.INSERT,
-            flowNode.flowNodeInstanceKey(),
+            flowNode.instanceKey(),
             "io.camunda.db.rdbms.sql.FlowNodeInstanceMapper.insert",
             flowNode));
   }
@@ -49,7 +49,7 @@ public class FlowNodeInstanceWriter {
         new QueueItem(
             ContextType.FLOW_NODE,
             WriteStatementType.UPDATE,
-            flowNode.flowNodeInstanceKey(),
+            flowNode.instanceKey(),
             "io.camunda.db.rdbms.sql.FlowNodeInstanceMapper.update",
             flowNode));
   }
