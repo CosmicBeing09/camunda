@@ -24,7 +24,7 @@ import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.IncidentRecordValue;
 import io.camunda.zeebe.protocol.record.value.ProcessInstanceRecordValue;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import java.util.Map;
@@ -56,7 +56,7 @@ public class TenantAwareBusinessRuleTaskTest {
   private final String tenantOne = "foo";
   private final String tenantTwo = "bar";
 
-  private Map<String, DecisionRecordValue> deployedDecisionsById;
+  private Map<String, DecisionMetadataValue> deployedDecisionsById;
 
   private static BpmnModelInstance processWithBusinessRuleTask() {
     return Bpmn.createExecutableProcess(PROCESS_ID)
@@ -81,7 +81,7 @@ public class TenantAwareBusinessRuleTaskTest {
 
     deployedDecisionsById =
         deployment.getValue().getDecisionsMetadata().stream()
-            .collect(Collectors.toMap(DecisionRecordValue::getDecisionId, Function.identity()));
+            .collect(Collectors.toMap(DecisionMetadataValue::getDecisionId, Function.identity()));
 
     ENGINE.deployment().withXmlResource("process.bpmn", process).withTenantId(tenantTwo).deploy();
 
@@ -138,7 +138,7 @@ public class TenantAwareBusinessRuleTaskTest {
 
     deployedDecisionsById =
         deployment.getValue().getDecisionsMetadata().stream()
-            .collect(Collectors.toMap(DecisionRecordValue::getDecisionId, Function.identity()));
+            .collect(Collectors.toMap(DecisionMetadataValue::getDecisionId, Function.identity()));
 
     ENGINE.deployment().withXmlResource("process.bpmn", process).withTenantId(tenantTwo).deploy();
 
@@ -194,7 +194,7 @@ public class TenantAwareBusinessRuleTaskTest {
 
     deployedDecisionsById =
         deployment.getValue().getDecisionsMetadata().stream()
-            .collect(Collectors.toMap(DecisionRecordValue::getDecisionId, Function.identity()));
+            .collect(Collectors.toMap(DecisionMetadataValue::getDecisionId, Function.identity()));
 
     ENGINE.deployment().withXmlResource("process.bpmn", process).withTenantId(tenantTwo).deploy();
 
@@ -249,7 +249,7 @@ public class TenantAwareBusinessRuleTaskTest {
 
     deployedDecisionsById =
         deployment.getValue().getDecisionsMetadata().stream()
-            .collect(Collectors.toMap(DecisionRecordValue::getDecisionId, Function.identity()));
+            .collect(Collectors.toMap(DecisionMetadataValue::getDecisionId, Function.identity()));
 
     ENGINE.deployment().withXmlResource("process.bpmn", process).withTenantId(tenantTwo).deploy();
 

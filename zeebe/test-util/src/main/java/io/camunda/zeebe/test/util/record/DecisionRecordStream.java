@@ -8,18 +8,18 @@
 package io.camunda.zeebe.test.util.record;
 
 import io.camunda.zeebe.protocol.record.Record;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import java.util.stream.Stream;
 
 public class DecisionRecordStream
-    extends ExporterRecordStream<DecisionRecordValue, DecisionRecordStream> {
+    extends ExporterRecordStream<DecisionMetadataValue, DecisionRecordStream> {
 
-  public DecisionRecordStream(final Stream<Record<DecisionRecordValue>> wrappedStream) {
+  public DecisionRecordStream(final Stream<Record<DecisionMetadataValue>> wrappedStream) {
     super(wrappedStream);
   }
 
   @Override
-  protected DecisionRecordStream supply(final Stream<Record<DecisionRecordValue>> wrappedStream) {
+  protected DecisionRecordStream supply(final Stream<Record<DecisionMetadataValue>> wrappedStream) {
     return new DecisionRecordStream(wrappedStream);
   }
 

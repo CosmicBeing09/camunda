@@ -27,7 +27,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
 import io.camunda.zeebe.protocol.record.value.CommandDistributionRecordValue;
 import io.camunda.zeebe.protocol.record.value.DeploymentRecordValue;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.Form;
 import io.camunda.zeebe.protocol.record.value.deployment.ProcessMetadataValue;
@@ -602,7 +602,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
           assertThat(record)
               .isNotNull()
               .extracting(Record::getValue)
-              .extracting(DecisionRecordValue::getDeploymentKey)
+              .extracting(DecisionMetadataValue::getDeploymentKey)
               .isEqualTo(deployment.getKey());
         });
   }
@@ -695,11 +695,11 @@ public final class CreateDeploymentMultiplePartitionsTest {
                   .limit(1))
           .extracting(Record::getValue)
           .extracting(
-              DecisionRecordValue::getDecisionId,
-              DecisionRecordValue::getVersion,
-              DecisionRecordValue::getDecisionKey,
-              DecisionRecordValue::getDecisionRequirementsId,
-              DecisionRecordValue::getDecisionRequirementsKey,
+              DecisionMetadataValue::getDecisionId,
+              DecisionMetadataValue::getVersion,
+              DecisionMetadataValue::getDecisionKey,
+              DecisionMetadataValue::getDecisionRequirementsId,
+              DecisionMetadataValue::getDecisionRequirementsKey,
               TenantOwned::getTenantId)
           .describedAs("Decisions are created for correct tenant")
           .containsExactly(
@@ -750,7 +750,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
   }
 
   private void assertSameDecision(
-      final DecisionRecordValue original, final DecisionRecordValue repeated) {
+      final DecisionMetadataValue original, final DecisionMetadataValue repeated) {
     Assertions.assertThat(repeated)
         .hasDecisionId(original.getDecisionId())
         .hasDecisionName(original.getDecisionName())
@@ -761,7 +761,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
   }
 
   private void assertDifferentDecision(
-      final DecisionRecordValue original, final DecisionRecordValue repeated) {
+      final DecisionMetadataValue original, final DecisionMetadataValue repeated) {
     assertThat(original.getVersion()).isLessThan(repeated.getVersion());
     assertThat(original.getDecisionKey()).isLessThan(repeated.getDecisionKey());
     assertThat(original.getDecisionRequirementsKey())

@@ -17,7 +17,7 @@ import io.camunda.webapps.schema.descriptors.index.DecisionIndex;
 import io.camunda.webapps.schema.entities.dmn.definition.DecisionDefinitionEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import java.util.HashSet;
 import java.util.Set;
 import org.slf4j.Logger;
@@ -47,12 +47,12 @@ public class DecisionZeebeRecordProcessor {
       throws PersistenceException {
     final String intentStr = record.getIntent().name();
     if (STATES.contains(intentStr)) {
-      final DecisionRecordValue decision = (DecisionRecordValue) record.getValue();
+      final DecisionMetadataValue decision = (DecisionMetadataValue) record.getValue();
       persistDecision(decision, batchRequest);
     }
   }
 
-  private void persistDecision(final DecisionRecordValue decision, final BatchRequest batchRequest)
+  private void persistDecision(final DecisionMetadataValue decision, final BatchRequest batchRequest)
       throws PersistenceException {
     final DecisionDefinitionEntity decisionEntity = createEntity(decision);
     LOGGER.debug(
@@ -63,7 +63,7 @@ public class DecisionZeebeRecordProcessor {
         decisionEntity);
   }
 
-  private DecisionDefinitionEntity createEntity(final DecisionRecordValue decision) {
+  private DecisionDefinitionEntity createEntity(final DecisionMetadataValue decision) {
     return new DecisionDefinitionEntity()
         .setId(String.valueOf(decision.getDecisionKey()))
         .setKey(decision.getDecisionKey())

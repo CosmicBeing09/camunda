@@ -16,7 +16,7 @@ import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.DecisionEvaluationRecordValue;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
 import java.util.Map;
 import java.util.function.Function;
@@ -42,7 +42,7 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
   private final String tenantOne = "foo";
   private final String tenantTwo = "bar";
 
-  private Map<String, DecisionRecordValue> deployedDecisionsById;
+  private Map<String, DecisionMetadataValue> deployedDecisionsById;
 
   private void deployForTenant(final String process, final String tenant) {
     final var deployment =
@@ -50,7 +50,7 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
 
     deployedDecisionsById =
         deployment.getValue().getDecisionsMetadata().stream()
-            .collect(Collectors.toMap(DecisionRecordValue::getDecisionId, Function.identity()));
+            .collect(Collectors.toMap(DecisionMetadataValue::getDecisionId, Function.identity()));
   }
 
   @Test

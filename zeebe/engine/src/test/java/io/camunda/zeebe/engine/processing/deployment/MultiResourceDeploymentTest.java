@@ -18,7 +18,7 @@ import io.camunda.zeebe.protocol.record.intent.DecisionRequirementsIntent;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.FormMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.ProcessMetadataValue;
@@ -178,7 +178,7 @@ public class MultiResourceDeploymentTest {
               .isGreaterThan(previousDecisionRequirementsKey);
     }
 
-    private static Consumer<DecisionRecordValue> expectedDecisionMetadata(
+    private static Consumer<DecisionMetadataValue> expectedDecisionMetadata(
         final long expectedDeploymentKey,
         final long expectedDecisionRequirementsKey,
         final long previousDecisionKey) {
@@ -188,7 +188,7 @@ public class MultiResourceDeploymentTest {
               .hasDeploymentKey(expectedDeploymentKey)
               .hasDecisionRequirementsKey(expectedDecisionRequirementsKey)
               .isNotDuplicate()
-              .extracting(DecisionRecordValue::getDecisionKey, InstanceOfAssertFactories.LONG)
+              .extracting(DecisionMetadataValue::getDecisionKey, InstanceOfAssertFactories.LONG)
               .isGreaterThan(previousDecisionKey);
     }
 

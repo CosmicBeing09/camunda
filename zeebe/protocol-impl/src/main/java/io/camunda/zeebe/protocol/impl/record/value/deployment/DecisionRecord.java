@@ -16,10 +16,10 @@ import io.camunda.zeebe.msgpack.property.LongProperty;
 import io.camunda.zeebe.msgpack.property.StringProperty;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import org.agrona.DirectBuffer;
 
-public final class DecisionRecord extends UnifiedRecordValue implements DecisionRecordValue {
+public final class DecisionRecord extends UnifiedRecordValue implements DecisionMetadataValue {
 
   private final StringProperty decisionIdProp = new StringProperty("decisionId", "");
   private final StringProperty decisionNameProp = new StringProperty("decisionName", "");

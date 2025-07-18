@@ -15,7 +15,7 @@ import io.camunda.webapps.schema.entities.dmn.definition.DecisionDefinitionEntit
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.DecisionIntent;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.ImmutableDecisionRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
 import java.util.Arrays;
@@ -42,7 +42,7 @@ final class DecisionHandlerTest {
   @Test
   void shouldHandleRecord() {
     // given
-    final Record<DecisionRecordValue> decisionRecord =
+    final Record<DecisionMetadataValue> decisionRecord =
         factory.generateRecord(ValueType.DECISION, r -> r.withIntent(DecisionIntent.CREATED));
 
     // when - then
@@ -60,7 +60,7 @@ final class DecisionHandlerTest {
         .forEach(
             intent -> {
               // given
-              final Record<DecisionRecordValue> decisionRecord =
+              final Record<DecisionMetadataValue> decisionRecord =
                   factory.generateRecord(ValueType.DECISION, r -> r.withIntent(intent));
               // when - then
               assertThat(underTest.handlesRecord(decisionRecord))
@@ -73,13 +73,13 @@ final class DecisionHandlerTest {
   void shouldGenerateIds() {
     // given
     final long expectedId = 123;
-    final DecisionRecordValue decisionRecordValue =
+    final DecisionMetadataValue decisionRecordValue =
         ImmutableDecisionRecordValue.builder()
-            .from(factory.generateObject(DecisionRecordValue.class))
+            .from(factory.generateObject(DecisionMetadataValue.class))
             .withDecisionKey(expectedId)
             .build();
 
-    final Record<DecisionRecordValue> decisionRecord =
+    final Record<DecisionMetadataValue> decisionRecord =
         factory.generateRecord(
             ValueType.DECISION,
             r -> r.withIntent(DecisionIntent.CREATED).withValue(decisionRecordValue));
@@ -117,9 +117,9 @@ final class DecisionHandlerTest {
   @Test
   void shouldUpdateEntityFromRecord() {
     // given
-    final DecisionRecordValue decisionRecordValue =
+    final DecisionMetadataValue decisionRecordValue =
         ImmutableDecisionRecordValue.builder()
-            .from(factory.generateObject(DecisionRecordValue.class))
+            .from(factory.generateObject(DecisionMetadataValue.class))
             .withDecisionKey(123)
             .withDecisionName("decisionName")
             .withVersion(2)
@@ -129,7 +129,7 @@ final class DecisionHandlerTest {
             .withTenantId("tenantId")
             .build();
 
-    final Record<DecisionRecordValue> decisionRecord =
+    final Record<DecisionMetadataValue> decisionRecord =
         factory.generateRecord(
             ValueType.DECISION,
             r -> r.withIntent(DecisionIntent.CREATED).withValue(decisionRecordValue));

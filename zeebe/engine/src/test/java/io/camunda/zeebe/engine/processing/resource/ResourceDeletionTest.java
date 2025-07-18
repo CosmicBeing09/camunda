@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.DecisionEvaluationRecordValue;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.Form;
 import io.camunda.zeebe.protocol.record.value.deployment.ProcessMetadataValue;
@@ -850,15 +850,15 @@ public class ResourceDeletionTest {
     assertThat(decisionDeletedRecord)
         .describedAs("Expect deleted decision to match the created decision")
         .extracting(
-            DecisionRecordValue::getDecisionId,
-            DecisionRecordValue::getDecisionName,
-            DecisionRecordValue::getVersion,
-            DecisionRecordValue::getVersionTag,
-            DecisionRecordValue::getDecisionKey,
-            DecisionRecordValue::getDecisionRequirementsId,
-            DecisionRecordValue::getDecisionRequirementsKey,
-            DecisionRecordValue::isDuplicate,
-            DecisionRecordValue::getDeploymentKey)
+            DecisionMetadataValue::getDecisionId,
+            DecisionMetadataValue::getDecisionName,
+            DecisionMetadataValue::getVersion,
+            DecisionMetadataValue::getVersionTag,
+            DecisionMetadataValue::getDecisionKey,
+            DecisionMetadataValue::getDecisionRequirementsId,
+            DecisionMetadataValue::getDecisionRequirementsKey,
+            DecisionMetadataValue::isDuplicate,
+            DecisionMetadataValue::getDeploymentKey)
         .containsOnly(
             decisionCreatedRecord.getDecisionId(),
             decisionCreatedRecord.getDecisionName(),

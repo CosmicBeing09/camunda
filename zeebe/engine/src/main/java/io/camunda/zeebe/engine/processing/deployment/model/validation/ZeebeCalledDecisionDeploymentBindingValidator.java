@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeCalledDecision;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import java.util.List;
 import org.camunda.bpm.model.xml.validation.ModelElementValidator;
 import org.camunda.bpm.model.xml.validation.ValidationResultCollector;
@@ -17,7 +17,7 @@ import org.camunda.bpm.model.xml.validation.ValidationResultCollector;
 public class ZeebeCalledDecisionDeploymentBindingValidator
     implements ModelElementValidator<ZeebeCalledDecision> {
 
-  private final List<DecisionRecordValue> decisionsMetadata;
+  private final List<DecisionMetadataValue> decisionsMetadata;
 
   public ZeebeCalledDecisionDeploymentBindingValidator(final DeploymentRecord deployment) {
     decisionsMetadata = deployment.getDecisionsMetadata();

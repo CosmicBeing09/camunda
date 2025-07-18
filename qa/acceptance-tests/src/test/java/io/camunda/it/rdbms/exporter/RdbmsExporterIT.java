@@ -63,7 +63,7 @@ import io.camunda.zeebe.protocol.record.value.TenantRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.VariableRecordValue;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsRecordValue;
 import io.camunda.zeebe.protocol.record.value.deployment.Form;
 import io.camunda.zeebe.protocol.record.value.deployment.Process;
@@ -299,7 +299,7 @@ class RdbmsExporterIT {
     exporter.export(decisionDefinitionRecord);
 
     // then
-    final var key = ((DecisionRecordValue) decisionDefinitionRecord.getValue()).getDecisionKey();
+    final var key = ((DecisionMetadataValue) decisionDefinitionRecord.getValue()).getDecisionKey();
     final var definition = rdbmsService.getDecisionDefinitionReader().findOne(key);
     assertThat(definition).isNotEmpty();
   }

@@ -21,7 +21,7 @@ import io.camunda.zeebe.protocol.record.intent.DecisionIntent;
 import io.camunda.zeebe.protocol.record.intent.DecisionRequirementsIntent;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.value.DeploymentRecordValue;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import io.camunda.zeebe.test.util.record.RecordingExporterTestWatcher;
@@ -263,9 +263,9 @@ public final class DmnDeploymentTest {
         .hasSize(2)
         .extracting(Record::getValue)
         .extracting(
-            DecisionRecordValue::getDecisionId,
-            DecisionRecordValue::getDecisionName,
-            DecisionRecordValue::getVersionTag)
+            DecisionMetadataValue::getDecisionId,
+            DecisionMetadataValue::getDecisionName,
+            DecisionMetadataValue::getVersionTag)
         .contains(
             tuple("jedi_or_sith", "Jedi or Sith", "v1.0"),
             tuple("force_user", "Which force user?", "v2.0"));
@@ -310,7 +310,7 @@ public final class DmnDeploymentTest {
         .containsExactly(2);
 
     assertThat(deployment2.getValue().getDecisionsMetadata())
-        .extracting(DecisionRecordValue::getVersion)
+        .extracting(DecisionMetadataValue::getVersion)
         .describedAs("Expect that the decision version is increased")
         .containsExactly(2);
 
@@ -326,10 +326,10 @@ public final class DmnDeploymentTest {
         .hasSize(2)
         .extracting(Record::getValue)
         .extracting(
-            DecisionRecordValue::getDecisionId,
-            DecisionRecordValue::getVersion,
-            DecisionRecordValue::getVersionTag,
-            DecisionRecordValue::getDeploymentKey)
+            DecisionMetadataValue::getDecisionId,
+            DecisionMetadataValue::getVersion,
+            DecisionMetadataValue::getVersionTag,
+            DecisionMetadataValue::getDeploymentKey)
         .contains(
             tuple("jedi_or_sith", 1, "v1.0", deployment1.getKey()),
             tuple("jedi_or_sith", 2, "v2.0", deployment2.getKey()));
@@ -353,17 +353,17 @@ public final class DmnDeploymentTest {
 
     // then
     assertThat(deployment2.getValue().getDecisionsMetadata())
-        .extracting(DecisionRecordValue::getVersion, DecisionRecordValue::getVersionTag)
+        .extracting(DecisionMetadataValue::getVersion, DecisionMetadataValue::getVersionTag)
         .describedAs("Expect that the decision version is increased for the same version tag")
         .containsExactly(tuple(2, "v1.0"));
 
     assertThat(RecordingExporter.decisionRecords().limit(2))
         .extracting(Record::getValue)
         .extracting(
-            DecisionRecordValue::getDecisionId,
-            DecisionRecordValue::getVersion,
-            DecisionRecordValue::getVersionTag,
-            DecisionRecordValue::getDeploymentKey)
+            DecisionMetadataValue::getDecisionId,
+            DecisionMetadataValue::getVersion,
+            DecisionMetadataValue::getVersionTag,
+            DecisionMetadataValue::getDeploymentKey)
         .containsExactly(
             tuple("jedi_or_sith", 1, "v1.0", deployment1.getKey()),
             tuple("jedi_or_sith", 2, "v1.0", deployment2.getKey()));
@@ -422,7 +422,7 @@ public final class DmnDeploymentTest {
 
     assertThat(RecordingExporter.decisionRecords().limit(2))
         .extracting(Record::getValue)
-        .extracting(DecisionRecordValue::getVersion, DecisionRecordValue::getDeploymentKey)
+        .extracting(DecisionMetadataValue::getVersion, DecisionMetadataValue::getDeploymentKey)
         .describedAs("Expect to omit decision record for duplicate")
         .containsExactly(tuple(1, deployment1.getKey()), tuple(2, deployment3.getKey()));
   }
@@ -444,7 +444,7 @@ public final class DmnDeploymentTest {
         .containsExactly(2);
 
     assertThat(deploymentEvent.getValue().getDecisionsMetadata())
-        .extracting(DecisionRecordValue::getVersion)
+        .extracting(DecisionMetadataValue::getVersion)
         .describedAs("Expect that the decision version is increased")
         .containsExactly(2);
   }
@@ -469,7 +469,7 @@ public final class DmnDeploymentTest {
     assertThat(RecordingExporter.decisionRecords().limit(2))
         .hasSize(2)
         .extracting(Record::getValue)
-        .extracting(DecisionRecordValue::getDecisionId, DecisionRecordValue::getVersion)
+        .extracting(DecisionMetadataValue::getDecisionId, DecisionMetadataValue::getVersion)
         .contains(tuple("jedi_or_sith", 1), tuple("jedi_or_sith", 2));
   }
 
@@ -492,7 +492,7 @@ public final class DmnDeploymentTest {
         .containsOnly(tuple(2, false));
 
     assertThat(deploymentEvent.getValue().getDecisionsMetadata())
-        .extracting(DecisionRecordValue::getVersion, DecisionRecordValue::isDuplicate)
+        .extracting(DecisionMetadataValue::getVersion, DecisionMetadataValue::isDuplicate)
         .describedAs("Expect that the decision version is increased")
         .containsExactly(tuple(3, false));
 
@@ -500,9 +500,9 @@ public final class DmnDeploymentTest {
         .hasSize(3)
         .extracting(Record::getValue)
         .extracting(
-            DecisionRecordValue::getDecisionId,
-            DecisionRecordValue::getVersion,
-            DecisionRecordValue::getDecisionRequirementsId)
+            DecisionMetadataValue::getDecisionId,
+            DecisionMetadataValue::getVersion,
+            DecisionMetadataValue::getDecisionRequirementsId)
         .contains(
             tuple("jedi_or_sith", 1, "force_users"),
             tuple("jedi_or_sith", 2, "star-wars"),

@@ -58,7 +58,7 @@ import io.camunda.zeebe.protocol.record.value.TenantRecordValue;
 import io.camunda.zeebe.protocol.record.value.TimerRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.VariableRecordValue;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsRecordValue;
 import io.camunda.zeebe.protocol.record.value.deployment.Process;
@@ -860,7 +860,7 @@ public class CompactRecordLogger {
   }
 
   private String summarizeDecision(final Record<?> record) {
-    final var value = (DecisionRecordValue) record.getValue();
+    final var value = (DecisionMetadataValue) record.getValue();
     return String.format(
         "%s (version:%d) of <drg %s[%s]>",
         formatId(value.getDecisionId()),

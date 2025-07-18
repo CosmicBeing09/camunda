@@ -67,7 +67,7 @@ import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.protocol.record.intent.management.CheckpointIntent;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 import io.camunda.zeebe.protocol.record.value.AdHocSubProcessActivityActivationRecordValue;
-import io.camunda.zeebe.protocol.record.value.AsyncRequestMetadataRecordValue;
+import io.camunda.zeebe.protocol.record.value.AsyncRequestRecordValue;
 import io.camunda.zeebe.protocol.record.value.AuthorizationRecordValue;
 import io.camunda.zeebe.protocol.record.value.BatchOperationChunkRecordValue;
 import io.camunda.zeebe.protocol.record.value.BatchOperationCreationRecordValue;
@@ -111,7 +111,7 @@ import io.camunda.zeebe.protocol.record.value.UserRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.VariableDocumentRecordValue;
 import io.camunda.zeebe.protocol.record.value.VariableRecordValue;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsRecordValue;
 import io.camunda.zeebe.protocol.record.value.deployment.Form;
 import io.camunda.zeebe.protocol.record.value.deployment.Process;
@@ -173,7 +173,7 @@ public final class ValueTypeMapping {
   private Map<ValueType, Mapping<?, ?>> loadValueTypes() {
     final Map<ValueType, Mapping<?, ?>> mapping = new EnumMap<>(ValueType.class);
 
-    mapping.put(ValueType.DECISION, new Mapping<>(DecisionRecordValue.class, DecisionIntent.class));
+    mapping.put(ValueType.DECISION, new Mapping<>(DecisionMetadataValue.class, DecisionIntent.class));
     mapping.put(
         ValueType.DECISION_EVALUATION,
         new Mapping<>(DecisionEvaluationRecordValue.class, DecisionEvaluationIntent.class));
@@ -299,7 +299,7 @@ public final class ValueTypeMapping {
             BatchOperationPartitionLifecycleRecordValue.class, BatchOperationIntent.class));
     mapping.put(
         ValueType.ASYNC_REQUEST_METADATA,
-        new Mapping<>(AsyncRequestMetadataRecordValue.class, AsyncRequestMetadataIntent.class));
+        new Mapping<>(AsyncRequestRecordValue.class, AsyncRequestMetadataIntent.class));
     return mapping;
   }
 

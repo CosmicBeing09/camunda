@@ -13,11 +13,11 @@ import io.camunda.exporter.rdbms.RdbmsExportHandler;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.DecisionIntent;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DecisionDefinitionExportHandler implements RdbmsExportHandler<DecisionRecordValue> {
+public class DecisionDefinitionExportHandler implements RdbmsExportHandler<DecisionMetadataValue> {
 
   private static final Logger LOG = LoggerFactory.getLogger(DecisionDefinitionExportHandler.class);
 
@@ -28,19 +28,19 @@ public class DecisionDefinitionExportHandler implements RdbmsExportHandler<Decis
   }
 
   @Override
-  public boolean canExport(final Record<DecisionRecordValue> record) {
+  public boolean canExport(final Record<DecisionMetadataValue> record) {
     // do not react on DecisionIntent.DELETED to keep historic data
     return record.getValueType() == ValueType.DECISION
         && record.getIntent() == DecisionIntent.CREATED;
   }
 
   @Override
-  public void export(final Record<DecisionRecordValue> record) {
-    final DecisionRecordValue value = record.getValue();
+  public void export(final Record<DecisionMetadataValue> record) {
+    final DecisionMetadataValue value = record.getValue();
     decisionDefinitionWriter.create(map(value));
   }
 
-  private DecisionDefinitionDbModel map(final DecisionRecordValue decision) {
+  private DecisionDefinitionDbModel map(final DecisionMetadataValue decision) {
     return new DecisionDefinitionDbModel.DecisionDefinitionDbModelBuilder()
         .decisionDefinitionId(decision.getDecisionId())
         .decisionDefinitionKey(decision.getDecisionKey())

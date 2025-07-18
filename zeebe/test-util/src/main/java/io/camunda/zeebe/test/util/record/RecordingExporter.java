@@ -90,7 +90,7 @@ import io.camunda.zeebe.protocol.record.value.UserRecordValue;
 import io.camunda.zeebe.protocol.record.value.UserTaskRecordValue;
 import io.camunda.zeebe.protocol.record.value.VariableDocumentRecordValue;
 import io.camunda.zeebe.protocol.record.value.VariableRecordValue;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsRecordValue;
 import io.camunda.zeebe.protocol.record.value.deployment.Form;
 import io.camunda.zeebe.protocol.record.value.deployment.Process;
@@ -399,7 +399,7 @@ public final class RecordingExporter implements Exporter {
   }
 
   public static DecisionRecordStream decisionRecords() {
-    return new DecisionRecordStream(records(ValueType.DECISION, DecisionRecordValue.class));
+    return new DecisionRecordStream(records(ValueType.DECISION, DecisionMetadataValue.class));
   }
 
   public static DecisionRequirementsRecordStream decisionRequirementsRecords() {

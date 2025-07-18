@@ -18,7 +18,7 @@ import io.camunda.webapps.schema.entities.dmn.definition.DecisionRequirementsEnt
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.DecisionRequirementsIntent;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsRecordValue;
 import io.camunda.zeebe.protocol.record.value.deployment.ImmutableDecisionRequirementsRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
@@ -66,7 +66,7 @@ final class DecisionRequirementsHandlerTest {
     final long expectedId = 123;
     final DecisionRequirementsRecordValue decisionRequirementsRecordValue =
         ImmutableDecisionRequirementsRecordValue.builder()
-            .from(factory.generateObject(DecisionRecordValue.class))
+            .from(factory.generateObject(DecisionMetadataValue.class))
             .withDecisionRequirementsKey(expectedId)
             .build();
 

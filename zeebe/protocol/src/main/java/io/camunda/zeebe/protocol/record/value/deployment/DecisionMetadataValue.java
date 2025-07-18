@@ -27,7 +27,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @ImmutableProtocol(builder = ImmutableDecisionRecordValue.Builder.class)
-public interface DecisionRecordValue extends RecordValue, TenantOwned {
+public interface DecisionMetadataValue extends RecordValue, TenantOwned {
 
   /**
    * @return the ID of the decision in the DMN

@@ -14,12 +14,12 @@ import io.camunda.webapps.schema.entities.dmn.definition.DecisionDefinitionEntit
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
-import io.camunda.zeebe.protocol.record.value.deployment.DecisionRecordValue;
+import io.camunda.zeebe.protocol.record.value.deployment.DecisionMetadataValue;
 import java.util.List;
 import java.util.Set;
 
 public class DecisionHandler
-    implements ExportHandler<DecisionDefinitionEntity, DecisionRecordValue> {
+    implements ExportHandler<DecisionDefinitionEntity, DecisionMetadataValue> {
 
   private static final Set<String> STATES = Set.of(ProcessIntent.CREATED.name());
   private final String indexName;
@@ -39,13 +39,13 @@ public class DecisionHandler
   }
 
   @Override
-  public boolean handlesRecord(final Record<DecisionRecordValue> record) {
+  public boolean handlesRecord(final Record<DecisionMetadataValue> record) {
     final String intentStr = record.getIntent().name();
     return STATES.contains(intentStr);
   }
 
   @Override
-  public List<String> generateIds(final Record<DecisionRecordValue> record) {
+  public List<String> generateIds(final Record<DecisionMetadataValue> record) {
     return List.of(String.valueOf(record.getValue().getDecisionKey()));
   }
 
@@ -56,8 +56,8 @@ public class DecisionHandler
 
   @Override
   public void updateEntity(
-      final Record<DecisionRecordValue> record, final DecisionDefinitionEntity entity) {
-    final DecisionRecordValue decision = record.getValue();
+      final Record<DecisionMetadataValue> record, final DecisionDefinitionEntity entity) {
+    final DecisionMetadataValue decision = record.getValue();
     entity
         .setId(String.valueOf(decision.getDecisionKey()))
         .setKey(decision.getDecisionKey())
