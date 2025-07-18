@@ -23,7 +23,7 @@ public final class AuthorizationProcessors {
       final MutableProcessingState processingState,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     typedRecordProcessors.onCommand(
         ValueType.AUTHORIZATION,
         AuthorizationIntent.CREATE,

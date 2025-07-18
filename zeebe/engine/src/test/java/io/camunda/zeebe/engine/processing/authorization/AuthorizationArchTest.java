@@ -20,8 +20,8 @@ import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.ConditionEvents;
 import com.tngtech.archunit.lang.conditions.ArchConditions;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.identity.PermissionsBehavior;
 import io.camunda.zeebe.engine.processing.job.DefaultJobCommandPreconditionGuard;
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
@@ -86,7 +86,7 @@ public class AuthorizationArchTest {
       public void check(final JavaClass item, final ConditionEvents events) {
         // The processor should directly check authorizations
         ArchConditions.callMethod(
-                AuthorizationCheckBehavior.class, "isAuthorized", AuthorizationRequest.class)
+                AuthorizationValidationBehavior.class, "isAuthorized", AuthorizationRequest.class)
             // Or the processor should have delegated authorization to the JobUpdateBehaviour
             .or(
                 ArchConditions.callMethod(

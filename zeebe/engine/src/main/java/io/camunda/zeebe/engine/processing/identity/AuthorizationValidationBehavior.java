@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class AuthorizationCheckBehavior {
+public final class AuthorizationValidationBehavior {
 
   public static final String FORBIDDEN_ERROR_MESSAGE =
       "Insufficient permissions to perform operation '%s' on resource '%s'";
@@ -52,7 +52,7 @@ public final class AuthorizationCheckBehavior {
   private final boolean authorizationsEnabled;
   private final boolean multiTenancyEnabled;
 
-  public AuthorizationCheckBehavior(
+  public AuthorizationValidationBehavior(
       final ProcessingState processingState, final SecurityConfiguration securityConfig) {
     authorizationState = processingState.getAuthorizationState();
     mappingState = processingState.getMappingState();

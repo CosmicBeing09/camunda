@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.clock;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -25,7 +25,7 @@ public final class ClockProcessors {
       final KeyGenerator keyGenerator,
       final ControllableStreamClock controllableStreamClock,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     final var clockProcessor =
         new ClockProcessor(
             writers, keyGenerator, controllableStreamClock, commandDistributionBehavior, authCheckBehavior);

@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.security.configuration.AuthorizationsConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.state.appliers.AuthorizationCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupEntityAddedApplier;
@@ -57,7 +57,7 @@ final class AuthorizationCheckBehaviorTest {
   @SuppressWarnings("unused") // injected by the extension
   private MutableProcessingState processingState;
 
-  private AuthorizationCheckBehavior authorizationCheckBehavior;
+  private AuthorizationValidationBehavior authorizationCheckBehavior;
   private UserCreatedApplier userCreatedApplier;
   private MappingCreatedApplier mappingCreatedApplier;
   private AuthorizationCreatedApplier authorizationCreatedApplier;
@@ -73,7 +73,7 @@ final class AuthorizationCheckBehaviorTest {
     final var authConfig = new AuthorizationsConfiguration();
     authConfig.setEnabled(true);
     securityConfig.setAuthorizations(authConfig);
-    authorizationCheckBehavior = new AuthorizationCheckBehavior(processingState, securityConfig);
+    authorizationCheckBehavior = new AuthorizationValidationBehavior(processingState, securityConfig);
 
     userCreatedApplier = new UserCreatedApplier(processingState.getUserState());
     mappingCreatedApplier = new MappingCreatedApplier(processingState.getMappingState());

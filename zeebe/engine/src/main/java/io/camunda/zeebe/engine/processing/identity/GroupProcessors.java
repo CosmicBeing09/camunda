@@ -19,7 +19,7 @@ public class GroupProcessors {
   public static void addGroupProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authValidationBehavior,
       final KeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -28,7 +28,7 @@ public class GroupProcessors {
         GroupIntent.CREATE,
         new GroupCreateProcessor(
             processingState.getGroupState(),
-            authCheckBehavior,
+            authValidationBehavior,
             keyGenerator,
             writers,
             commandDistributionBehavior));
@@ -38,7 +38,7 @@ public class GroupProcessors {
         new GroupUpdateProcessor(
             processingState.getGroupState(),
             keyGenerator,
-            authCheckBehavior,
+            authValidationBehavior,
             writers,
             commandDistributionBehavior));
     typedRecordProcessors.onCommand(
@@ -46,7 +46,7 @@ public class GroupProcessors {
         GroupIntent.ADD_ENTITY,
         new GroupAddEntityProcessor(
             processingState,
-            authCheckBehavior,
+            authValidationBehavior,
             keyGenerator,
             writers,
             commandDistributionBehavior));
@@ -55,7 +55,7 @@ public class GroupProcessors {
         GroupIntent.REMOVE_ENTITY,
         new GroupRemoveEntityProcessor(
             processingState,
-            authCheckBehavior,
+            authValidationBehavior,
             keyGenerator,
             writers,
             commandDistributionBehavior));
@@ -64,7 +64,7 @@ public class GroupProcessors {
         GroupIntent.DELETE,
         new GroupDeleteProcessor(
             processingState,
-            authCheckBehavior,
+            authValidationBehavior,
             keyGenerator,
             writers,
             commandDistributionBehavior));

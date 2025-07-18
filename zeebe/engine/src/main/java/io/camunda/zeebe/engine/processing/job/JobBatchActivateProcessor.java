@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
 import io.camunda.zeebe.engine.processing.job.JobBatchCollector.TooLargeJob;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -51,14 +51,14 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
   private final JobProcessingMetrics jobMetrics;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
-  private final AuthorizationCheckBehavior authorizationCheckBehavior;
+  private final AuthorizationValidationBehavior authorizationCheckBehavior;
 
   public JobBatchActivateProcessor(
       final Writers writers,
       final ProcessingState state,
       final KeyGenerator keyGenerator,
       final JobProcessingMetrics jobMetrics,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
 
     stateWriter = writers.state();
     rejectionWriter = writers.rejection();

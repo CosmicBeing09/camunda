@@ -12,8 +12,8 @@ import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
@@ -58,7 +58,7 @@ public final class VariableDocumentUpdateProcessor
   private final VariableBehavior variableBehavior;
   private final BpmnJobBehavior jobBehavior;
   private final Writers writers;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
 
   public VariableDocumentUpdateProcessor(
       final ProcessingState processingState,
@@ -66,7 +66,7 @@ public final class VariableDocumentUpdateProcessor
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final MutableUserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;
     processState = processingState.getProcessState();
@@ -101,7 +101,7 @@ public final class VariableDocumentUpdateProcessor
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
-              ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+              ? AuthorizationValidationBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                   "update variables for element",
                   scope.getValue().getProcessInstanceKey(),
                   "such element")
