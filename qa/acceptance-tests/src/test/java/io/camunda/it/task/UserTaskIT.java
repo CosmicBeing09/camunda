@@ -58,7 +58,7 @@ public class UserTaskIT {
 
     waitForProcessTasks(client, processInstanceId);
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
     // then
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getPriority()).isEqualTo(50);
@@ -84,9 +84,9 @@ public class UserTaskIT {
     // given
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, null);
+    final var processInstanceId = startTaskProcess(client, null);
 
-    var userTasks = fetchUserTasks(client, processInstanceId);
+    var userTasks = fetchTasks(client, processInstanceId);
 
     client.newUserTaskCompleteCommand(userTasks.getFirst().getUserTaskKey()).send().join();
     // then
@@ -97,7 +97,7 @@ public class UserTaskIT {
           f.state(UserTaskState.COMPLETED);
         });
 
-    userTasks = fetchUserTasks(client, processInstanceId);
+    userTasks = fetchTasks(client, processInstanceId);
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getState()).isEqualTo(UserTaskState.COMPLETED);
     assertThat(userTasks.getFirst().getCompletionDate()).isNotNull();
@@ -109,9 +109,9 @@ public class UserTaskIT {
     final var dateTime = OffsetDateTime.now();
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, null);
+    final var processInstanceId = startTaskProcess(client, null);
 
-    var userTasks = fetchUserTasks(client, processInstanceId);
+    var userTasks = fetchTasks(client, processInstanceId);
 
     client
         .newUserTaskUpdateCommand(userTasks.getFirst().getUserTaskKey())
@@ -131,7 +131,7 @@ public class UserTaskIT {
           f.candidateUser("demoUsers");
         });
 
-    userTasks = fetchUserTasks(client, processInstanceId);
+    userTasks = fetchTasks(client, processInstanceId);
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getPriority()).isEqualTo(99);
     assertThat(userTasks.getFirst().getCandidateUsers()).containsExactly("demoUsers");
@@ -146,9 +146,9 @@ public class UserTaskIT {
     // given
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, null);
+    final var processInstanceId = startTaskProcess(client, null);
 
-    var userTasks = fetchUserTasks(client, processInstanceId);
+    var userTasks = fetchTasks(client, processInstanceId);
 
     client
         .newUserTaskAssignCommand(userTasks.getFirst().getUserTaskKey())
@@ -164,7 +164,7 @@ public class UserTaskIT {
           f.assignee("demo");
         });
 
-    userTasks = fetchUserTasks(client, processInstanceId);
+    userTasks = fetchTasks(client, processInstanceId);
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getAssignee()).isEqualTo("demo");
   }
@@ -174,9 +174,9 @@ public class UserTaskIT {
     // given
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, t -> t.zeebeAssignee("demo"));
+    final var processInstanceId = startTaskProcess(client, t -> t.zeebeAssignee("demo"));
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
 
     client.newUserTaskUnassignCommand(userTasks.getFirst().getUserTaskKey()).send().join();
 
@@ -196,7 +196,7 @@ public class UserTaskIT {
               return tasks.getFirst().getAssignee() == null;
             });
 
-    final var unassignedTasks = fetchUserTasks(client, processInstanceId);
+    final var unassignedTasks = fetchTasks(client, processInstanceId);
     assertThat(unassignedTasks).hasSize(1);
     assertThat(unassignedTasks.getFirst().getAssignee()).isNull();
   }
@@ -293,7 +293,7 @@ public class UserTaskIT {
 
     waitForProcessTasks(client, processInstanceId);
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
 
     // then
     assertThat(userTasks).hasSize(1);
@@ -323,7 +323,7 @@ public class UserTaskIT {
 
     waitForProcessTasks(client, processInstanceId);
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
 
     // then
     assertThat(userTasks).hasSize(1);
@@ -331,7 +331,7 @@ public class UserTaskIT {
     assertThat(userTasks.getFirst().getFormKey()).isEqualTo(form.getFormKey());
   }
 
-  public static List<UserTask> fetchUserTasks(
+  public static List<UserTask> fetchTasks(
       final CamundaClient client, final long processInstanceId) {
     return client
         .newUserTaskSearchRequest()
@@ -341,7 +341,7 @@ public class UserTaskIT {
         .items();
   }
 
-  public static Long startZeebeUserTaskProcess(
+  public static Long startTaskProcess(
       final CamundaClient client, final Consumer<UserTaskBuilder> taskParams) {
     if (taskParams != null) {
       createAndDeployUserTaskProcess(
