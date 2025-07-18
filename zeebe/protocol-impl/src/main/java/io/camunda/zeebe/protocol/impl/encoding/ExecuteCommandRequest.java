@@ -195,7 +195,7 @@ public final class ExecuteCommandRequest implements BufferReader, BufferWriter {
         .key(key)
         .operationReference(operationReference)
         .valueType(valueType)
-        .intent(intent.getValue())
+        .intent(intent.getIntentValue())
         .putValue(value, 0, value.capacity())
         .putAuthorization(authorization.toDirectBuffer(), 0, authorization.getLength());
   }

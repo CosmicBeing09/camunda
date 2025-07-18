@@ -51,7 +51,7 @@ public enum Intent implements io.camunda.zeebe.protocol.record.intent.Intent {
   private final short value = 0;
 
   @Override
-  public short getValue() {
+  public short getIntentValue() {
     return value;
   }
 

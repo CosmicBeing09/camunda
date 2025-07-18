@@ -80,8 +80,32 @@ public enum ProcessInstanceIntent implements ProcessInstanceRelatedIntent {
     this.shouldBanInstance = shouldBanInstance;
   }
 
-  public short getIntent() {
+  @Override
+  public short getIntentValue() {
     return value;
+  }
+
+  @Override
+  public short getIntentValue() {
+    return value;
+  }
+
+  @Override
+  public boolean isEvent() {
+    switch (this) {
+      case SEQUENCE_FLOW_TAKEN:
+      case ELEMENT_ACTIVATING:
+      case ELEMENT_ACTIVATED:
+      case ELEMENT_COMPLETING:
+      case ELEMENT_COMPLETED:
+      case ELEMENT_TERMINATING:
+      case ELEMENT_TERMINATED:
+      case ELEMENT_MIGRATED:
+      case ANCESTOR_MIGRATED:
+        return true;
+      default:
+        return false;
+    }
   }
 
   public static Intent from(final short value) {
@@ -118,29 +142,6 @@ public enum ProcessInstanceIntent implements ProcessInstanceRelatedIntent {
         return CONTINUE_TERMINATING_ELEMENT;
       default:
         return Intent.UNKNOWN;
-    }
-  }
-
-  @Override
-  public short getValue() {
-    return value;
-  }
-
-  @Override
-  public boolean isEvent() {
-    switch (this) {
-      case SEQUENCE_FLOW_TAKEN:
-      case ELEMENT_ACTIVATING:
-      case ELEMENT_ACTIVATED:
-      case ELEMENT_COMPLETING:
-      case ELEMENT_COMPLETED:
-      case ELEMENT_TERMINATING:
-      case ELEMENT_TERMINATED:
-      case ELEMENT_MIGRATED:
-      case ANCESTOR_MIGRATED:
-        return true;
-      default:
-        return false;
     }
   }
 

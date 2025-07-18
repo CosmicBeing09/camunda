@@ -26,7 +26,7 @@ public enum ProcessInstanceModificationIntent implements Intent, ProcessInstance
   }
 
   @Override
-  public short getValue() {
+  public short getIntentValue() {
     return value;
   }
 

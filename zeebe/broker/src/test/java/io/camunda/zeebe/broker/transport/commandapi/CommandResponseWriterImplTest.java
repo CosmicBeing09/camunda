@@ -74,7 +74,7 @@ public final class CommandResponseWriterImplTest {
     assertThat(responseDecoder.key()).isEqualTo(KEY);
     assertThat(responseDecoder.recordType()).isEqualTo(RecordType.EVENT);
     assertThat(responseDecoder.valueType()).isEqualTo(ValueType.JOB);
-    assertThat(responseDecoder.intent()).isEqualTo(JobIntent.CREATED.getValue());
+    assertThat(responseDecoder.intent()).isEqualTo(JobIntent.CREATED.getIntentValue());
 
     assertThat(responseDecoder.valueLength()).isEqualTo(EVENT.length);
 

@@ -42,7 +42,7 @@ public enum ProcessMessageSubscriptionIntent implements ProcessInstanceRelatedIn
   }
 
   @Override
-  public short getValue() {
+  public short getIntentValue() {
     return value;
   }
 

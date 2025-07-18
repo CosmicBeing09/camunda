@@ -45,7 +45,7 @@ public enum MessageSubscriptionIntent implements ProcessInstanceRelatedIntent {
   }
 
   @Override
-  public short getValue() {
+  public short getIntentValue() {
     return value;
   }
 

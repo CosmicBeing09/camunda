@@ -32,7 +32,7 @@ public enum VariableDocumentIntent implements Intent {
   }
 
   @Override
-  public short getValue() {
+  public short getIntentValue() {
     return value;
   }
 

@@ -48,7 +48,7 @@ public enum BatchOperationExecutionIntent implements Intent {
   }
 
   @Override
-  public short getValue() {
+  public short getIntentValue() {
     return value;
   }
 

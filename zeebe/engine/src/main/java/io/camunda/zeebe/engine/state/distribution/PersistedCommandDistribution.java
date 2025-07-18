@@ -46,7 +46,7 @@ public class PersistedCommandDistribution extends UnpackedObject implements DbVa
       queueIdProperty.reset();
     }
     valueTypeProperty.setValue(commandDistributionRecord.getValueType());
-    intentProperty.setValue(commandDistributionRecord.getIntent().getValue());
+    intentProperty.setValue(commandDistributionRecord.getIntent().getIntentValue());
 
     final var commandValue = commandDistributionRecord.getCommandValue();
     final var valueBuffer = new UnsafeBuffer(0, 0);

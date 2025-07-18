@@ -121,7 +121,7 @@ public class Engine implements RecordProcessor {
             recordProcessorMap.get(
                 typedCommand.getRecordType(),
                 typedCommand.getValueType(),
-                typedCommand.getIntent().getValue());
+                typedCommand.getIntent().getIntentValue());
       } catch (final Exception e) {
         LOG.error(ERROR_MESSAGE_PROCESSOR_NOT_FOUND, typedCommand, e);
       }
@@ -151,7 +151,7 @@ public class Engine implements RecordProcessor {
             recordProcessorMap.get(
                 typedCommand.getRecordType(),
                 typedCommand.getValueType(),
-                typedCommand.getIntent().getValue());
+                typedCommand.getIntent().getIntentValue());
       } catch (final Exception e) {
         LOG.error(ERROR_MESSAGE_PROCESSOR_NOT_FOUND, typedCommand, e);
       }
