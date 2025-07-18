@@ -11,14 +11,14 @@ import io.camunda.util.ObjectBuilder;
 import java.util.List;
 import java.util.function.Function;
 
-public record GroupSort(List<FieldSorting> orderings) implements SortOption {
+public record GroupSort(List<FieldSorting> fields) implements SortOption {
   @Override
   public List<FieldSorting> getFieldSortings() {
-    return orderings;
+    return fields;
   }
 
-  public static GroupSort of(final Function<Builder, ObjectBuilder<GroupSort>> fn) {
-    return SortOptionBuilders.group(fn);
+  public static GroupSort of(final Function<Builder, ObjectBuilder<GroupSort>> builderFn) {
+    return SortOptionBuilders.group(builderFn);
   }
 
   public static final class Builder extends AbstractBuilder<Builder>
