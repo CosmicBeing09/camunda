@@ -27,9 +27,9 @@ public interface CredentialsProvider {
    * Adds credentials to the headers. For an example of this, see {@link
    * OAuthCredentialsProvider#applyCredentials(CredentialsApplier)}
    *
-   * @param applier where to add the credentials headers
+   * @param credentialsApplier where to add the credentials headers
    */
-  void applyCredentials(final CredentialsApplier applier) throws IOException;
+  void applyCredentials(final CredentialsApplier credentialsApplier) throws IOException;
 
   /**
    * Returns true if the request should be retried; otherwise returns false. For an example of this,
@@ -44,7 +44,7 @@ public interface CredentialsProvider {
   /**
    * @return a builder to configure and create a new {@link OAuthCredentialsProvider}.
    */
-  static OAuthCredentialsProviderBuilder newCredentialsProviderBuilder() {
+  static OAuthCredentialsProviderBuilder newOAuthCredentialsProviderBuilder() {
     return new OAuthCredentialsProviderBuilder();
   }
 

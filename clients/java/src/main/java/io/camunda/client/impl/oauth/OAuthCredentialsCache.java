@@ -41,8 +41,8 @@ import net.jcip.annotations.ThreadSafe;
 @ThreadSafe
 public final class OAuthCredentialsCache {
 
-  private static final String KEY_AUTH = "auth";
-  private static final String KEY_CREDENTIALS = "credentials";
+  private static final String KEY_OAUTH_WRAPPER = "auth";
+  private static final String KEY_CLIENT_CREDENTIALS = "credentials";
   private static final TypeReference<Map<String, OAuthCachedCredentials>> TYPE_REFERENCE =
       new TypeReference<Map<String, OAuthCachedCredentials>>() {};
   private static final ObjectMapper MAPPER = new ObjectMapper(new YAMLFactory());
@@ -85,7 +85,7 @@ public final class OAuthCredentialsCache {
 
     final Map<String, Map<String, OAuthCachedCredentials>> cache = new HashMap<>(values.size());
     for (final Entry<String, OAuthCachedCredentials> clients : values.entrySet()) {
-      cache.put(clients.getKey(), Collections.singletonMap(KEY_AUTH, clients.getValue()));
+      cache.put(clients.getKey(), Collections.singletonMap(KEY_OAUTH_WRAPPER, clients.getValue()));
     }
 
     WRITE_LOCK.lock();
@@ -209,15 +209,15 @@ public final class OAuthCredentialsCache {
 
     @JsonCreator
     private OAuthCachedCredentials(
-        @JsonProperty(KEY_AUTH) final Map<String, CamundaClientCredentials> auth) {
-      this(auth.get(KEY_CREDENTIALS));
+        @JsonProperty(KEY_OAUTH_WRAPPER) final Map<String, CamundaClientCredentials> auth) {
+      this(auth.get(KEY_CLIENT_CREDENTIALS));
     }
 
     private OAuthCachedCredentials(final CamundaClientCredentials credentials) {
       this.credentials = credentials;
     }
 
-    @JsonGetter(KEY_CREDENTIALS)
+    @JsonGetter(KEY_CLIENT_CREDENTIALS)
     private CamundaClientCredentials getCredentials() {
       return credentials;
     }
