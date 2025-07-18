@@ -725,8 +725,8 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return processInstanceKeyProp.getValue();
   }
 
-  public UserTaskRecord setProcessInstanceKey(final long key) {
-    processInstanceKeyProp.setValue(key);
+  public UserTaskRecord setProcessInstanceKey(final long processInstanceKey) {
+    processInstanceKeyProp.setValue(processInstanceKey);
     return this;
   }
 
