@@ -32,18 +32,18 @@ public final class FilterBuilders {
     return fn.apply(processDefinition()).build();
   }
 
-  public static ProcessDefinitionStatisticsFilter.Builder processDefinitionStatisticsFilter(
+  public static ProcessDefinitionStatisticsFilter.Builder processDefinitionStatistics(
       final long processDefinitionKey) {
     return new ProcessDefinitionStatisticsFilter.Builder(processDefinitionKey);
   }
 
-  public static ProcessDefinitionStatisticsFilter processDefinitionStatisticsFilter(
+  public static ProcessDefinitionStatisticsFilter processDefinitionStatistics(
       final long processDefinitionKey,
       final Function<
               ProcessDefinitionStatisticsFilter.Builder,
               ObjectBuilder<ProcessDefinitionStatisticsFilter>>
           fn) {
-    return fn.apply(processDefinitionStatisticsFilter(processDefinitionKey)).build();
+    return fn.apply(processDefinitionStatistics(processDefinitionKey)).build();
   }
 
   public static ProcessInstanceFilter.Builder processInstance() {

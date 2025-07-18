@@ -48,7 +48,7 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
       return this;
     }
 
-    public <T> Builder valueTypedOperations(final List<Operation<T>> operations) {
+    public <T> Builder valueTypedOperations(final List<FilterOperation<T>> operations) {
       operations.forEach(operation -> valueOperations.add(UntypedOperation.of(operation)));
       return this;
     }
@@ -61,7 +61,7 @@ public record VariableValueFilter(String name, List<UntypedOperation> valueOpera
     @Override
     public List<VariableValueFilter> buildList() {
       final List<VariableValueFilter> variableValueFilters = new ArrayList<>();
-      for (UntypedOperation untypedOperation : valueOperations) {
+      for (final UntypedOperation untypedOperation : valueOperations) {
         final VariableValueFilter variableValueFilter =
             new VariableValueFilter.Builder().name(name).valueOperation(untypedOperation).build();
         variableValueFilters.add(variableValueFilter);

@@ -23,7 +23,7 @@ import io.camunda.it.rdbms.db.fixtures.VariableFixtures;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsInvocationContextProviderExtension;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsTestApplication;
 import io.camunda.search.entities.UserTaskEntity;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.UntypedOperation;
 import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.filter.VariableValueFilter;
@@ -237,7 +237,7 @@ public class UserTaskIT {
                                     .name(randomizedVariable.name())
                                     .valueOperation(
                                         UntypedOperation.of(
-                                            Operation.eq(randomizedVariable.value())))
+                                            FilterOperation.eq(randomizedVariable.value())))
                                     .build()))
                         .build(),
                     UserTaskSort.of(b -> b),
@@ -343,7 +343,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .creationDateOperations(Operation.gt(creationDate.minusDays(1)))
+                        .creationDateOperations(FilterOperation.gt(creationDate.minusDays(1)))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -370,7 +370,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .completionDateOperations(Operation.gte(completionDate))
+                        .completionDateOperations(FilterOperation.gte(completionDate))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -397,7 +397,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .creationDateOperations(Operation.lte(creationDate))
+                        .creationDateOperations(FilterOperation.lte(creationDate))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -424,7 +424,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .completionDateOperations(Operation.lt(completionDate.plusDays(1)))
+                        .completionDateOperations(FilterOperation.lt(completionDate.plusDays(1)))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -449,7 +449,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .dueDateOperations(Operation.gt(dueDate.minusDays(1)))
+                        .dueDateOperations(FilterOperation.gt(dueDate.minusDays(1)))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -473,7 +473,7 @@ public class UserTaskIT {
             .getUserTaskReader()
             .search(
                 new UserTaskQuery(
-                    new UserTaskFilter.Builder().dueDateOperations(Operation.lte(dueDate)).build(),
+                    new UserTaskFilter.Builder().dueDateOperations(FilterOperation.lte(dueDate)).build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
 
@@ -499,7 +499,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .followUpDateOperations(Operation.gt(followUpDate.minusDays(1)))
+                        .followUpDateOperations(FilterOperation.gt(followUpDate.minusDays(1)))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -526,7 +526,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .followUpDateOperations(Operation.lte(followUpDate))
+                        .followUpDateOperations(FilterOperation.lte(followUpDate))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -553,7 +553,7 @@ public class UserTaskIT {
             .search(
                 new UserTaskQuery(
                     new UserTaskFilter.Builder()
-                        .completionDateOperations(Operation.eq(completionDate))
+                        .completionDateOperations(FilterOperation.eq(completionDate))
                         .build(),
                     UserTaskSort.of(b -> b),
                     SearchQueryPage.of(b -> b.from(0).size(10))));
@@ -582,12 +582,12 @@ public class UserTaskIT {
                     .states(userTask.state().name())
                     .processInstanceKeys(userTask.processInstanceKey())
                     .processDefinitionKeys(userTask.processDefinitionKey())
-                    .candidateUserOperations(Operation.in(userTask.candidateUsers()))
-                    .candidateGroupOperations(Operation.in(userTask.candidateGroups()))
-                    .creationDateOperations(Operation.lt(userTask.creationDate().plusDays(1)))
-                    .completionDateOperations(Operation.gte(userTask.completionDate().minusDays(2)))
-                    .dueDateOperations(Operation.lte(userTask.dueDate().plusDays(1)))
-                    .followUpDateOperations(Operation.gte(userTask.followUpDate().minusDays(1)))
+                    .candidateUserOperations(FilterOperation.in(userTask.candidateUsers()))
+                    .candidateGroupOperations(FilterOperation.in(userTask.candidateGroups()))
+                    .creationDateOperations(FilterOperation.lt(userTask.creationDate().plusDays(1)))
+                    .completionDateOperations(FilterOperation.gte(userTask.completionDate().minusDays(2)))
+                    .dueDateOperations(FilterOperation.lte(userTask.dueDate().plusDays(1)))
+                    .followUpDateOperations(FilterOperation.gte(userTask.followUpDate().minusDays(1)))
                     .tenantIds(userTask.tenantId())
                     .build(),
                 UserTaskSort.of(b -> b),

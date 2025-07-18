@@ -19,22 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public record FlowNodeInstanceFilter(
-    List<Long> flowNodeInstanceKeys,
-    List<Long> processInstanceKeys,
-    List<Long> processDefinitionKeys,
-    List<String> processDefinitionIds,
-    List<Operation<String>> stateOperations,
-    List<FlowNodeType> types,
-    List<String> flowNodeIds,
-    List<String> flowNodeNames,
-    List<String> treePaths,
-    Boolean hasIncident,
-    List<Long> incidentKeys,
-    List<String> tenantIds,
-    List<String> startDates,
-    List<String> endDates)
-    implements FilterBase {
+FilterBase {
 
   public static FlowNodeInstanceFilter of(
       final Function<FlowNodeInstanceFilter.Builder, ObjectBuilder<FlowNodeInstanceFilter>> fn) {
@@ -47,7 +32,7 @@ public record FlowNodeInstanceFilter(
     private List<Long> processInstanceKeys;
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
-    private List<Operation<String>> stateOperations;
+    private List<FilterOperation<String>> stateOperations;
     private List<FlowNodeType> types;
     private List<String> flowNodeIds;
     private List<String> flowNodeNames;
@@ -95,7 +80,7 @@ public record FlowNodeInstanceFilter(
     }
 
     public FlowNodeInstanceFilter.Builder stateOperations(
-        final List<Operation<String>> operations) {
+        final List<FilterOperation<String>> operations) {
       stateOperations = addValuesToList(stateOperations, operations);
       return this;
     }
@@ -106,7 +91,7 @@ public record FlowNodeInstanceFilter(
 
     @SafeVarargs
     public final FlowNodeInstanceFilter.Builder stateOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return stateOperations(collectValues(operation, operations));
     }
 
@@ -207,3 +192,19 @@ public record FlowNodeInstanceFilter(
     }
   }
 }
+    implements
+public record FlowNodeInstanceFilter(
+    List<Long> flowNodeInstanceKeys,
+    List<Long> processInstanceKeys,
+    List<Long> processDefinitionKeys,
+    List<String> processDefinitionIds,
+    List<FilterOperation<String>> stateOperations,
+    List<FlowNodeType> types,
+    List<String> flowNodeIds,
+    List<String> flowNodeNames,
+    List<String> treePaths,
+    Boolean hasIncident,
+    List<Long> incidentKeys,
+    List<String> tenantIds,
+    List<String> startDates,
+    List<String> endDates)

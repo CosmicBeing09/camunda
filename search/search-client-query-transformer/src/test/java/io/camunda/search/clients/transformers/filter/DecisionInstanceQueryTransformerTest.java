@@ -13,7 +13,7 @@ import io.camunda.search.clients.query.SearchBoolQuery;
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.query.SearchQueryBuilders;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -203,7 +203,7 @@ class DecisionInstanceQueryTransformerTest extends AbstractTransformerTest {
     // given
     final var dateAfter = OffsetDateTime.of(LocalDateTime.of(2024, 1, 2, 3, 4, 5), ZoneOffset.UTC);
     final var dateBefore = OffsetDateTime.of(LocalDateTime.of(2024, 2, 3, 4, 5, 6), ZoneOffset.UTC);
-    final var dateFilter = List.of(Operation.gte(dateAfter), Operation.lt(dateBefore));
+    final var dateFilter = List.of(FilterOperation.gte(dateAfter), FilterOperation.lt(dateBefore));
     final var decisionInstanceFilter =
         FilterBuilders.decisionInstance(f -> f.evaluationDateOperations(dateFilter));
 

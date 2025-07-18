@@ -16,7 +16,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import io.camunda.search.entities.ProcessInstanceEntity;
 import io.camunda.search.entities.ProcessInstanceEntity.ProcessInstanceState;
 import io.camunda.search.exception.CamundaSearchException;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.search.query.ProcessInstanceQuery;
 import io.camunda.search.query.SearchQueryResult;
@@ -583,13 +583,13 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
         "state",
         ops -> new ProcessInstanceFilter.Builder().stateOperations(ops).build(),
         List.of(
-            List.of(Operation.eq(String.valueOf(ProcessInstanceStateEnum.ACTIVE))),
-            List.of(Operation.neq(String.valueOf(ProcessInstanceStateEnum.COMPLETED))),
+            List.of(FilterOperation.eq(String.valueOf(ProcessInstanceStateEnum.ACTIVE))),
+            List.of(FilterOperation.neq(String.valueOf(ProcessInstanceStateEnum.COMPLETED))),
             List.of(
-                Operation.in(
+                FilterOperation.in(
                     String.valueOf(ProcessInstanceStateEnum.COMPLETED),
                     String.valueOf(ProcessInstanceStateEnum.ACTIVE)),
-                Operation.like("act"))),
+                FilterOperation.like("act"))),
         true);
     stringOperationTestCases(
         streamBuilder,
@@ -706,8 +706,8 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
 
     final var expectedFilter =
         new ProcessInstanceFilter.Builder()
-            .stateOperations(Operation.eq("ACTIVE"))
-            .tenantIdOperations(Operation.eq("tenant"));
+            .stateOperations(FilterOperation.eq("ACTIVE"))
+            .tenantIdOperations(FilterOperation.eq("tenant"));
     orFilters.forEach(expectedFilter::addOrOperation);
 
     when(processInstanceServices.search(queryCaptor.capture())).thenReturn(SEARCH_QUERY_RESULT);

@@ -15,7 +15,7 @@ import io.camunda.search.clients.query.SearchTermsQuery;
 import io.camunda.search.clients.types.TypedValue;
 import io.camunda.search.entities.BatchOperationEntity.BatchOperationItemState;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.webapps.schema.entities.operation.OperationState;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
@@ -156,7 +156,7 @@ class BatchOperationItemFilterTransformerTest extends AbstractTransformerTest {
     // given
     final var filter =
         FilterBuilders.batchOperationItem(
-            f -> f.stateOperations(Operation.neq(BatchOperationItemState.COMPLETED.name())));
+            f -> f.stateOperations(FilterOperation.neq(BatchOperationItemState.COMPLETED.name())));
 
     // when
     final var searchRequest = transformQuery(filter);

@@ -17,7 +17,7 @@ class UntypedOperationTest {
 
   @Test
   void shouldCreateUntypedOperation() {
-    final Operation<String> operation = new Operation<>(Operator.EQUALS, List.of("value"));
+    final FilterOperation<String> operation = new FilterOperation<>(Operator.EQUALS, List.of("value"));
     final UntypedOperation untypedOperation = UntypedOperation.of(operation);
 
     assertThat(untypedOperation).isNotNull();
@@ -28,7 +28,7 @@ class UntypedOperationTest {
 
   @Test
   void shouldThrowExceptionForInvalidValueType() {
-    final Operation<String> operation = new Operation<>(Operator.GREATER_THAN, List.of("value"));
+    final FilterOperation<String> operation = new FilterOperation<>(Operator.GREATER_THAN, List.of("value"));
     final IllegalArgumentException exception =
         catchThrowableOfType(IllegalArgumentException.class, () -> UntypedOperation.of(operation));
 
@@ -38,7 +38,7 @@ class UntypedOperationTest {
 
   @Test
   void shouldCreateUntypedOperationWithLikeOperator() {
-    final Operation<String> operation = new Operation<>(Operator.LIKE, List.of("value"));
+    final FilterOperation<String> operation = new FilterOperation<>(Operator.LIKE, List.of("value"));
     final UntypedOperation untypedOperation = UntypedOperation.of(operation);
 
     assertThat(untypedOperation).isNotNull();
@@ -49,7 +49,7 @@ class UntypedOperationTest {
 
   @Test
   void shouldThrowExceptionForInvalidValueTypeWithLikeOperator() {
-    final Operation<Integer> operation = new Operation<>(Operator.LIKE, List.of(123));
+    final FilterOperation<Integer> operation = new FilterOperation<>(Operator.LIKE, List.of(123));
     final IllegalArgumentException exception =
         catchThrowableOfType(IllegalArgumentException.class, () -> UntypedOperation.of(operation));
 

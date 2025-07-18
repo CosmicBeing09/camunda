@@ -29,7 +29,7 @@ import io.camunda.search.filter.FlowNodeInstanceFilter;
 import io.camunda.search.filter.GroupFilter;
 import io.camunda.search.filter.IncidentFilter;
 import io.camunda.search.filter.MappingFilter;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessDefinitionFilter;
 import io.camunda.search.filter.ProcessDefinitionStatisticsFilter;
 import io.camunda.search.filter.ProcessInstanceFilter;
@@ -196,7 +196,7 @@ public final class SearchQueryRequestMapper {
   private static Either<List<String>, ProcessDefinitionStatisticsFilter.Builder>
       toBaseProcessInstanceFilterFields(
           final long processDefinitionKey, final BaseProcessInstanceFilterFields filter) {
-    final var builder = FilterBuilders.processDefinitionStatisticsFilter(processDefinitionKey);
+    final var builder = FilterBuilders.processDefinitionStatistics(processDefinitionKey);
     final List<String> validationErrors = new ArrayList<>();
     if (filter != null) {
       ofNullable(filter.getProcessInstanceKey())
@@ -1527,7 +1527,7 @@ public final class SearchQueryRequestMapper {
 
   private static List<VariableValueFilter> toVariableValueFilters(
       final String name, final StringFilterProperty value) {
-    final List<Operation<String>> operations = mapToOperations(String.class).apply(value);
+    final List<FilterOperation<String>> operations = mapToOperations(String.class).apply(value);
     return new VariableValueFilter.Builder()
         .name(name)
         .valueTypedOperations(operations)

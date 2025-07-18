@@ -18,18 +18,18 @@ import java.util.List;
 import java.util.Objects;
 
 public record BatchOperationFilter(
-    List<Operation<String>> batchOperationIdOperations,
-    List<Operation<String>> operationTypeOperations,
-    List<Operation<String>> stateOperations)
+    List<FilterOperation<String>> batchOperationIdOperations,
+    List<FilterOperation<String>> operationTypeOperations,
+    List<FilterOperation<String>> stateOperations)
     implements FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationFilter> {
 
-    private List<Operation<String>> batchOperationIdOperations;
-    private List<Operation<String>> operationTypeOperations;
-    private List<Operation<String>> stateOperations;
+    private List<FilterOperation<String>> batchOperationIdOperations;
+    private List<FilterOperation<String>> operationTypeOperations;
+    private List<FilterOperation<String>> stateOperations;
 
-    public Builder batchOperationIdOperations(final List<Operation<String>> operations) {
+    public Builder batchOperationIdOperations(final List<FilterOperation<String>> operations) {
       batchOperationIdOperations = addValuesToList(batchOperationIdOperations, operations);
       return this;
     }
@@ -38,18 +38,18 @@ public record BatchOperationFilter(
       return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceBatchOperationIdOperations(final List<Operation<String>> operations) {
+    public Builder replaceBatchOperationIdOperations(final List<FilterOperation<String>> operations) {
       batchOperationIdOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder batchOperationIdOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return batchOperationIdOperations(collectValues(operation, operations));
     }
 
-    public Builder operationTypeOperations(final List<Operation<String>> operations) {
+    public Builder operationTypeOperations(final List<FilterOperation<String>> operations) {
       operationTypeOperations = addValuesToList(operationTypeOperations, operations);
       return this;
     }
@@ -58,18 +58,18 @@ public record BatchOperationFilter(
       return operationTypeOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceOperationTypeOperations(final List<Operation<String>> operations) {
+    public Builder replaceOperationTypeOperations(final List<FilterOperation<String>> operations) {
       operationTypeOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder operationTypeOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return operationTypeOperations(collectValues(operation, operations));
     }
 
-    public Builder stateOperations(final List<Operation<String>> operations) {
+    public Builder stateOperations(final List<FilterOperation<String>> operations) {
       stateOperations = addValuesToList(stateOperations, operations);
       return this;
     }
@@ -78,14 +78,14 @@ public record BatchOperationFilter(
       return stateOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceStateOperations(final List<Operation<String>> operations) {
+    public Builder replaceStateOperations(final List<FilterOperation<String>> operations) {
       stateOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder stateOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return stateOperations(collectValues(operation, operations));
     }
 

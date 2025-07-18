@@ -21,7 +21,7 @@ import io.camunda.it.rdbms.db.fixtures.ProcessDefinitionFixtures;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsInvocationContextProviderExtension;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsTestApplication;
 import io.camunda.search.entities.DecisionInstanceEntity;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.query.DecisionInstanceQuery;
 import io.camunda.search.sort.DecisionInstanceSort;
 import java.time.OffsetDateTime;
@@ -126,7 +126,7 @@ public class DecisionInstanceIT {
                                     .evaluationFailures(instance.evaluationFailure())
                                     .evaluationDateOperations(
                                         List.of(
-                                            Operation.gt(
+                                            FilterOperation.gt(
                                                 instance.evaluationDate().minusSeconds(1)))))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(5))));

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.BatchOperationMetrics;
@@ -174,9 +174,9 @@ public class BatchOperationExecutionSchedulerTest {
 
     // then
     final var filter = filterCaptor.getValue();
-    assertThat(filter.stateOperations()).containsExactly(Operation.eq("ACTIVE"));
+    assertThat(filter.stateOperations()).containsExactly(FilterOperation.eq("ACTIVE"));
     assertThat(filter.parentProcessInstanceKeyOperations())
-        .containsExactly(Operation.exists(false));
+        .containsExactly(FilterOperation.exists(false));
   }
 
   @Test
@@ -194,7 +194,7 @@ public class BatchOperationExecutionSchedulerTest {
 
     // then
     final var filter = filterCaptor.getValue();
-    assertThat(filter.stateOperations()).containsExactly(Operation.eq("ACTIVE"));
+    assertThat(filter.stateOperations()).containsExactly(FilterOperation.eq("ACTIVE"));
     assertThat(filter.parentProcessInstanceKeyOperations()).isEmpty();
   }
 
@@ -213,7 +213,7 @@ public class BatchOperationExecutionSchedulerTest {
 
     // then
     final var filter = filterCaptor.getValue();
-    assertThat(filter.stateOperations()).containsExactly(Operation.eq("ACTIVE"));
+    assertThat(filter.stateOperations()).containsExactly(FilterOperation.eq("ACTIVE"));
     assertThat(filter.parentProcessInstanceKeyOperations()).isEmpty();
   }
 
@@ -232,7 +232,7 @@ public class BatchOperationExecutionSchedulerTest {
 
     // then
     final var filter = filterCaptor.getValue();
-    assertThat(filter.stateOperations()).containsExactly(Operation.eq("ACTIVE"));
+    assertThat(filter.stateOperations()).containsExactly(FilterOperation.eq("ACTIVE"));
     assertThat(filter.parentProcessInstanceKeyOperations()).isEmpty();
   }
 

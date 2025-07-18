@@ -21,7 +21,7 @@ import io.camunda.it.rdbms.db.fixtures.ProcessDefinitionFixtures;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsInvocationContextProviderExtension;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsTestApplication;
 import io.camunda.search.entities.IncidentEntity;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.query.IncidentQuery;
 import io.camunda.search.sort.IncidentSort;
 import java.time.OffsetDateTime;
@@ -147,8 +147,8 @@ public class IncidentIT {
                                     .jobKeys(original.jobKey())
                                     .tenantIds(original.tenantId())
                                     .creationTimeOperations(
-                                        Operation.gt(original.creationDate().minusSeconds(1)),
-                                        Operation.lt(original.creationDate().plusSeconds(1))))
+                                        FilterOperation.gt(original.creationDate().minusSeconds(1)),
+                                        FilterOperation.lt(original.creationDate().plusSeconds(1))))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(5))));
 

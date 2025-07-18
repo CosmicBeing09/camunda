@@ -19,7 +19,7 @@ import io.camunda.search.entities.DecisionInstanceEntity.DecisionInstanceOutputE
 import io.camunda.search.entities.DecisionInstanceEntity.DecisionInstanceState;
 import io.camunda.search.exception.CamundaSearchException;
 import io.camunda.search.filter.DecisionInstanceFilter;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.query.DecisionInstanceQuery;
 import io.camunda.search.query.SearchQueryBuilders;
 import io.camunda.search.query.SearchQueryResult;
@@ -136,7 +136,7 @@ public class DecisionInstanceQueryControllerTest extends RestControllerTest {
                 q.filter(
                     f ->
                         f.evaluationDateOperations(
-                            Operation.eq(OffsetDateTime.parse("2024-06-05T08:29:15.027+00:00"))))),
+                            FilterOperation.eq(OffsetDateTime.parse("2024-06-05T08:29:15.027+00:00"))))),
         new TestArguments(
             """
       {

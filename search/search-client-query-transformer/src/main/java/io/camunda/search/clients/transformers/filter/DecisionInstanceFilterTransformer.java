@@ -34,7 +34,7 @@ import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.entities.DecisionInstanceEntity.DecisionDefinitionType;
 import io.camunda.search.entities.DecisionInstanceEntity.DecisionInstanceState;
 import io.camunda.search.filter.DecisionInstanceFilter;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -83,7 +83,7 @@ public final class DecisionInstanceFilterTransformer
   }
 
   private List<SearchQuery> getEvaluationDateQuery(
-      final List<Operation<OffsetDateTime>> evaluationDateOperations) {
+      final List<FilterOperation<OffsetDateTime>> evaluationDateOperations) {
     return dateTimeOperations(EVALUATION_DATE, evaluationDateOperations);
   }
 
@@ -102,13 +102,13 @@ public final class DecisionInstanceFilterTransformer
   }
 
   private List<SearchQuery> getDecisionDefinitionKeysQuery(
-      final List<Operation<Long>> decisionDefinitionKeyOperations) {
+      final List<FilterOperation<Long>> decisionDefinitionKeyOperations) {
     final var stringOperations =
         decisionDefinitionKeyOperations.stream()
             .map(
                 op -> {
                   final var values = op.values().stream().map(String::valueOf).toList();
-                  return new Operation<>(op.operator(), values);
+                  return new FilterOperation<>(op.operator(), values);
                 })
             .toList();
     return stringOperations(DECISION_DEFINITION_ID, stringOperations);

@@ -21,7 +21,7 @@ import static java.util.Optional.ofNullable;
 
 import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.clients.transformers.ServiceTransformers;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.filter.VariableValueFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
@@ -91,38 +91,38 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
     return longTerms(KEY, userTaskKeys);
   }
 
-  private List<SearchQuery> getCandidateUsersQuery(final List<Operation<String>> candidateUsers) {
+  private List<SearchQuery> getCandidateUsersQuery(final List<FilterOperation<String>> candidateUsers) {
     return stringOperations(CANDIDATE_USERS, candidateUsers);
   }
 
-  private List<SearchQuery> getCandidateGroupsQuery(final List<Operation<String>> candidateGroups) {
+  private List<SearchQuery> getCandidateGroupsQuery(final List<FilterOperation<String>> candidateGroups) {
     return stringOperations(CANDIDATE_GROUPS, candidateGroups);
   }
 
-  private List<SearchQuery> getAssigneesQuery(final List<Operation<String>> assignees) {
+  private List<SearchQuery> getAssigneesQuery(final List<FilterOperation<String>> assignees) {
     return stringOperations(ASSIGNEE, assignees);
   }
 
-  private List<SearchQuery> getPrioritiesQuery(final List<Operation<Integer>> priorities) {
+  private List<SearchQuery> getPrioritiesQuery(final List<FilterOperation<Integer>> priorities) {
     return intOperations(PRIORITY, priorities);
   }
 
   private List<SearchQuery> getCreationTimeQuery(
-      final List<Operation<OffsetDateTime>> creationTime) {
+      final List<FilterOperation<OffsetDateTime>> creationTime) {
     return dateTimeOperations(CREATION_TIME, creationTime);
   }
 
   private List<SearchQuery> getCompletionTimeQuery(
-      final List<Operation<OffsetDateTime>> completionTime) {
+      final List<FilterOperation<OffsetDateTime>> completionTime) {
     return dateTimeOperations(COMPLETION_TIME, completionTime);
   }
 
   private List<SearchQuery> getFollowUpDateQuery(
-      final List<Operation<OffsetDateTime>> followUpTime) {
+      final List<FilterOperation<OffsetDateTime>> followUpTime) {
     return dateTimeOperations(FOLLOW_UP_DATE, followUpTime);
   }
 
-  private List<SearchQuery> getDueDateQuery(final List<Operation<OffsetDateTime>> dueTime) {
+  private List<SearchQuery> getDueDateQuery(final List<FilterOperation<OffsetDateTime>> dueTime) {
     return dateTimeOperations(DUE_DATE, dueTime);
   }
 
