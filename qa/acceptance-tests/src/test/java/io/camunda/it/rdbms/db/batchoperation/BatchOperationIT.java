@@ -16,7 +16,6 @@ import static io.camunda.it.rdbms.db.fixtures.CommonFixtures.NOW;
 import static io.camunda.it.rdbms.db.fixtures.CommonFixtures.nextKey;
 import static io.camunda.it.rdbms.db.fixtures.CommonFixtures.nextStringId;
 import static io.camunda.it.rdbms.db.fixtures.CommonFixtures.nextStringKey;
-import static io.camunda.util.FilterUtil.mapDefaultToOperation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.db.rdbms.RdbmsService;
@@ -37,6 +36,7 @@ import io.camunda.search.query.BatchOperationQuery;
 import io.camunda.search.query.SearchQueryResult;
 import io.camunda.search.sort.BatchOperationItemSort;
 import io.camunda.search.sort.BatchOperationSort;
+import io.camunda.util.FilterUtil;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
@@ -541,8 +541,8 @@ public class BatchOperationIT {
                 new BatchOperationItemQuery(
                     new BatchOperationItemFilter.Builder()
                         .batchOperationIds(batchOperation.batchOperationId())
-                        .itemKeyOperations(mapDefaultToOperation(itemKeys))
-                        .processInstanceKeyOperations(mapDefaultToOperation(processInstanceKeys))
+                        .itemKeyOperations(FilterUtil.mapFiltersToOperation(itemKeys))
+                        .processInstanceKeyOperations(FilterUtil.mapFiltersToOperation(processInstanceKeys))
                         .states(BatchOperationState.ACTIVE.name())
                         .build(),
                     BatchOperationItemSort.of(b -> b),

@@ -58,7 +58,7 @@ public record UserFilter(
     }
 
     public Builder usernames(final Set<String> value) {
-      return usernameOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return usernameOperations(FilterUtil.mapFiltersToOperation(new ArrayList<>(value)));
     }
 
     public Builder usernames(final String value, final String... values) {
@@ -77,7 +77,7 @@ public record UserFilter(
     }
 
     public Builder names(final Set<String> value) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return nameOperations(FilterUtil.mapFiltersToOperation(new ArrayList<>(value)));
     }
 
     public Builder names(final String value, final String... values) {
@@ -96,7 +96,7 @@ public record UserFilter(
     }
 
     public Builder emails(final Set<String> value) {
-      return emailOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return emailOperations(FilterUtil.mapFiltersToOperation(new ArrayList<>(value)));
     }
 
     public Builder emails(final String value, final String... values) {

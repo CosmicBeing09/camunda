@@ -288,7 +288,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
         FilterBuilders.incident(
             f ->
                 f.errorMessageHashOperations(
-                        FilterUtil.mapDefaultToOperation(incidentErrorHashCodes))
+                        FilterUtil.mapFiltersToOperation(incidentErrorHashCodes))
                     .states(IncidentState.ACTIVE.name()));
 
     final var incidentResult = searchIncidents(IncidentQuery.of(f -> f.filter(incidentFilter)));

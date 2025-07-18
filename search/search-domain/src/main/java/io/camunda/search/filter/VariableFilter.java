@@ -45,7 +45,7 @@ public record VariableFilter(
     }
 
     public Builder names(final List<String> values) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(values));
+      return nameOperations(FilterUtil.mapFiltersToOperation(values));
     }
 
     @SafeVarargs
@@ -72,7 +72,7 @@ public record VariableFilter(
     }
 
     public Builder values(final List<String> values) {
-      return valueOperations(FilterUtil.mapDefaultToOperation(values));
+      return valueOperations(FilterUtil.mapFiltersToOperation(values));
     }
 
     @SafeVarargs
@@ -91,7 +91,7 @@ public record VariableFilter(
     }
 
     public Builder scopeKeys(final List<Long> values) {
-      return scopeKeyOperations(FilterUtil.mapDefaultToOperation(values));
+      return scopeKeyOperations(FilterUtil.mapFiltersToOperation(values));
     }
 
     @SafeVarargs
