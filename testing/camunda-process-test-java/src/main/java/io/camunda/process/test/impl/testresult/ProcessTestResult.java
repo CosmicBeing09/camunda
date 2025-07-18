@@ -20,14 +20,14 @@ import java.util.List;
 
 public class ProcessTestResult {
 
-  private List<ProcessInstanceResult> processInstanceResults = new ArrayList<>();
+  private List<ProcessInstanceResult> results = new ArrayList<>();
 
-  public List<ProcessInstanceResult> getProcessInstanceTestResults() {
-    return processInstanceResults;
+  public List<ProcessInstanceResult> getResults() {
+    return results;
   }
 
   public void setProcessInstanceTestResults(
       final List<ProcessInstanceResult> processInstanceResults) {
-    this.processInstanceResults = processInstanceResults;
+    results = processInstanceResults;
   }
 }

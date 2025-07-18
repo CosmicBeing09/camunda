@@ -44,7 +44,7 @@ public class CamundaProcessTestResultPrinter {
   private String formatResult(final ProcessTestResult result) {
     return "Process test results:\n"
         + "=====================\n\n"
-        + formatProcessInstances(result.getProcessInstanceTestResults())
+        + formatProcessInstances(result.getResults())
         + "\n"
         + "=====================\n";
   }
