@@ -95,12 +95,12 @@ public class OidcAuthOverRestIT {
 
   @BeforeAll
   static void setupKeycloak() {
-    final var defaultClient = new ClientRepresentation();
-    defaultClient.setClientId(DEFAULT_CLIENT_ID);
-    defaultClient.setEnabled(true);
-    defaultClient.setClientAuthenticatorType("client-secret");
-    defaultClient.setSecret(DEFAULT_CLIENT_SECRET);
-    defaultClient.setServiceAccountsEnabled(true);
+    final var defaultClientRepresentation = new ClientRepresentation();
+    defaultClientRepresentation.setClientId(DEFAULT_CLIENT_ID);
+    defaultClientRepresentation.setEnabled(true);
+    defaultClientRepresentation.setClientAuthenticatorType("client-secret");
+    defaultClientRepresentation.setSecret(DEFAULT_CLIENT_SECRET);
+    defaultClientRepresentation.setServiceAccountsEnabled(true);
 
     final var defaultUser = new UserRepresentation();
     defaultUser.setId(DEFAULT_USER_ID);
@@ -108,12 +108,12 @@ public class OidcAuthOverRestIT {
     defaultUser.setServiceAccountClientId(DEFAULT_CLIENT_ID);
     defaultUser.setEnabled(true);
 
-    final var restrictedClient = new ClientRepresentation();
-    restrictedClient.setClientId(RESTRICTED_CLIENT_ID);
-    restrictedClient.setEnabled(true);
-    restrictedClient.setClientAuthenticatorType("client-secret");
-    restrictedClient.setSecret(RESTRICTED_CLIENT_SECRET);
-    restrictedClient.setServiceAccountsEnabled(true);
+    final var restrictedClientRepresentation = new ClientRepresentation();
+    restrictedClientRepresentation.setClientId(RESTRICTED_CLIENT_ID);
+    restrictedClientRepresentation.setEnabled(true);
+    restrictedClientRepresentation.setClientAuthenticatorType("client-secret");
+    restrictedClientRepresentation.setSecret(RESTRICTED_CLIENT_SECRET);
+    restrictedClientRepresentation.setServiceAccountsEnabled(true);
 
     final var restrictedUser = new UserRepresentation();
     restrictedUser.setId(RESTRICTED_USER_ID);
@@ -124,7 +124,7 @@ public class OidcAuthOverRestIT {
     final var realm = new RealmRepresentation();
     realm.setRealm("camunda");
     realm.setEnabled(true);
-    realm.setClients(List.of(defaultClient, restrictedClient));
+    realm.setClients(List.of(defaultClientRepresentation, restrictedClientRepresentation));
     realm.setUsers(List.of(defaultUser, restrictedUser));
 
     try (final var keycloak = KEYCLOAK.getKeycloakAdminClient()) {
