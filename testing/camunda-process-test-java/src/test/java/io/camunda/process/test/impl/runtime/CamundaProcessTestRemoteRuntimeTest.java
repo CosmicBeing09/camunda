@@ -116,7 +116,7 @@ public class CamundaProcessTestRemoteRuntimeTest {
 
     final CamundaClientBuilderFactory clientBuilderFactory =
         () ->
-            CamundaClient.newClientBuilder()
+            CamundaClient.clientBuilder()
                 .restAddress(camundaRestApiAddress)
                 .grpcAddress(camundaGrpcApiAddress);
 

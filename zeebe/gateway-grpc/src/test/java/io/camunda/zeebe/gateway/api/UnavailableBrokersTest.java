@@ -114,7 +114,7 @@ class UnavailableBrokersTest {
     gateway.start().join();
 
     final String gatewayAddress = NetUtil.toSocketAddressString(networkCfg.toSocketAddress());
-    client = CamundaClient.newClientBuilder().gatewayAddress(gatewayAddress).usePlaintext().build();
+    client = CamundaClient.clientBuilder().gatewayAddress(gatewayAddress).usePlaintext().build();
   }
 
   @AfterAll

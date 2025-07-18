@@ -80,7 +80,7 @@ public class DataGenerator {
 
   private void init(final BackupRestoreTestContext testContext) {
     camundaClient =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(testContext.getExternalZeebeContactPoint())
             .usePlaintext()
             .build();

@@ -22,13 +22,13 @@ public final class ZeebeContainerUtil {
   public static CamundaClientBuilder newClientBuilder(final ZeebeCluster cluster) {
     final ZeebeGatewayNode<?> gateway = cluster.getAvailableGateway();
 
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.clientBuilder()
         .usePlaintext()
         .gatewayAddress(gateway.getExternalGatewayAddress());
   }
 
   public static CamundaClientBuilder newClientBuilder(final ContainerEngine containerEngine) {
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.clientBuilder()
         .usePlaintext()
         .gatewayAddress(containerEngine.getGatewayAddress());
   }

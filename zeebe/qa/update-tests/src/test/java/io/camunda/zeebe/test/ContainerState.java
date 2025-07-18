@@ -182,7 +182,7 @@ final class ContainerState implements CloseableResource {
       contactPoint = gateway.getExternalGatewayAddress();
     }
 
-    client = CamundaClient.newClientBuilder().gatewayAddress(contactPoint).usePlaintext().build();
+    client = CamundaClient.clientBuilder().gatewayAddress(contactPoint).usePlaintext().build();
     partitionsActuator = PartitionsActuator.of(broker);
   }
 

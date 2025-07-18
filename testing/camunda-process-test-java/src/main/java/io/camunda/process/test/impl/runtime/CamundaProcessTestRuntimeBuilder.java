@@ -68,7 +68,7 @@ public class CamundaProcessTestRuntimeBuilder {
   private CamundaProcessTestRuntimeMode runtimeMode = CamundaProcessTestRuntimeMode.MANAGED;
 
   private CamundaClientBuilderFactory remoteCamundaClientBuilderFactory =
-      () -> CamundaClient.newClientBuilder().usePlaintext();
+      () -> CamundaClient.clientBuilder().usePlaintext();
   private URI remoteCamundaMonitoringApiAddress =
       CamundaProcessTestRuntimeDefaults.LOCAL_CAMUNDA_MONITORING_API_ADDRESS;
   private URI remoteConnectorsRestApiAddress =

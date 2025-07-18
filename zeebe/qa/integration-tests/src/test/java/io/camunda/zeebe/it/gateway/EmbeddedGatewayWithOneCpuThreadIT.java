@@ -38,7 +38,7 @@ public final class EmbeddedGatewayWithOneCpuThreadIT {
     final var gtwConfig = config.getGateway();
     final var port = gtwConfig.getNetwork().getPort();
 
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.clientBuilder()
         .usePlaintext()
         .gatewayAddress("localhost:" + port)
         .build();

@@ -52,7 +52,7 @@ public class BrokerSnapshotTest {
 
     final String contactPoint = NetUtil.toSocketAddressString(brokerRule.getGatewayAddress());
     final CamundaClientBuilder camundaClientBuilder =
-        CamundaClient.newClientBuilder().usePlaintext().gatewayAddress(contactPoint);
+        CamundaClient.clientBuilder().usePlaintext().gatewayAddress(contactPoint);
     client = camundaClientBuilder.build();
   }
 

@@ -317,7 +317,7 @@ public class PrefixMigrationIT {
 
   private CamundaClient createCamundaClient(final GenericContainer<?> container) {
 
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.clientBuilder()
         .grpcAddress(URI.create("http://localhost:" + container.getMappedPort(GATEWAY.port())))
         .restAddress(URI.create("http://localhost:" + container.getMappedPort(REST.port())))
         .usePlaintext()

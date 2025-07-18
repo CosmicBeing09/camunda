@@ -135,7 +135,7 @@ public class OidcAuthOverRestIT {
   @BeforeEach
   void beforeEach(@TempDir final Path tempDir) {
     defaultMappingClient =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .grpcAddress(broker.grpcAddress())
             .restAddress(broker.restAddress())
             .usePlaintext()
@@ -156,7 +156,7 @@ public class OidcAuthOverRestIT {
             .build();
 
     restrictedClient =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .grpcAddress(broker.grpcAddress())
             .restAddress(broker.restAddress())
             .usePlaintext()

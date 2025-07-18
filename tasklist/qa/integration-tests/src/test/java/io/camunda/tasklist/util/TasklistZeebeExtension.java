@@ -108,7 +108,7 @@ public abstract class TasklistZeebeExtension
     final Integer zeebeRestPort = zeebeContainer.getMappedPort(8080);
 
     client =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
             .restAddress(
                 getURIFromString(

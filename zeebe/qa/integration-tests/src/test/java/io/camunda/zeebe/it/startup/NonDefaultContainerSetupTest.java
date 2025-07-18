@@ -88,7 +88,7 @@ public class NonDefaultContainerSetupTest {
       final var process = BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
       final ProcessInstanceResult result;
       try (final CamundaClient client =
-          CamundaClient.newClientBuilder()
+          CamundaClient.clientBuilder()
               .usePlaintext()
               .gatewayAddress(gateway.getExternalGatewayAddress())
               .build()) {

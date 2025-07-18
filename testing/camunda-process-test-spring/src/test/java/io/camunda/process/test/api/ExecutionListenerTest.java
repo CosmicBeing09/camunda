@@ -97,7 +97,7 @@ public class ExecutionListenerTest {
     when(camundaContainerRuntime.getCamundaClientBuilderFactory())
         .thenReturn(
             () ->
-                CamundaClient.newClientBuilder()
+                CamundaClient.clientBuilder()
                     .grpcAddress(GRPC_API_ADDRESS)
                     .restAddress(REST_API_ADDRESS)
                     .usePlaintext());
