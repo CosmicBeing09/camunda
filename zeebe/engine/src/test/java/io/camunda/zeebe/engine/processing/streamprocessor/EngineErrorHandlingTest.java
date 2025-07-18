@@ -264,14 +264,14 @@ public final class EngineErrorHandlingTest {
   @Test
   public void shouldBanInstance() {
     // given
-    final AtomicReference<DumpProcessor> dumpProcessorRef = new AtomicReference<>();
+    final AtomicReference<ElementCompletionProcessor> dumpProcessorRef = new AtomicReference<>();
     final ErrorProneProcessor processor = new ErrorProneProcessor();
 
     streams.startStreamProcessor(
         STREAM_NAME,
         DefaultZeebeDbFactory.defaultFactory(),
         (processingContext) -> {
-          dumpProcessorRef.set(spy(new DumpProcessor(processingContext.getWriters())));
+          dumpProcessorRef.set(spy(new ElementCompletionProcessor(processingContext.getWriters())));
           processingState = processingContext.getProcessingState();
           return TypedRecordProcessors.processors(
                   processingState.getKeyGenerator(), processingContext.getWriters())
@@ -365,7 +365,7 @@ public final class EngineErrorHandlingTest {
               .onCommand(
                   ValueType.PROCESS_INSTANCE,
                   ProcessInstanceIntent.ACTIVATE_ELEMENT,
-                  new DumpProcessor(processingContext.getWriters()));
+                  new ElementCompletionProcessor(processingContext.getWriters()));
         });
 
     // when
@@ -566,11 +566,11 @@ public final class EngineErrorHandlingTest {
     }
   }
 
-  protected static class DumpProcessor implements TypedRecordProcessor<ProcessInstanceRecord> {
+  protected static class ElementCompletionProcessor implements TypedRecordProcessor<ProcessInstanceRecord> {
     final List<Long> processedInstances = new ArrayList<>();
     private final StateWriter stateWriter;
 
-    public DumpProcessor(final Writers writers) {
+    public ElementCompletionProcessor(final Writers writers) {
       stateWriter = writers.state();
     }
 
