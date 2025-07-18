@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import java.time.InstantSource;
 import java.util.function.Supplier;
 
-public final class JobEventProcessors {
+public final class JobProcessorsRegistry {
 
   public static void addJobProcessors(
       final TypedRecordProcessors typedRecordProcessors,
@@ -35,11 +35,11 @@ public final class JobEventProcessors {
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
-    final var keyGenerator = processingState.getKeyGenerator();
+    final var asyncKeyGenerator = processingState.getKeyGenerator();
 
     final EventHandler eventHandle =
         new EventHandler(
-            keyGenerator,
+            asyncKeyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,
             processingState.getProcessState(),
@@ -74,7 +74,7 @@ public final class JobEventProcessors {
             new JobThrowErrorProcessor(
                 processingState,
                 bpmnBehaviors.eventPublicationBehavior(),
-                keyGenerator,
+                asyncKeyGenerator,
                 jobMetrics,
                 authCheckBehavior))
         .onCommand(

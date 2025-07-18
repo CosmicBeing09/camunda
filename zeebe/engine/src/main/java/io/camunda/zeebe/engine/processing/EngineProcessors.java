@@ -41,7 +41,7 @@ import io.camunda.zeebe.engine.processing.identity.IdentitySetupProcessors;
 import io.camunda.zeebe.engine.processing.identity.MappingProcessors;
 import io.camunda.zeebe.engine.processing.identity.RoleProcessors;
 import io.camunda.zeebe.engine.processing.incident.IncidentEventProcessors;
-import io.camunda.zeebe.engine.processing.job.JobEventProcessors;
+import io.camunda.zeebe.engine.processing.job.JobProcessorsRegistry;
 import io.camunda.zeebe.engine.processing.message.MessageEventProcessors;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.resource.ResourceDeletionDeleteProcessor;
@@ -201,7 +201,7 @@ public final class EngineProcessors {
     addDecisionProcessors(
         typedRecordProcessors, decisionBehavior, writers, processingState, authCheckBehavior);
 
-    JobEventProcessors.addJobProcessors(
+    JobProcessorsRegistry.addJobProcessors(
         typedRecordProcessors,
         processingState,
         scheduledTaskStateFactory,
