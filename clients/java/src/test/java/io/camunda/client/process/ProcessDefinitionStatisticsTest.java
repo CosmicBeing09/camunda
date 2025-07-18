@@ -62,10 +62,10 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
     // when
     final OffsetDateTime startDate = OffsetDateTime.now().minusDays(1);
     final OffsetDateTime endDate = OffsetDateTime.now();
-    final Map<String, Object> variablesMap = new LinkedHashMap<>();
-    variablesMap.put("n1", "v1");
-    variablesMap.put("n2", "v2");
-    final List<VariableValueFilterProperty> variables =
+    final Map<String, Object> variablesFilterMap = new LinkedHashMap<>();
+    variablesFilterMap.put("n1", "v1");
+    variablesFilterMap.put("n2", "v2");
+    final List<VariableValueFilterProperty> variableFiltersList =
         Arrays.asList(
             new VariableValueFilterProperty()
                 .name("n1")
@@ -85,7 +85,7 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
                     .state(ProcessInstanceState.ACTIVE)
                     .hasIncident(true)
                     .tenantId("tenant")
-                    .variables(variablesMap)
+                    .variables(variablesFilterMap)
                     .batchOperationId("batchOperationId")
                     .errorMessage("Error message")
                     .hasRetriesLeft(true)
@@ -110,7 +110,7 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
     assertThat(filter.getState().get$Eq()).isEqualTo(ProcessInstanceStateEnum.ACTIVE);
     assertThat(filter.getHasIncident()).isEqualTo(true);
     assertThat(filter.getTenantId().get$Eq()).isEqualTo("tenant");
-    assertThat(filter.getVariables()).isEqualTo(variables);
+    assertThat(filter.getVariables()).isEqualTo(variableFiltersList);
     assertThat(filter.getBatchOperationId().get$Eq()).isEqualTo("batchOperationId");
     assertThat(filter.getErrorMessage().get$Eq()).isEqualTo("Error message");
     assertThat(filter.getHasRetriesLeft()).isEqualTo(true);
