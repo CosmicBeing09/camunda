@@ -50,16 +50,16 @@ public class DecisionInstanceReader extends AbstractEntityReader<DecisionInstanc
   }
 
   public SearchQueryResult<DecisionInstanceEntity> search(final DecisionInstanceQuery query) {
-    final var dbSort = convertSort(query.sort(), DecisionInstanceSearchColumn.DECISION_INSTANCE_ID);
+    final var sort = convertSort(query.sort(), DecisionInstanceSearchColumn.DECISION_INSTANCE_ID);
     final var dbQuery =
         DecisionInstanceDbQuery.of(
-            b -> b.filter(query.filter()).sort(dbSort).page(convertPaging(dbSort, query.page())));
+            b -> b.filter(query.filter()).sort(sort).page(convertPaging(sort, query.page())));
 
     LOG.trace("[RDBMS DB] Search for process instance with filter {}", dbQuery);
     final var totalHits = decisionInstanceMapper.count(dbQuery);
     final var hits = enhanceEntities(decisionInstanceMapper.search(dbQuery), query.resultConfig());
 
-    return buildSearchQueryResult(totalHits, hits, dbSort);
+    return buildSearchQueryResult(totalHits, hits, sort);
   }
 
   /**
@@ -67,21 +67,21 @@ public class DecisionInstanceReader extends AbstractEntityReader<DecisionInstanc
    * SQL each (if enabled).
    */
   private List<DecisionInstanceEntity> enhanceEntities(
-      final List<DecisionInstanceEntity> intermediateResult,
+      final List<DecisionInstanceEntity> entities,
       final DecisionInstanceQueryResultConfig resultConfig) {
-    if (intermediateResult.isEmpty()) {
-      return intermediateResult;
+    if (entities.isEmpty()) {
+      return entities;
     }
 
     if (resultConfig == null
         || (!resultConfig.includeEvaluatedInputs() && !resultConfig.includeEvaluatedOutputs())) {
-      return intermediateResult;
+      return entities;
     }
 
     final Map<String, List<EvaluatedInput>> inputs = new HashMap<>();
     final Map<String, List<EvaluatedOutput>> outputs = new HashMap<>();
     final List<String> keys =
-        intermediateResult.stream().map(DecisionInstanceEntity::decisionInstanceId).toList();
+        entities.stream().map(DecisionInstanceEntity::decisionInstanceId).toList();
     if (resultConfig.includeEvaluatedInputs()) {
       inputs.putAll(
           decisionInstanceMapper.loadInputs(keys).stream()
@@ -93,7 +93,7 @@ public class DecisionInstanceReader extends AbstractEntityReader<DecisionInstanc
               .collect(Collectors.groupingBy(EvaluatedOutput::decisionInstanceId)));
     }
 
-    return intermediateResult.stream()
+    return entities.stream()
         .map(
             entity ->
                 entity.toBuilder()
