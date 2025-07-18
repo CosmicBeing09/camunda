@@ -18,8 +18,8 @@ package io.camunda.zeebe.protocol.record.intent.scaling;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 
 public enum RedistributionIntent implements Intent {
-  START((short) 1, false),
-  STARTED((short) 2, true),
+  REDISTRIBUTION_START((short) 1, false),
+  REDISTRIBUTION_STARTED((short) 2, true),
   COMPLETE((short) 5, false),
   COMPLETED((short) 6, true);
 
@@ -44,9 +44,9 @@ public enum RedistributionIntent implements Intent {
   public static Intent from(final short intent) {
     switch (intent) {
       case 1:
-        return START;
+        return REDISTRIBUTION_START;
       case 2:
-        return STARTED;
+        return REDISTRIBUTION_STARTED;
       // old CONTINUE is mapped to COMPLETE
       case 3:
       case 5:

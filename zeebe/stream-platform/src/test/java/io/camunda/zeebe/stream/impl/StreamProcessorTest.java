@@ -904,7 +904,7 @@ public final class StreamProcessorTest {
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).key(3);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(3);
     verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1))
         .intent(ProcessInstanceIntent.ELEMENT_ACTIVATING);
     verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).recordType(RecordType.EVENT);
@@ -964,8 +964,8 @@ public final class StreamProcessorTest {
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).key(3);
-    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).key(4);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(3);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(4);
   }
 
   @Test
@@ -1066,7 +1066,7 @@ public final class StreamProcessorTest {
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).key(3);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(3);
     verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1))
         .intent(ProcessInstanceIntent.ELEMENT_ACTIVATING);
     verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).recordType(RecordType.EVENT);
@@ -1129,7 +1129,7 @@ public final class StreamProcessorTest {
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).key(4);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(4);
   }
 
   @Test

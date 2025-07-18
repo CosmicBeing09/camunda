@@ -113,7 +113,7 @@ public class TenantAwareResourceFetchTest {
     // then
     verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).intent(ResourceIntent.FETCHED);
     verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).valueType(ValueType.RESOURCE);
-    verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).key(resourceKey);
+    verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).setKey(resourceKey);
     assertThat(record.getValue())
         .satisfies(
             resourceProperties(
@@ -182,7 +182,7 @@ public class TenantAwareResourceFetchTest {
     // then
     verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).intent(ResourceIntent.FETCHED);
     verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).valueType(ValueType.RESOURCE);
-    verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).key(resourceKey);
+    verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).setKey(resourceKey);
     assertThat(record.getValue())
         .satisfies(
             resourceProperties(
@@ -222,7 +222,7 @@ public class TenantAwareResourceFetchTest {
     // then
     verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).intent(ResourceIntent.FETCHED);
     verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).valueType(ValueType.RESOURCE);
-    verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).key(resourceKey);
+    verify(mockCommandResponseWriter, VERIFICATION_TIMEOUT).setKey(resourceKey);
     assertThat(record.getValue())
         .satisfies(
             resourceProperties(

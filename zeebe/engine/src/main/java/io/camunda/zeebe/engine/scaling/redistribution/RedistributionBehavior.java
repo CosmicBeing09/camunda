@@ -29,7 +29,7 @@ public final class RedistributionBehavior {
 
   public void startRedistribution(final long redistributionKey) {
     stateWriter.appendFollowUpEvent(
-        redistributionKey, RedistributionIntent.STARTED, new RedistributionRecord());
+        redistributionKey, RedistributionIntent.REDISTRIBUTION_STARTED, new RedistributionRecord());
     commandWriter.appendFollowUpCommand(
         redistributionKey, RedistributionIntent.COMPLETE, new RedistributionRecord());
   }

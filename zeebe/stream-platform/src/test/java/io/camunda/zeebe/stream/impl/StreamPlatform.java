@@ -94,8 +94,8 @@ public final class StreamPlatform {
 
     mockCommandResponseWriter = mock(CommandResponseWriter.class);
     when(mockCommandResponseWriter.intent(any())).thenReturn(mockCommandResponseWriter);
-    when(mockCommandResponseWriter.key(anyLong())).thenReturn(mockCommandResponseWriter);
-    when(mockCommandResponseWriter.partitionId(anyInt())).thenReturn(mockCommandResponseWriter);
+    when(mockCommandResponseWriter.setKey(anyLong())).thenReturn(mockCommandResponseWriter);
+    when(mockCommandResponseWriter.setPartitionId(anyInt())).thenReturn(mockCommandResponseWriter);
     when(mockCommandResponseWriter.recordType(any())).thenReturn(mockCommandResponseWriter);
     when(mockCommandResponseWriter.rejectionType(any())).thenReturn(mockCommandResponseWriter);
     when(mockCommandResponseWriter.rejectionReason(any())).thenReturn(mockCommandResponseWriter);

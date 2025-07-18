@@ -16,9 +16,9 @@ import org.agrona.DirectBuffer;
 
 public interface CommandResponseWriter {
 
-  CommandResponseWriter partitionId(int partitionId);
+  CommandResponseWriter setPartitionId(int partitionId);
 
-  CommandResponseWriter key(long key);
+  CommandResponseWriter setKey(long key);
 
   CommandResponseWriter intent(Intent intent);
 

@@ -672,11 +672,11 @@ public final class ProcessingStateMachine {
                 final var recordMetadata = responseValue.recordMetadata();
                 responseWriter
                     .intent(recordMetadata.getIntent())
-                    .key(responseValue.key())
+                    .setKey(responseValue.key())
                     .recordType(recordMetadata.getRecordType())
                     .rejectionReason(BufferUtil.wrapString(recordMetadata.getRejectionReason()))
                     .rejectionType(recordMetadata.getRejectionType())
-                    .partitionId(context.getPartitionId())
+                    .setPartitionId(context.getPartitionId())
                     .valueType(recordMetadata.getValueType())
                     .valueWriter(responseValue.recordValue())
                     .tryWriteResponse(

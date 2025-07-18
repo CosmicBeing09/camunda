@@ -47,13 +47,13 @@ public final class CommandResponseWriterImpl implements CommandResponseWriter, B
   }
 
   @Override
-  public CommandResponseWriterImpl partitionId(final int partitionId) {
+  public CommandResponseWriterImpl setPartitionId(final int partitionId) {
     this.partitionId = partitionId;
     return this;
   }
 
   @Override
-  public CommandResponseWriterImpl key(final long key) {
+  public CommandResponseWriterImpl setKey(final long key) {
     this.key = key;
     return this;
   }
