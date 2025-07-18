@@ -71,7 +71,7 @@ import org.slf4j.LoggerFactory;
  */
 @ThreadSafe
 public final class OAuthCredentialsProvider implements CredentialsProvider {
-  private static final String HEADER_AUTH_KEY = "Authorization";
+  private static final String AUTHORIZATION_HEADER = "Authorization";
   private static final String JWT_ASSERTION_TYPE =
       "urn:ietf:params:oauth:client-assertion-type:jwt-bearer";
 
@@ -81,7 +81,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
       JSON_MAPPER.readerFor(CamundaClientCredentials.class);
   private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
   private final URL authorizationServerUrl;
-  private final String payload;
+  private final String formEncodedRequestBody;
   private final String clientId;
   private final Path keystorePath;
   private final String keystorePassword;
@@ -100,7 +100,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     truststorePath = builder.getTruststorePath();
     truststorePassword = builder.getTruststorePassword();
     clientId = builder.getClientId();
-    payload = createParams(builder);
+    formEncodedRequestBody = createParams(builder);
     credentialsCache = new OAuthCredentialsCache(builder.getCredentialsCacheFile());
     connectionTimeout = builder.getConnectTimeout();
     readTimeout = builder.getReadTimeout();
@@ -120,7 +120,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
 
     type = Character.toUpperCase(type.charAt(0)) + type.substring(1);
     applier.put(
-        HEADER_AUTH_KEY, String.format("%s %s", type, camundaClientCredentials.getAccessToken()));
+        AUTHORIZATION_HEADER, String.format("%s %s", type, camundaClientCredentials.getAccessToken()));
   }
 
   /**
@@ -196,7 +196,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     connection.setRequestProperty("User-Agent", "camunda-client-java/" + VersionUtil.getVersion());
 
     try (final OutputStream os = connection.getOutputStream()) {
-      final byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+      final byte[] input = formEncodedRequestBody.getBytes(StandardCharsets.UTF_8);
       os.write(input, 0, input.length);
     }
 
