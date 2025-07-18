@@ -51,18 +51,18 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> resourceDeletionCommand) {
-    final var record = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> tenantCreateCommand) {
+    final var record = tenantCreateCommand.getValue();
     final var groupId = record.getGroupId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
             .addResourceId(groupId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
@@ -71,26 +71,26 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
       final var errorMessage =
           "Expected to update group with ID '%s', but a group with this ID does not exist."
               .formatted(groupId);
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     updateExistingGroup(persistedRecord.get(), record);
-    updateState(resourceDeletionCommand, persistedRecord.get());
+    updateState(tenantCreateCommand, persistedRecord.get());
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedDeleteCommand) {
+  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedCreateCommand) {
     stateWriter.appendFollowUpEvent(
-        distributedDeleteCommand.getValue().getGroupKey(), GroupIntent.UPDATED, distributedDeleteCommand.getValue());
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+        distributedCreateCommand.getValue().getGroupKey(), GroupIntent.UPDATED, distributedCreateCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private void updateExistingGroup(

@@ -68,23 +68,23 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> resourceDeletionCommand) {
-    final var record = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> tenantCreateCommand) {
+    final var record = tenantCreateCommand.getValue();
     final var tenantId = record.getTenantId();
     final var persistedTenantRecord = tenantState.getTenantById(tenantId);
 
     if (persistedTenantRecord.isEmpty()) {
       rejectCommand(
-          resourceDeletionCommand, RejectionType.NOT_FOUND, TENANT_NOT_FOUND_ERROR_MESSAGE.formatted(tenantId));
+          tenantCreateCommand, RejectionType.NOT_FOUND, TENANT_NOT_FOUND_ERROR_MESSAGE.formatted(tenantId));
       return;
     }
 
     final var authorizationRequest =
-        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.TENANT, PermissionType.DELETE)
+        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.TENANT, PermissionType.DELETE)
             .addResourceId(persistedTenantRecord.get().getTenantId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(resourceDeletionCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(tenantCreateCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -99,29 +99,29 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
 
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.DELETED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.DELETED, record,
-        resourceDeletionCommand);
-    distributeCommand(resourceDeletionCommand);
+        tenantCreateCommand);
+    distributeCommand(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteCommand) {
-    final var record = distributedDeleteCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedCreateCommand) {
+    final var record = distributedCreateCommand.getValue();
     tenantState
         .getTenantById(record.getTenantId())
         .ifPresentOrElse(
             tenant -> {
-              removeAssignedEntities(distributedDeleteCommand.getValue());
-              deleteAuthorizations(distributedDeleteCommand.getValue());
+              removeAssignedEntities(distributedCreateCommand.getValue());
+              deleteAuthorizations(distributedCreateCommand.getValue());
               stateWriter.appendFollowUpEvent(
-                  distributedDeleteCommand.getKey(), TenantIntent.DELETED, distributedDeleteCommand.getValue());
+                  distributedCreateCommand.getKey(), TenantIntent.DELETED, distributedCreateCommand.getValue());
             },
             () ->
                 rejectCommand(
-                    distributedDeleteCommand,
+                    distributedCreateCommand,
                     RejectionType.NOT_FOUND,
                     TENANT_NOT_FOUND_ERROR_MESSAGE.formatted(record.getTenantId())));
 
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private void rejectCommandWithUnauthorizedError(

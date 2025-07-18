@@ -82,53 +82,53 @@ public final class BatchOperationResumeProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> resourceDeletionCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> tenantCreateCommand) {
     final var request =
         new AuthorizationRequest(
-            resourceDeletionCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            tenantCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = resourceDeletionCommand.getValue();
-    final var batchOperationKey = resourceDeletionCommand.getValue().getBatchOperationKey();
+    final var recordValue = tenantCreateCommand.getValue();
+    final var batchOperationKey = tenantCreateCommand.getValue().getBatchOperationKey();
     final var resumeKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to resume a batch operation with key '{}': {}",
-        resourceDeletionCommand.getKey(),
+        tenantCreateCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(resourceDeletionCommand, batchOperationKey, recordValue);
+      rejectNotFound(tenantCreateCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be resumed
     if (!batchOperation.get().canResume()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(resourceDeletionCommand, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(tenantCreateCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
-    resumeBatchOperation(resumeKey, batchOperation.get(), resourceDeletionCommand.getValue());
+    resumeBatchOperation(resumeKey, batchOperation.get(), tenantCreateCommand.getValue());
     commandDistributionBehavior
         .withKey(resumeKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
 
     metrics.recordResumed(batchOperation.get().getBatchOperationType());
   }
 
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedDeleteCommand) {
-    final var recordValue = distributedDeleteCommand.getValue();
+      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedCreateCommand) {
+    final var recordValue = distributedCreateCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
 
     // Validation
@@ -138,14 +138,14 @@ public final class BatchOperationResumeProcessor
           "Processing distributed command to resume with key '{}': {}",
           batchOperationKey,
           recordValue);
-      resumeBatchOperation(distributedDeleteCommand.getKey(), batchOperation.get(), recordValue);
+      resumeBatchOperation(distributedCreateCommand.getKey(), batchOperation.get(), recordValue);
     } else {
       LOGGER.debug(
           "Distributed command to resume a batch operation with key '{}' will be ignored: {}",
           batchOperationKey,
           recordValue);
     }
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   @VisibleForTesting

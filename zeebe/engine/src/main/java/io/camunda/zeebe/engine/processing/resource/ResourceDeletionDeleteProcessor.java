@@ -113,34 +113,34 @@ public class ResourceDeletionDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> resourceDeletionCommand) {
-    final var resourceDeletionRecord = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> tenantCreateCommand) {
+    final var resourceDeletionRecord = tenantCreateCommand.getValue();
     final long eventKey = keyGenerator.nextKey();
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING,
         resourceDeletionRecord);
 
-    tryDeleteResources(resourceDeletionCommand);
+    tryDeleteResources(tenantCreateCommand);
 
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETED,
         resourceDeletionRecord);
     commandDistributionBehavior
         .withKey(eventKey)
         .inQueue(DistributionQueue.DEPLOYMENT)
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
     responseWriter.writeEventOnCommand(eventKey, ResourceDeletionIntent.DELETING,
         resourceDeletionRecord,
-        resourceDeletionCommand);
+        tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ResourceDeletionRecord> distributedDeleteCommand) {
-    final var value = distributedDeleteCommand.getValue();
-    stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), ResourceDeletionIntent.DELETING, value);
+  public void processDistributedCommand(final TypedRecord<ResourceDeletionRecord> distributedCreateCommand) {
+    final var value = distributedCreateCommand.getValue();
+    stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), ResourceDeletionIntent.DELETING, value);
 
-    tryDeleteResources(distributedDeleteCommand);
+    tryDeleteResources(distributedCreateCommand);
 
-    stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), ResourceDeletionIntent.DELETED, value);
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), ResourceDeletionIntent.DELETED, value);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   @Override

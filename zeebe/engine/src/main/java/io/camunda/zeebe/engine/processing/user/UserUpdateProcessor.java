@@ -52,8 +52,8 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> resourceDeletionCommand) {
-    final var record = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<UserRecord> tenantCreateCommand) {
+    final var record = tenantCreateCommand.getValue();
     final String username = record.getUsername();
     final var persistedUserOptional = userState.getUser(username);
 
@@ -62,21 +62,21 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
           "Expected to update user with username %s, but a user with this username does not exist"
               .formatted(username);
 
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var persistedUser = persistedUserOptional.get();
 
     final var authRequest =
-        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
+        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
             .addResourceId(persistedUser.getUsername());
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
@@ -84,21 +84,21 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
 
     stateWriter.appendFollowUpEvent(persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser);
     responseWriter.writeEventOnCommand(
-        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, resourceDeletionCommand);
+        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, tenantCreateCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteCommand) {
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedCreateCommand) {
     stateWriter.appendFollowUpEvent(
-        distributedDeleteCommand.getValue().getUserKey(), UserIntent.UPDATED, distributedDeleteCommand.getValue());
+        distributedCreateCommand.getValue().getUserKey(), UserIntent.UPDATED, distributedCreateCommand.getValue());
 
-    distributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    distributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private UserRecord overlayUser(final UserRecord persistedUser, final UserRecord updatedUser) {

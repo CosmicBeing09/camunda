@@ -37,14 +37,14 @@ public interface DistributedTypedRecordProcessor<T extends UnifiedRecordValue>
   /**
    * Process a command that is not distributed yet
    *
-   * @param resourceDeletionCommand the not yet distributed command to process
+   * @param tenantCreateCommand the not yet distributed command to process
    */
-  void processNewCommand(final TypedRecord<T> resourceDeletionCommand);
+  void processNewCommand(final TypedRecord<T> tenantCreateCommand);
 
   /**
    * Process a command that has been distributed. Be aware to not distribute it again!
    *
-   * @param distributedDeleteCommand the already distributed command to process
+   * @param distributedCreateCommand the already distributed command to process
    */
-  void processDistributedCommand(final TypedRecord<T> distributedDeleteCommand);
+  void processDistributedCommand(final TypedRecord<T> distributedCreateCommand);
 }

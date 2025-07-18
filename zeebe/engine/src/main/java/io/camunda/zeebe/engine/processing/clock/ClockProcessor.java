@@ -55,27 +55,27 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ClockRecord> resourceDeletionCommand) {
+  public void processNewCommand(final TypedRecord<ClockRecord> tenantCreateCommand) {
     final var authRequest =
-        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
+        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var intent = (ClockIntent) resourceDeletionCommand.getIntent();
-    final var clockRecord = resourceDeletionCommand.getValue();
+    final var intent = (ClockIntent) tenantCreateCommand.getIntent();
+    final var clockRecord = tenantCreateCommand.getValue();
 
     if (intent == ClockIntent.PIN && clockRecord.getTime() < 0) {
       final var rejectionMessage =
           "Expected pin time to be not negative but it was %d".formatted(clockRecord.getTime());
 
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       responseWriter.writeRejectionOnCommand(
-          resourceDeletionCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+          tenantCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       return;
     }
 
@@ -83,21 +83,21 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (resourceDeletionCommand.hasRequestMetadata()) {
+    if (tenantCreateCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord,
-          resourceDeletionCommand);
+          tenantCreateCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(resourceDeletionCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ClockRecord> distributedDeleteCommand) {
-    final var commandIntent = (ClockIntent) distributedDeleteCommand.getIntent();
+  public void processDistributedCommand(final TypedRecord<ClockRecord> distributedCreateCommand) {
+    final var commandIntent = (ClockIntent) distributedCreateCommand.getIntent();
     final var resultIntent = followUpIntent(commandIntent);
 
-    applyClockModification(distributedDeleteCommand.getKey(), commandIntent, resultIntent, distributedDeleteCommand.getValue());
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    applyClockModification(distributedCreateCommand.getKey(), commandIntent, resultIntent, distributedCreateCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private void applyClockModification(

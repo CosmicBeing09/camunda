@@ -56,9 +56,9 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> resourceDeletionCommand) {
+  public void processNewCommand(final TypedRecord<MappingRecord> tenantCreateCommand) {
 
-    final var record = resourceDeletionCommand.getValue();
+    final var record = tenantCreateCommand.getValue();
     final var mappingId = record.getMappingId();
     if (record.getMappingId() == null
         || record.getMappingId().isBlank()
@@ -74,28 +74,28 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
               record.getClaimValue(),
               record.getName(),
               record.getMappingId());
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NULL_VAL, errorMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NULL_VAL, errorMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NULL_VAL, errorMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NULL_VAL, errorMessage);
       return;
     }
 
     final var persistedRecord = mappingState.get(mappingId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = MAPPING_ID_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(mappingId);
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var authorizationRequest =
         new AuthorizationRequest(
-            resourceDeletionCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.UPDATE)
+            tenantCreateCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.UPDATE)
             .addResourceId(mappingId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
@@ -106,24 +106,24 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
       final var errorMessage =
           MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
               record.getClaimName(), record.getClaimValue());
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
     stateWriter.appendFollowUpEvent(record.getMappingKey(), MappingIntent.UPDATED, record);
     responseWriter.writeEventOnCommand(
-        record.getMappingKey(), MappingIntent.UPDATED, record, resourceDeletionCommand);
+        record.getMappingKey(), MappingIntent.UPDATED, record, tenantCreateCommand);
 
     commandDistributionBehavior
         .withKey(keyGenerator.nextKey())
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedDeleteCommand) {
-    stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), MappingIntent.UPDATED, distributedDeleteCommand.getValue());
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedCreateCommand) {
+    stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), MappingIntent.UPDATED, distributedCreateCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 }

@@ -63,25 +63,25 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> resourceDeletionCommand) {
-    final var record = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> tenantCreateCommand) {
+    final var record = tenantCreateCommand.getValue();
     final var groupId = record.getGroupId();
     final var authorizationRequest =
-        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.GROUP, PermissionType.DELETE)
+        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.GROUP, PermissionType.DELETE)
             .addResourceId(groupId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = groupState.get(groupId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = GROUP_NOT_FOUND_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -94,32 +94,32 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
 
     stateWriter.appendFollowUpEvent(groupKey, GroupIntent.DELETED, record);
     responseWriter.writeEventOnCommand(groupKey, GroupIntent.DELETED, record,
-        resourceDeletionCommand);
+        tenantCreateCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedDeleteCommand) {
-    final var record = distributedDeleteCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedCreateCommand) {
+    final var record = distributedCreateCommand.getValue();
     groupState
         .get(record.getGroupId())
         .ifPresentOrElse(
             group -> {
-              removeAssignedEntities(distributedDeleteCommand.getValue());
-              deleteAuthorizations(distributedDeleteCommand.getValue());
-              stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), GroupIntent.DELETED, record);
+              removeAssignedEntities(distributedCreateCommand.getValue());
+              deleteAuthorizations(distributedCreateCommand.getValue());
+              stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), GroupIntent.DELETED, record);
             },
             () -> {
               final var errorMessage = GROUP_NOT_FOUND_ERROR_MESSAGE.formatted(record.getGroupId());
-              rejectionWriter.appendRejection(distributedDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private void removeAssignedEntities(final GroupRecord record) {

@@ -58,25 +58,25 @@ public final class BatchOperationPartitionCompleteProcessor
    * Processes a non-distributed command to mark a partition of a batch operation as completed. This
    * occurs, when the leader marks itself as completed.
    *
-   * @param resourceDeletionCommand the command to process
+   * @param tenantCreateCommand the command to process
    */
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> resourceDeletionCommand) {
-    doProcessRecord(resourceDeletionCommand);
+  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> tenantCreateCommand) {
+    doProcessRecord(tenantCreateCommand);
   }
 
   /**
    * Processes a command from a follower partition to mark that partition of a batch operation as
    * completed.
    *
-   * @param distributedDeleteCommand the command to process
+   * @param distributedCreateCommand the command to process
    */
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationPartitionLifecycleRecord> distributedDeleteCommand) {
-    doProcessRecord(distributedDeleteCommand);
+      final TypedRecord<BatchOperationPartitionLifecycleRecord> distributedCreateCommand) {
+    doProcessRecord(distributedCreateCommand);
 
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private void doProcessRecord(final TypedRecord<BatchOperationPartitionLifecycleRecord> command) {

@@ -15,7 +15,7 @@ import java.util.function.BiFunction;
 
 public interface MembershipState {
 
-  List<String> getMemberships(EntityType entityType, String entityId, RelationType relationType);
+  List<String> getMemberships(EntityType subjectEntityType, String subjectEntityId, RelationType relationType);
 
   void forEachMember(
       RelationType relationType, String relationId, BiConsumer<EntityType, String> visitor);

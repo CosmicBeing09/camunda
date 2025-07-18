@@ -50,33 +50,33 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> resourceDeletionCommand) {
-    final var scaleUp = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> tenantCreateCommand) {
+    final var scaleUp = tenantCreateCommand.getValue();
 
-    final var optionalRejection = validateCommand(resourceDeletionCommand);
+    final var optionalRejection = validateCommand(tenantCreateCommand);
     if (optionalRejection.isPresent()) {
       final var rejection = optionalRejection.get();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
     final var scalingKey = keyGenerator.nextKey();
-    scaleUp.setBootstrappedAt(resourceDeletionCommand.getKey());
+    scaleUp.setBootstrappedAt(tenantCreateCommand.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
     responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp,
-        resourceDeletionCommand);
+        tenantCreateCommand);
     commandDistributionBehavior
         .withKey(scalingKey)
         .inQueue(DistributionQueue.SCALING)
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ScaleRecord> distributedDeleteCommand) {
-    final var scaleUp = distributedDeleteCommand.getValue();
-    final var scalingKey = distributedDeleteCommand.getKey();
+  public void processDistributedCommand(final TypedRecord<ScaleRecord> distributedCreateCommand) {
+    final var scaleUp = distributedCreateCommand.getValue();
+    final var scalingKey = distributedCreateCommand.getKey();
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private Optional<Rejection> validateCommand(final TypedRecord<ScaleRecord> command) {

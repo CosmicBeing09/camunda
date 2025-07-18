@@ -72,21 +72,21 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> resourceDeletionCommand) {
-    final var record = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> tenantCreateCommand) {
+    final var record = tenantCreateCommand.getValue();
     final var tenantId = record.getTenantId();
     final var authorizationRequest =
-        new AuthorizationRequest(resourceDeletionCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(resourceDeletionCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(tenantCreateCommand, isAuthorized.getLeft());
       return;
     }
 
     final var tenantLookup = getPersistedTenant(record);
     if (tenantLookup.isLeft()) {
-      rejectCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, tenantLookup.getLeft());
+      rejectCommand(tenantCreateCommand, RejectionType.NOT_FOUND, tenantLookup.getLeft());
       return;
     }
 
@@ -96,34 +96,34 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
 
     final var entityId = record.getEntityId();
     final var entityType = record.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(resourceDeletionCommand))) {
-      createEntityNotExistRejectCommand(resourceDeletionCommand, entityId, entityType, tenantId);
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(tenantCreateCommand))) {
+      createEntityNotExistRejectCommand(tenantCreateCommand, entityId, entityType, tenantId);
       return;
     }
 
     if (isEntityAssigned(record)) {
-      createAlreadyAssignedRejectCommand(resourceDeletionCommand, entityId, entityType, tenantId);
+      createAlreadyAssignedRejectCommand(tenantCreateCommand, entityId, entityType, tenantId);
       return;
     }
 
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_ADDED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_ADDED, record,
-        resourceDeletionCommand);
+        tenantCreateCommand);
 
-    distributeCommand(resourceDeletionCommand);
+    distributeCommand(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteCommand) {
-    final var record = distributedDeleteCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedCreateCommand) {
+    final var record = distributedCreateCommand.getValue();
     if (isEntityAssigned(record)) {
       createAlreadyAssignedRejectCommand(
-          distributedDeleteCommand, record.getEntityId(), record.getEntityType(), record.getTenantId());
+          distributedCreateCommand, record.getEntityId(), record.getEntityType(), record.getTenantId());
     } else {
-      stateWriter.appendFollowUpEvent(distributedDeleteCommand.getKey(), TenantIntent.ENTITY_ADDED, record);
+      stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), TenantIntent.ENTITY_ADDED, record);
     }
 
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   /** Loads the persisted tenant by the tenant id. */

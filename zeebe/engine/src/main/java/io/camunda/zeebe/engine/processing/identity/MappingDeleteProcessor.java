@@ -80,52 +80,52 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> resourceDeletionCommand) {
-    final var record = resourceDeletionCommand.getValue();
+  public void processNewCommand(final TypedRecord<MappingRecord> tenantCreateCommand) {
+    final var record = tenantCreateCommand.getValue();
     final String id = record.getMappingId();
     final var persistedMappingOptional = mappingState.get(id);
     if (persistedMappingOptional.isEmpty()) {
       final var errorMessage = MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(id);
-      rejectionWriter.appendRejection(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var authorizationRequest =
         new AuthorizationRequest(
-            resourceDeletionCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
+            tenantCreateCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(resourceDeletionCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(resourceDeletionCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
       return;
     }
     final long key = keyGenerator.nextKey();
     deleteMapping(persistedMappingOptional.get(), key);
     responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record,
-        resourceDeletionCommand);
+        tenantCreateCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(resourceDeletionCommand);
+        .distribute(tenantCreateCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedDeleteCommand) {
-    final var record = distributedDeleteCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedCreateCommand) {
+    final var record = distributedCreateCommand.getValue();
     mappingState
         .get(record.getMappingId())
         .ifPresentOrElse(
-            persistedMapping -> deleteMapping(persistedMapping, distributedDeleteCommand.getKey()),
+            persistedMapping -> deleteMapping(persistedMapping, distributedCreateCommand.getKey()),
             () -> {
               final var errorMessage =
                   MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(record.getMappingKey());
-              rejectionWriter.appendRejection(distributedDeleteCommand, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(distributedDeleteCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
   }
 
   private void deleteMapping(final PersistedMapping mapping, final long key) {
