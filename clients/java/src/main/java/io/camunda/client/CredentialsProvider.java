@@ -25,11 +25,11 @@ public interface CredentialsProvider {
 
   /**
    * Adds credentials to the headers. For an example of this, see {@link
-   * OAuthCredentialsProvider#applyCredentials(CredentialsApplier)}
+   * OAuthCredentialsProvider#applyCredentials(CredentialsHeaderApplier)}
    *
    * @param applier where to add the credentials headers
    */
-  void applyCredentials(final CredentialsApplier applier) throws IOException;
+  void applyCredentials(final CredentialsHeaderApplier applier) throws IOException;
 
   /**
    * Returns true if the request should be retried; otherwise returns false. For an example of this,
@@ -44,7 +44,7 @@ public interface CredentialsProvider {
   /**
    * @return a builder to configure and create a new {@link OAuthCredentialsProvider}.
    */
-  static OAuthCredentialsProviderBuilder newCredentialsProviderBuilder() {
+  static OAuthCredentialsProviderBuilder builder() {
     return new OAuthCredentialsProviderBuilder();
   }
 
@@ -52,7 +52,7 @@ public interface CredentialsProvider {
    * Used to apply call credentials on a per-request basis, abstracting over gRPC and REST. This
    * interface is only meant to be consumed, not implemented externally.
    */
-  interface CredentialsApplier {
+  interface CredentialsHeaderApplier {
 
     /**
      * Puts the given header key and value into the request headers (e.g. HTTP headers or gRPC
@@ -68,7 +68,7 @@ public interface CredentialsProvider {
      *
      * @param metadata the gRPC metadata on which to apply
      */
-    static CredentialsApplier ofMetadata(final Metadata metadata) {
+    static CredentialsHeaderApplier ofMetadata(final Metadata metadata) {
       return (key, value) ->
           metadata.put(Metadata.Key.of(key, Metadata.ASCII_STRING_MARSHALLER), value);
     }

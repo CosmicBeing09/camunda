@@ -57,11 +57,11 @@ public class OidcAuthOverGrpcIT {
   private static final String USER_ID_CLAIM_NAME = "sub";
 
   @Container
-  private static final ElasticsearchContainer CONTAINER =
+  private static final ElasticsearchContainer elasticsearchContainer =
       TestSearchContainers.createDefeaultElasticsearchContainer();
 
   @Container
-  private static final KeycloakContainer KEYCLOAK = DefaultTestContainers.createDefaultKeycloak();
+  private static final KeycloakContainer keycloakContainer = DefaultTestContainers.createDefaultKeycloak();
 
   @AutoClose private static CamundaClient defaultMappingClient;
   @AutoClose private static CamundaClient restrictedClient;
@@ -71,13 +71,13 @@ public class OidcAuthOverGrpcIT {
       new TestStandaloneBroker()
           .withAuthenticatedAccess()
           .withAuthenticationMethod(AuthenticationMethod.OIDC)
-          .withCamundaExporter("http://" + CONTAINER.getHttpHostAddress())
+          .withCamundaExporter("http://" + elasticsearchContainer.getHttpHostAddress())
           .withSecurityConfig(
               c -> {
                 c.getAuthorizations().setEnabled(true);
 
                 final var oidcConfig = c.getAuthentication().getOidc();
-                oidcConfig.setIssuerUri(KEYCLOAK.getAuthServerUrl() + "/realms/" + KEYCLOAK_REALM);
+                oidcConfig.setIssuerUri(keycloakContainer.getAuthServerUrl() + "/realms/" + KEYCLOAK_REALM);
                 // The following two properties are only needed for the webapp login flow which we
                 // don't test here.
                 oidcConfig.setClientId("example");
@@ -127,7 +127,7 @@ public class OidcAuthOverGrpcIT {
     realm.setClients(List.of(defaultClient, restrictedClient));
     realm.setUsers(List.of(defaultUser, restrictedUser));
 
-    try (final var keycloak = KEYCLOAK.getKeycloakAdminClient()) {
+    try (final var keycloak = keycloakContainer.getKeycloakAdminClient()) {
       keycloak.realms().create(realm);
     }
   }
@@ -147,7 +147,7 @@ public class OidcAuthOverGrpcIT {
                     .clientSecret(DEFAULT_CLIENT_SECRET)
                     .audience("zeebe")
                     .authorizationServerUrl(
-                        KEYCLOAK.getAuthServerUrl()
+                        keycloakContainer.getAuthServerUrl()
                             + "/realms/"
                             + KEYCLOAK_REALM
                             + "/protocol/openid-connect/token")
@@ -168,7 +168,7 @@ public class OidcAuthOverGrpcIT {
                     .clientSecret(RESTRICTED_CLIENT_SECRET)
                     .audience("zeebe")
                     .authorizationServerUrl(
-                        KEYCLOAK.getAuthServerUrl()
+                        keycloakContainer.getAuthServerUrl()
                             + "/realms/"
                             + KEYCLOAK_REALM
                             + "/protocol/openid-connect/token")

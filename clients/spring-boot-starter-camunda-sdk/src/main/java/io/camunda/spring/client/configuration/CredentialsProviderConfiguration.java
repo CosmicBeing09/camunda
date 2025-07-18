@@ -40,13 +40,13 @@ public class CredentialsProviderConfiguration {
   @ConditionalOnMissingBean
   public CredentialsProvider camundaClientCredentialsProvider(
       final CamundaClientProperties camundaClientProperties) {
-    final var authMethod = camundaClientProperties.getAuth().getMethod();
+    final var authMethod = camundaClientProperties.getAuth().getAuthenticationMethod();
 
     return authMethod == null
         ? new NoopCredentialsProvider()
         : switch (authMethod) {
           case basic -> buildBasicAuthCredentialsProvider(camundaClientProperties);
-          case oidc -> buildOAuthCredentialsProvider(camundaClientProperties);
+          case oidc -> buildOidcCredentialsProvider(camundaClientProperties);
           case none -> new NoopCredentialsProvider();
         };
   }
@@ -75,11 +75,11 @@ public class CredentialsProviderConfiguration {
     }
   }
 
-  private CredentialsProvider buildOAuthCredentialsProvider(
+  private CredentialsProvider buildOidcCredentialsProvider(
       final CamundaClientProperties camundaClientProperties) {
-    final OAuthCredentialsProviderBuilder credBuilder =
-        CredentialsProvider.newCredentialsProviderBuilder()
-            .applyEnvironmentOverrides(false)
+    final OAuthCredentialsProviderBuilder oidcBuilder =
+        CredentialsProvider.builder()
+            .useEnvironmentOverrides(false)
             .clientId(camundaClientProperties.getAuth().getClientId())
             .clientSecret(camundaClientProperties.getAuth().getClientSecret())
             .audience(camundaClientProperties.getAuth().getAudience())
@@ -92,9 +92,9 @@ public class CredentialsProviderConfiguration {
             .connectTimeout(camundaClientProperties.getAuth().getConnectTimeout())
             .readTimeout(camundaClientProperties.getAuth().getReadTimeout());
 
-    maybeConfigureIdentityProviderSSLConfig(credBuilder, camundaClientProperties);
+    maybeConfigureIdentityProviderSSLConfig(oidcBuilder, camundaClientProperties);
     try {
-      return credBuilder.build();
+      return oidcBuilder.build();
     } catch (final Exception e) {
       LOG.warn(
           "Failed to configure oidc credential provider, falling back to use no authentication, cause: {}",

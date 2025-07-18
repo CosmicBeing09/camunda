@@ -34,10 +34,10 @@ public class CamundaClientProperties {
   private ClientMode mode;
 
   @Deprecated(forRemoval = true, since = "8.8")
-  private String clusterId;
+  private String cloudClusterId;
 
   @Deprecated(forRemoval = true, since = "8.8")
-  private String region;
+  private String cloudRegion;
 
   @NestedConfigurationProperty
   private CamundaClientCloudProperties cloud = new CamundaClientCloudProperties();
@@ -258,23 +258,23 @@ public class CamundaClientProperties {
   @Deprecated(forRemoval = true, since = "8.8")
   @DeprecatedConfigurationProperty(replacement = "camunda.client.cloud.cluster-id")
   public String getClusterId() {
-    return clusterId;
+    return cloudClusterId;
   }
 
   @Deprecated(forRemoval = true)
   public void setClusterId(final String clusterId) {
-    this.clusterId = clusterId;
+    cloudClusterId = clusterId;
   }
 
   @Deprecated(forRemoval = true, since = "8.8")
   @DeprecatedConfigurationProperty(replacement = "camunda.client.cloud.region")
   public String getRegion() {
-    return region;
+    return cloudRegion;
   }
 
   @Deprecated(forRemoval = true, since = "8.8")
   public void setRegion(final String region) {
-    this.region = region;
+    cloudRegion = region;
   }
 
   public Boolean getEnabled() {

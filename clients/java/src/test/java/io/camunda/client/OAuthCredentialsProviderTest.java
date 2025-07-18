@@ -115,8 +115,6 @@ public final class OAuthCredentialsProviderTest {
 
   private static final String TRUSTSTORE_PASSWORD = "password";
   private static final String KEYSTORE_PASSWORD = "password";
-  private static final String ENTRA_KEYSTORE_PASSWORD = "mstest";
-
   @RegisterExtension
   static WireMockExtension httpsWiremock =
       WireMockExtension.newInstance()
@@ -130,7 +128,7 @@ public final class OAuthCredentialsProviderTest {
                   .keystorePath(VALID_IDENTITY_PATH)
                   .keystorePassword(KEYSTORE_PASSWORD))
           .build();
-
+  private static final String ENTRA_KEYSTORE_PASSWORD = "mstest";
   private static final String KEYSTORE_MATERIAL_PASSWORD = "password";
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
   private static final Key<String> AUTH_KEY =
@@ -422,29 +420,29 @@ public final class OAuthCredentialsProviderTest {
   }
 
   private void mockCredentials(final String token, final String scope) {
-    final HashMap<String, String> map = new HashMap<>();
-    map.put("client_secret", SECRET);
-    map.put("client_id", CLIENT_ID);
-    map.put("audience", AUDIENCE);
-    map.put("grant_type", "client_credentials");
+    final HashMap<String, String> requestParams = new HashMap<>();
+    requestParams.put("client_secret", SECRET);
+    requestParams.put("client_id", CLIENT_ID);
+    requestParams.put("audience", AUDIENCE);
+    requestParams.put("grant_type", "client_credentials");
     if (scope != null) {
-      map.put("scope", scope);
+      requestParams.put("scope", scope);
     }
 
     final String encodedBody =
-        map.entrySet().stream()
+        requestParams.entrySet().stream()
             .map(e -> encode(e.getKey()) + "=" + encode(e.getValue()))
             .collect(Collectors.joining("&"));
 
-    map.put("access_token", token);
-    map.put("token_type", TOKEN_TYPE);
-    map.put(
+    requestParams.put("access_token", token);
+    requestParams.put("token_type", TOKEN_TYPE);
+    requestParams.put(
         "expires_in",
         String.valueOf(
             EXPIRY.getLong(ChronoField.INSTANT_SECONDS) - Instant.now().getEpochSecond()));
 
     try {
-      final String body = jsonMapper.writeValueAsString(map);
+      final String body = jsonMapper.writeValueAsString(requestParams);
       currentWiremockRuntimeInfo
           .getWireMock()
           .register(
@@ -460,14 +458,14 @@ public final class OAuthCredentialsProviderTest {
     }
   }
 
-  private void mockTokenRequest(boolean withAssertion) {
+  private void mockTokenRequest(final boolean withAssertion) {
     final String assertionRegex = ".*client_assertion\\=[\\._\\-A-Za-z0-9]{400,500}.*";
     final String assertionTypeRegex = ".*client_assertion_type.*";
     final String clientSecret = ".*client_secret.*";
-    final HashMap<String, String> map = new HashMap<>();
-    map.put("access_token", ACCESS_TOKEN);
-    map.put("token_type", TOKEN_TYPE);
-    map.put("expires_in", "3600");
+    final HashMap<String, String> tokenResponseFields = new HashMap<>();
+    tokenResponseFields.put("access_token", ACCESS_TOKEN);
+    tokenResponseFields.put("token_type", TOKEN_TYPE);
+    tokenResponseFields.put("expires_in", "3600");
 
     try {
       currentWiremockRuntimeInfo
@@ -487,10 +485,10 @@ public final class OAuthCredentialsProviderTest {
                       !withAssertion ? matching(clientSecret) : notMatching(clientSecret))
                   .willReturn(
                       WireMock.aResponse()
-                          .withBody(jsonMapper.writeValueAsString(map))
+                          .withBody(jsonMapper.writeValueAsString(tokenResponseFields))
                           .withHeader("Content-Type", "application/json")
                           .withStatus(200)));
-    } catch (JsonProcessingException e) {
+    } catch (final JsonProcessingException e) {
       throw new RuntimeException(e);
     }
   }
@@ -753,7 +751,7 @@ public final class OAuthCredentialsProviderTest {
     }
 
     private OAuthCredentialsProviderBuilder initializeCredentialsProviderBuilder(
-        boolean withAssertion, boolean withClientSecret) {
+        final boolean withAssertion, final boolean withClientSecret) {
       OAuthCredentialsProviderBuilder builder =
           new OAuthCredentialsProviderBuilder()
               .clientId(CLIENT_ID)

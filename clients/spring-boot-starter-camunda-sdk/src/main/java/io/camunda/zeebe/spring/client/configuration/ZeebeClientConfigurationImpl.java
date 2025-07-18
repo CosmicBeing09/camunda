@@ -16,6 +16,7 @@
 package io.camunda.zeebe.spring.client.configuration;
 
 import io.camunda.client.CamundaClientConfiguration;
+import io.camunda.client.CredentialsProvider.CredentialsHeaderApplier;
 import io.camunda.zeebe.client.CredentialsProvider;
 import io.camunda.zeebe.client.ZeebeClientConfiguration;
 import io.camunda.zeebe.client.api.JsonMapper;
@@ -194,7 +195,7 @@ public class ZeebeClientConfigurationImpl implements ZeebeClientConfiguration {
     }
 
     private static class CredentialsApplierCompat
-        implements io.camunda.client.CredentialsProvider.CredentialsApplier {
+        implements CredentialsHeaderApplier {
       private final CredentialsApplier credentialsApplier;
 
       public CredentialsApplierCompat(final CredentialsApplier credentialsApplier) {

@@ -15,12 +15,12 @@
  */
 package io.camunda.client.util;
 
-import io.camunda.client.CredentialsProvider.CredentialsApplier;
+import io.camunda.client.CredentialsProvider.CredentialsHeaderApplier;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class TestCredentialsApplier implements CredentialsApplier {
+public final class TestCredentialsApplier implements CredentialsHeaderApplier {
   private final List<Credential> credentials = new CopyOnWriteArrayList<>();
 
   @Override

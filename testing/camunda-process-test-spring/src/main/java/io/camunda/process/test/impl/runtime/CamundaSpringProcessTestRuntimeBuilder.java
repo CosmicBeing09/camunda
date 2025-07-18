@@ -120,7 +120,7 @@ public class CamundaSpringProcessTestRuntimeBuilder {
             .withClientSecret(authProperties.getClientSecret())
             .withRegion(cloudProperties.getRegion());
 
-    if (authProperties.getMethod() != null) {
+    if (authProperties.getAuthenticationMethod() != null) {
       final CredentialsProvider credentialsProvider = createCredentialsProvider(clientProperties);
       cloudBuilderStep.credentialsProvider(credentialsProvider);
     }

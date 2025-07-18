@@ -35,7 +35,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldDefaultToNone() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.none);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.none);
     }
   }
 
@@ -48,7 +48,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.basic);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.basic);
       assertThat(properties.getAuth().getUsername()).isEqualTo("demo1");
       assertThat(properties.getAuth().getPassword()).isEqualTo("demo");
     }
@@ -63,7 +63,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.basic);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.basic);
       assertThat(properties.getAuth().getUsername()).isEqualTo("demo");
       assertThat(properties.getAuth().getPassword()).isEqualTo("demo1");
     }
@@ -78,7 +78,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(
               URI.create(
@@ -97,7 +97,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(
               URI.create(
@@ -116,7 +116,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.basic);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.basic);
       assertThat(properties.getAuth().getUsername()).isEqualTo("demo");
       assertThat(properties.getAuth().getPassword()).isEqualTo("demo");
     }
@@ -131,7 +131,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(
               URI.create(
@@ -149,7 +149,7 @@ public class CamundaClientAuthMethodsTest {
 
     @Test
     void shouldLoadDefaultsBasic() {
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.none);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.none);
     }
   }
 }

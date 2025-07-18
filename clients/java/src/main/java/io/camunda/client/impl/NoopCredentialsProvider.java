@@ -20,7 +20,7 @@ import io.camunda.client.CredentialsProvider;
 public final class NoopCredentialsProvider implements CredentialsProvider {
 
   @Override
-  public void applyCredentials(final CredentialsApplier ignored) {
+  public void applyCredentials(final CredentialsHeaderApplier ignored) {
     // Noop
   }
 

@@ -161,7 +161,7 @@ public class GatewayAuthenticationNoneIT {
     try (final var client =
         createCamundaClientBuilder()
             .credentialsProvider(
-                CredentialsProvider.newCredentialsProviderBuilder()
+                CredentialsProvider.builder()
                     .clientId(ZEEBE_CLIENT_ID)
                     .clientSecret(ZEEBE_CLIENT_SECRET)
                     .audience(ZEEBE_CLIENT_AUDIENCE)
@@ -216,7 +216,7 @@ public class GatewayAuthenticationNoneIT {
   private static final class InvalidAuthTokenProvider implements CredentialsProvider {
 
     @Override
-    public void applyCredentials(final CredentialsApplier applier) {
+    public void applyCredentials(final CredentialsHeaderApplier applier) {
       applier.put("Authorization", "Bearer youShallNotPass");
     }
 

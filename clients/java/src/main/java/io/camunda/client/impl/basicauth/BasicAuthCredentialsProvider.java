@@ -30,7 +30,7 @@ public class BasicAuthCredentialsProvider implements CredentialsProvider {
   }
 
   @Override
-  public void applyCredentials(final CredentialsApplier applier) {
+  public void applyCredentials(final CredentialsHeaderApplier applier) {
     applier.put(AUTH_HEADER_KEY, authHeaderValue);
   }
 
