@@ -311,6 +311,6 @@ public class LinkEventDefinitionTest {
   public static BpmnModelInstance getLinkEventProcess() {
     final ProcessBuilder process = Bpmn.createExecutableProcess("process");
     process.startEvent().manualTask("manualTask1").intermediateThrowEvent().link("LinkA");
-    return process.linkCatchEvent().link("LinkB").manualTask("manualTask2").endEvent().done();
+    return process.catchEvent().link("LinkB").manualTask("manualTask2").endEvent().done();
   }
 }

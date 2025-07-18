@@ -348,7 +348,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
                       .zeebeEndExecutionListener(END_EL_TYPE + "_throw_1"));
       final BpmnModelInstance modelInstance =
           processBuilder
-              .linkCatchEvent("catch")
+              .catchEvent("catch")
               .link("linkA")
               .zeebeStartExecutionListener(START_EL_TYPE + "_catch_1")
               .zeebeEndExecutionListener(END_EL_TYPE + "_catch_1")

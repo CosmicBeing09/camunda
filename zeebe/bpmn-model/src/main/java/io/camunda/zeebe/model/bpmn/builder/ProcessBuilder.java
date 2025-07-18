@@ -78,11 +78,11 @@ public class ProcessBuilder extends AbstractProcessBuilder<ProcessBuilder>
     return this;
   }
 
-  public IntermediateCatchEventBuilder linkCatchEvent() {
-    return linkCatchEvent(null);
+  public IntermediateCatchEventBuilder catchEvent() {
+    return catchEvent(null);
   }
 
-  public IntermediateCatchEventBuilder linkCatchEvent(final String id) {
+  public IntermediateCatchEventBuilder catchEvent(final String id) {
     final IntermediateCatchEvent catchEvent = createChild(IntermediateCatchEvent.class, id);
     final BpmnShape bpmnShape = createBpmnShape(catchEvent);
     setEventCoordinates(bpmnShape);

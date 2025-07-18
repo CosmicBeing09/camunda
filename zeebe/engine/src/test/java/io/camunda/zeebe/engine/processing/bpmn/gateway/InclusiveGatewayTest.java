@@ -1199,7 +1199,7 @@ public final class InclusiveGatewayTest {
             .serviceTask("task-2", s -> s.zeebeJobType("test"))
             .intermediateThrowEvent("throw", b -> b.link("link"))
             .moveToProcess(PROCESS_ID)
-            .linkCatchEvent("catch")
+            .catchEvent("catch")
             .link("link")
             .connectTo("join")
             .done();
