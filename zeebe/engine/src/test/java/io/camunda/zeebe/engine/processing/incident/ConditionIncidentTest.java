@@ -86,7 +86,7 @@ public final class ConditionIncidentTest {
         .hasElementId(failingEvent.getValue().getElementId())
         .hasElementInstanceKey(failingEvent.getKey())
         .hasVariableScopeKey(failingEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -123,7 +123,7 @@ public final class ConditionIncidentTest {
         .hasElementId(failingEvent.getValue().getElementId())
         .hasElementInstanceKey(failingEvent.getKey())
         .hasVariableScopeKey(failingEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

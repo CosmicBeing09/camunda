@@ -91,7 +91,7 @@ public class SignalControllerTest extends RestControllerTest {
     // given
     when(multiTenancyCfg.isEnabled()).thenReturn(false);
     when(signalServices.broadcastSignal(anyString(), anyMap(), anyString()))
-        .thenReturn(buildSignalResponse(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+        .thenReturn(buildSignalResponse(TenantOwned.DEFAULT_TENANT_ID));
 
     final var request =
         """
@@ -116,7 +116,7 @@ public class SignalControllerTest extends RestControllerTest {
 
     Mockito.verify(signalServices)
         .broadcastSignal(
-            "signalName", Map.of("key", "value"), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            "signalName", Map.of("key", "value"), TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

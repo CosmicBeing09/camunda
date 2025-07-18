@@ -62,7 +62,7 @@ public class StreamActivatedJobsTest extends GatewayTest {
     assertThat(streamedActivatedJob.getDeadline()).isEqualTo(DEADLINE);
     assertThat(activatedJob.jobRecord().getVariables()).isEqualTo(fetchedVariables);
     assertThat(activatedJob.jobRecord().getTenantId())
-        .isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

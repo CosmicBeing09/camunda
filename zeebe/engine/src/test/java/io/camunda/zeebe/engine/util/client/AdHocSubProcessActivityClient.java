@@ -38,7 +38,7 @@ public class AdHocSubProcessActivityClient {
       new AdHocSubProcessActivityActivationRecord();
   private Function<Long, Record<AdHocSubProcessActivityActivationRecordValue>> expectation =
       SUCCESS_EXPECTATION;
-  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_ID);
 
   public AdHocSubProcessActivityClient(final CommandWriter writer) {
     this.writer = writer;

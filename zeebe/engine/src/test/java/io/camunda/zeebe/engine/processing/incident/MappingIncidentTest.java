@@ -102,7 +102,7 @@ public final class MappingIncidentTest {
         .hasElementId("failingTask")
         .hasElementInstanceKey(failureCommand.getKey())
         .hasVariableScopeKey(failureCommand.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(incidentEventValue.getErrorMessage())
         .contains("Assertion failure on evaluate the expression");
@@ -155,7 +155,7 @@ public final class MappingIncidentTest {
         .hasElementId("service")
         .hasElementInstanceKey(failureEvent.getKey())
         .hasVariableScopeKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(incidentEvent.getValue().getErrorMessage())
         .contains("Assertion failure on evaluate the expression");
@@ -217,7 +217,7 @@ public final class MappingIncidentTest {
         .hasElementId("failingTask")
         .hasElementInstanceKey(failureEvent.getKey())
         .hasVariableScopeKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(incidentEvent.getValue().getErrorMessage())
         .contains("Assertion failure on evaluate the expression");
@@ -281,7 +281,7 @@ public final class MappingIncidentTest {
         .hasElementId("failingTask")
         .hasElementInstanceKey(failureEvent.getKey())
         .hasVariableScopeKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(incidentResolvedEvent.getValue().getErrorMessage())
         .contains("Assertion failure on evaluate the expression");

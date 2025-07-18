@@ -27,7 +27,7 @@ public final class AdHocSubProcessActivityActivationRecord extends UnifiedRecord
   private final ArrayProperty<AdHocSubProcessActivityActivationElement> elements =
       new ArrayProperty<>("elements", AdHocSubProcessActivityActivationElement::new);
   private final StringProperty tenantId =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public AdHocSubProcessActivityActivationRecord() {
     super(3);

@@ -54,7 +54,7 @@ public final class CreateProcessInstanceWithResultTest extends GatewayTest {
         .isEqualTo(stub.getProcessDefinitionKey());
     assertThat(brokerRequestValue.fetchVariables().iterator().next().getValue())
         .isEqualTo(wrapString("x"));
-    assertThat(brokerRequestValue.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(brokerRequestValue.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -79,7 +79,7 @@ public final class CreateProcessInstanceWithResultTest extends GatewayTest {
     assertThat(response.getVersion()).isEqualTo(stub.getProcessVersion());
     assertThat(response.getProcessDefinitionKey()).isEqualTo(stub.getProcessDefinitionKey());
     assertThat(response.getProcessInstanceKey()).isEqualTo(stub.getProcessInstanceKey());
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

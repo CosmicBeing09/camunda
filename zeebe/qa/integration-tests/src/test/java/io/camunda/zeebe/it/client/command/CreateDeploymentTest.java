@@ -204,7 +204,7 @@ public final class CreateDeploymentTest {
     assertThat(form.getFormId()).isEqualTo("Form_0w7r08e");
     assertThat(form.getResourceName()).isEqualTo(resourceName);
     assertThat(form.getVersion()).isEqualTo(1);
-    assertThat(form.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(form.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     assertThat(form.getFormKey()).isPositive();
   }
 

@@ -161,12 +161,12 @@ public final class DbProcessMigrationState {
 
   public void migrateProcessStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
-    tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_ID);
 
     iterator.drain(
         deprecatedProcessCacheColumnFamily,
         (key, value) -> {
-          value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+          value.setTenantId(TenantOwned.DEFAULT_TENANT_ID);
           processDefinitionKey.setValue(key.getValue());
           processColumnFamily.insert(tenantAwareProcessDefinitionKey, value);
         });
@@ -174,7 +174,7 @@ public final class DbProcessMigrationState {
     iterator.drain(
         deprecatedProcessCacheByIdAndVersionColumnFamily,
         (key, value) -> {
-          value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+          value.setTenantId(TenantOwned.DEFAULT_TENANT_ID);
           processId.wrapBuffer(value.getBpmnProcessId());
           processVersion.setValue(value.getVersion());
           processByIdAndVersionColumnFamily.insert(tenantAwareProcessIdAndVersionKey, value);

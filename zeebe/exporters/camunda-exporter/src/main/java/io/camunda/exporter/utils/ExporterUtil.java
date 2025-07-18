@@ -28,7 +28,7 @@ public final class ExporterUtil {
 
   public static String tenantOrDefault(final String tenantId) {
     if (tenantId == null || tenantId.isEmpty()) {
-      return TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+      return TenantOwned.DEFAULT_TENANT_ID;
     }
     return tenantId;
   }

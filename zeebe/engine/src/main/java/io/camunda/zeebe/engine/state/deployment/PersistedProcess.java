@@ -30,7 +30,7 @@ public final class PersistedProcess extends UnpackedObject implements DbValue {
   private final EnumProperty<PersistedProcessState> stateProp =
       new EnumProperty<>("state", PersistedProcessState.class, PersistedProcessState.ACTIVE);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty deploymentKeyProp =
       new LongProperty("deploymentKey", NO_DEPLOYMENT_KEY);
   private final StringProperty versionTagProp = new StringProperty("versionTag", "");

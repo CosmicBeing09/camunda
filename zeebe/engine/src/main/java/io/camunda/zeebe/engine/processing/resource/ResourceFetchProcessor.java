@@ -105,7 +105,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
   private Optional<PersistedResource> findResourceForAnonymouslyAuthorizedTenants(
       final long resourceKey) {
     return resourceState
-        .findResourceByKey(resourceKey, TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .findResourceByKey(resourceKey, TenantOwned.DEFAULT_TENANT_ID)
         .or(() -> tryForEachTenantUntilResourceFound(resourceKey));
   }
 

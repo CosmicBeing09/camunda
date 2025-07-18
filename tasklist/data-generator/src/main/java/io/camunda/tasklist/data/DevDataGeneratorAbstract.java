@@ -8,7 +8,7 @@
 package io.camunda.tasklist.data;
 
 import static io.camunda.tasklist.util.ThreadUtil.sleepFor;
-import static io.camunda.zeebe.protocol.record.value.TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+import static io.camunda.zeebe.protocol.record.value.TenantOwned.DEFAULT_TENANT_ID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -229,7 +229,7 @@ public abstract class DevDataGeneratorAbstract implements DataGenerator {
     final Runnable runCreateProcessInstance =
         () ->
             tasklistServicesAdapter.createProcessInstanceWithoutAuthentication(
-                processId, variables, DEFAULT_TENANT_IDENTIFIER);
+                processId, variables, DEFAULT_TENANT_ID);
     try {
       runCreateProcessInstance.run();
     } catch (final Exception ex) {
@@ -274,7 +274,7 @@ public abstract class DevDataGeneratorAbstract implements DataGenerator {
 
   private void deployResource(final String classpathResource) {
     tasklistServicesAdapter.deployResourceWithoutAuthentication(
-        classpathResource, DEFAULT_TENANT_IDENTIFIER);
+        classpathResource, DEFAULT_TENANT_ID);
     LOGGER.debug("Deployment of resource [{}] was performed", classpathResource);
   }
 

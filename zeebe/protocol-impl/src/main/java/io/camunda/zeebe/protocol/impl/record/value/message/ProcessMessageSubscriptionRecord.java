@@ -38,7 +38,7 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
   private final StringProperty correlationKeyProp = new StringProperty("correlationKey", "");
   private final StringProperty elementIdProp = new StringProperty("elementId", "");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public ProcessMessageSubscriptionRecord() {
     super(11);

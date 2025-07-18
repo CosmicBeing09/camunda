@@ -95,7 +95,7 @@ public final class EmbeddedSubProcessTest {
     assertThat(
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
                 .limitToProcessInstanceCompleted())
         .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
         .containsSubsequence(
@@ -130,7 +130,7 @@ public final class EmbeddedSubProcessTest {
     assertThat(
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
-                .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
                 .limitToProcessInstanceCompleted())
         .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))
         .containsSubsequence(

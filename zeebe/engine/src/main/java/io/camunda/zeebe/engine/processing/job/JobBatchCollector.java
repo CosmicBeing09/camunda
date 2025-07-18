@@ -90,7 +90,7 @@ final class JobBatchCollector {
     final var unwritableJob = new MutableReference<TooLargeJob>();
     final var tenantIds =
         value.getTenantIds().isEmpty()
-            ? List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            ? List.of(TenantOwned.DEFAULT_TENANT_ID)
             : value.getTenantIds();
     final Map<JobKind, Integer> jobCountPerJobKind = new EnumMap<>(JobKind.class);
     // the tenant check is performed earlier in the JobBatchActivateProcessor, so we can skip it

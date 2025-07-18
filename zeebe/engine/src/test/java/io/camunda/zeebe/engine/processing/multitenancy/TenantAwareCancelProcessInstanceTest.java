@@ -41,14 +41,14 @@ public class TenantAwareCancelProcessInstanceTest {
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
                 .done())
-        .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .deploy();
 
     final long processInstanceKey =
         ENGINE
             .processInstance()
             .ofBpmnProcessId("process")
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .create();
 
     // when
@@ -56,7 +56,7 @@ public class TenantAwareCancelProcessInstanceTest {
         ENGINE
             .processInstance()
             .withInstanceKey(processInstanceKey)
-            .forAuthorizedTenants(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .forAuthorizedTenants(TenantOwned.DEFAULT_TENANT_ID)
             .cancel();
 
     // then

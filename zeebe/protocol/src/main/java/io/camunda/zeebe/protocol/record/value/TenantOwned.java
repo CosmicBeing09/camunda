@@ -19,10 +19,10 @@ package io.camunda.zeebe.protocol.record.value;
 public interface TenantOwned {
 
   /**
-   * The default tenant identifier. When multi-tenancy is disabled, entities are owned by this
+   * The default tenant ID. When multi-tenancy is disabled, entities are owned by this
    * tenant. This is done in case multi-tenancy is enabled in the future.
    */
-  String DEFAULT_TENANT_IDENTIFIER = "<default>";
+  String DEFAULT_TENANT_ID = "<default>";
 
   /** Returns the identifier of the tenant that owns this entity. */
   String getTenantId();

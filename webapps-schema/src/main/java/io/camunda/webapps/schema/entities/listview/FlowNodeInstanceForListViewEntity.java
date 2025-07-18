@@ -35,7 +35,7 @@ public class FlowNodeInstanceForListViewEntity
   private boolean incident;
   private boolean jobFailedWithRetriesLeft = false;
 
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   @Deprecated @JsonIgnore private boolean pendingIncident;
 

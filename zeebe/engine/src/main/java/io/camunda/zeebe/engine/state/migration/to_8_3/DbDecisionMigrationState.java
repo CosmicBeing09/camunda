@@ -41,7 +41,7 @@ public class DbDecisionMigrationState {
   public void migrateDecisionStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_ID);
 
     /*
     `DEPRECATED_DMN_DECISIONS` -> `DMN_DECISIONS`
@@ -51,7 +51,7 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getDecisionsByKey(),
         (key, value) -> {
-          value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+          value.setTenantId(TenantOwned.DEFAULT_TENANT_ID);
           to.dbDecisionKey.setValue(key.getValue());
           to.decisionsByKey.insert(to.tenantAwareDecisionKey, value);
         });
@@ -64,7 +64,7 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getDecisionRequirementsByKey(),
         (key, value) -> {
-          value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+          value.setTenantId(TenantOwned.DEFAULT_TENANT_ID);
           to.dbDecisionRequirementsKey.setValue(key.getValue());
           to.decisionRequirementsByKey.insert(to.tenantAwareDecisionRequirementsKey, value);
         });

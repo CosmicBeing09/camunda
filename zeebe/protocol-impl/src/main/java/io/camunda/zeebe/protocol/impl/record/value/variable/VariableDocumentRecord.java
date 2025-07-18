@@ -105,6 +105,6 @@ public final class VariableDocumentRecord extends UnifiedRecordValue
   @Override
   public String getTenantId() {
     // todo(#13388): replace dummy implementation
-    return TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+    return TenantOwned.DEFAULT_TENANT_ID;
   }
 }

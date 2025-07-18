@@ -634,7 +634,7 @@ public final class JobStateTest {
     jobState.create(4294967296L, newJobRecord().setType("test-other"));
 
     // when
-    final List<Long> jobKeys = getActivatableKeys(type, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    final List<Long> jobKeys = getActivatableKeys(type, TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(jobKeys).hasSize(2);
@@ -645,7 +645,7 @@ public final class JobStateTest {
   public void shouldNotDoAnythingIfNoActivatableJobs() {
     // given
     final DirectBuffer type = wrapString("test");
-    final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+    final String tenantId = TenantOwned.DEFAULT_TENANT_ID;
     createAndActivateJobRecord(1, newJobRecord().setType(type));
     jobState.create(256L, newJobRecord().setType("other"));
 
@@ -776,7 +776,7 @@ public final class JobStateTest {
   }
 
   private JobRecord newJobRecord() {
-    return newJobRecord(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return newJobRecord(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private JobRecord newJobRecord(final String tenantId) {
@@ -811,7 +811,7 @@ public final class JobStateTest {
   }
 
   private void refuteListedAsActivatable(final long key, final DirectBuffer type) {
-    refuteListedAsActivatable(key, type, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    refuteListedAsActivatable(key, type, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private void refuteListedAsActivatable(

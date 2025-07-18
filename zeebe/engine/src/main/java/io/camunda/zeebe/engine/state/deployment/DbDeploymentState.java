@@ -171,7 +171,7 @@ public final class DbDeploymentState implements MutableDeploymentState {
             // Any deployments in this state are old as deployment distributions are done using
             // generalized distribution now. It is safe to assume that they belong to the default
             // tenant. We do have to set this on the record before distributing it.
-            deploymentRaw.getDeploymentRecord().setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            deploymentRaw.getDeploymentRecord().setTenantId(TenantOwned.DEFAULT_TENANT_ID);
             lastDeployment.set(BufferUtil.createCopy(deploymentRaw.getDeploymentRecord()));
             lastDeploymentKey.set(deploymentKey);
           }

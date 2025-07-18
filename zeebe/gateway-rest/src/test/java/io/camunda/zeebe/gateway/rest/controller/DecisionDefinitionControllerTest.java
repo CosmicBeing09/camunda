@@ -103,7 +103,7 @@ public class DecisionDefinitionControllerTest extends RestControllerTest {
     // given
     when(multiTenancyCfg.isEnabled()).thenReturn(false);
     when(decisionServices.evaluateDecision(anyString(), anyLong(), anyMap(), anyString()))
-        .thenReturn((buildResponse(TenantOwned.DEFAULT_TENANT_IDENTIFIER)));
+        .thenReturn((buildResponse(TenantOwned.DEFAULT_TENANT_ID)));
 
     final var request =
         """
@@ -127,7 +127,7 @@ public class DecisionDefinitionControllerTest extends RestControllerTest {
         .isOk();
     Mockito.verify(decisionServices)
         .evaluateDecision(
-            "", 123456L, Map.of("key", "value"), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            "", 123456L, Map.of("key", "value"), TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

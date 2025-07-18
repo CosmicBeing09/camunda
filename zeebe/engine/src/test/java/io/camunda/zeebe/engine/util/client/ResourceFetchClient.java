@@ -37,7 +37,7 @@ public class ResourceFetchClient {
   private final CommandWriter writer;
   private final ResourceRecord resourceRecord = new ResourceRecord();
   private Function<Long, Record<Resource>> expectation = SUCCESS_EXPECTATION;
-  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_ID);
   private int requestStreamId = 1;
   private long requestId = 1L;
 
@@ -84,7 +84,7 @@ public class ResourceFetchClient {
 
   public Record<Resource> fetch(final String username) {
     return fetch(
-        AuthorizationUtil.getUsernameAuthInfo(username, TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+        AuthorizationUtil.getUsernameAuthInfo(username, TenantOwned.DEFAULT_TENANT_ID));
   }
 
   public ResourceFetchClient expectRejection() {

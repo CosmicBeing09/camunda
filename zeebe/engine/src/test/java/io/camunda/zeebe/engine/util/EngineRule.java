@@ -463,7 +463,7 @@ public final class EngineRule extends ExternalResource {
 
   public Record<JobRecordValue> createJob(
       final String type, final String processId, final Map<String, Object> variables) {
-    return createJob(type, processId, variables, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return createJob(type, processId, variables, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   public Record<JobRecordValue> createJob(

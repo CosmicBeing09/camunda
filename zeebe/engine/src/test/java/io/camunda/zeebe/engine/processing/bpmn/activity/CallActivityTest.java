@@ -101,7 +101,7 @@ public final class CallActivityTest {
             RecordingExporter.processInstanceRecords()
                 .onlyEvents()
                 .withProcessInstanceKey(processInstanceKey)
-                .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
                 .withElementId("call")
                 .limit(2))
         .extracting(r -> tuple(r.getValue().getBpmnElementType(), r.getIntent()))

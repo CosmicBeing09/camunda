@@ -23,7 +23,7 @@ public class SequenceFlowEntity implements ExporterEntity<SequenceFlowEntity>, T
   private String bpmnProcessId;
 
   private String activityId;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   @Override
   public String getId() {

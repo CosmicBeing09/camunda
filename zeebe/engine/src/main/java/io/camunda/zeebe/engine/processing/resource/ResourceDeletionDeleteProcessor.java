@@ -409,7 +409,7 @@ public class ResourceDeletionDeleteProcessor
    */
   private boolean tryToDeleteResourceAssignedToDefaultTenant(
       final Function<String, Boolean> resourceDeletionCallback) {
-    return resourceDeletionCallback.apply(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return resourceDeletionCallback.apply(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   /**

@@ -26,7 +26,7 @@ import org.junit.Test;
 
 public final class PendingMessageSubscriptionStateTest {
 
-  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_ID;
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableMessageSubscriptionState persistentState;

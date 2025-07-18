@@ -172,7 +172,7 @@ public class StreamProcessingComposite implements CommandWriter {
 
   @Override
   public long writeCommand(final Intent intent, final UnifiedRecordValue value) {
-    return writeCommand(intent, value, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return writeCommand(intent, value, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Override
@@ -210,7 +210,7 @@ public class StreamProcessingComposite implements CommandWriter {
 
   @Override
   public long writeCommand(final long key, final Intent intent, final UnifiedRecordValue value) {
-    return writeCommand(key, intent, value, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return writeCommand(key, intent, value, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Override
@@ -325,7 +325,7 @@ public class StreamProcessingComposite implements CommandWriter {
             .requestId(requestId)
             .requestStreamId(requestStreamId)
             .intent(intent)
-            .authorizations(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .authorizations(TenantOwned.DEFAULT_TENANT_ID)
             .event(value);
     return writeActor.submit(writer::write).join();
   }
@@ -344,7 +344,7 @@ public class StreamProcessingComposite implements CommandWriter {
             .requestId(requestId)
             .requestStreamId(requestStreamId)
             .intent(intent)
-            .authorizationsWithUsername(username, TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .authorizationsWithUsername(username, TenantOwned.DEFAULT_TENANT_ID)
             .event(value);
     return writeActor.submit(writer::write).join();
   }
@@ -366,7 +366,7 @@ public class StreamProcessingComposite implements CommandWriter {
             .newRecord(getLogName(partition))
             .recordType(RecordType.COMMAND)
             .intent(intent)
-            .authorizations(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .authorizations(TenantOwned.DEFAULT_TENANT_ID)
             .event(value);
     return writeActor.submit(writer::write).join();
   }
@@ -395,7 +395,7 @@ public class StreamProcessingComposite implements CommandWriter {
   public long writeCommandOnPartition(
       final int partition, final long key, final Intent intent, final UnifiedRecordValue value) {
     return writeCommandOnPartition(
-        partition, key, intent, value, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        partition, key, intent, value, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Override

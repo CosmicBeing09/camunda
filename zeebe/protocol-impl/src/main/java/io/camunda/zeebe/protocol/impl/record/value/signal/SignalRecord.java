@@ -24,7 +24,7 @@ public final class SignalRecord extends UnifiedRecordValue implements SignalReco
   private final StringProperty signalNameProp = new StringProperty("signalName");
   private final DocumentProperty variablesProp = new DocumentProperty("variables");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public SignalRecord() {
     super(3);

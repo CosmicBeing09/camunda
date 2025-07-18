@@ -60,14 +60,14 @@ public class TenantAwareUpdateVariablesTest {
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
                 .done())
-        .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .deploy();
 
     final long processInstanceKey =
         ENGINE
             .processInstance()
             .ofBpmnProcessId("process")
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .create();
 
     // when
@@ -75,7 +75,7 @@ public class TenantAwareUpdateVariablesTest {
         ENGINE
             .variables()
             .ofScope(processInstanceKey)
-            .forAuthorizedTenants(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .forAuthorizedTenants(TenantOwned.DEFAULT_TENANT_ID)
             .withDocument(Map.of("foo", "bar"))
             .update(USERNAME);
 

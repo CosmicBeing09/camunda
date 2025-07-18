@@ -29,7 +29,7 @@ public class ProcessEntity implements ExporterEntity<ProcessEntity>, TenantOwned
   private String formKey;
   private Boolean isFormEmbedded;
   private Boolean isPublic;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   public String getName() {
     return name;

@@ -74,7 +74,7 @@ public final class JobBasedUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.USER_TASK)
-                .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
                 .limit(3))
         .extracting(Record::getRecordType, Record::getIntent)
         .containsSequence(
@@ -85,7 +85,7 @@ public final class JobBasedUserTaskTest {
     final Record<ProcessInstanceRecordValue> userTask =
         RecordingExporter.processInstanceRecords()
             .withProcessInstanceKey(processInstanceKey)
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .withIntent(ProcessInstanceIntent.ELEMENT_ACTIVATING)
             .withElementType(BpmnElementType.USER_TASK)
             .getFirst();
@@ -157,7 +157,7 @@ public final class JobBasedUserTaskTest {
     ENGINE
         .deployment()
         .withXmlResource(process(t -> t.zeebeInputExpression("processVariable", "taskVariable")))
-        .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .deploy();
 
     // when
@@ -166,7 +166,7 @@ public final class JobBasedUserTaskTest {
             .processInstance()
             .ofBpmnProcessId(PROCESS_ID)
             .withVariable("processVariable", "processValue")
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .create();
 
     // then
@@ -180,7 +180,7 @@ public final class JobBasedUserTaskTest {
             .withType(Protocol.USER_TASK_JOB_TYPE)
             .withMaxJobsToActivate(Integer.MAX_VALUE)
             .withTimeout(200)
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .activate()
             .getValue()
             .getJobs()

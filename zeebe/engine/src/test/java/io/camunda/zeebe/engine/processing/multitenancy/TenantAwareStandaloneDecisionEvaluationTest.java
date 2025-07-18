@@ -174,6 +174,6 @@ public class TenantAwareStandaloneDecisionEvaluationTest {
                 + "', but no decision found for id '"
                 + DECISION_ID
                 + "'");
-    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 }

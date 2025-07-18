@@ -35,7 +35,7 @@ public class DbProcessMessageSubscriptionMigrationState {
   public void migrateProcessMessageSubscriptionForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_ID);
 
     /*
     - `DEPRECATED_PROCESS_SUBSCRIPTION_BY_KEY` -> `PROCESS_SUBSCRIPTION_BY_KEY`
@@ -47,7 +47,7 @@ public class DbProcessMessageSubscriptionMigrationState {
         (key, value) -> {
           to.elementInstanceKey.setValue(key.first().getValue());
           to.messageName.wrapBuffer(key.second().getBuffer());
-          value.getRecord().setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+          value.getRecord().setTenantId(TenantOwned.DEFAULT_TENANT_ID);
           to.subscriptionColumnFamily.insert(to.elementKeyAndMessageName, value);
         });
   }

@@ -104,7 +104,7 @@ public final class JobActivationIncidentTest {
         .hasProcessDefinitionKey(processDefinitionKey)
         .hasProcessInstanceKey(processInstanceKey)
         .hasElementId("task")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

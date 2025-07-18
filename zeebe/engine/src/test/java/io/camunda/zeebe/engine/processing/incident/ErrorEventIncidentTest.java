@@ -149,7 +149,7 @@ public final class ErrorEventIncidentTest {
             .getFirst();
 
     Assertions.assertThat(incidentEvent.getValue())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasErrorType(ErrorType.UNHANDLED_ERROR_EVENT)
         .hasErrorMessage(
             "Expected to throw an error event with the code 'other-error', but it was not caught. Available error events are [error]");

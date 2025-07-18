@@ -370,7 +370,7 @@ public final class CorrelateMessageTest {
     Assertions.assertThat(record.getValue())
         .hasCorrelationKey(CORRELATION_KEY)
         .hasName(MESSAGE_NAME)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private static void assertMessageIsNotCorrelated(
@@ -382,7 +382,7 @@ public final class CorrelateMessageTest {
     Assertions.assertThat(record.getValue())
         .hasCorrelationKey(CORRELATION_KEY)
         .hasName(MESSAGE_NAME)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private void deployProcessWithMessageStartEvent(final String processId) {

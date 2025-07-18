@@ -2213,7 +2213,7 @@ final class JsonSerializableToJsonTest {
 
               return new ResourceDeletionRecord()
                   .setResourceKey(resourceKey)
-                  .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+                  .setTenantId(TenantOwned.DEFAULT_TENANT_ID);
             },
         """
         {
@@ -2233,7 +2233,7 @@ final class JsonSerializableToJsonTest {
               final var adHocSubProcessActivityActivationRecord =
                   new AdHocSubProcessActivityActivationRecord()
                       .setAdHocSubProcessInstanceKey("1234")
-                      .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+                      .setTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
               adHocSubProcessActivityActivationRecord.elements().add().setElementId("123");
 

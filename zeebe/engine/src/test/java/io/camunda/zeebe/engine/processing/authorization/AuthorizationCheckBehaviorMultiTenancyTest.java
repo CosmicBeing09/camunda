@@ -213,7 +213,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     assertThat(authorizedTenantIds.isAuthorizedForTenantId(tenantId2)).isTrue();
     assertThat(authorizedTenantIds.isAuthorizedForTenantIds(List.of(tenantId1, tenantId2)))
         .isTrue();
-    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_ID))
         .isFalse();
   }
 
@@ -237,7 +237,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     assertThat(authorizedTenantIds.isAuthorizedForTenantId(tenantId2)).isTrue();
     assertThat(authorizedTenantIds.isAuthorizedForTenantIds(List.of(tenantId1, tenantId2)))
         .isTrue();
-    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_ID))
         .isFalse();
   }
 
@@ -260,7 +260,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     assertThat(authorizedTenantIds.isAuthorizedForTenantId(tenantId2)).isTrue();
     assertThat(authorizedTenantIds.isAuthorizedForTenantIds(List.of(tenantId1, tenantId2)))
         .isTrue();
-    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_ID))
         .isFalse();
   }
 
@@ -285,7 +285,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     assertThat(authorizedTenantIds.isAuthorizedForTenantId(tenantId2)).isTrue();
     assertThat(authorizedTenantIds.isAuthorizedForTenantIds(List.of(tenantId1, tenantId2)))
         .isTrue();
-    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_ID))
         .isFalse();
   }
 
@@ -299,7 +299,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
         authorizationCheckBehavior.getAuthorizedTenantIds(command).getAuthorizedTenantIds();
 
     // then
-    assertThat(authorizedTenantIds).containsOnly(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(authorizedTenantIds).containsOnly(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -312,12 +312,12 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
     // then
     assertThat(authorizedTenantIds.getAuthorizedTenantIds())
-        .containsOnly(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+        .containsOnly(TenantOwned.DEFAULT_TENANT_ID);
+    assertThat(authorizedTenantIds.isAuthorizedForTenantId(TenantOwned.DEFAULT_TENANT_ID))
         .isTrue();
     assertThat(
             authorizedTenantIds.isAuthorizedForTenantIds(
-                List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER)))
+                List.of(TenantOwned.DEFAULT_TENANT_ID)))
         .isTrue();
     assertThat(authorizedTenantIds.isAuthorizedForTenantId("not-authorized")).isFalse();
   }
@@ -449,7 +449,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     // then
     assertThat(authorizationCheckBehavior.getAuthorizedTenantIds(command).getAuthorizedTenantIds())
         .singleElement()
-        .isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

@@ -15,7 +15,7 @@ import java.util.Objects;
 public class FormEntity implements ExporterEntity<FormEntity>, TenantOwned {
 
   private String id;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
   private long key;
 
   @JsonProperty("bpmnId")

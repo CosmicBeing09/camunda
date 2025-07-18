@@ -36,7 +36,7 @@ public class ResourceDeletionClient {
   private final CommandWriter writer;
   private final ResourceDeletionRecord resourceDeletionRecord = new ResourceDeletionRecord();
   private Function<Long, Record<ResourceDeletionRecordValue>> expectation = SUCCESS_EXPECTATION;
-  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_ID);
 
   public ResourceDeletionClient(final CommandWriter writer) {
     this.writer = writer;
@@ -69,7 +69,7 @@ public class ResourceDeletionClient {
 
   public Record<ResourceDeletionRecordValue> delete(final String username) {
     return delete(
-        AuthorizationUtil.getUsernameAuthInfo(username, TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+        AuthorizationUtil.getUsernameAuthInfo(username, TenantOwned.DEFAULT_TENANT_ID));
   }
 
   public ResourceDeletionClient expectRejection() {

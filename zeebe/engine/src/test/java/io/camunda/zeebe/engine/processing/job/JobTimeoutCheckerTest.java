@@ -68,7 +68,7 @@ public class JobTimeoutCheckerTest {
   }
 
   private JobRecord newJobRecord() {
-    return newJobRecord(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return newJobRecord(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private JobRecord newJobRecord(final String tenantId) {

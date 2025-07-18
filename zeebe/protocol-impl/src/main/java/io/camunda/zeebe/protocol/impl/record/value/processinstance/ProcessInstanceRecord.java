@@ -44,7 +44,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
       new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID, "");
   private final IntegerProperty versionProp = new IntegerProperty(PROP_PROCESS_VERSION, -1);
   private final StringProperty tenantIdProp =
-      new StringProperty(PROP_TENANT_ID, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty(PROP_TENANT_ID, TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty processDefinitionKeyProp = new LongProperty(PROP_PROCESS_KEY, -1L);
 
   private final LongProperty processInstanceKeyProp =

@@ -14,7 +14,7 @@ import java.util.List;
 public interface AuthorizedTenants {
 
   AuthorizedTenants DEFAULT_TENANTS =
-      new AuthenticatedAuthorizedTenants(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new AuthenticatedAuthorizedTenants(TenantOwned.DEFAULT_TENANT_ID);
   AuthorizedTenants ANONYMOUS = new AnonymouslyAuthorizedTenants();
 
   /** Returns true, if the user is authorized to access the passed tenantId. */

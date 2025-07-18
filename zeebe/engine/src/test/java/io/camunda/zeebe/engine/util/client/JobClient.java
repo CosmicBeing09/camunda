@@ -43,7 +43,7 @@ public final class JobClient {
   private final CommandWriter writer;
   private long processInstanceKey;
   private long jobKey = DEFAULT_KEY;
-  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_ID);
 
   private Function<Long, Record<JobRecordValue>> expectation = SUCCESS_SUPPLIER;
 

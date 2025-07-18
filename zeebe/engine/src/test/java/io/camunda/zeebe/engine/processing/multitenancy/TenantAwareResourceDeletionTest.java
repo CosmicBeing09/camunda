@@ -200,7 +200,7 @@ public class TenantAwareResourceDeletionTest {
         ENGINE
             .deployment()
             .withXmlResource(PROCESS)
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .deploy();
     final var resourceKey =
         deployment.getValue().getProcessesMetadata().getFirst().getProcessDefinitionKey();
@@ -212,7 +212,7 @@ public class TenantAwareResourceDeletionTest {
     final var deleted = ENGINE.resourceDeletion().withResourceKey(resourceKey).delete(anonymous);
 
     // then
-    Assertions.assertThat(deleted.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    Assertions.assertThat(deleted.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
     verifyResourceIsDeleted(resourceKey);
   }
 

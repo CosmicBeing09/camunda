@@ -312,7 +312,7 @@ public class DbMigrationState implements MutableMigrationState {
             transientState.onSent(
                 elementInstanceKey,
                 BufferUtil.bufferAsString(messageName),
-                TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+                TenantOwned.DEFAULT_TENANT_ID,
                 sentTime);
           }
 
@@ -334,7 +334,7 @@ public class DbMigrationState implements MutableMigrationState {
 
           final var processMessageSubscription =
               persistentState.getSubscription(
-                  elementInstanceKey, messageName, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+                  elementInstanceKey, messageName, TenantOwned.DEFAULT_TENANT_ID);
           if (processMessageSubscription != null) {
 
             final var record = processMessageSubscription.getRecord();

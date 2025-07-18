@@ -58,7 +58,7 @@ public class MultiTenancyMigrationTest {
       final long processDefinitionKey = 1L;
       final long signalSubscriptionKey = 2L;
       final long catchEventInstanceKey = 3L;
-      final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+      final String tenantId = TenantOwned.DEFAULT_TENANT_ID;
 
       final SignalSubscriptionRecord signalSubscription =
           new SignalSubscriptionRecord()
@@ -100,7 +100,7 @@ public class MultiTenancyMigrationTest {
       final String catchEventId = "catchEvent";
       final long processDefinitionKey = 1L;
       final long signalSubscriptionKey = 2L;
-      final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+      final String tenantId = TenantOwned.DEFAULT_TENANT_ID;
 
       final SignalSubscriptionRecord signalSubscription =
           new SignalSubscriptionRecord()
@@ -140,7 +140,7 @@ public class MultiTenancyMigrationTest {
       final String catchEventId = "catchEvent";
       final long signalSubscriptionKey = 2L;
       final long catchEventInstanceKey = 3L;
-      final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+      final String tenantId = TenantOwned.DEFAULT_TENANT_ID;
 
       final SignalSubscriptionRecord signalSubscription =
           new SignalSubscriptionRecord()

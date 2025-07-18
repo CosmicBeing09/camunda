@@ -48,7 +48,7 @@ public final class StateQueryService implements QueryService {
     return Optional.ofNullable(
             state
                 .getProcessState()
-                .getProcessByKeyAndTenant(key, TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                .getProcessByKeyAndTenant(key, TenantOwned.DEFAULT_TENANT_ID))
         .map(DeployedProcess::getBpmnProcessId);
   }
 

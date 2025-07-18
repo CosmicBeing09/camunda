@@ -37,9 +37,9 @@ public class TransientPendingSubscriptionStateTest {
   public void shouldReturnEntriesBeforeDeadline() {
     // when
     final var expected =
-        new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID);
     sut.add(expected, 500);
-    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 2000);
+    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_ID), 2000);
 
     // when
     final var actual = sut.entriesBefore(1000);
@@ -51,9 +51,9 @@ public class TransientPendingSubscriptionStateTest {
   @Test
   public void shouldReturnEntriesOrderedBySentTime() {
     // when
-    final var first = new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    final var second = new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    final var third = new PendingSubscription(3, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    final var first = new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID);
+    final var second = new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_ID);
+    final var third = new PendingSubscription(3, "message", TenantOwned.DEFAULT_TENANT_ID);
 
     sut.add(second, 600);
     sut.add(first, 500);
@@ -70,7 +70,7 @@ public class TransientPendingSubscriptionStateTest {
   public void shouldOverwriteExistingEntries() {
     // when
     final var subscription =
-        new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID);
 
     sut.add(subscription, 500);
     sut.add(subscription, 600);
@@ -85,8 +85,8 @@ public class TransientPendingSubscriptionStateTest {
   @Test
   public void shouldAcceptEntriesWithTheSameSentTime() {
     // when
-    sut.add(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 500);
-    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 500);
+    sut.add(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID), 500);
+    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_ID), 500);
 
     // when
     final var actual = sut.entriesBefore(1000);
@@ -98,12 +98,12 @@ public class TransientPendingSubscriptionStateTest {
   @Test
   public void shouldReturnEntriesBasedOnUpdatedSentTime() {
     // when
-    sut.add(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 2000);
-    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 3000);
+    sut.add(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID), 2000);
+    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_ID), 3000);
 
     // when
     final var expected =
-        new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID);
     sut.update(expected, 500);
     final var actual = sut.entriesBefore(1000);
 
@@ -114,11 +114,11 @@ public class TransientPendingSubscriptionStateTest {
   @Test
   public void shouldNotReturnEntriesThatHaveBeenRemoved() {
     // when
-    sut.add(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 500);
-    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER), 2000);
+    sut.add(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID), 500);
+    sut.add(new PendingSubscription(2, "message", TenantOwned.DEFAULT_TENANT_ID), 2000);
 
     // when
-    sut.remove(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+    sut.remove(new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID));
     final var actual = sut.entriesBefore(1000);
 
     // then
@@ -132,7 +132,7 @@ public class TransientPendingSubscriptionStateTest {
         .isThrownBy(
             () ->
                 sut.remove(
-                    new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER)));
+                    new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID)));
   }
 
   @Test
@@ -142,7 +142,7 @@ public class TransientPendingSubscriptionStateTest {
         .isThrownBy(
             () ->
                 sut.update(
-                    new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_IDENTIFIER),
+                    new PendingSubscription(1, "message", TenantOwned.DEFAULT_TENANT_ID),
                     500));
   }
 }

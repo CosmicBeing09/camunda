@@ -59,7 +59,7 @@ public class StandaloneDecisionEvaluationTest {
     assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
     assertThat(record.getValue())
         .hasDecisionOutput(EXPECTED_DECISION_OUTPUT)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -76,7 +76,7 @@ public class StandaloneDecisionEvaluationTest {
     assertThat(record.getValue())
         .hasFailedDecisionId(DECISION_ID)
         .hasEvaluationFailureMessage(EXPECTED_FAILURE_MSG)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -105,7 +105,7 @@ public class StandaloneDecisionEvaluationTest {
     assertThat(record.getValue())
         .hasDecisionOutput(EXPECTED_DECISION_OUTPUT)
         .hasDecisionVersion(deployedVersion)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -132,7 +132,7 @@ public class StandaloneDecisionEvaluationTest {
     assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATED);
     assertThat(record.getValue())
         .hasDecisionOutput(EXPECTED_DECISION_OUTPUT)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -146,7 +146,7 @@ public class StandaloneDecisionEvaluationTest {
     assertThat(record.getIntent()).isEqualTo(DecisionEvaluationIntent.EVALUATE);
     assertThat(record.getRejectionReason())
         .isEqualTo("Expected either a decision id or a valid decision key, but none provided");
-    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -168,7 +168,7 @@ public class StandaloneDecisionEvaluationTest {
                 + "', but no decision found for id '"
                 + falseDecisionId
                 + "'");
-    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -190,6 +190,6 @@ public class StandaloneDecisionEvaluationTest {
                 + "', but no decision found for key '"
                 + falseDecisionKey
                 + "'");
-    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(record.getValue()).hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 }

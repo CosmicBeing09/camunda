@@ -55,7 +55,7 @@ public final class MultiTenancyValidator {
     if (!multiTenancyEnabled) {
       if (hasTenantId
           && tenantIds.stream()
-              .anyMatch(tenantId -> !TenantOwned.DEFAULT_TENANT_IDENTIFIER.equals(tenantId))) {
+              .anyMatch(tenantId -> !TenantOwned.DEFAULT_TENANT_ID.equals(tenantId))) {
         // Anything else than the default tenant was provided
         return Either.left(
             RestErrorMapper.createProblemDetail(
@@ -68,7 +68,7 @@ public final class MultiTenancyValidator {
                 INVALID_ARGUMENT.name()));
       }
 
-      return Either.right(List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+      return Either.right(List.of(TenantOwned.DEFAULT_TENANT_ID));
     }
 
     final List<String> violations = new ArrayList<>();
@@ -83,7 +83,7 @@ public final class MultiTenancyValidator {
               violations.add(
                   ERROR_MESSAGE_INVALID_TENANT.formatted(
                       commandName, tenantId, "tenant identifier is longer than 31 characters"));
-            } else if (!TenantOwned.DEFAULT_TENANT_IDENTIFIER.equals(tenantId)
+            } else if (!TenantOwned.DEFAULT_TENANT_ID.equals(tenantId)
                 && !TENANT_ID_MASK.matcher(tenantId).matches()) {
               violations.add(
                   ERROR_MESSAGE_INVALID_TENANT.formatted(

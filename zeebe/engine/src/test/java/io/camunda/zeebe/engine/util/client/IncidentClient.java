@@ -52,7 +52,7 @@ public final class IncidentClient {
     private final IncidentRecord incidentRecord;
 
     private long incidentKey = DEFAULT_KEY;
-    private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_ID);
     private Function<Long, Record<IncidentRecordValue>> expectation = SUCCESS_SUPPLIER;
 
     public ResolveIncidentClient(final CommandWriter writer, final long processInstanceKey) {
@@ -132,7 +132,7 @@ public final class IncidentClient {
               IncidentIntent.RESOLVE,
               username,
               incidentRecord,
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              TenantOwned.DEFAULT_TENANT_ID);
 
       return expectation.apply(position);
     }

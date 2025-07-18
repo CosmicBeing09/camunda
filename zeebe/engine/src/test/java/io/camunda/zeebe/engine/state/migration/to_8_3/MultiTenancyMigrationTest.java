@@ -115,13 +115,13 @@ public class MultiTenancyMigrationTest {
 
       // then
       assertProcessPersisted(
-          processState.getProcessByKeyAndTenant(123, TenantOwned.DEFAULT_TENANT_IDENTIFIER),
+          processState.getProcessByKeyAndTenant(123, TenantOwned.DEFAULT_TENANT_ID),
           new PersistedProcess(
               "processId",
               1,
               PersistedProcessState.ACTIVE,
               "resourceName",
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+              TenantOwned.DEFAULT_TENANT_ID,
               model));
       assertThat(legacyState.getProcessByKey(123)).isNull();
     }
@@ -146,13 +146,13 @@ public class MultiTenancyMigrationTest {
       // then
       assertProcessPersisted(
           processState.getProcessByProcessIdAndVersion(
-              wrapString("processId"), 1, TenantOwned.DEFAULT_TENANT_IDENTIFIER),
+              wrapString("processId"), 1, TenantOwned.DEFAULT_TENANT_ID),
           new PersistedProcess(
               "processId",
               1,
               PersistedProcessState.ACTIVE,
               "resourceName",
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+              TenantOwned.DEFAULT_TENANT_ID,
               model));
       assertThat(legacyState.getProcessByProcessIdAndVersion(wrapString("processId"), 1)).isNull();
     }
@@ -177,13 +177,13 @@ public class MultiTenancyMigrationTest {
       // then
       assertProcessPersisted(
           processState.getLatestProcessVersionByProcessId(
-              wrapString("processId"), TenantOwned.DEFAULT_TENANT_IDENTIFIER),
+              wrapString("processId"), TenantOwned.DEFAULT_TENANT_ID),
           new PersistedProcess(
               "processId",
               1,
               PersistedProcessState.ACTIVE,
               "resourceName",
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+              TenantOwned.DEFAULT_TENANT_ID,
               model));
       assertThat(legacyState.getLatestProcessVersionByProcessId(wrapString("processId"))).isNull();
     }
@@ -208,7 +208,7 @@ public class MultiTenancyMigrationTest {
       // then
       assertThat(
               processState.getLatestVersionDigest(
-                  wrapString("processId"), TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                  wrapString("processId"), TenantOwned.DEFAULT_TENANT_ID))
           .extracting(BufferUtil::bufferAsString)
           .isEqualTo("checksum");
       assertThat(legacyState.getLatestVersionDigest(wrapString("processId"))).isNull();
@@ -287,7 +287,7 @@ public class MultiTenancyMigrationTest {
 
       final PersistedDecision persistedDecision =
           decisionState
-              .findDecisionByTenantAndKey(TenantOwned.DEFAULT_TENANT_IDENTIFIER, 456)
+              .findDecisionByTenantAndKey(TenantOwned.DEFAULT_TENANT_ID, 456)
               .orElseThrow();
       assertThat(bufferAsString(persistedDecision.getDecisionRequirementsId())).isEqualTo("drgId");
       assertThat(persistedDecision.getDecisionRequirementsKey()).isEqualTo(123L);
@@ -295,7 +295,7 @@ public class MultiTenancyMigrationTest {
       assertThat(bufferAsString(persistedDecision.getDecisionName())).isEqualTo("decisionName");
       assertThat(persistedDecision.getDecisionKey()).isEqualTo(456L);
       assertThat(persistedDecision.getVersion()).isEqualTo(1);
-      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
 
     @Test
@@ -324,7 +324,7 @@ public class MultiTenancyMigrationTest {
 
       final DeployedDrg deployedDrg =
           decisionState
-              .findDecisionRequirementsByTenantAndKey(TenantOwned.DEFAULT_TENANT_IDENTIFIER, 123)
+              .findDecisionRequirementsByTenantAndKey(TenantOwned.DEFAULT_TENANT_ID, 123)
               .orElseThrow();
       assertThat(bufferAsString(deployedDrg.getDecisionRequirementsId())).isEqualTo("drgId");
       assertThat(deployedDrg.getDecisionRequirementsKey()).isEqualTo(123L);
@@ -333,7 +333,7 @@ public class MultiTenancyMigrationTest {
       assertThat(bufferAsString(deployedDrg.getResourceName())).isEqualTo("resourceName");
       assertThat(bufferAsString(deployedDrg.getResource())).isEqualTo("resource");
       assertThat(bufferAsString(deployedDrg.getChecksum())).isEqualTo("checksum");
-      assertThat(deployedDrg.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(deployedDrg.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
 
     @Test
@@ -362,7 +362,7 @@ public class MultiTenancyMigrationTest {
 
       final List<PersistedDecision> persistedDecisions =
           decisionState.findDecisionsByTenantAndDecisionRequirementsKey(
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER, 123);
+              TenantOwned.DEFAULT_TENANT_ID, 123);
       assertThat(persistedDecisions).hasSize(1);
 
       final PersistedDecision persistedDecision = persistedDecisions.get(0);
@@ -372,7 +372,7 @@ public class MultiTenancyMigrationTest {
       assertThat(bufferAsString(persistedDecision.getDecisionName())).isEqualTo("decisionName");
       assertThat(persistedDecision.getDecisionKey()).isEqualTo(456L);
       assertThat(persistedDecision.getVersion()).isEqualTo(1);
-      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
 
     @Test
@@ -402,7 +402,7 @@ public class MultiTenancyMigrationTest {
       final PersistedDecision persistedDecision =
           decisionState
               .findLatestDecisionByIdAndTenant(
-                  wrapString("decisionId"), TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                  wrapString("decisionId"), TenantOwned.DEFAULT_TENANT_ID)
               .orElseThrow();
       assertThat(bufferAsString(persistedDecision.getDecisionRequirementsId())).isEqualTo("drgId");
       assertThat(persistedDecision.getDecisionRequirementsKey()).isEqualTo(123L);
@@ -410,7 +410,7 @@ public class MultiTenancyMigrationTest {
       assertThat(bufferAsString(persistedDecision.getDecisionName())).isEqualTo("decisionName");
       assertThat(persistedDecision.getDecisionKey()).isEqualTo(456L);
       assertThat(persistedDecision.getVersion()).isEqualTo(1);
-      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
 
     @Test
@@ -440,7 +440,7 @@ public class MultiTenancyMigrationTest {
       final DeployedDrg deployedDrg =
           decisionState
               .findLatestDecisionRequirementsByTenantAndId(
-                  TenantOwned.DEFAULT_TENANT_IDENTIFIER, wrapString("drgId"))
+                  TenantOwned.DEFAULT_TENANT_ID, wrapString("drgId"))
               .orElseThrow();
       assertThat(bufferAsString(deployedDrg.getDecisionRequirementsId())).isEqualTo("drgId");
       assertThat(deployedDrg.getDecisionRequirementsKey()).isEqualTo(123L);
@@ -449,7 +449,7 @@ public class MultiTenancyMigrationTest {
       assertThat(bufferAsString(deployedDrg.getResourceName())).isEqualTo("resourceName");
       assertThat(bufferAsString(deployedDrg.getResource())).isEqualTo("resource");
       assertThat(bufferAsString(deployedDrg.getChecksum())).isEqualTo("checksum");
-      assertThat(deployedDrg.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(deployedDrg.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
 
     @Test
@@ -502,14 +502,14 @@ public class MultiTenancyMigrationTest {
 
       // by deleting the second version, we use decisionKeyByDecisionIdAndVersion to find the
       // new latest drg of the decision. We can then use this to make our assertion below
-      decisionState.deleteDecision(decisionV2.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+      decisionState.deleteDecision(decisionV2.setTenantId(TenantOwned.DEFAULT_TENANT_ID));
       decisionState.deleteDecisionRequirements(
-          drgV2.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+          drgV2.setTenantId(TenantOwned.DEFAULT_TENANT_ID));
 
       final PersistedDecision persistedDecision =
           decisionState
               .findLatestDecisionByIdAndTenant(
-                  wrapString("decisionId"), TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                  wrapString("decisionId"), TenantOwned.DEFAULT_TENANT_ID)
               .orElseThrow();
       assertThat(bufferAsString(persistedDecision.getDecisionRequirementsId())).isEqualTo("drgId");
       assertThat(persistedDecision.getDecisionRequirementsKey()).isEqualTo(123L);
@@ -517,7 +517,7 @@ public class MultiTenancyMigrationTest {
       assertThat(bufferAsString(persistedDecision.getDecisionName())).isEqualTo("decisionName");
       assertThat(persistedDecision.getDecisionKey()).isEqualTo(456L);
       assertThat(persistedDecision.getVersion()).isEqualTo(1);
-      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(persistedDecision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
   }
 
@@ -559,7 +559,7 @@ public class MultiTenancyMigrationTest {
       // then
       final AtomicReference<StoredMessage> message = new AtomicReference<>();
       messageState.visitMessages(
-          TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+          TenantOwned.DEFAULT_TENANT_ID,
           messageRecord.getNameBuffer(),
           messageRecord.getCorrelationKeyBuffer(),
           storedMessage -> {
@@ -586,7 +586,7 @@ public class MultiTenancyMigrationTest {
               messageRecord.getDeadline(),
               messageRecord.getVariables(),
               messageRecord.getMessageId(),
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              TenantOwned.DEFAULT_TENANT_ID);
     }
   }
 
@@ -624,7 +624,7 @@ public class MultiTenancyMigrationTest {
       final AtomicReference<MessageStartEventSubscription> subscriptionRef =
           new AtomicReference<>();
       state.visitSubscriptionsByMessageName(
-          TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+          TenantOwned.DEFAULT_TENANT_ID,
           record.getMessageNameBuffer(),
           subscriptionRef::set);
 
@@ -695,7 +695,7 @@ public class MultiTenancyMigrationTest {
               record.getMessageKey(),
               record.getCorrelationKey(),
               record.getVariables(),
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              TenantOwned.DEFAULT_TENANT_ID);
     }
   }
 
@@ -742,7 +742,7 @@ public class MultiTenancyMigrationTest {
       // then
       final AtomicReference<MessageSubscription> subscriptionRef = new AtomicReference<>();
       state.visitSubscriptions(
-          TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+          TenantOwned.DEFAULT_TENANT_ID,
           record.getMessageNameBuffer(),
           record.getCorrelationKeyBuffer(),
           subscription -> {
@@ -773,7 +773,7 @@ public class MultiTenancyMigrationTest {
               record.getCorrelationKey(),
               record.isInterrupting(),
               record.getVariables(),
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              TenantOwned.DEFAULT_TENANT_ID);
     }
   }
 
@@ -824,7 +824,7 @@ public class MultiTenancyMigrationTest {
           state.getSubscription(
               record.getElementInstanceKey(),
               record.getMessageNameBuffer(),
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              TenantOwned.DEFAULT_TENANT_ID);
       assertThat(subscription).isNotNull();
       assertThat(subscription.getKey()).isEqualTo(key);
       assertThat(subscription.getRecord())
@@ -851,7 +851,7 @@ public class MultiTenancyMigrationTest {
               record.isInterrupting(),
               record.getVariables(),
               record.getElementId(),
-              TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              TenantOwned.DEFAULT_TENANT_ID);
     }
   }
 
@@ -919,7 +919,7 @@ public class MultiTenancyMigrationTest {
       final List<JobRecord> actualJobs = new ArrayList<>();
       jobState.forEachActivatableJobs(
           wrapString(jobType),
-          List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER),
+          List.of(TenantOwned.DEFAULT_TENANT_ID),
           (key, job) -> {
             assertThat(key).isEqualTo(jobKey);
             Assertions.assertThat(job)
@@ -938,7 +938,7 @@ public class MultiTenancyMigrationTest {
                 .hasProcessInstanceKey(processInstanceKey)
                 .hasProcessDefinitionVersion(version)
                 .hasCustomHeaders(customHeaders)
-                .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+                .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
             actualJobs.add(job);
             return true;
           });
@@ -965,7 +965,7 @@ public class MultiTenancyMigrationTest {
           new LegacyProcessState.LegacyProcessVersionManager(1, zeebeDb, transactionContext);
       processIdKey = new DbString();
       final var tenantKey = new DbString();
-      tenantKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      tenantKey.wrapString(TenantOwned.DEFAULT_TENANT_ID);
       tenantAwareProcessId = new DbTenantAwareKey<>(tenantKey, processIdKey, PlacementType.PREFIX);
       processVersionColumnFamily =
           zeebeDb.createColumnFamily(

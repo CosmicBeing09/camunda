@@ -58,7 +58,7 @@ public class ProcessInstanceWriterIT extends OperateSearchAbstractIT {
             .setStartDate(OffsetDateTime.now())
             .setEndDate(OffsetDateTime.now())
             .setTreePath("PI_4503599627370497")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
     testSearchRepository.createOrUpdateDocumentFromObject(
         listViewTemplate.getFullQualifiedName(), processInstance.getId(), processInstance);
@@ -101,7 +101,7 @@ public class ProcessInstanceWriterIT extends OperateSearchAbstractIT {
             .setStartDate(OffsetDateTime.now())
             .setEndDate(OffsetDateTime.now())
             .setTreePath("PI_4503599627370497")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
     testSearchRepository.createOrUpdateDocumentFromObject(
         listViewTemplate.getFullQualifiedName(), processInstance.getId(), processInstance);
@@ -143,7 +143,7 @@ public class ProcessInstanceWriterIT extends OperateSearchAbstractIT {
             .setStartDate(OffsetDateTime.now())
             .setEndDate(OffsetDateTime.now())
             .setTreePath("PI_4503599627370497")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
     testSearchRepository.createOrUpdateDocumentFromObject(
         listViewTemplate.getFullQualifiedName(), processInstance.getId(), processInstance);

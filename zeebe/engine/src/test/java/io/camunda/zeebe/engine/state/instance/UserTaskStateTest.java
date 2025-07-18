@@ -179,7 +179,7 @@ public class UserTaskStateTest {
       final LifecycleState expectedLifecycleState) {
     assertUserTask(
         expectedRecord,
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         storedRecord,
         expectedLifecycleState);
   }

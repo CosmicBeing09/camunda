@@ -24,7 +24,7 @@ public class JobActivationPropertiesImpl extends UnpackedObject implements JobAc
       new ArrayProperty<>("variables", StringValue::new);
   private final ArrayProperty<StringValue> tenantIdsProp =
       new ArrayProperty<>(
-          "tenantIds", () -> new StringValue(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+          "tenantIds", () -> new StringValue(TenantOwned.DEFAULT_TENANT_ID));
 
   public JobActivationPropertiesImpl() {
     super(4);

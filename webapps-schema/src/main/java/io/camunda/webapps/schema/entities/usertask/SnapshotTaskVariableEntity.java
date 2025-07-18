@@ -19,7 +19,7 @@ public class SnapshotTaskVariableEntity
         TenantOwned {
 
   private String id;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
   private long key;
   private int partitionId;
   private String taskId;

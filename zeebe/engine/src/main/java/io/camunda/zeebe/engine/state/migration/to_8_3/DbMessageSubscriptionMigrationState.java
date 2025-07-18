@@ -36,7 +36,7 @@ public class DbMessageSubscriptionMigrationState {
   public void migrateMessageSubscriptionForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_ID);
 
     /*
     - `DEPRECATED_MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY` -> `MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY`

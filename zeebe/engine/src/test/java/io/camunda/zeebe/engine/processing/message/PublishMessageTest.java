@@ -65,7 +65,7 @@ public final class PublishMessageTest {
         .hasCorrelationKey("order-123")
         .hasTimeToLive(1000L)
         .hasMessageId("")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

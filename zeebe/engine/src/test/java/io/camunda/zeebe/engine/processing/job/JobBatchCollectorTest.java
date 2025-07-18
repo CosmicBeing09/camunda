@@ -357,14 +357,14 @@ final class JobBatchCollectorTest {
             .setWorker("test");
 
     final List<String> tenantIdsList =
-        tenantIds.length > 0 ? List.of(tenantIds) : List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        tenantIds.length > 0 ? List.of(tenantIds) : List.of(TenantOwned.DEFAULT_TENANT_ID);
     batchRecord.setTenantIds(tenantIdsList);
 
     return new MockTypedRecord<>(state.getKeyGenerator().nextKey(), metadata, batchRecord);
   }
 
   private Job createJob(final long variableScopeKey) {
-    return createJob(variableScopeKey, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return createJob(variableScopeKey, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private Job createJob(final long variableScopeKey, final String tenantId) {

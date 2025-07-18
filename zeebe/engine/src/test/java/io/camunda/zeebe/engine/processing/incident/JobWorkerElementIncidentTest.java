@@ -102,7 +102,7 @@ public class JobWorkerElementIncidentTest {
             [NO_VARIABLE_FOUND] No variable found with name 'x'""")
         .hasElementId(TASK_ELEMENT_ID)
         .hasElementInstanceKey(recordThatLeadsToIncident.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L)
         .hasVariableScopeKey(recordThatLeadsToIncident.getKey());
   }
@@ -133,7 +133,7 @@ public class JobWorkerElementIncidentTest {
             "Expected result of the expression 'false' to be 'STRING', but was 'BOOLEAN'.")
         .hasElementId(TASK_ELEMENT_ID)
         .hasElementInstanceKey(recordThatLeadsToIncident.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L)
         .hasVariableScopeKey(recordThatLeadsToIncident.getKey());
   }
@@ -164,7 +164,7 @@ public class JobWorkerElementIncidentTest {
             "Expected result of the expression '\"\"' to be a not-empty string, but was an empty string.")
         .hasElementId(TASK_ELEMENT_ID)
         .hasElementInstanceKey(recordThatLeadsToIncident.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L)
         .hasVariableScopeKey(recordThatLeadsToIncident.getKey());
   }
@@ -241,7 +241,7 @@ public class JobWorkerElementIncidentTest {
             [NO_VARIABLE_FOUND] No variable found with name 'x'""")
         .hasElementId(TASK_ELEMENT_ID)
         .hasElementInstanceKey(recordThatLeadsToIncident.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L)
         .hasVariableScopeKey(recordThatLeadsToIncident.getKey());
   }
@@ -275,7 +275,7 @@ public class JobWorkerElementIncidentTest {
             "Expected result of the expression 'false' to be 'NUMBER', but was 'BOOLEAN'.")
         .hasElementId(TASK_ELEMENT_ID)
         .hasElementInstanceKey(recordThatLeadsToIncident.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L)
         .hasVariableScopeKey(recordThatLeadsToIncident.getKey());
   }

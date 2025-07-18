@@ -295,7 +295,7 @@ public final class EventSubscriptionIncidentTest {
         .hasProcessInstanceKey(processInstanceKey)
         .hasElementId(failureEvent.getValue().getElementId())
         .hasElementInstanceKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L);
   }
 
@@ -331,7 +331,7 @@ public final class EventSubscriptionIncidentTest {
         .hasProcessInstanceKey(processInstanceKey)
         .hasElementId(failureEvent.getValue().getElementId())
         .hasElementInstanceKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasJobKey(-1L);
   }
 

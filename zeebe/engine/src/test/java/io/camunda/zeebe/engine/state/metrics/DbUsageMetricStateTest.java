@@ -37,13 +37,13 @@ public class DbUsageMetricStateTest {
     final var eventTime = InstantSource.system().millis();
 
     // when
-    state.recordMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     final var actual = state.getUsageOverTime(eventTime);
     assertThat(actual)
         .containsExactlyInAnyOrderEntriesOf(
-            Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
+            Map.of(TenantOwned.DEFAULT_TENANT_ID, List.of(123L)));
   }
 
   @Test
@@ -52,7 +52,7 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.recordMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_ID);
     state.recordMetric(eventTime2, 10L, "tenant1");
     state.recordMetric(eventTime2, 11L, "tenant1");
     state.recordMetric(eventTime2, 12L, "tenant2");
@@ -64,7 +64,7 @@ public class DbUsageMetricStateTest {
     // then
     assertThat(actual1)
         .containsExactlyInAnyOrderEntriesOf(
-            Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
+            Map.of(TenantOwned.DEFAULT_TENANT_ID, List.of(123L)));
     assertThat(actual2)
         .containsExactlyInAnyOrderEntriesOf(
             Map.of("tenant1", List.of(10L, 11L), "tenant2", List.of(12L)));
@@ -76,13 +76,13 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.recordMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_ID);
     state.recordMetric(eventTime2, 10L, "tenant1");
     state.recordMetric(eventTime2, 11L, "tenant1");
     state.recordMetric(eventTime2, 12L, "tenant2");
     assertThat(state.getUsageOverTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
-            Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
+            Map.of(TenantOwned.DEFAULT_TENANT_ID, List.of(123L)));
     assertThat(state.getUsageOverTime(eventTime2))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of("tenant1", List.of(10L, 11L), "tenant2", List.of(12L)));
@@ -93,7 +93,7 @@ public class DbUsageMetricStateTest {
     // then
     assertThat(state.getUsageOverTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
-            Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
+            Map.of(TenantOwned.DEFAULT_TENANT_ID, List.of(123L)));
     assertThat(state.getUsageOverTime(eventTime2)).isEmpty();
   }
 }

@@ -28,7 +28,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
   private final BinaryProperty checksumProp = new BinaryProperty("checksum", new UnsafeBuffer());
   private final StringProperty resourceNameProp = new StringProperty("resourceName", "");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty deploymentKeyProp = new LongProperty("deploymentKey", -1L);
   private final StringProperty versionTagProp = new StringProperty("versionTag", "");
   private final BinaryProperty resourceProp = new BinaryProperty("resource", new UnsafeBuffer());

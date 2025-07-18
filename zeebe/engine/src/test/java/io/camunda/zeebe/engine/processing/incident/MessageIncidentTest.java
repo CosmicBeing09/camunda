@@ -212,7 +212,7 @@ public final class MessageIncidentTest {
         .hasElementInstanceKey(failureEvent.getKey())
         .hasJobKey(-1L)
         .hasVariableScopeKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -243,7 +243,7 @@ public final class MessageIncidentTest {
         .hasElementInstanceKey(failureEvent.getKey())
         .hasJobKey(-1L)
         .hasVariableScopeKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

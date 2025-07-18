@@ -86,7 +86,7 @@ public class ActivatableJobsPushTest {
         new JobActivationPropertiesImpl()
             .setWorker(worker, 0, worker.capacity())
             .setTimeout(timeout)
-            .setTenantIds(List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+            .setTenantIds(List.of(TenantOwned.DEFAULT_TENANT_ID))
             .setFetchVariables(
                 List.of(new StringValue("a"), new StringValue("b"), new StringValue("c")));
     jobStream = JOB_STREAMER.addJobStream(BufferUtil.wrapString(jobType), jobActivationProperties);
@@ -266,7 +266,7 @@ public class ActivatableJobsPushTest {
   private Long createJob(
       final String jobType, final String processId, final Map<String, Object> variables) {
     final Record<JobRecordValue> jobRecord =
-        ENGINE.createJob(jobType, processId, variables, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        ENGINE.createJob(jobType, processId, variables, TenantOwned.DEFAULT_TENANT_ID);
     activeProcessInstances.add(jobRecord.getValue().getProcessInstanceKey());
     return jobRecord.getKey();
   }
@@ -301,7 +301,7 @@ public class ActivatableJobsPushTest {
               final JobRecord jobRecord = activatedJob.jobRecord();
               assertThat(jobRecord.getWorkerBuffer()).isEqualTo(worker);
               assertThat(jobRecord.getVariables()).isEqualTo(variables);
-              assertThat(jobRecord.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+              assertThat(jobRecord.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
             });
   }
 }

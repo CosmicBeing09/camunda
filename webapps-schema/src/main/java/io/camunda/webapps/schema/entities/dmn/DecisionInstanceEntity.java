@@ -52,7 +52,7 @@ public class DecisionInstanceEntity
   private String result;
   private List<DecisionInstanceInputEntity> evaluatedInputs = new ArrayList<>();
   private List<DecisionInstanceOutputEntity> evaluatedOutputs = new ArrayList<>();
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   @JsonIgnore private Object[] sortValues;
 
