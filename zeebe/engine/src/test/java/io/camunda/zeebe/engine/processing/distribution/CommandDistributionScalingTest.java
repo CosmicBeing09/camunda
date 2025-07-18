@@ -25,7 +25,7 @@ import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
@@ -87,7 +87,7 @@ public class CommandDistributionScalingTest {
             distributionState,
             writers,
             1,
-            RoutingInfo.dynamic(state.getRoutingState(), RoutingInfo.forStaticPartitions(2)),
+            PartitionRouting.dynamic(state.getRoutingState(), PartitionRouting.forStaticPartitions(2)),
             mockInterpartitionCommandSender,
             mock(DistributionMetrics.class));
   }

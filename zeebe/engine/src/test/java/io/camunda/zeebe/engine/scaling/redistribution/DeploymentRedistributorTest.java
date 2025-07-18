@@ -17,8 +17,8 @@ import io.camunda.zeebe.engine.processing.deployment.distribute.DeploymentDistri
 import io.camunda.zeebe.engine.processing.deployment.distribute.DeploymentRedistributor;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo.StaticRoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting.StaticRoutingInfo;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
@@ -64,8 +64,8 @@ public class DeploymentRedistributorTest {
     routingState.initializeRoutingInfo(2);
     routingState.setDesiredPartitions(Set.of(1, 2, 3), 239123L);
 
-    final RoutingInfo routingInfo =
-        RoutingInfo.dynamic(routingState, new StaticRoutingInfo(Set.of(1, 2), 2));
+    final PartitionRouting routingInfo =
+        PartitionRouting.dynamic(routingState, new StaticRoutingInfo(Set.of(1, 2), 2));
 
     deploymentRedistributor =
         new DeploymentRedistributor(

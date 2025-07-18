@@ -23,9 +23,9 @@ import org.agrona.DirectBuffer;
  * <p>The information always reflects the current persisted routing info from {@link
  * DbRoutingState}.
  */
-public interface RoutingInfo {
+public interface PartitionRouting {
   /** Returns the current set of partitions. */
-  Set<Integer> partitions();
+  Set<Integer> getCurrentPartitionIds();
 
   /** Returns the desired set of partitions. */
   Set<Integer> desiredPartitions();
@@ -37,10 +37,10 @@ public interface RoutingInfo {
   boolean isPartitionScaling(final int partitionId);
 
   /**
-   * Creates a {@link RoutingInfo} instance for static partitions. This is used when the partitions
+   * Creates a {@link PartitionRouting} instance for static partitions. This is used when the partitions
    * are fixed and known at startup. Only relevant for testing.
    */
-  static RoutingInfo forStaticPartitions(final int partitionCount) {
+  static PartitionRouting forStaticPartitions(final int partitionCount) {
     final var partitions =
         IntStream.rangeClosed(Protocol.START_PARTITION_ID, partitionCount)
             .boxed()
@@ -48,11 +48,11 @@ public interface RoutingInfo {
     return new StaticRoutingInfo(partitions, partitionCount);
   }
 
-  static RoutingInfo dynamic(final RoutingState routingState, final RoutingInfo fallback) {
+  static PartitionRouting dynamic(final RoutingState routingState, final PartitionRouting fallback) {
     return new DynamicRoutingInfo(routingState, fallback);
   }
 
-  class StaticRoutingInfo implements RoutingInfo {
+  class StaticRoutingInfo implements PartitionRouting {
     private final Set<Integer> otherPartitions;
     private final int partitionCount;
 
@@ -62,13 +62,13 @@ public interface RoutingInfo {
     }
 
     @Override
-    public Set<Integer> partitions() {
+    public Set<Integer> getCurrentPartitionIds() {
       return otherPartitions;
     }
 
     @Override
     public Set<Integer> desiredPartitions() {
-      return partitions();
+      return getCurrentPartitionIds();
     }
 
     @Override
@@ -86,19 +86,19 @@ public interface RoutingInfo {
    * Naive implementation that always looks up the routing information from the {@link
    * RoutingState}. Later on, we might want to cache this information.
    */
-  class DynamicRoutingInfo implements RoutingInfo {
+  class DynamicRoutingInfo implements PartitionRouting {
     private final RoutingState routingState;
-    private final RoutingInfo fallback;
+    private final PartitionRouting fallback;
 
-    public DynamicRoutingInfo(final RoutingState routingState, final RoutingInfo fallback) {
+    public DynamicRoutingInfo(final RoutingState routingState, final PartitionRouting fallback) {
       this.routingState = routingState;
       this.fallback = fallback;
     }
 
     @Override
-    public Set<Integer> partitions() {
+    public Set<Integer> getCurrentPartitionIds() {
       if (!routingState.isInitialized()) {
-        return fallback.partitions();
+        return fallback.getCurrentPartitionIds();
       }
       return routingState.currentPartitions();
     }
@@ -106,7 +106,7 @@ public interface RoutingInfo {
     @Override
     public Set<Integer> desiredPartitions() {
       if (!routingState.isInitialized()) {
-        return fallback.partitions();
+        return fallback.getCurrentPartitionIds();
       }
       return routingState.desiredPartitions();
     }
@@ -126,7 +126,7 @@ public interface RoutingInfo {
 
     @Override
     public boolean isPartitionScaling(final int partitionId) {
-      return !partitions().contains(partitionId) && desiredPartitions().contains(partitionId);
+      return !getCurrentPartitionIds().contains(partitionId) && desiredPartitions().contains(partitionId);
     }
   }
 }

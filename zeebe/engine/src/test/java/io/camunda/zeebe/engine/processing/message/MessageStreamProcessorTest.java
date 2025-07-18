@@ -29,7 +29,7 @@ import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSen
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.util.StreamProcessorRule;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
@@ -84,7 +84,7 @@ public final class MessageStreamProcessorTest {
                 mockDistributionState,
                 writers,
                 1,
-                RoutingInfo.forStaticPartitions(1),
+                PartitionRouting.forStaticPartitions(1),
                 mockInterpartitionCommandSender,
                 mock(DistributionMetrics.class)));
 

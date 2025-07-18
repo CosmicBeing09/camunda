@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
 import io.camunda.zeebe.engine.state.immutable.DistributionState.PendingDistributionVisitor;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
@@ -48,7 +48,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
-  private final RoutingInfo routingInfo;
+  private final PartitionRouting routingInfo;
   private final InterPartitionCommandSender interPartitionCommandSender;
 
   private final int currentPartitionId;
@@ -70,7 +70,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
       final DistributionState distributionState,
       final Writers writers,
       final int currentPartition,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final InterPartitionCommandSender partitionCommandSender,
       final DistributionMetrics distributionMetrics) {
     this.distributionState = distributionState;

@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.distribution;
 
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
@@ -54,7 +54,7 @@ public final class CommandRedistributor implements StreamProcessorLifecycleAware
   private static final Logger LOG = LoggerFactory.getLogger(CommandRedistributor.class);
 
   private final CommandDistributionBehavior distributionBehavior;
-  private final RoutingInfo routingInfo;
+  private final PartitionRouting routingInfo;
 
   /**
    * Tracks the number of attempted retry cycles for each retriable distribution. Note that this
@@ -64,7 +64,7 @@ public final class CommandRedistributor implements StreamProcessorLifecycleAware
   private final Map<RetriableDistribution, Long> retryCyclesPerDistribution = new HashMap<>();
 
   public CommandRedistributor(
-      final CommandDistributionBehavior distributionBehavior, final RoutingInfo routingInfo) {
+      final CommandDistributionBehavior distributionBehavior, final PartitionRouting routingInfo) {
     this.distributionBehavior = distributionBehavior;
     this.routingInfo = routingInfo;
   }

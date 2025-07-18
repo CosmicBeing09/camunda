@@ -61,7 +61,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
 import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -95,8 +95,8 @@ public final class EngineProcessors {
     final var processingState = typedRecordProcessorContext.getProcessingState();
     final var keyGenerator = processingState.getKeyGenerator();
     final var routingInfo =
-        RoutingInfo.dynamic(
-            processingState.getRoutingState(), RoutingInfo.forStaticPartitions(partitionsCount));
+        PartitionRouting.dynamic(
+            processingState.getRoutingState(), PartitionRouting.forStaticPartitions(partitionsCount));
     final var scheduledTaskStateFactory =
         typedRecordProcessorContext.getScheduledTaskStateFactory();
     final var writers = typedRecordProcessorContext.getWriters();
@@ -344,7 +344,7 @@ public final class EngineProcessors {
       final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final DueDateTimerChecker timerChecker,
       final JobStreamer jobStreamer,
       final ProcessingMetrics jobMetrics,
@@ -376,7 +376,7 @@ public final class EngineProcessors {
       final DueDateTimerChecker timerChecker,
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final InstantSource clock,
       final EngineConfiguration config,
       final AuthorizationCheckBehavior authCheckBehavior,
@@ -413,7 +413,7 @@ public final class EngineProcessors {
       final EngineConfiguration config,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
 
     // on deployment partition CREATE Command is received and processed
     // it will cause a distribution to other partitions
@@ -589,7 +589,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final ProcessingState processingState,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
 
     // periodically retries command distribution
     typedRecordProcessors.withListener(

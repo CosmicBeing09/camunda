@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejection
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
@@ -43,14 +43,14 @@ public final class BatchOperationCreateProcessor
   private final TypedRejectionWriter rejectionWriter;
   private final AsyncResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final RoutingInfo routingInfo;
+  private final PartitionRouting routingInfo;
 
   public BatchOperationCreateProcessor(
       final Writers writers,
       final KeyGenerator keyGenerator,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
     stateWriter = writers.state();
     rejectionWriter = writers.rejection();
     responseWriter = writers.response();
@@ -85,7 +85,7 @@ public final class BatchOperationCreateProcessor
     final var recordWithKey = new BatchOperationCreationRecord();
     recordWithKey.wrap(recordValue);
     recordWithKey.setBatchOperationKey(key);
-    recordWithKey.setPartitionIds(routingInfo.partitions());
+    recordWithKey.setPartitionIds(routingInfo.getCurrentPartitionIds());
 
     stateWriter.appendFollowUpEvent(key, BatchOperationIntent.CREATED, recordWithKey);
     responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey, command);
