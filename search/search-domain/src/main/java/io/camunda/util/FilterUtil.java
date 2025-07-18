@@ -14,7 +14,7 @@ public final class FilterUtil {
 
   private FilterUtil() {}
 
-  public static <T> Operation<T> mapDefaultToOperation(final List<T> values) {
+  public static <T> Operation<T> buildOperationFromList(final List<T> values) {
     if (values.isEmpty()) {
       return null;
     }
@@ -22,7 +22,7 @@ public final class FilterUtil {
   }
 
   @SafeVarargs
-  public static <T> Operation<T> mapDefaultToOperation(final T value, final T... values) {
-    return mapDefaultToOperation(CollectionUtil.collectValues(value, values));
+  public static <T> Operation<T> buildOperationFromValues(final T value, final T... values) {
+    return buildOperationFromList(CollectionUtil.collectValues(value, values));
   }
 }

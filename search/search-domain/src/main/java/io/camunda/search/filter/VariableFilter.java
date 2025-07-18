@@ -41,11 +41,11 @@ public record VariableFilter(
     }
 
     public Builder names(final String value, final String... values) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return nameOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder names(final List<String> values) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(values));
+      return nameOperations(FilterUtil.buildOperationFromList(values));
     }
 
     @SafeVarargs
@@ -68,11 +68,11 @@ public record VariableFilter(
     }
 
     public Builder values(final String value, final String... values) {
-      return valueOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return valueOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder values(final List<String> values) {
-      return valueOperations(FilterUtil.mapDefaultToOperation(values));
+      return valueOperations(FilterUtil.buildOperationFromList(values));
     }
 
     @SafeVarargs
@@ -87,11 +87,11 @@ public record VariableFilter(
     }
 
     public Builder scopeKeys(final Long value, final Long... values) {
-      return scopeKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return scopeKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder scopeKeys(final List<Long> values) {
-      return scopeKeyOperations(FilterUtil.mapDefaultToOperation(values));
+      return scopeKeyOperations(FilterUtil.buildOperationFromList(values));
     }
 
     @SafeVarargs
@@ -112,7 +112,7 @@ public record VariableFilter(
     }
 
     public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return processInstanceKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder variableKeyOperations(final List<Operation<Long>> operations) {
@@ -121,7 +121,7 @@ public record VariableFilter(
     }
 
     public Builder variableKeys(final Long value, final Long... values) {
-      return variableKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return variableKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs

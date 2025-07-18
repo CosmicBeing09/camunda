@@ -31,7 +31,7 @@ FilterBase {
     }
 
     public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIdFilters(FilterUtil.mapDefaultToOperation(value, values));
+      return batchOperationIdFilters(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder replaceBatchOperationIdFilters(final List<Operation<String>> operations) {
@@ -45,7 +45,7 @@ FilterBase {
       return batchOperationIdFilters(collectValues(operation, operations));
     }
 
-    public Builder operationTypeFiltersUpdated(final String value, final String... values) {
+    public Builder operationTypeFilters(final String value, final String... values) {
       return operationTypeFilters(collectValues(value, values));
     }
 
@@ -75,5 +75,5 @@ FilterBase {
     implements
 public record BatchOperationFilter(
     List<Operation<String>> batchOperationIdFilters,
-    List<String> operationTypes,
+    List<String> operationTypeFilters,
     List<String> state)

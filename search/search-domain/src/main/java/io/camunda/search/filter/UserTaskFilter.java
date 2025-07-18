@@ -95,7 +95,7 @@ public record UserTaskFilter(
     }
 
     public Builder assignees(final String value, final String... values) {
-      return assigneeOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return assigneeOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -110,7 +110,7 @@ public record UserTaskFilter(
     }
 
     public Builder priorities(final Integer value, final Integer... values) {
-      return priorityOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return priorityOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -152,7 +152,7 @@ public record UserTaskFilter(
     }
 
     public Builder candidateUsers(final String value, final String... values) {
-      return candidateUserOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return candidateUserOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -167,7 +167,7 @@ public record UserTaskFilter(
     }
 
     public Builder candidateGroups(final String value, final String... values) {
-      return candidateGroupOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return candidateGroupOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs

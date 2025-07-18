@@ -95,7 +95,7 @@ public record FlowNodeInstanceFilter(
     }
 
     public FlowNodeInstanceFilter.Builder states(final String value, final String... values) {
-      return stateOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return stateOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs

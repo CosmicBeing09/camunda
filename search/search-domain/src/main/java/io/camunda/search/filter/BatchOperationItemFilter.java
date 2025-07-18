@@ -37,7 +37,7 @@ public record BatchOperationItemFilter(
     }
 
     public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return batchOperationIdOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder replaceBatchOperationIdOperations(final List<Operation<String>> operations) {
@@ -57,7 +57,7 @@ public record BatchOperationItemFilter(
     }
 
     public Builder itemKeys(final Long value, final Long... values) {
-      return itemKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return itemKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder replaceItemKeyOperations(final List<Operation<Long>> operations) {
@@ -77,7 +77,7 @@ public record BatchOperationItemFilter(
     }
 
     public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return processInstanceKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder replaceProcessInstanceKeyOperations(final List<Operation<Long>> operations) {

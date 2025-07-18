@@ -58,11 +58,11 @@ public record UserFilter(
     }
 
     public Builder usernames(final Set<String> value) {
-      return usernameOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return usernameOperations(FilterUtil.buildOperationFromList(new ArrayList<>(value)));
     }
 
     public Builder usernames(final String value, final String... values) {
-      return usernameOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return usernameOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -77,11 +77,11 @@ public record UserFilter(
     }
 
     public Builder names(final Set<String> value) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return nameOperations(FilterUtil.buildOperationFromList(new ArrayList<>(value)));
     }
 
     public Builder names(final String value, final String... values) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return nameOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -96,11 +96,11 @@ public record UserFilter(
     }
 
     public Builder emails(final Set<String> value) {
-      return emailOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return emailOperations(FilterUtil.buildOperationFromList(new ArrayList<>(value)));
     }
 
     public Builder emails(final String value, final String... values) {
-      return emailOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return emailOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs

@@ -83,7 +83,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder processInstanceKeys(final Long value, final Long... values) {
-      return processInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return processInstanceKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder replaceProcessInstanceKeyOperations(final List<Operation<Long>> operations) {
@@ -104,7 +104,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder parentProcessInstanceKeys(final Long value, final Long... values) {
-      return parentProcessInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return parentProcessInstanceKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -120,7 +120,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder parentFlowNodeInstanceKeys(final Long value, final Long... values) {
-      return parentFlowNodeInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return parentFlowNodeInstanceKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -157,7 +157,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder states(final String value, final String... values) {
-      return stateOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return stateOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -177,7 +177,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder tenantIds(final String value, final String... values) {
-      return tenantIdOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return tenantIdOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -197,7 +197,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return batchOperationIdOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -207,7 +207,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder errorMessages(final String value, final String... values) {
-      return errorMessageOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return errorMessageOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
@@ -238,7 +238,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder flowNodeIds(final String value, final String... values) {
-      return flowNodeIdOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return flowNodeIdOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     public Builder hasFlowNodeInstanceIncident(final Boolean value) {
@@ -253,7 +253,7 @@ public record ProcessDefinitionStatisticsFilter(
     }
 
     public Builder flowNodeInstanceState(final String value, final String... values) {
-      return flowNodeInstanceStateOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return flowNodeInstanceStateOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs
