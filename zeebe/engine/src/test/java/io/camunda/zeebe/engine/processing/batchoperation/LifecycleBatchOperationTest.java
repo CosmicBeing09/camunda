@@ -83,7 +83,7 @@ public final class LifecycleBatchOperationTest extends AbstractBatchOperationTes
     // and send the execute command
     engine
         .batchOperation()
-        .newExecution()
+        .newExecutionClient()
         .withBatchOperationKey(batchOperationKey)
         .executeWithoutExpectation();
 

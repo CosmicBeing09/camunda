@@ -233,7 +233,7 @@ public class CommandDistributionIdempotencyTest {
                 () ->
                     ENGINE
                         .batchOperation()
-                        .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+                        .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
                         .withFilter(
                             new UnsafeBuffer(
                                 MsgPackConverter.convertToMsgPack(
@@ -684,7 +684,7 @@ public class CommandDistributionIdempotencyTest {
   private static Record<BatchOperationCreationRecordValue> createBatchOperation() {
     return ENGINE
         .batchOperation()
-        .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+        .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
         .withFilter(
             new UnsafeBuffer(
                 MsgPackConverter.convertToMsgPack(

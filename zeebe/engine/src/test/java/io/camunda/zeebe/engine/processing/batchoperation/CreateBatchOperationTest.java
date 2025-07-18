@@ -35,7 +35,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     final var batchOperationKey =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .withFilter(new UnsafeBuffer())
             .expectRejection()
             .create()
@@ -59,7 +59,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     final var batchOperationKey =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .withFilter(new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{}")))
             .expectRejection()
             .create()
@@ -102,7 +102,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     final long batchOperationKey =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .withFilter(filterBuffer)
             .create()
             .getValue()
@@ -131,7 +131,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     final var batchOperationRecord =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .withFilter(
                 new UnsafeBuffer(
                     MsgPackConverter.convertToMsgPack(new ProcessInstanceFilter.Builder().build())))
@@ -150,7 +150,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     final var batchOperationRecord =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .expectRejection()
             .withFilter(
                 new UnsafeBuffer(
@@ -199,7 +199,7 @@ public final class CreateBatchOperationTest extends AbstractBatchOperationTest {
     final var batchOperationRecord =
         engine
             .batchOperation()
-            .newCreation(batchOperationType)
+            .newCreationClient(batchOperationType)
             .withFilter(
                 new UnsafeBuffer(
                     MsgPackConverter.convertToMsgPack(new ProcessInstanceFilter.Builder().build())))

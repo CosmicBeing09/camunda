@@ -68,7 +68,7 @@ public final class ExecuteBatchOperationTest extends AbstractBatchOperationTest 
     // when
     engine
         .batchOperation()
-        .newExecution()
+        .newExecutionClient()
         .withBatchOperationKey(batchOperationKey)
         .executeWithoutExpectation();
 

@@ -39,11 +39,11 @@ public final class BatchOperationClient {
     this.writer = writer;
   }
 
-  public BatchOperationCreationClient newCreation(final BatchOperationType type) {
+  public BatchOperationCreationClient newCreationClient(final BatchOperationType type) {
     return new BatchOperationCreationClient(writer, type);
   }
 
-  public BatchOperationExecutionClient newExecution() {
+  public BatchOperationExecutionClient newExecutionClient() {
     return new BatchOperationExecutionClient(writer);
   }
 

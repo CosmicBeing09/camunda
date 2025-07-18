@@ -48,7 +48,7 @@ public final class BatchOperationMultiPartitionTest {
     final long batchOperationKey =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .withFilter(new UnsafeBuffer("{\"hasIncident\": false}".getBytes()))
             .create()
             .getValue()
@@ -152,7 +152,7 @@ public final class BatchOperationMultiPartitionTest {
     final long batchOperationKey =
         engine
             .batchOperation()
-            .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+            .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
             .withFilter(new UnsafeBuffer("{\"hasIncident\": false}".getBytes()))
             .create()
             .getValue()
