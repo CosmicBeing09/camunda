@@ -23,8 +23,8 @@ public final class IncidentEventProcessors {
   public static void addProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
-      final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
+      final TypedRecordProcessor<ProcessInstanceRecord> processInstanceRecordProcessor,
+      final TypedRecordProcessor<UserTaskRecord> userTaskRecordProcessor,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -33,8 +33,8 @@ public final class IncidentEventProcessors {
         IncidentIntent.RESOLVE,
         new IncidentResolveProcessor(
             processingState,
-            bpmnStreamProcessor,
-            userTaskProcessor,
+            processInstanceRecordProcessor,
+            userTaskRecordProcessor,
             writers,
             jobActivationBehavior,
             authCheckBehavior));
