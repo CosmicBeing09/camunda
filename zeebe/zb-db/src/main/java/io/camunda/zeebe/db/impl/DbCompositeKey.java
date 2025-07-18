@@ -18,22 +18,22 @@ import org.agrona.MutableDirectBuffer;
 
 public class DbCompositeKey<FirstKeyType extends DbKey, SecondKeyType extends DbKey>
     implements DbKey, DbValue, ContainsForeignKeys {
-  final FirstKeyType first;
-  final SecondKeyType second;
+  final FirstKeyType firstKey;
+  final SecondKeyType secondKey;
   final Collection<DbForeignKey<DbKey>> containedForeignKeys;
 
   public DbCompositeKey(final FirstKeyType first, final SecondKeyType second) {
-    this.first = first;
-    this.second = second;
+    firstKey = first;
+    secondKey = second;
     containedForeignKeys = collectContainedForeignKeys(first, second);
   }
 
   public FirstKeyType first() {
-    return first;
+    return firstKey;
   }
 
   public SecondKeyType second() {
-    return second;
+    return secondKey;
   }
 
   @Override
@@ -43,21 +43,21 @@ public class DbCompositeKey<FirstKeyType extends DbKey, SecondKeyType extends Db
 
   @Override
   public void wrap(final DirectBuffer directBuffer, final int offset, final int length) {
-    first.wrap(directBuffer, offset, length);
-    final int firstKeyLength = first.getLength();
-    second.wrap(directBuffer, offset + firstKeyLength, length - firstKeyLength);
+    firstKey.wrap(directBuffer, offset, length);
+    final int firstKeyLength = firstKey.getLength();
+    secondKey.wrap(directBuffer, offset + firstKeyLength, length - firstKeyLength);
   }
 
   @Override
   public int getLength() {
-    return first.getLength() + second.getLength();
+    return firstKey.getLength() + secondKey.getLength();
   }
 
   @Override
   public void write(final MutableDirectBuffer mutableDirectBuffer, final int offset) {
-    first.write(mutableDirectBuffer, offset);
-    final int firstKeyPartLength = first.getLength();
-    second.write(mutableDirectBuffer, offset + firstKeyPartLength);
+    firstKey.write(mutableDirectBuffer, offset);
+    final int firstKeyPartLength = firstKey.getLength();
+    secondKey.write(mutableDirectBuffer, offset + firstKeyPartLength);
   }
 
   private static Collection<DbForeignKey<DbKey>> collectContainedForeignKeys(
@@ -74,6 +74,6 @@ public class DbCompositeKey<FirstKeyType extends DbKey, SecondKeyType extends Db
 
   @Override
   public String toString() {
-    return "DbCompositeKey{" + "first=" + first + ", second=" + second + '}';
+    return "DbCompositeKey{" + "first=" + firstKey + ", second=" + secondKey + '}';
   }
 }
