@@ -59,7 +59,7 @@ class UpdateUserTaskTest {
   @Test
   void shouldUpdateUserTaskWithDueDate() {
     // when
-    client.newUserTaskUpdateCommand(userTaskKey).dueDate(TEST_TIME).send().join();
+    client.newUserTaskUpdateCommand(userTaskKey).due(TEST_TIME).send().join();
 
     // then
     ZeebeAssertHelper.assertUserTaskUpdated(
@@ -81,7 +81,7 @@ class UpdateUserTaskTest {
     // when
     client
         .newUserTaskUpdateCommand(userTaskKey)
-        .dueDate(TEST_TIME)
+        .due(TEST_TIME)
         .followUpDate(TEST_TIME)
         .send()
         .join();
@@ -172,7 +172,7 @@ class UpdateUserTaskTest {
   @Test
   void shouldClearUserTaskDueDate() {
     // given
-    client.newUserTaskUpdateCommand(userTaskKey).dueDate(TEST_TIME).send().join();
+    client.newUserTaskUpdateCommand(userTaskKey).due(TEST_TIME).send().join();
 
     // when
     client.newUserTaskUpdateCommand(userTaskKey).clearDueDate().send().join();
@@ -233,7 +233,7 @@ class UpdateUserTaskTest {
   public void shouldRejectIfMalformedDueDate() {
     // when / then
     assertThatThrownBy(
-            () -> client.newUserTaskUpdateCommand(userTaskKey).dueDate("foo").send().join())
+            () -> client.newUserTaskUpdateCommand(userTaskKey).due("foo").send().join())
         .isInstanceOf(ProblemException.class)
         .hasMessageContaining("Failed with code 400: 'Bad Request'")
         .hasMessageContaining("The provided due date 'foo' cannot be parsed as a date");
@@ -256,7 +256,7 @@ class UpdateUserTaskTest {
             () ->
                 client
                     .newUserTaskUpdateCommand(userTaskKey)
-                    .dueDate("bar")
+                    .due("bar")
                     .followUpDate("foo")
                     .send()
                     .join())

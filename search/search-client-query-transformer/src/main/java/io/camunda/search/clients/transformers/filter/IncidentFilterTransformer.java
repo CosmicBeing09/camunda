@@ -27,7 +27,7 @@ import static io.camunda.webapps.schema.descriptors.template.IncidentTemplate.PR
 import static io.camunda.webapps.schema.descriptors.template.IncidentTemplate.STATE;
 import static io.camunda.webapps.schema.descriptors.template.IncidentTemplate.TREE_PATH;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.IncidentFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -38,7 +38,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
   }
 
   @Override
-  public SearchQuery toSearchQuery(final IncidentFilter filter) {
+  public Query toSearchQuery(final IncidentFilter filter) {
     return and(
         longOperations(KEY, filter.incidentKeyOperations()),
         longOperations(PROCESS_DEFINITION_KEY, filter.processDefinitionKeyOperations()),

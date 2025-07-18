@@ -54,12 +54,12 @@ public class ProcessInstanceImpl implements ProcessInstance {
   }
 
   @Override
-  public Long getProcessInstanceKey() {
+  public Long getKey() {
     return processInstanceKey;
   }
 
   @Override
-  public String getProcessDefinitionId() {
+  public String getDefinitionId() {
     return processDefinitionId;
   }
 

@@ -108,10 +108,10 @@ public class OperateInternalApiRolePermissionsIT {
             PermissionType.READ_PROCESS_INSTANCE, PermissionType.UPDATE_PROCESS_INSTANCE)
         .send()
         .join();
-    addUserToRole(adminClient.getConfiguration().getRestAddress(), roleId, AUTHORIZED_USERNAME);
+    addUserToRole(adminClient.getConfiguration().restAddress(), roleId, AUTHORIZED_USERNAME);
 
     adminClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask().endEvent().done(),
             "process.bpmn")
@@ -131,7 +131,7 @@ public class OperateInternalApiRolePermissionsIT {
                 assertThat(
                         adminClient
                             .newProcessInstanceSearchRequest()
-                            .filter(f -> f.processInstanceKey(processInstanceKey))
+                            .filter(f -> f.key(processInstanceKey))
                             .send()
                             .join()
                             .items())
@@ -213,7 +213,7 @@ public class OperateInternalApiRolePermissionsIT {
   private ResponseCount searchRunningProcessInstances(
       final CamundaClient client, final String username)
       throws URISyntaxException, IOException, InterruptedException {
-    final String url = client.getConfiguration().getRestAddress() + BASE_PATH;
+    final String url = client.getConfiguration().restAddress() + BASE_PATH;
 
     final var encodedCredentials =
         Base64.getEncoder().encodeToString("%s:%s".formatted(username, username).getBytes());
@@ -244,7 +244,7 @@ public class OperateInternalApiRolePermissionsIT {
       final CamundaClient client, final String username, final long processInstanceKey)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
-        client.getConfiguration().getRestAddress() + BASE_PATH + "/" + processInstanceKey;
+        client.getConfiguration().restAddress() + BASE_PATH + "/" + processInstanceKey;
 
     final var encodedCredentials =
         Base64.getEncoder().encodeToString("%s:%s".formatted(username, username).getBytes());
@@ -263,7 +263,7 @@ public class OperateInternalApiRolePermissionsIT {
       final CamundaClient client, final String username, final long processInstanceKey)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
-        client.getConfiguration().getRestAddress()
+        client.getConfiguration().restAddress()
             + BASE_PATH
             + "/"
             + processInstanceKey

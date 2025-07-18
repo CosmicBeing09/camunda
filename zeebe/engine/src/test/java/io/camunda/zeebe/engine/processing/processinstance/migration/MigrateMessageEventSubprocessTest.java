@@ -636,7 +636,7 @@ public class MigrateMessageEventSubprocessTest {
                                 .startEvent()
                                 .userTask("userTask1")
                                 .endEvent()
-                                .subProcessDone())
+                                .endSubProcess())
                     .endEvent("end")
                     .done())
             .withXmlResource(
@@ -658,7 +658,7 @@ public class MigrateMessageEventSubprocessTest {
                                 .startEvent()
                                 .userTask("userTask2")
                                 .endEvent()
-                                .subProcessDone())
+                                .endSubProcess())
                     .endEvent("end")
                     .done())
             .deploy();

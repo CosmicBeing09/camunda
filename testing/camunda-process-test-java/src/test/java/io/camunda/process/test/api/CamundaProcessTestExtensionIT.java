@@ -53,7 +53,7 @@ public class CamundaProcessTestExtensionIT {
             .zeebeOutputExpression("\"ok\"", "result")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =
@@ -87,7 +87,7 @@ public class CamundaProcessTestExtensionIT {
             .endEvent()
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     final ProcessInstanceEvent processInstance =
         client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
@@ -123,7 +123,7 @@ public class CamundaProcessTestExtensionIT {
             .name("end")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =
@@ -136,7 +136,7 @@ public class CamundaProcessTestExtensionIT {
             () ->
                 assertThat(client.newProcessInstanceSearchRequest().send().join().items())
                     .hasSize(1)
-                    .extracting(ProcessInstance::getProcessInstanceKey)
+                    .extracting(ProcessInstance::getKey)
                     .contains(processInstance.getProcessInstanceKey()));
   }
 
@@ -155,7 +155,7 @@ public class CamundaProcessTestExtensionIT {
             .name("end")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =
@@ -170,7 +170,7 @@ public class CamundaProcessTestExtensionIT {
             .filter(
                 filter ->
                     filter
-                        .processInstanceKey(processInstance.getProcessInstanceKey())
+                        .elementInstanceKey(processInstance.getProcessInstanceKey())
                         .state(UserTaskState.CREATED))
             .send()
             .join()
@@ -186,7 +186,7 @@ public class CamundaProcessTestExtensionIT {
         .returns(60, UserTask::getPriority);
 
     // when: complete the user task
-    client.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    client.newUserTaskCompleteCommand(userTask.getKey()).send().join();
 
     // then: verify that the user task and the process instance are completed
     CamundaAssert.assertThat(processInstance).hasCompletedElements(byName("task")).isCompleted();

@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.request;
 
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.search.response.ProcessInstanceSequenceFlow;
 import java.util.List;
 
 public interface ProcessInstanceSequenceFlowsRequest
-    extends FinalCommandStep<List<ProcessInstanceSequenceFlow>> {}
+    extends FinalStep<List<ProcessInstanceSequenceFlow>> {}

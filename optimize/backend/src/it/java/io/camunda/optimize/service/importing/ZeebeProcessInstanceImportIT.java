@@ -109,9 +109,9 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(deployedInstance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(deployedInstance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(deployedInstance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(deployedInstance.getBpmnProcessId());
+                  .isEqualTo(deployedInstance.getProcessId());
               assertThat(savedInstance.getProcessDefinitionVersion())
                   .isEqualTo(String.valueOf(deployedInstance.getVersion()));
               assertThat(savedInstance.getDataSource().getName())
@@ -125,15 +125,15 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getStartDate())
                   .isEqualTo(
                       getExpectedStartDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getEndDate())
                   .isEqualTo(
                       getExpectedEndDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getDuration())
                   .isEqualTo(
                       getExpectedDurationForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getFlowNodeInstances())
                   .hasSize(2)
                   .containsExactlyInAnyOrder(
@@ -236,9 +236,9 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(deployedInstance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(deployedInstance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(deployedInstance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(deployedInstance.getBpmnProcessId());
+                  .isEqualTo(deployedInstance.getProcessId());
               assertThat(savedInstance.getProcessDefinitionVersion())
                   .isEqualTo(String.valueOf(deployedInstance.getVersion()));
               assertThat(savedInstance.getDataSource().getName())
@@ -251,12 +251,12 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getStartDate())
                   .isEqualTo(
                       getExpectedStartDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getEndDate()).isNull();
               assertThat(savedInstance.getDuration()).isNull();
               final FlowNodeInstanceDto flowNodeInstanceDto =
                   new FlowNodeInstanceDto(
-                      String.valueOf(deployedInstance.getBpmnProcessId()),
+                      String.valueOf(deployedInstance.getProcessId()),
                       String.valueOf(deployedInstance.getVersion()),
                       ZEEBE_DEFAULT_TENANT_ID,
                       String.valueOf(deployedInstance.getProcessInstanceKey()),
@@ -305,9 +305,9 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(deployedInstance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(deployedInstance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(deployedInstance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(deployedInstance.getBpmnProcessId());
+                  .isEqualTo(deployedInstance.getProcessId());
               assertThat(savedInstance.getProcessDefinitionVersion())
                   .isEqualTo(String.valueOf(deployedInstance.getVersion()));
               assertThat(savedInstance.getDataSource().getName())
@@ -321,15 +321,15 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getStartDate())
                   .isEqualTo(
                       getExpectedStartDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getEndDate())
                   .isEqualTo(
                       getExpectedEndDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getDuration())
                   .isEqualTo(
                       getExpectedDurationForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getFlowNodeInstances())
                   .hasSize(2)
                   .containsExactlyInAnyOrder(
@@ -376,9 +376,9 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(deployedInstance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(deployedInstance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(deployedInstance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(deployedInstance.getBpmnProcessId());
+                  .isEqualTo(deployedInstance.getProcessId());
               assertThat(savedInstance.getProcessDefinitionVersion())
                   .isEqualTo(String.valueOf(deployedInstance.getVersion()));
               assertThat(savedInstance.getDataSource().getName())
@@ -392,15 +392,15 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getStartDate())
                   .isEqualTo(
                       getExpectedStartDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getEndDate())
                   .isEqualTo(
                       getExpectedEndDateForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getDuration())
                   .isEqualTo(
                       getExpectedDurationForEvents(
-                          exportedEvents.get(deployedInstance.getBpmnProcessId())));
+                          exportedEvents.get(deployedInstance.getProcessId())));
               assertThat(savedInstance.getFlowNodeInstances())
                   .hasSize(3)
                   .containsExactlyInAnyOrder(
@@ -647,7 +647,7 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
                             assertThat(flowNodeInstanceDto)
                                 .hasFieldOrPropertyWithValue(
                                     FlowNodeInstanceDto.Fields.definitionKey,
-                                    processInstance.getBpmnProcessId())
+                                    processInstance.getProcessId())
                                 .hasFieldOrPropertyWithValue(
                                     FlowNodeInstanceDto.Fields.definitionVersion,
                                     String.valueOf(processInstance.getVersion()))
@@ -912,7 +912,7 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
       final boolean canceled) {
     final FlowNodeInstanceDto flowNodeInstanceDto =
         new FlowNodeInstanceDto(
-            String.valueOf(deployedInstance.getBpmnProcessId()),
+            String.valueOf(deployedInstance.getProcessId()),
             String.valueOf(deployedInstance.getVersion()),
             ZEEBE_DEFAULT_TENANT_ID,
             String.valueOf(deployedInstance.getProcessInstanceKey()),

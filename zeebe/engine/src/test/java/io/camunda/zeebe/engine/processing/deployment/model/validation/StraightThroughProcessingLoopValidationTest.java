@@ -37,7 +37,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithSimpleUndefinedTaskLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -67,7 +67,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithSimpleManualTaskLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -97,7 +97,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithSimpleIntermediateThrowEventLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -127,7 +127,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithComplexStraightThroughProcessingLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     // Straight through loop: task1 > parallel2 > manualTask1 > exclusive2 > task1
@@ -178,7 +178,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithStraightThroughProcessingLoopNotStartingAtFirstElement() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -237,7 +237,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithSubProcessAsPartOfLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -285,7 +285,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithImplicitEndEventAsPartOfLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -323,7 +323,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldDeployProcessWithRegularLoops() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deployment =
@@ -347,7 +347,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithMultiInstanceAsPartOfLoop() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -381,7 +381,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithCallActivityCallingItselfWithoutOtherElements() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -411,7 +411,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldRejectDeploymentWithMultiInstanceCallActivityCallingItself() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var rejectedDeployment =
@@ -445,7 +445,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldDeployProcessWithRegularTaskBetweenStraightThroughTasks() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deployment =
@@ -470,7 +470,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldDeployProcessWithRegularTaskInsideOfSubprocess() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deployment =
@@ -502,7 +502,7 @@ public class StraightThroughProcessingLoopValidationTest {
   @Test
   public void shouldDeployProcessContainingCallActivityCallingItselfWithAWaitStateInBetween() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deployment =

@@ -10,7 +10,7 @@ package io.camunda.search.clients.transformers.filter;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.clients.query.SearchBoolQuery;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
 import org.junit.jupiter.api.Test;
@@ -110,10 +110,10 @@ public class VariableQueryTransformerTest extends AbstractTransformerTest {
             outerBoolQuery -> {
               assertThat(outerBoolQuery.must()).isNotEmpty();
 
-              final SearchQuery nameMustQuery = outerBoolQuery.must().get(0);
+              final Query nameMustQuery = outerBoolQuery.must().get(0);
               assertThat(nameMustQuery.queryOption()).isInstanceOf(SearchTermQuery.class);
 
-              final SearchQuery valueMustQuery = outerBoolQuery.must().get(1);
+              final Query valueMustQuery = outerBoolQuery.must().get(1);
               assertThat(valueMustQuery.queryOption()).isInstanceOf(SearchTermQuery.class);
 
               final SearchTermQuery innerNameTermQuery =

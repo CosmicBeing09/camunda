@@ -41,7 +41,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
             .newCreateInstanceCommand()
             .processDefinitionKey(123)
             .withResult()
-            .requestTimeout(Duration.ofSeconds(123))
+            .timeout(Duration.ofSeconds(123))
             .send()
             .join();
 
@@ -74,7 +74,7 @@ public final class CreateProcessInstanceWithResultTest extends ClientTest {
         .processDefinitionKey(123)
         .withResult()
         .fetchVariables("x")
-        .requestTimeout(Duration.ofSeconds(123))
+        .timeout(Duration.ofSeconds(123))
         .send()
         .join();
 

@@ -36,7 +36,7 @@ final class JobStreamLifecycleIT {
   private final TestGateway<?> gateway = cluster.availableGateway();
   @AutoClose private final CamundaClient client = gateway.newClientBuilder().build();
 
-  private final String jobType = Strings.newRandomValidBpmnId();
+  private final String jobType = Strings.randomBpmnId();
 
   @SuppressWarnings("unused")
   static void initTestCluster() {

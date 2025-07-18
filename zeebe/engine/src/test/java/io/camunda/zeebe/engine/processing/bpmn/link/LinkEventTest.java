@@ -40,7 +40,7 @@ public class LinkEventTest {
     final ProcessBuilder processBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
     processBuilder.startEvent().intermediateThrowEvent("throw", b -> b.link("linkA"));
     final BpmnModelInstance process =
-        processBuilder.linkCatchEvent("catch").link("linkA").manualTask().endEvent().done();
+        processBuilder.catchEvent("catch").link("linkA").manualTask().endEvent().done();
 
     ENGINE.deployment().withXmlResource(process).deploy();
 
@@ -78,7 +78,7 @@ public class LinkEventTest {
         .intermediateThrowEvent("throwB", b -> b.link("link"));
 
     final BpmnModelInstance process =
-        processBuilder.linkCatchEvent("catch").link("link").manualTask().endEvent().done();
+        processBuilder.catchEvent("catch").link("link").manualTask().endEvent().done();
 
     ENGINE.deployment().withXmlResource(process).deploy();
 
@@ -109,12 +109,12 @@ public class LinkEventTest {
     final ProcessBuilder processBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
     processBuilder.startEvent().intermediateThrowEvent("throwA", b -> b.link("linkA"));
     processBuilder
-        .linkCatchEvent("catchA")
+        .catchEvent("catchA")
         .link("linkA")
         .intermediateThrowEvent("throwB", b -> b.link("linkB"));
 
     final BpmnModelInstance process =
-        processBuilder.linkCatchEvent("catchB").link("linkB").endEvent("end").done();
+        processBuilder.catchEvent("catchB").link("linkB").endEvent("end").done();
 
     ENGINE.deployment().withXmlResource(process).deploy();
 

@@ -9,7 +9,7 @@ package io.camunda.search.clients.transformers.filter;
 
 import static io.camunda.search.clients.query.SearchQueryBuilders.term;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.SequenceFlowFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.descriptors.template.SequenceFlowTemplate;
@@ -22,7 +22,7 @@ public final class SequenceFlowFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final SequenceFlowFilter filter) {
+  public Query toSearchQuery(final SequenceFlowFilter filter) {
     return term(SequenceFlowTemplate.PROCESS_INSTANCE_KEY, filter.processInstanceKey());
   }
 }

@@ -15,7 +15,7 @@ import static io.camunda.webapps.schema.descriptors.index.UserIndex.KEY;
 import static io.camunda.webapps.schema.descriptors.index.UserIndex.NAME;
 import static io.camunda.webapps.schema.descriptors.index.UserIndex.USERNAME;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.UserFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ public class UserFilterTransformer extends IndexFilterTransformer<UserFilter> {
   }
 
   @Override
-  public SearchQuery toSearchQuery(final UserFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+  public Query toSearchQuery(final UserFilter filter) {
+    final var queries = new ArrayList<Query>();
     if (filter.key() != null) {
       queries.add(term(KEY, filter.key()));
     }

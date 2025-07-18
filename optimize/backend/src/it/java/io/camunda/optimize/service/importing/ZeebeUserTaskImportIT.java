@@ -67,9 +67,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -122,9 +122,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -177,9 +177,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -229,9 +229,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -283,9 +283,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -347,9 +347,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -416,9 +416,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -469,9 +469,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -523,9 +523,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -576,9 +576,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -671,9 +671,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -707,9 +707,9 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
               assertThat(savedInstance.getProcessInstanceId())
                   .isEqualTo(String.valueOf(instance.getProcessInstanceKey()));
               assertThat(savedInstance.getProcessDefinitionId())
-                  .isEqualTo(String.valueOf(instance.getProcessDefinitionKey()));
+                  .isEqualTo(String.valueOf(instance.getDefinitionKey()));
               assertThat(savedInstance.getProcessDefinitionKey())
-                  .isEqualTo(instance.getBpmnProcessId());
+                  .isEqualTo(instance.getProcessId());
               assertThat(savedInstance.getDataSource().getName())
                   .isEqualTo(getConfiguredZeebeName());
               assertThat(savedInstance.getTenantId()).isEqualTo(ZEEBE_DEFAULT_TENANT_ID);
@@ -921,7 +921,7 @@ public class ZeebeUserTaskImportIT extends AbstractCCSMIT {
     flowNodeInstanceDto.setFlowNodeType(FLOW_NODE_TYPE_USER_TASK);
     flowNodeInstanceDto.setProcessInstanceId(
         String.valueOf(deployedInstance.getProcessInstanceKey()));
-    flowNodeInstanceDto.setDefinitionKey(String.valueOf(deployedInstance.getBpmnProcessId()));
+    flowNodeInstanceDto.setDefinitionKey(String.valueOf(deployedInstance.getProcessId()));
     flowNodeInstanceDto.setDefinitionVersion(String.valueOf(deployedInstance.getVersion()));
     flowNodeInstanceDto.setTenantId(ZEEBE_DEFAULT_TENANT_ID);
     flowNodeInstanceDto.setUserTaskInstanceId(

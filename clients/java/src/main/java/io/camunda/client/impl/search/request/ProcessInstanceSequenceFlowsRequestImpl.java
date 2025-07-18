@@ -16,7 +16,7 @@
 package io.camunda.client.impl.search.request;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.search.request.ProcessInstanceSequenceFlowsRequest;
 import io.camunda.client.api.search.response.ProcessInstanceSequenceFlow;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -43,7 +43,7 @@ public class ProcessInstanceSequenceFlowsRequestImpl
   }
 
   @Override
-  public FinalCommandStep<List<ProcessInstanceSequenceFlow>> requestTimeout(
+  public FinalStep<List<ProcessInstanceSequenceFlow>> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

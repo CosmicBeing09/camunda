@@ -16,7 +16,7 @@ import io.camunda.search.aggregation.result.ProcessInstanceFlowNodeStatisticsAgg
 import io.camunda.search.clients.aggregator.SearchAggregator;
 import io.camunda.search.clients.core.AggregationResult;
 import io.camunda.search.clients.core.SearchQueryRequest;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.transformers.aggregation.AggregationTransformer;
 import io.camunda.search.clients.transformers.aggregation.ProcessDefinitionFlowNodeStatisticsAggregationTransformer;
 import io.camunda.search.clients.transformers.aggregation.ProcessInstanceFlowNodeStatisticsAggregationTransformer;
@@ -236,7 +236,7 @@ public final class ServiceTransformers {
   }
 
   public <F extends FilterBase> FilterTransformer<F> getFilterTransformer(final Class<?> cls) {
-    final ServiceTransformer<F, SearchQuery> transformer = getTransformer(cls);
+    final ServiceTransformer<F, Query> transformer = getTransformer(cls);
     return (FilterTransformer<F>) transformer;
   }
 

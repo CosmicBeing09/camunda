@@ -13,7 +13,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 import static io.camunda.webapps.schema.descriptors.index.FormIndex.BPMN_ID;
 import static io.camunda.webapps.schema.descriptors.index.FormIndex.KEY;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.FormFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -24,7 +24,7 @@ public class FormFilterTransformer extends IndexFilterTransformer<FormFilter> {
   }
 
   @Override
-  public SearchQuery toSearchQuery(final FormFilter filter) {
+  public Query toSearchQuery(final FormFilter filter) {
     return and(longTerms(KEY, filter.formKeys()), stringTerms(BPMN_ID, filter.formIds()));
   }
 }

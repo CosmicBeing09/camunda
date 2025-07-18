@@ -17,7 +17,7 @@ import static io.camunda.webapps.schema.descriptors.index.MappingIndex.CLAIM_VAL
 import static io.camunda.webapps.schema.descriptors.index.MappingIndex.MAPPING_ID;
 import static io.camunda.webapps.schema.descriptors.index.MappingIndex.NAME;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.MappingFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -28,7 +28,7 @@ public class MappingFilterTransformer extends IndexFilterTransformer<MappingFilt
   }
 
   @Override
-  public SearchQuery toSearchQuery(final MappingFilter filter) {
+  public Query toSearchQuery(final MappingFilter filter) {
     return and(
         stringTerms(CLAIM_NAME, filter.claimNames()),
         filter.claimName() == null ? null : term(CLAIM_NAME, filter.claimName()),

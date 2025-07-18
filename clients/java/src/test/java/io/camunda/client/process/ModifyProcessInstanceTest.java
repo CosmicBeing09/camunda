@@ -458,7 +458,7 @@ public class ModifyProcessInstanceTest extends ClientTest {
     client
         .newModifyProcessInstanceCommand(PI_KEY)
         .activateElement(ELEMENT_ID_A)
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

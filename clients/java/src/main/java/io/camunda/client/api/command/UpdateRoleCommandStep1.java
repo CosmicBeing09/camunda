@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.UpdateRoleResponse;
 
-public interface UpdateRoleCommandStep1 extends FinalCommandStep<UpdateRoleResponse> {
+public interface UpdateRoleCommandStep1 extends FinalStep<UpdateRoleResponse> {
 
   /**
    * Set the name for the role to be updated.

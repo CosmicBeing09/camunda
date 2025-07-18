@@ -68,14 +68,14 @@ public class DecisionInstanceAssertTest {
   @BeforeEach
   void configureAssertions() {
     CamundaAssert.initialize(camundaDataSource);
-    CamundaAssert.setAssertionInterval(Duration.ZERO);
-    CamundaAssert.setAssertionTimeout(Duration.ofSeconds(1));
+    CamundaAssert.setInterval(Duration.ZERO);
+    CamundaAssert.setTimeout(Duration.ofSeconds(1));
   }
 
   @AfterEach
   void resetAssertions() {
-    CamundaAssert.setAssertionInterval(CamundaAssert.DEFAULT_ASSERTION_INTERVAL);
-    CamundaAssert.setAssertionTimeout(CamundaAssert.DEFAULT_ASSERTION_TIMEOUT);
+    CamundaAssert.setInterval(CamundaAssert.DEFAULT_ASSERTION_INTERVAL);
+    CamundaAssert.setTimeout(CamundaAssert.DEFAULT_ASSERTION_TIMEOUT);
   }
 
   private void mockDecisionInstanceSearch(final DecisionInstance mockedResult) {
@@ -92,7 +92,7 @@ public class DecisionInstanceAssertTest {
   }
 
   private DecisionInstance decisionInstance(
-      Function<DecisionInstanceResult, DecisionInstanceResult> resultBuilderFn) {
+      final Function<DecisionInstanceResult, DecisionInstanceResult> resultBuilderFn) {
     final DecisionInstanceResult basicResult =
         new DecisionInstanceResult()
             .decisionDefinitionName(NAME)
@@ -130,7 +130,7 @@ public class DecisionInstanceAssertTest {
         result);
   }
 
-  private MatchedDecisionRule rule(MatchedDecisionRuleItem ruleItem) {
+  private MatchedDecisionRule rule(final MatchedDecisionRuleItem ruleItem) {
     return new MatchedDecisionRuleImpl(ruleItem, null);
   }
 

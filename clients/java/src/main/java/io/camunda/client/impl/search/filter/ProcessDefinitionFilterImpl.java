@@ -32,7 +32,7 @@ public class ProcessDefinitionFilterImpl
 
   @Override
   public ProcessDefinitionFilter processDefinitionKey(final long processDefinitionKey) {
-    filter.setProcessDefinitionKey(ParseUtil.keyToString(processDefinitionKey));
+    filter.setProcessDefinitionKey(ParseUtil.toStringOrNull(processDefinitionKey));
     return this;
   }
 

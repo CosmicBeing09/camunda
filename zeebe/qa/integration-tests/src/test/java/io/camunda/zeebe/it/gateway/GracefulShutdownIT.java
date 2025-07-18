@@ -36,7 +36,7 @@ final class GracefulShutdownIT {
   @Test
   void shouldShutdownGracefully() {
     // given -- an open job stream that needs to wait for an activated job
-    final var jobType = Strings.newRandomValidBpmnId();
+    final var jobType = Strings.randomBpmnId();
     final var activatedJob = new AtomicReference<ActivatedJob>();
     final var model =
         Bpmn.createExecutableProcess("process")
@@ -46,7 +46,7 @@ final class GracefulShutdownIT {
             .endEvent()
             .done();
     try (final var client = cluster.newClientBuilder().build()) {
-      client.newDeployResourceCommand().addProcessModel(model, "process.bpmn").send().join();
+      client.deployResource().addProcessModel(model, "process.bpmn").send().join();
       client.newStreamJobsCommand().jobType(jobType).consumer(activatedJob::set).send();
       client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();
 

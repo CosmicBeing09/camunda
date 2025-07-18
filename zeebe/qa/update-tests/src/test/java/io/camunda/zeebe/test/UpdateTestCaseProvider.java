@@ -187,7 +187,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
                 state ->
                     state
                         .client()
-                        .newDeployResourceCommand()
+                        .deployResource()
                         .addProcessModel(
                             Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done(),
                             "process.bpmn")
@@ -396,7 +396,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
     final var deploymentEvent =
         state
             .client()
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done(),
                 "process.bpmn")

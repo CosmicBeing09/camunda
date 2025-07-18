@@ -332,7 +332,7 @@ public class ProcessInstanceAssertj
     if (actualProcessInstance.get() == null) {
       awaitProcessInstance();
     }
-    return actualProcessInstance.get().getProcessInstanceKey();
+    return actualProcessInstance.get().getKey();
   }
 
   private static boolean isEnded(final ProcessInstance processInstance) {

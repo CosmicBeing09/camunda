@@ -57,12 +57,12 @@ public abstract class AbstractUserTaskBuilder<B extends AbstractUserTaskBuilder<
   }
 
   @Override
-  public B zeebeFormKey(final String format, final String location, final String id) {
-    return zeebeFormKey(String.format("%s:%s:%s", format, location, id));
+  public B formKey(final String format, final String location, final String id) {
+    return formKey(String.format("%s:%s:%s", format, location, id));
   }
 
   @Override
-  public B zeebeFormKey(final String formKey) {
+  public B formKey(final String formKey) {
     final ZeebeFormDefinition formDefinition =
         getCreateSingleExtensionElement(ZeebeFormDefinition.class);
     formDefinition.setFormKey(formKey);
@@ -73,7 +73,7 @@ public abstract class AbstractUserTaskBuilder<B extends AbstractUserTaskBuilder<
   public B zeebeUserTaskForm(final String userTaskForm) {
     final ZeebeUserTaskForm zeebeUserTaskForm = createZeebeUserTaskForm();
     zeebeUserTaskForm.setTextContent(userTaskForm);
-    return zeebeFormKey(
+    return formKey(
         USER_TASK_FORM_KEY_CAMUNDA_FORMS_FORMAT,
         USER_TASK_FORM_KEY_BPMN_LOCATION,
         zeebeUserTaskForm.getId());
@@ -84,7 +84,7 @@ public abstract class AbstractUserTaskBuilder<B extends AbstractUserTaskBuilder<
     final ZeebeUserTaskForm zeebeUserTaskForm = createZeebeUserTaskForm();
     zeebeUserTaskForm.setId(id);
     zeebeUserTaskForm.setTextContent(userTaskForm);
-    return zeebeFormKey(
+    return formKey(
         USER_TASK_FORM_KEY_CAMUNDA_FORMS_FORMAT, USER_TASK_FORM_KEY_BPMN_LOCATION, id);
   }
 

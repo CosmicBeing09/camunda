@@ -32,7 +32,7 @@ public interface BroadcastSignalCommandStep1
 
   interface BroadcastSignalCommandStep2
       extends CommandWithTenantStep<BroadcastSignalCommandStep2>,
-          FinalCommandStep<BroadcastSignalResponse> {
+      FinalStep<BroadcastSignalResponse> {
     /**
      * Set the variables of the signal.
      *

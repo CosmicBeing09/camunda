@@ -195,7 +195,7 @@ public class IncidentNotifierIT {
 
   private ProcessInstanceEvent generateIncident(final CamundaClient camundaClient) {
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("process/incident_process_v1.bpmn")
         .send()
         .join();

@@ -39,12 +39,12 @@ public class ProcessInstanceBuilder implements ProcessInstance {
   private String tenantId;
 
   @Override
-  public Long getProcessInstanceKey() {
+  public Long getKey() {
     return processInstanceKey;
   }
 
   @Override
-  public String getProcessDefinitionId() {
+  public String getDefinitionId() {
     return processDefinitionId;
   }
 

@@ -51,7 +51,7 @@ public class RestGatewayService {
    *
    * @param jobActivationResponse the response to provide upon a job activation request
    */
-  public void onActivateJobsRequest(final JobActivationResult jobActivationResponse) {
+  public void activateJobs(final JobActivationResult jobActivationResponse) {
     mockInfo
         .getWireMock()
         .register(
@@ -64,7 +64,7 @@ public class RestGatewayService {
    *
    * @param topologyResponse the response to provide upon a topology request
    */
-  public void onTopologyRequest(final TopologyResponse topologyResponse) {
+  public void topology(final TopologyResponse topologyResponse) {
     mockInfo
         .getWireMock()
         .register(

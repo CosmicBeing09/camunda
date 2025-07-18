@@ -106,7 +106,7 @@ public class ResourceDeletionMultiPartitionTest {
   @Test
   public void shouldTestBpmnLifecycle() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final long resourceKey =
         engine
             .deployment()

@@ -901,7 +901,7 @@ public class ModifyProcessInstanceTest {
                 .userTask("B")
                 .connectTo("join")
                 .endEvent()
-                .subProcessDone()
+                .endSubProcess()
                 .endEvent()
                 .done())
         .deploy();
@@ -1029,7 +1029,7 @@ public class ModifyProcessInstanceTest {
                                         .userTask("B")
                                         .userTask("C")
                                         .endEvent()
-                                        .subProcessDone()
+                                        .endSubProcess()
                                         .endEvent()))
                 .startEvent()
                 .userTask("D")
@@ -1374,7 +1374,7 @@ public class ModifyProcessInstanceTest {
                 .serviceTask("A", t -> t.zeebeJobType("A"))
                 .serviceTask("B", t -> t.zeebeJobType("B"))
                 .endEvent()
-                .subProcessDone()
+                .endSubProcess()
                 .endEvent()
                 .done())
         .deploy();

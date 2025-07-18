@@ -1279,7 +1279,7 @@ public class CoordinatesGenerationTest {
             .parallelGateway("innerParallelGateway")
             .userTask("innerUserTask")
             .endEvent("innerEndEvent")
-            .subProcessDone()
+            .endSubProcess()
             .done();
 
     final Bounds subProcessBounds = findBpmnShape(SUB_PROCESS_ID).getBounds();
@@ -1303,9 +1303,9 @@ public class CoordinatesGenerationTest {
             .userTask()
             .userTask()
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .endEvent("innerEndEvent")
-            .subProcessDone()
+            .endSubProcess()
             .done();
 
     final Bounds subProcessBounds = findBpmnShape(SUB_PROCESS_ID).getBounds();
@@ -1327,7 +1327,7 @@ public class CoordinatesGenerationTest {
             .endEvent("innerEndEvent")
             .moveToNode("innerParallelGateway")
             .userTask("innerUserTask")
-            .subProcessDone()
+            .endSubProcess()
             .done();
 
     final Bounds subProcessBounds = findBpmnShape(SUB_PROCESS_ID).getBounds();
@@ -1352,9 +1352,9 @@ public class CoordinatesGenerationTest {
             .userTask()
             .moveToNode("id")
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .endEvent("innerEndEvent")
-            .subProcessDone()
+            .endSubProcess()
             .endEvent()
             .done();
 

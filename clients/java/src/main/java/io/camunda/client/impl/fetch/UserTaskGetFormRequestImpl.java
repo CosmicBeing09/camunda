@@ -38,7 +38,7 @@ public class UserTaskGetFormRequestImpl implements UserTaskGetFormRequest {
   }
 
   @Override
-  public UserTaskGetFormRequest requestTimeout(final Duration requestTimeout) {
+  public UserTaskGetFormRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

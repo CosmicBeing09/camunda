@@ -225,7 +225,7 @@ public class CompatibilityModeOperateAuthorizationIT {
         startProcessInstance(adminClient, PROCESS_WITH_SERVICE_TASKS).getProcessInstanceKey();
     // wait for operate to catch up
     waitForProcessInstancesToStart(
-        adminClient, filter -> filter.processInstanceKey(processInstanceKey), 1);
+        adminClient, filter -> filter.key(processInstanceKey), 1);
     // and a user with process instance update permissions
     try (final var operateRestClient =
         STANDALONE_CAMUNDA.newOperateClient(user.username(), user.password())) {
@@ -251,7 +251,7 @@ public class CompatibilityModeOperateAuthorizationIT {
         startProcessInstance(adminClient, PROCESS_FOR_MIGRATION_V1).getProcessInstanceKey();
     // wait for operate to catch up
     waitForProcessInstancesToStart(
-        adminClient, filter -> filter.processInstanceKey(processInstanceKey), 1);
+        adminClient, filter -> filter.key(processInstanceKey), 1);
 
     try (final var operateRestClient =
         STANDALONE_CAMUNDA.newOperateClient(
@@ -298,7 +298,7 @@ public class CompatibilityModeOperateAuthorizationIT {
     final var processInstanceKey =
         startProcessInstance(adminClient, PROCESS_WITH_SERVICE_TASKS).getProcessInstanceKey();
     waitForProcessInstancesToStart(
-        adminClient, filter -> filter.processInstanceKey(processInstanceKey), 1);
+        adminClient, filter -> filter.key(processInstanceKey), 1);
 
     try (final var operateRestClient =
         STANDALONE_CAMUNDA.newOperateClient(user.username(), user.password())) {
@@ -336,7 +336,7 @@ public class CompatibilityModeOperateAuthorizationIT {
     final String variableScopeId = String.valueOf(processInstanceKey);
     final String variableName = "process01";
     waitForProcessInstancesToStart(
-        adminClient, filter -> filter.processInstanceKey(processInstanceKey), 1);
+        adminClient, filter -> filter.key(processInstanceKey), 1);
 
     try (final var operateRestClient =
         STANDALONE_CAMUNDA.newOperateClient(user.username(), user.password())) {

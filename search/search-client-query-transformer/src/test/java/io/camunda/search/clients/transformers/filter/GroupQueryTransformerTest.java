@@ -10,8 +10,8 @@ package io.camunda.search.clients.transformers.filter;
 import static io.camunda.zeebe.protocol.record.value.EntityType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchBoolQuery;
-import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.filter.FilterBuilders;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -29,14 +29,14 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
     // then
     assertThat(searchRequest)
         .isEqualTo(
-            SearchQuery.of(
+            Query.of(
                 q ->
                     q.bool(
                         b ->
                             b.must(
                                 List.of(
-                                    SearchQuery.of(q1 -> q.term(t -> t.field("key").value(12345L))),
-                                    SearchQuery.of(
+                                    Query.of(q1 -> q.term(t -> t.field("key").value(12345L))),
+                                    Query.of(
                                         q1 -> q.term(t -> t.field("join").value("group"))))))));
   }
 
@@ -51,15 +51,15 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
     // then
     assertThat(searchRequest)
         .isEqualTo(
-            SearchQuery.of(
+            Query.of(
                 q ->
                     q.bool(
                         b ->
                             b.must(
                                 List.of(
-                                    SearchQuery.of(
+                                    Query.of(
                                         q1 -> q.term(t -> t.field("groupId").value("group1"))),
-                                    SearchQuery.of(
+                                    Query.of(
                                         q1 -> q.term(t -> t.field("join").value("group"))))))));
   }
 
@@ -74,15 +74,15 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
     // then
     assertThat(searchRequest)
         .isEqualTo(
-            SearchQuery.of(
+            Query.of(
                 q ->
                     q.bool(
                         b ->
                             b.must(
                                 List.of(
-                                    SearchQuery.of(
+                                    Query.of(
                                         q1 -> q.term(t -> t.field("name").value("groupName"))),
-                                    SearchQuery.of(
+                                    Query.of(
                                         q1 -> q.term(t -> t.field("join").value("group"))))))));
   }
 
@@ -97,19 +97,19 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
     // then
     assertThat(searchRequest)
         .isEqualTo(
-            SearchQuery.of(
+            Query.of(
                 q ->
                     q.bool(
                         b ->
                             b.must(
                                 List.of(
-                                    SearchQuery.of(
+                                    Query.of(
                                         q1 ->
                                             q.term(
                                                 t ->
                                                     t.field("description")
                                                         .value("groupDescription"))),
-                                    SearchQuery.of(
+                                    Query.of(
                                         q1 -> q.term(t -> t.field("join").value("group"))))))));
   }
 
@@ -138,14 +138,14 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
 
     // then
     final var memberTypeQuery =
-        SearchQuery.of(q1 -> q1.term(t -> t.field("memberType").value(USER.name())));
+        Query.of(q1 -> q1.term(t -> t.field("memberType").value(USER.name())));
     final var expectedChildMemberTypeQuery =
-        SearchQuery.of(q -> q.hasChild(hc -> hc.type("member").query(memberTypeQuery)));
+        Query.of(q -> q.hasChild(hc -> hc.type("member").query(memberTypeQuery)));
     final var memberIdQuery =
-        SearchQuery.of(q1 -> q1.term(t -> t.field("memberId").value("test-member-id")));
+        Query.of(q1 -> q1.term(t -> t.field("memberId").value("test-member-id")));
     final var expectedChildMemberIdQuery =
-        SearchQuery.of(q -> q.hasChild(hc -> hc.type("member").query(memberIdQuery)));
-    final var joinQuery = SearchQuery.of(q1 -> q1.term(t -> t.field("join").value("group")));
+        Query.of(q -> q.hasChild(hc -> hc.type("member").query(memberIdQuery)));
+    final var joinQuery = Query.of(q1 -> q1.term(t -> t.field("join").value("group")));
 
     assertThat(query.filter()).isEmpty();
     assertThat(query.should()).isEmpty();
@@ -166,37 +166,37 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
     // then
     assertThat(searchRequest)
         .isEqualTo(
-            SearchQuery.of(
+            Query.of(
                 builder ->
                     builder.bool(
                         b ->
                             b.must(
                                 List.of(
-                                    SearchQuery.of(q -> q.term(t -> t.field("key").value(12345L))),
-                                    SearchQuery.of(
+                                    Query.of(q -> q.term(t -> t.field("key").value(12345L))),
+                                    Query.of(
                                         q -> q.term(t -> t.field("groupId").value("group1"))),
-                                    SearchQuery.of(
+                                    Query.of(
                                         q -> q.term(t -> t.field("name").value("TestGroup"))),
-                                    SearchQuery.of(
+                                    Query.of(
                                         q -> q.term(t -> t.field("join").value("group"))))))));
   }
 
-  private SearchQuery generateSearchQueryForParent(final String parentId, final String memberType) {
-    return SearchQuery.of(
+  private Query generateSearchQueryForParent(final String parentId, final String memberType) {
+    return Query.of(
         q ->
             q.bool(
                 b ->
                     b.must(
                         List.of(
-                            SearchQuery.of(
+                            Query.of(
                                 q1 -> q1.term(t -> t.field("memberType").value(memberType))),
-                            SearchQuery.of(
+                            Query.of(
                                 q1 ->
                                     q1.hasParent(
                                         p ->
                                             p.parentType("group")
                                                 .query(
-                                                    SearchQuery.of(
+                                                    Query.of(
                                                         q2 ->
                                                             q2.term(
                                                                 t ->

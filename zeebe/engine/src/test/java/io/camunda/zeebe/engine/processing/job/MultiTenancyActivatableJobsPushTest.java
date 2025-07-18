@@ -53,7 +53,7 @@ public class MultiTenancyActivatableJobsPushTest {
   @Test
   public void shouldPushWhenJobCreatedForAuthorizedTenant() {
     // given
-    final String jobType = Strings.newRandomValidBpmnId();
+    final String jobType = Strings.randomBpmnId();
     final DirectBuffer jobTypeBuffer = BufferUtil.wrapString(jobType);
     final DirectBuffer worker = BufferUtil.wrapString("test");
     final Map<String, Object> variables = Map.of("a", "valA", "b", "valB", "c", "valC");

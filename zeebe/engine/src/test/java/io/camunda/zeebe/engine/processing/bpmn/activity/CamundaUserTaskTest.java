@@ -244,11 +244,11 @@ public final class CamundaUserTaskTest {
   @Test
   public void shouldNotPickUpEmbeddedFormForUserTask() {
     // given
-    final String formKey = Strings.newRandomValidBpmnId();
+    final String formKey = Strings.randomBpmnId();
 
     ENGINE
         .deployment()
-        .withXmlResource(process(t -> t.zeebeFormKey(formKey).zeebeExternalFormReference("foo")))
+        .withXmlResource(process(t -> t.formKey(formKey).zeebeExternalFormReference("foo")))
         .deploy();
 
     // when
@@ -266,7 +266,7 @@ public final class CamundaUserTaskTest {
   @Test
   public void shouldNotPickUpEmbeddedFormWithJsonForUserTask() {
     // given
-    final String formKey = Strings.newRandomValidBpmnId();
+    final String formKey = Strings.randomBpmnId();
 
     ENGINE
         .deployment()

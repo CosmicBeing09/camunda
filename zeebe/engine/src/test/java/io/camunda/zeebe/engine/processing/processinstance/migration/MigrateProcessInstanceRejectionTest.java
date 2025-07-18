@@ -696,7 +696,7 @@ public class MigrateProcessInstanceRejectionTest {
                                 .startEvent()
                                 .serviceTask("task1", t -> t.zeebeJobType("task"))
                                 .endEvent()
-                                .subProcessDone())
+                                .endSubProcess())
                     .endEvent()
                     .done())
             .withXmlResource(
@@ -718,7 +718,7 @@ public class MigrateProcessInstanceRejectionTest {
                                             .startEvent()
                                             .serviceTask("task2", t -> t.zeebeJobType("task"))
                                             .endEvent())
-                                .subProcessDone())
+                                .endSubProcess())
                     .endEvent()
                     .done())
             .deploy();
@@ -786,7 +786,7 @@ public class MigrateProcessInstanceRejectionTest {
                                 .startEvent()
                                 .serviceTask("task1", t -> t.zeebeJobType("task"))
                                 .endEvent()
-                                .subProcessDone())
+                                .endSubProcess())
                     .endEvent()
                     .done())
             .withXmlResource(
@@ -802,7 +802,7 @@ public class MigrateProcessInstanceRejectionTest {
                                 .embeddedSubProcess()
                                 .startEvent()
                                 .endEvent()
-                                .subProcessDone())
+                                .endSubProcess())
                     .serviceTask("task2", t -> t.zeebeJobType("task"))
                     .endEvent()
                     .done())

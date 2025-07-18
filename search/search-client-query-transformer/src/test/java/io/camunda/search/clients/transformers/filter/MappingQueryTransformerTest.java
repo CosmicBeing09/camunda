@@ -9,7 +9,7 @@ package io.camunda.search.clients.transformers.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchQueryBuilders;
 import io.camunda.search.filter.FilterBuilders;
 import io.camunda.search.filter.MappingFilter;
@@ -30,7 +30,7 @@ public class MappingQueryTransformerTest extends AbstractTransformerTest {
   @ParameterizedTest
   @MethodSource("queryFilterParameters")
   public void shouldQueryByField(
-      final Function<Builder, ObjectBuilder<MappingFilter>> fn, final SearchQuery expected) {
+      final Function<Builder, ObjectBuilder<MappingFilter>> fn, final Query expected) {
     // given
     final var filter = FilterBuilders.mapping(fn);
     // when
@@ -44,21 +44,21 @@ public class MappingQueryTransformerTest extends AbstractTransformerTest {
         Arguments.of(
             (Function<Builder, ObjectBuilder<MappingFilter>>)
                 f -> f.claimNames(List.of("foo", "bar")),
-            SearchQuery.of(
+            Query.of(
                 q -> q.terms(t -> t.field("claimName").stringTerms(List.of("foo", "bar"))))),
         Arguments.of(
             (Function<Builder, ObjectBuilder<MappingFilter>>) f -> f.claimName("barfoo"),
-            SearchQuery.of(q -> q.term(t -> t.field("claimName").value("barfoo")))),
+            Query.of(q -> q.term(t -> t.field("claimName").value("barfoo")))),
         Arguments.of(
             (Function<Builder, ObjectBuilder<MappingFilter>>) f -> f.claimValue("foobar"),
-            SearchQuery.of(q -> q.term(t -> t.field("claimValue").value("foobar")))),
+            Query.of(q -> q.term(t -> t.field("claimValue").value("foobar")))),
         Arguments.of(
             (Function<Builder, ObjectBuilder<MappingFilter>>) f -> f.name("foobar"),
-            SearchQuery.of(q -> q.term(t -> t.field("name").value("foobar")))),
+            Query.of(q -> q.term(t -> t.field("name").value("foobar")))),
         Arguments.of(
             (Function<Builder, ObjectBuilder<MappingFilter>>)
                 f -> f.mappingIds(Set.of("id1", "id2")),
-            SearchQuery.of(
+            Query.of(
                 q ->
                     q.terms(
                         t ->

@@ -176,21 +176,21 @@ public class ZeebeLinkEventValidationTest {
   public static BpmnModelInstance getLinkEventProcess() {
     final ProcessBuilder process = Bpmn.createExecutableProcess("process");
     process.startEvent().manualTask("manualTask1").intermediateThrowEvent().link("LinkA");
-    return process.linkCatchEvent().link("LinkB").manualTask("manualTask2").endEvent().done();
+    return process.catchEvent().link("LinkB").manualTask("manualTask2").endEvent().done();
   }
 
   public static BpmnModelInstance getOnlyTargetLinkEventProcess() {
     final ProcessBuilder process = Bpmn.createExecutableProcess("process");
     process.startEvent().endEvent();
-    return process.linkCatchEvent().link("LinkB").endEvent().done();
+    return process.catchEvent().link("LinkB").endEvent().done();
   }
 
   public static BpmnModelInstance getOnlyManyTargetLinkEventProcess() {
     final ProcessBuilder process = Bpmn.createExecutableProcess("process");
     process.startEvent().endEvent();
-    process.linkCatchEvent().link("LinkB").endEvent();
+    process.catchEvent().link("LinkB").endEvent();
 
-    return process.linkCatchEvent().link("LinkC").endEvent().done();
+    return process.catchEvent().link("LinkC").endEvent().done();
   }
 
   public static BpmnModelInstance getManyLinkEventProcess() {
@@ -201,12 +201,12 @@ public class ZeebeLinkEventValidationTest {
         .intermediateThrowEvent("linkThrow1")
         .link("LinkA");
     process
-        .linkCatchEvent()
+        .catchEvent()
         .link("LinkA")
         .manualTask("manualTask2")
         .intermediateThrowEvent("linkThrow2")
         .link("LinkB");
-    return process.linkCatchEvent().link("LinkA").manualTask("manualTask3").endEvent().done();
+    return process.catchEvent().link("LinkA").manualTask("manualTask3").endEvent().done();
   }
 
   public static BpmnModelInstance getGoToLinkEventProcess() {
@@ -224,6 +224,6 @@ public class ZeebeLinkEventValidationTest {
         .conditionExpression("condition_link")
         .intermediateThrowEvent("linkThrow")
         .link("LinkA");
-    return process.linkCatchEvent().link("LinkA").connectTo("exclusive1").done();
+    return process.catchEvent().link("LinkA").connectTo("exclusive1").done();
   }
 }

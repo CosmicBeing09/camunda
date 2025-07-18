@@ -82,7 +82,7 @@ public final class ErrorEventIncidentTest {
                       .endEvent("end_boundary_in_subprocess")
                       .moveToActivity("task_in_subprocess")
                       .endEvent("end_subprocess")
-                      .subProcessDone())
+                      .endSubProcess())
           .boundaryEvent("error", b -> b.error("error"))
           .endEvent("end_boundary")
           .moveToActivity("subprocess")

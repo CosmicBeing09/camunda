@@ -59,7 +59,7 @@ public class CamundaClientConfigurationImplSelfManagedTest {
 
   @Test
   void shouldHaveGatewayAddress() {
-    assertThat(camundaClientConfiguration.getGatewayAddress()).isEqualTo("localhost:26500");
+    assertThat(camundaClientConfiguration.gatewayAddress()).isEqualTo("localhost:26500");
   }
 
   @Test

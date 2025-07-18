@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 public final class SearchUserTaskTest extends ClientRestTest {
 
   @Test
-  void shouldSearchUserTask() {
+  void search() {
     // when
     client.newUserTaskSearchRequest().send().join();
 
@@ -44,7 +44,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   }
 
   @Test
-  void shouldSearchUserTaskByAssignee() {
+  void byAssignee() {
     // when
     client.newUserTaskSearchRequest().filter(f -> f.assignee("demo")).send().join();
 
@@ -76,7 +76,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   @Test
   void shouldSearchUserTaskByKey() {
     // when
-    client.newUserTaskSearchRequest().filter(f -> f.userTaskKey(12345L)).send().join();
+    client.newUserTaskSearchRequest().filter(f -> f.key(12345L)).send().join();
 
     // then
     final UserTaskSearchQuery request = gatewayService.getLastRequest(UserTaskSearchQuery.class);
@@ -86,7 +86,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   @Test
   void shouldSearchUserTaskByTaskDefinitionId() {
     // when
-    client.newUserTaskSearchRequest().filter(f -> f.elementId("task-def-id")).send().join();
+    client.newUserTaskSearchRequest().filter(f -> f.id("task-def-id")).send().join();
 
     // then
     final UserTaskSearchQuery request = gatewayService.getLastRequest(UserTaskSearchQuery.class);
@@ -116,7 +116,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   @Test
   void shouldSearchUserTaskByProcessDefinitionKey() {
     // when
-    client.newUserTaskSearchRequest().filter(f -> f.processDefinitionKey(123L)).send().join();
+    client.newUserTaskSearchRequest().filter(f -> f.definitionKey(123L)).send().join();
 
     // then
     final UserTaskSearchQuery request = gatewayService.getLastRequest(UserTaskSearchQuery.class);
@@ -126,7 +126,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   @Test
   void shouldSearchUserTaskByProcessInstanceKey() {
     // when
-    client.newUserTaskSearchRequest().filter(f -> f.processInstanceKey(456L)).send().join();
+    client.newUserTaskSearchRequest().filter(f -> f.elementInstanceKey(456L)).send().join();
 
     // then
     final UserTaskSearchQuery request = gatewayService.getLastRequest(UserTaskSearchQuery.class);

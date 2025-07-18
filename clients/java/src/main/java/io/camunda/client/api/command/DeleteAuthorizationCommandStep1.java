@@ -18,4 +18,4 @@ package io.camunda.client.api.command;
 import io.camunda.client.api.response.DeleteAuthorizationResponse;
 
 public interface DeleteAuthorizationCommandStep1
-    extends FinalCommandStep<DeleteAuthorizationResponse> {}
+    extends FinalStep<DeleteAuthorizationResponse> {}

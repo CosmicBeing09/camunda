@@ -17,13 +17,13 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1.CreateAuthorizationCommandStep2;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1.CreateAuthorizationCommandStep3;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1.CreateAuthorizationCommandStep4;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1.CreateAuthorizationCommandStep5;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1.CreateAuthorizationCommandStep6;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.AuthorizationBuilderStep1;
+import io.camunda.client.api.command.AuthorizationBuilderStep1.AuthorizationBuilderStep2;
+import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep3;
+import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep4;
+import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep5;
+import io.camunda.client.api.command.AuthorizationBuilderStep1.CreateAuthorizationCommandStep6;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CreateAuthorizationResponse;
 import io.camunda.client.api.search.enums.OwnerType;
 import io.camunda.client.api.search.enums.PermissionType;
@@ -40,8 +40,8 @@ import java.util.stream.Collectors;
 import org.apache.hc.client5.http.config.RequestConfig;
 
 public class CreateAuthorizationCommandImpl
-    implements CreateAuthorizationCommandStep1,
-        CreateAuthorizationCommandStep2,
+    implements AuthorizationBuilderStep1,
+    AuthorizationBuilderStep2,
         CreateAuthorizationCommandStep3,
         CreateAuthorizationCommandStep4,
         CreateAuthorizationCommandStep5,
@@ -60,7 +60,7 @@ public class CreateAuthorizationCommandImpl
   }
 
   @Override
-  public CreateAuthorizationCommandStep2 ownerId(final String ownerId) {
+  public AuthorizationBuilderStep2 ownerId(final String ownerId) {
     ArgumentUtil.ensureNotNull("ownerId", ownerId);
     ArgumentUtil.ensureNotEmpty("ownerId", ownerId);
     request.setOwnerId(ownerId);
@@ -100,7 +100,7 @@ public class CreateAuthorizationCommandImpl
   }
 
   @Override
-  public FinalCommandStep<CreateAuthorizationResponse> requestTimeout(
+  public FinalStep<CreateAuthorizationResponse> timeout(
       final Duration requestTimeout) {
     ArgumentUtil.ensurePositive("requestTimeout", requestTimeout);
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

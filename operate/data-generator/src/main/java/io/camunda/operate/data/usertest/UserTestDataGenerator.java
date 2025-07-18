@@ -12,7 +12,7 @@ import static io.camunda.webapps.schema.entities.AbstractExporterEntity.DEFAULT_
 
 import io.camunda.client.api.command.ClientException;
 import io.camunda.client.api.command.FailJobCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.worker.JobClient;
 import io.camunda.client.api.worker.JobHandler;
@@ -979,7 +979,7 @@ public class UserTestDataGenerator extends AbstractDataGenerator {
     @Override
     public void handle(final JobClient jobClient, final ActivatedJob job) {
       if (!taskFailed && processInstanceKey == job.getProcessInstanceKey()) {
-        FinalCommandStep failCmd = jobClient.newFailCommand(job.getKey()).retries(0);
+        FinalStep failCmd = jobClient.newFailCommand(job.getKey()).retries(0);
         if (errorMessage != null) {
           failCmd = ((FailJobCommandStep1.FailJobCommandStep2) failCmd).errorMessage(errorMessage);
         }

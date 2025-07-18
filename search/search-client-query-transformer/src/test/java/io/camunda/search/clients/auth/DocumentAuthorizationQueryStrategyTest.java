@@ -22,8 +22,8 @@ import io.camunda.search.clients.AuthorizationSearchClient;
 import io.camunda.search.clients.core.SearchQueryHit;
 import io.camunda.search.clients.core.SearchQueryRequest;
 import io.camunda.search.clients.core.SearchQueryResponse;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchMatchNoneQuery;
-import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.entities.AuthorizationEntity;
 import io.camunda.search.query.AuthorizationQuery;
 import io.camunda.search.query.ProcessDefinitionQuery;
@@ -143,7 +143,7 @@ class DocumentAuthorizationQueryStrategyTest {
   void shouldApplyAuthorizationFilterToQuery() {
     // given
     final SearchQueryRequest originalRequest =
-        new SearchQueryRequest.Builder().index("index").query(mock(SearchQuery.class)).build();
+        new SearchQueryRequest.Builder().index("index").query(mock(Query.class)).build();
     final var securityContext =
         SecurityContext.of(
             s ->

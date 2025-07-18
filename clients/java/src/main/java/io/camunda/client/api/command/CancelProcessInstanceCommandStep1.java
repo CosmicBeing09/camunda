@@ -20,7 +20,7 @@ import io.camunda.client.api.response.CancelProcessInstanceResponse;
 public interface CancelProcessInstanceCommandStep1
     extends CommandWithOperationReferenceStep<CancelProcessInstanceCommandStep1>,
         CommandWithCommunicationApiStep<CancelProcessInstanceCommandStep1>,
-        FinalCommandStep<CancelProcessInstanceResponse> {
+    FinalStep<CancelProcessInstanceResponse> {
   // the place for new optional parameters
 
 }

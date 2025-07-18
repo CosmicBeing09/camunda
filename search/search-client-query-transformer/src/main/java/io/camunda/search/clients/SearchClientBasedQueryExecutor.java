@@ -13,7 +13,7 @@ import io.camunda.search.aggregation.AggregationBase;
 import io.camunda.search.aggregation.result.AggregationResultBase;
 import io.camunda.search.clients.auth.AuthorizationQueryStrategy;
 import io.camunda.search.clients.core.SearchQueryRequest;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchQueryBuilders;
 import io.camunda.search.clients.transformers.ServiceTransformer;
 import io.camunda.search.clients.transformers.ServiceTransformers;
@@ -104,7 +104,7 @@ public final class SearchClientBasedQueryExecutor {
         .getTenantIdField()
         .map(
             tenantField -> {
-              final SearchQuery tenantQuery = stringTerms(tenantField, tenantIds);
+              final Query tenantQuery = stringTerms(tenantField, tenantIds);
               return request.toBuilder()
                   .query(SearchQueryBuilders.and(request.query(), tenantQuery))
                   .build();

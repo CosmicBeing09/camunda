@@ -132,8 +132,8 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
       @Authenticated(ADMIN_USER_NAME) final CamundaClient adminClient,
       @Authenticated(TEST_USER_NAME_NO_PERMISSION) final CamundaClient noPermission) {
     // given (admin) to create instance
-    final var processInstanceKey = createProcessInstance(adminClient, PROCESS_WITH_USER_TASK);
-    final var userTaskKey = awaitUserTaskBeingAvailable(adminClient, processInstanceKey);
+    final var processInstanceKey = createInstance(adminClient, PROCESS_WITH_USER_TASK);
+    final var userTaskKey = awaitUserTask(adminClient, processInstanceKey);
     // given (non-admin) user without any authorizations
 
     // when
@@ -154,8 +154,8 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
     // given (admin) to create instance
     // create a process instance - with pre-assigned user task
     final var processInstanceKey =
-        createProcessInstance(adminClient, PROCESS_WITH_USER_TASK_PRE_ASSIGNED);
-    final var userTaskKeyPreAssigned = awaitUserTaskBeingAvailable(adminClient, processInstanceKey);
+        createInstance(adminClient, PROCESS_WITH_USER_TASK_PRE_ASSIGNED);
+    final var userTaskKeyPreAssigned = awaitUserTask(adminClient, processInstanceKey);
     // given (non-admin) user without any authorizations
 
     // when
@@ -176,8 +176,8 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
     // given (admin) to create instance
     // create a process instance - with pre-assigned user task
     final var processInstanceKey =
-        createProcessInstance(adminClient, PROCESS_WITH_USER_TASK_PRE_ASSIGNED);
-    final var userTaskKeyPreAssigned = awaitUserTaskBeingAvailable(adminClient, processInstanceKey);
+        createInstance(adminClient, PROCESS_WITH_USER_TASK_PRE_ASSIGNED);
+    final var userTaskKeyPreAssigned = awaitUserTask(adminClient, processInstanceKey);
     // given (non-admin) user without any authorizations
 
     // when
@@ -198,7 +198,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
     // given (admin) to create instance
     // create a process instance with job based user task
     final long anotherProcessInstanceKeyWithJobBasedUserTask =
-        createProcessInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK);
+        createInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK);
     final var anotherUserTaskKeyWithJobBasedUserTask =
         awaitJobBasedUserTaskBeingAvailable(anotherProcessInstanceKeyWithJobBasedUserTask);
     // given (non-admin) user without any authorizations
@@ -220,7 +220,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
       @Authenticated(TEST_USER_NAME_NO_PERMISSION) final CamundaClient noPermission) {
     // given (admin) to create instance
     final var processInstanceKeyWithJobBasedUserTaskPreAssigned =
-        createProcessInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK_PRE_ASSIGNED);
+        createInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK_PRE_ASSIGNED);
     final var userTaskKeyWithJobBasedUserTaskPreAssigned =
         awaitJobBasedUserTaskBeingAvailable(processInstanceKeyWithJobBasedUserTaskPreAssigned);
     // given (non-admin) user without any authorizations
@@ -242,7 +242,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
       @Authenticated(TEST_USER_NAME_NO_PERMISSION) final CamundaClient noPermission) {
     // given (admin) to create instance
     final var processInstanceKeyWithJobBasedUserTaskPreAssigned =
-        createProcessInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK_PRE_ASSIGNED);
+        createInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK_PRE_ASSIGNED);
     final var userTaskKeyWithJobBasedUserTaskPreAssigned =
         awaitJobBasedUserTaskBeingAvailable(processInstanceKeyWithJobBasedUserTaskPreAssigned);
     // given (non-admin) user without any authorizations
@@ -264,7 +264,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
       @Authenticated(TEST_USER_NAME_WITH_PERMISSION) final CamundaClient withPermission) {
     // given (admin) to create instance
     final var processInstanceKeyWithJobBasedUserTask =
-        createProcessInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK);
+        createInstance(adminClient, PROCESS_ID_WITH_JOB_BASED_USERTASK);
     final var userTaskKeyWithJobBasedUserTask =
         awaitJobBasedUserTaskBeingAvailable(processInstanceKeyWithJobBasedUserTask);
     // given (non-admin) user with permissions to assign task
@@ -283,10 +283,10 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
   }
 
   private static void deployResource(final CamundaClient camundaClient, final String resource) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resource).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resource).send().join();
   }
 
-  public static long createProcessInstance(
+  public static long createInstance(
       final CamundaClient camundaClient, final String processDefinitionId) {
     return camundaClient
         .newCreateInstanceCommand()
@@ -297,7 +297,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
         .getProcessInstanceKey();
   }
 
-  public static long awaitUserTaskBeingAvailable(
+  public static long awaitUserTask(
       final CamundaClient camundaClient, final long processInstanceKey) {
     final AtomicLong userTaskKey = new AtomicLong();
     Awaitility.await("should create an user task")
@@ -308,11 +308,11 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
               final var result =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.elementInstanceKey(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);
-              userTaskKey.set(result.items().getFirst().getUserTaskKey());
+              userTaskKey.set(result.items().getFirst().getKey());
             });
     return userTaskKey.get();
   }

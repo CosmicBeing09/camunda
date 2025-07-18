@@ -162,7 +162,7 @@ class JobWorkerBuilderImplTest {
         .open();
 
     // then
-    verify(lastStep, atLeast(1)).requestTimeout(Duration.ofHours(5));
+    verify(lastStep, atLeast(1)).timeout(Duration.ofHours(5));
   }
 
   @Test
@@ -185,7 +185,7 @@ class JobWorkerBuilderImplTest {
         .open();
 
     // then
-    verify(lastStep, atLeast(1)).requestTimeout(Duration.ofHours(8));
+    verify(lastStep, atLeast(1)).timeout(Duration.ofHours(8));
   }
 
   @Test
@@ -198,7 +198,7 @@ class JobWorkerBuilderImplTest {
     @SuppressWarnings("unchecked")
     final ArgumentCaptor<List<String>> tenantIdCaptor = ArgumentCaptor.forClass(List.class);
     Mockito.when(lastStep.tenantIds(tenantIdCaptor.capture())).thenReturn(lastStep);
-    Mockito.when(lastStep.requestTimeout(any())).thenReturn(lastStep);
+    Mockito.when(lastStep.timeout(any())).thenReturn(lastStep);
     final CamundaFuture<ActivateJobsResponse> camundaFuture = Mockito.mock();
     Mockito.when(lastStep.send()).thenReturn(camundaFuture);
     Mockito.when(camundaFuture.exceptionally(any())).thenReturn(Mockito.mock());
@@ -229,7 +229,7 @@ class JobWorkerBuilderImplTest {
     @SuppressWarnings("unchecked")
     final ArgumentCaptor<List<String>> tenantIdCaptor = ArgumentCaptor.forClass(List.class);
     Mockito.when(lastStep.tenantIds(tenantIdCaptor.capture())).thenReturn(lastStep);
-    Mockito.when(lastStep.requestTimeout(any())).thenReturn(lastStep);
+    Mockito.when(lastStep.timeout(any())).thenReturn(lastStep);
     final CamundaFuture<ActivateJobsResponse> camundaFuture = Mockito.mock();
     Mockito.when(lastStep.send()).thenReturn(camundaFuture);
     Mockito.when(camundaFuture.exceptionally(any())).thenReturn(Mockito.mock());

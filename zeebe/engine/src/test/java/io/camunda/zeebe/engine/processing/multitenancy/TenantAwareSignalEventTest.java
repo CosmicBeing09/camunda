@@ -61,7 +61,7 @@ public class TenantAwareSignalEventTest {
 
   @Before
   public void setup() {
-    processId = Strings.newRandomValidBpmnId();
+    processId = Strings.randomBpmnId();
     signalName = "signal-%s".formatted(processId);
   }
 

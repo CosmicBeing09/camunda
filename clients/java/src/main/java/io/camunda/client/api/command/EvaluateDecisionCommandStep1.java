@@ -42,7 +42,7 @@ public interface EvaluateDecisionCommandStep1
 
   interface EvaluateDecisionCommandStep2
       extends CommandWithTenantStep<EvaluateDecisionCommandStep2>,
-          FinalCommandStep<EvaluateDecisionResponse>,
+      FinalStep<EvaluateDecisionResponse>,
           CommandWithVariables<EvaluateDecisionCommandStep2> {
 
     /**

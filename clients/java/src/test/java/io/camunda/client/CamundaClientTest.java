@@ -97,9 +97,9 @@ public final class CamundaClientTest {
       final CamundaClientConfiguration configuration = client.getConfiguration();
 
       // then
-      assertThat(configuration.getGatewayAddress()).isEqualTo(DEFAULT_GATEWAY_ADDRESS);
+      assertThat(configuration.gatewayAddress()).isEqualTo(DEFAULT_GATEWAY_ADDRESS);
       assertThat(configuration.getGrpcAddress()).isEqualTo(DEFAULT_GRPC_ADDRESS);
-      assertThat(configuration.getRestAddress()).isEqualTo(DEFAULT_REST_ADDRESS);
+      assertThat(configuration.restAddress()).isEqualTo(DEFAULT_REST_ADDRESS);
       assertThat(configuration.getDefaultJobWorkerMaxJobsActive()).isEqualTo(32);
       assertThat(configuration.getNumJobWorkerExecutionThreads()).isEqualTo(1);
       assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("default");
@@ -490,7 +490,7 @@ public final class CamundaClientTest {
             .credentialsProvider(credentialsProvider)
             .build()) {
       final CamundaClientConfiguration configuration = client.getConfiguration();
-      assertThat(configuration.getGatewayAddress()).isEqualTo(gatewayAddress);
+      assertThat(configuration.gatewayAddress()).isEqualTo(gatewayAddress);
       assertThat(configuration.getCredentialsProvider()).isEqualTo(credentialsProvider);
     }
   }
@@ -605,7 +605,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getRestAddress()).isEqualTo(restAddress);
+    assertThat(builder.restAddress()).isEqualTo(restAddress);
   }
 
   @ParameterizedTest
@@ -623,7 +623,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getRestAddress()).isEqualTo(restAddress);
+    assertThat(builder.restAddress()).isEqualTo(restAddress);
   }
 
   @ParameterizedTest
@@ -711,7 +711,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getRestAddress()).isEqualTo(restAddress);
+    assertThat(builder.restAddress()).isEqualTo(restAddress);
   }
 
   @Test

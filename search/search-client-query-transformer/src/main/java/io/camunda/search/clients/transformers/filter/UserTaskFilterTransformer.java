@@ -19,14 +19,14 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.*;
 import static java.util.Optional.ofNullable;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.transformers.ServiceTransformers;
 import io.camunda.search.filter.Operation;
 import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.filter.VariableValueFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,15 +43,15 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
   }
 
   @Override
-  public SearchQuery toSearchQuery(final UserTaskFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+  public Query toSearchQuery(final UserTaskFilter filter) {
+    final var queries = new ArrayList<Query>();
     ofNullable(getUserTaskKeysQuery(filter.userTaskKeys())).ifPresent(queries::add);
     ofNullable(getProcessInstanceKeysQuery(filter.processInstanceKeys())).ifPresent(queries::add);
     ofNullable(getProcessDefinitionKeyQuery(filter.processDefinitionKeys()))
         .ifPresent(queries::add);
-    ofNullable(getBpmnProcessIdQuery(filter.bpmnProcessIds())).ifPresent(queries::add);
+    ofNullable(getBpmnProcessIdQuery(filter.processIds())).ifPresent(queries::add);
     ofNullable(getElementIdQuery(filter.elementIds())).ifPresent(queries::add);
-    ofNullable(getElementNameQuery(filter.elementNames())).ifPresent(queries::add);
+    ofNullable(getNameQuery(filter.elementNames())).ifPresent(queries::add);
     queries.addAll(getCandidateUsersQuery(filter.candidateUserOperations()));
     queries.addAll(getCandidateGroupsQuery(filter.candidateGroupOperations()));
     queries.addAll(getAssigneesQuery(filter.assigneeOperations()));
@@ -67,7 +67,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
     // Process Instance Variable Query: Check if processVariable  with specified varName and
     // varValue exists
     ofNullable(getProcessInstanceVariablesQuery(filter.processInstanceVariableFilter()))
-        .ifPresent(f -> queries.add(hasParentQuery(TaskJoinRelationshipType.PROCESS.getType(), f)));
+        .ifPresent(f -> queries.add(hasParentQuery(RelationshipType.PROCESS.getType(), f)));
 
     // Local Variable Query: Check if localVariable with specified varName and varValue exists
     // No need validate parent as the localVariable is the only children from Task
@@ -79,99 +79,99 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
     return and(queries);
   }
 
-  private SearchQuery getProcessInstanceKeysQuery(final List<Long> processInstanceKeys) {
+  private Query getProcessInstanceKeysQuery(final List<Long> processInstanceKeys) {
     return longTerms(PROCESS_INSTANCE_ID, processInstanceKeys);
   }
 
-  private SearchQuery getProcessDefinitionKeyQuery(final List<Long> processDefinitionIds) {
+  private Query getProcessDefinitionKeyQuery(final List<Long> processDefinitionIds) {
     return longTerms(PROCESS_DEFINITION_ID, processDefinitionIds);
   }
 
-  private SearchQuery getUserTaskKeysQuery(final List<Long> userTaskKeys) {
+  private Query getUserTaskKeysQuery(final List<Long> userTaskKeys) {
     return longTerms(KEY, userTaskKeys);
   }
 
-  private List<SearchQuery> getCandidateUsersQuery(final List<Operation<String>> candidateUsers) {
+  private List<Query> getCandidateUsersQuery(final List<Operation<String>> candidateUsers) {
     return stringOperations(CANDIDATE_USERS, candidateUsers);
   }
 
-  private List<SearchQuery> getCandidateGroupsQuery(final List<Operation<String>> candidateGroups) {
+  private List<Query> getCandidateGroupsQuery(final List<Operation<String>> candidateGroups) {
     return stringOperations(CANDIDATE_GROUPS, candidateGroups);
   }
 
-  private List<SearchQuery> getAssigneesQuery(final List<Operation<String>> assignees) {
+  private List<Query> getAssigneesQuery(final List<Operation<String>> assignees) {
     return stringOperations(ASSIGNEE, assignees);
   }
 
-  private List<SearchQuery> getPrioritiesQuery(final List<Operation<Integer>> priorities) {
+  private List<Query> getPrioritiesQuery(final List<Operation<Integer>> priorities) {
     return intOperations(PRIORITY, priorities);
   }
 
-  private List<SearchQuery> getCreationTimeQuery(
+  private List<Query> getCreationTimeQuery(
       final List<Operation<OffsetDateTime>> creationTime) {
     return dateTimeOperations(CREATION_TIME, creationTime);
   }
 
-  private List<SearchQuery> getCompletionTimeQuery(
+  private List<Query> getCompletionTimeQuery(
       final List<Operation<OffsetDateTime>> completionTime) {
     return dateTimeOperations(COMPLETION_TIME, completionTime);
   }
 
-  private List<SearchQuery> getFollowUpDateQuery(
+  private List<Query> getFollowUpDateQuery(
       final List<Operation<OffsetDateTime>> followUpTime) {
     return dateTimeOperations(FOLLOW_UP_DATE, followUpTime);
   }
 
-  private List<SearchQuery> getDueDateQuery(final List<Operation<OffsetDateTime>> dueTime) {
+  private List<Query> getDueDateQuery(final List<Operation<OffsetDateTime>> dueTime) {
     return dateTimeOperations(DUE_DATE, dueTime);
   }
 
-  private SearchQuery getStateQuery(final List<String> state) {
+  private Query getStateQuery(final List<String> state) {
     return stringTerms(STATE, state);
   }
 
-  private SearchQuery getTenantQuery(final List<String> tenant) {
+  private Query getTenantQuery(final List<String> tenant) {
     return stringTerms(TENANT_ID, tenant);
   }
 
-  private SearchQuery getBpmnProcessIdQuery(final List<String> bpmnProcessId) {
+  private Query getBpmnProcessIdQuery(final List<String> bpmnProcessId) {
     return stringTerms(BPMN_PROCESS_ID, bpmnProcessId);
   }
 
-  private SearchQuery getElementInstanceKeyQuery(final List<Long> elementInstanceKeys) {
+  private Query getElementInstanceKeyQuery(final List<Long> elementInstanceKeys) {
     return longTerms(FLOW_NODE_INSTANCE_ID, elementInstanceKeys);
   }
 
-  private SearchQuery getElementIdQuery(final List<String> taskDefinitionId) {
+  private Query getElementIdQuery(final List<String> taskDefinitionId) {
     return stringTerms(FLOW_NODE_BPMN_ID, taskDefinitionId);
   }
 
-  private SearchQuery getElementNameQuery(final List<String> elementName) {
+  private Query getNameQuery(final List<String> elementName) {
     return stringTerms(FLOW_NODE_NAME, elementName);
   }
 
-  private SearchQuery getProcessInstanceVariablesQuery(
+  private Query getProcessInstanceVariablesQuery(
       final List<VariableValueFilter> variableFilters) {
     if (variableFilters != null && !variableFilters.isEmpty()) {
       final var transformer = getVariableValueFilterTransformer();
       final var queries =
           variableFilters.stream()
               .map(transformer::apply)
-              .map((q) -> hasChildQuery(TaskJoinRelationshipType.PROCESS_VARIABLE.getType(), q))
+              .map((q) -> hasChildQuery(RelationshipType.PROCESS_VARIABLE.getType(), q))
               .collect(Collectors.toList());
       return and(queries);
     }
     return null;
   }
 
-  private SearchQuery getLocalVariablesQuery(final List<VariableValueFilter> variableFilters) {
+  private Query getLocalVariablesQuery(final List<VariableValueFilter> variableFilters) {
     if (variableFilters != null && !variableFilters.isEmpty()) {
       final var transformer = getVariableValueFilterTransformer();
 
       final var queries =
           variableFilters.stream()
               .map(transformer::apply)
-              .map((q) -> hasChildQuery(TaskJoinRelationshipType.LOCAL_VARIABLE.getType(), q))
+              .map((q) -> hasChildQuery(RelationshipType.LOCAL_VARIABLE.getType(), q))
               .collect(Collectors.toList());
       return and(queries);
     }

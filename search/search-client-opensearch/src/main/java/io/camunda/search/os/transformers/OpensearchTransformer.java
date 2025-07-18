@@ -7,7 +7,7 @@
  */
 package io.camunda.search.os.transformers;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.source.SearchSourceConfig;
 import io.camunda.search.clients.source.SearchSourceFilter;
 import io.camunda.search.clients.transformers.SearchTransfomer;
@@ -15,7 +15,6 @@ import io.camunda.search.clients.types.TypedValue;
 import io.camunda.search.sort.SearchSortOptions;
 import org.opensearch.client.opensearch._types.FieldValue;
 import org.opensearch.client.opensearch._types.SortOptions;
-import org.opensearch.client.opensearch._types.query_dsl.Query;
 import org.opensearch.client.opensearch.core.search.SourceConfig;
 import org.opensearch.client.opensearch.core.search.SourceFilter;
 
@@ -31,8 +30,8 @@ public abstract class OpensearchTransformer<T, R> implements SearchTransfomer<T,
     return (SearchTransfomer<T, R>) transformers.getTransformer(cls);
   }
 
-  protected SearchTransfomer<SearchQuery, Query> getQueryTransformer() {
-    return getTransformer(SearchQuery.class);
+  protected SearchTransfomer<Query, org.opensearch.client.opensearch._types.query_dsl.Query> getQueryTransformer() {
+    return getTransformer(Query.class);
   }
 
   protected SearchTransfomer<TypedValue, FieldValue> getFieldValueTransformer() {

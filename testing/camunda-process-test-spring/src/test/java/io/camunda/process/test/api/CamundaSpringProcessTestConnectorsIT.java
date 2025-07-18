@@ -54,7 +54,7 @@ public class CamundaSpringProcessTestConnectorsIT {
   void shouldInvokeInAndOutboundConnectors() throws IOException {
     // given
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("connector-process.bpmn")
         .send()
         .join();

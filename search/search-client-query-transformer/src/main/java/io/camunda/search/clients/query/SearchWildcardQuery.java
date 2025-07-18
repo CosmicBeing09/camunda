@@ -10,7 +10,7 @@ package io.camunda.search.clients.query;
 import io.camunda.util.ObjectBuilder;
 import java.util.Objects;
 
-public record SearchWildcardQuery(String field, String value) implements SearchQueryOption {
+public record SearchWildcardQuery(String field, String value) implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchWildcardQuery> {
 

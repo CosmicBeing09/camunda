@@ -58,7 +58,7 @@ public class UsersByGroupSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<GroupUser> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<GroupUser> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

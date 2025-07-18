@@ -1430,7 +1430,7 @@ public class CompensationEventExecutionTest {
                                 compensation.serviceTask("Undo-A").zeebeJobType("Undo-A")))
             .endEvent()
             .compensateEventDefinition()
-            .subProcessDone()
+            .endSubProcess()
             .endEvent()
             .done();
 
@@ -1862,7 +1862,7 @@ public class CompensationEventExecutionTest {
                         .compensation(
                             compensation ->
                                 compensation.serviceTask("Undo-A").zeebeJobType("Undo-A")))
-            .subProcessDone()
+            .endSubProcess()
             .parallelGateway("join")
             .moveToNode("fork")
             .serviceTask(
@@ -1925,7 +1925,7 @@ public class CompensationEventExecutionTest {
                         .compensation(
                             compensation ->
                                 compensation.serviceTask("Undo-A").zeebeJobType("Undo-A")))
-            .subProcessDone()
+            .endSubProcess()
             .parallelGateway("join")
             .moveToNode("fork")
             .serviceTask(
@@ -1988,7 +1988,7 @@ public class CompensationEventExecutionTest {
                         .compensation(
                             compensation ->
                                 compensation.serviceTask("Undo-A").zeebeJobType("Undo-A")))
-            .subProcessDone()
+            .endSubProcess()
             .parallelGateway("fork")
             .intermediateThrowEvent(
                 "compensation-throw-event-1",
@@ -2044,7 +2044,7 @@ public class CompensationEventExecutionTest {
                         .compensation(
                             compensation ->
                                 compensation.serviceTask("Undo-A").zeebeJobType("Undo-A")))
-            .subProcessDone()
+            .endSubProcess()
             .moveToNode("fork")
             .serviceTask("B", task -> task.zeebeJobType("B"))
             .intermediateThrowEvent(

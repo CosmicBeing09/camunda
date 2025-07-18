@@ -31,9 +31,10 @@ import io.camunda.client.api.command.AssignRoleToGroupCommandStep1;
 import io.camunda.client.api.command.AssignRoleToMappingCommandStep1;
 import io.camunda.client.api.command.AssignRoleToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToUserCommandStep1;
-import io.camunda.client.api.command.AssignUserTaskCommandStep1;
+import io.camunda.client.api.command.AssignUserTaskStep1;
 import io.camunda.client.api.command.AssignUserToGroupCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
+import io.camunda.client.api.command.AuthorizationBuilderStep1;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1;
 import io.camunda.client.api.command.CancelProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ClientException;
@@ -42,7 +43,6 @@ import io.camunda.client.api.command.ClockResetCommandStep1;
 import io.camunda.client.api.command.CompleteJobCommandStep1;
 import io.camunda.client.api.command.CompleteUserTaskCommandStep1;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1;
 import io.camunda.client.api.command.CreateDocumentBatchCommandStep1;
 import io.camunda.client.api.command.CreateDocumentCommandStep1;
@@ -90,7 +90,7 @@ import io.camunda.client.api.command.UpdateRoleCommandStep1;
 import io.camunda.client.api.command.UpdateTenantCommandStep1;
 import io.camunda.client.api.command.UpdateTimeoutJobCommandStep1;
 import io.camunda.client.api.command.UpdateUserCommandStep1;
-import io.camunda.client.api.command.UpdateUserTaskCommandStep1;
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.api.fetch.BatchOperationGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetXmlRequest;
@@ -507,13 +507,13 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public DeployProcessCommandStep1 newDeployCommand() {
+  public DeployProcessCommandStep1 deploy() {
     return new DeployProcessCommandImpl(
         asyncStub, config.getDefaultRequestTimeout(), credentialsProvider::shouldRetryRequest);
   }
 
   @Override
-  public DeployResourceCommandStep1 newDeployResourceCommand() {
+  public DeployResourceCommandStep1 deployResource() {
     return new DeployResourceCommandImpl(
         asyncStub,
         config,
@@ -677,12 +677,12 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public AssignUserTaskCommandStep1 newUserTaskAssignCommand(final long userTaskKey) {
+  public AssignUserTaskStep1 newUserTaskAssignCommand(final long userTaskKey) {
     return new AssignUserTaskCommandImpl(httpClient, jsonMapper, userTaskKey);
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 newUserTaskUpdateCommand(final long userTaskKey) {
+  public UserTaskUpdateBuilder newUserTaskUpdateCommand(final long userTaskKey) {
     return new UpdateUserTaskCommandImpl(httpClient, jsonMapper, userTaskKey);
   }
 
@@ -1123,7 +1123,7 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public CreateAuthorizationCommandStep1 newCreateAuthorizationCommand() {
+  public AuthorizationBuilderStep1 newCreateAuthorizationCommand() {
     return new CreateAuthorizationCommandImpl(httpClient, jsonMapper);
   }
 

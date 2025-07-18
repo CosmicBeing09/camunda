@@ -27,7 +27,7 @@ public interface AssignUserToGroupCommandStep1 {
    */
   AssignUserToGroupCommandStep2 username(String username);
 
-  interface AssignUserToGroupCommandStep2 extends FinalCommandStep<AssignUserToGroupResponse> {
+  interface AssignUserToGroupCommandStep2 extends FinalStep<AssignUserToGroupResponse> {
     /**
      * Sets the group ID.
      *

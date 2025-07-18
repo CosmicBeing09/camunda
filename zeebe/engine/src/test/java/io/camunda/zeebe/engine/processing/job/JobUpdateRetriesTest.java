@@ -71,7 +71,7 @@ public final class JobUpdateRetriesTest {
 
   @Before
   public void setup() {
-    jobType = Strings.newRandomValidBpmnId();
+    jobType = Strings.randomBpmnId();
   }
 
   @Test

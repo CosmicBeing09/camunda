@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent.ELEM
 
 import io.camunda.exporter.store.BatchRequest;
 import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.webapps.schema.entities.usertask.TaskProcessInstanceEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -61,7 +61,7 @@ public class UserTaskProcessInstanceHandler
     entity.setPartitionId(record.getPartitionId()).setTenantId(record.getValue().getTenantId());
     entity.setProcessInstanceId(record.getKey());
     final TaskJoinRelationship join = new TaskJoinRelationship();
-    join.setName(TaskJoinRelationshipType.PROCESS.getType());
+    join.setName(RelationshipType.PROCESS.getType());
 
     entity.setJoin(join);
   }

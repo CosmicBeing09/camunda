@@ -41,7 +41,7 @@ public class UnassignUserFromGroupTest {
         client
             .newUserCreateCommand()
             .name("User Name")
-            .username(Strings.newRandomValidUsername())
+            .username(Strings.randomUsername())
             .email("foo@example.com")
             .password("******")
             .send()

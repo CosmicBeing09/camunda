@@ -20,7 +20,7 @@ import static io.camunda.client.impl.search.request.TypedSearchRequestPropertyPr
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.search.filter.AdHocSubProcessActivityFilter;
 import io.camunda.client.api.search.request.AdHocSubProcessActivitySearchRequest;
 import io.camunda.client.api.search.response.AdHocSubProcessActivityResponse;
@@ -63,7 +63,7 @@ public class AdHocSubProcessActivitySearchRequestImpl
   }
 
   @Override
-  public FinalCommandStep<AdHocSubProcessActivityResponse> requestTimeout(
+  public FinalStep<AdHocSubProcessActivityResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

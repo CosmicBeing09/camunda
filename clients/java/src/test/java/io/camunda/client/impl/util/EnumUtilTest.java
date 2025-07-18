@@ -32,7 +32,7 @@ public class EnumUtilTest {
       final io.camunda.client.protocol.rest.OwnerTypeEnum protocolValue =
           EnumUtil.convert(value, io.camunda.client.protocol.rest.OwnerTypeEnum.class);
       assertThat(protocolValue).isNotNull();
-      if (value == OwnerType.UNKNOWN_ENUM_VALUE) {
+      if (value == OwnerType.UNKNOWN) {
         assertThat(protocolValue)
             .isEqualTo(io.camunda.client.protocol.rest.OwnerTypeEnum.UNKNOWN_DEFAULT_OPEN_API);
       } else {
@@ -45,7 +45,7 @@ public class EnumUtilTest {
       final OwnerType value = EnumUtil.convert(protocolValue, OwnerType.class);
       assertThat(value).isNotNull();
       if (protocolValue == io.camunda.client.protocol.rest.OwnerTypeEnum.UNKNOWN_DEFAULT_OPEN_API) {
-        assertThat(value).isEqualTo(OwnerType.UNKNOWN_ENUM_VALUE);
+        assertThat(value).isEqualTo(OwnerType.UNKNOWN);
       } else {
         assertThat(value.name()).isEqualTo(protocolValue.name());
       }
@@ -396,7 +396,7 @@ public class EnumUtilTest {
       final io.camunda.client.protocol.rest.UserTaskResult.StateEnum protocolValue =
           EnumUtil.convert(value, io.camunda.client.protocol.rest.UserTaskResult.StateEnum.class);
       assertThat(protocolValue).isNotNull();
-      if (value == UserTaskState.UNKNOWN_ENUM_VALUE) {
+      if (value == UserTaskState.UNKNOWN) {
         assertThat(protocolValue)
             .isEqualTo(
                 io.camunda.client.protocol.rest.UserTaskResult.StateEnum.UNKNOWN_DEFAULT_OPEN_API);
@@ -411,7 +411,7 @@ public class EnumUtilTest {
       assertThat(value).isNotNull();
       if (protocolValue
           == io.camunda.client.protocol.rest.UserTaskResult.StateEnum.UNKNOWN_DEFAULT_OPEN_API) {
-        assertThat(value).isEqualTo(UserTaskState.UNKNOWN_ENUM_VALUE);
+        assertThat(value).isEqualTo(UserTaskState.UNKNOWN);
       } else {
         assertThat(value.name()).isEqualTo(protocolValue.name());
       }
@@ -425,7 +425,7 @@ public class EnumUtilTest {
       final io.camunda.client.protocol.rest.UserTaskFilter.StateEnum protocolValue =
           EnumUtil.convert(value, io.camunda.client.protocol.rest.UserTaskFilter.StateEnum.class);
       assertThat(protocolValue).isNotNull();
-      if (value == UserTaskState.UNKNOWN_ENUM_VALUE) {
+      if (value == UserTaskState.UNKNOWN) {
         assertThat(protocolValue)
             .isEqualTo(
                 io.camunda.client.protocol.rest.UserTaskFilter.StateEnum.UNKNOWN_DEFAULT_OPEN_API);
@@ -440,7 +440,7 @@ public class EnumUtilTest {
       assertThat(value).isNotNull();
       if (protocolValue
           == io.camunda.client.protocol.rest.UserTaskFilter.StateEnum.UNKNOWN_DEFAULT_OPEN_API) {
-        assertThat(value).isEqualTo(UserTaskState.UNKNOWN_ENUM_VALUE);
+        assertThat(value).isEqualTo(UserTaskState.UNKNOWN);
       } else {
         assertThat(value.name()).isEqualTo(protocolValue.name());
       }

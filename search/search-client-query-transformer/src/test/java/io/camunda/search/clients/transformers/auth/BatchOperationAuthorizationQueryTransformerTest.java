@@ -13,7 +13,7 @@ import static io.camunda.zeebe.protocol.record.value.PermissionType.READ;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import java.util.List;
@@ -32,7 +32,7 @@ class BatchOperationAuthorizationQueryTransformerTest {
     final List<String> resourceKeys = List.of("key1", "key2");
 
     // when
-    final SearchQuery result =
+    final Query result =
         transformer.toSearchQuery(resourceType, permissionType, resourceKeys);
 
     // then

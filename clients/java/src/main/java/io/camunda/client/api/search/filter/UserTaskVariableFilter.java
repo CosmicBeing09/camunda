@@ -16,10 +16,10 @@
 package io.camunda.client.api.search.filter;
 
 import io.camunda.client.api.search.filter.builder.StringProperty;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import java.util.function.Consumer;
 
-public interface UserTaskVariableFilter extends SearchRequestFilter {
+public interface UserTaskVariableFilter extends Filter {
   /**
    * Filters variables by the specified name.
    *

@@ -17,7 +17,7 @@ import static io.camunda.webapps.schema.descriptors.index.AuthorizationIndex.PER
 import static io.camunda.webapps.schema.descriptors.index.AuthorizationIndex.RESOURCE_ID;
 import static io.camunda.webapps.schema.descriptors.index.AuthorizationIndex.RESOURCE_TYPE;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.AuthorizationFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -29,7 +29,7 @@ public final class AuthorizationFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final AuthorizationFilter filter) {
+  public Query toSearchQuery(final AuthorizationFilter filter) {
     return and(
         filter.authorizationKey() == null ? null : term(ID, filter.authorizationKey()),
         stringTerms(OWNER_ID, filter.ownerIds()),

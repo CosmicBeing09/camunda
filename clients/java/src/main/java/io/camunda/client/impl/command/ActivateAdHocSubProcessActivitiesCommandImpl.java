@@ -19,7 +19,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.ActivateAdHocSubProcessActivitiesCommandStep1;
 import io.camunda.client.api.command.ActivateAdHocSubProcessActivitiesCommandStep1.ActivateAdHocSubProcessActivitiesCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ActivateAdHocSubProcessActivitiesResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -60,7 +60,7 @@ public final class ActivateAdHocSubProcessActivitiesCommandImpl
   }
 
   @Override
-  public FinalCommandStep<ActivateAdHocSubProcessActivitiesResponse> requestTimeout(
+  public FinalStep<ActivateAdHocSubProcessActivitiesResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

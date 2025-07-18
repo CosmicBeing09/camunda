@@ -39,7 +39,7 @@ public class UserTaskGetRequestImpl implements UserTaskGetRequest {
   }
 
   @Override
-  public UserTaskGetRequest requestTimeout(final Duration requestTimeout) {
+  public UserTaskGetRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

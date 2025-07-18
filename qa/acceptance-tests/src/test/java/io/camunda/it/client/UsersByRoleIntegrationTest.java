@@ -33,7 +33,7 @@ public class UsersByRoleIntegrationTest {
   @Test
   void shouldAssignRoleToUser() {
     // given
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     final var roleId = Strings.newRandomValidIdentityId();
     final var createdUser = createUser(username);
     createRole(roleId, "roleName", "roleDesc");
@@ -59,7 +59,7 @@ public class UsersByRoleIntegrationTest {
 
   @Test
   void shouldRejectAssignIfRoleDoesNotExist() {
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     createUser(username);
     final var nonExistingRoleId = Strings.newRandomValidIdentityId();
 
@@ -78,7 +78,7 @@ public class UsersByRoleIntegrationTest {
 
   @Test
   void shouldRejectAssignIfUserAlreadyAssigned() {
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     final var roleId = Strings.newRandomValidIdentityId();
     createUser(username);
     createRole(roleId, "roleName", "roleDesc");
@@ -101,8 +101,8 @@ public class UsersByRoleIntegrationTest {
   void shouldUnassignRoleFromUserOnRoleDeletion() {
     // given
     final var roleId = Strings.newRandomValidIdentityId();
-    final var username1 = Strings.newRandomValidUsername();
-    final var username2 = Strings.newRandomValidUsername();
+    final var username1 = Strings.randomUsername();
+    final var username2 = Strings.randomUsername();
     createUser(username1);
     createUser(username2);
     createRole(roleId, "roleName", "roleDesc");
@@ -140,7 +140,7 @@ public class UsersByRoleIntegrationTest {
   @Test
   void shouldUnassignUserFromRole() {
     // given
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     final var roleId = Strings.newRandomValidIdentityId();
     createUser(username);
     createRole(roleId, "roleName", "roleDesc");
@@ -171,7 +171,7 @@ public class UsersByRoleIntegrationTest {
 
   @Test
   void shouldRejectUnassignIfUserNotAssigned() {
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     final var roleId = Strings.newRandomValidIdentityId();
     createUser(username);
     createRole(roleId, "roleName", "roleDesc");
@@ -192,7 +192,7 @@ public class UsersByRoleIntegrationTest {
   @Test
   void shouldRejectUnassignIfRoleDoesNotExist() {
     final var roleId = Strings.newRandomValidIdentityId();
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     createUser(username);
 
     assertThatThrownBy(
@@ -212,8 +212,8 @@ public class UsersByRoleIntegrationTest {
 
   @Test
   void shouldReturnUsersByRole() {
-    final var user1 = Strings.newRandomValidUsername();
-    final var user2 = Strings.newRandomValidUsername();
+    final var user1 = Strings.randomUsername();
+    final var user2 = Strings.randomUsername();
     final var roleId = Strings.newRandomValidIdentityId();
 
     createUser(user1);
@@ -236,9 +236,9 @@ public class UsersByRoleIntegrationTest {
   @Test
   void shouldReturnUsersByRoleSorted() {
     final var roleId = Strings.newRandomValidIdentityId();
-    final var user1 = "Alice" + Strings.newRandomValidUsername();
-    final var user2 = "Bob" + Strings.newRandomValidUsername();
-    final var user3 = "Simon" + Strings.newRandomValidUsername();
+    final var user1 = "Alice" + Strings.randomUsername();
+    final var user2 = "Bob" + Strings.randomUsername();
+    final var user3 = "Simon" + Strings.randomUsername();
     createUser(user1, "Alice", user1 + "@example.com");
     createUser(user2, "Bob", user2 + "@example.com");
     createUser(user3, "Simon", user2 + "@example.com");

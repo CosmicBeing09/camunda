@@ -37,7 +37,7 @@ public class DecisionRequirementsGetXmlRequestImpl implements DecisionRequiremen
   }
 
   @Override
-  public DecisionRequirementsGetXmlRequest requestTimeout(final Duration requestTimeout) {
+  public DecisionRequirementsGetXmlRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

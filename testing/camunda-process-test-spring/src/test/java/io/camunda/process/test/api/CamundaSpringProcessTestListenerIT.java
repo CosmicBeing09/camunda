@@ -50,7 +50,7 @@ public class CamundaSpringProcessTestListenerIT {
             .zeebeOutputExpression("\"ok\"", "result")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     // when
     final ProcessInstanceEvent processInstance =
@@ -84,7 +84,7 @@ public class CamundaSpringProcessTestListenerIT {
             .endEvent()
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     final ProcessInstanceEvent processInstance =
         client.newCreateInstanceCommand().bpmnProcessId("process").latestVersion().send().join();

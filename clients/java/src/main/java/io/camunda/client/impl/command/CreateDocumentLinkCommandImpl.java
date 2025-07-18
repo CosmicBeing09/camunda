@@ -21,7 +21,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateDocumentLinkCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DocumentLinkResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -60,7 +60,7 @@ public class CreateDocumentLinkCommandImpl implements CreateDocumentLinkCommandS
     this.jsonMapper = jsonMapper;
     this.httpClient = httpClient;
     httpRequestConfig = httpClient.newRequestConfig();
-    requestTimeout(configuration.getDefaultRequestTimeout());
+    timeout(configuration.getDefaultRequestTimeout());
   }
 
   @Override
@@ -83,7 +83,7 @@ public class CreateDocumentLinkCommandImpl implements CreateDocumentLinkCommandS
   }
 
   @Override
-  public FinalCommandStep<DocumentLinkResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DocumentLinkResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(
         requestTimeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
     return this;

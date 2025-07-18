@@ -36,7 +36,7 @@ public class TenantAwareTimerEventTest {
 
   @Before
   public void setup() {
-    processId = Strings.newRandomValidBpmnId();
+    processId = Strings.randomBpmnId();
   }
 
   @Test

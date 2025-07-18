@@ -16,7 +16,7 @@
 package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.UnassignMappingFromGroupStep1;
 import io.camunda.client.api.command.UnassignMappingFromGroupStep1.UnassignMappingFromGroupStep2;
 import io.camunda.client.api.response.UnassignMappingFromGroupResponse;
@@ -52,7 +52,7 @@ public class UnassignMappingFromGroupCommandImpl
   }
 
   @Override
-  public FinalCommandStep<UnassignMappingFromGroupResponse> requestTimeout(
+  public FinalStep<UnassignMappingFromGroupResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

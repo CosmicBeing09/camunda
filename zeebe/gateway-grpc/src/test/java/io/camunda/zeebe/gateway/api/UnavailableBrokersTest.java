@@ -15,7 +15,7 @@ import io.atomix.cluster.AtomixCluster;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.ClientStatusException;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.security.configuration.SecurityConfigurations;
 import io.camunda.service.UserServices;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
@@ -133,11 +133,11 @@ class UnavailableBrokersTest {
   @ParameterizedTest(name = "{0}")
   @MethodSource("unavailableTestCases")
   void shouldReturnUnavailableOnMissingTopology(
-      final String testName, final FinalCommandStep<?> command) {
+      final String testName, final FinalStep<?> command) {
     // when
     // setting a lower timeout than the time we wait on the future ensures we see a result from the
     // gateway and not simply our future timing out
-    final CamundaFuture<?> result = command.requestTimeout(Duration.ofSeconds(5)).send();
+    final CamundaFuture<?> result = command.timeout(Duration.ofSeconds(5)).send();
 
     // then
     assertThatCode(() -> result.join(10, TimeUnit.SECONDS))

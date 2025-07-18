@@ -55,7 +55,7 @@ public class IncidentSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<Incident> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<Incident> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

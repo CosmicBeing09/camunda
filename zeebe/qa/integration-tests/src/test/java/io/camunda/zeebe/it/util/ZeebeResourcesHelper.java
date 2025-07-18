@@ -162,7 +162,7 @@ public class ZeebeResourcesHelper implements CloseableSilently {
   }
 
   private DeployResourceCommandStep1 getDeployCommand(final boolean useRest) {
-    final DeployResourceCommandStep1 deployResourceCommand = client.newDeployResourceCommand();
+    final DeployResourceCommandStep1 deployResourceCommand = client.deployResource();
     return useRest ? deployResourceCommand.useRest() : deployResourceCommand.useGrpc();
   }
 

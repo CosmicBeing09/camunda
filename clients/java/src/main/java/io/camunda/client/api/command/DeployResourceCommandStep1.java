@@ -31,7 +31,7 @@ public interface DeployResourceCommandStep1
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  DeployResourceCommandStep2 addResourceBytes(byte[] resourceBytes, String resourceName);
+  DeployResourceCommandStep2 addBytes(byte[] resourceBytes, String resourceName);
 
   /**
    * Add the given resource to the deployment.
@@ -42,7 +42,7 @@ public interface DeployResourceCommandStep1
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  DeployResourceCommandStep2 addResourceString(
+  DeployResourceCommandStep2 addString(
       String resourceString, Charset charset, String resourceName);
 
   /**
@@ -99,7 +99,7 @@ public interface DeployResourceCommandStep1
   interface DeployResourceCommandStep2
       extends DeployResourceCommandStep1,
           CommandWithTenantStep<DeployResourceCommandStep2>,
-          FinalCommandStep<DeploymentEvent> {
+      FinalStep<DeploymentEvent> {
     // the place for new optional parameters
   }
 }

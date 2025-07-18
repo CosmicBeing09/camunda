@@ -18,6 +18,6 @@ package io.camunda.client.api.command;
 import io.camunda.client.api.response.Topology;
 
 public interface TopologyRequestStep1
-    extends CommandWithCommunicationApiStep<TopologyRequestStep1>, FinalCommandStep<Topology> {
+    extends CommandWithCommunicationApiStep<TopologyRequestStep1>, FinalStep<Topology> {
   // the place for new optional parameters
 }

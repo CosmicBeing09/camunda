@@ -22,7 +22,7 @@ public record UserTaskFilter(
     List<Long> userTaskKeys,
     List<String> elementIds,
     List<String> elementNames,
-    List<String> bpmnProcessIds,
+    List<String> processIds,
     List<Operation<String>> assigneeOperations,
     List<Operation<Integer>> priorityOperations,
     List<String> states,
@@ -46,7 +46,7 @@ public record UserTaskFilter(
     private List<Long> userTaskKeys;
     private List<String> elementIds;
     private List<String> elementNames;
-    private List<String> bpmnProcessIds;
+    private List<String> processIds;
     private List<Operation<String>> assigneeOperations;
     private List<Operation<Integer>> priorityOperations;
     private List<String> states;
@@ -96,7 +96,7 @@ public record UserTaskFilter(
     }
 
     public Builder bpmnProcessIds(final List<String> values) {
-      bpmnProcessIds = addValuesToList(bpmnProcessIds, values);
+      processIds = addValuesToList(processIds, values);
       return this;
     }
 
@@ -270,7 +270,7 @@ public record UserTaskFilter(
           Objects.requireNonNullElse(userTaskKeys, Collections.emptyList()),
           Objects.requireNonNullElse(elementIds, Collections.emptyList()),
           Objects.requireNonNullElse(elementNames, Collections.emptyList()),
-          Objects.requireNonNullElse(bpmnProcessIds, Collections.emptyList()),
+          Objects.requireNonNullElse(processIds, Collections.emptyList()),
           Objects.requireNonNullElse(assigneeOperations, Collections.emptyList()),
           Objects.requireNonNullElse(priorityOperations, Collections.emptyList()),
           Objects.requireNonNullElse(states, Collections.emptyList()),

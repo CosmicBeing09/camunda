@@ -102,7 +102,7 @@ public final class ReplayStateTest {
                     .embeddedSubProcess()
                     .startEvent()
                     .endEvent("errorEndEvent", b -> b.error("error"))
-                    .subProcessDone()
+                    .endSubProcess()
                     .boundaryEvent("errorCatchEvent", b -> b.error("error").cancelActivity(true))
                     .endEvent()
                     .moveToActivity("subProcess")

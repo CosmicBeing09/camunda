@@ -51,8 +51,8 @@ public final class CreateProcessInstanceTest extends ClientTest {
         client.newCreateInstanceCommand().processDefinitionKey(123).send().join();
 
     // then
-    assertThat(response.getProcessDefinitionKey()).isEqualTo(123);
-    assertThat(response.getBpmnProcessId()).isEqualTo("testProcess");
+    assertThat(response.getDefinitionKey()).isEqualTo(123);
+    assertThat(response.getProcessId()).isEqualTo("testProcess");
     assertThat(response.getVersion()).isEqualTo(12);
     assertThat(response.getProcessInstanceKey()).isEqualTo(32);
     assertThat(response.getTenantId()).isEqualTo("");
@@ -191,7 +191,7 @@ public final class CreateProcessInstanceTest extends ClientTest {
     client
         .newCreateInstanceCommand()
         .processDefinitionKey(123)
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

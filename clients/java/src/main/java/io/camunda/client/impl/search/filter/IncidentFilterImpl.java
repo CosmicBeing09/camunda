@@ -36,13 +36,13 @@ public class IncidentFilterImpl
 
   @Override
   public IncidentFilter incidentKey(final Long value) {
-    filter.setIncidentKey(ParseUtil.keyToString(value));
+    filter.setIncidentKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
   @Override
   public IncidentFilter processDefinitionKey(final Long value) {
-    filter.setProcessDefinitionKey(ParseUtil.keyToString(value));
+    filter.setProcessDefinitionKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -54,7 +54,7 @@ public class IncidentFilterImpl
 
   @Override
   public IncidentFilter processInstanceKey(final Long value) {
-    filter.setProcessInstanceKey(ParseUtil.keyToString(value));
+    filter.setProcessInstanceKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -78,7 +78,7 @@ public class IncidentFilterImpl
 
   @Override
   public IncidentFilter elementInstanceKey(final Long value) {
-    filter.setElementInstanceKey(ParseUtil.keyToString(value));
+    filter.setElementInstanceKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -96,7 +96,7 @@ public class IncidentFilterImpl
 
   @Override
   public IncidentFilter jobKey(final Long value) {
-    filter.setJobKey(ParseUtil.keyToString(value));
+    filter.setJobKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 

@@ -16,7 +16,7 @@
 package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.IncidentGetRequest;
 import io.camunda.client.api.search.response.Incident;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -40,7 +40,7 @@ public class IncidentGetRequestImpl implements IncidentGetRequest {
   }
 
   @Override
-  public FinalCommandStep<Incident> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<Incident> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -15,7 +15,7 @@
  */
 package io.camunda.spring.client.jobhandling;
 
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.worker.BackoffSupplier;
 import io.camunda.spring.client.metrics.MetricsRecorder;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class CommandWrapper {
 
-  private final FinalCommandStep<?> command;
+  private final FinalStep<?> command;
   private final ActivatedJob job;
   private final CommandExceptionHandlingStrategy commandExceptionHandlingStrategy;
   private final MetricsRecorder metricsRecorder;
@@ -35,7 +35,7 @@ public class CommandWrapper {
   private final int maxRetries;
 
   public CommandWrapper(
-      final FinalCommandStep<?> command,
+      final FinalStep<?> command,
       final ActivatedJob job,
       final CommandExceptionHandlingStrategy commandExceptionHandlingStrategy,
       final MetricsRecorder metricsRecorder,

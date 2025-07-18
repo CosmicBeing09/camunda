@@ -108,9 +108,9 @@ public class CamundaClientStarterAutoConfigurationCustomJsonMapperTest {
         AopTestUtils.getUltimateTargetObject(configuration.getJsonMapper());
     assertThat(clientJsonMapper).isSameAs(jsonMapper);
     assertThat(clientJsonMapper).isSameAs(applicationContext.getBean("overridingJsonMapper"));
-    assertThat(configuration.getGatewayAddress()).isEqualTo("localhost:1234");
+    assertThat(configuration.gatewayAddress()).isEqualTo("localhost:1234");
     assertThat(configuration.getGrpcAddress().toString()).isEqualTo("https://localhost:1234");
-    assertThat(configuration.getRestAddress().toString()).isEqualTo("https://localhost:8080");
+    assertThat(configuration.restAddress().toString()).isEqualTo("https://localhost:8080");
     assertThat(configuration.getDefaultRequestTimeout()).isEqualTo(Duration.ofSeconds(99));
     assertThat(configuration.getCaCertificatePath()).isEqualTo("aPath");
     assertThat(configuration.isPlaintextConnectionEnabled())

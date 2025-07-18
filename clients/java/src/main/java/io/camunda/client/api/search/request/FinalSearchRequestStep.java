@@ -15,12 +15,12 @@
  */
 package io.camunda.client.api.search.request;
 
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.search.response.SearchResponse;
 import java.time.Duration;
 
-public interface FinalSearchRequestStep<T> extends FinalCommandStep<SearchResponse<T>> {
+public interface FinalSearchRequestStep<T> extends FinalStep<SearchResponse<T>> {
 
   @Override
-  FinalSearchRequestStep<T> requestTimeout(Duration requestTimeout);
+  FinalSearchRequestStep<T> timeout(Duration requestTimeout);
 }

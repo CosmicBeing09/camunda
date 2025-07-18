@@ -28,7 +28,7 @@ public interface UnassignMappingFromGroupStep1 {
   UnassignMappingFromGroupStep2 mappingId(String mappingId);
 
   interface UnassignMappingFromGroupStep2
-      extends FinalCommandStep<UnassignMappingFromGroupResponse> {
+      extends FinalStep<UnassignMappingFromGroupResponse> {
     /**
      * Sets the group ID.
      *

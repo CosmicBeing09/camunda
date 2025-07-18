@@ -30,7 +30,7 @@ public class StraightThroughProcessingLoopValidationDisabledTest {
   @Test
   public void shouldDeployProcessWithRegularLoops() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deployment =

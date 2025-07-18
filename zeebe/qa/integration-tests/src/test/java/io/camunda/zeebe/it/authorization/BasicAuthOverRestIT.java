@@ -64,12 +64,12 @@ final class BasicAuthOverRestIT {
   @Test
   void shouldBeAuthorizedWithDefaultUser() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when then
     final var deploymentEvent =
         defaultUserClient
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(
                 Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
@@ -81,8 +81,8 @@ final class BasicAuthOverRestIT {
   @Test
   void shouldBeAuthorizedWithUserThatIsGrantedPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
-    final var username = Strings.newRandomValidUsername();
+    final var processId = Strings.randomBpmnId();
+    final var username = Strings.randomUsername();
     final var password = "password";
     authUtil.createUserWithPermissions(
         username,
@@ -93,7 +93,7 @@ final class BasicAuthOverRestIT {
       // when
       final var deploymentEvent =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(
                   Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
@@ -108,8 +108,8 @@ final class BasicAuthOverRestIT {
   @Test
   void shouldBeUnauthorizedWithUserThatIsNotGrantedPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
-    final var username = Strings.newRandomValidUsername();
+    final var processId = Strings.randomBpmnId();
+    final var username = Strings.randomUsername();
     final var password = "password";
     authUtil.createUser(username, password);
 
@@ -117,7 +117,7 @@ final class BasicAuthOverRestIT {
     try (final var client = authUtil.createClient(username, password)) {
       final var deployFuture =
           client
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(
                   Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")

@@ -58,13 +58,13 @@ public class UserTaskIT {
 
     waitForProcessTasks(client, processInstanceId);
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
     // then
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getPriority()).isEqualTo(50);
-    assertThat(userTasks.getFirst().getUserTaskKey()).isGreaterThan(0);
+    assertThat(userTasks.getFirst().getKey()).isGreaterThan(0);
     assertThat(userTasks.getFirst().getProcessInstanceKey()).isEqualTo(processInstanceId);
-    assertThat(userTasks.getFirst().getProcessDefinitionKey())
+    assertThat(userTasks.getFirst().getDefinitionKey())
         .isEqualTo(Long.valueOf(processDefinitionId));
     assertThat(userTasks.getFirst().getCreationDate()).isNotNull();
     assertThat(userTasks.getFirst().getDueDate()).isNotNull();
@@ -84,20 +84,20 @@ public class UserTaskIT {
     // given
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, null);
+    final var processInstanceId = startTaskProcess(client, null);
 
-    var userTasks = fetchUserTasks(client, processInstanceId);
+    var userTasks = fetchTasks(client, processInstanceId);
 
-    client.newUserTaskCompleteCommand(userTasks.getFirst().getUserTaskKey()).send().join();
+    client.newUserTaskCompleteCommand(userTasks.getFirst().getKey()).send().join();
     // then
     waitForTask(
         client,
         f -> {
-          f.processInstanceKey(processInstanceId);
+          f.elementInstanceKey(processInstanceId);
           f.state(UserTaskState.COMPLETED);
         });
 
-    userTasks = fetchUserTasks(client, processInstanceId);
+    userTasks = fetchTasks(client, processInstanceId);
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getState()).isEqualTo(UserTaskState.COMPLETED);
     assertThat(userTasks.getFirst().getCompletionDate()).isNotNull();
@@ -109,16 +109,16 @@ public class UserTaskIT {
     final var dateTime = OffsetDateTime.now();
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, null);
+    final var processInstanceId = startTaskProcess(client, null);
 
-    var userTasks = fetchUserTasks(client, processInstanceId);
+    var userTasks = fetchTasks(client, processInstanceId);
 
     client
-        .newUserTaskUpdateCommand(userTasks.getFirst().getUserTaskKey())
+        .newUserTaskUpdateCommand(userTasks.getFirst().getKey())
         .priority(99)
         .candidateUsers("demoUsers")
         .candidateGroups("demoGroup")
-        .dueDate(dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+        .due(dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
         .followUpDate(dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
         .send()
         .join();
@@ -127,11 +127,11 @@ public class UserTaskIT {
     waitForTask(
         client,
         f -> {
-          f.processInstanceKey(processInstanceId);
+          f.elementInstanceKey(processInstanceId);
           f.candidateUser("demoUsers");
         });
 
-    userTasks = fetchUserTasks(client, processInstanceId);
+    userTasks = fetchTasks(client, processInstanceId);
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getPriority()).isEqualTo(99);
     assertThat(userTasks.getFirst().getCandidateUsers()).containsExactly("demoUsers");
@@ -146,12 +146,12 @@ public class UserTaskIT {
     // given
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, null);
+    final var processInstanceId = startTaskProcess(client, null);
 
-    var userTasks = fetchUserTasks(client, processInstanceId);
+    var userTasks = fetchTasks(client, processInstanceId);
 
     client
-        .newUserTaskAssignCommand(userTasks.getFirst().getUserTaskKey())
+        .newUserTaskAssignCommand(userTasks.getFirst().getKey())
         .assignee("demo")
         .send()
         .join();
@@ -160,11 +160,11 @@ public class UserTaskIT {
     waitForTask(
         client,
         f -> {
-          f.processInstanceKey(processInstanceId);
+          f.elementInstanceKey(processInstanceId);
           f.assignee("demo");
         });
 
-    userTasks = fetchUserTasks(client, processInstanceId);
+    userTasks = fetchTasks(client, processInstanceId);
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getAssignee()).isEqualTo("demo");
   }
@@ -174,11 +174,11 @@ public class UserTaskIT {
     // given
 
     // when
-    final var processInstanceId = startZeebeUserTaskProcess(client, t -> t.zeebeAssignee("demo"));
+    final var processInstanceId = startTaskProcess(client, t -> t.zeebeAssignee("demo"));
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
 
-    client.newUserTaskUnassignCommand(userTasks.getFirst().getUserTaskKey()).send().join();
+    client.newUserTaskUnassignCommand(userTasks.getFirst().getKey()).send().join();
 
     // then
     Awaitility.await()
@@ -189,14 +189,14 @@ public class UserTaskIT {
               final var tasks =
                   client
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceId))
+                      .filter(f -> f.elementInstanceKey(processInstanceId))
                       .send()
                       .join()
                       .items();
               return tasks.getFirst().getAssignee() == null;
             });
 
-    final var unassignedTasks = fetchUserTasks(client, processInstanceId);
+    final var unassignedTasks = fetchTasks(client, processInstanceId);
     assertThat(unassignedTasks).hasSize(1);
     assertThat(unassignedTasks.getFirst().getAssignee()).isNull();
   }
@@ -293,7 +293,7 @@ public class UserTaskIT {
 
     waitForProcessTasks(client, processInstanceId);
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
 
     // then
     assertThat(userTasks).hasSize(1);
@@ -305,11 +305,11 @@ public class UserTaskIT {
     // given
     final var form =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("form/form.form")
             .send()
             .join()
-            .getForm()
+            .getForms()
             .getFirst();
 
     // when
@@ -323,7 +323,7 @@ public class UserTaskIT {
 
     waitForProcessTasks(client, processInstanceId);
 
-    final var userTasks = fetchUserTasks(client, processInstanceId);
+    final var userTasks = fetchTasks(client, processInstanceId);
 
     // then
     assertThat(userTasks).hasSize(1);
@@ -331,17 +331,17 @@ public class UserTaskIT {
     assertThat(userTasks.getFirst().getFormKey()).isEqualTo(form.getFormKey());
   }
 
-  public static List<UserTask> fetchUserTasks(
+  public static List<UserTask> fetchTasks(
       final CamundaClient client, final long processInstanceId) {
     return client
         .newUserTaskSearchRequest()
-        .filter(f -> f.processInstanceKey(processInstanceId))
+        .filter(f -> f.elementInstanceKey(processInstanceId))
         .send()
         .join()
         .items();
   }
 
-  public static Long startZeebeUserTaskProcess(
+  public static Long startTaskProcess(
       final CamundaClient client, final Consumer<UserTaskBuilder> taskParams) {
     if (taskParams != null) {
       createAndDeployUserTaskProcess(
@@ -376,7 +376,7 @@ public class UserTaskIT {
             .endEvent()
             .done();
     final DeployResourceCommandStep1.DeployResourceCommandStep2 deployProcessCommandStep1 =
-        camundaClient.newDeployResourceCommand().addProcessModel(process, processId + ".bpmn");
+        camundaClient.deployResource().addProcessModel(process, processId + ".bpmn");
     final DeploymentEvent deploymentEvent = deployProcessCommandStep1.send().join();
     return String.valueOf(deploymentEvent.getProcesses().getFirst().getProcessDefinitionKey());
   }
@@ -391,7 +391,7 @@ public class UserTaskIT {
             () ->
                 !client
                     .newUserTaskSearchRequest()
-                    .filter(f -> f.processInstanceKey(processInstanceKey))
+                    .filter(f -> f.elementInstanceKey(processInstanceKey))
                     .send()
                     .join()
                     .items()

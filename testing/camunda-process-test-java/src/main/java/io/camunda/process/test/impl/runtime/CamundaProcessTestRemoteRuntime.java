@@ -45,7 +45,7 @@ public class CamundaProcessTestRemoteRuntime implements CamundaProcessTestRuntim
 
     final CamundaClientConfiguration clientConfiguration =
         getClientConfiguration(camundaClientBuilderFactory);
-    camundaRestApiAddress = clientConfiguration.getRestAddress();
+    camundaRestApiAddress = clientConfiguration.restAddress();
     camundaGrpcApiAddress = clientConfiguration.getGrpcAddress();
   }
 

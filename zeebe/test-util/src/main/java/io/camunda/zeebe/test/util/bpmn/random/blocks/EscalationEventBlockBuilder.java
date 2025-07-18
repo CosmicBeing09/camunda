@@ -84,7 +84,7 @@ public class EscalationEventBlockBuilder extends AbstractBlockBuilder {
 
     final AbstractFlowNodeBuilder<?, ?> workInProgress = buildEscalationThrowEvent(subProcessStart);
 
-    final SubProcessBuilder subProcessDoneBuilder = workInProgress.subProcessDone();
+    final SubProcessBuilder subProcessDoneBuilder = workInProgress.endSubProcess();
 
     return connectEscalationCatchEvent(subProcessDoneBuilder);
   }

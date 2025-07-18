@@ -59,7 +59,7 @@ public interface ModifyProcessInstanceCommandStep1
 
   interface ModifyProcessInstanceCommandStep2
       extends CommandWithOperationReferenceStep<ModifyProcessInstanceCommandStep2>,
-          FinalCommandStep<ModifyProcessInstanceResponse> {
+      FinalStep<ModifyProcessInstanceResponse> {
     /**
      * Acts as a boundary between the different activate and terminate instructions. Use this if you
      * want to activate or terminate another element. Otherwise, {@link #send()} the command.

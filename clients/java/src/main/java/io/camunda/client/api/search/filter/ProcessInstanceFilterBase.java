@@ -23,19 +23,19 @@ import io.camunda.client.api.search.filter.builder.ElementInstanceStateProperty;
 import io.camunda.client.api.search.filter.builder.IntegerProperty;
 import io.camunda.client.api.search.filter.builder.ProcessInstanceStateProperty;
 import io.camunda.client.api.search.filter.builder.StringProperty;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public interface ProcessInstanceFilterBase extends SearchRequestFilter {
+public interface ProcessInstanceFilterBase extends Filter {
 
   /** Filter by processInstanceKey */
-  ProcessInstanceFilterBase processInstanceKey(final Long processInstanceKey);
+  ProcessInstanceFilterBase key(final Long processInstanceKey);
 
   /** Filter by processInstanceKey using {@link BasicLongProperty} consumer */
-  ProcessInstanceFilterBase processInstanceKey(final Consumer<BasicLongProperty> fn);
+  ProcessInstanceFilterBase key(final Consumer<BasicLongProperty> fn);
 
   /** Filter by processDefinitionId */
   ProcessInstanceFilterBase processDefinitionId(final String processDefinitionId);

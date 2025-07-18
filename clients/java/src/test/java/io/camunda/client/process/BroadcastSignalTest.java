@@ -150,7 +150,7 @@ public final class BroadcastSignalTest extends ClientTest {
     client
         .newBroadcastSignalCommand()
         .signalName("name")
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

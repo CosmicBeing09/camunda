@@ -32,7 +32,7 @@ public class DecisionRequirementsFilterImpl
 
   @Override
   public DecisionRequirementsFilter decisionRequirementsKey(final Long key) {
-    filter.decisionRequirementsKey(ParseUtil.keyToString(key));
+    filter.decisionRequirementsKey(ParseUtil.toStringOrNull(key));
     return this;
   }
 

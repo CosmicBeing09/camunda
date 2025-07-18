@@ -144,7 +144,7 @@ public class InheritedOIDCAuthorizationIT {
           .isThrownBy(
               () ->
                   client
-                      .newDeployResourceCommand()
+                      .deployResource()
                       .addProcessModel(
                           Bpmn.createExecutableProcess().startEvent().endEvent().done(),
                           "process.bpmn")
@@ -163,7 +163,7 @@ public class InheritedOIDCAuthorizationIT {
       Assertions.assertThatThrownBy(
               () ->
                   client
-                      .newDeployResourceCommand()
+                      .deployResource()
                       .addProcessModel(
                           Bpmn.createExecutableProcess().startEvent().endEvent().done(),
                           "process.bpmn")

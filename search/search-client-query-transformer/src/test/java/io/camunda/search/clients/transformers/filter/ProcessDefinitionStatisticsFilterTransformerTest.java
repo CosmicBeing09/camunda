@@ -9,9 +9,9 @@ package io.camunda.search.clients.transformers.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.search.clients.query.QueryOption;
 import io.camunda.search.clients.query.SearchBoolQuery;
 import io.camunda.search.clients.query.SearchHasParentQuery;
-import io.camunda.search.clients.query.SearchQueryOption;
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
@@ -197,7 +197,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
   }
 
   private SearchBoolQuery assertIsSearchBoolQuery(
-      final SearchQueryOption queryVariant, final int size) {
+      final QueryOption queryVariant, final int size) {
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
@@ -211,7 +211,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
   }
 
   private SearchBoolQuery assertIsSearchBoolQueryWithDefaultFilter(
-      final SearchQueryOption queryVariant, final int size) {
+      final QueryOption queryVariant, final int size) {
     final var searchBoolQuery = assertIsSearchBoolQuery(queryVariant, size);
     assertIsSearchTermQuery(
         searchBoolQuery.must().get(0).queryOption(), "joinRelation", "activity");
@@ -223,7 +223,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
   }
 
   private void assertIsSearchTermQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final String expectedValue) {
     assertThat(searchQueryOption)
@@ -235,8 +235,8 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
             });
   }
 
-  private SearchQueryOption assertIsSearchHasParentQuery(
-      final SearchQueryOption searchQueryOption) {
+  private QueryOption assertIsSearchHasParentQuery(
+      final QueryOption searchQueryOption) {
     assertThat(searchQueryOption)
         .isInstanceOfSatisfying(
             SearchHasParentQuery.class,
@@ -246,7 +246,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
   }
 
   private void assertIsSearchHasParentTermQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final Long expectedValue) {
     final var hasParentQuery = assertIsSearchHasParentQuery(searchQueryOption);

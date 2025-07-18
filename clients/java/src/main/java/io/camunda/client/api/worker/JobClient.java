@@ -230,7 +230,7 @@ public interface JobClient {
    *   <li>Closing the Camunda client
    *   <li>Cancelling the result of {@link StreamJobsCommandStep3#send()} via {@link
    *       CamundaFuture#cancel(boolean)} (the argument is irrelevant)
-   *   <li>Setting a {@link StreamJobsCommandStep3#requestTimeout(Duration)}; the stream will be
+   *   <li>Setting a {@link StreamJobsCommandStep3#timeout(Duration)}; the stream will be
    *       closed once this time out is reached. By default, there is no request time out at all.
    *       <strong>It's recommended to assign a long-ish time out and recreate your streams from
    *       time to time to ensure good load balancing across gateways.</strong>

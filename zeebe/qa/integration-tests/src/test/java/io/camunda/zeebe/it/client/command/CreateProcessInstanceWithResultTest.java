@@ -183,7 +183,7 @@ public final class CreateProcessInstanceWithResultTest {
     // given
     deployProcesses(testInfo);
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -224,7 +224,7 @@ public final class CreateProcessInstanceWithResultTest {
     // given
     deployProcesses(testInfo);
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -263,7 +263,7 @@ public final class CreateProcessInstanceWithResultTest {
     // given
     deployProcesses(testInfo);
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()
@@ -313,7 +313,7 @@ public final class CreateProcessInstanceWithResultTest {
     // given
     deployProcesses(testInfo);
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent("start_event_with_output_mapping")
@@ -357,7 +357,7 @@ public final class CreateProcessInstanceWithResultTest {
     // given
     deployProcesses(testInfo);
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess(processId)
                 .startEvent()

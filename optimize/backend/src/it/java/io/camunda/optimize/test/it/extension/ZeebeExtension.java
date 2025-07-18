@@ -120,7 +120,7 @@ public class ZeebeExtension implements BeforeEachCallback, AfterEachCallback {
 
   public Process deployProcess(final BpmnModelInstance bpmnModelInstance) {
     final DeployResourceCommandStep1 deployResourceCommandStep1 =
-        camundaClient.newDeployResourceCommand();
+        camundaClient.deployResource();
     deployResourceCommandStep1.addProcessModel(bpmnModelInstance, "resourceName.bpmn");
     final DeploymentEvent deploymentEvent =
         ((DeployResourceCommandStep1.DeployResourceCommandStep2) deployResourceCommandStep1)

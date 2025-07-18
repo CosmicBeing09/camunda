@@ -65,7 +65,7 @@ final class StreamJobsTest {
   void shouldStreamJobs() {
     // given
     final var jobs = new ArrayList<ActivatedJob>();
-    final var uniqueId = Strings.newRandomValidBpmnId();
+    final var uniqueId = Strings.randomBpmnId();
     final var process =
         Bpmn.createExecutableProcess(uniqueId)
             .startEvent()
@@ -127,7 +127,7 @@ final class StreamJobsTest {
   void shouldNotInterfereWithPolling() {
     // given
     final var streamedJobs = new ArrayList<ActivatedJob>();
-    final var uniqueId = Strings.newRandomValidBpmnId();
+    final var uniqueId = Strings.randomBpmnId();
     final var process =
         Bpmn.createExecutableProcess(uniqueId)
             .startEvent()
@@ -191,7 +191,7 @@ final class StreamJobsTest {
   @Test
   void shouldCompleteStreamOnGatewayClose() {
     // given
-    final var uniqueId = Strings.newRandomValidBpmnId();
+    final var uniqueId = Strings.randomBpmnId();
 
     // when
     final var stream =
@@ -242,7 +242,7 @@ final class StreamJobsTest {
 
   private void deployProcess(final BpmnModelInstance process) {
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(process, "sequence.bpmn")
         .tenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
         .send()
@@ -260,7 +260,7 @@ final class StreamJobsTest {
 
   @Nested
   final class SlowClientTest {
-    private final String uniqueId = Strings.newRandomValidBpmnId();
+    private final String uniqueId = Strings.randomBpmnId();
     private final CountDownLatch latch = new CountDownLatch(1);
     private final List<ActivatedJob> jobs = new CopyOnWriteArrayList<>();
     private final BpmnModelInstance process =

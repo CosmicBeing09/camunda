@@ -17,4 +17,4 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.DeleteRoleResponse;
 
-public interface DeleteRoleCommandStep1 extends FinalCommandStep<DeleteRoleResponse> {}
+public interface DeleteRoleCommandStep1 extends FinalStep<DeleteRoleResponse> {}

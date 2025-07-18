@@ -47,7 +47,7 @@ public final class VariableDocumentUpdateProcessorTest {
 
   @Before
   public void before() {
-    jobType = Strings.newRandomValidBpmnId();
+    jobType = Strings.randomBpmnId();
     final BpmnModelInstance process =
         Bpmn.createExecutableProcess(PROCESS_ID)
             .startEvent()

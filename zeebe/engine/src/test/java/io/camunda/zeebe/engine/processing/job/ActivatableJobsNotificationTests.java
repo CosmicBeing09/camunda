@@ -57,7 +57,7 @@ public final class ActivatableJobsNotificationTests {
 
   @Before
   public void setup() {
-    taskType = Strings.newRandomValidBpmnId();
+    taskType = Strings.randomBpmnId();
     ENGINE
         .deployment()
         .withXmlResource(PROCESS_ID + ".bpmn", MODEL_SUPPLIER.apply(taskType))
@@ -168,8 +168,8 @@ public final class ActivatableJobsNotificationTests {
   @Test
   public void shouldNotifyForMultipleJobTypes() {
     // given
-    final String firstType = Strings.newRandomValidBpmnId();
-    final String secondType = Strings.newRandomValidBpmnId();
+    final String firstType = Strings.randomBpmnId();
+    final String secondType = Strings.randomBpmnId();
 
     // when
     ENGINE.createJob(firstType, PROCESS_ID);

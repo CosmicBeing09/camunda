@@ -19,9 +19,9 @@ import io.camunda.client.api.search.enums.ProcessInstanceState;
 
 public interface ProcessInstance {
 
-  Long getProcessInstanceKey();
+  Long getKey();
 
-  String getProcessDefinitionId();
+  String getDefinitionId();
 
   String getProcessDefinitionName();
 

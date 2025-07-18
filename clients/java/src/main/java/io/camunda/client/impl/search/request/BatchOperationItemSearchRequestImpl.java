@@ -97,7 +97,7 @@ public class BatchOperationItemSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<BatchOperationItem> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<BatchOperationItem> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

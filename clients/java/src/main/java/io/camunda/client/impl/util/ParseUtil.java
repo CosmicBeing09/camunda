@@ -21,11 +21,11 @@ public class ParseUtil {
     return input == null ? null : Long.parseLong(input);
   }
 
-  public static long parseLongOrEmpty(final String input) {
+  public static long parseLongOrDefault(final String input) {
     return input == null ? -1L : Long.parseLong(input);
   }
 
-  public static String keyToString(final Long input) {
+  public static String toStringOrNull(final Long input) {
     return input == null ? null : String.valueOf(input);
   }
 }

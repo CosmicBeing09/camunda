@@ -116,7 +116,7 @@ public final class JobPollerImpl implements JobPoller {
       activateCommand.fetchVariables(fetchVariables);
     }
     activateCommand
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .exceptionally(
             throwable -> {

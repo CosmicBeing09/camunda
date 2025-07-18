@@ -38,13 +38,13 @@ public class ElementInstanceFilterImpl
 
   @Override
   public ElementInstanceFilter elementInstanceKey(final long value) {
-    filter.elementInstanceKey(ParseUtil.keyToString(value));
+    filter.elementInstanceKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
   @Override
   public ElementInstanceFilter processDefinitionKey(final long value) {
-    filter.setProcessDefinitionKey(ParseUtil.keyToString(value));
+    filter.setProcessDefinitionKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -56,7 +56,7 @@ public class ElementInstanceFilterImpl
 
   @Override
   public ElementInstanceFilter processInstanceKey(final long value) {
-    filter.setProcessInstanceKey(ParseUtil.keyToString(value));
+    filter.setProcessInstanceKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -101,7 +101,7 @@ public class ElementInstanceFilterImpl
 
   @Override
   public ElementInstanceFilter incidentKey(final long value) {
-    filter.setIncidentKey(ParseUtil.keyToString(value));
+    filter.setIncidentKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 

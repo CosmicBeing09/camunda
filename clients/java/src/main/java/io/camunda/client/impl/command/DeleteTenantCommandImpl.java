@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.DeleteTenantCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeleteTenantResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -42,7 +42,7 @@ public final class DeleteTenantCommandImpl implements DeleteTenantCommandStep1 {
   }
 
   @Override
-  public FinalCommandStep<DeleteTenantResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeleteTenantResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

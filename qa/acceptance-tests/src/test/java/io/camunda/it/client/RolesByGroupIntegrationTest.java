@@ -137,7 +137,7 @@ public class RolesByGroupIntegrationTest {
             () ->
                 assertThat(
                         searchRolesByGroupId(
-                                camundaClient.getConfiguration().getRestAddress().toString(),
+                                camundaClient.getConfiguration().restAddress().toString(),
                                 groupId)
                             .items())
                     .isEmpty());
@@ -164,7 +164,7 @@ public class RolesByGroupIntegrationTest {
             () ->
                 assertThat(
                         searchRolesByGroupId(
-                                camundaClient.getConfiguration().getRestAddress().toString(),
+                                camundaClient.getConfiguration().restAddress().toString(),
                                 groupId)
                             .items())
                     .anyMatch(r -> EXISTING_ROLE_ID.equals(r.getRoleId())));
@@ -184,7 +184,7 @@ public class RolesByGroupIntegrationTest {
             () ->
                 assertThat(
                         searchRolesByGroupId(
-                                camundaClient.getConfiguration().getRestAddress().toString(),
+                                camundaClient.getConfiguration().restAddress().toString(),
                                 groupId)
                             .items())
                     .isEmpty());
@@ -420,7 +420,7 @@ public class RolesByGroupIntegrationTest {
             () ->
                 assertThat(
                         searchRolesByGroupId(
-                                camundaClient.getConfiguration().getRestAddress().toString(),
+                                camundaClient.getConfiguration().restAddress().toString(),
                                 groupId)
                             .items())
                     .anyMatch(r -> roleId.equals(r.getRoleId())));

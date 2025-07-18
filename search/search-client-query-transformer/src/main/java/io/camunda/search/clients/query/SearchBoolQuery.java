@@ -15,35 +15,35 @@ import java.util.List;
 import java.util.Objects;
 
 public record SearchBoolQuery(
-    List<SearchQuery> filter,
-    List<SearchQuery> must,
-    List<SearchQuery> mustNot,
-    List<SearchQuery> should)
-    implements SearchQueryOption {
+    List<Query> filter,
+    List<Query> must,
+    List<Query> mustNot,
+    List<Query> should)
+    implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchBoolQuery> {
 
-    private List<SearchQuery> filter;
-    private List<SearchQuery> must;
-    private List<SearchQuery> mustNot;
-    private List<SearchQuery> should;
+    private List<Query> filter;
+    private List<Query> must;
+    private List<Query> mustNot;
+    private List<Query> should;
 
-    public Builder filter(final List<SearchQuery> queries) {
+    public Builder filter(final List<Query> queries) {
       filter = addValuesToList(filter, queries);
       return this;
     }
 
-    public Builder must(final List<SearchQuery> queries) {
+    public Builder must(final List<Query> queries) {
       must = addValuesToList(must, queries);
       return this;
     }
 
-    public Builder mustNot(final List<SearchQuery> queries) {
+    public Builder mustNot(final List<Query> queries) {
       mustNot = addValuesToList(mustNot, queries);
       return this;
     }
 
-    public Builder should(final List<SearchQuery> queries) {
+    public Builder should(final List<Query> queries) {
       should = addValuesToList(should, queries);
       return this;
     }

@@ -17,7 +17,7 @@ package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.DecisionInstanceGetRequest;
 import io.camunda.client.api.search.response.DecisionInstance;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -44,7 +44,7 @@ public class DecisionInstanceGetRequestImpl implements DecisionInstanceGetReques
   }
 
   @Override
-  public FinalCommandStep<DecisionInstance> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DecisionInstance> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

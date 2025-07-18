@@ -23,7 +23,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.ClientException;
 import io.camunda.client.api.command.DeployProcessCommandStep1;
 import io.camunda.client.api.command.DeployProcessCommandStep1.DeployProcessCommandBuilderStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.response.DeploymentEventImpl;
@@ -146,7 +146,7 @@ public final class DeployProcessCommandImpl
   }
 
   @Override
-  public FinalCommandStep<DeploymentEvent> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeploymentEvent> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     return this;
   }

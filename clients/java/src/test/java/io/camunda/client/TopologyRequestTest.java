@@ -159,7 +159,7 @@ public final class TopologyRequestTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newTopologyRequest().requestTimeout(requestTimeout).send().join();
+    client.newTopologyRequest().timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

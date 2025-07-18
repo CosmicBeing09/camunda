@@ -16,7 +16,7 @@
 package io.camunda.client.impl.statistics.request;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.statistics.request.ProcessInstanceElementStatisticsRequest;
 import io.camunda.client.api.statistics.response.ProcessElementStatistics;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -43,7 +43,7 @@ public class ProcessInstanceElementStatisticsRequestImpl
   }
 
   @Override
-  public FinalCommandStep<List<ProcessElementStatistics>> requestTimeout(
+  public FinalStep<List<ProcessElementStatistics>> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

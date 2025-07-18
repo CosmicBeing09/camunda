@@ -83,7 +83,7 @@ class AuthorizationSearchIT {
   void searchShouldReturnAuthorizations(@Authenticated(ADMIN) final CamundaClient adminClient)
       throws Exception {
     final var response =
-        searchAuthorizations(adminClient.getConfiguration().getRestAddress().toString(), ADMIN);
+        searchAuthorizations(adminClient.getConfiguration().restAddress().toString(), ADMIN);
     assertThat(response.items()).isNotEmpty();
   }
 
@@ -91,7 +91,7 @@ class AuthorizationSearchIT {
   void searchShouldReturnEmptyListForRestrictedUser(
       @Authenticated(RESTRICTED) final CamundaClient client) throws Exception {
     final var response =
-        searchAuthorizations(client.getConfiguration().getRestAddress().toString(), RESTRICTED);
+        searchAuthorizations(client.getConfiguration().restAddress().toString(), RESTRICTED);
     assertThat(response.items()).isEmpty();
   }
 
@@ -118,7 +118,7 @@ class AuthorizationSearchIT {
             () ->
                 assertThat(
                         searchAuthorizations(
-                                adminClient.getConfiguration().getRestAddress().toString(), ADMIN)
+                                adminClient.getConfiguration().restAddress().toString(), ADMIN)
                             .items())
                     .filteredOn(
                         auth ->
@@ -150,7 +150,7 @@ class AuthorizationSearchIT {
             () ->
                 assertThat(
                         searchAuthorizations(
-                                adminClient.getConfiguration().getRestAddress().toString(), ADMIN)
+                                adminClient.getConfiguration().restAddress().toString(), ADMIN)
                             .items())
                     .anyMatch(
                         auth ->
@@ -171,7 +171,7 @@ class AuthorizationSearchIT {
             () ->
                 assertThat(
                         searchAuthorizations(
-                                adminClient.getConfiguration().getRestAddress().toString(), ADMIN)
+                                adminClient.getConfiguration().restAddress().toString(), ADMIN)
                             .items())
                     .noneMatch(
                         auth ->

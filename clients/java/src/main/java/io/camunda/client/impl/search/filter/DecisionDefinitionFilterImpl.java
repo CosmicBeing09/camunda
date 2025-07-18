@@ -32,7 +32,7 @@ public class DecisionDefinitionFilterImpl
 
   @Override
   public DecisionDefinitionFilter decisionDefinitionKey(final long value) {
-    filter.setDecisionDefinitionKey(ParseUtil.keyToString(value));
+    filter.setDecisionDefinitionKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -62,7 +62,7 @@ public class DecisionDefinitionFilterImpl
 
   @Override
   public DecisionDefinitionFilter decisionRequirementsKey(final long value) {
-    filter.setDecisionRequirementsKey(ParseUtil.keyToString(value));
+    filter.setDecisionRequirementsKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 

@@ -244,7 +244,7 @@ public class IdentityMigrationIT {
   public void canMigratePermissions() throws URISyntaxException, IOException, InterruptedException {
     // when
     migration.start();
-    final var restAddress = client.getConfiguration().getRestAddress().toString();
+    final var restAddress = client.getConfiguration().restAddress().toString();
 
     Awaitility.await()
         .atMost(Duration.ofSeconds(5))

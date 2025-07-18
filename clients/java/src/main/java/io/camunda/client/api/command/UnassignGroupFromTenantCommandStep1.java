@@ -18,7 +18,7 @@ package io.camunda.client.api.command;
 import io.camunda.client.api.response.UnassignGroupFromTenantResponse;
 
 public interface UnassignGroupFromTenantCommandStep1
-    extends FinalCommandStep<UnassignGroupFromTenantResponse> {
+    extends FinalStep<UnassignGroupFromTenantResponse> {
 
   /**
    * Sets the group ID for the unassignment.

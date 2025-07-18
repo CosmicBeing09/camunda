@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.DeleteTenantResponse;
 
-public interface DeleteTenantCommandStep1 extends FinalCommandStep<DeleteTenantResponse> {
+public interface DeleteTenantCommandStep1 extends FinalStep<DeleteTenantResponse> {
   /**
    * Set the tenant id for the tenant to be deleted.
    *

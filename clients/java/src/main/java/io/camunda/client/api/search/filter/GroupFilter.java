@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.filter;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
-public interface GroupFilter extends SearchRequestFilter {
+public interface GroupFilter extends Filter {
 
   /**
    * Filters groups by the specified groupId.

@@ -28,7 +28,7 @@ public interface UnassignUserFromGroupCommandStep1 {
   UnassignUserFromGroupCommandStep2 username(String username);
 
   interface UnassignUserFromGroupCommandStep2
-      extends FinalCommandStep<UnassignUserFromGroupResponse> {
+      extends FinalStep<UnassignUserFromGroupResponse> {
 
     /**
      * Sets the group ID for the unassignment.

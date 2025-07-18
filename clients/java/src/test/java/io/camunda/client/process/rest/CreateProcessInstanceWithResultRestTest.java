@@ -33,7 +33,7 @@ public class CreateProcessInstanceWithResultRestTest extends ClientRestTest {
         .newCreateInstanceCommand()
         .processDefinitionKey(123)
         .withResult()
-        .requestTimeout(Duration.ofSeconds(123))
+        .timeout(Duration.ofSeconds(123))
         .send()
         .join();
 

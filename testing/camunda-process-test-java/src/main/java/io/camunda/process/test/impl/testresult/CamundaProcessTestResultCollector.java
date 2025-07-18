@@ -50,7 +50,7 @@ public class CamundaProcessTestResultCollector {
       final ProcessInstance processInstance) {
     final ProcessInstanceResult result = new ProcessInstanceResult();
 
-    final long processInstanceKey = processInstance.getProcessInstanceKey();
+    final long processInstanceKey = processInstance.getKey();
 
     result.setProcessInstance(processInstance);
     result.setVariables(collectVariables(processInstanceKey));

@@ -42,7 +42,7 @@ public interface AssignRoleToUserCommandStep1 {
    */
   AssignRoleToUserCommandStep2 roleId(String roleId);
 
-  interface AssignRoleToUserCommandStep2 extends FinalCommandStep<AssignRoleToUserResponse> {
+  interface AssignRoleToUserCommandStep2 extends FinalStep<AssignRoleToUserResponse> {
 
     /**
      * Sets the username of the user to assign the role to.

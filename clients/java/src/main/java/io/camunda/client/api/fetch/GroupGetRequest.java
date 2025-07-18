@@ -15,7 +15,7 @@
  */
 package io.camunda.client.api.fetch;
 
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.search.response.Group;
 
-public interface GroupGetRequest extends FinalCommandStep<Group> {}
+public interface GroupGetRequest extends FinalStep<Group> {}

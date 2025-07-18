@@ -16,7 +16,7 @@
 package io.camunda.spring.client.jobhandling;
 
 import io.camunda.client.api.command.FailJobCommandStep1.FailJobCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.ThrowErrorCommandStep1.ThrowErrorCommandStep2;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.FailJobResponse;
@@ -43,7 +43,7 @@ public class DefaultJobExceptionHandlingStrategy implements JobExceptionHandling
   }
 
   private CommandWrapper createCommandWrapper(
-      final FinalCommandStep<?> command, final ActivatedJob job, final JobWorkerValue workerValue) {
+      final FinalStep<?> command, final ActivatedJob job, final JobWorkerValue workerValue) {
     return new CommandWrapper(
         command,
         job,
@@ -82,7 +82,7 @@ public class DefaultJobExceptionHandlingStrategy implements JobExceptionHandling
     }
   }
 
-  private FinalCommandStep<Void> createThrowErrorCommand(
+  private FinalStep<Void> createThrowErrorCommand(
       final JobClient jobClient, final ActivatedJob job, final BpmnError bpmnError) {
     final ThrowErrorCommandStep2 command =
         jobClient
@@ -92,7 +92,7 @@ public class DefaultJobExceptionHandlingStrategy implements JobExceptionHandling
     return JobHandlingUtil.applyVariables(bpmnError.getVariables(), command);
   }
 
-  private FinalCommandStep<FailJobResponse> createFailJobCommand(
+  private FinalStep<FailJobResponse> createFailJobCommand(
       final JobClient jobClient, final ActivatedJob job, final JobError jobError) {
     final int retries =
         jobError.getRetries() == null ? (job.getRetries() - 1) : jobError.getRetries();

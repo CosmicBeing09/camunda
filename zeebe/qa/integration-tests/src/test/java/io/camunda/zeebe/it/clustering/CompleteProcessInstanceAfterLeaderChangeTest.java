@@ -95,7 +95,7 @@ public class CompleteProcessInstanceAfterLeaderChangeTest {
                   .variables(Map.of("key", "123"))
                   .withResult()
                   // retry delay for message subscription commands is 10s. Set a higher timeout.
-                  .requestTimeout(Duration.ofSeconds(20))
+                  .timeout(Duration.ofSeconds(20))
                   .send()
                   .join();
             },

@@ -28,7 +28,7 @@ public interface UnassignRoleFromUserCommandStep1 {
   UnassignRoleFromUserCommandStep2 roleId(String roleId);
 
   interface UnassignRoleFromUserCommandStep2
-      extends FinalCommandStep<UnassignUserFromRoleResponse> {
+      extends FinalStep<UnassignUserFromRoleResponse> {
 
     /**
      * Sets the username for the unassignment.

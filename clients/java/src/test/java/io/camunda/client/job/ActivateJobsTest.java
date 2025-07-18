@@ -226,7 +226,7 @@ public final class ActivateJobsTest extends ClientTest {
         .newActivateJobsCommand()
         .jobType("foo")
         .maxJobsToActivate(3)
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
     final ActivateJobsRequest request = gatewayService.getLastRequest();

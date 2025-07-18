@@ -217,7 +217,7 @@ public class RoleIntegrationTest {
             () ->
                 assertThat(
                         searchAuthorizations(
-                                camundaClient.getConfiguration().getRestAddress().toString())
+                                camundaClient.getConfiguration().restAddress().toString())
                             .items())
                     .anyMatch(
                         auth ->
@@ -240,7 +240,7 @@ public class RoleIntegrationTest {
             () ->
                 assertThat(
                         searchAuthorizations(
-                                camundaClient.getConfiguration().getRestAddress().toString())
+                                camundaClient.getConfiguration().restAddress().toString())
                             .items())
                     .noneMatch(
                         auth ->

@@ -25,8 +25,8 @@ public class RolesByGroupSearchTest {
 
   private static CamundaClient camundaClient;
 
-  private static final String ROLE_ID_1 = "a" + Strings.newRandomValidUsername();
-  private static final String ROLE_ID_2 = "b" + Strings.newRandomValidUsername();
+  private static final String ROLE_ID_1 = "a" + Strings.randomUsername();
+  private static final String ROLE_ID_2 = "b" + Strings.randomUsername();
   private static final String GROUP_ID = Strings.newRandomValidIdentityId();
   private static final String GROUP_ID_2 = Strings.newRandomValidIdentityId();
 

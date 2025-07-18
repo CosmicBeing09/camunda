@@ -25,16 +25,16 @@ import io.camunda.client.api.command.AssignRoleToGroupCommandStep1;
 import io.camunda.client.api.command.AssignRoleToMappingCommandStep1;
 import io.camunda.client.api.command.AssignRoleToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToUserCommandStep1;
-import io.camunda.client.api.command.AssignUserTaskCommandStep1;
+import io.camunda.client.api.command.AssignUserTaskStep1;
 import io.camunda.client.api.command.AssignUserToGroupCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
+import io.camunda.client.api.command.AuthorizationBuilderStep1;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1;
 import io.camunda.client.api.command.CancelProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ClockPinCommandStep1;
 import io.camunda.client.api.command.ClockResetCommandStep1;
 import io.camunda.client.api.command.CompleteUserTaskCommandStep1;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1;
 import io.camunda.client.api.command.CreateDocumentBatchCommandStep1;
 import io.camunda.client.api.command.CreateDocumentCommandStep1;
@@ -79,7 +79,7 @@ import io.camunda.client.api.command.UpdateRoleCommandStep1;
 import io.camunda.client.api.command.UpdateTenantCommandStep1;
 import io.camunda.client.api.command.UpdateTimeoutJobCommandStep1;
 import io.camunda.client.api.command.UpdateUserCommandStep1;
-import io.camunda.client.api.command.UpdateUserTaskCommandStep1;
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.api.fetch.BatchOperationGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetXmlRequest;
@@ -210,9 +210,9 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    * @deprecated since 8 for removal with 8.1, replaced by {@link
-   *     CamundaClient#newDeployResourceCommand()}
+   *     CamundaClient#deployResource()}
    */
-  DeployProcessCommandStep1 newDeployCommand();
+  DeployProcessCommandStep1 deploy();
 
   /**
    * Command to deploy new resources, i.e. BPMN process models and DMN decision models.
@@ -228,7 +228,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    */
-  DeployResourceCommandStep1 newDeployResourceCommand();
+  DeployResourceCommandStep1 deployResource();
 
   /**
    * Command to create/start a new instance of a process.
@@ -612,7 +612,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    * @param userTaskKey the key of the user task
    * @return a builder for the command
    */
-  AssignUserTaskCommandStep1 newUserTaskAssignCommand(long userTaskKey);
+  AssignUserTaskStep1 newUserTaskAssignCommand(long userTaskKey);
 
   /**
    * Command to update a user task.
@@ -632,7 +632,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    * @param userTaskKey the key of the user task
    * @return a builder for the command
    */
-  UpdateUserTaskCommandStep1 newUserTaskUpdateCommand(long userTaskKey);
+  UserTaskUpdateBuilder newUserTaskUpdateCommand(long userTaskKey);
 
   /**
    * Command to unassign a user task.
@@ -2135,7 +2135,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder to configure and send the create authorization command
    */
-  CreateAuthorizationCommandStep1 newCreateAuthorizationCommand();
+  AuthorizationBuilderStep1 newCreateAuthorizationCommand();
 
   /**
    * Command to delete an authorization

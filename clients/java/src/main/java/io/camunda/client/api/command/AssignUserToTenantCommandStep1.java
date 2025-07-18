@@ -28,7 +28,7 @@ public interface AssignUserToTenantCommandStep1 {
    */
   AssignUserToTenantCommandStep2 username(String username);
 
-  interface AssignUserToTenantCommandStep2 extends FinalCommandStep<AssignUserToTenantResponse> {
+  interface AssignUserToTenantCommandStep2 extends FinalStep<AssignUserToTenantResponse> {
     /**
      * Sets the tenant ID.
      *

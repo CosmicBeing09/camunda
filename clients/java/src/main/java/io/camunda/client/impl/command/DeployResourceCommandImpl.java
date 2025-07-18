@@ -26,7 +26,7 @@ import io.camunda.client.api.command.ClientException;
 import io.camunda.client.api.command.CommandWithTenantStep;
 import io.camunda.client.api.command.DeployResourceCommandStep1;
 import io.camunda.client.api.command.DeployResourceCommandStep1.DeployResourceCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -87,7 +87,7 @@ public final class DeployResourceCommandImpl
     httpRequestConfig = httpClient.newRequestConfig();
     useRest = preferRestOverGrpc;
     this.jsonMapper = jsonMapper;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   /**
@@ -117,11 +117,11 @@ public final class DeployResourceCommandImpl
     useRest = preferRestOverGrpc;
     this.jsonMapper = jsonMapper;
     tenantId(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
-  public DeployResourceCommandStep2 addResourceBytes(
+  public DeployResourceCommandStep2 addBytes(
       final byte[] resource, final String resourceName) {
 
     if (useRest) {
@@ -139,15 +139,15 @@ public final class DeployResourceCommandImpl
   }
 
   @Override
-  public DeployResourceCommandStep2 addResourceString(
+  public DeployResourceCommandStep2 addString(
       final String resource, final Charset charset, final String resourceName) {
-    return addResourceBytes(resource.getBytes(charset), resourceName);
+    return addBytes(resource.getBytes(charset), resourceName);
   }
 
   @Override
   public DeployResourceCommandStep2 addResourceStringUtf8(
       final String resourceString, final String resourceName) {
-    return addResourceString(resourceString, StandardCharsets.UTF_8, resourceName);
+    return addString(resourceString, StandardCharsets.UTF_8, resourceName);
   }
 
   @Override
@@ -158,7 +158,7 @@ public final class DeployResourceCommandImpl
     try {
       final byte[] bytes = StreamUtil.readInputStream(resourceStream);
 
-      return addResourceBytes(bytes, resourceName);
+      return addBytes(bytes, resourceName);
     } catch (final IOException e) {
       final String exceptionMsg =
           String.format("Cannot deploy bpmn resource from stream. %s", e.getMessage());
@@ -205,11 +205,11 @@ public final class DeployResourceCommandImpl
 
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
     Bpmn.writeModelToStream(outStream, processDefinition);
-    return addResourceBytes(outStream.toByteArray(), resourceName);
+    return addBytes(outStream.toByteArray(), resourceName);
   }
 
   @Override
-  public FinalCommandStep<DeploymentEvent> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeploymentEvent> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

@@ -17,4 +17,4 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.DeleteUserResponse;
 
-public interface DeleteUserCommandStep1 extends FinalCommandStep<DeleteUserResponse> {}
+public interface DeleteUserCommandStep1 extends FinalStep<DeleteUserResponse> {}

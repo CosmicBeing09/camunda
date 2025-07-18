@@ -55,7 +55,7 @@ public class MessageMultiTenancyTest {
   public void shouldStartAndCompleteProcessWithMessageStartEvent() {
     // given
     final var tenantId = "tenant" + UUID.randomUUID();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final String messageName = "msg" + UUID.randomUUID();
     ENGINE
         .deployment()
@@ -82,7 +82,7 @@ public class MessageMultiTenancyTest {
   public void shouldStartAndCompleteProcessWithIntermediateCatchEvent() {
     // given
     final var tenantId = "tenant" + UUID.randomUUID();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final String messageName = "msg" + UUID.randomUUID();
     final String correlationKey = "corr" + UUID.randomUUID().toString().replace("-", "");
     ENGINE
@@ -130,7 +130,7 @@ public class MessageMultiTenancyTest {
     // given
     final var tenantId = "tenant" + UUID.randomUUID();
     final var otherTenant = "tenant" + UUID.randomUUID();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final String messageName = "msg" + UUID.randomUUID();
     ENGINE
         .deployment()
@@ -159,7 +159,7 @@ public class MessageMultiTenancyTest {
     // given
     final var tenantId = "tenant" + UUID.randomUUID();
     final var otherTenant = "tenant" + UUID.randomUUID();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final String messageName = "msg" + UUID.randomUUID();
     final String correlationKey = "corr" + UUID.randomUUID().toString().replace("-", "");
     ENGINE
@@ -208,7 +208,7 @@ public class MessageMultiTenancyTest {
     // given a buffered message
     final var tenantId = "tenant" + UUID.randomUUID();
     final var otherTenant = "otherTenant" + UUID.randomUUID();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final String messageName = "msg" + UUID.randomUUID();
     final String correlationKey = "corr" + UUID.randomUUID().toString().replace("-", "");
     ENGINE

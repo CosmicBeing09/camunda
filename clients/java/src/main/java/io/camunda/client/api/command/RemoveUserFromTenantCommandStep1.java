@@ -28,7 +28,7 @@ public interface RemoveUserFromTenantCommandStep1 {
   RemoveUserFromTenantCommandStep2 username(String username);
 
   interface RemoveUserFromTenantCommandStep2
-      extends FinalCommandStep<RemoveUserFromTenantResponse> {
+      extends FinalStep<RemoveUserFromTenantResponse> {
 
     /**
      * Sets the tenant ID.

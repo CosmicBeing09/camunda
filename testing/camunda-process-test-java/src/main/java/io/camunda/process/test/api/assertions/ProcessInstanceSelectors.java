@@ -51,7 +51,7 @@ public class ProcessInstanceSelectors {
 
     @Override
     public boolean test(final ProcessInstance processInstance) {
-      return processInstance.getProcessInstanceKey().equals(processInstanceKey);
+      return processInstance.getKey().equals(processInstanceKey);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ProcessInstanceSelectors {
 
     @Override
     public void applyFilter(final ProcessInstanceFilter filter) {
-      filter.processInstanceKey(processInstanceKey);
+      filter.key(processInstanceKey);
     }
   }
 
@@ -75,7 +75,7 @@ public class ProcessInstanceSelectors {
 
     @Override
     public boolean test(final ProcessInstance processInstance) {
-      return processInstance.getProcessDefinitionId().equals(processDefinitionId);
+      return processInstance.getDefinitionId().equals(processDefinitionId);
     }
 
     @Override

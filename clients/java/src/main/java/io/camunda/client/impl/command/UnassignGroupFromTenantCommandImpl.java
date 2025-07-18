@@ -16,7 +16,7 @@
 package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.UnassignGroupFromTenantCommandStep1;
 import io.camunda.client.api.response.UnassignGroupFromTenantResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -45,7 +45,7 @@ public final class UnassignGroupFromTenantCommandImpl
   }
 
   @Override
-  public FinalCommandStep<UnassignGroupFromTenantResponse> requestTimeout(
+  public FinalStep<UnassignGroupFromTenantResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

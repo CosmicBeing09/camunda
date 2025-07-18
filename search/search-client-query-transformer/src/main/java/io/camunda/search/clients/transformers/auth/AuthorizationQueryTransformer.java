@@ -7,7 +7,7 @@
  */
 package io.camunda.search.clients.transformers.auth;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.List;
 /** Creates an authorization filter query */
 public interface AuthorizationQueryTransformer {
 
-  SearchQuery toSearchQuery(
+  Query toSearchQuery(
       AuthorizationResourceType resourceType,
       PermissionType permissionType,
       List<String> resourceKeys);

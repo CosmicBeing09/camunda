@@ -142,7 +142,7 @@ class DecisionInstanceAuthorizationIT {
   private static DeploymentEvent deployResource(
       final CamundaClient camundaClient, final String resourceName) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath(resourceName)
         .send()
         .join();

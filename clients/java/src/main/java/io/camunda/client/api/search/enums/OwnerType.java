@@ -22,5 +22,5 @@ public enum OwnerType {
   GROUP,
   MAPPING,
   UNSPECIFIED,
-  UNKNOWN_ENUM_VALUE;
+  UNKNOWN;
 }

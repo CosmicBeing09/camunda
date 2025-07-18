@@ -57,7 +57,7 @@ public final class CancelProcessInstanceTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newCancelInstanceCommand(123).requestTimeout(requestTimeout).send().join();
+    client.newCancelInstanceCommand(123).timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

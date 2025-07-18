@@ -30,7 +30,7 @@ import static io.camunda.webapps.schema.descriptors.template.DecisionInstanceTem
 import static io.camunda.webapps.schema.descriptors.template.DecisionInstanceTemplate.TENANT_ID;
 import static java.util.Optional.ofNullable;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.entities.DecisionInstanceEntity.DecisionDefinitionType;
 import io.camunda.search.entities.DecisionInstanceEntity.DecisionInstanceState;
 import io.camunda.search.filter.DecisionInstanceFilter;
@@ -48,8 +48,8 @@ public final class DecisionInstanceFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final DecisionInstanceFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+  public Query toSearchQuery(final DecisionInstanceFilter filter) {
+    final var queries = new ArrayList<Query>();
     ofNullable(getKeysQuery(filter.decisionInstanceKeys())).ifPresent(queries::add);
     ofNullable(getIdsQuery(filter.decisionInstanceIds())).ifPresent(queries::add);
     ofNullable(getStatesQuery(filter.states())).ifPresent(queries::add);
@@ -70,38 +70,38 @@ public final class DecisionInstanceFilterTransformer
     return and(queries);
   }
 
-  private SearchQuery getKeysQuery(final List<Long> keys) {
+  private Query getKeysQuery(final List<Long> keys) {
     return longTerms(KEY, keys);
   }
 
-  private SearchQuery getIdsQuery(final List<String> ids) {
+  private Query getIdsQuery(final List<String> ids) {
     return stringTerms(ID, ids);
   }
 
-  private SearchQuery getStatesQuery(final List<DecisionInstanceState> states) {
+  private Query getStatesQuery(final List<DecisionInstanceState> states) {
     return stringTerms(STATE, states != null ? states.stream().map(Enum::name).toList() : null);
   }
 
-  private List<SearchQuery> getEvaluationDateQuery(
+  private List<Query> getEvaluationDateQuery(
       final List<Operation<OffsetDateTime>> evaluationDateOperations) {
     return dateTimeOperations(EVALUATION_DATE, evaluationDateOperations);
   }
 
-  private SearchQuery getEvaluationFailuresQuery(final List<String> evaluationFailures) {
+  private Query getEvaluationFailuresQuery(final List<String> evaluationFailures) {
     return or(
         stringTerms(EVALUATION_FAILURE_MESSAGE, evaluationFailures),
         stringTerms(EVALUATION_FAILURE, evaluationFailures));
   }
 
-  private SearchQuery getProcessDefinitionKeysQuery(final List<Long> processDefinitionKeys) {
+  private Query getProcessDefinitionKeysQuery(final List<Long> processDefinitionKeys) {
     return longTerms(PROCESS_DEFINITION_KEY, processDefinitionKeys);
   }
 
-  private SearchQuery getProcessInstanceKeysQuery(final List<Long> processInstanceKeys) {
+  private Query getProcessInstanceKeysQuery(final List<Long> processInstanceKeys) {
     return longTerms(PROCESS_INSTANCE_KEY, processInstanceKeys);
   }
 
-  private List<SearchQuery> getDecisionDefinitionKeysQuery(
+  private List<Query> getDecisionDefinitionKeysQuery(
       final List<Operation<Long>> decisionDefinitionKeyOperations) {
     final var stringOperations =
         decisionDefinitionKeyOperations.stream()
@@ -114,27 +114,27 @@ public final class DecisionInstanceFilterTransformer
     return stringOperations(DECISION_DEFINITION_ID, stringOperations);
   }
 
-  private SearchQuery getDecisionDefinitionIdsQuery(final List<String> decisionDefinitionIds) {
+  private Query getDecisionDefinitionIdsQuery(final List<String> decisionDefinitionIds) {
     return stringTerms(DECISION_ID, decisionDefinitionIds);
   }
 
-  private SearchQuery getDecisionDefinitionNamesQuery(final List<String> decisionDefinitionNames) {
+  private Query getDecisionDefinitionNamesQuery(final List<String> decisionDefinitionNames) {
     return stringTerms(DECISION_NAME, decisionDefinitionNames);
   }
 
-  private SearchQuery getDecisionDefinitionVersionsQuery(
+  private Query getDecisionDefinitionVersionsQuery(
       final List<Integer> decisionDefinitionVersions) {
     return intTerms(DECISION_VERSION, decisionDefinitionVersions);
   }
 
-  private SearchQuery getDecisionDefinitionTypesQuery(
+  private Query getDecisionDefinitionTypesQuery(
       final List<DecisionDefinitionType> decisionTypes) {
     return stringTerms(
         DECISION_TYPE,
         decisionTypes != null ? decisionTypes.stream().map(Enum::name).toList() : null);
   }
 
-  private SearchQuery getTenantIdsQuery(final List<String> tenantIds) {
+  private Query getTenantIdsQuery(final List<String> tenantIds) {
     return stringTerms(TENANT_ID, tenantIds);
   }
 }

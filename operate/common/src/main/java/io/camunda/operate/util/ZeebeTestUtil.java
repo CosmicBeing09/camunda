@@ -56,7 +56,7 @@ public abstract class ZeebeTestUtil {
       if (classpathResources.length == 0) {
         return null;
       }
-      DeployResourceCommandStep1 deployProcessCommandStep1 = client.newDeployResourceCommand();
+      DeployResourceCommandStep1 deployProcessCommandStep1 = client.deployResource();
       for (final String classpathResource : classpathResources) {
         deployProcessCommandStep1 =
             deployProcessCommandStep1.addResourceFromClasspath(classpathResource);
@@ -90,7 +90,7 @@ public abstract class ZeebeTestUtil {
     if (classpathResources.length == 0) {
       return;
     }
-    DeployResourceCommandStep1 deployProcessCommandStep1 = client.newDeployResourceCommand();
+    DeployResourceCommandStep1 deployProcessCommandStep1 = client.deployResource();
     for (final String classpathResource : classpathResources) {
       deployProcessCommandStep1 =
           deployProcessCommandStep1.addResourceFromClasspath(classpathResource);
@@ -120,7 +120,7 @@ public abstract class ZeebeTestUtil {
       final BpmnModelInstance processModel,
       final String resourceName) {
     DeployResourceCommandStep2 deployProcessCommandStep1 =
-        client.newDeployResourceCommand().addProcessModel(processModel, resourceName);
+        client.deployResource().addProcessModel(processModel, resourceName);
     if (tenantId != null) {
       deployProcessCommandStep1 = deployProcessCommandStep1.tenantId(tenantId);
     }

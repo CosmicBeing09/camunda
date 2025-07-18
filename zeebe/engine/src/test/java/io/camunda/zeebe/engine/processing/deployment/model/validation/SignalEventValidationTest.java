@@ -38,7 +38,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalStartEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -56,7 +56,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldRejectDeployNoneReferenceSignalEndEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -84,7 +84,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldRejectDeployEmptySignalEndEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -107,7 +107,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalEndEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -129,7 +129,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldRejectDeployEmptySignalThrowEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -157,7 +157,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalThrowEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -195,7 +195,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalBoundaryEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -218,7 +218,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldRejectDeploymentIfSignalBoundaryEventWithEmptyName() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -241,7 +241,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalStartAndMultipleBoundaryEvents() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -286,7 +286,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalIntermediateCatchEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -308,7 +308,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldRejectDeploymentIfSignalIntermediateCatchEventWithEmptyName() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -330,7 +330,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalEventSubprocess() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -353,7 +353,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldRejectDeploymentIfSignalEventSubprocessWithEmptyName() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =
@@ -375,7 +375,7 @@ public final class SignalEventValidationTest {
   @Test
   public void shouldDeploySignalStartAndBoundaryEventEvenWithSameSignal() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final BpmnModelInstance processDefinition =

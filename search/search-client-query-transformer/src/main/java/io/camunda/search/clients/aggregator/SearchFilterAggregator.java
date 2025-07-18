@@ -7,13 +7,13 @@
  */
 package io.camunda.search.clients.aggregator;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.util.ObjectBuilder;
 import java.util.List;
 import java.util.Objects;
 
 public record SearchFilterAggregator(
-    String name, SearchQuery query, List<SearchAggregator> aggregations)
+    String name, Query query, List<SearchAggregator> aggregations)
     implements SearchAggregator {
 
   @Override
@@ -29,14 +29,14 @@ public record SearchFilterAggregator(
   public static final class Builder extends SearchAggregator.AbstractBuilder<Builder>
       implements ObjectBuilder<SearchFilterAggregator> {
 
-    private SearchQuery query;
+    private Query query;
 
     @Override
     protected Builder self() {
       return this;
     }
 
-    public Builder query(final SearchQuery value) {
+    public Builder query(final Query value) {
       query = value;
       return this;
     }

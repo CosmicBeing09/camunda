@@ -19,7 +19,7 @@ import static io.camunda.webapps.schema.descriptors.index.ProcessIndex.RESOURCE_
 import static io.camunda.webapps.schema.descriptors.index.ProcessIndex.VERSION;
 import static io.camunda.webapps.schema.descriptors.index.ProcessIndex.VERSION_TAG;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.ProcessDefinitionFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -31,7 +31,7 @@ public class ProcessDefinitionFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final ProcessDefinitionFilter filter) {
+  public Query toSearchQuery(final ProcessDefinitionFilter filter) {
     return and(
         longTerms(KEY, filter.processDefinitionKeys()),
         stringTerms(NAME, filter.names()),

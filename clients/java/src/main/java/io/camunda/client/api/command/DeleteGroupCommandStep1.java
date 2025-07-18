@@ -17,4 +17,4 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.DeleteGroupResponse;
 
-public interface DeleteGroupCommandStep1 extends FinalCommandStep<DeleteGroupResponse> {}
+public interface DeleteGroupCommandStep1 extends FinalStep<DeleteGroupResponse> {}

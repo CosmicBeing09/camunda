@@ -130,7 +130,7 @@ public class EvaluateDecisionCommandImpl extends CommandWithVariables<EvaluateDe
   @Override
   public EvaluateDecisionCommandStep2 decisionKey(final long decisionKey) {
     grpcRequestObjectBuilder.setDecisionKey(decisionKey);
-    httpRequestObject.setDecisionDefinitionKey(ParseUtil.keyToString(decisionKey));
+    httpRequestObject.setDecisionDefinitionKey(ParseUtil.toStringOrNull(decisionKey));
     return this;
   }
 

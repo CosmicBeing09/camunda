@@ -16,7 +16,7 @@
 package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.ProcessDefinitionGetFormRequest;
 import io.camunda.client.api.search.response.Form;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -41,7 +41,7 @@ public class ProcessDefinitionGetFormRequestImpl implements ProcessDefinitionGet
   }
 
   @Override
-  public FinalCommandStep<Form> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<Form> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

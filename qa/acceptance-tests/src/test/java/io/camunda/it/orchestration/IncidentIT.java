@@ -33,15 +33,15 @@ public class IncidentIT {
   private static CamundaClient client;
   private static final String CALL_ACTIVITY_ID = "child";
   private static final String TASK_ID = "task";
-  private final String parentProcessId = Strings.newRandomValidBpmnId();
-  private final String childProcessId = Strings.newRandomValidBpmnId();
-  private final String jobType = Strings.newRandomValidBpmnId();
+  private final String parentProcessId = Strings.randomBpmnId();
+  private final String childProcessId = Strings.randomBpmnId();
+  private final String jobType = Strings.randomBpmnId();
 
   @Test
   void shouldExportIncident() {
     final var resource =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/error-end-event.bpmn")
             .send()
             .join();
@@ -177,7 +177,7 @@ public class IncidentIT {
       final CamundaClient client, final long childInstanceKey) {
     return client
         .newProcessInstanceSearchRequest()
-        .filter(p -> p.processInstanceKey(childInstanceKey))
+        .filter(p -> p.key(childInstanceKey))
         .send()
         .join()
         .items()
@@ -243,7 +243,7 @@ public class IncidentIT {
             .endEvent()
             .done();
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(parentProcess, "parent.bpmn")
         .addProcessModel(childProcess, "child.bpmn")
         .send()
@@ -255,7 +255,7 @@ public class IncidentIT {
 
     final var resource =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/errorProcess.bpmn")
             .send()
             .join();

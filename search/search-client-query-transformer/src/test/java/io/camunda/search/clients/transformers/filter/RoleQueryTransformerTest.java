@@ -10,8 +10,8 @@ package io.camunda.search.clients.transformers.filter;
 import static io.camunda.zeebe.protocol.record.value.EntityType.USER;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchBoolQuery;
-import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.filter.FilterBuilders;
 import org.junit.jupiter.api.Test;
 
@@ -30,8 +30,8 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     assertThat(query.should()).isEmpty();
     assertThat(query.must())
         .containsExactlyInAnyOrder(
-            SearchQuery.of(q1 -> q1.term(t -> t.field("roleId").value("role1"))),
-            SearchQuery.of(q1 -> q1.term(t -> t.field("join").value("role"))));
+            Query.of(q1 -> q1.term(t -> t.field("roleId").value("role1"))),
+            Query.of(q1 -> q1.term(t -> t.field("join").value("role"))));
   }
 
   @Test
@@ -47,8 +47,8 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     assertThat(query.should()).isEmpty();
     assertThat(query.must())
         .containsExactlyInAnyOrder(
-            SearchQuery.of(q1 -> q1.term(t -> t.field("name").value("roleName"))),
-            SearchQuery.of(q1 -> q1.term(t -> t.field("join").value("role"))));
+            Query.of(q1 -> q1.term(t -> t.field("name").value("roleName"))),
+            Query.of(q1 -> q1.term(t -> t.field("join").value("role"))));
   }
 
   @Test
@@ -64,8 +64,8 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     assertThat(query.should()).isEmpty();
     assertThat(query.must())
         .containsExactlyInAnyOrder(
-            SearchQuery.of(q1 -> q1.term(t -> t.field("description").value("roleDescription"))),
-            SearchQuery.of(q1 -> q1.term(t -> t.field("join").value("role"))));
+            Query.of(q1 -> q1.term(t -> t.field("description").value("roleDescription"))),
+            Query.of(q1 -> q1.term(t -> t.field("join").value("role"))));
   }
 
   @Test
@@ -79,11 +79,11 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
 
     // then
     final var expectedMemberTypeQuery =
-        SearchQuery.of(q1 -> q1.term(t -> t.field("memberType").value(USER.name())));
+        Query.of(q1 -> q1.term(t -> t.field("memberType").value(USER.name())));
     final var roleIdQuery =
-        SearchQuery.of(q1 -> q1.term(t -> t.field("roleId").value("test-parent-id")));
+        Query.of(q1 -> q1.term(t -> t.field("roleId").value("test-parent-id")));
     final var expectedParentQuery =
-        SearchQuery.of(q -> q.hasParent(hp -> hp.parentType("role").query(roleIdQuery)));
+        Query.of(q -> q.hasParent(hp -> hp.parentType("role").query(roleIdQuery)));
 
     assertThat(query.filter()).isEmpty();
     assertThat(query.should()).isEmpty();
@@ -102,14 +102,14 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
 
     // then
     final var memberTypeQuery =
-        SearchQuery.of(q1 -> q1.term(t -> t.field("memberType").value(USER.name())));
+        Query.of(q1 -> q1.term(t -> t.field("memberType").value(USER.name())));
     final var expectedChildMemberTypeQuery =
-        SearchQuery.of(q -> q.hasChild(hc -> hc.type("member").query(memberTypeQuery)));
+        Query.of(q -> q.hasChild(hc -> hc.type("member").query(memberTypeQuery)));
     final var memberIdQuery =
-        SearchQuery.of(q1 -> q1.term(t -> t.field("memberId").value("test-member-id")));
+        Query.of(q1 -> q1.term(t -> t.field("memberId").value("test-member-id")));
     final var expectedChildMemberIdQuery =
-        SearchQuery.of(q -> q.hasChild(hc -> hc.type("member").query(memberIdQuery)));
-    final var joinQuery = SearchQuery.of(q1 -> q1.term(t -> t.field("join").value("role")));
+        Query.of(q -> q.hasChild(hc -> hc.type("member").query(memberIdQuery)));
+    final var joinQuery = Query.of(q1 -> q1.term(t -> t.field("join").value("role")));
 
     assertThat(query.filter()).isEmpty();
     assertThat(query.should()).isEmpty();
@@ -131,8 +131,8 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     assertThat(query.should()).isEmpty();
     assertThat(query.must())
         .containsExactlyInAnyOrder(
-            SearchQuery.of(q -> q.term(t -> t.field("roleId").value("role1"))),
-            SearchQuery.of(q -> q.term(t -> t.field("name").value("TestRole"))),
-            SearchQuery.of(q -> q.term(t -> t.field("join").value("role"))));
+            Query.of(q -> q.term(t -> t.field("roleId").value("role1"))),
+            Query.of(q -> q.term(t -> t.field("name").value("TestRole"))),
+            Query.of(q -> q.term(t -> t.field("join").value("role"))));
   }
 }

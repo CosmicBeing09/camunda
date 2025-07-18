@@ -50,7 +50,7 @@ public final class WorkloadGenerator {
    */
   public static void performSampleWorkload(final CamundaClient client) {
     client
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(SAMPLE_PROCESS, "sample_process.bpmn")
         .send()
         .join();

@@ -38,8 +38,8 @@ import static io.camunda.webapps.schema.descriptors.template.ListViewTemplate.VA
 import static io.camunda.webapps.schema.descriptors.template.ListViewTemplate.VAR_VALUE;
 import static java.util.Optional.ofNullable;
 
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchMatchQuery.SearchMatchQueryOperator;
-import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.clients.transformers.ServiceTransformers;
 import io.camunda.search.filter.ProcessDefinitionStatisticsFilter;
 import io.camunda.search.filter.VariableValueFilter;
@@ -61,9 +61,9 @@ public class ProcessDefinitionStatisticsFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final ProcessDefinitionStatisticsFilter filter) {
+  public Query toSearchQuery(final ProcessDefinitionStatisticsFilter filter) {
 
-    final var queries = new ArrayList<SearchQuery>();
+    final var queries = new ArrayList<Query>();
     queries.add(term(JOIN_RELATION, ACTIVITIES_JOIN_RELATION));
     queries.add(
         hasParentQuery(
@@ -71,7 +71,7 @@ public class ProcessDefinitionStatisticsFilterTransformer
     queries.addAll(toSearchQueryFields(filter));
 
     if (filter.orFilters() != null && !filter.orFilters().isEmpty()) {
-      final var orQueries = new ArrayList<SearchQuery>();
+      final var orQueries = new ArrayList<Query>();
       filter.orFilters().stream().map(f -> and(toSearchQueryFields(f))).forEach(orQueries::add);
       queries.add(or(orQueries));
     }
@@ -79,9 +79,9 @@ public class ProcessDefinitionStatisticsFilterTransformer
     return and(queries);
   }
 
-  public ArrayList<SearchQuery> toSearchQueryFields(
+  public ArrayList<Query> toSearchQueryFields(
       final ProcessDefinitionStatisticsFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+    final var queries = new ArrayList<Query>();
     toProcessInstanceQueries(filter)
         .ifPresent(
             query -> queries.add(hasParentQuery(PROCESS_INSTANCE_JOIN_RELATION, and(query))));
@@ -89,9 +89,9 @@ public class ProcessDefinitionStatisticsFilterTransformer
     return queries;
   }
 
-  private Optional<ArrayList<SearchQuery>> toFlowNodeInstanceQueries(
+  private Optional<ArrayList<Query>> toFlowNodeInstanceQueries(
       final ProcessDefinitionStatisticsFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+    final var queries = new ArrayList<Query>();
 
     queries.addAll((stringOperations(ACTIVITY_ID, filter.flowNodeIdOperations())));
     queries.addAll(stringOperations(ACTIVITY_STATE, filter.flowNodeInstanceStateOperations()));
@@ -101,9 +101,9 @@ public class ProcessDefinitionStatisticsFilterTransformer
     return ofNullable(queries.isEmpty() ? null : queries);
   }
 
-  private Optional<ArrayList<SearchQuery>> toProcessInstanceQueries(
+  private Optional<ArrayList<Query>> toProcessInstanceQueries(
       final ProcessDefinitionStatisticsFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+    final var queries = new ArrayList<Query>();
 
     queries.addAll(longOperations(KEY, filter.processInstanceKeyOperations()));
     queries.addAll(
@@ -129,11 +129,11 @@ public class ProcessDefinitionStatisticsFilterTransformer
     return ofNullable(queries.isEmpty() ? null : queries);
   }
 
-  private static SearchQuery hasRetriesLeftQuery(final Boolean value) {
+  private static Query hasRetriesLeftQuery(final Boolean value) {
     return hasChildQuery(ACTIVITIES_JOIN_RELATION, term(JOB_FAILED_WITH_RETRIES_LEFT, value));
   }
 
-  private SearchQuery getProcessVariablesQuery(final List<VariableValueFilter> variableFilters) {
+  private Query getProcessVariablesQuery(final List<VariableValueFilter> variableFilters) {
     if (variableFilters != null && !variableFilters.isEmpty()) {
       final var transformer = getVariableValueFilterTransformer();
       final VariableValueFilterTransformer variableTransformer =

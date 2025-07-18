@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.TopologyRequestStep1;
 import io.camunda.client.api.response.Topology;
 import io.camunda.client.impl.RetriableClientFutureImpl;
@@ -69,7 +69,7 @@ public final class TopologyRequestImpl implements TopologyRequestStep1 {
   }
 
   @Override
-  public FinalCommandStep<Topology> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<Topology> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     return this;
   }

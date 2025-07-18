@@ -75,7 +75,7 @@ public class RemoteCamundaSpringProcessTestIT {
             .endEvent("end")
             .done();
 
-    client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
+    client.deployResource().addProcessModel(process, "process.bpmn").send().join();
 
     processTestContext.mockJobWorker("task").thenComplete();
 

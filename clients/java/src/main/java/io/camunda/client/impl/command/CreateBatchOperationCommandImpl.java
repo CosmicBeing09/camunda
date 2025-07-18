@@ -24,12 +24,12 @@ import io.camunda.client.api.command.CreateBatchOperationCommandStep1.CreateBatc
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1.CreateBatchOperationCommandStep3;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1.ProcessInstanceMigrationStep;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1.ProcessInstanceModificationStep;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.MigrationPlan;
 import io.camunda.client.api.response.CreateBatchOperationResponse;
 import io.camunda.client.api.search.filter.ProcessInstanceFilter;
 import io.camunda.client.api.search.request.SearchRequestBuilders;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
 import io.camunda.client.impl.response.CreateBatchOperationResponseImpl;
@@ -49,7 +49,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import org.apache.hc.client5.http.config.RequestConfig;
 
-public class CreateBatchOperationCommandImpl<E extends SearchRequestFilter>
+public class CreateBatchOperationCommandImpl<E extends Filter>
     implements ProcessInstanceMigrationStep<E>,
         CreateBatchOperationCommandStep2<E>,
         ProcessInstanceModificationStep<E>,
@@ -105,7 +105,7 @@ public class CreateBatchOperationCommandImpl<E extends SearchRequestFilter>
   }
 
   @Override
-  public FinalCommandStep<CreateBatchOperationResponse> requestTimeout(
+  public FinalStep<CreateBatchOperationResponse> timeout(
       final Duration requestTimeout) {
     ArgumentUtil.ensurePositive("requestTimeout", requestTimeout);
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

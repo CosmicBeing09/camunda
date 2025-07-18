@@ -738,7 +738,7 @@ public class ModifyProcessInstanceRejectionTest {
                 .startEvent()
                 .serviceTask("A", t -> t.zeebeJobType("A"))
                 .endEvent()
-                .subProcessDone()
+                .endSubProcess()
                 .endEvent()
                 .done())
         .deploy();
@@ -797,7 +797,7 @@ public class ModifyProcessInstanceRejectionTest {
                 .startEvent()
                 .serviceTask("A", t -> t.zeebeJobType("A"))
                 .endEvent()
-                .subProcessDone()
+                .endSubProcess()
                 .endEvent()
                 .done())
         .deploy();

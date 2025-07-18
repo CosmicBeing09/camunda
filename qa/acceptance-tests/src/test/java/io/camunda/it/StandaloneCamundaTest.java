@@ -38,7 +38,7 @@ public class StandaloneCamundaTest {
 
     // when
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(
             Bpmn.createExecutableProcess("process")
                 .startEvent()

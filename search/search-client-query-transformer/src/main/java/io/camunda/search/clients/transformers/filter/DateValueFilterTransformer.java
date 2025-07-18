@@ -9,7 +9,7 @@ package io.camunda.search.clients.transformers.filter;
 
 import static io.camunda.search.clients.query.SearchQueryBuilders.range;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.transformers.filter.DateValueFilterTransformer.DateFieldFilter;
 import io.camunda.search.filter.DateValueFilter;
 import io.camunda.search.filter.FilterBase;
@@ -23,7 +23,7 @@ public final class DateValueFilterTransformer implements FilterTransformer<DateF
       DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
 
   @Override
-  public SearchQuery toSearchQuery(final DateFieldFilter filter) {
+  public Query toSearchQuery(final DateFieldFilter filter) {
     final var field = Objects.requireNonNull(filter.field());
     final var dateFiler = filter.filter();
     final var after = dateFiler.after();

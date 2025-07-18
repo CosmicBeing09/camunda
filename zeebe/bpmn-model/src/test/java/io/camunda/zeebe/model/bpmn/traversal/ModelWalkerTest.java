@@ -56,11 +56,11 @@ public class ModelWalkerTest {
             .subProcess("sub-1-2")
             .embeddedSubProcess()
             .startEvent("start-2-1")
-            .subProcessDone()
+            .endSubProcess()
             .subProcess("sub-1-3")
             .embeddedSubProcess()
             .startEvent("start-3-1")
-            .subProcessDone()
+            .endSubProcess()
             .endEvent("end-1-4")
             .done();
 

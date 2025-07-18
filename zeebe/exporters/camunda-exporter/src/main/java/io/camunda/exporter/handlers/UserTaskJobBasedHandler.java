@@ -22,7 +22,7 @@ import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
 import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.webapps.schema.entities.usertask.TaskState;
 import io.camunda.zeebe.exporter.common.cache.ExporterEntityCache;
 import io.camunda.zeebe.exporter.common.cache.process.CachedProcessEntity;
@@ -144,7 +144,7 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
     }
 
     final TaskJoinRelationship joinRelation = new TaskJoinRelationship();
-    joinRelation.setName(TaskJoinRelationshipType.TASK.getType());
+    joinRelation.setName(RelationshipType.TASK.getType());
     joinRelation.setParent(Long.valueOf(entity.getProcessInstanceId()));
     entity.setJoin(joinRelation);
   }
@@ -179,8 +179,8 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
     if (entity.getState() != null) {
       updateFields.put(TaskTemplate.STATE, entity.getState());
     }
-    if (entity.getFlowNodeBpmnId() != null) {
-      updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getFlowNodeBpmnId());
+    if (entity.getBpmnId() != null) {
+      updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getBpmnId());
     }
     if (entity.getFlowNodeName() != null) {
       updateFields.put(TaskTemplate.FLOW_NODE_NAME, entity.getFlowNodeName());

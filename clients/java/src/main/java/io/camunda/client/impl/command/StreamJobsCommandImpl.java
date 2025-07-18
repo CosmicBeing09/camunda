@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.StreamJobsCommandStep1;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep2;
 import io.camunda.client.api.command.StreamJobsCommandStep1.StreamJobsCommandStep3;
@@ -75,9 +75,33 @@ public final class StreamJobsCommandImpl
   }
 
   @Override
-  public FinalCommandStep<StreamJobsResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<StreamJobsResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     return this;
+  }
+
+  @Override
+  public StreamJobsCommandStep3 timeout(final Duration timeout) {
+    Objects.requireNonNull(timeout, "must specify a job timeout");
+    builder.setTimeout(timeout.toMillis());
+    return this;
+  }
+
+  @Override
+  public StreamJobsCommandStep3 workerName(final String workerName) {
+    builder.setWorker(workerName);
+    return this;
+  }
+
+  @Override
+  public StreamJobsCommandStep3 fetchVariables(final List<String> fetchVariables) {
+    builder.addAllFetchVariable(fetchVariables);
+    return this;
+  }
+
+  @Override
+  public StreamJobsCommandStep3 fetchVariables(final String... fetchVariables) {
+    return fetchVariables(Arrays.asList(fetchVariables));
   }
 
   @Override
@@ -122,30 +146,6 @@ public final class StreamJobsCommandImpl
   public StreamJobsCommandStep3 consumer(final Consumer<ActivatedJob> consumer) {
     this.consumer = Objects.requireNonNull(consumer, "must specify a job consumer");
     return this;
-  }
-
-  @Override
-  public StreamJobsCommandStep3 timeout(final Duration timeout) {
-    Objects.requireNonNull(timeout, "must specify a job timeout");
-    builder.setTimeout(timeout.toMillis());
-    return this;
-  }
-
-  @Override
-  public StreamJobsCommandStep3 workerName(final String workerName) {
-    builder.setWorker(workerName);
-    return this;
-  }
-
-  @Override
-  public StreamJobsCommandStep3 fetchVariables(final List<String> fetchVariables) {
-    builder.addAllFetchVariable(fetchVariables);
-    return this;
-  }
-
-  @Override
-  public StreamJobsCommandStep3 fetchVariables(final String... fetchVariables) {
-    return fetchVariables(Arrays.asList(fetchVariables));
   }
 
   @Override

@@ -19,7 +19,7 @@ import static io.camunda.webapps.schema.descriptors.index.DecisionIndex.KEY;
 import static io.camunda.webapps.schema.descriptors.index.DecisionIndex.NAME;
 import static io.camunda.webapps.schema.descriptors.index.DecisionIndex.VERSION;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.DecisionDefinitionFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -31,7 +31,7 @@ public final class DecisionDefinitionFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final DecisionDefinitionFilter filter) {
+  public Query toSearchQuery(final DecisionDefinitionFilter filter) {
     return and(
         longTerms(KEY, filter.decisionDefinitionKeys()),
         stringTerms(DECISION_ID, filter.decisionDefinitionIds()),

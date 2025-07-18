@@ -61,28 +61,28 @@ public abstract class AbstractFlowNodeBuilder<
 
   protected boolean compensationStarted;
   protected BoundaryEvent compensateBoundaryEvent;
-  private SequenceFlowBuilder currentSequenceFlowBuilder;
+  private SequenceFlowBuilder sequenceFlowBuilder;
 
   protected AbstractFlowNodeBuilder(
       final BpmnModelInstance modelInstance, final E element, final Class<?> selfType) {
     super(modelInstance, element, selfType);
   }
 
-  protected SequenceFlowBuilder getCurrentSequenceFlowBuilder() {
-    if (currentSequenceFlowBuilder == null) {
+  protected SequenceFlowBuilder getSequenceFlowBuilder() {
+    if (sequenceFlowBuilder == null) {
       final SequenceFlow sequenceFlow = createSibling(SequenceFlow.class);
-      currentSequenceFlowBuilder = sequenceFlow.builder();
+      sequenceFlowBuilder = sequenceFlow.builder();
     }
-    return currentSequenceFlowBuilder;
+    return sequenceFlowBuilder;
   }
 
   public B condition(final String name, final String condition) {
     if (name != null) {
-      getCurrentSequenceFlowBuilder().name(name);
+      getSequenceFlowBuilder().name(name);
     }
     final ConditionExpression conditionExpression = createInstance(ConditionExpression.class);
     conditionExpression.setTextContent(condition);
-    getCurrentSequenceFlowBuilder().condition(conditionExpression);
+    getSequenceFlowBuilder().condition(conditionExpression);
     return myself;
   }
 
@@ -115,11 +115,11 @@ public abstract class AbstractFlowNodeBuilder<
   }
 
   protected void connectTargetWithSequenceFlow(final FlowNode target) {
-    getCurrentSequenceFlowBuilder().from(element).to(target);
+    getSequenceFlowBuilder().from(element).to(target);
 
-    final SequenceFlow sequenceFlow = getCurrentSequenceFlowBuilder().getElement();
+    final SequenceFlow sequenceFlow = getSequenceFlowBuilder().getElement();
     createEdge(sequenceFlow);
-    currentSequenceFlowBuilder = null;
+    sequenceFlowBuilder = null;
   }
 
   protected void connectTargetWithAssociation(final FlowNode target) {
@@ -141,7 +141,7 @@ public abstract class AbstractFlowNodeBuilder<
   }
 
   public B sequenceFlowId(final String sequenceFlowId) {
-    getCurrentSequenceFlowBuilder().id(sequenceFlowId);
+    getSequenceFlowBuilder().id(sequenceFlowId);
     return myself;
   }
 

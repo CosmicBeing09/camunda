@@ -21,7 +21,7 @@ public class FormCreatedV1ApplierTest extends AbstractFormCreatedApplierTest {
     // given
     final var formKey = keyGenerator.nextKey();
     final var deploymentKey = keyGenerator.nextKey();
-    final var formId = Strings.newRandomValidBpmnId();
+    final var formId = Strings.randomBpmnId();
     final var version = 1;
     final var tenant1Form = sampleFormRecord(formKey, formId, version, deploymentKey, TENANT_1);
     final var tenant2Form = sampleFormRecord(formKey, formId, version, deploymentKey, TENANT_2);

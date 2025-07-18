@@ -22,7 +22,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.client.api.command.ProblemException;
-import io.camunda.client.api.command.UpdateUserTaskCommandStep1;
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.protocol.rest.ProblemDetail;
 import io.camunda.client.protocol.rest.UserTaskUpdateRequest;
 import io.camunda.client.util.ClientRestTest;
@@ -64,7 +64,7 @@ public final class UpdateUserTaskTest extends ClientRestTest {
   @Test
   void shouldUpdateUserTaskWithDueDate() {
     // when
-    client.newUserTaskUpdateCommand(123L).dueDate(TEST_TIME).send().join();
+    client.newUserTaskUpdateCommand(123L).due(TEST_TIME).send().join();
 
     // then
     final UserTaskUpdateRequest request =
@@ -88,7 +88,7 @@ public final class UpdateUserTaskTest extends ClientRestTest {
   @Test
   void shouldUpdateUserTaskWithDueDateAndFollowUpDate() {
     // when
-    client.newUserTaskUpdateCommand(123L).dueDate(TEST_TIME).followUpDate(TEST_TIME).send().join();
+    client.newUserTaskUpdateCommand(123L).due(TEST_TIME).followUpDate(TEST_TIME).send().join();
 
     // then
     final UserTaskUpdateRequest request =
@@ -190,8 +190,8 @@ public final class UpdateUserTaskTest extends ClientRestTest {
   @Test
   void shouldClearUserTaskDueDate() {
     // given
-    final UpdateUserTaskCommandStep1 updateUserTaskCommandStep1 =
-        client.newUserTaskUpdateCommand(123L).dueDate(TEST_TIME);
+    final UserTaskUpdateBuilder updateUserTaskCommandStep1 =
+        client.newUserTaskUpdateCommand(123L).due(TEST_TIME);
 
     // when
     updateUserTaskCommandStep1.clearDueDate().send().join();
@@ -206,7 +206,7 @@ public final class UpdateUserTaskTest extends ClientRestTest {
   @Test
   void shouldClearUserTaskFollowUpDate() {
     // given
-    final UpdateUserTaskCommandStep1 updateUserTaskCommandStep1 =
+    final UserTaskUpdateBuilder updateUserTaskCommandStep1 =
         client.newUserTaskUpdateCommand(123L).followUpDate(TEST_TIME);
 
     // when
@@ -222,7 +222,7 @@ public final class UpdateUserTaskTest extends ClientRestTest {
   @Test
   void shouldClearUserTaskCandidateGroups() {
     // given
-    final UpdateUserTaskCommandStep1 updateUserTaskCommandStep1 =
+    final UserTaskUpdateBuilder updateUserTaskCommandStep1 =
         client.newUserTaskUpdateCommand(123L).candidateGroups("foo");
 
     // when
@@ -240,7 +240,7 @@ public final class UpdateUserTaskTest extends ClientRestTest {
   @Test
   void shouldClearUserTaskCandidateUsers() {
     // given
-    final UpdateUserTaskCommandStep1 updateUserTaskCommandStep1 =
+    final UserTaskUpdateBuilder updateUserTaskCommandStep1 =
         client.newUserTaskUpdateCommand(123L).candidateUsers("foo");
 
     // when

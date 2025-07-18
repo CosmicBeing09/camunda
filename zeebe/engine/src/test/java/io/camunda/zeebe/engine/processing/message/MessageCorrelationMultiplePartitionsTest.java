@@ -288,7 +288,7 @@ public final class MessageCorrelationMultiplePartitionsTest {
 
   @Test
   public void shouldCorrelateMessagesIdempotent() {
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var messageName = "event_message";
     final var correlationKey = CORRELATION_KEYS.get(START_PARTITION_ID);
     final var eventSubProcessStartId = "eventSubProcessStart";

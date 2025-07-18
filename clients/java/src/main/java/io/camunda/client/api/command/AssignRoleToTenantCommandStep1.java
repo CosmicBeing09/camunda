@@ -28,7 +28,7 @@ public interface AssignRoleToTenantCommandStep1 {
    */
   AssignRoleToTenantCommandStep2 roleId(String roleId);
 
-  interface AssignRoleToTenantCommandStep2 extends FinalCommandStep<AssignRoleToTenantResponse> {
+  interface AssignRoleToTenantCommandStep2 extends FinalStep<AssignRoleToTenantResponse> {
 
     /**
      * Sets the tenant ID.

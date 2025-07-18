@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 import io.camunda.exporter.handlers.UserTaskVariableHandler.UserTaskVariableBatch;
 import io.camunda.exporter.store.BatchRequest;
 import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.webapps.schema.entities.usertask.TaskVariableEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -200,7 +200,7 @@ public class UserTaskVariableHandlerTest {
         batch.getVariables().stream()
             .filter(
                 v ->
-                    TaskJoinRelationshipType.PROCESS_VARIABLE
+                    RelationshipType.PROCESS_VARIABLE
                         .getType()
                         .equals(v.getJoin().getName()))
             .findFirst()
@@ -210,7 +210,7 @@ public class UserTaskVariableHandlerTest {
         batch.getVariables().stream()
             .filter(
                 v ->
-                    TaskJoinRelationshipType.LOCAL_VARIABLE.getType().equals(v.getJoin().getName()))
+                    RelationshipType.LOCAL_VARIABLE.getType().equals(v.getJoin().getName()))
             .findFirst()
             .get();
 
@@ -237,7 +237,7 @@ public class UserTaskVariableHandlerTest {
     assertThat(localVariable.getJoin()).isNotNull();
     assertThat(localVariable.getJoin().getParent()).isEqualTo(variableRecordValue.getScopeKey());
     assertThat(localVariable.getJoin().getName())
-        .isEqualTo(TaskJoinRelationshipType.LOCAL_VARIABLE.getType());
+        .isEqualTo(RelationshipType.LOCAL_VARIABLE.getType());
 
     // Process Variable Assertions
     assertThat(processVariable.getId())
@@ -256,7 +256,7 @@ public class UserTaskVariableHandlerTest {
     assertThat(processVariable.getJoin().getParent())
         .isEqualTo(variableRecordValue.getProcessInstanceKey());
     assertThat(processVariable.getJoin().getName())
-        .isEqualTo(TaskJoinRelationshipType.PROCESS_VARIABLE.getType());
+        .isEqualTo(RelationshipType.PROCESS_VARIABLE.getType());
   }
 
   @Test
@@ -299,7 +299,7 @@ public class UserTaskVariableHandlerTest {
     assertThat(variableEntity.getJoin().getParent())
         .isEqualTo(variableRecordValue.getProcessInstanceKey());
     assertThat(variableEntity.getJoin().getName())
-        .isEqualTo(TaskJoinRelationshipType.PROCESS_VARIABLE.getType());
+        .isEqualTo(RelationshipType.PROCESS_VARIABLE.getType());
   }
 
   @Test

@@ -20,7 +20,7 @@ import static io.camunda.client.impl.command.ArgumentUtil.ensureNotNull;
 import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.DeleteDocumentCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DeleteDocumentResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -47,7 +47,7 @@ public class DeleteDocumentCommandImpl implements DeleteDocumentCommandStep1 {
     this.client = client;
     this.storeId = storeId;
     requestConfig = client.newRequestConfig();
-    requestTimeout(configuration.getDefaultRequestTimeout());
+    timeout(configuration.getDefaultRequestTimeout());
   }
 
   @Override
@@ -57,7 +57,7 @@ public class DeleteDocumentCommandImpl implements DeleteDocumentCommandStep1 {
   }
 
   @Override
-  public FinalCommandStep<DeleteDocumentResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<DeleteDocumentResponse> timeout(final Duration requestTimeout) {
     requestConfig.setResponseTimeout(
         requestTimeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
     return this;

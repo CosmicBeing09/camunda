@@ -68,7 +68,7 @@ public final class InclusiveGatewayTest {
   @Test
   public void shouldSplitOnInclusiveGateway() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -212,7 +212,7 @@ public final class InclusiveGatewayTest {
   @Test
   public void testProcessInstanceStatesWithInclusiveGateway() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -547,7 +547,7 @@ public final class InclusiveGatewayTest {
   @Test
   public void shouldCompleteScopeOnInclusiveGateway() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance process =
         Bpmn.createExecutableProcess(processId)
             .startEvent("start")
@@ -577,7 +577,7 @@ public final class InclusiveGatewayTest {
   @Test
   public void shouldCreateDeploymentInclusiveGatewayWithDefaultFlow() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     // when
     final BpmnModelInstance processDefinition1 =
         Bpmn.createExecutableProcess(processId)
@@ -628,7 +628,7 @@ public final class InclusiveGatewayTest {
   @Test
   public void shouldNotEvaluateConditionOfDefaultFlow() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -675,7 +675,7 @@ public final class InclusiveGatewayTest {
   @Test
   public void shouldEvaluateConditionWithoutDefaultFlow() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -1199,7 +1199,7 @@ public final class InclusiveGatewayTest {
             .serviceTask("task-2", s -> s.zeebeJobType("test"))
             .intermediateThrowEvent("throw", b -> b.link("link"))
             .moveToProcess(PROCESS_ID)
-            .linkCatchEvent("catch")
+            .catchEvent("catch")
             .link("link")
             .connectTo("join")
             .done();

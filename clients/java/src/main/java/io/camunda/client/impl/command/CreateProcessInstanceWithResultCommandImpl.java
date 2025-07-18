@@ -19,7 +19,7 @@ import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateProcessInstanceCommandStep1.CreateProcessInstanceWithResultCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ProcessInstanceResult;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -75,11 +75,11 @@ public final class CreateProcessInstanceWithResultCommandImpl
     this.httpClient = httpClient;
     httpRequestConfig = httpClient.newRequestConfig();
     useRest = preferRestOverGrpc;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
-  public FinalCommandStep<ProcessInstanceResult> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<ProcessInstanceResult> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     grpcRequestObject.setRequestTimeout(requestTimeout.toMillis());
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.UpdateRoleCommandStep1;
 import io.camunda.client.api.response.UpdateRoleResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -58,7 +58,7 @@ public class UpdateRoleCommandImpl implements UpdateRoleCommandStep1 {
   }
 
   @Override
-  public FinalCommandStep<UpdateRoleResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<UpdateRoleResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

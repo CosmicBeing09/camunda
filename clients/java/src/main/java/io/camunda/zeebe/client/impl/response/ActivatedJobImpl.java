@@ -75,7 +75,7 @@ public final class ActivatedJobImpl implements ActivatedJob {
       final JsonMapper jsonMapper, final io.camunda.client.protocol.rest.ActivatedJobResult job) {
     this.jsonMapper = jsonMapper;
 
-    key = ParseUtil.parseLongOrEmpty(job.getJobKey());
+    key = ParseUtil.parseLongOrDefault(job.getJobKey());
     type = getOrEmpty(job.getType());
     customHeaders =
         job.getCustomHeaders() == null
@@ -93,12 +93,12 @@ public final class ActivatedJobImpl implements ActivatedJob {
     deadline = getOrEmpty(job.getDeadline());
     variablesAsMap = job.getVariables() == null ? new HashMap<>() : job.getVariables();
     variables = jsonMapper.toJson(variablesAsMap);
-    processInstanceKey = ParseUtil.parseLongOrEmpty(job.getProcessInstanceKey());
+    processInstanceKey = ParseUtil.parseLongOrDefault(job.getProcessInstanceKey());
     bpmnProcessId = getOrEmpty(job.getProcessDefinitionId());
     processDefinitionVersion = getOrEmpty(job.getProcessDefinitionVersion());
-    processDefinitionKey = ParseUtil.parseLongOrEmpty(job.getProcessDefinitionKey());
+    processDefinitionKey = ParseUtil.parseLongOrDefault(job.getProcessDefinitionKey());
     elementId = getOrEmpty(job.getElementId());
-    elementInstanceKey = ParseUtil.parseLongOrEmpty(job.getElementInstanceKey());
+    elementInstanceKey = ParseUtil.parseLongOrDefault(job.getElementInstanceKey());
     tenantId = getOrEmpty(job.getTenantId());
   }
 

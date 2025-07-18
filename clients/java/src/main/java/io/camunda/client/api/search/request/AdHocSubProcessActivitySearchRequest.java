@@ -15,13 +15,13 @@
  */
 package io.camunda.client.api.search.request;
 
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.search.filter.AdHocSubProcessActivityFilter;
 import io.camunda.client.api.search.response.AdHocSubProcessActivityResponse;
 import java.util.function.Consumer;
 
 public interface AdHocSubProcessActivitySearchRequest
-    extends FinalCommandStep<AdHocSubProcessActivityResponse> {
+    extends FinalStep<AdHocSubProcessActivityResponse> {
   /**
    * Sets the filter to be included in the search request.
    *

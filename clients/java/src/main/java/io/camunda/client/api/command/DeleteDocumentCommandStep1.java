@@ -20,7 +20,7 @@ import io.camunda.client.api.response.DeleteDocumentResponse;
 
 /** Command to delete a document from the document store. */
 @ExperimentalApi("https://github.com/camunda/issues/issues/841")
-public interface DeleteDocumentCommandStep1 extends FinalCommandStep<DeleteDocumentResponse> {
+public interface DeleteDocumentCommandStep1 extends FinalStep<DeleteDocumentResponse> {
 
   /**
    * Sets the document store ID. If not set, the default document store for the cluster will be

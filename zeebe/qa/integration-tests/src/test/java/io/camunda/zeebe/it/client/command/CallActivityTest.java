@@ -45,8 +45,8 @@ public final class CallActivityTest {
 
   @Test
   public void shouldRaiseIncidentWhenExceedingBatchSizeOnCallActivityActivation() {
-    final String child = Strings.newRandomValidBpmnId();
-    final String parent = Strings.newRandomValidBpmnId();
+    final String child = Strings.randomBpmnId();
+    final String parent = Strings.randomBpmnId();
 
     CLIENT_RULE.deployProcess(Bpmn.createExecutableProcess(child).startEvent("v1").done());
     CLIENT_RULE.deployProcess(
@@ -96,8 +96,8 @@ public final class CallActivityTest {
 
   @Test
   public void shouldBeAbleToResolveIncidentAfterExceedingBatchSizeOnCallActivityActivation() {
-    final String child = Strings.newRandomValidBpmnId();
-    final String parent = Strings.newRandomValidBpmnId();
+    final String child = Strings.randomBpmnId();
+    final String parent = Strings.randomBpmnId();
 
     CLIENT_RULE.deployProcess(Bpmn.createExecutableProcess(child).startEvent("v1").done());
     CLIENT_RULE.deployProcess(
@@ -151,8 +151,8 @@ public final class CallActivityTest {
 
   @Test
   public void shouldRaiseIncidentWhenExceedingBatchSizeOnCallActivityCompletion() {
-    final String child = Strings.newRandomValidBpmnId();
-    final String parent = Strings.newRandomValidBpmnId();
+    final String child = Strings.randomBpmnId();
+    final String parent = Strings.randomBpmnId();
 
     CLIENT_RULE.deployProcess(
         Bpmn.createExecutableProcess(child)

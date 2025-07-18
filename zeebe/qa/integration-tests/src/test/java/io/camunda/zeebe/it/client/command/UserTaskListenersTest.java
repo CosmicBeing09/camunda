@@ -779,7 +779,7 @@ public class UserTaskListenersTest {
     final var updateUserTaskFuture =
         client
             .newUserTaskUpdateCommand(userTaskKey)
-            .dueDate(updatedDueDate)
+            .due(updatedDueDate)
             .candidateGroups("updated_group")
             .priority(99) // will be reset to the initial value by correction
             .send();

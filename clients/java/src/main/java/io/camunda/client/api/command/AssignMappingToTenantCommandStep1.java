@@ -29,7 +29,7 @@ public interface AssignMappingToTenantCommandStep1 {
   AssignMappingToTenantCommandStep2 mappingId(String mappingId);
 
   interface AssignMappingToTenantCommandStep2
-      extends FinalCommandStep<AssignMappingToTenantResponse> {
+      extends FinalStep<AssignMappingToTenantResponse> {
 
     /**
      * Sets the tenant ID.

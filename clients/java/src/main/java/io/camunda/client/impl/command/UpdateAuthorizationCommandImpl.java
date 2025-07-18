@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.UpdateAuthorizationCommandStep1;
 import io.camunda.client.api.command.UpdateAuthorizationCommandStep1.UpdateAuthorizationCommandStep2;
 import io.camunda.client.api.command.UpdateAuthorizationCommandStep1.UpdateAuthorizationCommandStep3;
@@ -103,7 +103,7 @@ public class UpdateAuthorizationCommandImpl
   }
 
   @Override
-  public FinalCommandStep<UpdateAuthorizationResponse> requestTimeout(
+  public FinalStep<UpdateAuthorizationResponse> timeout(
       final Duration requestTimeout) {
     ArgumentUtil.ensurePositive("requestTimeout", requestTimeout);
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

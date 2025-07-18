@@ -69,7 +69,7 @@ public final class JobUpdateRetriesTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newUpdateRetriesCommand(123).retries(3).requestTimeout(requestTimeout).send().join();
+    client.newUpdateRetriesCommand(123).retries(3).timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

@@ -40,7 +40,7 @@ public class RemoveEntityRoleMultiPartitionTest {
   @Test
   public void shouldDistributeRoleRemoveEntityCommand() {
     // when
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     engine
         .user()
         .newUser(username)
@@ -107,7 +107,7 @@ public class RemoveEntityRoleMultiPartitionTest {
   @Test
   public void shouldDistributeInIdentityQueue() {
     // when
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     engine
         .user()
         .newUser(username)
@@ -140,7 +140,7 @@ public class RemoveEntityRoleMultiPartitionTest {
     for (int partitionId = 2; partitionId <= PARTITION_COUNT; partitionId++) {
       engine.interceptInterPartitionIntent(partitionId, UserIntent.CREATE);
     }
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     engine
         .user()
         .newUser(username)

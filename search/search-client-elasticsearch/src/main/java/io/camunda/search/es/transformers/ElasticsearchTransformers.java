@@ -31,7 +31,7 @@ import io.camunda.search.clients.query.SearchMatchAllQuery;
 import io.camunda.search.clients.query.SearchMatchNoneQuery;
 import io.camunda.search.clients.query.SearchMatchQuery;
 import io.camunda.search.clients.query.SearchPrefixQuery;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.clients.query.SearchTermsQuery;
@@ -115,7 +115,7 @@ public final class ElasticsearchTransformers {
     mappers.put(SearchWriteResponse.class, new SearchWriteResponseTransformer(mappers));
 
     // queries
-    mappers.put(SearchQuery.class, new QueryTransformer(mappers));
+    mappers.put(Query.class, new QueryTransformer(mappers));
     mappers.put(SearchBoolQuery.class, new BoolQueryTransformer(mappers));
     mappers.put(SearchConstantScoreQuery.class, new ConstantScoreQueryTransformer(mappers));
     mappers.put(SearchExistsQuery.class, new ExistsQueryTransformer(mappers));

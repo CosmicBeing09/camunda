@@ -10,7 +10,7 @@ package io.camunda.search.clients.query;
 import io.camunda.util.ObjectBuilder;
 import java.util.Objects;
 
-public record SearchExistsQuery(String field) implements SearchQueryOption {
+public record SearchExistsQuery(String field) implements QueryOption {
   public static final class Builder implements ObjectBuilder<SearchExistsQuery> {
 
     private String field;

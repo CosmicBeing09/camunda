@@ -33,7 +33,7 @@ public interface UpdateRetriesJobCommandStep1
 
   interface UpdateRetriesJobCommandStep2
       extends CommandWithOperationReferenceStep<UpdateRetriesJobCommandStep2>,
-          FinalCommandStep<UpdateRetriesJobResponse> {
+      FinalStep<UpdateRetriesJobResponse> {
     // the place for new optional parameters
   }
 }

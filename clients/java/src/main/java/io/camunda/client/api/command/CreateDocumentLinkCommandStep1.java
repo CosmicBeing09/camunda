@@ -21,7 +21,7 @@ import java.time.Duration;
 
 /** Command to create a document link in the document store. */
 @ExperimentalApi("https://github.com/camunda/issues/issues/841")
-public interface CreateDocumentLinkCommandStep1 extends FinalCommandStep<DocumentLinkResponse> {
+public interface CreateDocumentLinkCommandStep1 extends FinalStep<DocumentLinkResponse> {
 
   /**
    * Sets the document store ID. If not set, the default document store for the cluster will be

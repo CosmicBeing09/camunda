@@ -83,7 +83,7 @@ public final class CompleteJobTest {
 
   @Before
   public void setup() {
-    jobType = Strings.newRandomValidBpmnId();
+    jobType = Strings.randomBpmnId();
   }
 
   @Test

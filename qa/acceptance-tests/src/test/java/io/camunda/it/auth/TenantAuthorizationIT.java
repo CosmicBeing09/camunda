@@ -86,7 +86,7 @@ class TenantAuthorizationIT {
     createTenant(adminClient, "tenant1");
     createTenant(adminClient, "tenant2");
     // Expected count is 3 because a default tenant gets created
-    waitForTenantsToBeCreated(adminClient.getConfiguration().getRestAddress().toString(), ADMIN, 3);
+    waitForTenantsToBeCreated(adminClient.getConfiguration().restAddress().toString(), ADMIN, 3);
   }
 
   @Test
@@ -94,7 +94,7 @@ class TenantAuthorizationIT {
       @Authenticated(RESTRICTED) final CamundaClient userClient) throws Exception {
     // when
     final var tenantSearchResponse =
-        searchTenants(userClient.getConfiguration().getRestAddress().toString(), RESTRICTED);
+        searchTenants(userClient.getConfiguration().restAddress().toString(), RESTRICTED);
 
     // then
     assertThat(tenantSearchResponse.items())
@@ -108,7 +108,7 @@ class TenantAuthorizationIT {
       @Authenticated(UNAUTHORIZED) final CamundaClient userClient) throws Exception {
     // when
     final var tenantSearchResponse =
-        searchTenants(userClient.getConfiguration().getRestAddress().toString(), UNAUTHORIZED);
+        searchTenants(userClient.getConfiguration().restAddress().toString(), UNAUTHORIZED);
 
     // then
     assertThat(tenantSearchResponse.items()).isEmpty();
@@ -120,7 +120,7 @@ class TenantAuthorizationIT {
     // when
     final var tenant =
         getTenantById(
-            userClient.getConfiguration().getRestAddress().toString(), RESTRICTED, "tenant1");
+            userClient.getConfiguration().restAddress().toString(), RESTRICTED, "tenant1");
 
     // then
     assertThat(tenant.isRight()).isTrue();
@@ -133,7 +133,7 @@ class TenantAuthorizationIT {
     // when
     final var tenant =
         getTenantById(
-            userClient.getConfiguration().getRestAddress().toString(), UNAUTHORIZED, "tenant1");
+            userClient.getConfiguration().restAddress().toString(), UNAUTHORIZED, "tenant1");
 
     // then
     assertThat(tenant.isLeft()).isTrue();

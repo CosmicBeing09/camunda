@@ -28,7 +28,7 @@ public interface AssignRoleToMappingCommandStep1 {
    */
   AssignRoleToMappingCommandStep2 roleId(String roleId);
 
-  interface AssignRoleToMappingCommandStep2 extends FinalCommandStep<AssignRoleToMappingResponse> {
+  interface AssignRoleToMappingCommandStep2 extends FinalStep<AssignRoleToMappingResponse> {
     /**
      * Sets the mapping ID.
      *

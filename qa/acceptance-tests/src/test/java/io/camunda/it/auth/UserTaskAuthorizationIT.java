@@ -81,7 +81,7 @@ class UserTaskAuthorizationIT {
   }
 
   @Test
-  public void searchShouldReturnAuthorizedUserTasks(
+  public void searchReturnsAuthorizedTasks(
       @Authenticated(USER1) final CamundaClient camundaClient) {
     // when
     final var result = camundaClient.newUserTaskSearchRequest().send().join();
@@ -97,7 +97,7 @@ class UserTaskAuthorizationIT {
       @Authenticated(ADMIN) final CamundaClient adminClient,
       @Authenticated(USER1) final CamundaClient camundaClient) {
     // given
-    final var userTaskKey = getUserTaskKey(adminClient, PROCESS_ID_1);
+    final var userTaskKey = getKey(adminClient, PROCESS_ID_1);
     // when
     final var result = camundaClient.newUserTaskGetRequest(userTaskKey).send().join();
     // then
@@ -110,7 +110,7 @@ class UserTaskAuthorizationIT {
       @Authenticated(ADMIN) final CamundaClient adminClient,
       @Authenticated(USER1) final CamundaClient camundaClient) {
     // given
-    final var userTaskKey = getUserTaskKey(adminClient, PROCESS_ID_2);
+    final var userTaskKey = getKey(adminClient, PROCESS_ID_2);
     // when
     final Executable executeGet =
         () -> camundaClient.newUserTaskGetRequest(userTaskKey).send().join();
@@ -127,7 +127,7 @@ class UserTaskAuthorizationIT {
       @Authenticated(ADMIN) final CamundaClient adminClient,
       @Authenticated(USER2) final CamundaClient camundaClient) {
     // given
-    final var userTaskKey = getUserTaskKey(adminClient, PROCESS_ID_2);
+    final var userTaskKey = getKey(adminClient, PROCESS_ID_2);
     // when
     final var result = camundaClient.newUserTaskGetFormRequest(userTaskKey).send().join();
     // then
@@ -140,7 +140,7 @@ class UserTaskAuthorizationIT {
       @Authenticated(ADMIN) final CamundaClient adminClient,
       @Authenticated(USER1) final CamundaClient camundaClient) {
     // given
-    final var userTaskKey = getUserTaskKey(adminClient, PROCESS_ID_2);
+    final var userTaskKey = getKey(adminClient, PROCESS_ID_2);
     // when
     final Executable executeGetForm =
         () -> camundaClient.newUserTaskGetFormRequest(userTaskKey).send().join();
@@ -157,7 +157,7 @@ class UserTaskAuthorizationIT {
       @Authenticated(ADMIN) final CamundaClient adminClient,
       @Authenticated(USER1) final CamundaClient camundaClient) {
     // given
-    final var userTaskKey = getUserTaskKey(adminClient, PROCESS_ID_1);
+    final var userTaskKey = getKey(adminClient, PROCESS_ID_1);
     // when
     final var result = camundaClient.newUserTaskVariableSearchRequest(userTaskKey).send().join();
     // then
@@ -169,7 +169,7 @@ class UserTaskAuthorizationIT {
       @Authenticated(ADMIN) final CamundaClient adminClient,
       @Authenticated(USER2) final CamundaClient camundaClient) {
     // given
-    final var userTaskKey = getUserTaskKey(adminClient, PROCESS_ID_1);
+    final var userTaskKey = getKey(adminClient, PROCESS_ID_1);
     // when
     final Executable executeSearchVariables =
         () -> camundaClient.newUserTaskVariableSearchRequest(userTaskKey).send().join();
@@ -181,19 +181,19 @@ class UserTaskAuthorizationIT {
             "Unauthorized to perform operation 'READ_USER_TASK' on resource 'PROCESS_DEFINITION'");
   }
 
-  private long getUserTaskKey(final CamundaClient camundaClient, final String processId) {
+  private long getKey(final CamundaClient camundaClient, final String processId) {
     return camundaClient
         .newUserTaskSearchRequest()
-        .filter(f -> f.bpmnProcessId(processId))
+        .filter(f -> f.processDefinitionId(processId))
         .send()
         .join()
         .items()
         .getFirst()
-        .getUserTaskKey();
+        .getKey();
   }
 
   private static void deployResource(final CamundaClient camundaClient, final String resourceName) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resourceName).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resourceName).send().join();
   }
 
   private static void startProcessInstance(

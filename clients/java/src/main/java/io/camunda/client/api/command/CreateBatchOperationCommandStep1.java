@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.CreateBatchOperationResponse;
 import io.camunda.client.api.search.filter.ProcessInstanceFilter;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import java.util.function.Consumer;
 
 public interface CreateBatchOperationCommandStep1 {
@@ -50,7 +50,7 @@ public interface CreateBatchOperationCommandStep1 {
    */
   ProcessInstanceModificationStep<ProcessInstanceFilter> modifyProcessInstance();
 
-  interface CreateBatchOperationCommandStep2<E extends SearchRequestFilter> {
+  interface CreateBatchOperationCommandStep2<E extends Filter> {
 
     /**
      * Sets the filter for the batch operation.
@@ -69,7 +69,7 @@ public interface CreateBatchOperationCommandStep1 {
     CreateBatchOperationCommandStep3<E> filter(Consumer<E> filter);
   }
 
-  interface ProcessInstanceMigrationStep<E extends SearchRequestFilter>
+  interface ProcessInstanceMigrationStep<E extends Filter>
       extends CreateBatchOperationCommandStep2<E> {
 
     ProcessInstanceMigrationStep<E> migrationPlan(MigrationPlan migrationPlan);
@@ -80,7 +80,7 @@ public interface CreateBatchOperationCommandStep1 {
     ProcessInstanceMigrationStep<E> targetProcessDefinitionKey(long targetProcessDefinitionKey);
   }
 
-  interface ProcessInstanceModificationStep<E extends SearchRequestFilter>
+  interface ProcessInstanceModificationStep<E extends Filter>
       extends CreateBatchOperationCommandStep2<E> {
 
     /**
@@ -120,6 +120,6 @@ public interface CreateBatchOperationCommandStep1 {
         String sourceElementId, String targetElementId);
   }
 
-  interface CreateBatchOperationCommandStep3<E extends SearchRequestFilter>
-      extends FinalCommandStep<CreateBatchOperationResponse> {}
+  interface CreateBatchOperationCommandStep3<E extends Filter>
+      extends FinalStep<CreateBatchOperationResponse> {}
 }

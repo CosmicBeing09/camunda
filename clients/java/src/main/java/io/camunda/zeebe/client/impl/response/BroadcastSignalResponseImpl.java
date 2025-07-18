@@ -31,7 +31,7 @@ public final class BroadcastSignalResponseImpl implements BroadcastSignalRespons
   }
 
   public BroadcastSignalResponseImpl(final SignalBroadcastResult response) {
-    key = ParseUtil.parseLongOrEmpty(response.getSignalKey());
+    key = ParseUtil.parseLongOrDefault(response.getSignalKey());
     tenantId = response.getTenantId();
   }
 

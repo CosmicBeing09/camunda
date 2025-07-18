@@ -87,7 +87,7 @@ public class ProcessExternalControllerIT extends TasklistZeebeIntegrationTest {
     final String formId = "Form_0mik7px";
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("formDeployedV1.form")
         .send()
         .join();
@@ -118,12 +118,12 @@ public class ProcessExternalControllerIT extends TasklistZeebeIntegrationTest {
     final String bpmnProcessId = "startedByFormLinked";
 
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("formDeployedV1.form")
         .send()
         .join();
     camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath("formDeployedV2.form")
         .send()
         .join();

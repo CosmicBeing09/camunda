@@ -39,7 +39,7 @@ public class VariableGetRequestImpl implements VariableGetRequest {
   }
 
   @Override
-  public VariableGetRequest requestTimeout(final Duration requestTimeout) {
+  public VariableGetRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

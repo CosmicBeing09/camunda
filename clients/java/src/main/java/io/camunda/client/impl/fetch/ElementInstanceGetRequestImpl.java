@@ -16,7 +16,7 @@
 package io.camunda.client.impl.fetch;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.fetch.ElementInstanceGetRequest;
 import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -40,7 +40,7 @@ public class ElementInstanceGetRequestImpl implements ElementInstanceGetRequest 
   }
 
   @Override
-  public FinalCommandStep<ElementInstance> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<ElementInstance> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

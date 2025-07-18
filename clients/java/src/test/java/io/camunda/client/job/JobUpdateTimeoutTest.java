@@ -104,7 +104,7 @@ public class JobUpdateTimeoutTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newUpdateTimeoutCommand(123).timeout(100).requestTimeout(requestTimeout).send().join();
+    client.newUpdateTimeoutCommand(123).timeout(100).timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

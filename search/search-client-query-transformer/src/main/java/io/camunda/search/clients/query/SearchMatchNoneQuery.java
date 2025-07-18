@@ -9,7 +9,7 @@ package io.camunda.search.clients.query;
 
 import io.camunda.util.ObjectBuilder;
 
-public final record SearchMatchNoneQuery() implements SearchQueryOption {
+public final record SearchMatchNoneQuery() implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchMatchNoneQuery> {
 

@@ -203,7 +203,7 @@ public class Starter extends App {
               .latestVersion()
               .variables(variables)
               .withResult()
-              .requestTimeout(starterCfg.getWithResultsTimeout())
+              .timeout(starterCfg.getWithResultsTimeout())
               .send());
     } else {
       requestFutures.put(
@@ -252,7 +252,7 @@ public class Starter extends App {
   private static DeployResourceCommandStep2 constructDeploymentCommand(
       final CamundaClient client, final StarterCfg starterCfg) {
     final var deployCmd =
-        client.newDeployResourceCommand().addResourceFromClasspath(starterCfg.getBpmnXmlPath());
+        client.deployResource().addResourceFromClasspath(starterCfg.getBpmnXmlPath());
 
     final var extraBpmnModels = starterCfg.getExtraBpmnModels();
     if (extraBpmnModels != null) {

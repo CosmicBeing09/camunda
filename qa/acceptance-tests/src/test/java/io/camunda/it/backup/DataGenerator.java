@@ -82,7 +82,7 @@ public class DataGenerator implements AutoCloseable {
                       .newProcessInstanceSearchRequest()
                       .filter(
                           b ->
-                              b.processInstanceKey(p -> p.in(instanceKeys.stream().toList()))
+                              b.key(p -> p.in(instanceKeys.stream().toList()))
                                   .state(state))
                       .page(b -> b.limit(instanceKeys.size()).from(0))
                       .send();
@@ -95,7 +95,7 @@ public class DataGenerator implements AutoCloseable {
               // remove all completed instances
               response.get().items().stream()
                   .filter(inst -> inst.getState().equals(ProcessInstanceState.COMPLETED))
-                  .map(ProcessInstance::getProcessInstanceKey)
+                  .map(ProcessInstance::getKey)
                   .forEach(instanceKeys::remove);
             });
   }
@@ -152,10 +152,10 @@ public class DataGenerator implements AutoCloseable {
 
     items.forEach(
         item -> {
-          LOGGER.debug("Completing user task {}", item.getUserTaskKey());
+          LOGGER.debug("Completing user task {}", item.getKey());
           assertThat(
                   camundaClient
-                      .newUserTaskCompleteCommand(item.getUserTaskKey())
+                      .newUserTaskCompleteCommand(item.getKey())
                       .send()
                       .toCompletableFuture())
               .succeedsWithin(timeout);
@@ -207,7 +207,7 @@ public class DataGenerator implements AutoCloseable {
     private void deploy() {
       final var deployResourceCmd =
           camundaClient
-              .newDeployResourceCommand()
+              .deployResource()
               .addProcessModel(process.createModel(), bpmnProcessId + ".bpmn");
       final var deploymentEvent = deployResourceCmd.send().join();
       LOGGER.debug("Deployed process {} with key {}", bpmnProcessId, deploymentEvent.getKey());

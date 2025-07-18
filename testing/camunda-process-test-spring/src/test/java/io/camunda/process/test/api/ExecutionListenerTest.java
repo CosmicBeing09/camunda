@@ -133,7 +133,7 @@ public class ExecutionListenerTest {
 
     final CamundaClientConfiguration configuration = camundaClient.getConfiguration();
     assertThat(configuration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(configuration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(configuration.restAddress()).isEqualTo(REST_API_ADDRESS);
 
     verify(applicationContext).publishEvent(camundaClientCreatedEventArgumentCaptor.capture());
     verify(applicationContext).publishEvent(zeebeClientCreatedEventArgumentCaptor.capture());
@@ -179,7 +179,7 @@ public class ExecutionListenerTest {
 
     final CamundaClientConfiguration configuration = newCamundaClient.getConfiguration();
     assertThat(configuration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(configuration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(configuration.restAddress()).isEqualTo(REST_API_ADDRESS);
   }
 
   @Test

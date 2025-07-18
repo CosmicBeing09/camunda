@@ -46,7 +46,7 @@ public class ProcessStateMultiTenantTest {
   public void shouldPutDeploymentForDifferentTenants() {
     // given
     final long processKey = keyGenerator.nextKey();
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final int version = 1;
     final var tenant1Deployment = createDeploymentRecord(TENANT_1, processKey, processId, version);
     final var tenant2Deployment = createDeploymentRecord(TENANT_2, processKey, processId, version);
@@ -80,7 +80,7 @@ public class ProcessStateMultiTenantTest {
   public void shouldPutProcessForMultipleTenants() {
     // given
     final long processKey = keyGenerator.nextKey();
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final int version = 1;
     final var tenant1Process = createProcessRecord(TENANT_1, processKey, processId, version);
     final var tenant2Process = createProcessRecord(TENANT_2, processKey, processId, version);
@@ -127,7 +127,7 @@ public class ProcessStateMultiTenantTest {
     // given
     final var processKey = keyGenerator.nextKey();
     final var deploymentKey = keyGenerator.nextKey();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var version = 1;
     final var tenant1Process =
         createProcessRecord(TENANT_1, processKey, processId, version)
@@ -157,7 +157,7 @@ public class ProcessStateMultiTenantTest {
   public void shouldStoreProcessDefinitionKeyByProcessIdAndVersionTagForMultipleTenants() {
     // given
     final var processKey = keyGenerator.nextKey();
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var version = 1;
     final var versionTag = "v1.0";
     final var tenant1Process =
@@ -186,7 +186,7 @@ public class ProcessStateMultiTenantTest {
   public void shouldUpdateProcessStateForTenant() {
     // given
     final long processKey = keyGenerator.nextKey();
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final int version = 1;
     final var tenant1Process = createProcessRecord(TENANT_1, processKey, processId, version);
     final var tenant2Process = createProcessRecord(TENANT_2, processKey, processId, version);
@@ -218,7 +218,7 @@ public class ProcessStateMultiTenantTest {
   @Test
   public void shouldDeleteProcessForTenant() {
     final long processKey = keyGenerator.nextKey();
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final int version = 1;
     final var tenant1Process = createProcessRecord(TENANT_1, processKey, processId, version);
     final var tenant2Process = createProcessRecord(TENANT_2, processKey, processId, version);

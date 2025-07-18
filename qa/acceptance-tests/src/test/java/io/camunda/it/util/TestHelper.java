@@ -69,7 +69,7 @@ public final class TestHelper {
   public static DeploymentEvent deployResource(
       final CamundaClient camundaClient, final String resourceName) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath(resourceName)
         .send()
         .join();
@@ -88,7 +88,7 @@ public final class TestHelper {
       final String resourceName) {
     final var event =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processDefinition, resourceName)
             .send()
             .join()
@@ -125,7 +125,7 @@ public final class TestHelper {
       final BpmnModelInstance processModel,
       final String resourceName) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(processModel, resourceName)
         .send()
         .join();
@@ -134,7 +134,7 @@ public final class TestHelper {
   public static DeploymentEvent deployResourceForTenant(
       final CamundaClient camundaClient, final String resourceName, final String tenantId) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addResourceFromClasspath(resourceName)
         .tenantId(tenantId)
         .send()
@@ -568,7 +568,7 @@ public final class TestHelper {
               final var result =
                   camundaClient
                       .newProcessInstanceSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.key(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.items().getFirst().getEndDate()).isNotNull();

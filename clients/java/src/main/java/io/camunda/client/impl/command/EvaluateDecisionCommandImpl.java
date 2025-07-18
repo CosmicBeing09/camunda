@@ -22,7 +22,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CommandWithTenantStep;
 import io.camunda.client.api.command.EvaluateDecisionCommandStep1;
 import io.camunda.client.api.command.EvaluateDecisionCommandStep1.EvaluateDecisionCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.EvaluateDecisionResponse;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -71,7 +71,7 @@ public class EvaluateDecisionCommandImpl extends CommandWithVariables<EvaluateDe
     httpRequestObject = new DecisionEvaluationInstruction();
     useRest = config.preferRestOverGrpc();
     tenantId(config.getDefaultTenantId());
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   /**
@@ -101,7 +101,7 @@ public class EvaluateDecisionCommandImpl extends CommandWithVariables<EvaluateDe
     httpRequestConfig = httpClient.newRequestConfig();
     httpRequestObject = new DecisionEvaluationInstruction();
     tenantId(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
@@ -130,12 +130,12 @@ public class EvaluateDecisionCommandImpl extends CommandWithVariables<EvaluateDe
   @Override
   public EvaluateDecisionCommandStep2 decisionKey(final long decisionKey) {
     grpcRequestObjectBuilder.setDecisionKey(decisionKey);
-    httpRequestObject.setDecisionDefinitionKey(ParseUtil.keyToString(decisionKey));
+    httpRequestObject.setDecisionDefinitionKey(ParseUtil.toStringOrNull(decisionKey));
     return this;
   }
 
   @Override
-  public FinalCommandStep<EvaluateDecisionResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<EvaluateDecisionResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

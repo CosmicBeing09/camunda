@@ -198,9 +198,9 @@ public final class CreateDeploymentTest {
 
     // then
     assertThat(result.getKey()).isPositive();
-    assertThat(result.getForm()).hasSize(1);
+    assertThat(result.getForms()).hasSize(1);
 
-    final var form = result.getForm().get(0);
+    final var form = result.getForms().get(0);
     assertThat(form.getFormId()).isEqualTo("Form_0w7r08e");
     assertThat(form.getResourceName()).isEqualTo(resourceName);
     assertThat(form.getVersion()).isEqualTo(1);
@@ -209,7 +209,7 @@ public final class CreateDeploymentTest {
   }
 
   private DeployResourceCommandStep1 getCommand(final CamundaClient client, final boolean useRest) {
-    final DeployResourceCommandStep1 deployResourceCommand = client.newDeployResourceCommand();
+    final DeployResourceCommandStep1 deployResourceCommand = client.deployResource();
     return useRest ? deployResourceCommand.useRest() : deployResourceCommand.useGrpc();
   }
 }

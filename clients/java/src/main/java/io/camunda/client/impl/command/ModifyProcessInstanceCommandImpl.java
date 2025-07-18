@@ -19,7 +19,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.ModifyProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ModifyProcessInstanceCommandStep1.ModifyProcessInstanceCommandStep3;
 import io.camunda.client.api.response.ModifyProcessInstanceResponse;
@@ -83,7 +83,7 @@ public final class ModifyProcessInstanceCommandImpl
     httpRequestObject = new ProcessInstanceModificationInstruction();
     useRest = config.preferRestOverGrpc();
     this.processInstanceKey = processInstanceKey;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
@@ -103,7 +103,7 @@ public final class ModifyProcessInstanceCommandImpl
         TerminateInstruction.newBuilder().setElementInstanceKey(elementInstanceKey).build());
     httpRequestObject.addTerminateInstructionsItem(
         new ProcessInstanceModificationTerminateInstruction()
-            .elementInstanceKey(ParseUtil.keyToString(elementInstanceKey)));
+            .elementInstanceKey(ParseUtil.toStringOrNull(elementInstanceKey)));
     return this;
   }
 
@@ -119,7 +119,7 @@ public final class ModifyProcessInstanceCommandImpl
     final ProcessInstanceModificationActivateInstruction activateInstructionsItem =
         new ProcessInstanceModificationActivateInstruction()
             .elementId(elementId)
-            .ancestorElementInstanceKey(ParseUtil.keyToString(ancestorElementInstanceKey));
+            .ancestorElementInstanceKey(ParseUtil.toStringOrNull(ancestorElementInstanceKey));
     latestActivateInstructionRest = activateInstructionsItem;
     httpRequestObject.addActivateInstructionsItem(activateInstructionsItem);
     return this;
@@ -283,7 +283,7 @@ public final class ModifyProcessInstanceCommandImpl
   }
 
   @Override
-  public FinalCommandStep<ModifyProcessInstanceResponse> requestTimeout(
+  public FinalStep<ModifyProcessInstanceResponse> timeout(
       final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);

@@ -11,7 +11,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.and;
 import static io.camunda.search.clients.query.SearchQueryBuilders.dateTimeOperations;
 import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.Operation;
 import io.camunda.search.filter.UsageMetricsFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
@@ -33,9 +33,9 @@ public class UsageMetricsFilterTransformer implements FilterTransformer<UsageMet
   }
 
   @Override
-  public SearchQuery toSearchQuery(final UsageMetricsFilter filter) {
+  public Query toSearchQuery(final UsageMetricsFilter filter) {
     this.filter = filter;
-    final var queries = new ArrayList<SearchQuery>();
+    final var queries = new ArrayList<Query>();
     queries.add(stringTerms("event", filter.events()));
     queries.addAll(
         dateTimeOperations(

@@ -241,7 +241,7 @@ public final class StreamJobsTest extends ClientTest {
         .newStreamJobsCommand()
         .jobType("foo")
         .consumer(ignored -> {})
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

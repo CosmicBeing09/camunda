@@ -158,7 +158,7 @@ public class ClusterPurgeMultiDbIT {
                   .satisfies(
                       items -> {
                         Assertions.assertThat(items).hasSize(1);
-                        userTaskKey.set(items.getFirst().getUserTaskKey());
+                        userTaskKey.set(items.getFirst().getKey());
                       });
             });
 
@@ -320,7 +320,7 @@ public class ClusterPurgeMultiDbIT {
   private long deployProcessModel(final BpmnModelInstance processModel) {
     final var deploymentEvent =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addProcessModel(processModel, "test-process.bpmn")
             .send()
             .join();

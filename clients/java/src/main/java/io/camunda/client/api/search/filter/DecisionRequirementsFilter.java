@@ -15,10 +15,10 @@
  */
 package io.camunda.client.api.search.filter;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
 /** Interface for defining Decision Requirements in search queries. */
-public interface DecisionRequirementsFilter extends SearchRequestFilter {
+public interface DecisionRequirementsFilter extends Filter {
 
   /**
    * Filters Decision Requirement by the specified key.

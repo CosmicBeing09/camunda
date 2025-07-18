@@ -123,12 +123,12 @@ public final class CamundaClientBuilderImpl
   private boolean useDefaultRetryPolicy;
 
   @Override
-  public String getGatewayAddress() {
+  public String gatewayAddress() {
     return gatewayAddress;
   }
 
   @Override
-  public URI getRestAddress() {
+  public URI restAddress() {
     return restAddress;
   }
 
@@ -593,7 +593,7 @@ public final class CamundaClientBuilderImpl
 
     if (!grpcAddressUsed) {
       final String scheme = usePlaintextConnection ? "http://" : "https://";
-      grpcAddress(getURIFromString(scheme + getGatewayAddress()));
+      grpcAddress(getURIFromString(scheme + gatewayAddress()));
     }
 
     return new CamundaClientImpl(this);

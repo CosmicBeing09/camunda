@@ -45,7 +45,7 @@ final class StandaloneBrokerIT {
   @SmokeTest
   void smokeTest() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var process = Bpmn.createExecutableProcess(processId).startEvent().endEvent().done();
     final var partitionActuatorSpec =
         new RequestSpecBuilder()
@@ -65,7 +65,7 @@ final class StandaloneBrokerIT {
 
   private ProcessInstanceResult executeProcessInstance(
       final String processId, final BpmnModelInstance process) {
-    client.newDeployResourceCommand().addProcessModel(process, processId + ".bpmn").send().join();
+    client.deployResource().addProcessModel(process, processId + ".bpmn").send().join();
     return client
         .newCreateInstanceCommand()
         .bpmnProcessId(processId)

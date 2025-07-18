@@ -16,7 +16,7 @@
 package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.RemoveUserFromTenantCommandStep1;
 import io.camunda.client.api.command.RemoveUserFromTenantCommandStep1.RemoveUserFromTenantCommandStep2;
 import io.camunda.client.api.response.RemoveUserFromTenantResponse;
@@ -52,7 +52,7 @@ public final class RemoveUserFromTenantCommandImpl
   }
 
   @Override
-  public FinalCommandStep<RemoveUserFromTenantResponse> requestTimeout(
+  public FinalStep<RemoveUserFromTenantResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

@@ -16,7 +16,7 @@ import static io.camunda.webapps.schema.descriptors.IndexDescriptor.TENANT_ID;
 import static io.camunda.webapps.schema.descriptors.template.FlowNodeInstanceTemplate.*;
 import static java.util.Optional.ofNullable;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.entities.FlowNodeInstanceEntity.FlowNodeType;
 import io.camunda.search.filter.FlowNodeInstanceFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
@@ -31,8 +31,8 @@ public class FlownodeInstanceFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final FlowNodeInstanceFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+  public Query toSearchQuery(final FlowNodeInstanceFilter filter) {
+    final var queries = new ArrayList<Query>();
     ofNullable(longTerms(KEY, filter.flowNodeInstanceKeys())).ifPresent(queries::add);
     ofNullable(longTerms(PROCESS_INSTANCE_KEY, filter.processInstanceKeys()))
         .ifPresent(queries::add);
@@ -50,7 +50,7 @@ public class FlownodeInstanceFilterTransformer
     return and(queries);
   }
 
-  private SearchQuery getTypeQuery(final List<FlowNodeType> types) {
+  private Query getTypeQuery(final List<FlowNodeType> types) {
     return stringTerms(TYPE, types != null ? types.stream().map(Enum::name).toList() : null);
   }
 }

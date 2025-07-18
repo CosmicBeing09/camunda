@@ -493,7 +493,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
   @Test
   public void shouldWriteProcessCreatedEventsOnAllPartitions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deployment =
@@ -530,7 +530,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
   @Test
   public void shouldWriteProcessCreatedEventsWithSameKeys() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     ENGINE
@@ -611,7 +611,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
   public void shouldCreateProcessForTenant() {
     // given
     final String tenant = "tenant";
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     final var deployment =

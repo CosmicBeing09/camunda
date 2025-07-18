@@ -58,7 +58,7 @@ public interface PublishMessageCommandStep1
 
   interface PublishMessageCommandStep3
       extends CommandWithTenantStep<PublishMessageCommandStep3>,
-          FinalCommandStep<PublishMessageResponse>,
+      FinalStep<PublishMessageResponse>,
           CommandWithVariables<PublishMessageCommandStep3> {
     /**
      * Set the id of the message. The message is rejected if another message is already published

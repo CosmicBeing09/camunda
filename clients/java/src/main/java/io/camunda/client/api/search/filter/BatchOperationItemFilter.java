@@ -20,10 +20,10 @@ import io.camunda.client.api.search.filter.builder.BasicLongProperty;
 import io.camunda.client.api.search.filter.builder.BasicStringProperty;
 import io.camunda.client.api.search.filter.builder.BatchOperationItemStateProperty;
 import io.camunda.client.api.search.filter.builder.StringProperty;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import java.util.function.Consumer;
 
-public interface BatchOperationItemFilter extends SearchRequestFilter {
+public interface BatchOperationItemFilter extends Filter {
 
   /**
    * Filters batch operation items by the specified batchOperationId.

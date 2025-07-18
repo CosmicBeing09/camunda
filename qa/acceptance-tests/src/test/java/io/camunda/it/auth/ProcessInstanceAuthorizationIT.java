@@ -89,7 +89,7 @@ class ProcessInstanceAuthorizationIT {
     final var result = camundaClient.newProcessInstanceSearchRequest().send().join();
     // then
     assertThat(result.items()).hasSize(1);
-    assertThat(result.items().getFirst().getProcessDefinitionId()).isEqualTo(PROCESS_ID_1);
+    assertThat(result.items().getFirst().getDefinitionId()).isEqualTo(PROCESS_ID_1);
   }
 
   @Test
@@ -102,7 +102,7 @@ class ProcessInstanceAuthorizationIT {
     final var result = camundaClient.newProcessInstanceGetRequest(processInstanceKey).send().join();
     // then
     assertThat(result).isNotNull();
-    assertThat(result.getProcessDefinitionId()).isEqualTo(PROCESS_ID_1);
+    assertThat(result.getDefinitionId()).isEqualTo(PROCESS_ID_1);
   }
 
   @Test
@@ -261,7 +261,7 @@ class ProcessInstanceAuthorizationIT {
         .join()
         .items()
         .getFirst()
-        .getProcessInstanceKey();
+        .getKey();
   }
 
   private long getAnyElementInstanceKey(final CamundaClient camundaClient, final String processId) {
@@ -309,7 +309,7 @@ class ProcessInstanceAuthorizationIT {
   }
 
   private static void deployResource(final CamundaClient camundaClient, final String resourceName) {
-    camundaClient.newDeployResourceCommand().addResourceFromClasspath(resourceName).send().join();
+    camundaClient.deployResource().addResourceFromClasspath(resourceName).send().join();
   }
 
   private static void startProcessInstance(

@@ -118,7 +118,7 @@ public final class SetVariablesTest extends ClientTest {
     final Duration requestTimeout = Duration.ofHours(124);
 
     // when
-    client.newSetVariablesCommand(123).variables("{}").requestTimeout(requestTimeout).send().join();
+    client.newSetVariablesCommand(123).variables("{}").timeout(requestTimeout).send().join();
 
     // then
     rule.verifyRequestTimeout(requestTimeout);

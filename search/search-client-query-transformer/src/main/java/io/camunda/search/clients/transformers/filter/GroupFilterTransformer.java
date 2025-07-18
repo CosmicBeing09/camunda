@@ -18,7 +18,7 @@ import static io.camunda.webapps.schema.descriptors.index.GroupIndex.KEY;
 import static io.camunda.webapps.schema.descriptors.index.GroupIndex.MEMBER_ID;
 import static io.camunda.webapps.schema.descriptors.index.GroupIndex.NAME;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.GroupFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.descriptors.index.GroupIndex;
@@ -30,7 +30,7 @@ public class GroupFilterTransformer extends IndexFilterTransformer<GroupFilter> 
   }
 
   @Override
-  public SearchQuery toSearchQuery(final GroupFilter filter) {
+  public Query toSearchQuery(final GroupFilter filter) {
 
     return and(
         filter.groupKey() == null ? null : term(KEY, filter.groupKey()),

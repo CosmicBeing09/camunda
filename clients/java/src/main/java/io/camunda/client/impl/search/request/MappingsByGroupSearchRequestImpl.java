@@ -59,7 +59,7 @@ public class MappingsByGroupSearchRequestImpl
   }
 
   @Override
-  public FinalSearchRequestStep<Mapping> requestTimeout(final Duration requestTimeout) {
+  public FinalSearchRequestStep<Mapping> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.UpdateGroupResponse;
 
-public interface UpdateGroupCommandStep1 extends FinalCommandStep<UpdateGroupResponse> {
+public interface UpdateGroupCommandStep1 extends FinalStep<UpdateGroupResponse> {
 
   /**
    * Sets the name for the group to be updated.

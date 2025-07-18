@@ -90,7 +90,7 @@ public class CamundaClientConfigurationImplTest {
             executorService(),
             credentialsProvider());
     assertThat(configuration.isPlaintextConnectionEnabled()).isEqualTo(plaintext);
-    assertThat(configuration.getGatewayAddress()).isEqualTo("some-host:21500");
+    assertThat(configuration.gatewayAddress()).isEqualTo("some-host:21500");
   }
 
   @Test

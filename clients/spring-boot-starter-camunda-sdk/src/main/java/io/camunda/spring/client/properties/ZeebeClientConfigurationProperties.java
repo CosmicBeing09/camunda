@@ -244,7 +244,7 @@ public class ZeebeClientConfigurationProperties {
   /**
    * @deprecated since 8.5 for removal with 8.8, replaced by {@link
    *     CamundaClientProperties#getGrpcAddress()}
-   * @see CamundaClientConfiguration#getGatewayAddress()
+   * @see CamundaClientConfiguration#gatewayAddress()
    */
   @DeprecatedConfigurationProperty(replacement = "camunda.client.grpc-address")
   public String getGatewayAddress() {
@@ -486,7 +486,7 @@ public class ZeebeClientConfigurationProperties {
   public static class Broker {
     /**
      * @deprecated since 8.5 for removal with 8.8, replaced by {@link Broker#getGrpcAddress()}
-     * @see CamundaClientConfiguration#getGatewayAddress()
+     * @see CamundaClientConfiguration#gatewayAddress()
      */
     private String gatewayAddress;
 
@@ -496,7 +496,7 @@ public class ZeebeClientConfigurationProperties {
 
     /**
      * @deprecated since 8.5 for removal with 8.8, replaced by {@link Broker#getGrpcAddress()}
-     * @see CamundaClientConfiguration#getGatewayAddress()
+     * @see CamundaClientConfiguration#gatewayAddress()
      */
     @DeprecatedConfigurationProperty(replacement = "camunda.client.grpc-address")
     public String getGatewayAddress() {
@@ -505,7 +505,7 @@ public class ZeebeClientConfigurationProperties {
 
     /**
      * @deprecated since 8.5 for removal with 8.8, replaced by {@link Broker#getGrpcAddress()}
-     * @see CamundaClientConfiguration#getGatewayAddress()
+     * @see CamundaClientConfiguration#gatewayAddress()
      */
     public void setGatewayAddress(final String gatewayAddress) {
       this.gatewayAddress = gatewayAddress;
@@ -708,7 +708,7 @@ public class ZeebeClientConfigurationProperties {
 
     /**
      * @deprecated since 8.5 for removal with 8.8, replaced by {@link Cloud#getGrpcAddress()}
-     * @see CamundaClientConfiguration#getGatewayAddress()
+     * @see CamundaClientConfiguration#gatewayAddress()
      */
     @DeprecatedConfigurationProperty(
         replacement = "camunda.client.grpc-address",

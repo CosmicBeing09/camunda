@@ -21,7 +21,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1.BroadcastSignalCommandStep2;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.BroadcastSignalResponse;
 import io.camunda.client.impl.RetriableClientFutureImpl;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -66,7 +66,7 @@ public final class BroadcastSignalCommandImpl
     httpRequestObject = new SignalBroadcastRequest();
     useRest = config.preferRestOverGrpc();
     tenantId(config.getDefaultTenantId());
-    requestTimeout(config.getDefaultRequestTimeout());
+    timeout(config.getDefaultRequestTimeout());
   }
 
   @Override
@@ -100,7 +100,7 @@ public final class BroadcastSignalCommandImpl
   }
 
   @Override
-  public FinalCommandStep<BroadcastSignalResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<BroadcastSignalResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

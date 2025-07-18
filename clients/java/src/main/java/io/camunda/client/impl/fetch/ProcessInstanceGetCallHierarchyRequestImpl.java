@@ -42,7 +42,7 @@ public class ProcessInstanceGetCallHierarchyRequestImpl
   }
 
   @Override
-  public ProcessInstanceGetCallHierarchyRequest requestTimeout(final Duration requestTimeout) {
+  public ProcessInstanceGetCallHierarchyRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

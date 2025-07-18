@@ -45,7 +45,7 @@ public interface ActivateJobsCommandStep1
 
   interface ActivateJobsCommandStep3
       extends CommandWithOneOrMoreTenantsStep<ActivateJobsCommandStep3>,
-          FinalCommandStep<ActivateJobsResponse> {
+      FinalStep<ActivateJobsResponse> {
 
     /**
      * Set the time for how long a job is exclusively assigned for this subscription.
@@ -60,7 +60,23 @@ public interface ActivateJobsCommandStep1
      * @return the builder for this command. Call {@link #send()} to complete the command and send
      *     it to the broker.
      */
+    @Override
     ActivateJobsCommandStep3 timeout(Duration timeout);
+
+    /**
+     * Sets the request timeout for the command.
+     *
+     * <p>Additionally, it sets the HTTP response timeout to the specified value, incremented by the
+     * offset defined in {@link CamundaClientConfiguration#getDefaultRequestTimeoutOffset()}
+     * (default 1 second), ensuring that the client timeout does not occur before the server
+     * timeout.
+     *
+     * @see FinalStep#timeout(Duration)
+     * @param requestTimeout the request timeout
+     * @return the configured command
+     */
+    @Override
+    FinalStep<ActivateJobsResponse> timeout(Duration requestTimeout);
 
     /**
      * Set the name of the job worker.
@@ -102,20 +118,5 @@ public interface ActivateJobsCommandStep1
      *     it to the broker.
      */
     ActivateJobsCommandStep3 fetchVariables(String... fetchVariables);
-
-    /**
-     * Sets the request timeout for the command.
-     *
-     * <p>Additionally, it sets the HTTP response timeout to the specified value, incremented by the
-     * offset defined in {@link CamundaClientConfiguration#getDefaultRequestTimeoutOffset()}
-     * (default 1 second), ensuring that the client timeout does not occur before the server
-     * timeout.
-     *
-     * @see FinalCommandStep#requestTimeout(Duration)
-     * @param requestTimeout the request timeout
-     * @return the configured command
-     */
-    @Override
-    FinalCommandStep<ActivateJobsResponse> requestTimeout(Duration requestTimeout);
   }
 }

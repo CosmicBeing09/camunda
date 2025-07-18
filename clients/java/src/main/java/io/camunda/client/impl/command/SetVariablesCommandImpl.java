@@ -18,7 +18,7 @@ package io.camunda.client.impl.command;
 import io.camunda.client.CredentialsProvider.StatusCode;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.command.SetVariablesCommandStep1;
 import io.camunda.client.api.command.SetVariablesCommandStep1.SetVariablesCommandStep2;
 import io.camunda.client.api.response.SetVariablesResponse;
@@ -70,11 +70,11 @@ public final class SetVariablesCommandImpl extends CommandWithVariables<SetVaria
     httpRequestConfig = httpClient.newRequestConfig();
     useRest = preferRestOverGrpc;
     this.elementInstanceKey = elementInstanceKey;
-    requestTimeout(requestTimeout);
+    timeout(requestTimeout);
   }
 
   @Override
-  public FinalCommandStep<SetVariablesResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<SetVariablesResponse> timeout(final Duration requestTimeout) {
     this.requestTimeout = requestTimeout;
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;

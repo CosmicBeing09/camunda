@@ -52,13 +52,13 @@ public class ProcessInstanceFilterImpl
   }
 
   @Override
-  public ProcessInstanceFilter processInstanceKey(final Long processInstanceKey) {
-    processInstanceKey(b -> b.eq(processInstanceKey));
+  public ProcessInstanceFilter key(final Long processInstanceKey) {
+    key(b -> b.eq(processInstanceKey));
     return this;
   }
 
   @Override
-  public ProcessInstanceFilter processInstanceKey(final Consumer<BasicLongProperty> fn) {
+  public ProcessInstanceFilter key(final Consumer<BasicLongProperty> fn) {
     final BasicLongProperty property = new BasicLongPropertyImpl();
     fn.accept(property);
     filter.setProcessInstanceKey(provideSearchRequestProperty(property));

@@ -60,7 +60,7 @@ public class TaskJoinRelationship {
     return Objects.equals(name, that.name) && Objects.equals(parent, that.parent);
   }
 
-  public enum TaskJoinRelationshipType {
+  public enum RelationshipType {
     PROCESS("process"),
     LOCAL_VARIABLE("localVariable"),
     PROCESS_VARIABLE("variable"),
@@ -68,7 +68,7 @@ public class TaskJoinRelationship {
 
     private final String type;
 
-    TaskJoinRelationshipType(final String type) {
+    RelationshipType(final String type) {
       this.type = type;
     }
 

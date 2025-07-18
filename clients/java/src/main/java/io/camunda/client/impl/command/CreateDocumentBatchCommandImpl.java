@@ -21,7 +21,7 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CreateDocumentBatchCommandStep1;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.DocumentReferenceBatchResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -66,11 +66,11 @@ public class CreateDocumentBatchCommandImpl implements CreateDocumentBatchComman
     this.jsonMapper = jsonMapper;
     this.httpClient = httpClient;
     httpRequestConfig = httpClient.newRequestConfig();
-    requestTimeout(configuration.getDefaultRequestTimeout());
+    timeout(configuration.getDefaultRequestTimeout());
   }
 
   @Override
-  public FinalCommandStep<DocumentReferenceBatchResponse> requestTimeout(
+  public FinalStep<DocumentReferenceBatchResponse> timeout(
       final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(
         requestTimeout.toMillis(), java.util.concurrent.TimeUnit.MILLISECONDS);
@@ -92,7 +92,7 @@ public class CreateDocumentBatchCommandImpl implements CreateDocumentBatchComman
           document.getMetadata().setProcessDefinitionId(processDefinitionId);
         }
         if (processInstanceKey != null) {
-          document.getMetadata().setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
+          document.getMetadata().setProcessInstanceKey(ParseUtil.toStringOrNull(processInstanceKey));
         }
         final String metadataString = jsonMapper.toJson(document.getMetadata());
         final MultipartPart part =

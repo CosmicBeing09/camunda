@@ -33,7 +33,7 @@ public class HistoryCleanupIT {
   private static CamundaClient camundaClient;
 
   @Test
-  void shouldDeleteProcessesWhichAreMarkedForCleanup() {
+  void shouldDeleteMarkedProcesses() {
     // given
     deployResource(camundaClient, RESOURCE_NAME).getProcesses().getFirst();
     waitForProcessesToBeDeployed(camundaClient, 1);
@@ -54,7 +54,7 @@ public class HistoryCleanupIT {
             .until(
                 () -> camundaClient.newUserTaskSearchRequest().send().join().items().getFirst(),
                 Objects::nonNull);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getKey()).send().join();
 
     // then one of the process instance should be ended, but still exist to query
     final Long processInstanceKey = userTask.getProcessInstanceKey();
@@ -69,7 +69,7 @@ public class HistoryCleanupIT {
               final var result =
                   camundaClient
                       .newProcessInstanceSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.key(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.page().totalItems()).isEqualTo(0);
@@ -77,7 +77,7 @@ public class HistoryCleanupIT {
               final var taskAmount =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(b -> b.userTaskKey(userTask.getUserTaskKey()))
+                      .filter(b -> b.key(userTask.getKey()))
                       .send()
                       .join()
                       .page()
@@ -88,6 +88,6 @@ public class HistoryCleanupIT {
     // the other should still exist
     final var result = camundaClient.newProcessInstanceSearchRequest().send().join();
     assertThat(result.page().totalItems()).isEqualTo(1);
-    assertThat(result.items().getFirst().getProcessInstanceKey()).isNotEqualTo(processInstanceKey);
+    assertThat(result.items().getFirst().getKey()).isNotEqualTo(processInstanceKey);
   }
 }

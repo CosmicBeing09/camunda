@@ -55,7 +55,7 @@ public class ProcessInstanceStatisticsTest {
                 assertThat(
                         camundaClient
                             .newUserTaskSearchRequest()
-                            .filter(f -> f.processDefinitionKey(processDefinitionKey))
+                            .filter(f -> f.definitionKey(processDefinitionKey))
                             .send()
                             .join()
                             .items())
@@ -207,7 +207,7 @@ public class ProcessInstanceStatisticsTest {
   private static DeploymentEvent deployResource(
       final BpmnModelInstance processModel, final String resourceName) {
     return camundaClient
-        .newDeployResourceCommand()
+        .deployResource()
         .addProcessModel(processModel, resourceName)
         .send()
         .join();

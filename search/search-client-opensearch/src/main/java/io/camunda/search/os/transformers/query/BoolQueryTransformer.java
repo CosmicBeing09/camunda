@@ -7,13 +7,12 @@
  */
 package io.camunda.search.os.transformers.query;
 
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchBoolQuery;
-import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.os.transformers.OpensearchTransformers;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.opensearch.client.opensearch._types.query_dsl.BoolQuery;
-import org.opensearch.client.opensearch._types.query_dsl.Query;
 import org.opensearch.client.opensearch._types.query_dsl.QueryBuilders;
 
 public final class BoolQueryTransformer extends QueryOptionTransformer<SearchBoolQuery, BoolQuery> {
@@ -49,7 +48,7 @@ public final class BoolQueryTransformer extends QueryOptionTransformer<SearchBoo
     return builder.build();
   }
 
-  private List<Query> of(final List<SearchQuery> values) {
+  private List<org.opensearch.client.opensearch._types.query_dsl.Query> of(final List<Query> values) {
     final var transformer = getQueryTransformer();
     return values.stream().map(transformer::apply).collect(Collectors.toList());
   }

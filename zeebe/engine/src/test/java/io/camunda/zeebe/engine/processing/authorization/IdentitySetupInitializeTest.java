@@ -209,7 +209,7 @@ public class IdentitySetupInitializeTest {
     engine
         .identitySetup()
         .initialize()
-        .withUser(new UserRecord().setUsername(Strings.newRandomValidUsername()))
+        .withUser(new UserRecord().setUsername(Strings.randomUsername()))
         .withRole(new RoleRecord().setRoleId(Strings.newRandomValidIdentityId()))
         .withTenant(tenant)
         .initialize();

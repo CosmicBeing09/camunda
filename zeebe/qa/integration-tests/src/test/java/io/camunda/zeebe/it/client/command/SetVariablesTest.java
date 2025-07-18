@@ -144,7 +144,7 @@ public final class SetVariablesTest {
     final var command =
         getCommand(client, useRest, processInstanceKey)
             .variables(Map.of("foo", "bar"))
-            .requestTimeout(Duration.ofSeconds(60))
+            .timeout(Duration.ofSeconds(60))
             .send();
 
     // then

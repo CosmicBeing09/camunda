@@ -254,7 +254,7 @@ public class RoleTest {
 
   @Test
   public void shouldRemoveUserFromRole() {
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     engine
         .user()
         .newUser(username)
@@ -317,7 +317,7 @@ public class RoleTest {
 
   @Test
   public void shouldRemoveGroupFromRole() {
-    final var groupId = Strings.newRandomValidUsername();
+    final var groupId = Strings.randomUsername();
     engine.group().newGroup(groupId).create();
     final var roleId = UUID.randomUUID().toString();
     engine.role().newRole(roleId).create();

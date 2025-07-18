@@ -12,7 +12,7 @@ import static io.camunda.search.clients.core.RequestBuilders.searchRequest;
 import io.camunda.search.aggregation.AggregationBase;
 import io.camunda.search.clients.aggregator.SearchAggregator;
 import io.camunda.search.clients.core.SearchQueryRequest;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.source.SearchSourceConfig;
 import io.camunda.search.clients.transformers.ServiceTransformer;
 import io.camunda.search.clients.transformers.ServiceTransformers;
@@ -84,7 +84,7 @@ public class TypedSearchQueryTransformer<F extends FilterBase, S extends SortOpt
     return resultConfigTransformer.apply(resultConfig);
   }
 
-  private SearchQuery toSearchQuery(final F filter) {
+  private Query toSearchQuery(final F filter) {
     return getFilterTransformer(filter).apply(filter);
   }
 

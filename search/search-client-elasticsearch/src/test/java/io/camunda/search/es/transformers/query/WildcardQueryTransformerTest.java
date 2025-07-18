@@ -10,8 +10,7 @@ package io.camunda.search.es.transformers.query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchQueryBuilders;
 import io.camunda.search.clients.transformers.SearchTransfomer;
 import io.camunda.search.es.transformers.ElasticsearchTransformers;
@@ -25,11 +24,11 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class WildcardQueryTransformerTest {
 
   private final ElasticsearchTransformers transformers = new ElasticsearchTransformers();
-  private SearchTransfomer<SearchQuery, Query> transformer;
+  private SearchTransfomer<Query, co.elastic.clients.elasticsearch._types.query_dsl.Query> transformer;
 
   @BeforeEach
   public void before() {
-    transformer = transformers.getTransformer(SearchQuery.class);
+    transformer = transformers.getTransformer(Query.class);
   }
 
   private static Stream<Arguments> provideRangeQueries() {
@@ -49,7 +48,7 @@ public class WildcardQueryTransformerTest {
 
   @ParameterizedTest
   @MethodSource("provideRangeQueries")
-  public void shouldApplyTransformer(final SearchQuery query, final String expectedResultQuery) {
+  public void shouldApplyTransformer(final Query query, final String expectedResultQuery) {
     // given
     final var expectedQuery = expectedResultQuery.replace("'", "\"");
 

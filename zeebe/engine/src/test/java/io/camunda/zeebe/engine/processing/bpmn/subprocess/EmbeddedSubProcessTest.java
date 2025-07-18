@@ -195,7 +195,7 @@ public final class EmbeddedSubProcessTest {
                   .startEvent()
                   .serviceTask("task-1", b -> b.zeebeJobType("task-1"))
                   .endEvent()
-                  .subProcessDone()
+                  .endSubProcess()
                   .boundaryEvent(
                       "boundary",
                       b -> b.cancelActivity(false).timerWithDuration("PT15S").endEvent());
@@ -386,7 +386,7 @@ public final class EmbeddedSubProcessTest {
                     .startEvent()
                     .serviceTask("task", t -> t.zeebeJobType("task"))
                     .endEvent()
-                    .subProcessDone()
+                    .endSubProcess()
                     .boundaryEvent(
                         "cancel",
                         b -> b.message(m -> m.name("cancel").zeebeCorrelationKeyExpression("key")))

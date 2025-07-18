@@ -74,7 +74,7 @@ public class UserTaskImpl implements UserTask {
   }
 
   @Override
-  public Long getUserTaskKey() {
+  public Long getKey() {
     return userTaskKey;
   }
 
@@ -124,7 +124,7 @@ public class UserTaskImpl implements UserTask {
   }
 
   @Override
-  public Long getProcessDefinitionKey() {
+  public Long getDefinitionKey() {
     return processDefinitionKey;
   }
 

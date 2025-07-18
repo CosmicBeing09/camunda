@@ -10,14 +10,14 @@ package io.camunda.search.clients.query;
 import io.camunda.util.ObjectBuilder;
 import java.util.Objects;
 
-public record SearchHasChildQuery(SearchQuery query, String type) implements SearchQueryOption {
+public record SearchHasChildQuery(Query query, String type) implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchHasChildQuery> {
 
-    private SearchQuery query;
+    private Query query;
     private String type;
 
-    public Builder query(final SearchQuery value) {
+    public Builder query(final Query value) {
       query = value;
       return this;
     }

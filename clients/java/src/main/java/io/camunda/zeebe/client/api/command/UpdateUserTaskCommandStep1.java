@@ -15,12 +15,13 @@
  */
 package io.camunda.zeebe.client.api.command;
 
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.zeebe.client.api.response.UpdateUserTaskResponse;
 import java.util.List;
 
 /**
  * @deprecated since 8.8 for removal in 8.9, replaced by {@link
- *     io.camunda.client.api.command.UpdateUserTaskCommandStep1}
+ *     UserTaskUpdateBuilder}
  */
 @Deprecated
 public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserTaskResponse> {

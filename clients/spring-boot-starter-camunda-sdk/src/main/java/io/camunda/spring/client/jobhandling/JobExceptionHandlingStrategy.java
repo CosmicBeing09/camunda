@@ -15,7 +15,7 @@
  */
 package io.camunda.spring.client.jobhandling;
 
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.worker.JobClient;
 import io.camunda.spring.client.annotation.value.JobWorkerValue;
@@ -27,6 +27,6 @@ public interface JobExceptionHandlingStrategy {
       JobClient jobClient, ActivatedJob job, JobWorkerValue jobWorkerValue) {}
 
   interface CommandWrapperCreator {
-    CommandWrapper create(FinalCommandStep<?> command);
+    CommandWrapper create(FinalStep<?> command);
   }
 }

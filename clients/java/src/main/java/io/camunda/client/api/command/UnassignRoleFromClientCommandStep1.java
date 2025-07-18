@@ -28,7 +28,7 @@ public interface UnassignRoleFromClientCommandStep1 {
   UnassignRoleFromClientCommandStep2 roleId(String roleId);
 
   interface UnassignRoleFromClientCommandStep2
-      extends FinalCommandStep<UnassignRoleFromClientResponse> {
+      extends FinalStep<UnassignRoleFromClientResponse> {
     /**
      * Sets the client ID.
      *

@@ -189,12 +189,12 @@ public final class DeploymentEventImpl implements DeploymentEvent {
   }
 
   @Override
-  public List<Form> getForm() {
+  public List<Form> getForms() {
     return forms;
   }
 
   @Override
-  public List<Resource> getResource() {
+  public List<Resource> getResources() {
     return resources;
   }
 

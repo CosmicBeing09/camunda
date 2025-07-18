@@ -55,7 +55,7 @@ public interface CorrelateMessageCommandStep1 {
 
   interface CorrelateMessageCommandStep3
       extends CommandWithTenantStep<CorrelateMessageCommandStep3>,
-          FinalCommandStep<CorrelateMessageResponse>,
+      FinalStep<CorrelateMessageResponse>,
           CommandWithVariables<CorrelateMessageCommandStep3> {
 
     /**

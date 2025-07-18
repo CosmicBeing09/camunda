@@ -44,9 +44,9 @@ public class ProcessMigrationIT {
   void shouldMigrateProcess() {
     // given
     final var definitionKey1 =
-        deployProcessFromClasspath(client, "process/migration-process_v1.bpmn");
+        deployProcess(client, "process/migration-process_v1.bpmn");
     final var definitionKey2 =
-        deployProcessFromClasspath(client, "process/migration-process_v2.bpmn");
+        deployProcess(client, "process/migration-process_v2.bpmn");
     final var processInstanceKey =
         startProcessInstance(
             client,
@@ -56,7 +56,7 @@ public class ProcessMigrationIT {
                 "alice", "bob"));
 
     // when
-    migrateProcessInstance(
+    migrateInstance(
         client,
         processInstanceKey,
         MigrationPlan.newBuilder()
@@ -69,7 +69,7 @@ public class ProcessMigrationIT {
     // then
     processInstanceExistAndMatches(
         client,
-        f -> f.processInstanceKey(processInstanceKey).processDefinitionId("migration-process_v2"),
+        f -> f.key(processInstanceKey).processDefinitionId("migration-process_v2"),
         f -> assertThat(f).hasSize(1));
     processInstanceHasUserTask(
         client,
@@ -99,14 +99,14 @@ public class ProcessMigrationIT {
   void shouldMigrateProcessWithIncident() {
     // given
     final var definitionKey1 =
-        deployProcessFromClasspath(client, "process/migration-process_v1.bpmn");
+        deployProcess(client, "process/migration-process_v1.bpmn");
     final var definitionKey2 =
-        deployProcessFromClasspath(client, "process/migration-process_v2.bpmn");
+        deployProcess(client, "process/migration-process_v2.bpmn");
     final var processInstanceKey = startProcessInstance(client, "migration-process_v1", Map.of());
     throwIncident(client, processInstanceKey, "taskB", "error", "error message");
 
     // when
-    migrateProcessInstance(
+    migrateInstance(
         client,
         processInstanceKey,
         MigrationPlan.newBuilder()
@@ -132,15 +132,15 @@ public class ProcessMigrationIT {
   void shouldMigrateProcessWithResolvedIncident() {
     // given
     final var definitionKey1 =
-        deployProcessFromClasspath(client, "process/migration-process_v1.bpmn");
+        deployProcess(client, "process/migration-process_v1.bpmn");
     final var definitionKey2 =
-        deployProcessFromClasspath(client, "process/migration-process_v2.bpmn");
+        deployProcess(client, "process/migration-process_v2.bpmn");
     final var processInstanceKey = startProcessInstance(client, "migration-process_v1", Map.of());
     throwIncident(client, processInstanceKey, "taskB", "error", "error message");
     resolveIncidents(client, processInstanceKey);
 
     // when
-    migrateProcessInstance(
+    migrateInstance(
         client,
         processInstanceKey,
         MigrationPlan.newBuilder()
@@ -161,9 +161,9 @@ public class ProcessMigrationIT {
         });
   }
 
-  public Long deployProcessFromClasspath(final CamundaClient client, final String classpath) {
+  public Long deployProcess(final CamundaClient client, final String classpath) {
     final var deployment =
-        client.newDeployResourceCommand().addResourceFromClasspath(classpath).send().join();
+        client.deployResource().addResourceFromClasspath(classpath).send().join();
     final var event = deployment.getProcesses().getFirst();
 
     // sync with exported database
@@ -179,7 +179,7 @@ public class ProcessMigrationIT {
   // command helpers
   //
 
-  public void migrateProcessInstance(
+  public void migrateInstance(
       final CamundaClient client,
       final Long processInstanceKey,
       final MigrationPlan migrationPlan) {
@@ -276,7 +276,7 @@ public class ProcessMigrationIT {
       final ThrowingConsumer<UserTask> assertions) {
     userTaskExistAndMatches(
         client,
-        f -> f.processInstanceKey(processInstanceKey),
+        f -> f.elementInstanceKey(processInstanceKey),
         f -> {
           assertThat(f).hasSize(1);
           assertThat(f.getFirst()).satisfies(assertions);

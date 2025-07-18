@@ -94,7 +94,7 @@ public final class ThrowErrorTest extends ClientTest {
     client
         .newThrowErrorCommand(123)
         .errorCode("errorCode")
-        .requestTimeout(requestTimeout)
+        .timeout(requestTimeout)
         .send()
         .join();
 

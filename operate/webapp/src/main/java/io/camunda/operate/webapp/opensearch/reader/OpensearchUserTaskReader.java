@@ -18,7 +18,7 @@ import io.camunda.webapps.schema.descriptors.template.SnapshotTaskVariableTempla
 import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.usertask.SnapshotTaskVariableEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import java.util.List;
 import java.util.Optional;
 import org.opensearch.client.opensearch._types.FieldValue;
@@ -33,7 +33,7 @@ import org.springframework.stereotype.Component;
 public class OpensearchUserTaskReader extends OpensearchAbstractReader implements UserTaskReader {
 
   private static final Query TASK_QUERY =
-      term(TaskTemplate.JOIN_FIELD_NAME, TaskJoinRelationshipType.TASK.getType());
+      term(TaskTemplate.JOIN_FIELD_NAME, RelationshipType.TASK.getType());
   private final TaskTemplate taskTemplate;
   private final SnapshotTaskVariableTemplate snapshotTaskVariableTemplate;
 

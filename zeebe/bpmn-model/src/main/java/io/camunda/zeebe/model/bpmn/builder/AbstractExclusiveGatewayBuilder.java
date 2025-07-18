@@ -50,7 +50,7 @@ public abstract class AbstractExclusiveGatewayBuilder<B extends AbstractExclusiv
    * @return the builder
    */
   public B defaultFlow() {
-    final SequenceFlow sequenceFlow = getCurrentSequenceFlowBuilder().getElement();
+    final SequenceFlow sequenceFlow = getSequenceFlowBuilder().getElement();
     return defaultFlow(sequenceFlow);
   }
 }

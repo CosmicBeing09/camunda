@@ -203,7 +203,7 @@ public class DataGenerator {
         .zeebeInput("=var1", "varIn")
         .zeebeOutput("=varOut", "var2")
         .endEvent()
-        .subProcessDone()
+        .endSubProcess()
         .serviceTask("task2")
         .zeebeJobType("task2")
         .serviceTask("task3")

@@ -60,7 +60,7 @@ public class NetworkCompressionTest {
             .join();
 
     // then - gateway to broker and broker to broker communication was successful
-    assertThat(processInstance.getBpmnProcessId()).isEqualTo(processId);
+    assertThat(processInstance.getProcessId()).isEqualTo(processId);
   }
 
   private void configureGatewayWithCompression(final GatewayCfg gatewayCfg) {

@@ -40,7 +40,7 @@ public class DecisionDefinitionGetRequestImpl implements DecisionDefinitionGetRe
   }
 
   @Override
-  public DecisionDefinitionGetRequest requestTimeout(final Duration requestTimeout) {
+  public DecisionDefinitionGetRequest timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

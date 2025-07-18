@@ -20,7 +20,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1.CorrelateMessageCommandStep2;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1.CorrelateMessageCommandStep3;
-import io.camunda.client.api.command.FinalCommandStep;
+import io.camunda.client.api.command.FinalStep;
 import io.camunda.client.api.response.CorrelateMessageResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -72,7 +72,7 @@ public class CorrelateMessageCommandImpl extends CommandWithVariables<CorrelateM
   }
 
   @Override
-  public FinalCommandStep<CorrelateMessageResponse> requestTimeout(final Duration requestTimeout) {
+  public FinalStep<CorrelateMessageResponse> timeout(final Duration requestTimeout) {
     httpRequestConfig.setResponseTimeout(requestTimeout.toMillis(), TimeUnit.MILLISECONDS);
     return this;
   }

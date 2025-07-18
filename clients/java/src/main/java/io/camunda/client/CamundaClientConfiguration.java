@@ -32,12 +32,12 @@ public interface CamundaClientConfiguration {
    * @see CamundaClientBuilder#grpcAddress(URI)
    */
   @Deprecated
-  String getGatewayAddress();
+  String gatewayAddress();
 
   /**
    * @see CamundaClientBuilder#restAddress(URI)
    */
-  URI getRestAddress();
+  URI restAddress();
 
   /**
    * @see CamundaClientBuilder#grpcAddress(URI)

@@ -18,7 +18,7 @@ package io.camunda.client.api.command;
 import io.camunda.client.api.response.UpdateUserTaskResponse;
 import java.util.List;
 
-public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserTaskResponse> {
+public interface UserTaskUpdateBuilder extends FinalStep<UpdateUserTaskResponse> {
 
   /**
    * Set the custom action to update the user task with.
@@ -27,7 +27,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 action(String action);
+  UserTaskUpdateBuilder action(String action);
 
   /**
    * Set the due date to set in the user task. Use {@link #clearDueDate()} to remove the due date
@@ -37,7 +37,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 dueDate(String dueDate);
+  UserTaskUpdateBuilder due(String dueDate);
 
   /**
    * Clear the due date in the user task.
@@ -45,7 +45,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 clearDueDate();
+  UserTaskUpdateBuilder clearDueDate();
 
   /**
    * Set the follow-up date to set in the user task. Use {@link #clearFollowUpDate()} to remove the
@@ -55,7 +55,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 followUpDate(String followUpDate);
+  UserTaskUpdateBuilder followUpDate(String followUpDate);
 
   /**
    * Clear the follow-up date in the user task.
@@ -63,7 +63,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 clearFollowUpDate();
+  UserTaskUpdateBuilder clearFollowUpDate();
 
   /**
    * Set the candidate groups to set in the user task. This replaces the candidate groups in the
@@ -73,7 +73,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 candidateGroups(List<String> candidateGroups);
+  UserTaskUpdateBuilder candidateGroups(List<String> candidateGroups);
 
   /**
    * Set the candidate groups to set in the user task. This replaces the candidate groups in the
@@ -83,7 +83,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 candidateGroups(String... candidateGroups);
+  UserTaskUpdateBuilder candidateGroups(String... candidateGroups);
 
   /**
    * Remove the candidate groups from the user task.
@@ -91,7 +91,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 clearCandidateGroups();
+  UserTaskUpdateBuilder clearCandidateGroups();
 
   /**
    * Set the candidate users to set in the user task. This replaces the candidate users in the task.
@@ -101,7 +101,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 candidateUsers(List<String> candidateUsers);
+  UserTaskUpdateBuilder candidateUsers(List<String> candidateUsers);
 
   /**
    * Set the candidate users to set in the user task. This replaces the candidate users in the task.
@@ -111,7 +111,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 candidateUsers(String... candidateUsers);
+  UserTaskUpdateBuilder candidateUsers(String... candidateUsers);
 
   /**
    * Remove the candidate users from the user task.
@@ -119,7 +119,7 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 clearCandidateUsers();
+  UserTaskUpdateBuilder clearCandidateUsers();
 
   /**
    * Set the priority of the User Task. The priority must be an integer between 0 and 100, default
@@ -129,5 +129,5 @@ public interface UpdateUserTaskCommandStep1 extends FinalCommandStep<UpdateUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  UpdateUserTaskCommandStep1 priority(Integer priority);
+  UserTaskUpdateBuilder priority(Integer priority);
 }

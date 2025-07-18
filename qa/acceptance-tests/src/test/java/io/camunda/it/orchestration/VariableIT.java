@@ -29,7 +29,7 @@ public class VariableIT {
     // given
     final var deployment =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/bpm_variable_test.bpmn")
             .send()
             .join();
@@ -70,7 +70,7 @@ public class VariableIT {
     // given
     final var deployment =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/bpm_variable_test.bpmn")
             .send()
             .join();
@@ -118,7 +118,7 @@ public class VariableIT {
     // given
     final var deployment =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/bpm_variable_test.bpmn")
             .send()
             .join();
@@ -169,7 +169,7 @@ public class VariableIT {
     // given
     final var deployment =
         client
-            .newDeployResourceCommand()
+            .deployResource()
             .addResourceFromClasspath("process/bpm_variable_test.bpmn")
             .send()
             .join();
