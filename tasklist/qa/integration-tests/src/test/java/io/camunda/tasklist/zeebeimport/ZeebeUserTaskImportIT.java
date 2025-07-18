@@ -55,16 +55,16 @@ public class ZeebeUserTaskImportIT extends TasklistZeebeIntegrationTest {
 
   @Test
   public void shouldImportZeebeUserTask() {
-    final String bpmnProcessId = "testProcess";
+    final String processId = "testProcess";
     final String flowNodeBpmnId = "taskA";
 
     final String taskId =
         tester
             .createAndDeploySimpleProcess(
-                bpmnProcessId, flowNodeBpmnId, AbstractUserTaskBuilder::zeebeUserTask)
+                processId, flowNodeBpmnId, AbstractUserTaskBuilder::zeebeUserTask)
             .waitUntil()
             .processIsDeployed()
-            .startProcessInstance(bpmnProcessId)
+            .startProcessInstance(processId)
             .waitUntil()
             .taskIsCreated(flowNodeBpmnId)
             .getTaskId();
@@ -75,21 +75,21 @@ public class ZeebeUserTaskImportIT extends TasklistZeebeIntegrationTest {
     assertEquals(TaskImplementation.ZEEBE_USER_TASK, taskEntity.getImplementation());
     assertEquals(TaskState.CREATED, taskEntity.getState());
     assertNotNull(taskEntity.getCreationTime());
-    assertEquals(bpmnProcessId, taskEntity.getBpmnProcessId());
-    assertEquals(flowNodeBpmnId, taskEntity.getFlowNodeBpmnId());
-    assertEquals(tester.getProcessDefinitionKey(), taskEntity.getProcessDefinitionId());
+    assertEquals(processId, taskEntity.getBpmnProcessId());
+    assertEquals(flowNodeBpmnId, taskEntity.getBpmnId());
+    assertEquals(tester.getProcessDefinitionKey(), taskEntity.getDefinitionId());
     assertEquals(tester.getProcessInstanceId(), taskEntity.getProcessInstanceId());
     assertEquals(taskEntity.getPriority(), Integer.valueOf(TaskStore.DEFAULT_PRIORITY));
   }
 
   @Test
   public void shouldImportCompletedZeebeUserTaskWithVariables() {
-    final String bpmnProcessId = "testProcess";
+    final String processId = "testProcess";
     final String flowNodeBpmnId1 = "taskA";
     final String flowNodeBpmnId2 = "taskB";
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(bpmnProcessId)
+        Bpmn.createExecutableProcess(processId)
             .startEvent("start")
             .userTask(flowNodeBpmnId1)
             .zeebeUserTask()
@@ -103,7 +103,7 @@ public class ZeebeUserTaskImportIT extends TasklistZeebeIntegrationTest {
             .createAndDeployProcess(process)
             .waitUntil()
             .processIsDeployed()
-            .startProcessInstance(bpmnProcessId)
+            .startProcessInstance(processId)
             .waitUntil()
             .taskIsCreated(flowNodeBpmnId1)
             .completeZeebeUserTask(

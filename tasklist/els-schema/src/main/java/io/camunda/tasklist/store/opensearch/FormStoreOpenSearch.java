@@ -154,7 +154,7 @@ public class FormStoreOpenSearch implements FormStore {
                                       q ->
                                           q.match(
                                               m ->
-                                                  m.field(TaskTemplate.PROCESS_DEFINITION_ID)
+                                                  m.field(TaskTemplate.DEFINITION_ID)
                                                       .query(
                                                           FieldValue.of(processDefinitionId))))));
 

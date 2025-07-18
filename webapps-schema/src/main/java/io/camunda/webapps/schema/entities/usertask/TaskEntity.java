@@ -27,7 +27,7 @@ public class TaskEntity
   private int partitionId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String flowNodeBpmnId;
+  private String bpmnId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String flowNodeName;
@@ -54,7 +54,7 @@ public class TaskEntity
   private String bpmnProcessId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String processDefinitionId;
+  private String definitionId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private String assignee;
@@ -150,12 +150,12 @@ public class TaskEntity
     return this;
   }
 
-  public String getFlowNodeBpmnId() {
-    return flowNodeBpmnId;
+  public String getBpmnId() {
+    return bpmnId;
   }
 
-  public TaskEntity setFlowNodeBpmnId(final String flowNodeBpmnId) {
-    this.flowNodeBpmnId = flowNodeBpmnId;
+  public TaskEntity setBpmnId(final String bpmnId) {
+    this.bpmnId = bpmnId;
     return this;
   }
 
@@ -231,12 +231,12 @@ public class TaskEntity
     return this;
   }
 
-  public String getProcessDefinitionId() {
-    return processDefinitionId;
+  public String getDefinitionId() {
+    return definitionId;
   }
 
   public TaskEntity setProcessDefinitionId(final String processDefinitionId) {
-    this.processDefinitionId = processDefinitionId;
+    definitionId = processDefinitionId;
     return this;
   }
 

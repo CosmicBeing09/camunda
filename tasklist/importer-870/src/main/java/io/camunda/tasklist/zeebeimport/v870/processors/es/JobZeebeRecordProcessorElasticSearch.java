@@ -75,18 +75,18 @@ public class JobZeebeRecordProcessorElasticSearch {
   private UpdateRequest persistTask(
       final Record<JobRecordValueImpl> record, final JobRecordValueImpl recordValue)
       throws PersistenceException {
-    final String processDefinitionId = String.valueOf(recordValue.getProcessDefinitionKey());
+    final String definitionId = String.valueOf(recordValue.getProcessDefinitionKey());
     final TaskEntity entity =
         new TaskEntity()
             .setImplementation(TaskImplementation.JOB_WORKER)
             .setId(String.valueOf(record.getKey()))
             .setKey(record.getKey())
             .setPartitionId(record.getPartitionId())
-            .setFlowNodeBpmnId(recordValue.getElementId())
+            .setBpmnId(recordValue.getElementId())
             .setFlowNodeInstanceId(String.valueOf(recordValue.getElementInstanceKey()))
             .setProcessInstanceId(String.valueOf(recordValue.getProcessInstanceKey()))
             .setBpmnProcessId(recordValue.getBpmnProcessId())
-            .setProcessDefinitionId(processDefinitionId)
+            .setProcessDefinitionId(definitionId)
             .setTenantId(recordValue.getTenantId());
 
     final String dueDate =
@@ -201,9 +201,9 @@ public class JobZeebeRecordProcessorElasticSearch {
       final Map<String, Object> updateFields = new HashMap<>();
       LOGGER.debug("Task instance: id {}", entity.getId());
       if (intent == Intent.MIGRATED) {
-        updateFields.put(TaskTemplate.FLOW_NODE_BPMN_ID, entity.getFlowNodeBpmnId());
+        updateFields.put(TaskTemplate.BPMN_ID, entity.getBpmnId());
         updateFields.put(TaskTemplate.BPMN_PROCESS_ID, entity.getBpmnProcessId());
-        updateFields.put(TaskTemplate.PROCESS_DEFINITION_ID, entity.getProcessDefinitionId());
+        updateFields.put(TaskTemplate.DEFINITION_ID, entity.getDefinitionId());
       } else {
         if (entity.getState() != null) {
           updateFields.put(TaskTemplate.STATE, entity.getState());

@@ -195,7 +195,7 @@ public class FormStoreElasticSearch implements FormStore {
                       .minimumShouldMatch(1))
               .must(
                   QueryBuilders.matchQuery(
-                      TaskTemplate.PROCESS_DEFINITION_ID, processDefinitionId));
+                      TaskTemplate.DEFINITION_ID, processDefinitionId));
 
       final SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
       searchSourceBuilder.query(boolQuery);

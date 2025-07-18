@@ -23,13 +23,13 @@ import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.CANDID
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.COMPLETION_TIME;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.CREATION_TIME;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.DUE_DATE;
-import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.FLOW_NODE_BPMN_ID;
+import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.BPMN_ID;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.FLOW_NODE_INSTANCE_ID;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.FOLLOW_UP_DATE;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.IMPLEMENTATION;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.KEY;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.PRIORITY;
-import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.PROCESS_DEFINITION_ID;
+import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.DEFINITION_ID;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.PROCESS_INSTANCE_ID;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.STATE;
 import static io.camunda.webapps.schema.descriptors.template.TaskTemplate.TENANT_ID;
@@ -99,7 +99,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
   }
 
   private SearchQuery getProcessDefinitionKeyQuery(final List<Long> processDefinitionIds) {
-    return longTerms(PROCESS_DEFINITION_ID, processDefinitionIds);
+    return longTerms(DEFINITION_ID, processDefinitionIds);
   }
 
   private SearchQuery getUserTaskKeysQuery(final List<Long> userTaskKeys) {
@@ -158,7 +158,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
   }
 
   private SearchQuery getElementIdQuery(final List<String> taskDefinitionId) {
-    return stringTerms(FLOW_NODE_BPMN_ID, taskDefinitionId);
+    return stringTerms(BPMN_ID, taskDefinitionId);
   }
 
   private SearchQuery getProcessInstanceVariablesQuery(

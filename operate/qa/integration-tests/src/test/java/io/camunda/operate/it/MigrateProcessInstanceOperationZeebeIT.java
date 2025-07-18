@@ -63,7 +63,7 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
   @Qualifier("operateFlowNodeInstanceTemplate")
   private FlowNodeInstanceTemplate flowNodeInstanceTemplate;
 
-  private Long initialBatchOperationMaxSize;
+  private Long initialBatchSize;
 
   @Autowired private UserTaskReader userTaskReader;
 
@@ -73,20 +73,20 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
     super.before();
     migrateProcessInstanceHandler.setOperateAdapter(operateServicesAdapter);
     mockMvc = mockMvcTestRule.getMockMvc();
-    initialBatchOperationMaxSize = operateProperties.getBatchOperationMaxSize();
+    initialBatchSize = operateProperties.getBatchOperationMaxSize();
   }
 
   @Override
   @After
   public void after() {
-    operateProperties.setBatchOperationMaxSize(initialBatchOperationMaxSize);
+    operateProperties.setBatchOperationMaxSize(initialBatchSize);
 
     super.after();
   }
 
   @Test
   public void testCanMigrateZeebeUserTask() throws Exception {
-    final var processDefinitionKey =
+    final var definitionKey =
         tester
             .deployProcess("three-zeebe-user-tasks.bpmn")
             .waitUntil()
@@ -102,12 +102,12 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
     final var beforeUserTasks = userTaskReader.getUserTasks();
     final var userTask1 =
         beforeUserTasks.stream()
-            .filter(u -> "UserTask-1".equals(u.getFlowNodeBpmnId()))
+            .filter(u -> "UserTask-1".equals(u.getBpmnId()))
             .findFirst()
             .get();
     final var userTask3 =
         beforeUserTasks.stream()
-            .filter(u -> "UserTask-3".equals(u.getFlowNodeBpmnId()))
+            .filter(u -> "UserTask-3".equals(u.getBpmnId()))
             .findFirst()
             .get();
     final ListViewQueryDto query = createGetAllProcessInstancesQuery();
@@ -118,7 +118,7 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
             .setQuery(query)
             .setMigrationPlan(
                 new MigrationPlanDto()
-                    .setTargetProcessDefinitionKey(String.valueOf(processDefinitionKey))
+                    .setTargetProcessDefinitionKey(String.valueOf(definitionKey))
                     .setMappingInstructions(
                         List.of(
                             new MigrationPlanDto.MappingInstruction()
@@ -147,13 +147,13 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
     final var afterUserTasks = userTaskReader.getUserTasks();
     final var afterUserTask1 =
         afterUserTasks.stream()
-            .filter(u -> "UserTask-1".equals(u.getFlowNodeBpmnId()))
+            .filter(u -> "UserTask-1".equals(u.getBpmnId()))
             .findFirst()
             .get();
     assertThat(userTask1.getKey()).isNotEqualTo(afterUserTask1.getKey());
     final var afterUserTask3 =
         afterUserTasks.stream()
-            .filter(u -> "UserTask-3".equals(u.getFlowNodeBpmnId()))
+            .filter(u -> "UserTask-3".equals(u.getBpmnId()))
             .findFirst()
             .get();
     assertThat(userTask3.getKey()).isEqualTo(afterUserTask3.getKey());

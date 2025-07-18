@@ -143,7 +143,7 @@ public class TaskStoreOpenSearch implements TaskStore {
 
     final Query.Builder processInstanceIdQuery = new Query.Builder();
     processInstanceIdQuery.term(
-        t -> t.field(TaskTemplate.PROCESS_DEFINITION_ID).value(FieldValue.of(processDefinitionId)));
+        t -> t.field(TaskTemplate.DEFINITION_ID).value(FieldValue.of(processDefinitionId)));
 
     final SearchRequest.Builder searchRequest =
         OpenSearchUtil.createSearchRequest(taskTemplate)
@@ -500,7 +500,7 @@ public class TaskStoreOpenSearch implements TaskStore {
       taskDefinitionQ = new Query.Builder();
       taskDefinitionQ.term(
           t ->
-              t.field(TaskTemplate.FLOW_NODE_BPMN_ID)
+              t.field(TaskTemplate.BPMN_ID)
                   .value(FieldValue.of(query.getTaskDefinitionId())));
     }
 
@@ -571,7 +571,7 @@ public class TaskStoreOpenSearch implements TaskStore {
       processDefinitionIdQ = new Query.Builder();
       processDefinitionIdQ.term(
           t ->
-              t.field(TaskTemplate.PROCESS_DEFINITION_ID)
+              t.field(TaskTemplate.DEFINITION_ID)
                   .value(FieldValue.of(query.getProcessDefinitionId())));
     }
 
