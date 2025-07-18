@@ -28,7 +28,7 @@ import io.camunda.zeebe.engine.state.instance.DbTimerInstanceState;
 import io.camunda.zeebe.engine.state.message.DbMessageState;
 import io.camunda.zeebe.engine.state.message.DbMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.DbProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.time.InstantSource;
 
@@ -49,8 +49,8 @@ public final class ScheduledTaskDbState implements ScheduledTaskState {
       final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId,
-      final TransientPendingSubscriptionState transientMessageSubscriptionState,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final TransientSubscriptionState transientMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final InstantSource clock) {
     distributionState = new DbDistributionState(zeebeDb, transactionContext);
     messageState = new DbMessageState(zeebeDb, transactionContext, partitionId);

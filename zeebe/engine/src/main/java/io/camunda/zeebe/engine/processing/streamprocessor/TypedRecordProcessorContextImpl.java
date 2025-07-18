@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.ScheduledTaskDbState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
 import io.camunda.zeebe.stream.api.RecordProcessorContext;
@@ -33,8 +33,8 @@ public class TypedRecordProcessorContextImpl implements TypedRecordProcessorCont
   private final Writers writers;
   private final InterPartitionCommandSender partitionCommandSender;
   private final EngineConfiguration config;
-  private final TransientPendingSubscriptionState transientMessageSubscriptionState;
-  private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
+  private final TransientSubscriptionState transientMessageSubscriptionState;
+  private final TransientSubscriptionState transientProcessMessageSubscriptionState;
   private final ControllableStreamClock clock;
   private final SecurityConfiguration securityConfig;
   private final MeterRegistry meterRegistry;
@@ -47,8 +47,8 @@ public class TypedRecordProcessorContextImpl implements TypedRecordProcessorCont
     partitionId = context.getPartitionId();
     scheduleService = context.getScheduleService();
     zeebeDb = context.getZeebeDb();
-    transientMessageSubscriptionState = new TransientPendingSubscriptionState();
-    transientProcessMessageSubscriptionState = new TransientPendingSubscriptionState();
+    transientMessageSubscriptionState = new TransientSubscriptionState();
+    transientProcessMessageSubscriptionState = new TransientSubscriptionState();
     clock = Objects.requireNonNull(context.getClock());
     processingState =
         new ProcessingDbState(
@@ -120,7 +120,7 @@ public class TypedRecordProcessorContextImpl implements TypedRecordProcessorCont
   }
 
   @Override
-  public TransientPendingSubscriptionState getTransientProcessMessageSubscriptionState() {
+  public TransientSubscriptionState getTransientProcessMessageSubscriptionState() {
     return transientProcessMessageSubscriptionState;
   }
 

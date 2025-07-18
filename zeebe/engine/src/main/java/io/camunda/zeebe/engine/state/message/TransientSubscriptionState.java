@@ -25,25 +25,25 @@ import java.util.stream.Collectors;
  * which last sent time was updated so that those entries should not have been returned) and already
  * removed entries. For the intended use, this is not a problem.
  */
-public final class TransientPendingSubscriptionState {
+public final class TransientSubscriptionState {
 
   // Reconsider thread-safety implications when changing the map implementation.
-  private final Map<PendingSubscription, Long> pending = new ConcurrentHashMap<>();
+  private final Map<PendingSubscription, Long> subscriptionTimestamps = new ConcurrentHashMap<>();
 
   public void add(final PendingSubscription pendingSubscription, final long lastSentTime) {
-    pending.put(pendingSubscription, lastSentTime);
+    subscriptionTimestamps.put(pendingSubscription, lastSentTime);
   }
 
   public void update(final PendingSubscription pendingSubscription, final long lastSentTime) {
-    pending.put(pendingSubscription, lastSentTime);
+    subscriptionTimestamps.put(pendingSubscription, lastSentTime);
   }
 
   public void remove(final PendingSubscription pendingSubscription) {
-    pending.remove(pendingSubscription);
+    subscriptionTimestamps.remove(pendingSubscription);
   }
 
   Iterable<PendingSubscription> entriesBefore(final long deadline) {
-    return pending.entrySet().stream()
+    return subscriptionTimestamps.entrySet().stream()
         .sorted(Map.Entry.comparingByValue())
         .takeWhile(entry -> entry.getValue() < deadline)
         .map(Entry::getKey)

@@ -39,7 +39,7 @@ import io.camunda.zeebe.engine.state.message.DbMessageStartEventSubscriptionStat
 import io.camunda.zeebe.engine.state.message.DbMessageState;
 import io.camunda.zeebe.engine.state.message.DbMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.DbProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.metrics.DbUsageMetricState;
 import io.camunda.zeebe.engine.state.migration.DbMigrationState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
@@ -125,7 +125,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
   private final MutableBatchOperationState batchOperationState;
   private final MutableMembershipState membershipState;
   private final MutableUsageMetricState usageMetricState;
-  private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
+  private final TransientSubscriptionState transientProcessMessageSubscriptionState;
   private final int partitionId;
 
   public ProcessingDbState(
@@ -133,8 +133,8 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
       final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final KeyGenerator keyGenerator,
-      final TransientPendingSubscriptionState transientMessageSubscriptionState,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final TransientSubscriptionState transientMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final EngineConfiguration config,
       final InstantSource clock) {
     this.partitionId = partitionId;
@@ -373,7 +373,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
   }
 
   @Override
-  public TransientPendingSubscriptionState getTransientPendingSubscriptionState() {
+  public TransientSubscriptionState getTransientPendingSubscriptionState() {
     return transientProcessMessageSubscriptionState;
   }
 

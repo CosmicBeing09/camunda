@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.immutable.PendingProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
@@ -30,7 +30,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
 
   private MutableProcessMessageSubscriptionState persistentState;
   private PendingProcessMessageSubscriptionState pendingSubscriptionState;
-  private TransientPendingSubscriptionState transientSubscriptionState;
+  private TransientSubscriptionState transientSubscriptionState;
 
   @Before
   public void setUp() {

@@ -17,7 +17,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.immutable.PendingProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
@@ -47,13 +47,13 @@ public final class DbProcessMessageSubscriptionState
           DbCompositeKey<DbLong, DbTenantAwareKey<DbString>>, ProcessMessageSubscription>
       subscriptionColumnFamily;
 
-  private final TransientPendingSubscriptionState transientState;
+  private final TransientSubscriptionState transientState;
   private final InstantSource clock;
 
   public DbProcessMessageSubscriptionState(
       final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final InstantSource clock) {
     this.clock = clock;
     elementInstanceKey = new DbLong();

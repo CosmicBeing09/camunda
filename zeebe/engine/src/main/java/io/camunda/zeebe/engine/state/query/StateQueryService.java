@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.QueryService;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -84,8 +84,8 @@ public final class StateQueryService implements QueryService {
               () -> {
                 throw new UnsupportedOperationException("Not allowed to generate a new key");
               },
-              new TransientPendingSubscriptionState(),
-              new TransientPendingSubscriptionState(),
+              new TransientSubscriptionState(),
+              new TransientSubscriptionState(),
               new EngineConfiguration(),
               clock);
     }

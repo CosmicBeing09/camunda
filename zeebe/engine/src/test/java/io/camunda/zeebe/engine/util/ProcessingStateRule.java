@@ -11,7 +11,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -48,8 +48,8 @@ public final class ProcessingStateRule extends ExternalResource {
             db,
             context,
             keyGenerator,
-            new TransientPendingSubscriptionState(),
-            new TransientPendingSubscriptionState(),
+            new TransientSubscriptionState(),
+            new TransientSubscriptionState(),
             new EngineConfiguration(),
             InstantSource.system());
   }
