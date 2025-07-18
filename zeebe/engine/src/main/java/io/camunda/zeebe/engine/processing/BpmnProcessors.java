@@ -85,7 +85,7 @@ public final class BpmnProcessors {
     final var bpmnStreamProcessor =
         new BpmnStreamProcessor(
             bpmnBehaviors, processingState, writers, processEngineMetrics, config);
-    addBpmnStepProcessor(typedRecordProcessors, bpmnStreamProcessor);
+    addBpmnElementCommandProcessors(typedRecordProcessors, bpmnStreamProcessor);
 
     addMessageStreamProcessors(
         typedRecordProcessors,
@@ -145,16 +145,16 @@ public final class BpmnProcessors {
         new ProcessInstanceCancelProcessor(processingState, writers, authCheckBehavior));
   }
 
-  private static void addBpmnStepProcessor(
+  private static void addBpmnElementCommandProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final BpmnStreamProcessor bpmnStepProcessor) {
+      final BpmnStreamProcessor bpmnStreamProcessor) {
 
     Arrays.stream(ProcessInstanceIntent.values())
         .filter(ProcessInstanceIntent::isBpmnElementCommand)
         .forEach(
             intent ->
                 typedRecordProcessors.onCommand(
-                    ValueType.PROCESS_INSTANCE, intent, bpmnStepProcessor));
+                    ValueType.PROCESS_INSTANCE, intent, bpmnStreamProcessor));
   }
 
   private static void addMessageStreamProcessors(
