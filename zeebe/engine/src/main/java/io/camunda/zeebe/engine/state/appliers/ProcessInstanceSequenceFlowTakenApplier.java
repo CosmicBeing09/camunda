@@ -11,13 +11,13 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSeq
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 
 /** Applies state changes for `ProcessInstance:Sequence_Flow_Taken` */
 final class ProcessInstanceSequenceFlowTakenApplier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
   private final MutableProcessState processState;
@@ -30,7 +30,7 @@ final class ProcessInstanceSequenceFlowTakenApplier
   }
 
   @Override
-  public void applyState(final long key, final ProcessInstanceRecord value) {
+  public void applyState(final long key, final WorkflowInstanceRecord value) {
     // We need to keep track of the active sequence flows to not complete the process instances to
     // early. On completing of the process instance we verify that we have no more active element
     // instances and active sequence flows. Since sequence flows are no elements, we don't want to

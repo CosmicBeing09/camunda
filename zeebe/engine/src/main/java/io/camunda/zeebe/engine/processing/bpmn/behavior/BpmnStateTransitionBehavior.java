@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWr
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceBatchRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -40,8 +40,8 @@ public final class BpmnStateTransitionBehavior {
   private static final String NO_PROCESS_FOUND_MESSAGE =
       "Expected to find a deployed process for process id '%s', but none found.";
 
-  private final ProcessInstanceRecord childInstanceRecord = new ProcessInstanceRecord();
-  private final ProcessInstanceRecord followUpInstanceRecord = new ProcessInstanceRecord();
+  private final WorkflowInstanceRecord childInstanceRecord = new WorkflowInstanceRecord();
+  private final WorkflowInstanceRecord followUpInstanceRecord = new WorkflowInstanceRecord();
 
   private final IdGenerator keyGenerator;
   private final BpmnStateBehavior stateBehavior;

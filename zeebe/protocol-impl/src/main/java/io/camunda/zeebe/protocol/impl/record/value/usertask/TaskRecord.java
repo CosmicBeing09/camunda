@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.protocol.impl.record.value.usertask;
 
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_BPMN_PROCESS_ID;
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_INSTANCE_KEY;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord.PROP_WORKFLOW_DEFINITION_ID;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord.PROP_PROCESS_INSTANCE_KEY;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -35,7 +35,7 @@ import java.util.stream.StreamSupport;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
-public final class UserTaskRecord extends UnifiedRecordValue implements UserTaskRecordValue {
+public final class TaskRecord extends UnifiedRecordValue implements UserTaskRecordValue {
 
   public static final DirectBuffer NO_HEADERS = new UnsafeBuffer(MsgPackHelper.EMTPY_OBJECT);
 
@@ -61,7 +61,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
    * their corresponding getter methods. This map enables efficient comparison and updates of
    * attribute values dynamically based on their names.
    *
-   * @implNote If a new updatable attribute is introduced in the {@link UserTaskRecord} class:
+   * @implNote If a new updatable attribute is introduced in the {@link TaskRecord} class:
    *     <ul>
    *       <li>The corresponding getter method must also be added to this map.
    *       <li>To ensure efficiency, prefer getters that return a {@code DirectBuffer}
@@ -69,17 +69,17 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
    *           during comparisons.
    *     </ul>
    */
-  private static final Map<String, Function<UserTaskRecord, ?>> ATTRIBUTE_GETTER_MAP =
+  private static final Map<String, Function<TaskRecord, ?>> ATTRIBUTE_GETTER_MAP =
       Map.of(
-          ASSIGNEE, UserTaskRecord::getAssigneeBuffer,
-          CANDIDATE_GROUPS, UserTaskRecord::getCandidateGroupsList,
-          CANDIDATE_USERS, UserTaskRecord::getCandidateUsersList,
-          DUE_DATE, UserTaskRecord::getDueDateBuffer,
-          FOLLOW_UP_DATE, UserTaskRecord::getFollowUpDateBuffer,
-          PRIORITY, UserTaskRecord::getPriority,
-          VARIABLES, UserTaskRecord::getVariablesBuffer);
+          ASSIGNEE, TaskRecord::getAssigneeBuffer,
+          CANDIDATE_GROUPS, TaskRecord::getCandidateGroupsList,
+          CANDIDATE_USERS, TaskRecord::getCandidateUsersList,
+          DUE_DATE, TaskRecord::getDueDateBuffer,
+          FOLLOW_UP_DATE, TaskRecord::getFollowUpDateBuffer,
+          PRIORITY, TaskRecord::getPriority,
+          VARIABLES, TaskRecord::getVariablesBuffer);
 
-  private final LongProperty userTaskKeyProp = new LongProperty("userTaskKey", -1);
+  private final LongProperty taskKeyProp = new LongProperty("userTaskKey", -1);
   private final StringProperty assigneeProp = new StringProperty(ASSIGNEE, EMPTY_STRING);
   private final ArrayProperty<StringValue> candidateGroupsListProp =
       new ArrayProperty<>(CANDIDATE_GROUPS, StringValue::new);
@@ -97,7 +97,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   private final LongProperty processInstanceKeyProp =
       new LongProperty(PROP_PROCESS_INSTANCE_KEY, -1L);
   private final StringProperty bpmnProcessIdProp =
-      new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID, EMPTY_STRING);
+      new StringProperty(PROP_WORKFLOW_DEFINITION_ID, EMPTY_STRING);
   private final IntegerProperty processDefinitionVersionProp =
       new IntegerProperty("processDefinitionVersion", -1);
   private final LongProperty processDefinitionKeyProp =
@@ -135,8 +135,8 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
    * correction. If a listener applies the same correction multiple times, subsequent `CORRECTED`
    * events will not contain duplicate changes.
    *
-   * @see #wrapChangedAttributes(UserTaskRecord, boolean)
-   * @see #wrapChangedAttributesIfValueChanged(UserTaskRecord)
+   * @see #wrapChangedAttributes(TaskRecord, boolean)
+   * @see #wrapChangedAttributesIfValueChanged(TaskRecord)
    * @see #correctAttributes(List, JobResultCorrections)
    */
   private final ArrayProperty<StringValue> changedAttributesProp =
@@ -147,9 +147,9 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   private final IntegerProperty priorityProp = new IntegerProperty(PRIORITY, 50);
   private final StringProperty deniedReasonProp = new StringProperty("deniedReason", EMPTY_STRING);
 
-  public UserTaskRecord() {
+  public TaskRecord() {
     super(22);
-    declareProperty(userTaskKeyProp)
+    declareProperty(taskKeyProp)
         .declareProperty(assigneeProp)
         .declareProperty(candidateGroupsListProp)
         .declareProperty(candidateUsersListProp)
@@ -173,9 +173,9 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
         .declareProperty(deniedReasonProp);
   }
 
-  /** Like {@link #wrap(UserTaskRecord)} but does not set the variables. */
-  public void wrapWithoutVariables(final UserTaskRecord record) {
-    userTaskKeyProp.setValue(record.getUserTaskKey());
+  /** Like {@link #wrap(TaskRecord)} but does not set the variables. */
+  public void wrapWithoutVariables(final TaskRecord record) {
+    taskKeyProp.setValue(record.getUserTaskKey());
     assigneeProp.setValue(record.getAssigneeBuffer());
     setCandidateGroupsList(record.getCandidateGroupsList());
     setCandidateUsersList(record.getCandidateUsersList());
@@ -205,20 +205,20 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
    * @implNote This method uses variable assignment. So changing a non-primitive in one record also
    *     affects the other. If you need to separate the records, use {@link #copy()} instead.
    */
-  public void wrap(final UserTaskRecord record) {
+  public void wrap(final TaskRecord record) {
     wrapWithoutVariables(record);
     variableProp.setValue(record.getVariablesBuffer());
   }
 
   /** Returns a full copy of the record. */
-  public UserTaskRecord copy() {
-    final UserTaskRecord copy = new UserTaskRecord();
+  public TaskRecord copy() {
+    final TaskRecord copy = new TaskRecord();
     copy.copyFrom(this);
     return copy;
   }
 
   /**
-   * Updates the attributes of this {@link UserTaskRecord} based on the given record.
+   * Updates the attributes of this {@link TaskRecord} based on the given record.
    *
    * @apiNote If {@code includeTrackingProperties} is {@code true}, all attributes in the given
    *     record's `changedAttributes` list will be added to this record's `changedAttributesProp`,
@@ -228,7 +228,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
    * @param includeTrackingProperties whether to include all changed attributes in the tracking list
    */
   public void wrapChangedAttributes(
-      final UserTaskRecord record, final boolean includeTrackingProperties) {
+      final TaskRecord record, final boolean includeTrackingProperties) {
     if (includeTrackingProperties) {
       changedAttributesProp.reset();
     }
@@ -245,12 +245,12 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   }
 
   /**
-   * Updates the attributes of this {@link UserTaskRecord} based on the given record and adds the
+   * Updates the attributes of this {@link TaskRecord} based on the given record and adds the
    * attribute to `changedAttributesProp` only if its value was actually changed.
    *
    * @param record the record containing the changed attributes list and new attribute values
    */
-  public void wrapChangedAttributesIfValueChanged(final UserTaskRecord record) {
+  public void wrapChangedAttributesIfValueChanged(final TaskRecord record) {
     changedAttributesProp.reset();
 
     record.getChangedAttributes().stream()
@@ -262,7 +262,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
             });
   }
 
-  private void updateAttribute(final String attributeName, final UserTaskRecord record) {
+  private void updateAttribute(final String attributeName, final TaskRecord record) {
     switch (attributeName) {
       case ASSIGNEE:
         setAssignee(record.getAssigneeBuffer());
@@ -317,7 +317,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
 
   @Override
   public long getUserTaskKey() {
-    return userTaskKeyProp.getValue();
+    return taskKeyProp.getValue();
   }
 
   @Override
@@ -409,7 +409,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return processDefinitionKeyProp.getValue();
   }
 
-  public UserTaskRecord setProcessDefinitionKey(final long processDefinitionKey) {
+  public TaskRecord setProcessDefinitionKey(final long processDefinitionKey) {
     processDefinitionKeyProp.setValue(processDefinitionKey);
     return this;
   }
@@ -419,128 +419,128 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return priorityProp.getValue();
   }
 
-  public UserTaskRecord setPriority(final int priority) {
+  public TaskRecord setPriority(final int priority) {
     priorityProp.setValue(priority);
     return this;
   }
 
-  public UserTaskRecord setProcessDefinitionVersion(final int version) {
+  public TaskRecord setProcessDefinitionVersion(final int version) {
     processDefinitionVersionProp.setValue(version);
     return this;
   }
 
-  public UserTaskRecord setBpmnProcessId(final String bpmnProcessId) {
+  public TaskRecord setBpmnProcessId(final String bpmnProcessId) {
     bpmnProcessIdProp.setValue(bpmnProcessId);
     return this;
   }
 
-  public UserTaskRecord setBpmnProcessId(final DirectBuffer bpmnProcessId) {
+  public TaskRecord setBpmnProcessId(final DirectBuffer bpmnProcessId) {
     bpmnProcessIdProp.setValue(bpmnProcessId);
     return this;
   }
 
-  public UserTaskRecord setElementInstanceKey(final long elementInstanceKey) {
+  public TaskRecord setElementInstanceKey(final long elementInstanceKey) {
     elementInstanceKeyProp.setValue(elementInstanceKey);
     return this;
   }
 
-  public UserTaskRecord setElementId(final String elementId) {
+  public TaskRecord setElementId(final String elementId) {
     elementIdProp.setValue(elementId);
     return this;
   }
 
-  public UserTaskRecord setElementId(final DirectBuffer elementId) {
+  public TaskRecord setElementId(final DirectBuffer elementId) {
     elementIdProp.setValue(elementId);
     return this;
   }
 
-  public UserTaskRecord setCreationTimestamp(final long creationTimestamp) {
+  public TaskRecord setCreationTimestamp(final long creationTimestamp) {
     creationTimestampProp.setValue(creationTimestamp);
     return this;
   }
 
-  public UserTaskRecord setCustomHeaders(final DirectBuffer buffer) {
+  public TaskRecord setCustomHeaders(final DirectBuffer buffer) {
     customHeadersProp.setValue(buffer, 0, buffer.capacity());
     return this;
   }
 
-  public UserTaskRecord setExternalFormReference(final DirectBuffer externalFormReference) {
+  public TaskRecord setExternalFormReference(final DirectBuffer externalFormReference) {
     externalFormReferenceProp.setValue(externalFormReference);
     return this;
   }
 
-  public UserTaskRecord setExternalFormReference(final String externalFormReference) {
+  public TaskRecord setExternalFormReference(final String externalFormReference) {
     externalFormReferenceProp.setValue(externalFormReference);
     return this;
   }
 
-  public UserTaskRecord setAction(final String action) {
+  public TaskRecord setAction(final String action) {
     actionProp.setValue(action);
     return this;
   }
 
-  public UserTaskRecord setAction(final DirectBuffer action) {
+  public TaskRecord setAction(final DirectBuffer action) {
     actionProp.setValue(action);
     return this;
   }
 
-  public UserTaskRecord setChangedAttributes(final List<String> changedAttributes) {
+  public TaskRecord setChangedAttributes(final List<String> changedAttributes) {
     changedAttributesProp.reset();
     changedAttributes.forEach(this::addChangedAttribute);
     return this;
   }
 
-  public UserTaskRecord setFormKey(final long formKey) {
+  public TaskRecord setFormKey(final long formKey) {
     formKeyProp.setValue(formKey);
     return this;
   }
 
-  public UserTaskRecord setFollowUpDate(final String followUpDate) {
+  public TaskRecord setFollowUpDate(final String followUpDate) {
     followUpDateProp.setValue(followUpDate);
     return this;
   }
 
-  public UserTaskRecord setFollowUpDate(final DirectBuffer followUpDate) {
+  public TaskRecord setFollowUpDate(final DirectBuffer followUpDate) {
     followUpDateProp.setValue(followUpDate);
     return this;
   }
 
-  public UserTaskRecord setDueDate(final String dueDate) {
+  public TaskRecord setDueDate(final String dueDate) {
     dueDateProp.setValue(dueDate);
     return this;
   }
 
-  public UserTaskRecord setDueDate(final DirectBuffer dueDate) {
+  public TaskRecord setDueDate(final DirectBuffer dueDate) {
     dueDateProp.setValue(dueDate);
     return this;
   }
 
-  public UserTaskRecord setCandidateUsersList(final List<String> candidateUsers) {
+  public TaskRecord setCandidateUsersList(final List<String> candidateUsers) {
     candidateUsersListProp.reset();
     candidateUsers.forEach(
         tenantId -> candidateUsersListProp.add().wrap(BufferUtil.wrapString(tenantId)));
     return this;
   }
 
-  public UserTaskRecord setCandidateGroupsList(final List<String> candidateGroups) {
+  public TaskRecord setCandidateGroupsList(final List<String> candidateGroups) {
     candidateGroupsListProp.reset();
     candidateGroups.forEach(
         tenantId -> candidateGroupsListProp.add().wrap(BufferUtil.wrapString(tenantId)));
     return this;
   }
 
-  public UserTaskRecord setAssignee(final String assignee) {
+  public TaskRecord setAssignee(final String assignee) {
     assigneeProp.setValue(assignee);
     return this;
   }
 
-  public UserTaskRecord setAssignee(final DirectBuffer assignee) {
+  public TaskRecord setAssignee(final DirectBuffer assignee) {
     assigneeProp.setValue(assignee);
     return this;
   }
 
-  public UserTaskRecord setUserTaskKey(final long userTaskKey) {
-    userTaskKeyProp.setValue(userTaskKey);
+  public TaskRecord setUserTaskKey(final long userTaskKey) {
+    taskKeyProp.setValue(userTaskKey);
     return this;
   }
 
@@ -548,42 +548,42 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return bufferAsString(deniedReasonProp.getValue());
   }
 
-  public UserTaskRecord setDeniedReason(final String deniedReason) {
+  public TaskRecord setDeniedReason(final String deniedReason) {
     deniedReasonProp.setValue(deniedReason);
     return this;
   }
 
-  public UserTaskRecord setAssigneeChanged() {
+  public TaskRecord setAssigneeChanged() {
     changedAttributesProp.add().wrap(ASSIGNEE_VALUE);
     return this;
   }
 
-  public UserTaskRecord setCandidateGroupsChanged() {
+  public TaskRecord setCandidateGroupsChanged() {
     changedAttributesProp.add().wrap(CANDIDATE_GROUPS_VALUE);
     return this;
   }
 
-  public UserTaskRecord setCandidateUsersChanged() {
+  public TaskRecord setCandidateUsersChanged() {
     changedAttributesProp.add().wrap(CANDIDATE_USERS_VALUE);
     return this;
   }
 
-  public UserTaskRecord setDueDateChanged() {
+  public TaskRecord setDueDateChanged() {
     changedAttributesProp.add().wrap(DUE_DATE_VALUE);
     return this;
   }
 
-  public UserTaskRecord setFollowUpDateChanged() {
+  public TaskRecord setFollowUpDateChanged() {
     changedAttributesProp.add().wrap(FOLLOW_UP_DATE_VALUE);
     return this;
   }
 
-  public UserTaskRecord setPriorityChanged() {
+  public TaskRecord setPriorityChanged() {
     changedAttributesProp.add().wrap(PRIORITY_VALUE);
     return this;
   }
 
-  public UserTaskRecord setVariablesChanged() {
+  public TaskRecord setVariablesChanged() {
     changedAttributesProp.add().wrap(VARIABLES_VALUE);
     return this;
   }
@@ -593,7 +593,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return bufferAsString(tenantIdProp.getValue());
   }
 
-  public UserTaskRecord setTenantId(final String tenantId) {
+  public TaskRecord setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
     return this;
   }
@@ -603,7 +603,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return MsgPackConverter.convertToMap(variableProp.getValue());
   }
 
-  public UserTaskRecord setVariables(final DirectBuffer variables) {
+  public TaskRecord setVariables(final DirectBuffer variables) {
     variableProp.setValue(variables);
     return this;
   }
@@ -618,36 +618,36 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return changedAttributesProp;
   }
 
-  public UserTaskRecord setChangedAttributesProp(
+  public TaskRecord setChangedAttributesProp(
       final ArrayProperty<StringValue> changedAttributes) {
     changedAttributesProp.reset();
     changedAttributes.forEach(attribute -> changedAttributesProp.add().wrap(attribute));
     return this;
   }
 
-  public UserTaskRecord addChangedAttribute(final String attribute) {
+  public TaskRecord addChangedAttribute(final String attribute) {
     changedAttributesProp.add().wrap(BufferUtil.wrapString(attribute));
     return this;
   }
 
-  public void setDiffAsChangedAttributes(final UserTaskRecord other) {
+  public void setDiffAsChangedAttributes(final TaskRecord other) {
     changedAttributesProp.reset();
     determineChangedAttributes(other).forEach(this::addChangedAttribute);
   }
 
   /**
-   * Determines which attributes have changed between this {@link UserTaskRecord} and another
+   * Determines which attributes have changed between this {@link TaskRecord} and another
    * instance.
    *
    * <p>This method compares all trackable user task attributes and returns a list of attribute
    * names that have different values between the two records.
    *
-   * @param other the {@link UserTaskRecord} to compare against
+   * @param other the {@link TaskRecord} to compare against
    * @return a list of attribute names that have changed
-   * @implNote Attributes are compared using {@link UserTaskRecord#ATTRIBUTE_GETTER_MAP}, ensuring
+   * @implNote Attributes are compared using {@link TaskRecord#ATTRIBUTE_GETTER_MAP}, ensuring
    *     that all supported fields are checked dynamically.
    */
-  public List<String> determineChangedAttributes(final UserTaskRecord other) {
+  public List<String> determineChangedAttributes(final TaskRecord other) {
     return ATTRIBUTE_GETTER_MAP.keySet().stream()
         .sorted()
         .filter(attribute -> isAttributeValueChanged(attribute, other))
@@ -658,7 +658,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return !changedAttributesProp.isEmpty();
   }
 
-  private boolean isAttributeValueChanged(final String attribute, final UserTaskRecord other) {
+  private boolean isAttributeValueChanged(final String attribute, final TaskRecord other) {
     final var attributeGetter = ATTRIBUTE_GETTER_MAP.get(attribute);
     if (attributeGetter == null) {
       return false;
@@ -725,12 +725,12 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return processInstanceKeyProp.getValue();
   }
 
-  public UserTaskRecord setProcessInstanceKey(final long key) {
+  public TaskRecord setProcessInstanceKey(final long key) {
     processInstanceKeyProp.setValue(key);
     return this;
   }
 
-  public UserTaskRecord unsetAssignee() {
+  public TaskRecord unsetAssignee() {
     assigneeProp.setValue(EMPTY_STRING);
     final var changedAttributes = getChangedAttributes();
     changedAttributes.remove(ASSIGNEE);
@@ -738,7 +738,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
     return this;
   }
 
-  public UserTaskRecord resetChangedAttributes() {
+  public TaskRecord resetChangedAttributes() {
     changedAttributesProp.reset();
     return this;
   }

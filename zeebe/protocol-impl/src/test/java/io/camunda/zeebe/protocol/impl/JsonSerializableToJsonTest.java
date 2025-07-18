@@ -65,7 +65,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationTerminateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationVariableInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.resource.ResourceDeletionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
@@ -73,7 +73,7 @@ import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionReco
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.JsonSerializable;
@@ -1652,7 +1652,7 @@ final class JsonSerializableToJsonTest {
               final var processDefinitionPath = List.of(101L, 102L);
               final var callingElementPath = List.of(12345, 67890);
 
-              return new ProcessInstanceRecord()
+              return new WorkflowInstanceRecord()
                   .setElementId(elementId)
                   .setBpmnElementType(bpmnElementType)
                   .setBpmnProcessId(wrapString(bpmnProcessId))
@@ -1692,7 +1692,7 @@ final class JsonSerializableToJsonTest {
       /////////////////////////////////////////////////////////////////////////////////////////////
       {
         "Empty ProcessInstanceRecord",
-        (Supplier<UnifiedRecordValue>) ProcessInstanceRecord::new,
+        (Supplier<UnifiedRecordValue>) WorkflowInstanceRecord::new,
         """
         {
           "bpmnProcessId": "",
@@ -2394,7 +2394,7 @@ final class JsonSerializableToJsonTest {
         "UserTaskRecord",
         (Supplier<UnifiedRecordValue>)
             () ->
-                new UserTaskRecord()
+                new TaskRecord()
                     .setUserTaskKey(123)
                     .setAssignee("myAssignee")
                     .setCandidateGroupsList(List.of("myCandidateGroups"))
@@ -2454,7 +2454,7 @@ final class JsonSerializableToJsonTest {
       /////////////////////////////////////////////////////////////////////////////////////////////
       {
         "Empty UserTaskRecord",
-        (Supplier<UnifiedRecordValue>) UserTaskRecord::new,
+        (Supplier<UnifiedRecordValue>) TaskRecord::new,
         """
       {
         "bpmnProcessId": "",
@@ -2489,7 +2489,7 @@ final class JsonSerializableToJsonTest {
         "UserTaskRecord WithNullableVariable",
         (Supplier<UnifiedRecordValue>)
             () ->
-                new UserTaskRecord()
+                new TaskRecord()
                     .setVariables(
                         new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
         """

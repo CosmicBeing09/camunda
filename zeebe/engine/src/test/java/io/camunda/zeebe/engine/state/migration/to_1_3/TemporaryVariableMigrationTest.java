@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
@@ -156,7 +156,7 @@ public class TemporaryVariableMigrationTest {
     public void eventSubProcessGetsMigratedCorrectly() {
       // given
       final long flowScopeKey = 200L;
-      final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+      final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
       processInstanceRecord.setBpmnElementType(BpmnElementType.EVENT_SUB_PROCESS);
       processInstanceRecord.setFlowScopeKey(flowScopeKey);
       elementInstanceState.newInstance(

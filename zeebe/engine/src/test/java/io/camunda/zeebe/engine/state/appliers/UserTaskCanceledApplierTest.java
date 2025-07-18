@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -49,7 +49,7 @@ public class UserTaskCanceledApplierTest {
 
     // Initial state of the User Task
     final var initialState =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("initial_user"));
 
@@ -59,7 +59,7 @@ public class UserTaskCanceledApplierTest {
 
     // Simulate an update event with a change
     final var updateAttempt =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("update_user"))
             .setCandidateUsersChanged();
@@ -98,7 +98,7 @@ public class UserTaskCanceledApplierTest {
     final var userTaskKey = 1;
 
     // Initial state of the User Task
-    final var initialState = new UserTaskRecord().setUserTaskKey(userTaskKey);
+    final var initialState = new TaskRecord().setUserTaskKey(userTaskKey);
 
     // Apply initial task creation
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);

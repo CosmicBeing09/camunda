@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.appliers;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowElementContainer;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 
 public final class BufferedStartMessageEventStateApplier {
@@ -32,7 +32,7 @@ public final class BufferedStartMessageEventStateApplier {
    *
    * @param record the record of the process instance that has ended
    */
-  public void removeMessageLock(final ProcessInstanceRecord record) {
+  public void removeMessageLock(final WorkflowInstanceRecord record) {
 
     if (record.getBpmnElementType() == BpmnElementType.PROCESS) {
       final var processElement = getProcessElement(record);
@@ -43,7 +43,7 @@ public final class BufferedStartMessageEventStateApplier {
     }
   }
 
-  private ExecutableFlowElementContainer getProcessElement(final ProcessInstanceRecord record) {
+  private ExecutableFlowElementContainer getProcessElement(final WorkflowInstanceRecord record) {
     return processState.getFlowElement(
         record.getProcessDefinitionKey(),
         record.getTenantId(),
@@ -51,7 +51,7 @@ public final class BufferedStartMessageEventStateApplier {
         ExecutableFlowElementContainer.class);
   }
 
-  private void removeProcessInstanceMessageLock(final ProcessInstanceRecord record) {
+  private void removeProcessInstanceMessageLock(final WorkflowInstanceRecord record) {
 
     final var processInstanceKey = record.getProcessInstanceKey();
     final var correlationKey = messageState.getProcessInstanceCorrelationKey(processInstanceKey);

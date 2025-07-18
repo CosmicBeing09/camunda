@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.batchoperation.handlers;
 
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.batchoperation.PersistedBatchOperation;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ public class CancelProcessInstanceBatchOperationExecutor implements BatchOperati
   public void execute(final long itemKey, final PersistedBatchOperation batchOperation) {
     LOGGER.trace("Cancelling process instance with key '{}'", itemKey);
 
-    final var command = new ProcessInstanceRecord();
+    final var command = new WorkflowInstanceRecord();
     command.setProcessInstanceKey(itemKey);
     commandWriter.appendFollowUpCommand(
         itemKey,

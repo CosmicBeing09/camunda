@@ -10,17 +10,17 @@ package io.camunda.zeebe.engine.state.mutable;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.AwaitProcessInstanceResultMetadata;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import java.util.function.Consumer;
 import org.agrona.DirectBuffer;
 
 public interface MutableElementInstanceState extends ElementInstanceState {
 
-  ElementInstance newInstance(long key, ProcessInstanceRecord value, ProcessInstanceIntent state);
+  ElementInstance newInstance(long key, WorkflowInstanceRecord value, ProcessInstanceIntent state);
 
   ElementInstance newInstance(
-      ElementInstance parent, long key, ProcessInstanceRecord value, ProcessInstanceIntent state);
+      ElementInstance parent, long key, WorkflowInstanceRecord value, ProcessInstanceIntent state);
 
   void removeInstance(long key);
 

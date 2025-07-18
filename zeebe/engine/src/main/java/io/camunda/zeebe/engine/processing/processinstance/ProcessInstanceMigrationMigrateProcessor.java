@@ -37,7 +37,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.msgpack.spec.MsgPackHelper;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -325,7 +325,7 @@ public class ProcessInstanceMigrationMigrateProcessor
 
     sequenceFlows.forEach(
         sequenceFlow -> {
-          final var sequenceFlowRecord = new ProcessInstanceRecord();
+          final var sequenceFlowRecord = new WorkflowInstanceRecord();
           sequenceFlowRecord.copyFrom(elementInstanceRecord);
           sequenceFlowRecord
               .setElementId(sequenceFlow.getId())
@@ -528,7 +528,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       final long incidentKey,
       final DeployedProcess targetProcessDefinition,
       final String targetElementId,
-      final ProcessInstanceRecord elementInstanceRecord) {
+      final WorkflowInstanceRecord elementInstanceRecord) {
     final var incidentRecord = incidentState.getIncidentRecord(incidentKey);
     if (incidentRecord == null) {
       throw new SafetyCheckFailedException(

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordValue;
@@ -123,8 +123,8 @@ public final class BoundaryEventTest {
             .betweenProcessInstance(processInstanceKey)
             .limit(
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("timer")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("timer")
                         && r.getIntent() == ProcessInstanceIntent.ELEMENT_ACTIVATING)
             .asList();
 
@@ -245,8 +245,8 @@ public final class BoundaryEventTest {
         RecordingExporter.records()
             .limit(
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("timer")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("timer")
                         && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED)
             .asList();
 
@@ -297,8 +297,8 @@ public final class BoundaryEventTest {
         RecordingExporter.records()
             .limit(
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("task")
                         && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED)
             .asList();
 

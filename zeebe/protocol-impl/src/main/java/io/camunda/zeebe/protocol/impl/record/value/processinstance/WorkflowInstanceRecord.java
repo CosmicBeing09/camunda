@@ -27,10 +27,10 @@ import java.util.ArrayList;
 import java.util.List;
 import org.agrona.DirectBuffer;
 
-public final class ProcessInstanceRecord extends UnifiedRecordValue
+public final class WorkflowInstanceRecord extends UnifiedRecordValue
     implements ProcessInstanceRecordValue {
 
-  public static final String PROP_PROCESS_BPMN_PROCESS_ID = "bpmnProcessId";
+  public static final String PROP_WORKFLOW_DEFINITION_ID = "bpmnProcessId";
   public static final String PROP_PROCESS_INSTANCE_KEY = "processInstanceKey";
   public static final String PROP_PROCESS_ELEMENT_ID = "elementId";
   public static final String PROP_PROCESS_VERSION = "version";
@@ -41,7 +41,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
   public static final String PROP_TENANT_ID = "tenantId";
 
   private final StringProperty bpmnProcessIdProp =
-      new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID, "");
+      new StringProperty(PROP_WORKFLOW_DEFINITION_ID, "");
   private final IntegerProperty versionProp = new IntegerProperty(PROP_PROCESS_VERSION, -1);
   private final StringProperty tenantIdProp =
       new StringProperty(PROP_TENANT_ID, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -72,7 +72,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
   private final ArrayProperty<IntegerValue> callingElementPathProp =
       new ArrayProperty<>("callingElementPath", IntegerValue::new);
 
-  public ProcessInstanceRecord() {
+  public WorkflowInstanceRecord() {
     super(14);
     declareProperty(bpmnElementTypeProp)
         .declareProperty(elementIdProp)
@@ -90,7 +90,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
         .declareProperty(callingElementPathProp);
   }
 
-  public void wrap(final ProcessInstanceRecord record) {
+  public void wrap(final WorkflowInstanceRecord record) {
     elementIdProp.setValue(record.getElementIdBuffer());
     bpmnProcessIdProp.setValue(record.getBpmnProcessIdBuffer());
     flowScopeKeyProp.setValue(record.getFlowScopeKey());
@@ -114,7 +114,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return elementIdProp.getValue();
   }
 
-  public ProcessInstanceRecord setBpmnProcessId(
+  public WorkflowInstanceRecord setBpmnProcessId(
       final DirectBuffer directBuffer, final int offset, final int length) {
     bpmnProcessIdProp.setValue(directBuffer, offset, length);
     return this;
@@ -140,7 +140,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return processInstanceKeyProp.getValue();
   }
 
-  public ProcessInstanceRecord setProcessInstanceKey(final long processInstanceKey) {
+  public WorkflowInstanceRecord setProcessInstanceKey(final long processInstanceKey) {
     processInstanceKeyProp.setValue(processInstanceKey);
     return this;
   }
@@ -170,7 +170,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return parentElementInstanceKeyProp.getValue();
   }
 
-  public ProcessInstanceRecord setParentElementInstanceKey(final long parentElementInstanceKey) {
+  public WorkflowInstanceRecord setParentElementInstanceKey(final long parentElementInstanceKey) {
     parentElementInstanceKeyProp.setValue(parentElementInstanceKey);
     return this;
   }
@@ -180,7 +180,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return bpmnEventTypeProp.getValue();
   }
 
-  public ProcessInstanceRecord setBpmnEventType(final BpmnEventType bpmnEventType) {
+  public WorkflowInstanceRecord setBpmnEventType(final BpmnEventType bpmnEventType) {
     bpmnEventTypeProp.setValue(bpmnEventType);
     return this;
   }
@@ -197,7 +197,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return elementInstancePath;
   }
 
-  public ProcessInstanceRecord setElementInstancePath(final List<List<Long>> elementInstancePath) {
+  public WorkflowInstanceRecord setElementInstancePath(final List<List<Long>> elementInstancePath) {
     elementInstancePathProp.reset();
     elementInstancePath.forEach(
         pathEntry -> {
@@ -214,7 +214,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return processDefinitionPath;
   }
 
-  public ProcessInstanceRecord setProcessDefinitionPath(final List<Long> processDefinitionPath) {
+  public WorkflowInstanceRecord setProcessDefinitionPath(final List<Long> processDefinitionPath) {
     processDefinitionPathProp.reset();
     processDefinitionPath.forEach(e -> processDefinitionPathProp.add().setValue(e));
     return this;
@@ -227,67 +227,67 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return callingElementPath;
   }
 
-  public ProcessInstanceRecord setCallingElementPath(final List<Integer> callingElementPath) {
+  public WorkflowInstanceRecord setCallingElementPath(final List<Integer> callingElementPath) {
     callingElementPathProp.reset();
     callingElementPath.forEach(e -> callingElementPathProp.add().setValue(e));
     return this;
   }
 
-  public ProcessInstanceRecord setParentProcessInstanceKey(final long parentProcessInstanceKey) {
+  public WorkflowInstanceRecord setParentProcessInstanceKey(final long parentProcessInstanceKey) {
     parentProcessInstanceKeyProp.setValue(parentProcessInstanceKey);
     return this;
   }
 
-  public ProcessInstanceRecord setBpmnElementType(final BpmnElementType bpmnType) {
+  public WorkflowInstanceRecord setBpmnElementType(final BpmnElementType bpmnType) {
     bpmnElementTypeProp.setValue(bpmnType);
     return this;
   }
 
-  public ProcessInstanceRecord setFlowScopeKey(final long flowScopeKey) {
+  public WorkflowInstanceRecord setFlowScopeKey(final long flowScopeKey) {
     flowScopeKeyProp.setValue(flowScopeKey);
     return this;
   }
 
-  public ProcessInstanceRecord setElementId(final String elementId) {
+  public WorkflowInstanceRecord setElementId(final String elementId) {
     elementIdProp.setValue(elementId);
     return this;
   }
 
-  public ProcessInstanceRecord setElementId(final DirectBuffer elementId) {
+  public WorkflowInstanceRecord setElementId(final DirectBuffer elementId) {
     return setElementId(elementId, 0, elementId.capacity());
   }
 
-  public ProcessInstanceRecord setProcessDefinitionKey(final long processDefinitionKey) {
+  public WorkflowInstanceRecord setProcessDefinitionKey(final long processDefinitionKey) {
     processDefinitionKeyProp.setValue(processDefinitionKey);
     return this;
   }
 
-  public ProcessInstanceRecord setVersion(final int version) {
+  public WorkflowInstanceRecord setVersion(final int version) {
     versionProp.setValue(version);
     return this;
   }
 
-  public ProcessInstanceRecord setBpmnProcessId(final String bpmnProcessId) {
+  public WorkflowInstanceRecord setBpmnProcessId(final String bpmnProcessId) {
     bpmnProcessIdProp.setValue(bpmnProcessId);
     return this;
   }
 
-  public ProcessInstanceRecord setBpmnProcessId(final DirectBuffer directBuffer) {
+  public WorkflowInstanceRecord setBpmnProcessId(final DirectBuffer directBuffer) {
     bpmnProcessIdProp.setValue(directBuffer);
     return this;
   }
 
-  public ProcessInstanceRecord resetElementInstancePath() {
+  public WorkflowInstanceRecord resetElementInstancePath() {
     elementInstancePathProp.reset();
     return this;
   }
 
-  public ProcessInstanceRecord resetCallingElementPath() {
+  public WorkflowInstanceRecord resetCallingElementPath() {
     callingElementPathProp.reset();
     return this;
   }
 
-  public ProcessInstanceRecord resetProcessDefinitionPath() {
+  public WorkflowInstanceRecord resetProcessDefinitionPath() {
     processDefinitionPathProp.reset();
     return this;
   }
@@ -296,7 +296,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return getParentProcessInstanceKey() != -1L;
   }
 
-  public ProcessInstanceRecord setElementId(
+  public WorkflowInstanceRecord setElementId(
       final DirectBuffer elementId, final int offset, final int length) {
     elementIdProp.setValue(elementId, offset, length);
     return this;
@@ -307,7 +307,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     return bufferAsString(tenantIdProp.getValue());
   }
 
-  public ProcessInstanceRecord setTenantId(final String tenantId) {
+  public WorkflowInstanceRecord setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
     return this;
   }

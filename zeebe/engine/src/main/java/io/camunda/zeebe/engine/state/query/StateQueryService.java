@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import java.time.InstantSource;
 import java.util.Optional;
@@ -58,7 +58,7 @@ public final class StateQueryService implements QueryService {
 
     return Optional.ofNullable(state.getElementInstanceState().getInstance(key))
         .map(ElementInstance::getValue)
-        .map(ProcessInstanceRecord::getBpmnProcessIdBuffer);
+        .map(WorkflowInstanceRecord::getBpmnProcessIdBuffer);
   }
 
   @Override

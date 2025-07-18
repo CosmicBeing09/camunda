@@ -62,8 +62,8 @@ import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
 import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.routing.PartitionRouting;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
@@ -180,7 +180,7 @@ public final class EngineProcessors {
         clock,
         authCheckBehavior);
 
-    final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor =
+    final TypedRecordProcessor<WorkflowInstanceRecord> bpmnStreamProcessor =
         addProcessProcessors(
             processingState,
             scheduledTaskStateFactory,
@@ -326,7 +326,7 @@ public final class EngineProcessors {
     return typedRecordProcessors;
   }
 
-  private static TypedRecordProcessor<UserTaskRecord> createUserTaskProcessor(
+  private static TypedRecordProcessor<TaskRecord> createUserTaskProcessor(
       final MutableAsyncProcessingContext processingState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
@@ -366,7 +366,7 @@ public final class EngineProcessors {
         transientProcessMessageSubscriptionState);
   }
 
-  private static TypedRecordProcessor<ProcessInstanceRecord> addProcessProcessors(
+  private static TypedRecordProcessor<WorkflowInstanceRecord> addProcessProcessors(
       final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskState,
       final BpmnBehaviorsImpl bpmnBehaviors,
@@ -465,8 +465,8 @@ public final class EngineProcessors {
 
   private static void addIncidentProcessors(
       final ProcessingState processingState,
-      final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
+      final TypedRecordProcessor<WorkflowInstanceRecord> bpmnStreamProcessor,
+      final TypedRecordProcessor<TaskRecord> userTaskProcessor,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
@@ -575,7 +575,7 @@ public final class EngineProcessors {
 
   private static void addUserTaskProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor) {
+      final TypedRecordProcessor<TaskRecord> userTaskProcessor) {
 
     UserTaskIntent.commands()
         .forEach(

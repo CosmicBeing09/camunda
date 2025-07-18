@@ -33,7 +33,7 @@ import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -110,7 +110,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
       final DeployedProcess targetProcessDefinition,
       final DeployedProcess sourceProcessDefinition,
       final Map<String, String> sourceElementIdToTargetElementId,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final String targetElementId,
       final long processInstanceKey,
       final String elementId) {
@@ -301,7 +301,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
   private Map<String, Boolean> subscribeToAllCatchEvents(
       final ElementInstance elementInstance,
       final Map<String, String> sourceElementIdToTargetElementId,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final String targetElementId,
       final long processInstanceKey,
       final String elementId,

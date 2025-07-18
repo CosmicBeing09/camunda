@@ -21,7 +21,7 @@ import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -997,7 +997,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
             .key(intermediateCatchEventKey)
             .processInstance(
                 ProcessInstanceIntent.ELEMENT_ACTIVATING,
-                new ProcessInstanceRecord()
+                new WorkflowInstanceRecord()
                     .setProcessDefinitionKey(eventBasedGateway.getValue().getProcessDefinitionKey())
                     .setBpmnProcessId(processId)
                     .setElementId("MSG_1")
@@ -1009,7 +1009,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
             .key(intermediateCatchEventKey)
             .processInstance(
                 ProcessInstanceIntent.ELEMENT_ACTIVATED,
-                new ProcessInstanceRecord()
+                new WorkflowInstanceRecord()
                     .setProcessDefinitionKey(eventBasedGateway.getValue().getProcessDefinitionKey())
                     .setBpmnProcessId(processId)
                     .setElementId("MSG_1")
@@ -1337,12 +1337,12 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.stop();
 
     // when
-    final var sequenceFlowRecord = new ProcessInstanceRecord();
-    sequenceFlowRecord.copyFrom((ProcessInstanceRecord) userTask.getValue());
+    final var sequenceFlowRecord = new WorkflowInstanceRecord();
+    sequenceFlowRecord.copyFrom((WorkflowInstanceRecord) userTask.getValue());
     sequenceFlowRecord.setElementId("toA").setBpmnElementType(BpmnElementType.SEQUENCE_FLOW);
 
-    final var multiInstanceRecord = new ProcessInstanceRecord();
-    multiInstanceRecord.copyFrom((ProcessInstanceRecord) userTask.getValue());
+    final var multiInstanceRecord = new WorkflowInstanceRecord();
+    multiInstanceRecord.copyFrom((WorkflowInstanceRecord) userTask.getValue());
     multiInstanceRecord.setBpmnElementType(BpmnElementType.MULTI_INSTANCE_BODY).setElementId("A");
 
     ENGINE.writeRecords(

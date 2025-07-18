@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
@@ -33,7 +33,7 @@ public class UserTaskCommandPreconditionChecker {
   private final String intent;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final BiFunction<
-          TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
+          TypedRecord<TaskRecord>, TaskRecord, Either<Rejection, TaskRecord>>
       additionalChecks;
   private final TaskState userTaskState;
 
@@ -49,7 +49,7 @@ public class UserTaskCommandPreconditionChecker {
       final List<LifecycleState> validLifecycleStates,
       final String intent,
       final BiFunction<
-              TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
+              TypedRecord<TaskRecord>, TaskRecord, Either<Rejection, TaskRecord>>
           additionalChecks,
       final TaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -60,7 +60,7 @@ public class UserTaskCommandPreconditionChecker {
     this.userTaskState = userTaskState;
   }
 
-  protected Either<Rejection, UserTaskRecord> check(final TypedRecord<UserTaskRecord> command) {
+  protected Either<Rejection, TaskRecord> check(final TypedRecord<TaskRecord> command) {
     final long userTaskKey = command.getKey();
     final var persistedRecord =
         userTaskState.getUserTask(userTaskKey, authCheckBehavior.getAuthorizedTenantIds(command));

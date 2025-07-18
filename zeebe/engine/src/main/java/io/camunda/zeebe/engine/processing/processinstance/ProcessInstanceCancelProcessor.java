@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
@@ -26,7 +26,7 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import java.util.Optional;
 
 public final class ProcessInstanceCancelProcessor
-    implements TypedRecordProcessor<ProcessInstanceRecord> {
+    implements TypedRecordProcessor<WorkflowInstanceRecord> {
 
   private static final String MESSAGE_PREFIX =
       "Expected to cancel a process instance with key '%d', but ";
@@ -56,14 +56,14 @@ public final class ProcessInstanceCancelProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceRecord> command) {
+  public void processRecord(final TypedRecord<WorkflowInstanceRecord> command) {
     final var elementInstance = elementInstanceState.getInstance(command.getKey());
 
     if (!validateCommand(command, elementInstance)) {
       return;
     }
 
-    final ProcessInstanceRecord value = elementInstance.getValue();
+    final WorkflowInstanceRecord value = elementInstance.getValue();
 
     commandWriter.appendFollowUpCommand(
         command.getKey(), ProcessInstanceIntent.TERMINATE_ELEMENT, value);
@@ -72,7 +72,7 @@ public final class ProcessInstanceCancelProcessor
   }
 
   private boolean validateCommand(
-      final TypedRecord<ProcessInstanceRecord> command, final ElementInstance elementInstance) {
+      final TypedRecord<WorkflowInstanceRecord> command, final ElementInstance elementInstance) {
 
     if (elementInstance == null
         || !elementInstance.canTerminate()

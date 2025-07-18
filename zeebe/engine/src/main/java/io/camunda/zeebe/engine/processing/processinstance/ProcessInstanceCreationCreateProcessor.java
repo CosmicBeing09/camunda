@@ -33,7 +33,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.msgpack.property.ArrayProperty;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationStartInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceCreationIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -71,7 +71,7 @@ public final class ProcessInstanceCreationCreateProcessor
           BpmnElementType.BOUNDARY_EVENT,
           BpmnElementType.UNSPECIFIED);
 
-  private final ProcessInstanceRecord newProcessInstance = new ProcessInstanceRecord();
+  private final WorkflowInstanceRecord newProcessInstance = new WorkflowInstanceRecord();
 
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
@@ -353,7 +353,7 @@ public final class ProcessInstanceCreationCreateProcessor
         record.getVariablesBuffer());
   }
 
-  private ProcessInstanceRecord initProcessInstanceRecord(
+  private WorkflowInstanceRecord initProcessInstanceRecord(
       final DeployedProcess process, final long processInstanceKey) {
     newProcessInstance.reset();
     newProcessInstance.setBpmnProcessId(process.getBpmnProcessId());
@@ -430,7 +430,7 @@ public final class ProcessInstanceCreationCreateProcessor
   private void activateElementsForStartInstructions(
       final ArrayProperty<ProcessInstanceCreationStartInstruction> startInstructions,
       final DeployedProcess process,
-      final ProcessInstanceRecord processInstance) {
+      final WorkflowInstanceRecord processInstance) {
 
     startInstructions.forEach(
         instruction -> {

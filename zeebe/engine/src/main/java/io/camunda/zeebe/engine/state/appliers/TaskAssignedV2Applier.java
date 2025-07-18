@@ -13,12 +13,12 @@ import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
 
 public final class TaskAssignedV2Applier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, TaskRecord> {
 
   private final MutableTaskState taskState;
   private final MutableElementInstanceState elementInstanceState;
@@ -29,8 +29,8 @@ public final class TaskAssignedV2Applier
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
-    final var userTaskRecord = new UserTaskRecord();
+  public void applyState(final long key, final TaskRecord value) {
+    final var userTaskRecord = new TaskRecord();
     userTaskRecord.wrapWithoutVariables(value);
     taskState.update(userTaskRecord.setChangedAttributes(List.of()).setAction(""));
     taskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);

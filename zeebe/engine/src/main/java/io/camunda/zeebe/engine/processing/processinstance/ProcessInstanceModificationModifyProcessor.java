@@ -38,7 +38,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationActivateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationVariableInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent;
@@ -526,7 +526,7 @@ public final class ProcessInstanceModificationModifyProcessor
                       ancestorInstances
                           .get(instruction.getAncestorScopeKey())
                           .map(ElementInstance::getValue)
-                          .map(ProcessInstanceRecord::getElementId)
+                          .map(WorkflowInstanceRecord::getElementId)
                           .orElse(null);
                   return new InstructionDetails(
                       instruction.getAncestorScopeKey(), ancestorId, instruction.getElementId());

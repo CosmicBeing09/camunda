@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableJobState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import org.junit.Before;
@@ -187,7 +187,7 @@ public final class IncidentStateTest {
   public IncidentRecord createProcessInstanceIncident() {
     elementInstanceState.createInstance(
         new ElementInstance(
-            1234, ProcessInstanceIntent.ELEMENT_ACTIVATED, new ProcessInstanceRecord()));
+            1234, ProcessInstanceIntent.ELEMENT_ACTIVATED, new WorkflowInstanceRecord()));
 
     final IncidentRecord expectedRecord = new IncidentRecord();
     expectedRecord.setElementInstanceKey(1234);

@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -169,7 +169,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             .job(JobIntent.COMPLETE, createdJob.getValue())
             .key(createdJob.getKey()),
         RecordToWrite.command()
-            .processInstance(CANCEL, new ProcessInstanceRecord())
+            .processInstance(CANCEL, new WorkflowInstanceRecord())
             .key(processInstanceKey));
 
     // when
@@ -199,7 +199,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             .key(createdJob.getKey())
             .causedBy(0),
         RecordToWrite.command()
-            .processInstance(CANCEL, new ProcessInstanceRecord())
+            .processInstance(CANCEL, new WorkflowInstanceRecord())
             .key(processInstanceKey));
 
     // when
@@ -231,7 +231,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             .key(activityActivated.getKey())
             .causedBy(1),
         RecordToWrite.command()
-            .processInstance(CANCEL, new ProcessInstanceRecord())
+            .processInstance(CANCEL, new WorkflowInstanceRecord())
             .key(processInstanceKey));
 
     // when
@@ -267,7 +267,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
             .key(activityActivated.getKey())
             .causedBy(2),
         RecordToWrite.command()
-            .processInstance(CANCEL, new ProcessInstanceRecord())
+            .processInstance(CANCEL, new WorkflowInstanceRecord())
             .key(processInstanceKey));
 
     // when

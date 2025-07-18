@@ -33,7 +33,7 @@ import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -318,7 +318,7 @@ public final class EngineErrorHandlingTest {
 
     final RecordMetadata metadata = new RecordMetadata();
     metadata.valueType(ValueType.PROCESS_INSTANCE);
-    final MockTypedRecord<ProcessInstanceRecord> mockTypedRecord =
+    final MockTypedRecord<WorkflowInstanceRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.processInstance(1));
     Assertions.assertThat(processingState.getBannedInstanceState().isBanned(mockTypedRecord))
         .isTrue();
@@ -374,7 +374,7 @@ public final class EngineErrorHandlingTest {
     // then
     final RecordMetadata metadata = new RecordMetadata();
     metadata.valueType(ValueType.PROCESS_INSTANCE);
-    final MockTypedRecord<ProcessInstanceRecord> mockTypedRecord =
+    final MockTypedRecord<WorkflowInstanceRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.processInstance(1));
     waitUntil(() -> processingState.getBannedInstanceState().isBanned(mockTypedRecord));
   }
@@ -462,7 +462,7 @@ public final class EngineErrorHandlingTest {
     // then
     final RecordMetadata metadata = new RecordMetadata();
     metadata.valueType(ValueType.PROCESS_INSTANCE);
-    final MockTypedRecord<ProcessInstanceRecord> mockTypedRecord =
+    final MockTypedRecord<WorkflowInstanceRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.processInstance(1));
     Assertions.assertThat(processingState.getBannedInstanceState().isBanned(mockTypedRecord))
         .isFalse();
@@ -551,12 +551,12 @@ public final class EngineErrorHandlingTest {
   }
 
   protected static class ErrorProneProcessor
-      implements TypedRecordProcessor<ProcessInstanceRecord> {
+      implements TypedRecordProcessor<WorkflowInstanceRecord> {
 
     public final AtomicLong processCount = new AtomicLong(0);
 
     @Override
-    public void processRecord(final TypedRecord<ProcessInstanceRecord> record) {
+    public void processRecord(final TypedRecord<WorkflowInstanceRecord> record) {
       processCount.incrementAndGet();
       throw new RuntimeException("expected");
     }
@@ -566,7 +566,7 @@ public final class EngineErrorHandlingTest {
     }
   }
 
-  protected static class DumpProcessor implements TypedRecordProcessor<ProcessInstanceRecord> {
+  protected static class DumpProcessor implements TypedRecordProcessor<WorkflowInstanceRecord> {
     final List<Long> processedInstances = new ArrayList<>();
     private final StateWriter stateWriter;
 
@@ -575,7 +575,7 @@ public final class EngineErrorHandlingTest {
     }
 
     @Override
-    public void processRecord(final TypedRecord<ProcessInstanceRecord> record) {
+    public void processRecord(final TypedRecord<WorkflowInstanceRecord> record) {
       processedInstances.add(record.getValue().getProcessInstanceKey());
       stateWriter.appendFollowUpEvent(
           record.getKey(), ProcessInstanceIntent.ELEMENT_COMPLETED, record.getValue());

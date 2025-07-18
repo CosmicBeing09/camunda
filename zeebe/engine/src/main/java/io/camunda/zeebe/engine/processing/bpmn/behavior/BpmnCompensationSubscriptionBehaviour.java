@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.state.immutable.CompensationSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.CompensationSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -238,7 +238,7 @@ public class BpmnCompensationSubscriptionBehaviour {
     // activate the compensation handler
     final var compensationHandler = boundaryEvent.getCompensation().getCompensationHandler();
 
-    final ProcessInstanceRecord compensationHandlerRecord = new ProcessInstanceRecord();
+    final WorkflowInstanceRecord compensationHandlerRecord = new WorkflowInstanceRecord();
     compensationHandlerRecord.wrap(context.getRecordValue());
     compensationHandlerRecord
         .setElementId(compensationHandler.getId())
@@ -284,7 +284,7 @@ public class BpmnCompensationSubscriptionBehaviour {
 
     final long boundaryEventKey = keyGenerator.nextKey();
 
-    final ProcessInstanceRecord boundaryEventRecord = new ProcessInstanceRecord();
+    final WorkflowInstanceRecord boundaryEventRecord = new WorkflowInstanceRecord();
     boundaryEventRecord.wrap(context.getRecordValue());
     boundaryEventRecord
         .setElementId(boundaryEvent.getId())

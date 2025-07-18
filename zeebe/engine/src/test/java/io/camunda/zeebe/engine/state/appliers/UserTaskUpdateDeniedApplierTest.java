@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
@@ -52,7 +52,7 @@ public class UserTaskUpdateDeniedApplierTest {
 
     // Initial state of the User Task before an update attempt
     final var initialState =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("initial_user"))
             .setCandidateGroupsList(List.of("initial_group"))
@@ -66,7 +66,7 @@ public class UserTaskUpdateDeniedApplierTest {
 
     // Simulate an update event with changes
     final var updateAttempt =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("update_user"))
             .setDueDate("update_due_date")

@@ -27,7 +27,7 @@ import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -164,7 +164,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   }
 
   private ExecutableFlowElement getCatchEvent(
-      final ProcessInstanceRecord elementRecord, final DirectBuffer elementId) {
+      final WorkflowInstanceRecord elementRecord, final DirectBuffer elementId) {
     return processState.getFlowElement(
         elementRecord.getProcessDefinitionKey(),
         elementRecord.getTenantId(),

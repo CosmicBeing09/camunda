@@ -19,8 +19,8 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -33,7 +33,7 @@ public final class EventHandler {
 
   private static final DirectBuffer NO_VARIABLES = new UnsafeBuffer();
 
-  private final ProcessInstanceRecord processInstanceCreationRecord = new ProcessInstanceRecord();
+  private final WorkflowInstanceRecord processInstanceCreationRecord = new WorkflowInstanceRecord();
   private final MessageStartEventSubscriptionRecord startEventSubscriptionRecord =
       new MessageStartEventSubscriptionRecord();
 
@@ -105,14 +105,14 @@ public final class EventHandler {
   public void activateElement(
       final ExecutableFlowElement catchEvent,
       final long eventScopeKey,
-      final ProcessInstanceRecord elementRecord) {
+      final WorkflowInstanceRecord elementRecord) {
     activateElement(catchEvent, eventScopeKey, elementRecord, NO_VARIABLES);
   }
 
   public void activateElement(
       final ExecutableFlowElement catchEvent,
       final long eventScopeKey,
-      final ProcessInstanceRecord elementRecord,
+      final WorkflowInstanceRecord elementRecord,
       final DirectBuffer variables) {
 
     final var processEventKey =
@@ -158,7 +158,7 @@ public final class EventHandler {
         jobRecord.getVariablesBuffer());
   }
 
-  public void triggeringProcessEvent(final UserTaskRecord userTaskRecord) {
+  public void triggeringProcessEvent(final TaskRecord userTaskRecord) {
     triggeringProcessEvent(
         userTaskRecord.getProcessDefinitionKey(),
         userTaskRecord.getProcessInstanceKey(),

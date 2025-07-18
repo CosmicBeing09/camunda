@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.ColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.test.util.MsgPackUtil;
@@ -48,7 +48,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldCreateNewInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
 
     // when
     final ElementInstance elementInstance =
@@ -62,13 +62,13 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldCreateNewInstanceWithParent() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
     // when
-    final ProcessInstanceRecord otherRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord otherRecord = createProcessInstanceRecord();
     otherRecord.setElementId("subProcess");
     final ElementInstance childInstance =
         elementInstanceState.newInstance(
@@ -82,7 +82,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldFindElementInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     elementInstanceState.newInstance(
         100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
 
@@ -96,7 +96,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldFindChildInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -114,7 +114,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldFindParentInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -132,7 +132,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldRemoveParentInstanceAfterRemovingChild() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -158,7 +158,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldRemoveChildInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -189,7 +189,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldUpdateElementInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance instance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -210,14 +210,14 @@ public final class ElementInstanceStateTest {
 
     Assertions.assertThat(updatedInstance.getNumberOfActiveElementInstances()).isEqualTo(0);
 
-    final ProcessInstanceRecord record = updatedInstance.getValue();
+    final WorkflowInstanceRecord record = updatedInstance.getValue();
     assertProcessInstanceRecord(record);
   }
 
   @Test
   public void shouldNotUpdateElementInstance() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance instance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -237,14 +237,14 @@ public final class ElementInstanceStateTest {
 
     Assertions.assertThat(updatedInstance.getNumberOfActiveElementInstances()).isEqualTo(0);
 
-    final ProcessInstanceRecord record = updatedInstance.getValue();
+    final WorkflowInstanceRecord record = updatedInstance.getValue();
     assertProcessInstanceRecord(record);
   }
 
   @Test
   public void shouldNotUpdateElementInstanceWithoutFlush() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance instance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -262,7 +262,7 @@ public final class ElementInstanceStateTest {
   @Test
   public void shouldCollectChildInstances() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord();
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
             100, processInstanceRecord, ProcessInstanceIntent.ELEMENT_ACTIVATED);
@@ -408,7 +408,7 @@ public final class ElementInstanceStateTest {
     final int parent = 100;
     final int child = 101;
 
-    final ProcessInstanceRecord processInstanceRecord =
+    final WorkflowInstanceRecord processInstanceRecord =
         createProcessInstanceRecord().setBpmnElementType(BpmnElementType.PROCESS);
     final ElementInstance parentInstance =
         elementInstanceState.newInstance(
@@ -522,7 +522,7 @@ public final class ElementInstanceStateTest {
     Assertions.assertThat(elementInstance.getNumberOfActiveElementInstances())
         .isEqualTo(childCount);
 
-    final ProcessInstanceRecord record = elementInstance.getValue();
+    final WorkflowInstanceRecord record = elementInstance.getValue();
 
     assertProcessInstanceRecord(record);
   }
@@ -540,8 +540,8 @@ public final class ElementInstanceStateTest {
     assertProcessInstanceRecord(childInstance.getValue(), wrapString(elementId));
   }
 
-  private ProcessInstanceRecord createProcessInstanceRecord() {
-    final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+  private WorkflowInstanceRecord createProcessInstanceRecord() {
+    final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
     processInstanceRecord.setElementId("startEvent");
     processInstanceRecord.setBpmnProcessId(wrapString("process1"));
     processInstanceRecord.setProcessInstanceKey(1000L);
@@ -553,12 +553,12 @@ public final class ElementInstanceStateTest {
     return processInstanceRecord;
   }
 
-  private void assertProcessInstanceRecord(final ProcessInstanceRecord record) {
+  private void assertProcessInstanceRecord(final WorkflowInstanceRecord record) {
     assertProcessInstanceRecord(record, wrapString("startEvent"));
   }
 
   private void assertProcessInstanceRecord(
-      final ProcessInstanceRecord record, final DirectBuffer elementId) {
+      final WorkflowInstanceRecord record, final DirectBuffer elementId) {
     assertThat(record.getElementIdBuffer()).isEqualTo(elementId);
     assertThat(record.getBpmnProcessIdBuffer()).isEqualTo(wrapString("process1"));
     assertThat(record.getProcessInstanceKey()).isEqualTo(1000L);

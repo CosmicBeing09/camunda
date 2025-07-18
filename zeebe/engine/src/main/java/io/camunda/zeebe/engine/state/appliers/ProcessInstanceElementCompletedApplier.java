@@ -15,13 +15,13 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 
 /** Applies state changes for `ProcessInstance:Element_Completed` */
 final class ProcessInstanceElementCompletedApplier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
   private final MutableEventScopeInstanceState eventScopeInstanceState;
@@ -43,7 +43,7 @@ final class ProcessInstanceElementCompletedApplier
   }
 
   @Override
-  public void applyState(final long key, final ProcessInstanceRecord value) {
+  public void applyState(final long key, final WorkflowInstanceRecord value) {
 
     final var parentElementInstanceKey = value.getParentElementInstanceKey();
 
@@ -73,7 +73,7 @@ final class ProcessInstanceElementCompletedApplier
   }
 
   private boolean isChildProcess(
-      final ProcessInstanceRecord value, final long parentElementInstanceKey) {
+      final WorkflowInstanceRecord value, final long parentElementInstanceKey) {
     return parentElementInstanceKey > 0 && value.getBpmnElementType() == BpmnElementType.PROCESS;
   }
 
@@ -110,7 +110,7 @@ final class ProcessInstanceElementCompletedApplier
     }
   }
 
-  private boolean isTerminateEndEvent(final ProcessInstanceRecord value) {
+  private boolean isTerminateEndEvent(final WorkflowInstanceRecord value) {
     if (value.getBpmnElementType().equals(BpmnElementType.END_EVENT)) {
       final var element =
           processState.getFlowElement(

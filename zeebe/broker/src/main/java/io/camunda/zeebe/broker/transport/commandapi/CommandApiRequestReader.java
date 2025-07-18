@@ -38,13 +38,13 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.resource.ResourceDeletionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.ExecuteCommandRequestDecoder;
 import io.camunda.zeebe.protocol.record.MessageHeaderDecoder;
@@ -61,7 +61,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
   static {
     RECORDS_BY_TYPE.put(ValueType.DEPLOYMENT, DeploymentRecord::new);
     RECORDS_BY_TYPE.put(ValueType.JOB, JobRecord::new);
-    RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE, ProcessInstanceRecord::new);
+    RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE, WorkflowInstanceRecord::new);
     RECORDS_BY_TYPE.put(ValueType.MESSAGE, MessageRecord::new);
     RECORDS_BY_TYPE.put(ValueType.MESSAGE_BATCH, MessageBatchRecord::new);
     RECORDS_BY_TYPE.put(ValueType.JOB_BATCH, JobBatchRecord::new);
@@ -75,7 +75,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
     RECORDS_BY_TYPE.put(ValueType.COMMAND_DISTRIBUTION, CommandDistributionRecord::new);
     RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE_BATCH, ProcessInstanceBatchRecord::new);
     RECORDS_BY_TYPE.put(ValueType.RESOURCE_DELETION, ResourceDeletionRecord::new);
-    RECORDS_BY_TYPE.put(ValueType.USER_TASK, UserTaskRecord::new);
+    RECORDS_BY_TYPE.put(ValueType.USER_TASK, TaskRecord::new);
     RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE_MIGRATION, ProcessInstanceMigrationRecord::new);
     RECORDS_BY_TYPE.put(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,

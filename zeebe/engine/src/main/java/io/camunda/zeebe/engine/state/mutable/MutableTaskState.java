@@ -10,20 +10,20 @@ package io.camunda.zeebe.engine.state.mutable;
 import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.instance.AsyncTransitionTriggerMetadata;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import java.util.function.Consumer;
 
 public interface MutableTaskState extends TaskState {
 
-  void create(final UserTaskRecord userTask);
+  void create(final TaskRecord userTask);
 
-  void update(final UserTaskRecord userTask);
+  void update(final TaskRecord userTask);
 
   void updateUserTaskLifecycleState(final long userTaskKey, final LifecycleState newLifecycleState);
 
   void delete(final long userTaskKey);
 
-  void storeIntermediateState(final UserTaskRecord userTask, final LifecycleState lifecycleState);
+  void storeIntermediateState(final TaskRecord userTask, final LifecycleState lifecycleState);
 
   void updateIntermediateState(long key, Consumer<UserTaskIntermediateStateValue> updater);
 

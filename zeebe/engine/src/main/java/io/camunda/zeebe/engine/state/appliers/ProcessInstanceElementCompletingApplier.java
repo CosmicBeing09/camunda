@@ -9,12 +9,12 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 
 /** Applies state changes for `ProcessInstance:Element_Completing` */
 final class ProcessInstanceElementCompletingApplier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
 
@@ -24,7 +24,7 @@ final class ProcessInstanceElementCompletingApplier
   }
 
   @Override
-  public void applyState(final long elementInstanceKey, final ProcessInstanceRecord value) {
+  public void applyState(final long elementInstanceKey, final WorkflowInstanceRecord value) {
     elementInstanceState.updateInstance(
         elementInstanceKey,
         instance -> instance.setState(ProcessInstanceIntent.ELEMENT_COMPLETING));

@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.Optional;
 import java.util.Random;
@@ -50,7 +50,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     final var initialAssignee = "initial";
     final var newAssignee = "changed";
 
-    final var given = new UserTaskRecord().setUserTaskKey(userTaskKey);
+    final var given = new TaskRecord().setUserTaskKey(userTaskKey);
 
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, given);
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, given);
@@ -92,12 +92,12 @@ public class UserTaskAssignmentDeniedApplierTest {
     final long userTaskKey = new Random().nextLong();
     final var initialAssignee = "initial";
 
-    final var given = new UserTaskRecord().setAssignee(initialAssignee).setUserTaskKey(userTaskKey);
+    final var given = new TaskRecord().setAssignee(initialAssignee).setUserTaskKey(userTaskKey);
 
     // assignee is present in the creating event
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, given);
     // but we clear the assignee for created event
-    final UserTaskRecord recordWithoutAssignee = given.unsetAssignee();
+    final TaskRecord recordWithoutAssignee = given.unsetAssignee();
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, given);
 

@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder.ElementT
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCallActivity;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowElement;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import java.util.HashMap;
@@ -219,7 +219,7 @@ public class ElementTreePathBuilderTest {
   }
 
   private ElementInstance createElementInstanceForRecord(
-      final long key, final ProcessInstanceRecord instanceRecord, final String elementId) {
+      final long key, final WorkflowInstanceRecord instanceRecord, final String elementId) {
     instanceRecord.setElementId(elementId);
     final ElementInstance callActivityElementInstance =
         new ElementInstance(key, ProcessInstanceIntent.ELEMENT_ACTIVATING, instanceRecord);
@@ -230,7 +230,7 @@ public class ElementTreePathBuilderTest {
   private ElementInstance createElementInstanceWithParentForRecord(
       final long key,
       final ElementInstance parent,
-      final ProcessInstanceRecord instanceRecord,
+      final WorkflowInstanceRecord instanceRecord,
       final String elementId) {
     instanceRecord.setElementId(elementId);
     final ElementInstance callActivityElementInstance =
@@ -239,12 +239,12 @@ public class ElementTreePathBuilderTest {
     return callActivityElementInstance;
   }
 
-  private ProcessInstanceRecord createProcessInstanceRecord() {
+  private WorkflowInstanceRecord createProcessInstanceRecord() {
     return createProcessInstanceRecord(PROCESS_DEFINITION_KEY_SEQUENCER.incrementAndGet());
   }
 
-  private ProcessInstanceRecord createProcessInstanceRecord(final long processDefinitionKey) {
-    final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+  private WorkflowInstanceRecord createProcessInstanceRecord(final long processDefinitionKey) {
+    final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
     processInstanceRecord.setElementId("startEvent");
     processInstanceRecord.setBpmnProcessId(wrapString("process1"));
     processInstanceRecord.setProcessInstanceKey(1000L);

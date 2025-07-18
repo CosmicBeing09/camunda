@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.entry;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -163,13 +163,13 @@ public final class ActivityTest {
         RecordingExporter.records()
             .skipUntil(
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("task")
                         && r.getIntent() == ELEMENT_ACTIVATING)
             .limit(
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("task")
                         && r.getIntent() == ELEMENT_ACTIVATED)
             .asList();
 
@@ -305,12 +305,12 @@ public final class ActivityTest {
             .betweenProcessInstance(processInstanceKey)
             .between(
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("task")
                         && r.getIntent() == leavingState,
                 r ->
-                    r.getValue() instanceof ProcessInstanceRecord
-                        && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task")
+                    r.getValue() instanceof WorkflowInstanceRecord
+                        && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("task")
                         && r.getIntent() == leftState)
             .asList();
 

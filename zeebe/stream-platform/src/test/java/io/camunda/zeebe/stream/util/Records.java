@@ -16,7 +16,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -166,13 +166,13 @@ public final class Records {
     return record;
   }
 
-  public static ProcessInstanceRecord processInstance(final long instanceKey) {
+  public static WorkflowInstanceRecord processInstance(final long instanceKey) {
     return processInstance(instanceKey, "processId");
   }
 
-  public static ProcessInstanceRecord processInstance(
+  public static WorkflowInstanceRecord processInstance(
       final long instanceKey, final String processId) {
-    final var record = new ProcessInstanceRecord();
+    final var record = new WorkflowInstanceRecord();
     record.setProcessInstanceKey(instanceKey);
     record.setBpmnProcessId(processId);
     return record;

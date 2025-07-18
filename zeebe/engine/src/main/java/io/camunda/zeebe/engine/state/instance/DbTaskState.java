@@ -16,7 +16,7 @@ import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
@@ -96,7 +96,7 @@ public class DbTaskState implements MutableTaskState {
   }
 
   @Override
-  public void create(final UserTaskRecord userTask) {
+  public void create(final TaskRecord userTask) {
     userTaskKey.wrapLong(userTask.getUserTaskKey());
     // do not persist variables in user task state
     userTaskRecordToWrite.setRecordWithoutVariables(userTask);
@@ -107,7 +107,7 @@ public class DbTaskState implements MutableTaskState {
   }
 
   @Override
-  public void update(final UserTaskRecord userTask) {
+  public void update(final TaskRecord userTask) {
     userTaskKey.wrapLong(userTask.getUserTaskKey());
     // do not persist variables in user task state
     userTaskRecordToWrite.setRecordWithoutVariables(userTask);
@@ -129,7 +129,7 @@ public class DbTaskState implements MutableTaskState {
   }
 
   @Override
-  public void storeIntermediateState(final UserTaskRecord record, final LifecycleState lifecycle) {
+  public void storeIntermediateState(final TaskRecord record, final LifecycleState lifecycle) {
     userTaskIntermediateStateKey.wrapLong(record.getUserTaskKey());
     userTaskIntermediateStateToWrite.setRecord(record);
     userTaskIntermediateStateToWrite.setLifecycleState(lifecycle);
@@ -205,15 +205,15 @@ public class DbTaskState implements MutableTaskState {
   }
 
   @Override
-  public UserTaskRecord getUserTask(final long key) {
+  public TaskRecord getUserTask(final long key) {
     userTaskKey.wrapLong(key);
     final TaskRecordValue userTask = userTasksColumnFamily.get(userTaskKey);
     return userTask == null ? null : userTask.getRecord();
   }
 
   @Override
-  public UserTaskRecord getUserTask(final long key, final AuthorizedTenants authorizedTenantIds) {
-    final UserTaskRecord userTask = getUserTask(key);
+  public TaskRecord getUserTask(final long key, final AuthorizedTenants authorizedTenantIds) {
+    final TaskRecord userTask = getUserTask(key);
     if (userTask != null && authorizedTenantIds.isAuthorizedForTenantId(userTask.getTenantId())) {
       return userTask;
     }

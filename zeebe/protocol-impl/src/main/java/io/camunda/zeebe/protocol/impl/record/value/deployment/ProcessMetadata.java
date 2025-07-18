@@ -7,9 +7,9 @@
  */
 package io.camunda.zeebe.protocol.impl.record.value.deployment;
 
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_BPMN_PROCESS_ID;
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_KEY;
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_VERSION;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord.PROP_WORKFLOW_DEFINITION_ID;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord.PROP_PROCESS_KEY;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord.PROP_PROCESS_VERSION;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -29,7 +29,7 @@ import org.agrona.DirectBuffer;
  * user. It is similar to {@link ProcessRecord} except that it doesn't contain the actual resources.
  */
 public final class ProcessMetadata extends UnifiedRecordValue implements ProcessMetadataValue {
-  private final StringProperty bpmnProcessIdProp = new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID);
+  private final StringProperty bpmnProcessIdProp = new StringProperty(PROP_WORKFLOW_DEFINITION_ID);
   private final IntegerProperty versionProp = new IntegerProperty(PROP_PROCESS_VERSION);
   private final LongProperty keyProp = new LongProperty(PROP_PROCESS_KEY);
   private final StringProperty resourceNameProp = new StringProperty("resourceName");
@@ -63,6 +63,16 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
   @Override
   public int getVersion() {
     return versionProp.getValue();
+  }
+
+  public ProcessMetadata setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return bufferAsString(versionTagProp.getValue());
   }
 
   @Override
@@ -115,8 +125,8 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
     return this;
   }
 
-  public ProcessMetadata setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessMetadata setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -180,16 +190,6 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   public ProcessMetadata setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessMetadata setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }

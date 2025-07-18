@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationElement;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.AdHocSubProcessActivityActivationIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -168,7 +168,7 @@ public class AdHocSubProcessActivityActivateProcessor
     for (final var elementValue : command.getValue().getElements()) {
       final var elementToActivate =
           adHocSubProcessDefinition.getElementById(elementValue.getElementId());
-      final var elementProcessInstanceRecord = new ProcessInstanceRecord();
+      final var elementProcessInstanceRecord = new WorkflowInstanceRecord();
       elementProcessInstanceRecord.wrap(adHocSubProcessElementInstance.getValue());
       elementProcessInstanceRecord
           .setFlowScopeKey(adHocSubProcessElementInstance.getKey())

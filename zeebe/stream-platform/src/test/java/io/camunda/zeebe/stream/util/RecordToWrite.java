@@ -15,7 +15,7 @@ import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -123,7 +123,7 @@ public final class RecordToWrite implements LogAppendEntry {
   public RecordToWrite processInstance(
       final ProcessInstanceIntent intent, final ProcessInstanceRecordValue value) {
     recordMetadata.valueType(ValueType.PROCESS_INSTANCE).intent(intent);
-    unifiedRecordValue = (ProcessInstanceRecord) value;
+    unifiedRecordValue = (WorkflowInstanceRecord) value;
     return this;
   }
 

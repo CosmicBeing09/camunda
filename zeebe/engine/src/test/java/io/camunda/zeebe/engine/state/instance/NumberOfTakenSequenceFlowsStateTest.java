@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.ColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import org.agrona.DirectBuffer;
 import org.junit.Before;
@@ -188,7 +188,7 @@ public final class NumberOfTakenSequenceFlowsStateTest {
   public void shouldRemoveNumbersWhenRemovingTheScope() {
     // given
     elementInstanceState.newInstance(
-        FLOW_SCOPE_KEY, new ProcessInstanceRecord(), ProcessInstanceIntent.ELEMENT_ACTIVATED);
+        FLOW_SCOPE_KEY, new WorkflowInstanceRecord(), ProcessInstanceIntent.ELEMENT_ACTIVATED);
     elementInstanceState.incrementNumberOfTakenSequenceFlows(
         FLOW_SCOPE_KEY, GATEWAY_ELEMENT_ID, SEQUENCE_FLOW_ELEMENT_ID);
     elementInstanceState.incrementNumberOfTakenSequenceFlows(

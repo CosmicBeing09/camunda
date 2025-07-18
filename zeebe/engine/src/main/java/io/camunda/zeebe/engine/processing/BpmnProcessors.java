@@ -41,7 +41,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.state.routing.PartitionRouting;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.AdHocSubProcessActivityActivationIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
@@ -59,7 +59,7 @@ import java.util.function.Supplier;
 
 public final class BpmnProcessors {
 
-  public static TypedRecordProcessor<ProcessInstanceRecord> addBpmnStreamProcessor(
+  public static TypedRecordProcessor<WorkflowInstanceRecord> addBpmnStreamProcessor(
       final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskState,
       final ProcessBehaviors bpmnBehaviors,

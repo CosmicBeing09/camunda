@@ -21,23 +21,23 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
 
-public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
+public class TaskCreateProcessor implements UserTaskCommandProcessor {
 
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
-  private final TaskState userTaskState;
+  private final TaskState taskState;
   private final StateWriter stateWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
   private final BpmnJobBehavior jobBehavior;
   private final BpmnUserTaskBehavior userTaskBehavior;
 
-  public UserTaskCreateProcessor(
+  public TaskCreateProcessor(
       final ProcessingState state,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior,
@@ -45,7 +45,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
       final BpmnJobBehavior jobBehavior) {
     elementInstanceState = state.getElementInstanceState();
     processState = state.getProcessState();
-    userTaskState = state.getUserTaskState();
+    taskState = state.getUserTaskState();
     stateWriter = writers.state();
     preconditionChecker =
         new UserTaskCommandPreconditionChecker(
@@ -58,19 +58,19 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, TaskRecord> validateCommand(
+      final TypedRecord<TaskRecord> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {
 
     // Current assumption: there can not be corrections of the assignee if there is an initial
     // assignee.
     final long userTaskKey = command.getKey();
-    userTaskState
+    taskState
         .findInitialAssignee(userTaskKey)
         .ifPresentOrElse(
             // if there is initial assignee -> remove the assignee from UT record as we are going
@@ -92,7 +92,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
                     userTaskKey, UserTaskIntent.CREATED, userTaskRecord));
   }
 
-  private void assignUserTask(final UserTaskRecord userTaskRecord, final String assignee) {
+  private void assignUserTask(final TaskRecord userTaskRecord, final String assignee) {
     userTaskBehavior.userTaskAssigning(userTaskRecord, assignee);
 
     final var element =
@@ -113,7 +113,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
         .ifPresentOrElse(
             listener ->
                 jobBehavior.createNewTaskListenerJob(
-                    context, userTaskRecord, listener, List.of(UserTaskRecord.ASSIGNEE)),
+                    context, userTaskRecord, listener, List.of(TaskRecord.ASSIGNEE)),
             () -> userTaskBehavior.userTaskAssigned(userTaskRecord, assignee));
   }
 }

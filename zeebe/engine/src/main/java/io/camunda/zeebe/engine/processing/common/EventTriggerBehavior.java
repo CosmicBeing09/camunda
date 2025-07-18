@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessEventRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -30,7 +30,7 @@ import org.agrona.DirectBuffer;
 
 public class EventTriggerBehavior {
 
-  private final ProcessInstanceRecord eventRecord = new ProcessInstanceRecord();
+  private final WorkflowInstanceRecord eventRecord = new WorkflowInstanceRecord();
   private final ProcessEventRecord processEventRecord = new ProcessEventRecord();
 
   private final IdGenerator keyGenerator;
@@ -65,7 +65,7 @@ public class EventTriggerBehavior {
   public void triggerEventSubProcess(
       final ExecutableStartEvent startEvent,
       final long flowScopeElementInstanceKey,
-      final ProcessInstanceRecord recordValue,
+      final WorkflowInstanceRecord recordValue,
       final DirectBuffer variables) {
 
     final var flowScopeElementInstance =
@@ -201,7 +201,7 @@ public class EventTriggerBehavior {
       final ExecutableFlowElement triggeredEvent,
       final long eventScopeKey,
       final long flowScopeKey,
-      final ProcessInstanceRecord elementRecord,
+      final WorkflowInstanceRecord elementRecord,
       final DirectBuffer variables) {
 
     eventRecord.reset();

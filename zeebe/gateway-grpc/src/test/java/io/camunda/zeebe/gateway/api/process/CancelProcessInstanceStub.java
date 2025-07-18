@@ -11,11 +11,11 @@ import io.camunda.zeebe.broker.client.api.dto.BrokerResponse;
 import io.camunda.zeebe.gateway.api.util.StubbedBrokerClient;
 import io.camunda.zeebe.gateway.api.util.StubbedBrokerClient.RequestStub;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerCancelProcessInstanceRequest;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 
 public final class CancelProcessInstanceStub
     implements RequestStub<
-        BrokerCancelProcessInstanceRequest, BrokerResponse<ProcessInstanceRecord>> {
+        BrokerCancelProcessInstanceRequest, BrokerResponse<WorkflowInstanceRecord>> {
 
   @Override
   public void registerWith(final StubbedBrokerClient gateway) {
@@ -23,9 +23,9 @@ public final class CancelProcessInstanceStub
   }
 
   @Override
-  public BrokerResponse<ProcessInstanceRecord> handle(
+  public BrokerResponse<WorkflowInstanceRecord> handle(
       final BrokerCancelProcessInstanceRequest request) throws Exception {
     return new BrokerResponse<>(
-        new ProcessInstanceRecord(), request.getPartitionId(), request.getKey());
+        new WorkflowInstanceRecord(), request.getPartitionId(), request.getKey());
   }
 }

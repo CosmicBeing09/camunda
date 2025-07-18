@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -84,7 +84,7 @@ public class ClaimUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction(DEFAULT_ACTION)
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(TaskRecord.ASSIGNEE)
                     .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
   }
 
@@ -127,7 +127,7 @@ public class ClaimUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction("customAction")
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(TaskRecord.ASSIGNEE)
                     .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
   }
 

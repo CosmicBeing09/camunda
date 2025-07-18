@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -83,12 +83,12 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
 
   private static final Set<String> CORRECTABLE_PROPERTIES =
       Set.of(
-          UserTaskRecord.ASSIGNEE,
-          UserTaskRecord.CANDIDATE_GROUPS,
-          UserTaskRecord.CANDIDATE_USERS,
-          UserTaskRecord.DUE_DATE,
-          UserTaskRecord.FOLLOW_UP_DATE,
-          UserTaskRecord.PRIORITY);
+          TaskRecord.ASSIGNEE,
+          TaskRecord.CANDIDATE_GROUPS,
+          TaskRecord.CANDIDATE_USERS,
+          TaskRecord.DUE_DATE,
+          TaskRecord.FOLLOW_UP_DATE,
+          TaskRecord.PRIORITY);
   private static final Set<JobListenerEventType> LISTENER_EVENT_TYPES_THAT_SUPPORT_DENY =
       EnumSet.of(
           JobListenerEventType.ASSIGNING,
@@ -279,7 +279,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
 
     final var correctedAttributes = command.getValue().getResult().getCorrectedAttributes();
 
-    if (correctedAttributes.contains(UserTaskRecord.ASSIGNEE)) {
+    if (correctedAttributes.contains(TaskRecord.ASSIGNEE)) {
       final var uerTaskKey = getUserTaskKey(job);
       final var initialAssignee = userTaskState.findInitialAssignee(uerTaskKey);
 

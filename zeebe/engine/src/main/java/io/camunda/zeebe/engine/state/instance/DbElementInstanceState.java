@@ -20,7 +20,7 @@ import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -138,7 +138,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
   @Override
   public ElementInstance newInstance(
-      final long key, final ProcessInstanceRecord value, final ProcessInstanceIntent state) {
+      final long key, final WorkflowInstanceRecord value, final ProcessInstanceIntent state) {
     return newInstance(null, key, value, state);
   }
 
@@ -146,7 +146,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   public ElementInstance newInstance(
       final ElementInstance parent,
       final long key,
-      final ProcessInstanceRecord value,
+      final WorkflowInstanceRecord value,
       final ProcessInstanceIntent state) {
 
     final ElementInstance instance;

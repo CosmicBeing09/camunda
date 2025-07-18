@@ -19,7 +19,7 @@ import io.camunda.service.exception.CamundaBrokerException;
 import io.camunda.zeebe.broker.client.api.dto.BrokerRejection;
 import io.camunda.zeebe.gateway.rest.RestControllerTest;
 import io.camunda.zeebe.gateway.rest.cache.ProcessCache;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -43,8 +43,8 @@ import org.springframework.http.MediaType;
 @WebMvcTest(UserTaskController.class)
 public class UserTaskControllerTest extends RestControllerTest {
 
-  static final CompletableFuture<UserTaskRecord> BROKER_RESPONSE =
-      CompletableFuture.completedFuture(new UserTaskRecord());
+  static final CompletableFuture<TaskRecord> BROKER_RESPONSE =
+      CompletableFuture.completedFuture(new TaskRecord());
   static final String TEST_TIME =
       OffsetDateTime.of(2023, 11, 11, 11, 11, 11, 11, ZoneOffset.of("Z")).toString();
 
@@ -236,7 +236,7 @@ public class UserTaskControllerTest extends RestControllerTest {
         .expectBody()
         .isEmpty();
 
-    final var argumentCaptor = ArgumentCaptor.forClass(UserTaskRecord.class);
+    final var argumentCaptor = ArgumentCaptor.forClass(TaskRecord.class);
     Mockito.verify(userTaskServices)
         .updateUserTask(eq(1L), argumentCaptor.capture(), eq("customAction"));
     Assertions.assertThat(argumentCaptor.getValue())
@@ -279,15 +279,15 @@ public class UserTaskControllerTest extends RestControllerTest {
         .expectBody()
         .isEmpty();
 
-    final var argumentCaptor = ArgumentCaptor.forClass(UserTaskRecord.class);
+    final var argumentCaptor = ArgumentCaptor.forClass(TaskRecord.class);
     Mockito.verify(userTaskServices).updateUserTask(eq(1L), argumentCaptor.capture(), eq(""));
     Assertions.assertThat(argumentCaptor.getValue())
         .hasChangedAttributes(
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.PRIORITY)
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.PRIORITY)
         .hasDueDate(TEST_TIME)
         .hasFollowUpDate(TEST_TIME)
         .hasCandidateGroupsList("foo")
@@ -324,10 +324,10 @@ public class UserTaskControllerTest extends RestControllerTest {
         .expectBody()
         .isEmpty();
 
-    final var argumentCaptor = ArgumentCaptor.forClass(UserTaskRecord.class);
+    final var argumentCaptor = ArgumentCaptor.forClass(TaskRecord.class);
     Mockito.verify(userTaskServices).updateUserTask(eq(1L), argumentCaptor.capture(), eq(""));
     Assertions.assertThat(argumentCaptor.getValue())
-        .hasChangedAttributes(UserTaskRecord.CANDIDATE_GROUPS, UserTaskRecord.FOLLOW_UP_DATE)
+        .hasChangedAttributes(TaskRecord.CANDIDATE_GROUPS, TaskRecord.FOLLOW_UP_DATE)
         .hasDueDate("")
         .hasFollowUpDate(TEST_TIME)
         .hasCandidateGroupsList("foo")
@@ -362,10 +362,10 @@ public class UserTaskControllerTest extends RestControllerTest {
         .expectBody()
         .isEmpty();
 
-    final var argumentCaptor = ArgumentCaptor.forClass(UserTaskRecord.class);
+    final var argumentCaptor = ArgumentCaptor.forClass(TaskRecord.class);
     Mockito.verify(userTaskServices).updateUserTask(eq(1L), argumentCaptor.capture(), eq(""));
     Assertions.assertThat(argumentCaptor.getValue())
-        .hasChangedAttributes(UserTaskRecord.CANDIDATE_GROUPS, UserTaskRecord.FOLLOW_UP_DATE)
+        .hasChangedAttributes(TaskRecord.CANDIDATE_GROUPS, TaskRecord.FOLLOW_UP_DATE)
         .hasDueDate("")
         .hasFollowUpDate("")
         .hasNoCandidateGroupsList()
@@ -405,16 +405,16 @@ public class UserTaskControllerTest extends RestControllerTest {
         .expectBody()
         .isEmpty();
 
-    final var argumentCaptor = ArgumentCaptor.forClass(UserTaskRecord.class);
+    final var argumentCaptor = ArgumentCaptor.forClass(TaskRecord.class);
     Mockito.verify(userTaskServices)
         .updateUserTask(eq(1L), argumentCaptor.capture(), eq("customAction"));
     Assertions.assertThat(argumentCaptor.getValue())
         .hasChangedAttributes(
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.PRIORITY)
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.PRIORITY)
         .hasDueDate(TEST_TIME)
         .hasFollowUpDate(TEST_TIME)
         .hasCandidateGroupsList("foo")
@@ -451,10 +451,10 @@ public class UserTaskControllerTest extends RestControllerTest {
         .expectBody()
         .isEmpty();
 
-    final var argumentCaptor = ArgumentCaptor.forClass(UserTaskRecord.class);
+    final var argumentCaptor = ArgumentCaptor.forClass(TaskRecord.class);
     Mockito.verify(userTaskServices).updateUserTask(eq(1L), argumentCaptor.capture(), eq(""));
     Assertions.assertThat(argumentCaptor.getValue())
-        .hasChangedAttributes(UserTaskRecord.DUE_DATE, UserTaskRecord.FOLLOW_UP_DATE)
+        .hasChangedAttributes(TaskRecord.DUE_DATE, TaskRecord.FOLLOW_UP_DATE)
         .hasDueDate(dateAndUrl.getLeft())
         .hasFollowUpDate(dateAndUrl.getLeft());
   }

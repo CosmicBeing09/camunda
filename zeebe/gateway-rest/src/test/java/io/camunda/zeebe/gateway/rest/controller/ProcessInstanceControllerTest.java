@@ -34,7 +34,7 @@ import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperation
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceResultRecord;
 import io.camunda.zeebe.protocol.record.value.BatchOperationType;
 import java.time.OffsetDateTime;
@@ -538,7 +538,7 @@ public class ProcessInstanceControllerTest extends RestControllerTest {
   void shouldCancelProcessInstance() {
     // given
     when(processInstanceServices.cancelProcessInstance(any(ProcessInstanceCancelRequest.class)))
-        .thenReturn(CompletableFuture.completedFuture(new ProcessInstanceRecord()));
+        .thenReturn(CompletableFuture.completedFuture(new WorkflowInstanceRecord()));
 
     final var request =
         """
@@ -567,7 +567,7 @@ public class ProcessInstanceControllerTest extends RestControllerTest {
   void shouldCancelProcessInstanceWithNoBody() {
     // given
     when(processInstanceServices.cancelProcessInstance(any(ProcessInstanceCancelRequest.class)))
-        .thenReturn(CompletableFuture.completedFuture(new ProcessInstanceRecord()));
+        .thenReturn(CompletableFuture.completedFuture(new WorkflowInstanceRecord()));
 
     // when/then
     webClient
@@ -589,7 +589,7 @@ public class ProcessInstanceControllerTest extends RestControllerTest {
   void shouldDeleteResourceWithEmptyBody() {
     // given
     when(processInstanceServices.cancelProcessInstance(any(ProcessInstanceCancelRequest.class)))
-        .thenReturn(CompletableFuture.completedFuture(new ProcessInstanceRecord()));
+        .thenReturn(CompletableFuture.completedFuture(new WorkflowInstanceRecord()));
 
     final var request =
         """

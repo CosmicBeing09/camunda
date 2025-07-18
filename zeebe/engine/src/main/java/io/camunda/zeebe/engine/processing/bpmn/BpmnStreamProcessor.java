@@ -29,7 +29,7 @@ import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -45,7 +45,7 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 
 @ExcludeAuthorizationCheck
-public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessInstanceRecord> {
+public final class BpmnStreamProcessor implements TypedRecordProcessor<WorkflowInstanceRecord> {
 
   private static final Logger LOGGER = Loggers.PROCESS_PROCESSOR_LOGGER;
 
@@ -95,7 +95,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceRecord> record) {
+  public void processRecord(final TypedRecord<WorkflowInstanceRecord> record) {
 
     // initialize
     final var intent = (ProcessInstanceIntent) record.getIntent();
@@ -121,7 +121,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
 
   @Override
   public ProcessingError tryHandleError(
-      final TypedRecord<ProcessInstanceRecord> command, final Throwable error) {
+      final TypedRecord<WorkflowInstanceRecord> command, final Throwable error) {
     if (error instanceof ExceededBatchRecordSizeException) {
       context.init(
           command.getKey(), command.getValue(), (ProcessInstanceIntent) command.getIntent());
@@ -335,7 +335,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
   }
 
   private ExecutableFlowElement getElement(
-      final ProcessInstanceRecord recordValue,
+      final WorkflowInstanceRecord recordValue,
       final BpmnElementProcessor<ExecutableFlowElement> processor) {
 
     return processState.getFlowElement(

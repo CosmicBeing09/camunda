@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableBannedInstanceState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -93,7 +93,7 @@ public final class BannedInstanceStateTest {
   @Test
   public void shouldNotCallCallbackIfNotProcessInstanceIntent() {
     // given
-    final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
     processInstanceRecord.setElementId("PI");
     processInstanceRecord.setBpmnProcessId(wrapString("process1"));
     processInstanceRecord.setProcessInstanceKey(1000L);
@@ -139,7 +139,7 @@ public final class BannedInstanceStateTest {
   }
 
   private TypedRecordImpl createRecord(final long processInstanceKey) {
-    final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+    final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
     processInstanceRecord.setElementId("startEvent");
     processInstanceRecord.setBpmnProcessId(wrapString("process1"));
     processInstanceRecord.setProcessInstanceKey(processInstanceKey);

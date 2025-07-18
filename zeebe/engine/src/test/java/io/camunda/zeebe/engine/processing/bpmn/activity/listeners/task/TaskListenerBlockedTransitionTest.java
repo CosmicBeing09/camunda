@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -173,7 +173,7 @@ public class TaskListenerBlockedTransitionTest {
             Assertions.assertThat(userTask)
                 .hasAction("my_custom_action")
                 .hasVariables(Map.of("foo_var", "bar"))
-                .hasOnlyChangedAttributes(UserTaskRecord.VARIABLES));
+                .hasOnlyChangedAttributes(TaskRecord.VARIABLES));
     helper.assertThatProcessInstanceCompleted(processInstanceKey);
   }
 
@@ -272,11 +272,11 @@ public class TaskListenerBlockedTransitionTest {
             // assignee should NOT be present in the CREATED
             tuple(UserTaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
             // assignee should be present in the ASSIGNING
-            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(TaskRecord.ASSIGNEE)),
             tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
             tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
             tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(TaskRecord.ASSIGNEE)));
   }
 
   @Test
@@ -324,7 +324,7 @@ public class TaskListenerBlockedTransitionTest {
             Assertions.assertThat(userTask)
                 .hasAssignee("me")
                 .hasAction("my_assign_action")
-                .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE));
+                .hasOnlyChangedAttributes(TaskRecord.ASSIGNEE));
   }
 
   @Test
@@ -423,7 +423,7 @@ public class TaskListenerBlockedTransitionTest {
                 .hasFollowUpDate("")
                 .hasPriority(88) // updated
                 .hasAction("my_update_action")
-                .hasOnlyChangedAttributes(UserTaskRecord.CANDIDATE_USERS, UserTaskRecord.PRIORITY));
+                .hasOnlyChangedAttributes(TaskRecord.CANDIDATE_USERS, TaskRecord.PRIORITY));
   }
 
   @Test
@@ -476,7 +476,7 @@ public class TaskListenerBlockedTransitionTest {
     final Predicate<Record<?>> isUserTaskOrVariableDocumentWithElementInstanceKey =
         r ->
             switch (r.getValue()) {
-              case final UserTaskRecord u ->
+              case final TaskRecord u ->
                   u.getElementInstanceKey() == userTaskElementInstanceKey;
               case final VariableDocumentRecord v -> v.getScopeKey() == userTaskElementInstanceKey;
               default -> false;
@@ -512,7 +512,7 @@ public class TaskListenerBlockedTransitionTest {
         userTask ->
             Assertions.assertThat(userTask)
                 .hasVariables(Map.of("status", "APPROVED"))
-                .hasOnlyChangedAttributes(UserTaskRecord.VARIABLES)
+                .hasOnlyChangedAttributes(TaskRecord.VARIABLES)
                 .hasAction(""));
   }
 
@@ -628,13 +628,13 @@ public class TaskListenerBlockedTransitionTest {
         .containsExactly(
             // First update
             tuple(
-                List.of("frodo", "samwise"), 50, "update", List.of(UserTaskRecord.CANDIDATE_USERS)),
+                List.of("frodo", "samwise"), 50, "update", List.of(TaskRecord.CANDIDATE_USERS)),
             // Second update
             tuple(
                 List.of("aragorn", "legolas"),
                 99,
                 "escalate",
-                List.of(UserTaskRecord.CANDIDATE_USERS, UserTaskRecord.PRIORITY)));
+                List.of(TaskRecord.CANDIDATE_USERS, TaskRecord.PRIORITY)));
   }
 
   @Test
@@ -674,9 +674,9 @@ public class TaskListenerBlockedTransitionTest {
     final Predicate<Record<?>> isUserTaskOrProcessInstanceRecordWithUserTaskInstanceKey =
         r ->
             switch (r.getValue()) {
-              case final UserTaskRecord u ->
+              case final TaskRecord u ->
                   u.getElementInstanceKey() == userTaskElementInstanceKey;
-              case final ProcessInstanceRecord ignored -> r.getKey() == userTaskElementInstanceKey;
+              case final WorkflowInstanceRecord ignored -> r.getKey() == userTaskElementInstanceKey;
               default -> false;
             };
 
@@ -807,7 +807,7 @@ public class TaskListenerBlockedTransitionTest {
             Assertions.assertThat(userTask)
                 .hasAssignee("test_user")
                 .hasAction("claim_action")
-                .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE));
+                .hasOnlyChangedAttributes(TaskRecord.ASSIGNEE));
   }
 
   @Test
@@ -857,11 +857,11 @@ public class TaskListenerBlockedTransitionTest {
         .containsExactly(
             tuple(UserTaskIntent.CREATING, assignee, action, List.of()),
             tuple(UserTaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
-            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(TaskRecord.ASSIGNEE)),
             tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
             tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
             tuple(UserTaskIntent.COMPLETE_TASK_LISTENER, assignee, action, List.of()),
-            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(TaskRecord.ASSIGNEE)));
   }
 
   @Test

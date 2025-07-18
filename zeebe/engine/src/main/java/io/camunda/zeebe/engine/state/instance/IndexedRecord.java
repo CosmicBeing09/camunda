@@ -12,7 +12,7 @@ import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.msgpack.property.EnumProperty;
 import io.camunda.zeebe.msgpack.property.LongProperty;
 import io.camunda.zeebe.msgpack.property.ObjectProperty;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import org.agrona.DirectBuffer;
 import org.agrona.MutableDirectBuffer;
@@ -22,8 +22,8 @@ public final class IndexedRecord extends UnpackedObject implements DbValue {
   private final LongProperty keyProp = new LongProperty("key", 0L);
   private final EnumProperty<ProcessInstanceIntent> stateProp =
       new EnumProperty<>("state", ProcessInstanceIntent.class);
-  private final ObjectProperty<ProcessInstanceRecord> valueProp =
-      new ObjectProperty<>("processInstanceRecord", new ProcessInstanceRecord());
+  private final ObjectProperty<WorkflowInstanceRecord> valueProp =
+      new ObjectProperty<>("processInstanceRecord", new WorkflowInstanceRecord());
 
   IndexedRecord() {
     super(3);
@@ -33,7 +33,7 @@ public final class IndexedRecord extends UnpackedObject implements DbValue {
   public IndexedRecord(
       final long key,
       final ProcessInstanceIntent instanceState,
-      final ProcessInstanceRecord record) {
+      final WorkflowInstanceRecord record) {
     this();
     keyProp.setValue(key);
     stateProp.setValue(instanceState);
@@ -62,11 +62,11 @@ public final class IndexedRecord extends UnpackedObject implements DbValue {
     return getState() == state;
   }
 
-  public ProcessInstanceRecord getValue() {
+  public WorkflowInstanceRecord getValue() {
     return valueProp.getValue();
   }
 
-  public IndexedRecord setValue(final ProcessInstanceRecord value) {
+  public IndexedRecord setValue(final WorkflowInstanceRecord value) {
     final MutableDirectBuffer valueBuffer = new UnsafeBuffer(0, 0);
     final int encodedLength = value.getLength();
     valueBuffer.wrap(new byte[encodedLength]);
