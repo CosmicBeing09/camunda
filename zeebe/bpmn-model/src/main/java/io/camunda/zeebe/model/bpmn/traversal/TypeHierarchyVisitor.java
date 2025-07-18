@@ -15,7 +15,7 @@
  */
 package io.camunda.zeebe.model.bpmn.traversal;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.impl.BpmnImpl;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstance;
 import java.util.List;
@@ -44,6 +44,6 @@ public abstract class TypeHierarchyVisitor implements ModelElementVisitor {
       ModelElementType implementedType, BpmnModelElementInstance instance);
 
   private List<ModelElementType> getTypeHierarchy(final ModelElementType type) {
-    return ((BpmnImpl) Bpmn.INSTANCE).getHierarchy(type);
+    return ((BpmnImpl) BpmnModelApi.INSTANCE).getHierarchy(type);
   }
 }

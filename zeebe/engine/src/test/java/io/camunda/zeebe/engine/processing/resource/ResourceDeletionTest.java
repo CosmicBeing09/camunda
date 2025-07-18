@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
@@ -248,7 +248,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId).startEvent().userTask().endEvent().done())
+                BpmnModelApi.createExecutableProcess(processId).startEvent().userTask().endEvent().done())
             .deploy()
             .getValue()
             .getProcessesMetadata()
@@ -328,7 +328,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent1")
                     .timerWithDuration(Duration.ofDays(1))
                     .endEvent("endEvent")
@@ -395,7 +395,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent1")
                     .timerWithDuration(Duration.ofDays(1))
                     .endEvent("endEvent")
@@ -445,7 +445,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent1")
                     .message("message1")
                     .endEvent("endEvent")
@@ -512,7 +512,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent1")
                     .message("message1")
                     .endEvent("endEvent")
@@ -563,7 +563,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent1")
                     .signal("signal1")
                     .endEvent("endEvent")
@@ -630,7 +630,7 @@ public class ResourceDeletionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent1")
                     .signal("signal1")
                     .endEvent("endEvent")
@@ -700,7 +700,7 @@ public class ResourceDeletionTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .businessRuleTask(
                     "task",
@@ -714,7 +714,7 @@ public class ResourceDeletionTest {
     return engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .versionTag("v1.0")
                 .startEvent()
                 .endEvent()
@@ -730,7 +730,7 @@ public class ResourceDeletionTest {
     return engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .timerWithDuration(Duration.ofDays(1))
                 .endEvent()
@@ -746,7 +746,7 @@ public class ResourceDeletionTest {
     return engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .message("message")
                 .endEvent()
@@ -762,7 +762,7 @@ public class ResourceDeletionTest {
     return engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId).startEvent().signal("signal").endEvent().done())
+            BpmnModelApi.createExecutableProcess(processId).startEvent().signal("signal").endEvent().done())
         .deploy()
         .getValue()
         .getProcessesMetadata()

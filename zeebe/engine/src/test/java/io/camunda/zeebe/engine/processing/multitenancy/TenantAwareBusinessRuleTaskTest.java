@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -59,7 +59,7 @@ public class TenantAwareBusinessRuleTaskTest {
   private Map<String, DecisionRecordValue> deployedDecisionsById;
 
   private static BpmnModelInstance processWithBusinessRuleTask() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .businessRuleTask(
             TASK_ID, t -> t.zeebeCalledDecisionId(DECISION_ID).zeebeResultVariable(RESULT_VARIABLE))

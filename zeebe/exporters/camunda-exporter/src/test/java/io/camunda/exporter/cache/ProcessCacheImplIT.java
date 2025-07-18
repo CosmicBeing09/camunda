@@ -9,7 +9,7 @@ package io.camunda.exporter.cache;
 
 import static io.camunda.search.test.utils.SearchDBExtension.PROCESS_INDEX;
 import static io.camunda.search.test.utils.SearchDBExtension.TEST_INTEGRATION_OPENSEARCH_AWS_URL;
-import static io.camunda.zeebe.model.bpmn.Bpmn.convertToString;
+import static io.camunda.zeebe.model.bpmn.BpmnModelApi.convertToString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatException;
 
@@ -25,7 +25,7 @@ import io.camunda.zeebe.exporter.common.cache.ExporterEntityCache;
 import io.camunda.zeebe.exporter.common.cache.ExporterEntityCache.CacheLoaderFailedException;
 import io.camunda.zeebe.exporter.common.cache.ExporterEntityCacheImpl;
 import io.camunda.zeebe.exporter.common.cache.process.CachedProcessEntity;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
 import io.camunda.zeebe.model.bpmn.instance.FlowNode;
@@ -115,7 +115,7 @@ class ProcessCacheImplIT {
 
   private BpmnModelInstance createBpmnWithCallActivities(
       final String bpmnProcessId, final List<String> callActivityIds) {
-    final StartEventBuilder seb = Bpmn.createExecutableProcess(bpmnProcessId).startEvent();
+    final StartEventBuilder seb = BpmnModelApi.createExecutableProcess(bpmnProcessId).startEvent();
     callActivityIds.forEach(ca -> seb.callActivity(ca).zeebeProcessId(ca));
     return seb.done();
   }

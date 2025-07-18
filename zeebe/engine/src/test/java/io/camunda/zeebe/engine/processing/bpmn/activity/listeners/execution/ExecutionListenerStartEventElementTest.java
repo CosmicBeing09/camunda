@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ExpectedValidationResult;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ProcessValidationUtil;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
 import io.camunda.zeebe.model.bpmn.instance.StartEvent;
 import io.camunda.zeebe.protocol.record.Record;
@@ -117,7 +117,7 @@ public class ExecutionListenerStartEventElementTest {
     final var modelInstance =
         scenario
             .builderFunction
-            .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
+            .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
             .zeebeEndExecutionListener(END_EL_TYPE + "_1")
             .zeebeEndExecutionListener(END_EL_TYPE + "_2")
             .manualTask()
@@ -161,7 +161,7 @@ public class ExecutionListenerStartEventElementTest {
     final var modelInstance =
         scenario
             .builderFunction
-            .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
+            .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
             .zeebeEndExecutionListener(END_EL_TYPE)
             .serviceTask(SERVICE_TASK_TYPE, t -> t.zeebeJobType(SERVICE_TASK_TYPE))
             .endEvent()
@@ -213,7 +213,7 @@ public class ExecutionListenerStartEventElementTest {
     final var modelInstance =
         scenario
             .builderFunction
-            .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
+            .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
             .zeebeStartExecutionListener(START_EL_TYPE)
             .endEvent()
             .done();
@@ -232,7 +232,7 @@ public class ExecutionListenerStartEventElementTest {
     final var modelInstance =
         scenario
             .builderFunction
-            .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
+            .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent(scenario.name))
             .zeebeEndExecutionListener(END_EL_TYPE)
             .manualTask()
             .endEvent()

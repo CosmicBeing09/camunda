@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
@@ -51,7 +51,7 @@ public final class CancelProcessInstanceInBatchesTest {
   public void shouldCancelInstanceWithMoreChildrenThanTheBatchSizeCanHandle() {
     // given
     CLIENT_RULE.deployProcess(
-        Bpmn.createExecutableProcess("PROCESS")
+        BpmnModelApi.createExecutableProcess("PROCESS")
             .startEvent()
             .zeebeOutputExpression("0", "count")
             .exclusiveGateway("joining")
@@ -84,7 +84,7 @@ public final class CancelProcessInstanceInBatchesTest {
   public void shouldCancelSubprocessWithMoreNestedChildrenThanTheBatchSizeCanHandle() {
     // given
     CLIENT_RULE.deployProcess(
-        Bpmn.createExecutableProcess("PROCESS")
+        BpmnModelApi.createExecutableProcess("PROCESS")
             .startEvent()
             .subProcess(
                 "subprocess",

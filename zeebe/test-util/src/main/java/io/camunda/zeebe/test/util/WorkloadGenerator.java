@@ -9,7 +9,7 @@ package io.camunda.zeebe.test.util;
 
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.worker.JobWorker;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -33,7 +33,7 @@ import org.awaitility.Awaitility;
  */
 public final class WorkloadGenerator {
   private static final BpmnModelInstance SAMPLE_PROCESS =
-      Bpmn.createExecutableProcess("testProcess")
+      BpmnModelApi.createExecutableProcess("testProcess")
           .startEvent()
           .intermediateCatchEvent(
               "message",

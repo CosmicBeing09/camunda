@@ -26,7 +26,7 @@ import io.camunda.zeebe.gateway.admin.backup.BrokerBackupRequest;
 import io.camunda.zeebe.gateway.admin.backup.State;
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.RecordingJobHandler;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.management.BackupStatusCode;
 import io.camunda.zeebe.protocol.record.Record;
@@ -67,11 +67,11 @@ class BackupMultiPartitionTest {
   @Container private static final MinioContainer S3 = new MinioContainer();
   private static final String JOB_TYPE = "test";
   private static final BpmnModelInstance SIMPLE_PROCESS =
-      Bpmn.createExecutableProcess("process").startEvent("start").endEvent("end").done();
+      BpmnModelApi.createExecutableProcess("process").startEvent("start").endEvent("end").done();
   private static final String CORRELATION_KEY = "key";
   private static final String MESSAGE_NAME = "message";
   private static final BpmnModelInstance PROCESS_WITH_MESSAGE_EVENT =
-      Bpmn.createExecutableProcess("message-process")
+      BpmnModelApi.createExecutableProcess("message-process")
           .startEvent()
           .intermediateCatchEvent("receive-message")
           .message(m -> m.name(MESSAGE_NAME).zeebeCorrelationKeyExpression(CORRELATION_KEY))

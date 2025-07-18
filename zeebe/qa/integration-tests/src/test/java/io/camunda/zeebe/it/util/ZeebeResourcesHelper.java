@@ -14,7 +14,7 @@ import io.camunda.client.api.command.DeployResourceCommandStep1;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.api.response.PartitionInfo;
 import io.camunda.client.api.response.Topology;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ServiceTaskBuilder;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
@@ -125,7 +125,7 @@ public class ZeebeResourcesHelper implements CloseableSilently {
 
   public BpmnModelInstance createSingleJobModelInstance(
       final String jobType, final Consumer<ServiceTaskBuilder> taskBuilderConsumer) {
-    return Bpmn.createExecutableProcess("process")
+    return BpmnModelApi.createExecutableProcess("process")
         .startEvent("start")
         .serviceTask(
             "task",
@@ -222,7 +222,7 @@ public class ZeebeResourcesHelper implements CloseableSilently {
 
   public BpmnModelInstance createSingleUserTaskModelInstance(
       final UnaryOperator<UserTaskBuilder> userTaskBuilderFunction) {
-    return Bpmn.createExecutableProcess("process")
+    return BpmnModelApi.createExecutableProcess("process")
         .startEvent("start")
         .userTask("task", t -> userTaskBuilderFunction.apply(t.zeebeUserTask()))
         .zeebeUserTask()

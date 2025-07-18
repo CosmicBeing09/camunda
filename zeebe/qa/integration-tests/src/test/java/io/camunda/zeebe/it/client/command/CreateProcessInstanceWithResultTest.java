@@ -20,7 +20,7 @@ import io.camunda.client.api.response.ActivateJobsResponse;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.ProcessInstanceResult;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -117,7 +117,7 @@ public final class CreateProcessInstanceWithResultTest {
     // given
     deployProcesses(testInfo);
     final BpmnModelInstance processWithVariableScopes =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .subProcess(
                 "sub",
@@ -185,7 +185,7 @@ public final class CreateProcessInstanceWithResultTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateCatchEvent()
                 .message(message -> message.name("a").zeebeCorrelationKeyExpression("key"))
@@ -226,7 +226,7 @@ public final class CreateProcessInstanceWithResultTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
                 .endEvent()
@@ -265,7 +265,7 @@ public final class CreateProcessInstanceWithResultTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
                 .boundaryEvent("error", e -> e.errorEventDefinition().error("error"))
@@ -315,7 +315,7 @@ public final class CreateProcessInstanceWithResultTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent("start_event_with_output_mapping")
                 .exclusiveGateway("gateway")
                 .sequenceFlowId("to-a")
@@ -359,7 +359,7 @@ public final class CreateProcessInstanceWithResultTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
                 .endEvent("end_event")
@@ -451,7 +451,7 @@ public final class CreateProcessInstanceWithResultTest {
     processId = "processWithJob";
     processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent("v1")
                 .serviceTask(
                     "task",
@@ -486,7 +486,7 @@ public final class CreateProcessInstanceWithResultTest {
     processId = "process-" + testInfo.getTestMethod().get().getName();
     processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId).startEvent("v1").done());
+            BpmnModelApi.createExecutableProcess(processId).startEvent("v1").done());
     jobType = "job-" + testInfo.getTestMethod().get().getName();
   }
 }

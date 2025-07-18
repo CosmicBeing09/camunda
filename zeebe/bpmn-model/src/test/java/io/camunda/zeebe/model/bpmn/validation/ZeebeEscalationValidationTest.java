@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractThrowEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 class ZeebeEscalationValidationTest {
 
   private BpmnModelInstance process(final Consumer<SubProcessBuilder> builder) {
-    return Bpmn.createExecutableProcess().startEvent().subProcess("sp", builder).endEvent().done();
+    return BpmnModelApi.createExecutableProcess().startEvent().subProcess("sp", builder).endEvent().done();
   }
 
   @Test
@@ -43,7 +43,7 @@ class ZeebeEscalationValidationTest {
   void verifyEscalationBoundaryEventOnlyAllowAttachingToSubProcessOrCallActivity() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .boundaryEvent("catch", b -> b.escalation("escalation-1"))
@@ -63,7 +63,7 @@ class ZeebeEscalationValidationTest {
   void verifyEscalationBoundaryEventAttachingToSubProcess() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .subProcess(
                 "sp",
@@ -85,7 +85,7 @@ class ZeebeEscalationValidationTest {
   void verifyEscalationBoundaryEventAttachingToCallActivity() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("child"))
             .boundaryEvent("catch-1", b -> b.escalation().endEvent())
@@ -102,7 +102,7 @@ class ZeebeEscalationValidationTest {
   void verifyMultipleEscalationBoundaryEventsWithoutEscalationCode() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("child"))
             .boundaryEvent("catch-1", b -> b.escalation().endEvent())
@@ -124,7 +124,7 @@ class ZeebeEscalationValidationTest {
   void verifyMultipleEscalationBoundaryEventsWithSameEscalationCode() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("child"))
             .boundaryEvent("catch-1", b -> b.escalation("escalation").endEvent())
@@ -177,7 +177,7 @@ class ZeebeEscalationValidationTest {
   void verifyMultipleEscalationEventSubprocessWithSameEscalationCode() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "sub-1", s -> s.startEvent().interrupting(true).escalation("escalation").endEvent())
             .eventSubProcess(
@@ -199,7 +199,7 @@ class ZeebeEscalationValidationTest {
   void verifyMissingEscalationRefOnIntermediateThrowingEscalationEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent()
             .escalationEventDefinition()
@@ -217,7 +217,7 @@ class ZeebeEscalationValidationTest {
   void verifyMissingEscalationCodeOnIntermediateThrowingEscalationEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent()
             .escalation("")
@@ -234,7 +234,7 @@ class ZeebeEscalationValidationTest {
   void verifyMissingEscalationRefOnEscalationEndEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .endEvent("escalation", AbstractThrowEventBuilder::escalationEventDefinition)
             .done();
@@ -250,7 +250,7 @@ class ZeebeEscalationValidationTest {
   void verifyMissingEscalationCodeOnEscalationEndEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .endEvent("escalation", e -> e.escalation(""))
             .done();
@@ -265,7 +265,7 @@ class ZeebeEscalationValidationTest {
   void verifyEscalationCodeOfEscalationBoundaryEventCanNotContainAnExpression() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("child"))
             .boundaryEvent("catch", b -> b.escalation("= escalation").endEvent())
@@ -284,7 +284,7 @@ class ZeebeEscalationValidationTest {
   void verifyEscalationCodeOfEscalationStartEventCanNotContainAnExpression() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "sub", s -> s.startEvent("start").escalation("= escalation").endEvent())
             .startEvent()

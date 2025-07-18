@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractBoundaryEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractStartEventBuilder;
@@ -48,7 +48,7 @@ public class EscalationEventTest {
   public void shouldThrowEscalationFromEscalationIntermediateThrowEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateThrowEvent("throw", b -> b.escalation(ESCALATION_CODE))
             .manualTask(TASK_ELEMENT_ID)
@@ -85,7 +85,7 @@ public class EscalationEventTest {
   public void shouldThrowEscalationFromEndEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .endEvent("end", e -> e.escalation(ESCALATION_CODE))
             .done();
@@ -114,7 +114,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnBoundaryEventWithoutEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -161,7 +161,7 @@ public class EscalationEventTest {
     // Regression for https://github.com/camunda/camunda/issues/12326
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -215,7 +215,7 @@ public class EscalationEventTest {
                 .endEvent();
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -267,7 +267,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOutsideMultiInstanceSubprocess() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -312,7 +312,7 @@ public class EscalationEventTest {
   public void shouldThrowEscalationEventHierarchical() {
     // given
     final var processChild =
-        Bpmn.createExecutableProcess("wf-child")
+        BpmnModelApi.createExecutableProcess("wf-child")
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -326,7 +326,7 @@ public class EscalationEventTest {
             .done();
 
     final var processParent =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("wf-child"))
             .boundaryEvent(CATCH_ELEMENT_ID, b -> b.escalation(ESCALATION_CODE))
@@ -371,7 +371,7 @@ public class EscalationEventTest {
       shouldCatchEscalationOnNonInterruptingBoundaryEventWhenThrowEscalationEventHierarchical() {
     // given
     final var processChild =
-        Bpmn.createExecutableProcess("wf-child")
+        BpmnModelApi.createExecutableProcess("wf-child")
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -386,7 +386,7 @@ public class EscalationEventTest {
             .done();
 
     final var processParent =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("wf-child"))
             .boundaryEvent(CATCH_ELEMENT_ID, b -> b.escalation(ESCALATION_CODE))
@@ -442,14 +442,14 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnEscalationStartEventWhenThrowEscalationEventHierarchical() {
     // given
     final var processChild =
-        Bpmn.createExecutableProcess("wf-child")
+        BpmnModelApi.createExecutableProcess("wf-child")
             .startEvent()
             .intermediateThrowEvent(THROW_ELEMENT_ID, b -> b.escalation(ESCALATION_CODE))
             .endEvent()
             .done();
 
     final var processParent =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "escalation-event-subprocess",
                 e ->
@@ -503,7 +503,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationEventsByEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -544,7 +544,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnNonInterruptingBoundaryEventWithEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -598,7 +598,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnNonInterruptingBoundaryEventWithoutEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -644,7 +644,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnNonInterruptingEscalationStartEventWithEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "escalation-event-subprocess",
                 e ->
@@ -692,7 +692,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnNonInterruptingEscalationStartEventWithoutEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "escalation-event-subprocess",
                 e ->
@@ -739,7 +739,7 @@ public class EscalationEventTest {
   public void shouldThrowEscalationFromIntermediateThrowEventWithExpression() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateThrowEvent("throw", b -> b.escalationExpression("escalationCode"))
             .manualTask(TASK_ELEMENT_ID)
@@ -787,7 +787,7 @@ public class EscalationEventTest {
   public void shouldThrowEscalationFromEndEventWithExpression() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .endEvent("end", e -> e.escalationExpression("escalationCode"))
             .done();
@@ -825,7 +825,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationByEscalationCodeWithExpression() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "escalation-event-subprocess",
                 e ->
@@ -883,7 +883,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnBoundaryEventWithSpecificEscalationCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -928,7 +928,7 @@ public class EscalationEventTest {
   public void shouldCatchEscalationOnEscalstionStartEventWithSpecificEscalationCode() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "sub-1",
                 e -> e.startEvent("catch-all", AbstractStartEventBuilder::escalation).endEvent())

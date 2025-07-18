@@ -60,7 +60,7 @@ public abstract class ZeebeContainerManager {
             ConnectionTypes.ELASTICSEARCH.getType());
 
     client =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
             .usePlaintext()
             .defaultRequestTimeout(REQUEST_TIMEOUT)

@@ -9,7 +9,7 @@ package io.camunda.optimize.service.util;
 
 import io.camunda.optimize.dto.optimize.FlowNodeDataDto;
 import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.BaseElement;
 import io.camunda.zeebe.model.bpmn.instance.FlowNode;
@@ -43,7 +43,7 @@ public final class BpmnModelUtil {
 
   public static BpmnModelInstance parseBpmnModel(final String bpmn20Xml) {
     try (final ByteArrayInputStream stream = new ByteArrayInputStream(bpmn20Xml.getBytes())) {
-      return Bpmn.readModelFromStream(stream);
+      return BpmnModelApi.readModelFromStream(stream);
     } catch (final IOException e) {
       throw new OptimizeRuntimeException("Failed reading model", e);
     }

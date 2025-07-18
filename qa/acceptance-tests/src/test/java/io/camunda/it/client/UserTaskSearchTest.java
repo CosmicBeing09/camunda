@@ -18,7 +18,7 @@ import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.response.UserTask;
 import io.camunda.client.api.search.response.Variable;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -35,23 +35,23 @@ import org.junit.jupiter.api.Test;
 
 @MultiDbTest
 class UserTaskSearchTest {
-  private static Long userTaskKeyTaskAssigned;
+  private static Long assignedTaskKey;
 
   private static CamundaClient camundaClient;
 
   @BeforeAll
   static void beforeAll() {
 
-    deployProcess("process", "simple.bpmn", "test", "", "");
-    deployProcess("process-2", "simple-2.bpmn", "test-2", "group", "user");
+    deployProcessWithDefaultPriority("process", "simple.bpmn", "test", "", "");
+    deployProcessWithDefaultPriority("process-2", "simple-2.bpmn", "test-2", "group", "user");
     deployProcess("process-3", "simple-3.bpmn", "test-3", "", "", "30");
-    delpoyProcessFromResourcePath("/process/bpm_variable_test.bpmn", "bpm_variable_test.bpmn");
-    delpoyProcessFromResourcePath(
+    deployProcessFromResourcePath("/process/bpm_variable_test.bpmn", "bpm_variable_test.bpmn");
+    deployProcessFromResourcePath(
         "/process/bpmn_subprocess_case.bpmn", "bpmn_subprocess_case.bpmn");
 
     deployForm("form/form.form");
-    delpoyProcessFromResourcePath("/process/process_with_form.bpmn", "process_with_form.bpmn");
-    delpoyProcessFromResourcePath("/process/job_worker_process.bpmn", "job_worker_process.bpmn");
+    deployProcessFromResourcePath("/process/process_with_form.bpmn", "process_with_form.bpmn");
+    deployProcessFromResourcePath("/process/job_worker_process.bpmn", "job_worker_process.bpmn");
 
     startProcessInstance("process");
     startProcessInstance("process-2");
@@ -187,7 +187,7 @@ class UserTaskSearchTest {
             .join();
 
     // Retrieve userTaskKey that contains variables
-    final var userTaskKey = resultUserTaskQuery.items().getFirst().getUserTaskKey();
+    final var userTaskKey = resultUserTaskQuery.items().getFirst().getTaskId();
 
     final var resultVariableQuery =
         camundaClient.newUserTaskVariableSearchRequest(userTaskKey).send().join();
@@ -368,7 +368,7 @@ class UserTaskSearchTest {
         camundaClient.newUserTaskSearchRequest().filter(f -> f.assignee("demo")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
     assertThat(result.items().getFirst().getAssignee()).isEqualTo("demo");
-    assertThat(result.items().getFirst().getUserTaskKey()).isEqualTo(userTaskKeyTaskAssigned);
+    assertThat(result.items().getFirst().getTaskId()).isEqualTo(assignedTaskKey);
   }
 
   @Test
@@ -385,7 +385,7 @@ class UserTaskSearchTest {
     assertThat(result.items()).hasSize(1);
     final var first = result.items().getFirst();
     assertThat(first.getAssignee()).isEqualTo("demo");
-    assertThat(first.getUserTaskKey()).isEqualTo(userTaskKeyTaskAssigned);
+    assertThat(first.getTaskId()).isEqualTo(assignedTaskKey);
   }
 
   @Test
@@ -393,7 +393,7 @@ class UserTaskSearchTest {
     final var resultCreated =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.CREATED))
+            .filter(f -> f.status(UserTaskState.CREATED))
             .send()
             .join();
     assertThat(resultCreated.items().size()).isEqualTo(7);
@@ -404,7 +404,7 @@ class UserTaskSearchTest {
     final var resultCompleted =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .send()
             .join();
     assertThat(resultCompleted.items().size()).isEqualTo(1);
@@ -434,7 +434,7 @@ class UserTaskSearchTest {
   }
 
   @Test
-  public void shouldRetrieveTaskByElementName() {
+  public void shouldRetrieveTaskByName() {
     final var result =
         camundaClient.newUserTaskSearchRequest().filter(f -> f.elementName("P2")).send().join();
     assertThat(result.items().size()).isEqualTo(1);
@@ -499,7 +499,7 @@ class UserTaskSearchTest {
   public void shouldValidatePagination() {
     final var result = camundaClient.newUserTaskSearchRequest().page(p -> p.limit(1)).send().join();
     assertThat(result.items().size()).isEqualTo(1);
-    final var key = result.items().getFirst().getUserTaskKey();
+    final var key = result.items().getFirst().getTaskId();
     // apply searchAfter
     final var resultAfter =
         camundaClient
@@ -509,7 +509,7 @@ class UserTaskSearchTest {
             .join();
 
     assertThat(resultAfter.items().size()).isEqualTo(7);
-    final var keyAfter = resultAfter.items().getFirst().getUserTaskKey();
+    final var keyAfter = resultAfter.items().getFirst().getTaskId();
     // apply searchBefore
     final var resultBefore =
         camundaClient
@@ -518,7 +518,7 @@ class UserTaskSearchTest {
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(resultBefore.items().getFirst().getUserTaskKey()).isEqualTo(key);
+    assertThat(resultBefore.items().getFirst().getTaskId()).isEqualTo(key);
   }
 
   @Test
@@ -546,7 +546,7 @@ class UserTaskSearchTest {
         .isEqualTo(
             Long.toString(
                 OffsetDateTime.parse(firstItem.getCreationDate()).toInstant().toEpochMilli()));
-    assertThat(userTaskKey).isEqualTo(Long.toString(firstItem.getUserTaskKey()));
+    assertThat(userTaskKey).isEqualTo(Long.toString(firstItem.getTaskId()));
 
     final List<String> lastSortValues =
         result.page().lastSortValues().stream().map(Object::toString).toList();
@@ -557,7 +557,7 @@ class UserTaskSearchTest {
         .isEqualTo(
             Long.toString(
                 OffsetDateTime.parse(lastItem.getCreationDate()).toInstant().toEpochMilli()));
-    assertThat(userTaskKey).isEqualTo(Long.toString(lastItem.getUserTaskKey()));
+    assertThat(userTaskKey).isEqualTo(Long.toString(lastItem.getTaskId()));
   }
 
   @Test
@@ -627,10 +627,10 @@ class UserTaskSearchTest {
   @Test
   void shouldGetUserTaskByKey() {
     // when
-    final var result = camundaClient.newUserTaskGetRequest(userTaskKeyTaskAssigned).send().join();
+    final var result = camundaClient.newUserTaskGetRequest(assignedTaskKey).send().join();
 
     // then
-    assertThat(result.getUserTaskKey()).isEqualTo(userTaskKeyTaskAssigned);
+    assertThat(result.getTaskId()).isEqualTo(assignedTaskKey);
   }
 
   @Test
@@ -657,7 +657,7 @@ class UserTaskSearchTest {
         userTaskList.items().stream().filter(item -> item.getFormKey() != null).findFirst().get();
 
     final var result =
-        camundaClient.newUserTaskGetFormRequest(userTaskKeyWithForm.getUserTaskKey()).send().join();
+        camundaClient.newUserTaskGetFormRequest(userTaskKeyWithForm.getTaskId()).send().join();
 
     // assert that the form key is the same as the form key of the user task
     assertThat(result.getFormKey()).isEqualTo(userTaskKeyWithForm.getFormKey());
@@ -674,7 +674,7 @@ class UserTaskSearchTest {
 
     final var result =
         camundaClient
-            .newUserTaskGetFormRequest(userTaskKeyWithNoForm.getUserTaskKey())
+            .newUserTaskGetFormRequest(userTaskKeyWithNoForm.getTaskId())
             .send()
             .join();
     // then
@@ -687,7 +687,7 @@ class UserTaskSearchTest {
     final var userTaskList = camundaClient.newUserTaskSearchRequest().send().join();
 
     final var userTaskElementInstanceKey =
-        userTaskList.items().stream().findFirst().get().getElementInstanceKey();
+        userTaskList.items().stream().findFirst().get().getInstanceKey();
 
     final var result =
         camundaClient
@@ -697,7 +697,7 @@ class UserTaskSearchTest {
             .join();
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().getFirst().getElementInstanceKey())
+    assertThat(result.items().getFirst().getInstanceKey())
         .isEqualTo(userTaskElementInstanceKey);
   }
 
@@ -707,7 +707,7 @@ class UserTaskSearchTest {
     final var userTaskList =
         camundaClient.newUserTaskSearchRequest().filter(f -> f.elementId("TaskSub")).send().join();
 
-    final var userTaskKey = userTaskList.items().stream().findFirst().get().getUserTaskKey();
+    final var userTaskKey = userTaskList.items().stream().findFirst().get().getTaskId();
 
     final var result =
         camundaClient
@@ -728,7 +728,7 @@ class UserTaskSearchTest {
     final var userTaskList =
         camundaClient.newUserTaskSearchRequest().filter(f -> f.elementId("TaskSub")).send().join();
 
-    final var userTaskKey = userTaskList.items().stream().findFirst().get().getUserTaskKey();
+    final var userTaskKey = userTaskList.items().stream().findFirst().get().getTaskId();
 
     final var result =
         camundaClient
@@ -748,7 +748,7 @@ class UserTaskSearchTest {
         camundaClient.newUserTaskSearchRequest().filter(f -> f.elementId("TaskSub")).send().join();
 
     final var userTaskKey =
-        userTaskList.items().stream().findFirst().orElseThrow().getUserTaskKey();
+        userTaskList.items().stream().findFirst().orElseThrow().getTaskId();
 
     final var result =
         camundaClient
@@ -770,7 +770,7 @@ class UserTaskSearchTest {
         camundaClient.newUserTaskSearchRequest().filter(f -> f.elementId("TaskSub")).send().join();
 
     final var userTaskKey =
-        userTaskList.items().stream().findFirst().orElseThrow().getUserTaskKey();
+        userTaskList.items().stream().findFirst().orElseThrow().getTaskId();
 
     final var result =
         camundaClient
@@ -944,7 +944,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -980,7 +980,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1015,7 +1015,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1056,7 +1056,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1131,7 +1131,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1164,7 +1164,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1197,7 +1197,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1228,14 +1228,14 @@ class UserTaskSearchTest {
   void shouldSearchByFromWithLimit() {
     // when
     final var resultAll = camundaClient.newUserTaskSearchRequest().send().join();
-    final var thirdKey = resultAll.items().get(2).getUserTaskKey();
+    final var thirdKey = resultAll.items().get(2).getTaskId();
 
     final var resultSearchFrom =
         camundaClient.newUserTaskSearchRequest().page(p -> p.limit(2).from(2)).send().join();
 
     // then
     assertThat(resultSearchFrom.items().size()).isEqualTo(2);
-    assertThat(resultSearchFrom.items().stream().findFirst().get().getUserTaskKey())
+    assertThat(resultSearchFrom.items().stream().findFirst().get().getTaskId())
         .isEqualTo(thirdKey);
   }
 
@@ -1336,7 +1336,7 @@ class UserTaskSearchTest {
             });
   }
 
-  private static void deployProcess(
+  private static void deployProcessWithDefaultPriority(
       final String processId,
       final String resourceName,
       final String userTaskName,
@@ -1352,7 +1352,7 @@ class UserTaskSearchTest {
     camundaClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .userTask(userTaskName)
                 .zeebeUserTask()
@@ -1384,7 +1384,7 @@ class UserTaskSearchTest {
     camundaClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .userTask(userTaskName)
                 .zeebeTaskPriority(priority)
@@ -1400,13 +1400,13 @@ class UserTaskSearchTest {
         .join();
   }
 
-  private static void delpoyProcessFromResourcePath(
+  private static void deployProcessFromResourcePath(
       final String resource, final String resourceName) {
     final InputStream process = UserTaskSearchTest.class.getResourceAsStream(resource);
 
     camundaClient
         .newDeployResourceCommand()
-        .addProcessModel(Bpmn.readModelFromStream(process), resourceName)
+        .addProcessModel(BpmnModelApi.readModelFromStream(process), resourceName)
         .send()
         .join();
   }
@@ -1427,17 +1427,17 @@ class UserTaskSearchTest {
             () -> {
               final var result = camundaClient.newUserTaskSearchRequest().send().join();
               assertThat(result.items().size()).isEqualTo(8);
-              userTaskKeyTaskAssigned = result.items().getFirst().getUserTaskKey();
+              assignedTaskKey = result.items().getFirst().getTaskId();
             });
 
     camundaClient
-        .newUserTaskAssignCommand(userTaskKeyTaskAssigned)
+        .newUserTaskAssignCommand(assignedTaskKey)
         .assignee("demo")
         .action("assignee")
         .send()
         .join();
 
-    camundaClient.newUserTaskCompleteCommand(userTaskKeyTaskAssigned).send().join();
+    camundaClient.newUserTaskCompleteCommand(assignedTaskKey).send().join();
 
     Awaitility.await("should export Assigned task and Completed to ElasticSearch")
         .atMost(TIMEOUT_DATA_AVAILABILITY)
@@ -1454,7 +1454,7 @@ class UserTaskSearchTest {
               final var resultComplete =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.state(UserTaskState.COMPLETED))
+                      .filter(f -> f.status(UserTaskState.COMPLETED))
                       .send()
                       .join();
               assertThat(resultComplete.items().size()).isEqualTo(1);

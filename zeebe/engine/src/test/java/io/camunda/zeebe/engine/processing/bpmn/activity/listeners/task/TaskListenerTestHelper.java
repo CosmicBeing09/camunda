@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
@@ -95,7 +95,7 @@ public class TaskListenerTestHelper {
 
   BpmnModelInstance createProcessWithZeebeUserTask(
       final UnaryOperator<UserTaskBuilder> userTaskBuilderFunction) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .userTask(USER_TASK_ELEMENT_ID, t -> userTaskBuilderFunction.apply(t.zeebeUserTask()))
         .endEvent()
@@ -105,7 +105,7 @@ public class TaskListenerTestHelper {
   BpmnModelInstance createProcess(
       final Function<StartEventBuilder, AbstractFlowNodeBuilder<?, ?>> processBuilderFunction) {
     return processBuilderFunction
-        .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+        .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
         .endEvent()
         .done();
   }

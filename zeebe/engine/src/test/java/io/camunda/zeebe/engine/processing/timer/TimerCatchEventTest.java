@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.timer;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -33,14 +33,14 @@ import org.junit.Test;
 public final class TimerCatchEventTest {
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final BpmnModelInstance SINGLE_TIMER_PROCESS =
-      Bpmn.createExecutableProcess("SINGLE_TIMER_PROCESS")
+      BpmnModelApi.createExecutableProcess("SINGLE_TIMER_PROCESS")
           .startEvent()
           .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT1M"))
           .endEvent()
           .done();
 
   private static final BpmnModelInstance SINGLE_TIMER_DATETIME_PROCESS =
-      Bpmn.createExecutableProcess("SINGLE_TIMER_DATETIME_PROCESS")
+      BpmnModelApi.createExecutableProcess("SINGLE_TIMER_DATETIME_PROCESS")
           .startEvent()
           .intermediateCatchEvent(
               "timer", c -> c.timerWithDateExpression("now() + duration(\"PT1M\")"))
@@ -48,7 +48,7 @@ public final class TimerCatchEventTest {
           .done();
 
   private static final BpmnModelInstance BOUNDARY_EVENT_DATETIME_PROCESS =
-      Bpmn.createExecutableProcess("BOUNDARY_EVENT_DATETIME_PROCESS")
+      BpmnModelApi.createExecutableProcess("BOUNDARY_EVENT_DATETIME_PROCESS")
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer")
@@ -60,7 +60,7 @@ public final class TimerCatchEventTest {
           .done();
 
   private static final BpmnModelInstance BOUNDARY_EVENT_ABSOLUTE_DATETIME_PROCESS =
-      Bpmn.createExecutableProcess("BOUNDARY_EVENT_ABSOLUTE_DATETIME_PROCESS")
+      BpmnModelApi.createExecutableProcess("BOUNDARY_EVENT_ABSOLUTE_DATETIME_PROCESS")
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer")
@@ -71,7 +71,7 @@ public final class TimerCatchEventTest {
           .endEvent("taskEnd")
           .done();
   private static final BpmnModelInstance BOUNDARY_EVENT_PROCESS =
-      Bpmn.createExecutableProcess("BOUNDARY_EVENT_PROCESS")
+      BpmnModelApi.createExecutableProcess("BOUNDARY_EVENT_PROCESS")
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer")
@@ -82,7 +82,7 @@ public final class TimerCatchEventTest {
           .endEvent("taskEnd")
           .done();
   private static final BpmnModelInstance TWO_REPS_CYCLE_PROCESS =
-      Bpmn.createExecutableProcess("TWO_REPS_CYCLE_PROCESS")
+      BpmnModelApi.createExecutableProcess("TWO_REPS_CYCLE_PROCESS")
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer")
@@ -93,7 +93,7 @@ public final class TimerCatchEventTest {
           .endEvent()
           .done();
   private static final BpmnModelInstance INFINITE_CYCLE_PROCESS =
-      Bpmn.createExecutableProcess("INFINITE_CYCLE_PROCESS")
+      BpmnModelApi.createExecutableProcess("INFINITE_CYCLE_PROCESS")
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer")
@@ -123,7 +123,7 @@ public final class TimerCatchEventTest {
   public void testLifeCycle() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("testLifeCycle")
+        BpmnModelApi.createExecutableProcess("testLifeCycle")
             .startEvent()
             .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT0S"))
             .endEvent()
@@ -158,7 +158,7 @@ public final class TimerCatchEventTest {
   public void shouldCreateTimer() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldCreateTimer")
+        BpmnModelApi.createExecutableProcess("shouldCreateTimer")
             .startEvent()
             .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT10S"))
             .endEvent()
@@ -196,7 +196,7 @@ public final class TimerCatchEventTest {
   public void shouldCreateTimerFromFeelExpression() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldCreateTimer")
+        BpmnModelApi.createExecutableProcess("shouldCreateTimer")
             .startEvent()
             .intermediateCatchEvent("timer", c -> c.timerWithDurationExpression("\"PT10S\""))
             .endEvent()
@@ -362,7 +362,7 @@ public final class TimerCatchEventTest {
   public void shouldTriggerTimerWithZeroDuration() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldTriggerTimerWithZeroDuration")
+        BpmnModelApi.createExecutableProcess("shouldTriggerTimerWithZeroDuration")
             .startEvent()
             .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT0S"))
             .endEvent()
@@ -384,7 +384,7 @@ public final class TimerCatchEventTest {
   public void shouldTriggerTimerWithNegativeDuration() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldTriggerTimerWithNegativeDuration")
+        BpmnModelApi.createExecutableProcess("shouldTriggerTimerWithNegativeDuration")
             .startEvent()
             .intermediateCatchEvent("timer", c -> c.timerWithDuration("-PT1H"))
             .endEvent()
@@ -406,7 +406,7 @@ public final class TimerCatchEventTest {
   public void shouldTriggerMultipleTimers() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldTriggerMultipleTimers")
+        BpmnModelApi.createExecutableProcess("shouldTriggerMultipleTimers")
             .startEvent()
             .parallelGateway()
             .intermediateCatchEvent("timer1", c -> c.timerWithDuration("PT1S"))
@@ -462,7 +462,7 @@ public final class TimerCatchEventTest {
   public void shouldCancelTimer() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldCancelTimer")
+        BpmnModelApi.createExecutableProcess("shouldCancelTimer")
             .startEvent()
             .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT10S"))
             .endEvent()
@@ -657,7 +657,7 @@ public final class TimerCatchEventTest {
   public void shouldRecreateTimerForTheSpecifiedAmountOfRepetitions() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("shouldRecreateTimerForTheSpecifiedAmountOfRepetitions")
+        BpmnModelApi.createExecutableProcess("shouldRecreateTimerForTheSpecifiedAmountOfRepetitions")
             .startEvent()
             .parallelGateway("gw")
             .serviceTask("task-1", b -> b.zeebeJobType("type"))
@@ -745,7 +745,7 @@ public final class TimerCatchEventTest {
   @Test
   public void shouldHaveNoSourceRecordPositionOnTimerTrigger() {
     // given
-    final var process = Bpmn.createExecutableProcess("process1");
+    final var process = BpmnModelApi.createExecutableProcess("process1");
 
     process
         .eventSubProcess("eventSub")
@@ -801,7 +801,7 @@ public final class TimerCatchEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("missing_time_component")
+            BpmnModelApi.createExecutableProcess("missing_time_component")
                 .startEvent()
                 .intermediateCatchEvent(
                     "timer", t -> t.timerWithDurationExpression(faultyDurationExpression))

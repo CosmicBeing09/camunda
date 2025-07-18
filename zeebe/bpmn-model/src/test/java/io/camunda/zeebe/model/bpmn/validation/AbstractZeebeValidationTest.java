@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static org.junit.Assert.fail;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.traversal.ModelWalker;
 import io.camunda.zeebe.model.bpmn.validation.zeebe.ZeebeDesignTimeValidators;
@@ -62,7 +62,7 @@ public abstract class AbstractZeebeValidationTest {
     } else if (modelSource instanceof String) {
       final InputStream modelStream =
           AbstractZeebeValidationTest.class.getResourceAsStream((String) modelSource);
-      modelInstance = Bpmn.readModelFromStream(modelStream);
+      modelInstance = BpmnModelApi.readModelFromStream(modelStream);
     } else {
       throw new RuntimeException("Cannot convert parameter to bpmn model");
     }
@@ -73,7 +73,7 @@ public abstract class AbstractZeebeValidationTest {
     // when
     final ValidationResults results = validate(modelInstance);
 
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
 
     // then
     final List<ExpectedValidationResult> unmatchedExpectations = new ArrayList<>(expectedResults);

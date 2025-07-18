@@ -24,7 +24,7 @@ import io.camunda.operate.webapp.rest.dto.activity.FlowNodeStateDto;
 import io.camunda.operate.webapp.rest.dto.listview.SortValuesWrapper;
 import io.camunda.operate.webapp.zeebe.operation.CancelProcessInstanceHandler;
 import io.camunda.webapps.schema.entities.flownode.FlowNodeType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.List;
 import java.util.Map;
@@ -104,7 +104,7 @@ public class FlowNodeInstanceZeebeImportIT extends OperateZeebeAbstractIT {
     final String processId = "testProcess";
     final String subprocessFlowNodeId = "subprocess";
     final BpmnModelInstance testProcess =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .subProcess(
                 subprocessFlowNodeId,

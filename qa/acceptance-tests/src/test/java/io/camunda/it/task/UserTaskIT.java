@@ -16,7 +16,7 @@ import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.filter.UserTaskFilter;
 import io.camunda.client.api.search.response.UserTask;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractUserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
@@ -62,7 +62,7 @@ public class UserTaskIT {
     // then
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getPriority()).isEqualTo(50);
-    assertThat(userTasks.getFirst().getUserTaskKey()).isGreaterThan(0);
+    assertThat(userTasks.getFirst().getTaskId()).isGreaterThan(0);
     assertThat(userTasks.getFirst().getProcessInstanceKey()).isEqualTo(processInstanceId);
     assertThat(userTasks.getFirst().getProcessDefinitionKey())
         .isEqualTo(Long.valueOf(processDefinitionId));
@@ -76,7 +76,7 @@ public class UserTaskIT {
     assertThat(userTasks.getFirst().getBpmnProcessId()).isEqualTo("test-process-id");
     assertThat(userTasks.getFirst().getElementId()).isEqualTo("zeebe-task");
     assertThat(userTasks.getFirst().getExternalFormReference()).isNull();
-    assertThat(userTasks.getFirst().getElementInstanceKey()).isGreaterThan(0);
+    assertThat(userTasks.getFirst().getInstanceKey()).isGreaterThan(0);
   }
 
   @Test
@@ -88,13 +88,13 @@ public class UserTaskIT {
 
     var userTasks = fetchUserTasks(client, processInstanceId);
 
-    client.newUserTaskCompleteCommand(userTasks.getFirst().getUserTaskKey()).send().join();
+    client.newUserTaskCompleteCommand(userTasks.getFirst().getTaskId()).send().join();
     // then
     waitForTask(
         client,
         f -> {
           f.processInstanceKey(processInstanceId);
-          f.state(UserTaskState.COMPLETED);
+          f.status(UserTaskState.COMPLETED);
         });
 
     userTasks = fetchUserTasks(client, processInstanceId);
@@ -114,7 +114,7 @@ public class UserTaskIT {
     var userTasks = fetchUserTasks(client, processInstanceId);
 
     client
-        .newUserTaskUpdateCommand(userTasks.getFirst().getUserTaskKey())
+        .newUserTaskUpdateCommand(userTasks.getFirst().getTaskId())
         .priority(99)
         .candidateUsers("demoUsers")
         .candidateGroups("demoGroup")
@@ -151,7 +151,7 @@ public class UserTaskIT {
     var userTasks = fetchUserTasks(client, processInstanceId);
 
     client
-        .newUserTaskAssignCommand(userTasks.getFirst().getUserTaskKey())
+        .newUserTaskAssignCommand(userTasks.getFirst().getTaskId())
         .assignee("demo")
         .send()
         .join();
@@ -178,7 +178,7 @@ public class UserTaskIT {
 
     final var userTasks = fetchUserTasks(client, processInstanceId);
 
-    client.newUserTaskUnassignCommand(userTasks.getFirst().getUserTaskKey()).send().join();
+    client.newUserTaskUnassignCommand(userTasks.getFirst().getTaskId()).send().join();
 
     // then
     Awaitility.await()
@@ -368,7 +368,7 @@ public class UserTaskIT {
       final String elementBpmnId,
       final Consumer<UserTaskBuilder>... taskModifiers) {
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .userTask(
                 elementBpmnId,

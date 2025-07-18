@@ -39,7 +39,7 @@ import io.camunda.webapps.schema.entities.incident.IncidentEntity;
 import io.camunda.webapps.schema.entities.incident.IncidentState;
 import io.camunda.webapps.schema.entities.listview.ProcessInstanceForListViewEntity;
 import io.camunda.webapps.schema.entities.listview.ProcessInstanceState;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -191,7 +191,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
     // having
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .serviceTask("task1")
             .zeebeJobType("task1")
@@ -231,7 +231,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
     // having
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .serviceTask("task1")
             .zeebeJobType("task1")
@@ -348,7 +348,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
 
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .exclusiveGateway(activityId)
             .sequenceFlowId("s1")
@@ -427,7 +427,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
 
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .exclusiveGateway(activityId)
             .sequenceFlowId("s1")
@@ -493,7 +493,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
 
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .exclusiveGateway(activityId)
             .sequenceFlowId("s1")
@@ -533,7 +533,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
 
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .eventBasedGateway(activityId)
             .intermediateCatchEvent(
@@ -725,7 +725,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
     final String processId2 = "simpleProcess";
     deployProcess("demoProcess_v_1.bpmn");
     deployProcess(
-        Bpmn.createExecutableProcess(processId2)
+        BpmnModelApi.createExecutableProcess(processId2)
             .startEvent()
             .serviceTask("task1")
             .zeebeJobType("task1")
@@ -778,7 +778,7 @@ public class ProcessInstanceZeebeImportIT extends OperateZeebeAbstractIT {
     final String calledProcessId = "process";
     final String callActivityId = "callActivity";
     final BpmnModelInstance testProcess =
-        Bpmn.createExecutableProcess(parentProcessId)
+        BpmnModelApi.createExecutableProcess(parentProcessId)
             .startEvent()
             .callActivity(callActivityId)
             .zeebeProcessId(calledProcessId)

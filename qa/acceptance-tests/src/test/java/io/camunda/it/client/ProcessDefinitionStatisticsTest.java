@@ -25,7 +25,7 @@ import io.camunda.client.api.worker.JobWorker;
 import io.camunda.client.impl.statistics.response.ProcessElementStatisticsImpl;
 import io.camunda.it.util.TestHelper;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
@@ -384,7 +384,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(2, f -> f.processDefinitionKey(processDefinitionKey).state(ACTIVE));
     waitForUserTasks(2, processDefinitionKey);
     final var userTask = getUserTask(processDefinitionKey);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
     waitForProcessInstances(
         1,
         f ->
@@ -417,7 +417,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(2, f -> f.processDefinitionKey(processDefinitionKey).state(ACTIVE));
     waitForUserTasks(2, processDefinitionKey);
     final var userTask = getUserTask(processDefinitionKey);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
     waitForProcessInstances(
         1,
         f ->
@@ -450,7 +450,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(3, f -> f.processDefinitionKey(processDefinitionKey).state(ACTIVE));
     waitForUserTasks(3, processDefinitionKey);
     final var userTask = getUserTask(processDefinitionKey);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
     waitForProcessInstances(
         1,
         f ->
@@ -477,7 +477,7 @@ public class ProcessDefinitionStatisticsTest {
   void shouldGetDistinctStatisticsForMultiInstanceActivity() {
     // given
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .userTask("UserTaskMultiInstance")
             .zeebeUserTask()
@@ -523,7 +523,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(2, f -> f.processDefinitionKey(processDefinitionKey).state(ACTIVE));
     waitForUserTasks(2, processDefinitionKey);
     final var userTask = getUserTask(processDefinitionKey);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
     waitForProcessInstances(
         1,
         f ->
@@ -624,7 +624,7 @@ public class ProcessDefinitionStatisticsTest {
   void shouldReturnStatisticsForCanceled() {
     // given
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .userTask("UserTask")
             .endEvent()
@@ -700,7 +700,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(2, f -> f.processDefinitionKey(processDefinitionKey).state(ACTIVE));
     waitForUserTasks(2, processDefinitionKey);
     final var userTask = getUserTask(processDefinitionKey);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
     waitForProcessInstances(
         1,
         f ->
@@ -730,7 +730,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(2, f -> f.processDefinitionKey(processDefinitionKey).state(ACTIVE));
     waitForUserTasks(2, processDefinitionKey);
     final var userTask = getUserTask(processDefinitionKey);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
     waitForProcessInstances(
         1,
         f ->
@@ -833,7 +833,7 @@ public class ProcessDefinitionStatisticsTest {
 
   private static long deployCompleteBPMN() {
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .endEvent("EndEvent")
             .done();
@@ -845,7 +845,7 @@ public class ProcessDefinitionStatisticsTest {
 
   private static long deployActiveBPMN() {
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .userTask("UserTask")
             .zeebeUserTask()
@@ -859,7 +859,7 @@ public class ProcessDefinitionStatisticsTest {
 
   private static long deployIncidentBPMN() {
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .scriptTask(
                 "ScriptTask",

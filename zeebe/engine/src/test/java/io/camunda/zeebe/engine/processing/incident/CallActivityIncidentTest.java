@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.incident.IncidentHelper.assertI
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.protocol.record.Record;
@@ -40,7 +40,7 @@ public final class CallActivityIncidentTest {
   private static final Function<String, BpmnModelInstance>
       PROCESS_PARENT_PROCESS_ID_EXPRESSION_SUPPLIER =
           (parentProcessId) ->
-              Bpmn.createExecutableProcess(parentProcessId)
+              BpmnModelApi.createExecutableProcess(parentProcessId)
                   .startEvent()
                   .callActivity("call", c -> c.zeebeProcessIdExpression(PROCESS_ID_VARIABLE))
                   .done();
@@ -60,7 +60,7 @@ public final class CallActivityIncidentTest {
         .deployment()
         .withXmlResource(
             "wf-parent.bpmn",
-            Bpmn.createExecutableProcess(parentProcessId)
+            BpmnModelApi.createExecutableProcess(parentProcessId)
                 .startEvent()
                 .callActivity("call", c -> c.zeebeProcessId(childProcessId))
                 .done())
@@ -90,10 +90,10 @@ public final class CallActivityIncidentTest {
   public void shouldCreateIncidentIfProcessIsNotDeployedInSameDeploymentForBindingTypeDeployment() {
     // given
     final var childProcessId = Strings.newRandomValidBpmnId();
-    final var childProcess = Bpmn.createExecutableProcess(childProcessId).startEvent().done();
+    final var childProcess = BpmnModelApi.createExecutableProcess(childProcessId).startEvent().done();
     ENGINE.deployment().withXmlResource("wf-child.bpmn", childProcess).deploy();
     final var parentProcess =
-        Bpmn.createExecutableProcess(parentProcessId)
+        BpmnModelApi.createExecutableProcess(parentProcessId)
             .startEvent()
             .callActivity(
                 "call",
@@ -135,10 +135,10 @@ public final class CallActivityIncidentTest {
   public void shouldCreateIncidentIfProcessWithVersionTagIsNotDeployedForBindingTypeVersionTag() {
     // given
     final var childProcessId = Strings.newRandomValidBpmnId();
-    final var childProcess = Bpmn.createExecutableProcess(childProcessId).startEvent().done();
+    final var childProcess = BpmnModelApi.createExecutableProcess(childProcessId).startEvent().done();
     ENGINE.deployment().withXmlResource("wf-child.bpmn", childProcess).deploy();
     final var parentProcess =
-        Bpmn.createExecutableProcess(parentProcessId)
+        BpmnModelApi.createExecutableProcess(parentProcessId)
             .startEvent()
             .callActivity(
                 "call",
@@ -174,7 +174,7 @@ public final class CallActivityIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(childProcessId)
+            BpmnModelApi.createExecutableProcess(childProcessId)
                 .startEvent()
                 .message("start")
                 .endEvent()
@@ -297,7 +297,7 @@ public final class CallActivityIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(childProcessId).startEvent().endEvent().done())
+            BpmnModelApi.createExecutableProcess(childProcessId).startEvent().endEvent().done())
         .deploy();
 
     ENGINE.incident().ofInstance(processInstanceKey).withKey(incident.getKey()).resolve();
@@ -318,7 +318,7 @@ public final class CallActivityIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(parentProcessId)
+            BpmnModelApi.createExecutableProcess(parentProcessId)
                 .startEvent()
                 .callActivity("call", c -> c.zeebeProcessId(childProcessId))
                 .boundaryEvent("boundary")
@@ -336,7 +336,7 @@ public final class CallActivityIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(childProcessId).startEvent().endEvent().done())
+            BpmnModelApi.createExecutableProcess(childProcessId).startEvent().endEvent().done())
         .deploy();
 
     ENGINE.incident().ofInstance(processInstanceKey).withKey(incident.getKey()).resolve();

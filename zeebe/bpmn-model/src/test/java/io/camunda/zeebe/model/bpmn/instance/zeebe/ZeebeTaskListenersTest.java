@@ -19,7 +19,7 @@ import static io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListener.DEFAU
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.impl.BpmnModelConstants;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstanceTest;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
@@ -51,7 +51,7 @@ public class ZeebeTaskListenersTest extends BpmnModelElementInstanceTest {
   public void shouldReadTaskListenerElements() {
     // given
     modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "my_user_task",

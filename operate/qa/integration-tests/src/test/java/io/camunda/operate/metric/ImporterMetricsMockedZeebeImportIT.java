@@ -18,7 +18,7 @@ import io.camunda.operate.util.MetricAssert;
 import io.camunda.operate.util.OperateZeebeAbstractIT;
 import io.camunda.operate.util.TestImportListener;
 import io.camunda.operate.zeebeimport.ZeebeImporter;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.IOException;
 import java.util.concurrent.Callable;
@@ -57,7 +57,7 @@ public class ImporterMetricsMockedZeebeImportIT extends OperateZeebeAbstractIT {
 
     final String bpmnProcessId = "startEndProcess";
     final BpmnModelInstance startEndProcess =
-        Bpmn.createExecutableProcess(bpmnProcessId).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(bpmnProcessId).startEvent().endEvent().done();
 
     // process
     tester.deployProcess(startEndProcess, "startEndProcess.bpmn");

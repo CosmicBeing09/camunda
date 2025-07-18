@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.instance.BoundaryEvent;
 import io.camunda.zeebe.model.bpmn.instance.IntermediateCatchEvent;
 import org.junit.runners.Parameterized.Parameters;
@@ -29,7 +29,7 @@ public class ZeebeTimerValidationTest extends AbstractZeebeValidationTest {
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("catch", c -> c.timerWithCycle("R5/PT05S"))
             .endEvent()
@@ -40,7 +40,7 @@ public class ZeebeTimerValidationTest extends AbstractZeebeValidationTest {
                 "Intermediate timer catch event must have either a time duration or a time date."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("catch")

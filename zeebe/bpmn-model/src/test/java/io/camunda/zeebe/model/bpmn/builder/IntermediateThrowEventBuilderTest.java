@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.impl.QueryImpl;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
@@ -33,7 +33,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetMessageId() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(b -> b.name("message").zeebeMessageId("message-id-1"))
@@ -56,7 +56,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetMessageIdExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(b -> b.name("message").zeebeMessageIdExpression("messageIdExpr"))
@@ -79,7 +79,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetCorrelationKey() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(b -> b.name("message").zeebeCorrelationKey("correlation-key-1"))
@@ -102,7 +102,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetCorrelationKeyExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(b -> b.name("message").zeebeCorrelationKeyExpression("correlationKeyExpr"))
@@ -125,7 +125,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetTimeToLive() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(b -> b.name("message").zeebeTimeToLive("PT10S"))
@@ -148,7 +148,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetTimeToLiveExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(b -> b.name("message").zeebeTimeToLiveExpression("timeToLiveExpr"))
@@ -171,7 +171,7 @@ public class IntermediateThrowEventBuilderTest {
   void shouldSetMessageIdAndCorrelationKeyAndTimeToLive() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("throw")
             .message(

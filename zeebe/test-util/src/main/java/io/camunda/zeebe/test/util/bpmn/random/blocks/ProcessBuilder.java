@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.test.util.bpmn.random.blocks;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.test.util.bpmn.random.ConstructionContext;
@@ -85,7 +85,7 @@ public final class ProcessBuilder {
     final var result = new ArrayList<BpmnModelInstance>();
 
     final io.camunda.zeebe.model.bpmn.builder.ProcessBuilder processBuilder =
-        Bpmn.createExecutableProcess(processId);
+        BpmnModelApi.createExecutableProcess(processId);
 
     if (hasEventSubProcess) {
       buildEventSubProcess(processBuilder);

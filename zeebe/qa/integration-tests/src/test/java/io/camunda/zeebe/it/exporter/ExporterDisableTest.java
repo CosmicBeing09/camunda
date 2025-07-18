@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.actuator.ExportersActuator;
 import io.camunda.zeebe.qa.util.cluster.TestCluster;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
@@ -58,7 +58,7 @@ final class ExporterDisableTest {
         client
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess("processId").startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess("processId").startEvent().endEvent().done(),
                 "process.bpmn")
             .send()
             .join()

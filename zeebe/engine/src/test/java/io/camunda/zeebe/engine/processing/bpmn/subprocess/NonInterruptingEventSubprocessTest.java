@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
@@ -443,7 +443,7 @@ public class NonInterruptingEventSubprocessTest {
 
   private static BpmnModelInstance eventSubprocModel(
       final Function<StartEventBuilder, StartEventBuilder> startBuilder) {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     startBuilder
         .apply(
             builder
@@ -461,7 +461,7 @@ public class NonInterruptingEventSubprocessTest {
 
   private static BpmnModelInstance eventSubprocModelWithLocalScopeVariable(
       final Function<StartEventBuilder, StartEventBuilder> startBuilder) {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     startBuilder
         .apply(
             builder
@@ -480,7 +480,7 @@ public class NonInterruptingEventSubprocessTest {
 
   private BpmnModelInstance eventSubProcTaskModel(
       final String procTaskType, final String subprocTaskType) {
-    final ProcessBuilder modelBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder modelBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     builder
         .apply(
             modelBuilder
@@ -499,7 +499,7 @@ public class NonInterruptingEventSubprocessTest {
 
   private static BpmnModelInstance eventSubprocModelWithEmbeddedSubWithBoundaryEvent(
       final Function<StartEventBuilder, StartEventBuilder> startBuilder) {
-    final var builder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final var builder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     startBuilder
         .apply(
             builder

@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -55,7 +55,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeStartExecutionListener(START_EL_TYPE + "_1")
                 .zeebeStartExecutionListener(START_EL_TYPE + "_2")
                 .zeebeEndExecutionListener(END_EL_TYPE + "_1")
@@ -106,7 +106,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeStartExecutionListener(START_EL_TYPE)
                 .zeebeEndExecutionListener(END_EL_TYPE)
                 .startEvent()
@@ -155,7 +155,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeStartExecutionListener(START_EL_TYPE)
                 .zeebeEndExecutionListener(END_EL_TYPE)
                 .startEvent()
@@ -205,7 +205,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeExecutionListener(el -> el.start().type(START_EL_TYPE + "_1"))
                 .zeebeExecutionListener(el -> el.start().typeExpression("start_el_2_name_var"))
                 .zeebeExecutionListener(el -> el.end().type(END_EL_TYPE))
@@ -292,7 +292,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeExecutionListener(el -> el.start().type(START_EL_TYPE))
                 .zeebeExecutionListener(el -> el.end().type(END_EL_TYPE + "_1"))
                 .zeebeExecutionListener(el -> el.end().typeExpression("end_el_2_name_var"))
@@ -384,7 +384,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeStartExecutionListener(START_EL_TYPE)
                 .startEvent()
                 .serviceTask("task", b -> b.zeebeJobType(SERVICE_TASK_TYPE))
@@ -423,7 +423,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeExecutionListener(el -> el.start().type(START_EL_TYPE + "_1"))
                 .zeebeExecutionListener(
                     el ->
@@ -468,7 +468,7 @@ public class ExecutionListenerProcessInstanceTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .zeebeStartExecutionListener(START_EL_TYPE)
                 .startEvent()
                 .endEvent()

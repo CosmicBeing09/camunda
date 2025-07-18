@@ -42,7 +42,7 @@ public class ZeebeConnector {
     LOGGER.info(
         "Zeebe Client - Using Gateway Configuration: {}", zeebeProperties.getGatewayAddress());
     final CamundaClientBuilder builder =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(zeebeProperties.getGatewayAddress())
             // .restAddress(getURIFromString(zeebeProperties.getRestAddress()))
             .restAddress(getURIFromSaaSOrProperties(zeebeProperties.getRestAddress()))

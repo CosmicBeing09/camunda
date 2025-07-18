@@ -13,7 +13,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.ProblemException;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -45,7 +45,7 @@ class CorrelateMessageTest {
     final var processId = "processId";
     final var messageName = "messageName";
     final var process =
-        Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     resourcesHelper.deployProcess(process);
 
     // when
@@ -69,7 +69,7 @@ class CorrelateMessageTest {
     final var processId = "processId";
     final var messageName = "messageName";
     final var process =
-        Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     resourcesHelper.deployProcess(process);
 
     // when
@@ -93,7 +93,7 @@ class CorrelateMessageTest {
     final var messageName = "messageName";
     final var correlationKey = "correlationKey";
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent()
             .message(
@@ -128,14 +128,14 @@ class CorrelateMessageTest {
     final var messageName = "messageName";
     final var correlationKey = "correlationKey";
     final var messageStartProcess =
-        Bpmn.createExecutableProcess(processMessageStart)
+        BpmnModelApi.createExecutableProcess(processMessageStart)
             .startEvent()
             .message(messageName)
             .endEvent()
             .done();
     resourcesHelper.deployProcess(messageStartProcess);
     final var messageCatchProcess =
-        Bpmn.createExecutableProcess(processMessageCatch)
+        BpmnModelApi.createExecutableProcess(processMessageCatch)
             .startEvent()
             .intermediateCatchEvent()
             .message(

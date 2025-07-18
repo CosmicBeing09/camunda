@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AdHocSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.AdHocSubProcess;
@@ -21,7 +21,7 @@ public class AdHocSubProcessValidatorTest {
   private static final String AD_HOC_SUB_PROCESS_ELEMENT_ID = "ad-hoc";
 
   private BpmnModelInstance process(final Consumer<AdHocSubProcessBuilder> modifier) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .adHocSubProcess(AD_HOC_SUB_PROCESS_ELEMENT_ID, modifier)
         .endEvent()

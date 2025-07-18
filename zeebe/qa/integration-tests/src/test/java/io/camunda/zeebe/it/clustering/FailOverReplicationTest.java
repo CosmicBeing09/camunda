@@ -13,7 +13,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.zeebe.broker.Broker;
 import io.camunda.zeebe.broker.system.configuration.BrokerCfg;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.snapshots.SnapshotId;
@@ -38,7 +38,7 @@ public class FailOverReplicationTest {
   private static final int PARTITION_COUNT = 1;
   private static final Duration SNAPSHOT_PERIOD = Duration.ofMinutes(5);
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
   private static final String PROCESS_RESOURCE_NAME = "process.bpmn";
 
   private final ClusteringRule clusteringRule =

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.DeploymentEvent;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.qa.util.actuator.PartitionsActuator;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
@@ -47,7 +47,7 @@ final class FormLinkingIT {
         client
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess("form_linking_test")
+                BpmnModelApi.createExecutableProcess("form_linking_test")
                     .startEvent()
                     .userTask()
                     .zeebeFormId("formId1")
@@ -55,7 +55,7 @@ final class FormLinkingIT {
                     .done(),
                 "form_linking_test.bpmn")
             .addProcessModel(
-                Bpmn.createExecutableProcess("form_linking_test2")
+                BpmnModelApi.createExecutableProcess("form_linking_test2")
                     .startEvent()
                     .userTask()
                     .zeebeFormId("formId2")

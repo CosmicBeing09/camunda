@@ -189,7 +189,7 @@ class UserTaskAuthorizationIT {
         .join()
         .items()
         .getFirst()
-        .getUserTaskKey();
+        .getTaskId();
   }
 
   private static void deployResource(final CamundaClient camundaClient, final String resourceName) {

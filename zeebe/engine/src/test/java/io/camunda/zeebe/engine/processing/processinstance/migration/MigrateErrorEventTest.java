@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance.migration;
 import static io.camunda.zeebe.engine.processing.processinstance.migration.MigrationTestUtil.extractProcessDefinitionKeyByProcessId;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -40,7 +40,7 @@ public class MigrateErrorEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", s -> s.zeebeJobType("A"))
                     .boundaryEvent("boundary1")
@@ -50,7 +50,7 @@ public class MigrateErrorEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", s -> s.zeebeJobType("B"))
                     .boundaryEvent("boundary2")
@@ -131,7 +131,7 @@ public class MigrateErrorEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", s -> s.zeebeJobType("A"))
                     .boundaryEvent("boundary1")
@@ -141,7 +141,7 @@ public class MigrateErrorEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", s -> s.zeebeJobType("B"))
                     .boundaryEvent("boundary2")
@@ -221,7 +221,7 @@ public class MigrateErrorEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", s -> s.zeebeJobType("A"))
                     .boundaryEvent("boundary1")
@@ -235,7 +235,7 @@ public class MigrateErrorEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", s -> s.zeebeJobType("A"))
                     .boundaryEvent("boundary3")
@@ -321,13 +321,13 @@ public class MigrateErrorEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", s -> s.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", s -> s.zeebeJobType("B"))
                     .boundaryEvent("boundary2")
@@ -407,7 +407,7 @@ public class MigrateErrorEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", s -> s.zeebeJobType("A"))
                     .boundaryEvent("boundary1")
@@ -417,7 +417,7 @@ public class MigrateErrorEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", s -> s.zeebeJobType("B"))
                     .endEvent()

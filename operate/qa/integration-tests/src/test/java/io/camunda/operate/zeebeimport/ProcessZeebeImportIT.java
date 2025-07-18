@@ -25,7 +25,7 @@ import io.camunda.operate.webapp.rest.dto.ProcessGroupDto;
 import io.camunda.operate.webapp.security.permission.PermissionsService;
 import io.camunda.webapps.schema.descriptors.index.ProcessIndex;
 import io.camunda.webapps.schema.entities.ProcessEntity;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import java.util.List;
@@ -177,7 +177,7 @@ public class ProcessZeebeImportIT extends OperateZeebeAbstractIT {
 
   private Long createAndDeployProcess(
       final CamundaClient camundaClient, final String bpmnProcessId, final String name) {
-    ProcessBuilder executableProcess = Bpmn.createExecutableProcess(bpmnProcessId);
+    ProcessBuilder executableProcess = BpmnModelApi.createExecutableProcess(bpmnProcessId);
     if (name != null) {
       executableProcess = executableProcess.name(name);
     }

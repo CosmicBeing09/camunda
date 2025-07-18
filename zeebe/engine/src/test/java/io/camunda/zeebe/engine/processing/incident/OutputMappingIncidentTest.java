@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.DeploymentClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -69,7 +69,7 @@ public class OutputMappingIncidentTest {
             ENGINE
                 .deployment()
                 .withXmlResource(
-                    Bpmn.createExecutableProcess(PROCESS_ID)
+                    BpmnModelApi.createExecutableProcess(PROCESS_ID)
                         .startEvent()
                         .serviceTask(
                             "serviceTaskId",
@@ -86,7 +86,7 @@ public class OutputMappingIncidentTest {
             ENGINE
                 .deployment()
                 .withXmlResource(
-                    Bpmn.createExecutableProcess(PROCESS_ID)
+                    BpmnModelApi.createExecutableProcess(PROCESS_ID)
                         .startEvent()
                         .intermediateThrowEvent(
                             "intermediateThrowEventId",
@@ -102,7 +102,7 @@ public class OutputMappingIncidentTest {
                 .deployment()
                 .withXmlClasspathResource("/dmn/drg-force-user.dmn")
                 .withXmlResource(
-                    Bpmn.createExecutableProcess(PROCESS_ID)
+                    BpmnModelApi.createExecutableProcess(PROCESS_ID)
                         .startEvent()
                         .businessRuleTask(
                             "businessRuleTaskId",
@@ -121,7 +121,7 @@ public class OutputMappingIncidentTest {
             ENGINE
                 .deployment()
                 .withXmlResource(
-                    Bpmn.createExecutableProcess(PROCESS_ID)
+                    BpmnModelApi.createExecutableProcess(PROCESS_ID)
                         .startEvent()
                         .endEvent(
                             "endEventId",

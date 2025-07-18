@@ -16,7 +16,7 @@ import io.camunda.client.api.response.PublishMessageResponse;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
@@ -56,7 +56,7 @@ public final class MessageCorrelationTest {
 
     processDefinitionKey =
         CLIENT_RULE.deployProcess(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .intermediateCatchEvent(CATCH_EVENT_ELEMENT_ID)
                 .message(

@@ -49,7 +49,7 @@ import io.camunda.zeebe.engine.util.client.UserTaskClient;
 import io.camunda.zeebe.engine.util.client.VariableClient;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.logstreams.util.ListLogStorage;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
@@ -474,7 +474,7 @@ public final class EngineRule extends ExternalResource {
     deployment()
         .withXmlResource(
             processId + ".bpmn",
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent("start")
                 .serviceTask("task", b -> b.zeebeJobType(type).done())
                 .endEvent("end")

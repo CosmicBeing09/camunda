@@ -25,7 +25,7 @@ import io.camunda.process.test.api.CamundaProcessTest;
 import io.camunda.process.test.api.CamundaProcessTestContext;
 import io.camunda.process.test.api.assertions.DecisionSelectors;
 import io.camunda.process.test.api.assertions.UserTaskSelectors;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -746,7 +746,7 @@ public class CamundaProcessTestContextIT {
   }
 
   private BpmnModelInstance processModelWithChildProcess() {
-    return Bpmn.createExecutableProcess("test-process")
+    return BpmnModelApi.createExecutableProcess("test-process")
         .startEvent()
         .callActivity()
         .zeebeProcessId("child-process-1")
@@ -755,7 +755,7 @@ public class CamundaProcessTestContextIT {
   }
 
   private BpmnModelInstance childProcessModel() {
-    return Bpmn.createExecutableProcess("child-process-1")
+    return BpmnModelApi.createExecutableProcess("child-process-1")
         .startEvent()
         .serviceTask("child-service-task")
         .zeebeJobType("child-job")
@@ -764,7 +764,7 @@ public class CamundaProcessTestContextIT {
   }
 
   private BpmnModelInstance processModelWithServiceTask() {
-    return Bpmn.createExecutableProcess("test-process")
+    return BpmnModelApi.createExecutableProcess("test-process")
         .startEvent()
         .serviceTask("service-task-1")
         .zeebeJobType("test")
@@ -783,7 +783,7 @@ public class CamundaProcessTestContextIT {
 
   private BpmnModelInstance processModelWithUserTask(
       final String taskName, final String elementId) {
-    return Bpmn.createExecutableProcess("test-process")
+    return BpmnModelApi.createExecutableProcess("test-process")
         .startEvent()
         .userTask(elementId)
         .name(taskName)
@@ -835,7 +835,7 @@ public class CamundaProcessTestContextIT {
   }
 
   private BpmnModelInstance processModelWithBusinessRule() {
-    return Bpmn.createExecutableProcess("test-process")
+    return BpmnModelApi.createExecutableProcess("test-process")
         .startEvent()
         .businessRuleTask(
             "br-task",
@@ -946,7 +946,7 @@ public class CamundaProcessTestContextIT {
 
   private BpmnModelInstance processModelWithBusinessRuleTask(
       final String decisionId, final String resultVariable) {
-    return Bpmn.createExecutableProcess("test-process")
+    return BpmnModelApi.createExecutableProcess("test-process")
         .startEvent()
         .businessRuleTask("business-rule-1")
         .zeebeCalledDecisionId(decisionId)

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -41,7 +41,7 @@ public final class InclusiveGatewayTest {
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final String PROCESS_ID = "process";
   private static final BpmnModelInstance INCLUSIVE_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .inclusiveGateway("inclusive")
           .sequenceFlowId("s1")
@@ -70,7 +70,7 @@ public final class InclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .inclusiveGateway("inclusive")
             .sequenceFlowId("s1")
@@ -214,7 +214,7 @@ public final class InclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .inclusiveGateway("inclusive")
             .sequenceFlowId("s1")
@@ -466,7 +466,7 @@ public final class InclusiveGatewayTest {
   public void shouldPassThroughInclusiveGateway() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .sequenceFlowId("flow1")
             .inclusiveGateway("inclusive")
@@ -507,7 +507,7 @@ public final class InclusiveGatewayTest {
   public void shouldCreateIncidentIfInclusiveGatewayWithSingleSequenceFlowHasNoMatchingCondition() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .inclusiveGateway()
             .condition("= false")
@@ -549,7 +549,7 @@ public final class InclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .sequenceFlowId("flow1")
             .inclusiveGateway("inclusive")
@@ -580,7 +580,7 @@ public final class InclusiveGatewayTest {
     final String processId = Strings.newRandomValidBpmnId();
     // when
     final BpmnModelInstance processDefinition1 =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .inclusiveGateway("inclusive")
             .sequenceFlowId("s1")
@@ -602,7 +602,7 @@ public final class InclusiveGatewayTest {
 
     // when
     final BpmnModelInstance processDefinition2 =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .inclusiveGateway("inclusive")
             .sequenceFlowId("s1")
@@ -630,7 +630,7 @@ public final class InclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .inclusiveGateway("inclusive")
             .sequenceFlowId("s1")
@@ -677,7 +677,7 @@ public final class InclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .inclusiveGateway("inclusive")
             .sequenceFlowId("s1")
@@ -718,7 +718,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnInclusiveGateway() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .parallelGateway("fork")
             .sequenceFlowId("joinFlow1")
@@ -754,7 +754,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayWithOneIncomingFlowTaken() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .inclusiveGateway("fork")
             .sequenceFlowId("joinFlow1")
@@ -790,7 +790,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayWhenMultiSatisfiedBranchesAreActivated() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .inclusiveGateway("fork")
             .sequenceFlowId("joinFlow1")
@@ -835,7 +835,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayWhenAllSatisfiedBranchesAreActivated() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .sequenceFlowId("joinFlow1")
@@ -875,7 +875,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayWhenAllSatisfiedBranchesAreActivatedWithBoundaryEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .sequenceFlowId("joinFlow1")
@@ -917,7 +917,7 @@ public final class InclusiveGatewayTest {
   public void shouldMergeAndSplitInOneGateway() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .parallelGateway("fork")
             .inclusiveGateway("join")
@@ -956,7 +956,7 @@ public final class InclusiveGatewayTest {
   public void shouldMergeAndSplitInOneGatewayWhenSubsetOfTheSequenceFlowsHasBeenTaken() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .exclusiveGateway("fork")
             .conditionExpression("a >= 0")
@@ -1001,7 +1001,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayIfAllIncomingFlowsAreTakenOnce() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .task("task-1")
@@ -1035,7 +1035,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayIfAnIncomingFlowIsTaken() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .exclusiveGateway("exclusive")
@@ -1065,7 +1065,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinGatewayWithMultipleTokensOnSamePath() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .inclusiveGateway("join")
@@ -1104,7 +1104,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinGatewayIfActiveElementWithLoopHasPathToGateway() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .parallelGateway("fork")
             .task("task-1")
@@ -1141,7 +1141,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinGatewayIfActiveElementWithLoopNoPathToGateway() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .parallelGateway("fork")
             .task("task-1")
@@ -1189,7 +1189,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayIfActiveLinkCatchEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .task("task-1")
@@ -1231,7 +1231,7 @@ public final class InclusiveGatewayTest {
   public void shouldJoinOnGatewayWithNoneThrowEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .task("task-1")
@@ -1269,7 +1269,7 @@ public final class InclusiveGatewayTest {
   public void shouldResolveIncident() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .parallelGateway("fork")
             .inclusiveGateway("join")

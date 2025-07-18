@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.bpmn.compensation;
 
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ExpectedValidationResult;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ProcessValidationUtil;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractStartEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractThrowEventBuilder;
@@ -128,7 +128,7 @@ public class CompensationEventTest {
   @Test
   public void shouldNotDeployCompensationEventSubprocess() {
     final var process =
-        Bpmn.createExecutableProcess("compensation-process")
+        BpmnModelApi.createExecutableProcess("compensation-process")
             .startEvent()
             .subProcess(
                 "embedded-subprocess",
@@ -178,6 +178,6 @@ public class CompensationEventTest {
 
   private BpmnModelInstance createModelFromClasspathResource(final String classpath) {
     final var resourceAsStream = getClass().getResourceAsStream(classpath);
-    return Bpmn.readModelFromStream(resourceAsStream);
+    return BpmnModelApi.readModelFromStream(resourceAsStream);
   }
 }

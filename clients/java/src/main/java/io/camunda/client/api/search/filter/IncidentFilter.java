@@ -17,9 +17,9 @@ package io.camunda.client.api.search.filter;
 
 import io.camunda.client.api.search.enums.IncidentErrorType;
 import io.camunda.client.api.search.enums.IncidentState;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
-public interface IncidentFilter extends SearchRequestFilter {
+public interface IncidentFilter extends Filter {
 
   /**
    * Filters incidents by the specified key.

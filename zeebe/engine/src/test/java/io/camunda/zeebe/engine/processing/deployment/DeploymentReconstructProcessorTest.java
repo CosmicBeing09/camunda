@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.appliers.EventAppliers;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRecord;
@@ -118,7 +118,8 @@ final class DeploymentReconstructProcessorTest {
                 .setResourceName("process.bpmn")
                 .setResource(
                     BufferUtil.wrapString(
-                        Bpmn.convertToString(Bpmn.createExecutableProcess("process").done())))
+                        BpmnModelApi.convertToString(
+                            BpmnModelApi.createExecutableProcess("process").done())))
                 .setVersion(1));
 
     // when

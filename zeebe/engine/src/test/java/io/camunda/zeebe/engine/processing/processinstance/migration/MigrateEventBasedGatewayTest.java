@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -46,7 +46,7 @@ public class MigrateEventBasedGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway")
                     .intermediateCatchEvent("timer", b -> b.timerWithDuration("PT5M"))
@@ -58,7 +58,7 @@ public class MigrateEventBasedGatewayTest {
                     .endEvent("B")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway2")
                     .intermediateCatchEvent("timer2", b -> b.timerWithDuration("PT5M"))
@@ -125,7 +125,7 @@ public class MigrateEventBasedGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway")
                     .intermediateCatchEvent(
@@ -139,7 +139,7 @@ public class MigrateEventBasedGatewayTest {
                     .endEvent("B")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway2")
                     .intermediateCatchEvent(
@@ -283,7 +283,7 @@ public class MigrateEventBasedGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway")
                     .intermediateCatchEvent(
@@ -295,7 +295,7 @@ public class MigrateEventBasedGatewayTest {
                     .endEvent("B")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway2")
                     .intermediateCatchEvent(
@@ -378,7 +378,7 @@ public class MigrateEventBasedGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .eventBasedGateway("gateway")
                     .intermediateCatchEvent(
@@ -394,7 +394,7 @@ public class MigrateEventBasedGatewayTest {
                     .endEvent("C")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway2")
                     .intermediateCatchEvent(
@@ -463,7 +463,7 @@ public class MigrateEventBasedGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .eventBasedGateway("gateway")
                     .intermediateCatchEvent(
@@ -479,7 +479,7 @@ public class MigrateEventBasedGatewayTest {
                     .endEvent("C")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway2")
                     .intermediateCatchEvent(
@@ -549,7 +549,7 @@ public class MigrateEventBasedGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .eventBasedGateway("gateway")
                     .intermediateCatchEvent(
@@ -561,7 +561,7 @@ public class MigrateEventBasedGatewayTest {
                     .endEvent("B")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("gateway2")
                     .intermediateCatchEvent(

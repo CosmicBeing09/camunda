@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractTaskBuilder;
@@ -44,7 +44,7 @@ public class ZeebeExecutionListenersValidationTest {
   void testJobTypeNotDefined() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "task",
@@ -66,7 +66,7 @@ public class ZeebeExecutionListenersValidationTest {
   void testEventTypeNotDefined() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/ZeebeExecutionListenersValidationTest.testEventTypeNotDefined.bpmn"));
 
@@ -108,7 +108,7 @@ public class ZeebeExecutionListenersValidationTest {
 
     final BpmnModelInstance process =
         taskConfigurer
-            .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+            .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
             .id(elementType)
             .zeebeStartExecutionListener(START_EL_TYPE)
             .zeebeEndExecutionListener(END_EL_TYPE)
@@ -124,7 +124,7 @@ public class ZeebeExecutionListenersValidationTest {
   void validateExecutionListenersSupportedOnlyForSpecifiedElements() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/ZeebeExecutionListenersValidationTest.testElementThatNotSupportExecutionListeners.bpmn"));
 
@@ -147,7 +147,7 @@ public class ZeebeExecutionListenersValidationTest {
   void testExecutionListenersTheSameJobTypeButDifferentEventType() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "task",
@@ -166,7 +166,7 @@ public class ZeebeExecutionListenersValidationTest {
   void testExecutionListenersWithTheSameEventTypeAndJobType() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "task",

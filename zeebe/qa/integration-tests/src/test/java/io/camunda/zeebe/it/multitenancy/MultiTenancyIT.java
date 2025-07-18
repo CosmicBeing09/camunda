@@ -35,7 +35,7 @@ import io.camunda.client.impl.basicauth.BasicAuthCredentialsProviderBuilder;
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.it.util.AuthorizationsUtil;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -149,7 +149,7 @@ public class MultiTenancyIT {
     RecordingExporter.reset();
     processId = Strings.newRandomValidBpmnId();
     process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .endEvent()
@@ -157,7 +157,7 @@ public class MultiTenancyIT {
 
     migratedProcessId = Strings.newRandomValidBpmnId();
     migratedProcess =
-        Bpmn.createExecutableProcess(migratedProcessId)
+        BpmnModelApi.createExecutableProcess(migratedProcessId)
             .startEvent()
             .serviceTask("migrated-task", b -> b.zeebeJobType("type"))
             .endEvent()
@@ -357,7 +357,7 @@ public class MultiTenancyIT {
 
     try (final var client = createCamundaClient(USER_TENANT_B)) {
       // when
-      final var processV2 = Bpmn.createExecutableProcess(processId).startEvent().done();
+      final var processV2 = BpmnModelApi.createExecutableProcess(processId).startEvent().done();
       final Future<DeploymentEvent> result =
           client
               .newDeployResourceCommand()
@@ -497,7 +497,7 @@ public class MultiTenancyIT {
       client
           .newDeployResourceCommand()
           .addProcessModel(
-              Bpmn.createExecutableProcess("parent")
+              BpmnModelApi.createExecutableProcess("parent")
                   .startEvent()
                   .callActivity("call", c -> c.zeebeProcessId(processId))
                   .endEvent()
@@ -573,7 +573,7 @@ public class MultiTenancyIT {
     // given
     final String messageName = "message";
     process =
-        Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
           .newDeployResourceCommand()
@@ -604,7 +604,7 @@ public class MultiTenancyIT {
     // given
     final String messageName = "message";
     process =
-        Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
           .newDeployResourceCommand()
@@ -638,7 +638,7 @@ public class MultiTenancyIT {
     // given
     final String messageName = "message";
     process =
-        Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
           .newDeployResourceCommand()
@@ -669,7 +669,7 @@ public class MultiTenancyIT {
     // given
     final String messageName = "message";
     process =
-        Bpmn.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().message(messageName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       client
           .newDeployResourceCommand()
@@ -990,7 +990,7 @@ public class MultiTenancyIT {
   void shouldResolveIncidentForTenant() {
     // given
     process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .zeebeOutputExpression("assert(foo, foo != null)", "target")
             .endEvent()
@@ -1029,7 +1029,7 @@ public class MultiTenancyIT {
   void shouldNotFindIncidentForTenantWhenUnauthorized() {
     // given
     process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .zeebeOutputExpression("assert(foo, foo != null)", "target")
             .endEvent()
@@ -1375,7 +1375,7 @@ public class MultiTenancyIT {
   void shouldStartInstanceWhenBroadcastSignalForTenant() {
     final String signalName = "signal";
     process =
-        Bpmn.createExecutableProcess(processId).startEvent().signal(signalName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().signal(signalName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client
@@ -1401,7 +1401,7 @@ public class MultiTenancyIT {
   void shouldDenyBroadcastSignalWhenUnauthorized() {
     final String signalName = "signal";
     process =
-        Bpmn.createExecutableProcess(processId).startEvent().signal(signalName).endEvent().done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().signal(signalName).endEvent().done();
     try (final var client = createCamundaClient(USER_TENANT_A)) {
       // given
       client

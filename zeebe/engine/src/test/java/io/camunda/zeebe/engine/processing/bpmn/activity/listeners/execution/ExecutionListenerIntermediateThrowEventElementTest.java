@@ -21,7 +21,7 @@ import static org.hamcrest.Matchers.oneOf;
 import static org.junit.Assume.assumeThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.IntermediateThrowEventBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -97,7 +97,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .intermediateThrowEvent(eventElementId, e -> scenario.builderFunction.apply(e))
                   .zeebeStartExecutionListener(START_EL_TYPE + "_1")
@@ -165,7 +165,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
 
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .intermediateThrowEvent(
                   scenario.name,
@@ -202,7 +202,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .intermediateThrowEvent(
                       eventElementId,
@@ -239,7 +239,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .intermediateThrowEvent(scenario.name, e -> scenario.builderFunction.apply(e))
                   .zeebeEndExecutionListener(END_EL_TYPE)
@@ -276,7 +276,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .intermediateThrowEvent(scenario.name, e -> scenario.builderFunction.apply(e))
                   .zeebeStartExecutionListener(START_EL_TYPE)
@@ -339,7 +339,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .subProcess(
                       "subprocess",
@@ -416,7 +416,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .subProcess(
                       "subprocess",
@@ -488,7 +488,7 @@ public class ExecutionListenerIntermediateThrowEventElementTest {
       final String eventElementId = "compensation-throw-event";
 
       final BpmnModelInstance process =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .serviceTask(
                   "A",

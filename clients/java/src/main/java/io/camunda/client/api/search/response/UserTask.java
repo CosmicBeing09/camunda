@@ -21,7 +21,7 @@ import java.util.Map;
 
 public interface UserTask {
 
-  Long getUserTaskKey();
+  Long getTaskId();
 
   /** Name of the task */
   String getName();
@@ -39,7 +39,7 @@ public interface UserTask {
   String getElementName();
 
   /** Instance key of the element */
-  Long getElementInstanceKey();
+  Long getInstanceKey();
 
   /** Candidate groups for the task */
   List<String> getCandidateGroups();

@@ -104,7 +104,7 @@ public class CamundaSpringProcessTestRuntimeBuilder {
       return createCamundaSaasClientBuilder(clientProperties);
 
     } else {
-      return CamundaClient.newClientBuilder().usePlaintext();
+      return CamundaClient.clientBuilder().usePlaintext();
     }
   }
 

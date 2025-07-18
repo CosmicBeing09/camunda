@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.SignalClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.ExecuteCommandResponseDecoder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -47,7 +47,7 @@ public class SignalCatchEventTest {
   public void shouldTriggerIntermediateCatchEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateCatchEvent(ELEMENT_ID)
             .signal(SIGNAL_NAME)
@@ -84,7 +84,7 @@ public class SignalCatchEventTest {
   public void shouldTriggerInterruptingBoundaryEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent(ELEMENT_ID)
@@ -123,7 +123,7 @@ public class SignalCatchEventTest {
   public void shouldTriggerNonInterruptingBoundaryEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent(ELEMENT_ID)
@@ -171,7 +171,7 @@ public class SignalCatchEventTest {
   public void shouldCloseSignalSubscription() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent(ELEMENT_ID)
@@ -216,7 +216,7 @@ public class SignalCatchEventTest {
   public void shouldTriggerSignalCatchEventAttachedToEventBasedGateway() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .eventBasedGateway("event_based_gateway")
             .intermediateCatchEvent(ELEMENT_ID)
@@ -259,7 +259,7 @@ public class SignalCatchEventTest {
       shouldRejectDeploymentSignalCatchEventWithSameSignalNameAttachedToEventBasedGateway() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .eventBasedGateway("event_based_gateway")
             .intermediateCatchEvent(ELEMENT_ID)

@@ -99,14 +99,14 @@ public class ZeebeExtension implements BeforeEachCallback, AfterEachCallback {
   public void createClient() {
     if (isZeebeVersionPre85()) {
       camundaClient =
-          CamundaClient.newClientBuilder()
+          CamundaClient.clientBuilder()
               .defaultRequestTimeout(Duration.ofMillis(15000))
               .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
               .usePlaintext()
               .build();
     } else {
       camundaClient =
-          CamundaClient.newClientBuilder()
+          CamundaClient.clientBuilder()
               .defaultRequestTimeout(Duration.ofMillis(15000))
               .grpcAddress(
                   URI.create(

@@ -15,7 +15,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.ProblemException;
 import io.camunda.client.api.search.response.Variable;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import java.io.InputStream;
 import java.util.Comparator;
 import java.util.List;
@@ -274,7 +274,7 @@ class VariableSearchTest {
 
     camundaClient
         .newDeployResourceCommand()
-        .addProcessModel(Bpmn.readModelFromStream(process), resourceName)
+        .addProcessModel(BpmnModelApi.readModelFromStream(process), resourceName)
         .send()
         .join();
   }

@@ -15,7 +15,7 @@ import io.camunda.client.api.worker.JobWorkerBuilderStep1.JobWorkerBuilderStep3;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
@@ -53,7 +53,7 @@ public final class LargeMessageSizeTest {
   private String jobType;
 
   private static BpmnModelInstance process(final String jobType) {
-    return Bpmn.createExecutableProcess("process")
+    return BpmnModelApi.createExecutableProcess("process")
         .startEvent()
         .serviceTask("task", t -> t.zeebeJobType(jobType))
         .endEvent()
@@ -68,7 +68,7 @@ public final class LargeMessageSizeTest {
   @Test
   public void shouldDeployLargeProcess() {
     // given
-    final var processAsString = Bpmn.convertToString(process(jobType));
+    final var processAsString = BpmnModelApi.convertToString(process(jobType));
     final var additionalChars = "<!--" + LARGE_TEXT + "-->";
     final var largeProcess = processAsString + additionalChars;
 
@@ -149,7 +149,7 @@ public final class LargeMessageSizeTest {
   public void shouldActivateJobsByRespectingMaxMessageSize() {
     // given
     final var modelInstance =
-        Bpmn.createExecutableProcess("foo")
+        BpmnModelApi.createExecutableProcess("foo")
             .startEvent()
             .serviceTask()
             .zeebeJobType("foo")
@@ -221,7 +221,7 @@ public final class LargeMessageSizeTest {
 
     // given
     final var modelInstance =
-        Bpmn.createExecutableProcess("foo")
+        BpmnModelApi.createExecutableProcess("foo")
             .startEvent()
             .serviceTask()
             .zeebeJobType("foo")

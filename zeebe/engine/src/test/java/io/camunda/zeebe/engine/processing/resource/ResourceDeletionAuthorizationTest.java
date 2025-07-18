@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ResourceDeletionIntent;
@@ -321,7 +321,7 @@ public class ResourceDeletionAuthorizationTest {
     return engine
         .deployment()
         .withXmlResource(
-            "process.bpmn", Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())
+            "process.bpmn", BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())
         .deploy(DEFAULT_USER.getUsername())
         .getValue()
         .getProcessesMetadata()

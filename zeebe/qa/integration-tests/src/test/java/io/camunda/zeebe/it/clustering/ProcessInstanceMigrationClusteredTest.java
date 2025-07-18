@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.SubscriptionUtil;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -34,7 +34,7 @@ public class ProcessInstanceMigrationClusteredTest {
   private static final String MESSAGE_NAME = "message1";
   private static final String CORRELATION_KEY = "key1";
   private static final BpmnModelInstance SOURCE_PROCESS =
-      Bpmn.createExecutableProcess("sourceProcess")
+      BpmnModelApi.createExecutableProcess("sourceProcess")
           .startEvent()
           .userTask("A")
           .boundaryEvent("boundary1")
@@ -45,7 +45,7 @@ public class ProcessInstanceMigrationClusteredTest {
           .done();
 
   private static final BpmnModelInstance TARGET_PROCESS =
-      Bpmn.createExecutableProcess("targetProcess")
+      BpmnModelApi.createExecutableProcess("targetProcess")
           .startEvent()
           .userTask("B")
           .boundaryEvent("boundary2")
@@ -56,7 +56,7 @@ public class ProcessInstanceMigrationClusteredTest {
           .done();
 
   private static final BpmnModelInstance TARGET_PROCESS_2 =
-      Bpmn.createExecutableProcess("targetProcess2")
+      BpmnModelApi.createExecutableProcess("targetProcess2")
           .startEvent()
           .userTask("C")
           .boundaryEvent("boundary3")
@@ -185,7 +185,7 @@ public class ProcessInstanceMigrationClusteredTest {
             .getClient()
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -202,7 +202,7 @@ public class ProcessInstanceMigrationClusteredTest {
                     .done(),
                 "sourceProcess.bpmn")
             .addProcessModel(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary3")

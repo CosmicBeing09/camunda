@@ -14,7 +14,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assume.assumeThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.JobKind;
@@ -55,7 +55,7 @@ public class JobProcessingMetricsTest {
           {
             JobMetricsTestScenario.of(
                 JobKind.BPMN_ELEMENT,
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .serviceTask(TASK_ID, t -> t.zeebeJobTypeExpression("jobType"))
                     .endEvent()
@@ -64,7 +64,7 @@ public class JobProcessingMetricsTest {
           {
             JobMetricsTestScenario.of(
                 JobKind.EXECUTION_LISTENER,
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .manualTask(TASK_ID)
                     .zeebeExecutionListener(el -> el.start().typeExpression("jobType"))

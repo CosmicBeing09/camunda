@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -37,7 +37,7 @@ public class LinkEventTest {
   @Test
   public void shouldTriggerEvent() {
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     processBuilder.startEvent().intermediateThrowEvent("throw", b -> b.link("linkA"));
     final BpmnModelInstance process =
         processBuilder.linkCatchEvent("catch").link("linkA").manualTask().endEvent().done();
@@ -69,7 +69,7 @@ public class LinkEventTest {
   @Test
   public void shouldTriggerEventFromMultipleSources() {
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     processBuilder
         .startEvent()
         .parallelGateway("parallel")
@@ -106,7 +106,7 @@ public class LinkEventTest {
   @Test
   public void shouldTriggerEventWithDifferentLinkEvents() {
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
     processBuilder.startEvent().intermediateThrowEvent("throwA", b -> b.link("linkA"));
     processBuilder
         .linkCatchEvent("catchA")

@@ -14,7 +14,7 @@ import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.auth.Authorization;
 import io.camunda.zeebe.engine.util.AuthorizationUtil;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -57,7 +57,7 @@ public class TenantAwareResourceDeletionTest {
   private static final String DRG_SINGLE_DECISION = "/dmn/decision-table.dmn";
   private static final String TEST_FORM_1 = "/form/test-form-1.form";
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("test").startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess("test").startEvent().endEvent().done();
 
   @Rule public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
 

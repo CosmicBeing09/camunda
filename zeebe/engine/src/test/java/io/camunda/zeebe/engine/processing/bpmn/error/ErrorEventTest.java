@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractStartEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
@@ -48,7 +48,7 @@ public class ErrorEventTest {
 
   private static BpmnModelInstance process(final Consumer<ServiceTaskBuilder> customizer) {
     final var builder =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType(JOB_TYPE));
 
@@ -290,7 +290,7 @@ public class ErrorEventTest {
   public void shouldCatchErrorEventsOnErrorStartEventWithoutErrorRef() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "sub",
                 e ->
@@ -327,7 +327,7 @@ public class ErrorEventTest {
   public void shouldCatchErrorEventsOnErrorStartEventWithEmptyErrorCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("sub", e -> e.startEvent("error", s -> s.error(null)).endEvent())
             .startEvent("start")
             .serviceTask("task", t -> t.zeebeJobType(JOB_TYPE))
@@ -360,7 +360,7 @@ public class ErrorEventTest {
   public void shouldCatchErrorEventsOnErrorStartEventWithoutErrorCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "sub", e -> e.startEvent("error", AbstractStartEventBuilder::error).endEvent())
             .startEvent("start")
@@ -394,7 +394,7 @@ public class ErrorEventTest {
   public void shouldCatchErrorEventsOnErrorStartEventWithSpecificErrorCode() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "sub-1",
                 e -> e.startEvent("catch-all", AbstractStartEventBuilder::error).endEvent())
@@ -451,14 +451,14 @@ public class ErrorEventTest {
   public void shouldCatchErrorFromChildInstance() {
     // given
     final var processChild =
-        Bpmn.createExecutableProcess("wf-child")
+        BpmnModelApi.createExecutableProcess("wf-child")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType(JOB_TYPE))
             .endEvent()
             .done();
 
     final var processParent =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("wf-child"))
             .boundaryEvent("error", b -> b.error(ERROR_CODE).endEvent())
@@ -519,7 +519,7 @@ public class ErrorEventTest {
         s -> s.startEvent("error-start-event").error(ERROR_CODE).endEvent();
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -570,7 +570,7 @@ public class ErrorEventTest {
   public void shouldCatchErrorOutsideMultiInstanceSubprocess() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -619,7 +619,7 @@ public class ErrorEventTest {
   public void shouldThrowErrorOnEndEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subProcess",
@@ -659,7 +659,7 @@ public class ErrorEventTest {
   public void shouldThrowErrorOnEndEventWithExpression() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subProcess",

@@ -19,7 +19,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.instance.Process;
 import org.junit.runners.Parameterized.Parameters;
 
@@ -35,7 +35,7 @@ public class ValidateProcessTest extends AbstractZeebeValidationTest {
         singletonList(expect(Process.class, "Element id must be present and not empty."))
       },
       {
-        Bpmn.createExecutableProcess().done(),
+        BpmnModelApi.createExecutableProcess().done(),
         singletonList(expect(Process.class, "Must have at least one start event"))
       }
     };

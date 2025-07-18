@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ExpectedValidationResult;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ProcessValidationUtil;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractEndEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.EndEventBuilder;
@@ -89,7 +89,7 @@ public class ExecutionListenerEndEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .manualTask()
                   .endEvent(endEventElementId, e -> scenario.endEventBuilderFunction.apply(e))
@@ -137,7 +137,7 @@ public class ExecutionListenerEndEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .manualTask()
                   .endEvent("end_event", e -> scenario.endEventBuilderFunction.apply(e))
@@ -199,7 +199,7 @@ public class ExecutionListenerEndEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess("process")
+              BpmnModelApi.createExecutableProcess("process")
                   .startEvent()
                   .subProcess(
                       "subprocess",
@@ -251,7 +251,7 @@ public class ExecutionListenerEndEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess("process")
+              BpmnModelApi.createExecutableProcess("process")
                   .startEvent()
                   .subProcess(
                       "subprocess",
@@ -307,7 +307,7 @@ public class ExecutionListenerEndEventElementTest {
       final long processInstanceKey =
           createProcessInstance(
               ENGINE,
-              Bpmn.createExecutableProcess(PROCESS_ID)
+              BpmnModelApi.createExecutableProcess(PROCESS_ID)
                   .startEvent()
                   .subProcess(
                       "event-subprocess",
@@ -381,7 +381,7 @@ public class ExecutionListenerEndEventElementTest {
     public void shouldNotDeployProcessWithErrorEndEventWithEndExecutionListeners() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .subProcess(
                   "event-subprocess",
@@ -413,7 +413,7 @@ public class ExecutionListenerEndEventElementTest {
           eventSubprocess -> eventSubprocess.startEvent().error().endEvent(endEventElementId);
 
       final BpmnModelInstance process =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .eventSubProcess("event-subprocess", compensationEventSubprocess)
               .startEvent()
               .serviceTask(

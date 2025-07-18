@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.zeebe.PublishMessageBuilder;
 import io.camunda.zeebe.model.bpmn.instance.Message;
@@ -79,7 +79,7 @@ class ZeebeSendTaskValidatorTest {
   void emptyJobType() {
     // when
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .sendTask("task", t -> t.zeebeJobType("jobType"))
             .zeebeJobType("")
@@ -95,7 +95,7 @@ class ZeebeSendTaskValidatorTest {
   void bothPublishMessageAndTaskDefinitionExtension() {
     // when
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .sendTask("task", t -> t.zeebeJobType("jobType"))
             .message(b -> b.name("message-name").zeebeCorrelationKey("corrleation-key"))
@@ -110,7 +110,7 @@ class ZeebeSendTaskValidatorTest {
   }
 
   private BpmnModelInstance process(final Consumer<PublishMessageBuilder> consumer) {
-    return Bpmn.createExecutableProcess("process")
+    return BpmnModelApi.createExecutableProcess("process")
         .startEvent()
         .sendTask("task")
         .message(consumer)

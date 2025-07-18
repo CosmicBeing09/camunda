@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.test.util.bpmn.random.blocks;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.test.util.bpmn.random.BlockBuilder;
@@ -74,7 +74,7 @@ public class CallActivityBlockBuilder extends AbstractBlockBuilder {
 
   private void buildChildProcess() {
     AbstractFlowNodeBuilder<?, ?> workInProgress =
-        Bpmn.createExecutableProcess(calledProcessId).startEvent();
+        BpmnModelApi.createExecutableProcess(calledProcessId).startEvent();
 
     if (calledProcessBuilder != null) {
       workInProgress = calledProcessBuilder.buildFlowNodes(workInProgress);

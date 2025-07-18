@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.test.util.bpmn.random.blocks;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
@@ -99,7 +99,7 @@ public class EscalationEventBlockBuilder extends AbstractBlockBuilder {
 
   private void buildChildProcess() {
     final AbstractFlowNodeBuilder<?, ?> childProcessStart =
-        Bpmn.createExecutableProcess(calledProcessId).startEvent(escalationProcessStartEventId);
+        BpmnModelApi.createExecutableProcess(calledProcessId).startEvent(escalationProcessStartEventId);
 
     final AbstractFlowNodeBuilder<?, ?> workInProgress =
         buildEscalationThrowEvent(childProcessStart);

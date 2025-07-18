@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AbstractUserTaskBuilder;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -44,20 +44,20 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .callActivity("A", c -> c.zeebeProcessId(childProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .callActivity("B", c -> c.zeebeProcessId(childProcessId))
                     .userTask("C")
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent("start")
                     .userTask("task")
                     .endEvent("end")
@@ -115,20 +115,20 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .callActivity("A", c -> c.zeebeProcessId(childProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .callActivity("B", c -> c.zeebeProcessId(childProcessId))
                     .userTask("C")
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent("start")
                     .userTask("task", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
@@ -189,20 +189,20 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .callActivity("A", c -> c.zeebeProcessId(childProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .callActivity("B", c -> c.zeebeProcessId(childProcessId))
                     .userTask("C")
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent("start")
                     .userTask("task", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
@@ -253,19 +253,19 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .callActivity("callActivity", c -> c.zeebeProcessId(childProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent("start")
                     .userTask("A", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetChildProcessId)
+                BpmnModelApi.createExecutableProcess(targetChildProcessId)
                     .startEvent("start")
                     .userTask("B", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
@@ -348,19 +348,19 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .callActivity("callActivity", c -> c.zeebeProcessId(childProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent("start")
                     .userTask("A", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetChildProcessId)
+                BpmnModelApi.createExecutableProcess(targetChildProcessId)
                     .startEvent("start")
                     .userTask("B", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
@@ -418,19 +418,19 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(parentProcessId)
+                BpmnModelApi.createExecutableProcess(parentProcessId)
                     .startEvent("start")
                     .callActivity("callActivity", c -> c.zeebeProcessId(childProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent("start")
                     .userTask("A", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetChildProcessId)
+                BpmnModelApi.createExecutableProcess(targetChildProcessId)
                     .startEvent("start")
                     .userTask("B", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")
@@ -483,26 +483,26 @@ public class MigrateCallActivityTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .callActivity("call1", c -> c.zeebeProcessId(level1ChildProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(level1ChildProcessId)
+                BpmnModelApi.createExecutableProcess(level1ChildProcessId)
                     .startEvent("start")
                     .callActivity("callActivity", c -> c.zeebeProcessId(level2ChildProcessId))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .callActivity("callActivity1", c -> c.zeebeProcessId(level2ChildProcessId))
                     .callActivity("callActivity0", c -> c.zeebeProcessIdExpression("processIdExpr"))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(level2ChildProcessId)
+                BpmnModelApi.createExecutableProcess(level2ChildProcessId)
                     .startEvent("start")
                     .userTask("A", AbstractUserTaskBuilder::zeebeUserTask)
                     .endEvent("end")

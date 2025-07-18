@@ -10,7 +10,7 @@ package io.camunda.zeebe.it.clustering.network;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.SubscriptionUtil;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.Duration;
@@ -22,7 +22,7 @@ final class MessageCorrelationTestCase implements AsymmetricNetworkPartitionTest
   @Override
   public void given(final CamundaClient client) {
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent()
             .message(msg -> msg.name("msg").zeebeCorrelationKeyExpression("key"))

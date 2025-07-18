@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.variable.mapping;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.ServiceTaskBuilder;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -101,7 +101,7 @@ public final class JobInputMappingTest {
     ENGINE_RULE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     "service",

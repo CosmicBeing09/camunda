@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static io.camunda.zeebe.test.util.MsgPackUtil.asMsgPack;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -49,7 +49,7 @@ public final class VariableDocumentUpdateProcessorTest {
   public void before() {
     jobType = Strings.newRandomValidBpmnId();
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType(jobType))
             .done();

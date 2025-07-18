@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -43,7 +43,7 @@ public class MigrateBusinessRuleTaskTest {
             .deployment()
             .withXmlClasspathResource(DMN_RESOURCE)
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .businessRuleTask(
                         "businessRuleTask1",
@@ -53,7 +53,7 @@ public class MigrateBusinessRuleTaskTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .businessRuleTask(
                         "businessRuleTask2",
@@ -130,13 +130,13 @@ public class MigrateBusinessRuleTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .businessRuleTask("businessRuleTask1", a -> a.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .businessRuleTask("businessRuleTask2", a -> a.zeebeJobType("B"))
                     .userTask()

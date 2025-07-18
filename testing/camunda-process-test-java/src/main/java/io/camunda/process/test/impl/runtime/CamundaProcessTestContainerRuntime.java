@@ -192,7 +192,7 @@ public class CamundaProcessTestContainerRuntime
   @Override
   public CamundaClientBuilderFactory getCamundaClientBuilderFactory() {
     return () ->
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .restAddress(getCamundaRestApiAddress())
             .grpcAddress(getCamundaGrpcApiAddress())
             .usePlaintext();

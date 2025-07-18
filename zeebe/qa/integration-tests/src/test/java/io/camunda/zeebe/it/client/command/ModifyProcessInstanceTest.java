@@ -15,7 +15,7 @@ import io.camunda.client.api.command.ClientStatusException;
 import io.camunda.client.api.command.ModifyProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ProblemException;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
@@ -262,9 +262,9 @@ public class ModifyProcessInstanceTest {
     processId2 = processId + "-2";
     processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId).startEvent().endEvent().done());
+            BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done());
     resourcesHelper.deployProcess(
-        Bpmn.createExecutableProcess(processId2)
+        BpmnModelApi.createExecutableProcess(processId2)
             .startEvent()
             .userTask("A")
             .parallelGateway()

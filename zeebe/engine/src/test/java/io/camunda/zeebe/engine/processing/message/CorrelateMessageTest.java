@@ -11,7 +11,7 @@ import static io.camunda.zeebe.test.util.MsgPackUtil.asMsgPack;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -389,7 +389,7 @@ public final class CorrelateMessageTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .message(MESSAGE_NAME)
                 .endEvent()
@@ -406,7 +406,7 @@ public final class CorrelateMessageTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .intermediateCatchEvent(
                     "msg",
@@ -426,7 +426,7 @@ public final class CorrelateMessageTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .userTask()
                 .boundaryEvent(
@@ -447,7 +447,7 @@ public final class CorrelateMessageTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent("msgStart")
                 .message(messageName)
                 .endEvent()

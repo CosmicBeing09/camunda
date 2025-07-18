@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.instance.zeebe;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.BaseElement;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstance;
@@ -37,7 +37,7 @@ public class ZeebeBuilderTest {
   public void shouldBuildServiceTask() {
     // when
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .serviceTask(
                 "foo",
@@ -50,7 +50,7 @@ public class ZeebeBuilderTest {
             .done();
 
     // then
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
 
     final ServiceTask serviceTask = modelInstance.getModelElementById("foo");
 
@@ -70,7 +70,7 @@ public class ZeebeBuilderTest {
   public void shouldBuildTaskWithIoMapping() {
     // when
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .serviceTask(
                 "foo",
@@ -81,7 +81,7 @@ public class ZeebeBuilderTest {
             .done();
 
     // then
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
 
     final ServiceTask serviceTask = modelInstance.getModelElementById("foo");
 
@@ -100,7 +100,7 @@ public class ZeebeBuilderTest {
   public void shouldBuildIntermediateMessageCatchEvent() {
     // when
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .intermediateCatchEvent("catch")
             .message(b -> b.name("messageName").zeebeCorrelationKeyExpression("correlationKey"))
@@ -108,7 +108,7 @@ public class ZeebeBuilderTest {
             .done();
 
     // then
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
 
     final IntermediateCatchEvent catchEvent = modelInstance.getModelElementById("catch");
     final Collection<EventDefinition> definitions = catchEvent.getEventDefinitions();
@@ -131,7 +131,7 @@ public class ZeebeBuilderTest {
   public void shouldBuildReceiveTask() {
     // when
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .receiveTask("catch")
             .message(b -> b.name("messageName").zeebeCorrelationKeyExpression("correlationKey"))
@@ -139,7 +139,7 @@ public class ZeebeBuilderTest {
             .done();
 
     // then
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
 
     final ReceiveTask task = modelInstance.getModelElementById("catch");
     final Message message = task.getMessage();

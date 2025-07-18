@@ -14,7 +14,7 @@ import io.camunda.qa.util.cluster.TestCamundaApplication;
 import io.camunda.qa.util.cluster.TestRestOperateClient.ProcessInstanceResult;
 import io.camunda.qa.util.multidb.MultiDbTest;
 import io.camunda.qa.util.multidb.MultiDbTestApplication;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.util.Either;
 import java.time.Duration;
 import org.awaitility.Awaitility;
@@ -40,7 +40,7 @@ public class StandaloneCamundaTest {
     camundaClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("test")
                 .zeebeJobType("type")

@@ -34,7 +34,7 @@ import io.camunda.client.api.search.response.UserTask;
 import io.camunda.client.api.search.response.Variable;
 import io.camunda.client.impl.search.filter.ProcessInstanceFilterImpl;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
@@ -156,7 +156,7 @@ public class BatchOperationMigrateProcessInstanceTest {
     final long sourceProcessDefinitionKey =
         deployProcessAndWaitForIt(
                 client,
-                Bpmn.createExecutableProcess("sourceProcess")
+                BpmnModelApi.createExecutableProcess("sourceProcess")
                     .startEvent()
                     .exclusiveGateway()
                     .conditionExpression("canBeMigrated")
@@ -171,7 +171,7 @@ public class BatchOperationMigrateProcessInstanceTest {
     final var targetProcessDefinitionKey =
         deployProcessAndWaitForIt(
                 client,
-                Bpmn.createExecutableProcess("process2").startEvent().userTask("userTaskB").done(),
+                BpmnModelApi.createExecutableProcess("process2").startEvent().userTask("userTaskB").done(),
                 "target-process.bpmn")
             .getProcessDefinitionKey();
 

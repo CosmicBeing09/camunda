@@ -33,7 +33,7 @@ public class DataStoreTest {
   @BeforeClass
   public static void parseModel() {
     modelInstance =
-        Bpmn.readModelFromStream(DataStoreTest.class.getResourceAsStream("DataStoreTest.bpmn"));
+        BpmnModelApi.readModelFromStream(DataStoreTest.class.getResourceAsStream("DataStoreTest.bpmn"));
   }
 
   @Test

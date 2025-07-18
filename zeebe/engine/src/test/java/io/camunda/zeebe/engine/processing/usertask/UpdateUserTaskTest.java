@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.usertask;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
@@ -53,7 +53,7 @@ public final class UpdateUserTaskTest {
 
   private static BpmnModelInstance process(final Consumer<UserTaskBuilder> consumer) {
     final var builder =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("task").zeebeUserTask();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("task").zeebeUserTask();
 
     consumer.accept(builder);
 

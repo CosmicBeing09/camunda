@@ -541,7 +541,7 @@ public class ClusteringRule extends ExternalResource {
         NetUtil.toSocketAddressString(
             gatewayResource.gateway.getGatewayCfg().getNetwork().toSocketAddress());
     final CamundaClientBuilder camundaClientBuilder =
-        CamundaClient.newClientBuilder().gatewayAddress(contactPoint);
+        CamundaClient.clientBuilder().gatewayAddress(contactPoint);
 
     clientConfigurator.accept(camundaClientBuilder);
 

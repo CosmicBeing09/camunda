@@ -18,7 +18,7 @@ import io.camunda.client.api.search.enums.ResourceType;
 import io.camunda.security.entity.AuthenticationMethod;
 import io.camunda.zeebe.it.util.AuthorizationsUtil;
 import io.camunda.zeebe.it.util.AuthorizationsUtil.Permissions;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration.TestZeebe;
@@ -71,7 +71,7 @@ final class BasicAuthOverRestIT {
         defaultUserClient
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
             .send()
             .join();
@@ -95,7 +95,7 @@ final class BasicAuthOverRestIT {
           client
               .newDeployResourceCommand()
               .addProcessModel(
-                  Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                  BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
               .send()
               .join();
@@ -119,7 +119,7 @@ final class BasicAuthOverRestIT {
           client
               .newDeployResourceCommand()
               .addProcessModel(
-                  Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                  BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
               .send();
 

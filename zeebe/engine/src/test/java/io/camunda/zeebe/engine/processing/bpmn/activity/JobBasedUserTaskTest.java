@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.protocol.Protocol;
@@ -54,7 +54,7 @@ public final class JobBasedUserTaskTest {
   }
 
   private static BpmnModelInstance process(final Consumer<UserTaskBuilder> consumer) {
-    final var builder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("task");
+    final var builder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("task");
 
     consumer.accept(builder);
 

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -52,7 +52,7 @@ public final class MessageCatchElementTest {
   private static final String SEQUENCE_FLOW_ID = "to-end";
   private static final String CATCH_EVENT_PROCESS_PROCESS_ID = "catchEventProcess";
   private static final BpmnModelInstance CATCH_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(CATCH_EVENT_PROCESS_PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(CATCH_EVENT_PROCESS_PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent(ELEMENT_ID)
           .message(m -> m.name(MESSAGE_NAME).zeebeCorrelationKeyExpression(CORRELATION_VARIABLE))
@@ -61,7 +61,7 @@ public final class MessageCatchElementTest {
           .done();
   private static final String RECEIVE_TASK_PROCESS_PROCESS_ID = "receiveTaskProcess";
   private static final BpmnModelInstance RECEIVE_TASK_PROCESS =
-      Bpmn.createExecutableProcess(RECEIVE_TASK_PROCESS_PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(RECEIVE_TASK_PROCESS_PROCESS_ID)
           .startEvent()
           .receiveTask(ELEMENT_ID)
           .message(m -> m.name(MESSAGE_NAME).zeebeCorrelationKeyExpression(CORRELATION_VARIABLE))
@@ -70,7 +70,7 @@ public final class MessageCatchElementTest {
           .done();
   private static final String BOUNDARY_EVENT_PROCESS_PROCESS_ID = "boundaryEventProcess";
   private static final BpmnModelInstance BOUNDARY_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(BOUNDARY_EVENT_PROCESS_PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(BOUNDARY_EVENT_PROCESS_PROCESS_ID)
           .startEvent()
           .serviceTask(ELEMENT_ID, b -> b.zeebeJobType("type"))
           .boundaryEvent()
@@ -81,7 +81,7 @@ public final class MessageCatchElementTest {
   private static final String NON_INT_BOUNDARY_EVENT_PROCESS_PROCESS_ID =
       "nonIntBoundaryEventProcess";
   private static final BpmnModelInstance NON_INT_BOUNDARY_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(NON_INT_BOUNDARY_EVENT_PROCESS_PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(NON_INT_BOUNDARY_EVENT_PROCESS_PROCESS_ID)
           .startEvent()
           .serviceTask(ELEMENT_ID, b -> b.zeebeJobType("type"))
           .boundaryEvent("event")

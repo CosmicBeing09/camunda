@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
@@ -48,7 +48,7 @@ public final class CreateProcessInstanceTest {
     // given
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -91,7 +91,7 @@ public final class CreateProcessInstanceTest {
     // given
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -127,7 +127,7 @@ public final class CreateProcessInstanceTest {
     // given
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -161,7 +161,7 @@ public final class CreateProcessInstanceTest {
     // given
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -197,7 +197,7 @@ public final class CreateProcessInstanceTest {
     // given
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -223,7 +223,7 @@ public final class CreateProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process").startEvent("start").endEvent().done())
+            BpmnModelApi.createExecutableProcess("process").startEvent("start").endEvent().done())
         .deploy();
 
     // when
@@ -262,7 +262,7 @@ public final class CreateProcessInstanceTest {
   @Test
   public void shouldActivateOnlyNoneStartEvent() {
     // given
-    final var processBuilder = Bpmn.createExecutableProcess("process");
+    final var processBuilder = BpmnModelApi.createExecutableProcess("process");
     processBuilder.startEvent("none-start").endEvent();
     processBuilder.startEvent("timer-start").timerWithCycle("R/PT1H").endEvent();
     processBuilder.startEvent("message-start").message("start").endEvent();
@@ -289,7 +289,7 @@ public final class CreateProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .sequenceFlowId("flow")
                 .endEvent()
@@ -328,7 +328,7 @@ public final class CreateProcessInstanceTest {
   public void shouldCompleteUndefinedTask() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process").startEvent().task().endEvent().done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().task().endEvent().done();
 
     ENGINE.deployment().withXmlResource(modelInstance).deploy();
 
@@ -354,7 +354,7 @@ public final class CreateProcessInstanceTest {
     final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())
         .withTenantId(tenantId)
         .deploy();
 
@@ -379,7 +379,7 @@ public final class CreateProcessInstanceTest {
     final String tenantId = "foo";
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())
         .withTenantId(tenantId)
         .deploy();
 
@@ -413,7 +413,7 @@ public final class CreateProcessInstanceTest {
     // given
     final var processId = helper.getBpmnProcessId();
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("noneStart")
             .endEvent()
             .moveToProcess(processId)

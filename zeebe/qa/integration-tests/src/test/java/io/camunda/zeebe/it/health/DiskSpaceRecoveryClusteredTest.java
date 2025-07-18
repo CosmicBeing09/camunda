@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.message.MessageObserver;
 import io.camunda.zeebe.it.clustering.ClusteringRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
@@ -61,7 +61,7 @@ public class DiskSpaceRecoveryClusteredTest {
     waitUntilDiskSpaceNotAvailable(failingBroker);
 
     final long deploymentKey =
-        deployProcess(Bpmn.createExecutableProcess("test").startEvent().endEvent().done());
+        deployProcess(BpmnModelApi.createExecutableProcess("test").startEvent().endEvent().done());
 
     // when
     Awaitility.await()
@@ -160,7 +160,7 @@ public class DiskSpaceRecoveryClusteredTest {
 
   private long deployProcessWithMessage(final String processId) {
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .intermediateCatchEvent()
             .message(m -> m.name(messageName).zeebeCorrelationKeyExpression("key"))

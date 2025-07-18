@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -37,7 +37,7 @@ public class MultiPartitionRejectionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("PROCESS")
+                BpmnModelApi.createExecutableProcess("PROCESS")
                     .startEvent()
                     .documentation(
                         "x".repeat((int) (ByteValue.ofMegabytes(2) - ByteValue.ofKilobytes(1))))
@@ -55,13 +55,13 @@ public class MultiPartitionRejectionTest {
   public void shouldNotBeAbleToCreateInstanceWhenDeploymentIsRejected() {
     // given
     final BpmnModelInstance invalidProcess =
-        Bpmn.createExecutableProcess("too_large_process")
+        BpmnModelApi.createExecutableProcess("too_large_process")
             .startEvent()
             // In order to cause BATCH SIZE EXCEEDING we add a big comment
             .documentation("x".repeat((int) (ByteValue.ofMegabytes(2) - ByteValue.ofKilobytes(2))))
             .done();
     final BpmnModelInstance validProcess =
-        Bpmn.createExecutableProcess("valid_process").startEvent().task().endEvent().done();
+        BpmnModelApi.createExecutableProcess("valid_process").startEvent().task().endEvent().done();
 
     // when
     engine

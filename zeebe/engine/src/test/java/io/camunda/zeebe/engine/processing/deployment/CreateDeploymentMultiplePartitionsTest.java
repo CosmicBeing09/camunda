@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.fail;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -49,9 +49,9 @@ public final class CreateDeploymentMultiplePartitionsTest {
   public static final int PARTITION_COUNT = 3;
   @ClassRule public static final EngineRule ENGINE = EngineRule.multiplePartition(PARTITION_COUNT);
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
   private static final BpmnModelInstance PROCESS_2 =
-      Bpmn.createExecutableProcess("process2").startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess("process2").startEvent().endEvent().done();
   private static final String DMN_DECISION_TABLE = "/dmn/decision-table.dmn";
   private static final String DMN_DECISION_TABLE_V2 = "/dmn/decision-table_v2.dmn";
   private static final String DMN_DECISION_TABLE_RENAMED =
@@ -67,12 +67,12 @@ public final class CreateDeploymentMultiplePartitionsTest {
   public void shouldCreateDeploymentOnAllPartitions() {
     // when
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("shouldCreateDeploymentOnAllPartitions")
+        BpmnModelApi.createExecutableProcess("shouldCreateDeploymentOnAllPartitions")
             .startEvent()
             .endEvent()
             .done();
     final BpmnModelInstance secondNoopModel =
-        Bpmn.createExecutableProcess("shouldCreateDeploymentOnAllPartitionsSecondNoopDeployment")
+        BpmnModelApi.createExecutableProcess("shouldCreateDeploymentOnAllPartitionsSecondNoopDeployment")
             .startEvent()
             .endEvent()
             .done();
@@ -288,7 +288,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
   public void shouldIncrementProcessVersions() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("shouldIncrementProcessVersions")
+        BpmnModelApi.createExecutableProcess("shouldIncrementProcessVersions")
             .startEvent()
             .endEvent()
             .done();
@@ -364,7 +364,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
 
     // when
     final BpmnModelInstance sameBpmnIdModel =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
     final Record<DeploymentRecordValue> repeated =
         ENGINE.deployment().withXmlResource("process.bpmn", sameBpmnIdModel).deploy();
 
@@ -501,7 +501,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
             .deployment()
             .withXmlResource(
                 "process.bpmn",
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .versionTag("v1.0")
                     .startEvent()
                     .endEvent()
@@ -536,7 +536,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            "process.bpmn", Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())
+            "process.bpmn", BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())
         .deploy();
 
     // then
@@ -619,7 +619,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
             .deployment()
             .withXmlResource(
                 "process.xml",
-                Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())
+                BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())
             .withTenantId(tenant)
             .deploy();
 
@@ -792,7 +792,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
 
   private byte[] bpmnXml(final BpmnModelInstance definition) {
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, definition);
+    BpmnModelApi.writeModelToStream(outStream, definition);
     return outStream.toByteArray();
   }
 

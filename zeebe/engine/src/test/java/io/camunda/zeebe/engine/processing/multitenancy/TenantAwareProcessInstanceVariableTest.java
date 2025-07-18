@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -48,7 +48,7 @@ public class TenantAwareProcessInstanceVariableTest {
   private static final String TENANT_ID = "foo";
 
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test"))
           .endEvent()

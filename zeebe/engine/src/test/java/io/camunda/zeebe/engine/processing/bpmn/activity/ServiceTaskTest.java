@@ -16,7 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior.LinkedResourceProps;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.protocol.record.Record;
@@ -91,7 +91,7 @@ public class ServiceTaskTest {
   public void shouldCreateJobWithLinkedResourcesVersionTagBinding() throws JsonProcessingException {
 
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -158,7 +158,7 @@ public class ServiceTaskTest {
   public void shouldCreateJobWithLinkedResourcesLatestBinding() throws JsonProcessingException {
 
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -220,7 +220,7 @@ public class ServiceTaskTest {
   @Test
   public void shouldCreateJobWithLinkedResourcesDeploymentBinding() throws JsonProcessingException {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -283,7 +283,7 @@ public class ServiceTaskTest {
   @Test
   public void shouldHandleNotFoundVersionTagBinding() {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -321,7 +321,7 @@ public class ServiceTaskTest {
   @Test
   public void shouldHandleNotFoundDeploymentBinding() {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -360,7 +360,7 @@ public class ServiceTaskTest {
   @Test
   public void shouldHandleNotFoundLatestBinding() {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -397,7 +397,7 @@ public class ServiceTaskTest {
   @Test
   public void shouldResolveIncidentAfterNotFoundResource() {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_linked_resource",
@@ -448,7 +448,7 @@ public class ServiceTaskTest {
   @Test
   public void shouldNotIncludeLinkedResourcesWhenTheyAreNotInServiceTask() {
     final BpmnModelInstance modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream("resource/test-send-task-with-linked-resources.bpmn"));
 
     ENGINE.deployment().withXmlResource(modelInstance).deploy();

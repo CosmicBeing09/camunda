@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.instance.MultiInstanceLoopCharacteristics;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeLoopCharacteristics;
 import org.junit.runners.Parameterized.Parameters;
@@ -30,7 +30,7 @@ public class ZeebeMultiInstanceLoopCharacteristicsValidationTest
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("test").multiInstance())
             .done(),
@@ -40,7 +40,7 @@ public class ZeebeMultiInstanceLoopCharacteristicsValidationTest
                 "Must have exactly one 'zeebe:loopCharacteristics' extension element"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -54,7 +54,7 @@ public class ZeebeMultiInstanceLoopCharacteristicsValidationTest
                 "Attribute 'inputCollection' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -70,7 +70,7 @@ public class ZeebeMultiInstanceLoopCharacteristicsValidationTest
                 "Attribute 'outputElement' must be present if the attribute 'outputCollection' is set"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",

@@ -41,7 +41,7 @@ public class CreateModelTest {
 
   @Before
   public void createEmptyModel() {
-    modelInstance = Bpmn.createEmptyModel();
+    modelInstance = BpmnModelApi.createEmptyModel();
     definitions = modelInstance.newInstance(Definitions.class);
     definitions.setTargetNamespace("http://camunda.org/examples");
     modelInstance.setDefinitions(definitions);
@@ -107,6 +107,6 @@ public class CreateModelTest {
 
   @After
   public void validateModel() {
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
   }
 }

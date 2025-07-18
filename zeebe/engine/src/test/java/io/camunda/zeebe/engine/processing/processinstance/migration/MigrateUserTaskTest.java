@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -46,13 +46,13 @@ public class MigrateUserTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .userTask()
@@ -104,13 +104,13 @@ public class MigrateUserTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A", u -> u.zeebeUserTask())
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B", u -> u.zeebeUserTask())
                     .endEvent()
@@ -162,7 +162,7 @@ public class MigrateUserTaskTest {
             .withJsonClasspathResource("/form/test-form-1.form")
             .withJsonClasspathResource("/form/test-form-2.form")
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask(
                         "A",
@@ -177,7 +177,7 @@ public class MigrateUserTaskTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask(
                         "B",
@@ -262,7 +262,7 @@ public class MigrateUserTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask(
                         "A",
@@ -270,7 +270,7 @@ public class MigrateUserTaskTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask(
                         "B",
@@ -328,7 +328,7 @@ public class MigrateUserTaskTest {
             .withJsonClasspathResource("/form/test-form-1.form")
             .withJsonClasspathResource("/form/test-form-2.form")
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask(
                         "A",
@@ -343,7 +343,7 @@ public class MigrateUserTaskTest {
                     .endEvent("source_process_end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask(
                         "B",
@@ -434,7 +434,7 @@ public class MigrateUserTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A", u -> u.zeebeUserTask().zeebeAssignee("frodo"))
                     .zeebeTaskListener(
@@ -442,7 +442,7 @@ public class MigrateUserTaskTest {
                     .endEvent("source_process_end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B", u -> u.zeebeUserTask().zeebeAssignee("frodo"))
                     .zeebeTaskListener(

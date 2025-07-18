@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.filter;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
-public interface ProcessDefinitionFilter extends SearchRequestFilter {
+public interface ProcessDefinitionFilter extends Filter {
 
   /**
    * Filters process definitions by the specified process definition key.

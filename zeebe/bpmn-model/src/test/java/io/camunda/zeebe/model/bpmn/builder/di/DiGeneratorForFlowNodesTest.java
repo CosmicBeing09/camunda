@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.bpmndi.BpmnDiagram;
@@ -51,7 +51,7 @@ public class DiGeneratorForFlowNodesTest {
   @After
   public void validateModel() throws IOException {
     if (instance != null) {
-      Bpmn.validateModel(instance);
+      BpmnModelApi.validateModel(instance);
     }
   }
 
@@ -59,7 +59,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGeneratePlaneForProcess() {
 
     // when
-    instance = Bpmn.createExecutableProcess("process").done();
+    instance = BpmnModelApi.createExecutableProcess("process").done();
 
     // then
     final Collection<BpmnDiagram> bpmnDiagrams = instance.getModelElementsByType(BpmnDiagram.class);
@@ -76,7 +76,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForStartEvent() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).endEvent(END_EVENT_ID).done();
@@ -92,7 +92,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForUserTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).userTask(USER_TASK_ID).done();
@@ -108,7 +108,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForSendTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).sendTask(SEND_TASK_ID).done();
@@ -124,7 +124,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForServiceTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).serviceTask(SERVICE_TASK_ID).done();
@@ -140,7 +140,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForReceiveTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).receiveTask(TASK_ID).done();
@@ -156,7 +156,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForManualTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).manualTask(TASK_ID).done();
@@ -172,7 +172,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForBusinessRuleTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).businessRuleTask(TASK_ID).done();
@@ -188,7 +188,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForScriptTask() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).scriptTask(TASK_ID).done();
@@ -204,7 +204,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForCatchingIntermediateEvent() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -225,7 +225,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForBoundaryIntermediateEvent() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -252,7 +252,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForThrowingIntermediateEvent() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -273,7 +273,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForEndEvent() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance = processBuilder.startEvent(START_EVENT_ID).endEvent(END_EVENT_ID).done();
@@ -289,7 +289,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForBlankSubProcess() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -313,7 +313,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapesForNestedFlowNodes() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -345,7 +345,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForEventSubProcess() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -376,7 +376,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForCallActivity() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -397,7 +397,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForTransaction() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -429,7 +429,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForParallelGateway() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -450,7 +450,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForInclusiveGateway() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -471,7 +471,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForEventBasedGateway() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =
@@ -493,7 +493,7 @@ public class DiGeneratorForFlowNodesTest {
   public void shouldGenerateShapeForExclusiveGateway() {
 
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
 
     // when
     instance =

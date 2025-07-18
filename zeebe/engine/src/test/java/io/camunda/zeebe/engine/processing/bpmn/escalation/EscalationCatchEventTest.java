@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.EscalationIntent;
@@ -56,7 +56,7 @@ public final class EscalationCatchEventTest {
     return new Object[][] {
       {
         "boundary event on subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -74,7 +74,7 @@ public final class EscalationCatchEventTest {
       },
       {
         "boundary event on multi-instance subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -93,7 +93,7 @@ public final class EscalationCatchEventTest {
       },
       {
         "escalation event subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "escalation-event-subprocess",
                 s ->
@@ -110,7 +110,7 @@ public final class EscalationCatchEventTest {
       },
       {
         "favor escalation event subprocess over boundary event on subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "sub",

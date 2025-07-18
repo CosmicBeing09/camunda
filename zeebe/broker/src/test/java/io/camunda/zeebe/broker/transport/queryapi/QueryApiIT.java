@@ -13,7 +13,7 @@ import io.atomix.cluster.messaging.MessagingConfig;
 import io.atomix.cluster.messaging.impl.NettyMessagingService;
 import io.atomix.utils.net.Address;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.encoding.ErrorResponse;
 import io.camunda.zeebe.protocol.impl.encoding.ExecuteQueryRequest;
 import io.camunda.zeebe.protocol.impl.encoding.ExecuteQueryResponse;
@@ -103,7 +103,7 @@ public final class QueryApiIT {
         command
             .partitionClient(1)
             .deployProcess(
-                Bpmn.createExecutableProcess("OneProcessToRuleThemAll")
+                BpmnModelApi.createExecutableProcess("OneProcessToRuleThemAll")
                     .startEvent()
                     .endEvent()
                     .done())
@@ -138,7 +138,7 @@ public final class QueryApiIT {
     // given
     final var client = command.partitionClient(1);
     client.deploy(
-        Bpmn.createExecutableProcess("OneProcessToRuleThemAll")
+        BpmnModelApi.createExecutableProcess("OneProcessToRuleThemAll")
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .endEvent()

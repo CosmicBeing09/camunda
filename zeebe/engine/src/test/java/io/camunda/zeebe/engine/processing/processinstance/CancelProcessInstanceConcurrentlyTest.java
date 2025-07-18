@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
@@ -48,7 +48,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
   private static final String INPUT_COLLECTION_VARIABLE = "items";
 
   private static final BpmnModelInstance SEQUENTIAL_FLOW =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .parallelGateway("fork")
           .serviceTask(ELEMENT_ID, t -> t.zeebeJobType(JOB_TYPE))
@@ -56,7 +56,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
           .done();
 
   private static final BpmnModelInstance PARALLEL_FLOW =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .parallelGateway("fork")
           .serviceTask(ELEMENT_ID, t -> t.zeebeJobType(JOB_TYPE))
@@ -67,7 +67,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
           .done();
 
   private static final BpmnModelInstance SUB_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .subProcess(
               "sub-process",
@@ -83,7 +83,7 @@ public final class CancelProcessInstanceConcurrentlyTest {
           .done();
 
   private static final BpmnModelInstance MULTI_INSTANCE =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask(
               ELEMENT_ID,

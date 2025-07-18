@@ -84,7 +84,7 @@ public final class CamundaClientTest {
 
   @Test
   public void shouldNotFailIfClosedTwice() {
-    final CamundaClient client = CamundaClient.newClient();
+    final CamundaClient client = CamundaClient.createClient();
     client.close();
     client.close();
   }
@@ -92,7 +92,7 @@ public final class CamundaClientTest {
   @Test
   public void shouldHaveDefaultValues() {
     // given
-    try (final CamundaClient client = CamundaClient.newClient()) {
+    try (final CamundaClient client = CamundaClient.createClient()) {
       // when
       final CamundaClientConfiguration configuration = client.getConfiguration();
 
@@ -123,13 +123,13 @@ public final class CamundaClientTest {
   @Test
   public void shouldFailIfCertificateDoesNotExist() {
     assertThatThrownBy(
-            () -> CamundaClient.newClientBuilder().caCertificatePath("/wrong/path").build())
+            () -> CamundaClient.clientBuilder().caCertificatePath("/wrong/path").build())
         .hasCauseInstanceOf(FileNotFoundException.class);
   }
 
   @Test
   public void shouldFailWithEmptyCertificatePath() {
-    assertThatThrownBy(() -> CamundaClient.newClientBuilder().caCertificatePath("").build())
+    assertThatThrownBy(() -> CamundaClient.clientBuilder().caCertificatePath("").build())
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -549,7 +549,7 @@ public final class CamundaClientTest {
     // given
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try (final CamundaClient client =
-        CamundaClient.newClientBuilder().jobWorkerExecutor(executor, true).build()) {
+        CamundaClient.clientBuilder().jobWorkerExecutor(executor, true).build()) {
       // when
       client.close();
 
@@ -563,7 +563,7 @@ public final class CamundaClientTest {
     // given
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try (final CamundaClient client =
-        CamundaClient.newClientBuilder().jobWorkerExecutor(executor, false).build()) {
+        CamundaClient.clientBuilder().jobWorkerExecutor(executor, false).build()) {
       // when
       client.close();
 
@@ -580,7 +580,7 @@ public final class CamundaClientTest {
     final ScheduledThreadPoolExecutor executor = spy(new ScheduledThreadPoolExecutor(1));
     final Duration pollInterval = Duration.ZERO;
     try (final CamundaClient client =
-            CamundaClient.newClientBuilder().jobWorkerExecutor(executor).build();
+            CamundaClient.clientBuilder().jobWorkerExecutor(executor).build();
         final JobWorker ignored =
             client
                 .newWorker()

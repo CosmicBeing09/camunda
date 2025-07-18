@@ -12,7 +12,7 @@ import static org.assertj.core.api.Fail.fail;
 
 import io.camunda.operate.util.OperateZeebeAbstractIT;
 import io.camunda.operate.webapp.rest.dto.FlowNodeStatisticsDto;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
@@ -67,7 +67,7 @@ public class FlowNodeStatisticsZeebeIT extends OperateZeebeAbstractIT {
     final String startEvent = "start";
     final String endEvent = "end";
     final String jobType = "taskA";
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess("process");
     AbstractFlowNodeBuilder flowNodeBuilder = processBuilder.startEvent(startEvent);
     for (int i = 0; i < 20; i++) {
       flowNodeBuilder = flowNodeBuilder.serviceTask("task" + i).zeebeJobType(jobType);

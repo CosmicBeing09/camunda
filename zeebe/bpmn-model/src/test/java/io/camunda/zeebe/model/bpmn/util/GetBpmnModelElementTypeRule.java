@@ -16,7 +16,7 @@
 
 package io.camunda.zeebe.model.bpmn.util;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import org.camunda.bpm.model.xml.Model;
 import org.camunda.bpm.model.xml.ModelInstance;
 import org.camunda.bpm.model.xml.instance.ModelElementInstance;
@@ -45,7 +45,7 @@ public class GetBpmnModelElementTypeRule extends TestWatcher implements GetModel
     } catch (final ClassNotFoundException e) {
       throw new RuntimeException(e);
     }
-    modelInstance = Bpmn.createEmptyModel();
+    modelInstance = BpmnModelApi.createEmptyModel();
     model = modelInstance.getModel();
     modelElementType = model.getType(instanceClass);
   }

@@ -31,7 +31,7 @@ import io.camunda.webapps.schema.entities.operation.BatchOperationEntity;
 import io.camunda.webapps.schema.entities.operation.OperationEntity;
 import io.camunda.webapps.schema.entities.operation.OperationState;
 import io.camunda.webapps.schema.entities.operation.OperationType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.List;
 import java.util.Objects;
@@ -166,7 +166,7 @@ public class MigrateProcessInstanceOperationZeebeIT extends OperateZeebeAbstract
     // process instances that complete execution
     final String bpmnProcessId = "startEndProcess";
     final BpmnModelInstance startEndProcess =
-        Bpmn.createExecutableProcess(bpmnProcessId).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(bpmnProcessId).startEvent().endEvent().done();
     final Long processDefinitionKey = deployProcess(startEndProcess, "startEndProcess.bpmn");
     final Long processInstanceKey1 =
         ZeebeTestUtil.startProcessInstance(super.getClient(), bpmnProcessId, null);

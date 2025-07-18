@@ -9,7 +9,7 @@ package io.camunda.zeebe.it.clustering;
 
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import java.time.Duration;
@@ -72,7 +72,7 @@ public class InstallRequestHandlingTest {
 
     final var processDefinitionKey =
         clientRule.deployProcess(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", task -> task.zeebeJobType("type"))
                 .endEvent()

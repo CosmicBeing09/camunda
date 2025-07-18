@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.deployment;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.DecisionIntent;
@@ -37,7 +37,7 @@ import org.junit.runners.Parameterized.Parameters;
 public class MultiResourceDeploymentTest {
 
   private static final BpmnModelInstance PROCESS_V1 =
-      Bpmn.createExecutableProcess("process1").startEvent("v1").endEvent().done();
+      BpmnModelApi.createExecutableProcess("process1").startEvent("v1").endEvent().done();
   private static final String FORM_V1 = "/form/test-form-1.form";
   private static final String FORM_V2 = "/form/test-form-1_v2.form";
   private static final String DMN_V1 = "/dmn/decision-table.dmn";
@@ -75,7 +75,7 @@ public class MultiResourceDeploymentTest {
         new Object[] {
           "BPMN has changed",
           PROCESS_V1,
-          Bpmn.createExecutableProcess("process1").startEvent("v2").endEvent().done(),
+          BpmnModelApi.createExecutableProcess("process1").startEvent("v2").endEvent().done(),
           DMN_V1,
           DMN_V1,
           FORM_V1,

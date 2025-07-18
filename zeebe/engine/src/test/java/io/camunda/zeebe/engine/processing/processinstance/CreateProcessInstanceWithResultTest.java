@@ -14,7 +14,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceResultRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -35,7 +35,7 @@ public final class CreateProcessInstanceWithResultTest {
 
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("PROCESS").startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess("PROCESS").startEvent().endEvent().done();
   private static ProcessInstanceResultRecord response;
   private static CommandResponseWriter mockCommandResponseWriter;
 

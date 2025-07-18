@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.traversal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.impl.instance.CollaborationImpl;
 import io.camunda.zeebe.model.bpmn.impl.instance.ProcessImpl;
@@ -51,7 +51,7 @@ public class ModelWalkerTest {
   public void shouldVisitModelTopDownDepthFirst() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start-1-1")
             .subProcess("sub-1-2")
             .embeddedSubProcess()
@@ -109,7 +109,7 @@ public class ModelWalkerTest {
   public void shouldInvokeTypedVisitors() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start-1")
             .userTask("user-1")
             .endEvent("end-1")
@@ -147,7 +147,7 @@ public class ModelWalkerTest {
   public void shouldVisitTypeHiearchyInOrder() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start-1")
             .userTask("user-1")
             .endEvent("end-1")
@@ -186,7 +186,7 @@ public class ModelWalkerTest {
   public void shouldIgnoreUnknownElementsAndAttributes() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.readModelFromStream(ModelWalkerTest.class.getResourceAsStream("ModelWalkerTest.bpmn"));
+        BpmnModelApi.readModelFromStream(ModelWalkerTest.class.getResourceAsStream("ModelWalkerTest.bpmn"));
 
     final List<BpmnModelElementInstance> visitedElements = new ArrayList<>();
 
@@ -214,7 +214,7 @@ public class ModelWalkerTest {
     // given
     // a BPMN model containing one executable and one non-executable process
     final BpmnModelInstance modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ModelWalkerTest.class.getResourceAsStream("CollaborationModelWalkerTest.bpmn"));
 
     final List<BpmnModelElementInstance> visitedElements = new ArrayList<>();

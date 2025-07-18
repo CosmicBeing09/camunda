@@ -71,7 +71,7 @@ public final class GrpcClientRule extends ExternalResource {
   public void before() {
     startTime = System.currentTimeMillis();
     final CamundaClientBuilder builder =
-        CamundaClient.newClientBuilder().defaultRequestTimeout(Duration.ofSeconds(10));
+        CamundaClient.clientBuilder().defaultRequestTimeout(Duration.ofSeconds(10));
     configurator.accept(builder);
     client = builder.build();
     resourcesHelper = new ZeebeResourcesHelper(client);

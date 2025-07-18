@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
@@ -34,7 +34,7 @@ public class CallActivityBuilderTest {
   void shouldSetProcessId() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("callActivity", c -> c.zeebeProcessId("process-id-1"))
             .done();
@@ -53,7 +53,7 @@ public class CallActivityBuilderTest {
   void shouldSetProcessIdExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("callActivity", c -> c.zeebeProcessIdExpression("processIdExpr"))
             .done();
@@ -73,7 +73,7 @@ public class CallActivityBuilderTest {
   void shouldSetPropagateAllChildVariables(final boolean propagateAllChildVariables) {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "callActivity", c -> c.zeebePropagateAllChildVariables(propagateAllChildVariables))
@@ -94,7 +94,7 @@ public class CallActivityBuilderTest {
   void shouldSetPropagateAllParentVariables(final boolean propagateAllParentVariables) {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "callActivity",
@@ -116,7 +116,7 @@ public class CallActivityBuilderTest {
   void shouldSetBindingType(final ZeebeBindingType bindingType) {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("callActivity", c -> c.zeebeBindingType(bindingType))
             .done();
@@ -135,7 +135,7 @@ public class CallActivityBuilderTest {
   void shouldSetVersionTag() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("callActivity", c -> c.zeebeVersionTag("v1"))
             .done();

@@ -38,7 +38,7 @@ public class ModelTest {
 
   @Test
   public void testCreateEmptyModel() {
-    final BpmnModelInstance bpmnModelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance bpmnModelInstance = BpmnModelApi.createEmptyModel();
 
     Definitions definitions = bpmnModelInstance.getDefinitions();
     assertThat(definitions).isNull();
@@ -52,7 +52,7 @@ public class ModelTest {
 
   @Test
   public void testBaseTypeCalculation() {
-    final BpmnModelInstance bpmnModelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance bpmnModelInstance = BpmnModelApi.createEmptyModel();
     final Model model = bpmnModelInstance.getModel();
     Collection<ModelElementType> allBaseTypes =
         ModelUtil.calculateAllBaseTypes(model.getType(StartEvent.class));
@@ -67,7 +67,7 @@ public class ModelTest {
 
   @Test
   public void testExtendingTypeCalculation() {
-    final BpmnModelInstance bpmnModelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance bpmnModelInstance = BpmnModelApi.createEmptyModel();
     final Model model = bpmnModelInstance.getModel();
     final List<ModelElementType> baseInstanceTypes = new ArrayList<ModelElementType>();
     baseInstanceTypes.add(model.getType(Event.class));

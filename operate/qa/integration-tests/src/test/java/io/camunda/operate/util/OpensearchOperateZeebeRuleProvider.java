@@ -129,7 +129,7 @@ public class OpensearchOperateZeebeRuleProvider implements OperateZeebeRuleProvi
             ConnectionTypes.OPENSEARCH.getType());
 
     client =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
             .usePlaintext()
             .defaultRequestTimeout(REQUEST_TIMEOUT)

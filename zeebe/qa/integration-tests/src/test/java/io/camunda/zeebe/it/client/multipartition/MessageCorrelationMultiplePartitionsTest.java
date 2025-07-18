@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.it.clustering.ClusteringRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.test.util.record.ProcessInstances;
@@ -53,7 +53,7 @@ public final class MessageCorrelationMultiplePartitionsTest {
 
     processDefinitionKey =
         CLIENT_RULE.deployProcess(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .intermediateCatchEvent()
                 .message(m -> m.name(messageName).zeebeCorrelationKeyExpression("key"))

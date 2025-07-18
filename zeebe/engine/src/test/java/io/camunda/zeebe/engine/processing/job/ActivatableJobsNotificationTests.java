@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.intent.JobIntent.TIMED_OUT;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.value.JobBatchRecordValue;
@@ -37,7 +37,7 @@ public final class ActivatableJobsNotificationTests {
   private static final int VERIFICATION_TIMEOUT = 5000;
   private static final Function<String, BpmnModelInstance> MODEL_SUPPLIER =
       (type) ->
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent("start")
               .serviceTask("task", b -> b.zeebeJobType(type).done())
               .endEvent("end")

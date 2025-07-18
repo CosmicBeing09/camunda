@@ -13,7 +13,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
 import io.camunda.zeebe.management.cluster.PlannedOperationsResponse;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.qa.util.actuator.ClusterActuator;
 import io.camunda.zeebe.qa.util.cluster.TestCluster;
@@ -96,7 +96,7 @@ final class Utils {
   static long deployProcessModel(
       final CamundaClient camundaClient, final String jobType, final String processId) {
     final var process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType(jobType))
             .endEvent()

@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.filter;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
-public interface DecisionDefinitionFilter extends SearchRequestFilter {
+public interface DecisionDefinitionFilter extends Filter {
 
   /** Filter by decision key. */
   DecisionDefinitionFilter decisionDefinitionKey(final long value);

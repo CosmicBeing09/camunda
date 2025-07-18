@@ -15,13 +15,13 @@
  */
 package io.camunda.client.api.search.request;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestSort;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Sort;
 import java.util.function.Consumer;
 
 public interface TypedSearchRequest<
-    F extends SearchRequestFilter,
-    S extends SearchRequestSort<S>,
+    F extends Filter,
+    S extends Sort<S>,
     SELF extends TypedSearchRequest<F, S, SELF>> {
 
   /**
@@ -72,9 +72,9 @@ public interface TypedSearchRequest<
    */
   SELF page(final Consumer<SearchRequestPage> fn);
 
-  public static interface SearchRequestFilter {}
+  public static interface Filter {}
 
-  public static interface SearchRequestSort<S extends SearchRequestSort<S>> {
+  public static interface Sort<S extends Sort<S>> {
 
     /**
      * Sort in ascending order

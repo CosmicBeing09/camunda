@@ -23,7 +23,7 @@ import io.camunda.operate.webapp.rest.dto.SequenceFlowDto;
 import io.camunda.operate.webapp.rest.dto.listview.ListViewResponseDto;
 import io.camunda.webapps.schema.descriptors.template.ListViewTemplate;
 import io.camunda.webapps.schema.entities.operation.OperationType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import jakarta.annotation.PreDestroy;
 import java.io.IOException;
@@ -80,7 +80,7 @@ public class DataGenerator {
 
   private void init(final BackupRestoreTestContext testContext) {
     camundaClient =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(testContext.getExternalZeebeContactPoint())
             .usePlaintext()
             .build();
@@ -239,7 +239,7 @@ public class DataGenerator {
   }
 
   private BpmnModelInstance createModel(final String bpmnProcessId) {
-    return Bpmn.createExecutableProcess(bpmnProcessId)
+    return BpmnModelApi.createExecutableProcess(bpmnProcessId)
         .startEvent("start")
         .serviceTask("task1")
         .zeebeJobType("task1")

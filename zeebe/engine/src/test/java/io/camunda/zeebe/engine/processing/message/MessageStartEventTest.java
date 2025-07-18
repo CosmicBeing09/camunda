@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
@@ -61,7 +61,7 @@ public final class MessageStartEventTest {
   private static BpmnModelInstance singleStartEvent(
       final Consumer<StartEventBuilder> customizer, final String messageName) {
     final var startEventBuilder =
-        Bpmn.createExecutableProcess("wf").startEvent("start").message(messageName);
+        BpmnModelApi.createExecutableProcess("wf").startEvent("start").message(messageName);
 
     customizer.accept(startEventBuilder);
 
@@ -69,7 +69,7 @@ public final class MessageStartEventTest {
   }
 
   private static BpmnModelInstance multipleStartEvents() {
-    final var process = Bpmn.createExecutableProcess("wf");
+    final var process = BpmnModelApi.createExecutableProcess("wf");
     process.startEvent().message(MESSAGE_NAME_1).serviceTask("task", t -> t.zeebeJobType("test"));
     process.startEvent().message(MESSAGE_NAME_2).connectTo("task");
 
@@ -286,7 +286,7 @@ public final class MessageStartEventTest {
   @Test
   public void shouldTriggerOnlyMessageStartEvent() {
     // given
-    final var process = Bpmn.createExecutableProcess("process");
+    final var process = BpmnModelApi.createExecutableProcess("process");
     process.startEvent("none-start").endEvent();
     process.startEvent("message-start").message(MESSAGE_NAME_1).endEvent();
     process.startEvent("timer-start").timerWithCycle("R/PT1H").endEvent();
@@ -311,7 +311,7 @@ public final class MessageStartEventTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("wf")
+            BpmnModelApi.createExecutableProcess("wf")
                 .startEvent()
                 .message(MESSAGE_NAME_1)
                 .intermediateCatchEvent(

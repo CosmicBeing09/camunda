@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.traversal.ModelWalker;
 import io.camunda.zeebe.model.bpmn.validation.zeebe.ZeebeDesignTimeValidators;
@@ -76,7 +76,7 @@ public final class ProcessValidationUtil {
   private static void validateSchema(final BpmnModelInstance process) {
     assertThatNoException()
         .describedAs("Expecting the process to match the BPMN schema.")
-        .isThrownBy(() -> Bpmn.validateModel(process));
+        .isThrownBy(() -> BpmnModelApi.validateModel(process));
   }
 
   private static List<ValidationResult> validate(final BpmnModelInstance model) {

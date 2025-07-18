@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutablePro
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.processing.deployment.model.element.TaskListener;
 import io.camunda.zeebe.engine.processing.deployment.model.transformation.BpmnTransformer;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.TaskListenerBuilder;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
@@ -45,7 +45,7 @@ class UserTaskTransformerTest {
   private final BpmnTransformer transformer = new BpmnTransformer(expressionLanguage);
 
   private BpmnModelInstance processWithUserTask(final Consumer<UserTaskBuilder> userTaskModifier) {
-    return Bpmn.createExecutableProcess().startEvent().userTask(TASK_ID, userTaskModifier).done();
+    return BpmnModelApi.createExecutableProcess().startEvent().userTask(TASK_ID, userTaskModifier).done();
   }
 
   private ExecutableJobWorkerTask transformUserTask(final BpmnModelInstance userTask) {

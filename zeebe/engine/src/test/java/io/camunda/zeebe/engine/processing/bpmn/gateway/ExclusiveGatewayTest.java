@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -43,7 +43,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("xor")
             .sequenceFlowId("s1")
@@ -90,7 +90,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("split")
             .sequenceFlowId("s1")
@@ -137,7 +137,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("split")
             .sequenceFlowId("s1")
@@ -210,7 +210,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("xor")
             .sequenceFlowId("s1")
@@ -258,7 +258,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway()
             .defaultFlow()
@@ -291,7 +291,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId).startEvent().exclusiveGateway("xor").done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent().exclusiveGateway("xor").done();
 
     ENGINE.deployment().withXmlResource(processDefinition).deploy();
 
@@ -326,7 +326,7 @@ public final class ExclusiveGatewayTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .exclusiveGateway("xor")
                 .sequenceFlowId("s1")
@@ -372,7 +372,7 @@ public final class ExclusiveGatewayTest {
     final String processId = Strings.newRandomValidBpmnId();
     // when
     final BpmnModelInstance processDefinition1 =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("xor")
             .sequenceFlowId("s1")
@@ -394,7 +394,7 @@ public final class ExclusiveGatewayTest {
 
     // when
     final BpmnModelInstance processDefinition2 =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("xor")
             .sequenceFlowId("s1")
@@ -422,7 +422,7 @@ public final class ExclusiveGatewayTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .exclusiveGateway("xor")
             .sequenceFlowId("s1")

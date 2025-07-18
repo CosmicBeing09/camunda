@@ -100,7 +100,7 @@ public class CamundaMigrator extends ApiCallable implements AutoCloseable {
         URL.formatted(
             camundaContainer.getHost(), camundaContainer.getMappedPort(TestZeebePort.REST.port()));
     camundaClient =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .grpcAddress(
                 URI.create(
                     RPC_URL.formatted(

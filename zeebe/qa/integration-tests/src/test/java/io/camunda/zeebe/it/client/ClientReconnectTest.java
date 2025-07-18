@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.camunda.client.api.command.ClientException;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.test.util.TestUtil;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
@@ -34,7 +34,7 @@ public final class ClientReconnectTest {
   public void init() {
     processDefinitionKey =
         clientRule.deployProcess(
-            Bpmn.createExecutableProcess("process").startEvent().endEvent().done());
+            BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done());
   }
 
   @Test

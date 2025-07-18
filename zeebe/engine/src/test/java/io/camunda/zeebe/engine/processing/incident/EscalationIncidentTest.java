@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -43,7 +43,7 @@ public class EscalationIncidentTest {
   public void shouldCreateIncidentIfEscalationCodeExpressionOfEndEventCannotBeEvaluated() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .endEvent(THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))
             .done();
@@ -85,7 +85,7 @@ public class EscalationIncidentTest {
   @Test
   public void shouldCreateIncidentIfEscalationCodeExpressionOfEndEventEvaluatesToWrongType() {
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .endEvent(THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))
             .done();
@@ -129,7 +129,7 @@ public class EscalationIncidentTest {
       shouldCreateIncidentIfEscalationCodeExpressionOfIntermediateEscalationEventCannotBeEvaluated() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateThrowEvent(
                 THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))
@@ -174,7 +174,7 @@ public class EscalationIncidentTest {
   public void
       shouldCreateIncidentIfEscalationCodeExpressionOfIntermediateEscalationEventEvaluatesToWrongType() {
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateThrowEvent(
                 THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))
@@ -220,7 +220,7 @@ public class EscalationIncidentTest {
     // given
     final String tenantId = "acme";
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .endEvent(THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))
             .done();
@@ -245,7 +245,7 @@ public class EscalationIncidentTest {
   public void shouldResolveIncidentIfEscalationCodeOfEndEventCouldNotBeEvaluated() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .endEvent(THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))
             .done();
@@ -294,7 +294,7 @@ public class EscalationIncidentTest {
       shouldResolveIncidentIfEscalationCodeOfIntermediateEscalationEventCouldNotBeEvaluated() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateThrowEvent(
                 THROW_ELEMENT_ID, i -> i.escalationExpression("escalationCodeLookup"))

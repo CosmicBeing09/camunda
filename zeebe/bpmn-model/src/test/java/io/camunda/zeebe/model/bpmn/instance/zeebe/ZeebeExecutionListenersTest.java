@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.instance.zeebe;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.impl.BpmnModelConstants;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstanceTest;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
@@ -50,7 +50,7 @@ public class ZeebeExecutionListenersTest extends BpmnModelElementInstanceTest {
   public void shouldReadExecutionListenerElements() {
     // given
     modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ZeebeExecutionListenersTest.class.getResourceAsStream(
                 "ZeebeExecutionListenersTest.bpmn"));
 

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableDeploymentState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -327,14 +327,14 @@ public class DeploymentStateTest {
 
   private DeploymentRecord createDeployment() {
     final var modelInstance =
-        Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
     final var deploymentRecord = new DeploymentRecord();
 
     deploymentRecord
         .resources()
         .add()
         .setResourceName(wrapString("resource"))
-        .setResource(wrapString(Bpmn.convertToString(modelInstance)));
+        .setResource(wrapString(BpmnModelApi.convertToString(modelInstance)));
 
     deploymentRecord
         .processesMetadata()

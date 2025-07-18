@@ -74,7 +74,7 @@ public class UserTaskImpl implements UserTask {
   }
 
   @Override
-  public Long getUserTaskKey() {
+  public Long getTaskId() {
     return userTaskKey;
   }
 
@@ -104,7 +104,7 @@ public class UserTaskImpl implements UserTask {
   }
 
   @Override
-  public Long getElementInstanceKey() {
+  public Long getInstanceKey() {
     return elementInstanceKey;
   }
 

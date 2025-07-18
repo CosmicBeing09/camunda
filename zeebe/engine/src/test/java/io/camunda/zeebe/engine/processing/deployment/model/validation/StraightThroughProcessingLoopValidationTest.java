@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.deployment.model.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.ExecuteCommandResponseDecoder;
@@ -44,7 +44,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .task("task2")
@@ -74,7 +74,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .manualTask("task1")
                     .manualTask("task2")
@@ -104,7 +104,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .intermediateThrowEvent("event1")
                     .intermediateThrowEvent("event2")
@@ -135,7 +135,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("userTask1")
                     .parallelGateway("parallel1")
@@ -185,7 +185,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .task("task2")
@@ -244,7 +244,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .subProcess(
@@ -292,7 +292,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .subProcess(
@@ -330,7 +330,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("task1")
                     .userTask("task2")
@@ -354,7 +354,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .task("task2")
@@ -388,7 +388,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent")
                     .callActivity("callActivity", c -> c.zeebeProcessId(processId))
                     .userTask("userTask")
@@ -418,7 +418,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent")
                     .callActivity("callActivity", c -> c.zeebeProcessId(processId))
                     .multiInstance()
@@ -452,7 +452,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .userTask("test")
@@ -477,7 +477,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .task("task1")
                     .subProcess(
@@ -509,7 +509,7 @@ public class StraightThroughProcessingLoopValidationTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("startEvent")
                     .userTask("userTask")
                     .callActivity("callActivity", c -> c.zeebeProcessId(processId))

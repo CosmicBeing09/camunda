@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -43,7 +43,7 @@ public class DeploymentRejectionTest {
   public void shouldRejectDeploymentIfUsedInvalidMessage() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess().startEvent().intermediateCatchEvent("invalidMessage").done();
+        BpmnModelApi.createExecutableProcess().startEvent().intermediateCatchEvent("invalidMessage").done();
 
     // when
     final Record<DeploymentRecordValue> rejectedDeployment =
@@ -152,11 +152,11 @@ public class DeploymentRejectionTest {
   public void shouldRejectDeploymentWithDuplicateResources() {
     // given
     final BpmnModelInstance definition1 =
-        Bpmn.createExecutableProcess("process1").startEvent().done();
+        BpmnModelApi.createExecutableProcess("process1").startEvent().done();
     final BpmnModelInstance definition2 =
-        Bpmn.createExecutableProcess("process2").startEvent().done();
+        BpmnModelApi.createExecutableProcess("process2").startEvent().done();
     final BpmnModelInstance definition3 =
-        Bpmn.createExecutableProcess("process2")
+        BpmnModelApi.createExecutableProcess("process2")
             .startEvent()
             .serviceTask("task", (t) -> t.zeebeJobType("j").zeebeTaskHeader("k", "v"))
             .done();
@@ -183,7 +183,7 @@ public class DeploymentRejectionTest {
   public void shouldRejectDeploymentWithInvalidTimerStartEventExpression() {
     // given
     final BpmnModelInstance definition =
-        Bpmn.createExecutableProcess("process1")
+        BpmnModelApi.createExecutableProcess("process1")
             .startEvent("start-event-1")
             .timerWithCycleExpression("INVALID_CYCLE_EXPRESSION")
             .done();
@@ -254,9 +254,9 @@ public class DeploymentRejectionTest {
   public void shouldDoAtomicDeployments() {
     // given
     final BpmnModelInstance invalidProcess =
-        Bpmn.createExecutableProcess("invalid_process_without_start_event").done();
+        BpmnModelApi.createExecutableProcess("invalid_process_without_start_event").done();
     final BpmnModelInstance validProcess =
-        Bpmn.createExecutableProcess("valid_process").startEvent().task().endEvent().done();
+        BpmnModelApi.createExecutableProcess("valid_process").startEvent().task().endEvent().done();
 
     // when
     ENGINE
@@ -283,7 +283,7 @@ public class DeploymentRejectionTest {
       shouldRejectDeploymentIfCalledProcessNotIncludedForCallActivityWithBindingTypeDeployment() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "callActivity",
@@ -319,7 +319,7 @@ public class DeploymentRejectionTest {
       shouldRejectDeploymentIfCalledDecisionNotIncludedForBusinessRuleTaskWithBindingTypeDeployment() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask(
                 "businessRuleTask",
@@ -355,7 +355,7 @@ public class DeploymentRejectionTest {
   public void shouldRejectDeploymentIfLinkedFormNotIncludedForUserTaskWithBindingTypeDeployment() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "userTask",
@@ -391,7 +391,7 @@ public class DeploymentRejectionTest {
       shouldRejectDeploymentIfTargetResourceNotIncludedForBindingTypeDeploymentInAnyProcess() {
     // given
     final var process1 =
-        Bpmn.createExecutableProcess("process-1")
+        BpmnModelApi.createExecutableProcess("process-1")
             .startEvent()
             .callActivity(
                 "callActivity1",
@@ -402,7 +402,7 @@ public class DeploymentRejectionTest {
             .endEvent()
             .done();
     final var process2 =
-        Bpmn.createExecutableProcess("process-2")
+        BpmnModelApi.createExecutableProcess("process-2")
             .startEvent()
             .callActivity(
                 "callActivity2",
@@ -447,7 +447,7 @@ public class DeploymentRejectionTest {
       shouldRejectDeploymentIfTargetResourceNotIncludedForBindingTypeDeploymentInMultipleElements() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "callActivity",
@@ -500,7 +500,7 @@ public class DeploymentRejectionTest {
   public void shouldNotRejectDeploymentForBindingTypeDeploymentIfTargetIdIsExpression() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "activity",

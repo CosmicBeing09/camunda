@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.instance.EventBasedGateway;
 import io.camunda.zeebe.model.bpmn.instance.IntermediateCatchEvent;
 import io.camunda.zeebe.model.bpmn.instance.Message;
@@ -32,7 +32,7 @@ public class ZeebeEventBasedGatewayValidationTest extends AbstractZeebeValidatio
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .eventBasedGateway()
             .intermediateCatchEvent()
@@ -44,7 +44,7 @@ public class ZeebeEventBasedGatewayValidationTest extends AbstractZeebeValidatio
                 "Event-based gateway must have at least 2 outgoing sequence flows."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .eventBasedGateway()
             .intermediateCatchEvent()
@@ -59,7 +59,7 @@ public class ZeebeEventBasedGatewayValidationTest extends AbstractZeebeValidatio
                 "Intermediate timer catch event must have either a time duration or a time date."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .eventBasedGateway()
             .intermediateCatchEvent(
@@ -74,7 +74,7 @@ public class ZeebeEventBasedGatewayValidationTest extends AbstractZeebeValidatio
                 "Multiple message event definitions with the same name 'msg' are not allowed."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .eventBasedGateway()
             .intermediateCatchEvent(
@@ -90,7 +90,7 @@ public class ZeebeEventBasedGatewayValidationTest extends AbstractZeebeValidatio
                 "Attribute 'correlationKey' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .eventBasedGateway()
             .receiveTask()
@@ -105,7 +105,7 @@ public class ZeebeEventBasedGatewayValidationTest extends AbstractZeebeValidatio
                 "Event-based gateway must not have an outgoing sequence flow to other elements than message/timer/signal intermediate catch events."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .parallelGateway("parallel")
             .eventBasedGateway("event")

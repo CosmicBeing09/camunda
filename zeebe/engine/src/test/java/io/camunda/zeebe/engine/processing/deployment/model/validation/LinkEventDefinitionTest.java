@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -71,7 +71,7 @@ public class LinkEventDefinitionTest {
   public void shouldRejectDeploymentIfNoLinkName() throws Exception {
     // given
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent()
             .link("")
@@ -208,7 +208,7 @@ public class LinkEventDefinitionTest {
   public void shouldRejectDeploymentIfTheLinkCatchEventOfLinkThrowEventIsNotInTheSameScope() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .subProcess(
                 "sub-1",
@@ -252,7 +252,7 @@ public class LinkEventDefinitionTest {
   public void shouldRejectDeploymentIfMultipleLinkCatchEventsHaveSameNameInDifferentScopes() {
     // given
     final var process =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .subProcess(
                 "sub-1",
@@ -309,7 +309,7 @@ public class LinkEventDefinitionTest {
   }
 
   public static BpmnModelInstance getLinkEventProcess() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("process");
     process.startEvent().manualTask("manualTask1").intermediateThrowEvent().link("LinkA");
     return process.linkCatchEvent().link("LinkB").manualTask("manualTask2").endEvent().done();
   }

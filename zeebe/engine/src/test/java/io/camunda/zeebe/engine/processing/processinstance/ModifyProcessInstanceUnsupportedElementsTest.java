@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.ProcessInstanceClient.ProcessInstanceModificationClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.test.util.record.RecordingExporterTestWatcher;
@@ -46,7 +46,7 @@ public class ModifyProcessInstanceUnsupportedElementsTest {
     return List.of(
         new Scenario(
             "Activate element that belongs to an event-based gateway",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .eventBasedGateway("event_based_gateway")
                 .intermediateCatchEvent(
@@ -65,7 +65,7 @@ public class ModifyProcessInstanceUnsupportedElementsTest {
                 "The activation of events belonging to an event-based gateway is not supported")),
         new Scenario(
             "Activate start events",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event_sub_process",
                     e ->
@@ -90,7 +90,7 @@ public class ModifyProcessInstanceUnsupportedElementsTest {
                     + " Supported element types are:")),
         new Scenario(
             "Activate sequence flows",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .sequenceFlowId("flow_to_A")
                 .userTask("A")
@@ -109,7 +109,7 @@ public class ModifyProcessInstanceUnsupportedElementsTest {
                     + " Supported element types are:")),
         new Scenario(
             "Activate boundary events",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .boundaryEvent(
@@ -138,7 +138,7 @@ public class ModifyProcessInstanceUnsupportedElementsTest {
                     + " Supported element types are:")),
         new Scenario(
             "Activate a combination of unsupported elements",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("root_start")
                 .userTask("A")
                 .boundaryEvent(

@@ -28,7 +28,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutablePro
 import io.camunda.zeebe.engine.processing.deployment.model.transformation.BpmnTransformer;
 import io.camunda.zeebe.engine.state.deployment.PersistedProcess.PersistedProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
@@ -406,7 +406,7 @@ public final class DbProcessState implements MutableProcessState {
 
   private BpmnModelInstance readModelInstanceFromBuffer(final DirectBuffer buffer) {
     try (final DirectBufferInputStream stream = new DirectBufferInputStream(buffer)) {
-      return Bpmn.readModelFromStream(stream);
+      return BpmnModelApi.readModelFromStream(stream);
     }
   }
 

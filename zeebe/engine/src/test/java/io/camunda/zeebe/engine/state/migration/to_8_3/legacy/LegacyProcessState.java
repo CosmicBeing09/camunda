@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.transformation.BpmnTr
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.deployment.Digest;
 import io.camunda.zeebe.engine.state.deployment.PersistedProcess;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
@@ -201,7 +201,7 @@ public final class LegacyProcessState {
 
   private BpmnModelInstance readModelInstanceFromBuffer(final DirectBuffer buffer) {
     try (final DirectBufferInputStream stream = new DirectBufferInputStream(buffer)) {
-      return Bpmn.readModelFromStream(stream);
+      return BpmnModelApi.readModelFromStream(stream);
     }
   }
 

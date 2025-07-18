@@ -20,7 +20,7 @@ import io.camunda.tasklist.util.TasklistZeebeIntegrationTest;
 import io.camunda.tasklist.webapp.api.rest.v1.entities.TaskResponse;
 import io.camunda.tasklist.webapp.security.TasklistURIs;
 import io.camunda.webapps.schema.entities.usertask.TaskState;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -108,7 +108,7 @@ public class ZeebeImportMigrateProcessTaskIT extends TasklistZeebeIntegrationTes
     final String taskId =
         tester
             .createAndDeployProcess(
-                Bpmn.createExecutableProcess(bpmnProcessId)
+                BpmnModelApi.createExecutableProcess(bpmnProcessId)
                     .startEvent()
                     .userTask(oldElementId)
                     .zeebeUserTask()
@@ -126,7 +126,7 @@ public class ZeebeImportMigrateProcessTaskIT extends TasklistZeebeIntegrationTes
     tester
         .having()
         .createAndDeployProcess(
-            Bpmn.createExecutableProcess(bpmnProcessId)
+            BpmnModelApi.createExecutableProcess(bpmnProcessId)
                 .startEvent()
                 .userTask(newElementId)
                 .zeebeUserTask()

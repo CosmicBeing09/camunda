@@ -14,7 +14,7 @@ import io.camunda.zeebe.el.ExpressionLanguageFactory;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor.EvaluationContextLookup;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.traversal.ModelWalker;
 import io.camunda.zeebe.model.bpmn.validation.ValidationVisitor;
@@ -36,7 +36,7 @@ public class ProcessValidationUtil {
   public static void validateProcess(
       final BpmnModelInstance process, final ExpectedValidationResult expectation) {
 
-    Bpmn.validateModel(process);
+    BpmnModelApi.validateModel(process);
 
     final var validationResults =
         validate(process).getResults().values().stream()
@@ -61,7 +61,7 @@ public class ProcessValidationUtil {
    * @param process the element to validate
    */
   public static void validateProcess(final BpmnModelInstance process) {
-    Bpmn.validateModel(process);
+    BpmnModelApi.validateModel(process);
 
     assertThat(
             validate(process).getResults().values().stream().flatMap(Collection::stream).toList())

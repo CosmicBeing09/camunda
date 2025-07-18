@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState.ProcessIdentifier;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
@@ -1187,7 +1187,7 @@ public final class ProcessStateTest {
   public static DeploymentRecord creatingDeploymentRecord(
       final MutableProcessingState processingState, final String processId, final int version) {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask(
                 "test",
@@ -1199,7 +1199,7 @@ public final class ProcessStateTest {
 
     final DeploymentRecord deploymentRecord = new DeploymentRecord();
     final String resourceName = "process.bpmn";
-    final var resource = wrapString(Bpmn.convertToString(modelInstance));
+    final var resource = wrapString(BpmnModelApi.convertToString(modelInstance));
     final var checksum = wrapString("checksum");
     deploymentRecord
         .setTenantId(TENANT_ID)
@@ -1245,7 +1245,7 @@ public final class ProcessStateTest {
       final String processId,
       final int version,
       final String versionTag) {
-    final var processBuilder = Bpmn.createExecutableProcess(processId);
+    final var processBuilder = BpmnModelApi.createExecutableProcess(processId);
     if (versionTag != null) {
       processBuilder.versionTag(versionTag);
     }
@@ -1257,7 +1257,7 @@ public final class ProcessStateTest {
             .done();
     final ProcessRecord processRecord = new ProcessRecord();
     final String resourceName = "process.bpmn";
-    final var resource = wrapString(Bpmn.convertToString(modelInstance));
+    final var resource = wrapString(BpmnModelApi.convertToString(modelInstance));
     final var checksum = wrapString("checksum");
 
     final KeyGenerator keyGenerator = processingState.getKeyGenerator();

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.record.Record;
@@ -31,7 +31,7 @@ import org.junit.rules.Timeout;
 public final class DeploymentClusteredTest {
 
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
 
   public final Timeout testTimeout = Timeout.seconds(120);
   public final ClusteringRule clusteringRule =

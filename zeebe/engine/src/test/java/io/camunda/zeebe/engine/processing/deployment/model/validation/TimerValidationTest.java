@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
 import static io.camunda.zeebe.engine.processing.deployment.model.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractCatchEventBuilder;
 import io.camunda.zeebe.model.bpmn.instance.StartEvent;
@@ -96,21 +96,21 @@ public final class TimerValidationTest {
   private static Stream<Arguments> timerEvents() {
     return Stream.of(
         Arguments.of(
-            "start-event", Bpmn.createExecutableProcess("process").startEvent("start-event")),
+            "start-event", BpmnModelApi.createExecutableProcess("process").startEvent("start-event")),
         Arguments.of(
             "boundary-event",
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .boundaryEvent("boundary-event")),
         Arguments.of(
             "intermediate-catch-event",
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .intermediateCatchEvent("intermediate-catch-event")),
         Arguments.of(
             "event-sub-process",
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .eventSubProcess("subprocess")
                 .startEvent("event-sub-process")));
   }
@@ -122,7 +122,7 @@ public final class TimerValidationTest {
             "cycle",
             processBuilder(
                 expression ->
-                    Bpmn.createExecutableProcess("process")
+                    BpmnModelApi.createExecutableProcess("process")
                         .startEvent()
                         .timerWithCycleExpression(expression)
                         .done())),
@@ -131,7 +131,7 @@ public final class TimerValidationTest {
             "date",
             processBuilder(
                 expression ->
-                    Bpmn.createExecutableProcess("process")
+                    BpmnModelApi.createExecutableProcess("process")
                         .startEvent()
                         .timerWithDateExpression(expression)
                         .done())));
@@ -145,7 +145,7 @@ public final class TimerValidationTest {
                 "duration",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .startEvent()
                             .serviceTask("task", t -> t.zeebeJobType("test"))
                             .boundaryEvent("boundary-event")
@@ -156,7 +156,7 @@ public final class TimerValidationTest {
                 "cycle",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .startEvent()
                             .serviceTask("task", t -> t.zeebeJobType("test"))
                             .boundaryEvent("boundary-event")
@@ -167,7 +167,7 @@ public final class TimerValidationTest {
                 "date",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .startEvent()
                             .serviceTask("task", t -> t.zeebeJobType("test"))
                             .boundaryEvent("boundary-event")
@@ -178,7 +178,7 @@ public final class TimerValidationTest {
                 "duration",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .startEvent()
                             .intermediateCatchEvent("intermediate-catch-event")
                             .timerWithDurationExpression(expression)
@@ -188,7 +188,7 @@ public final class TimerValidationTest {
                 "date",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .startEvent()
                             .intermediateCatchEvent("intermediate-catch-event")
                             .timerWithDateExpression(expression)
@@ -198,7 +198,7 @@ public final class TimerValidationTest {
                 "duration",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .eventSubProcess(
                                 "sub-process",
                                 subProcess ->
@@ -214,7 +214,7 @@ public final class TimerValidationTest {
                 "cycle",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .eventSubProcess(
                                 "sub-process",
                                 subProcess ->
@@ -230,7 +230,7 @@ public final class TimerValidationTest {
                 "date",
                 processBuilder(
                     expression ->
-                        Bpmn.createExecutableProcess("process")
+                        BpmnModelApi.createExecutableProcess("process")
                             .eventSubProcess(
                                 "sub-process",
                                 subProcess ->

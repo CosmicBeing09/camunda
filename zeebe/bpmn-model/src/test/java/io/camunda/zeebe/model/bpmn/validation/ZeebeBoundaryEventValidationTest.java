@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import org.junit.runners.Parameterized.Parameters;
 
 public class ZeebeBoundaryEventValidationTest extends AbstractZeebeValidationTest {
@@ -27,7 +27,7 @@ public class ZeebeBoundaryEventValidationTest extends AbstractZeebeValidationTes
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("boundary")
@@ -38,7 +38,7 @@ public class ZeebeBoundaryEventValidationTest extends AbstractZeebeValidationTes
         valid()
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("boundary")
@@ -48,7 +48,7 @@ public class ZeebeBoundaryEventValidationTest extends AbstractZeebeValidationTes
         singletonList(expect("boundary", "Must have exactly one event definition"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("boundary")
@@ -60,7 +60,7 @@ public class ZeebeBoundaryEventValidationTest extends AbstractZeebeValidationTes
         singletonList(expect("boundary", "Must have exactly one event definition"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("boundary")
@@ -72,7 +72,7 @@ public class ZeebeBoundaryEventValidationTest extends AbstractZeebeValidationTes
         singletonList(expect("boundary", "Must have at least one outgoing sequence flow"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task1", b -> b.zeebeJobType("type"))
             .boundaryEvent("boundary")

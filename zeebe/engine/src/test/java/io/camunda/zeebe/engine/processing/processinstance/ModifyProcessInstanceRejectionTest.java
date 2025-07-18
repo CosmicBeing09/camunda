@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance;
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent;
@@ -72,7 +72,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
         .deploy();
     final var processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -108,7 +108,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
         .deploy();
     final var processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     final var userTaskActivated =
@@ -146,7 +146,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .subProcess(
@@ -191,7 +191,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
         .deploy();
     final var processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -229,7 +229,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .userTask("B")
@@ -275,7 +275,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .userTask("B")
@@ -324,7 +324,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-subprocess",
                     eventSubprocess ->
@@ -391,7 +391,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(callActivityProcessId)
+            BpmnModelApi.createExecutableProcess(callActivityProcessId)
                 .startEvent()
                 .userTask("A")
                 .endEvent()
@@ -401,7 +401,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .callActivity(
                     "callActivity",
@@ -447,7 +447,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
         .deploy();
     final var processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
     RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -482,7 +482,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "sp", sp -> sp.embeddedSubProcess().startEvent().userTask("A").endEvent())
@@ -525,7 +525,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess("sp", sp -> sp.embeddedSubProcess().startEvent().task("A").endEvent())
                 .userTask("B")
@@ -567,7 +567,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "sp", sp -> sp.embeddedSubProcess().startEvent().userTask("A").endEvent())
@@ -618,7 +618,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("split")
                 .subProcess(
@@ -681,7 +681,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .subProcess(
@@ -724,7 +724,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "SubProcess",
@@ -785,7 +785,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "SubProcess",
@@ -836,7 +836,7 @@ public class ModifyProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "sp", sp -> sp.embeddedSubProcess().startEvent().userTask("A").endEvent())

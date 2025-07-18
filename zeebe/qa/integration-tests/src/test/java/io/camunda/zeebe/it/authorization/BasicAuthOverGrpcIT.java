@@ -19,7 +19,7 @@ import io.camunda.client.api.search.enums.ResourceType;
 import io.camunda.security.entity.AuthenticationMethod;
 import io.camunda.zeebe.it.util.AuthorizationsUtil;
 import io.camunda.zeebe.it.util.AuthorizationsUtil.Permissions;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration.TestZeebe;
@@ -73,7 +73,7 @@ public class BasicAuthOverGrpcIT {
         defaultUserClient
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
             .send()
             .join();
@@ -97,7 +97,7 @@ public class BasicAuthOverGrpcIT {
           client
               .newDeployResourceCommand()
               .addProcessModel(
-                  Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                  BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
               .send()
               .join();
@@ -121,7 +121,7 @@ public class BasicAuthOverGrpcIT {
           client
               .newDeployResourceCommand()
               .addProcessModel(
-                  Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                  BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                   "process.bpmn")
               .send();
 

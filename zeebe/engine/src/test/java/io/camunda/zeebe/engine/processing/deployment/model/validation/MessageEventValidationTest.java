@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.MessageEventDefinition;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ public final class MessageEventValidationTest {
   public void shouldRejectDeploymentWhenNoMessageReferenced() {
 
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("processId")
+        BpmnModelApi.createExecutableProcess("processId")
             .startEvent("startEvent")
             .messageEventDefinition()
             .id("messageEvent")

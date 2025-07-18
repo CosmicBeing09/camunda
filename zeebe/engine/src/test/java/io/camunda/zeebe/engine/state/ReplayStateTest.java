@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.record.Record;
@@ -60,7 +60,7 @@ public final class ReplayStateTest {
     return List.of(
         testCase("activated service task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .serviceTask("task", t -> t.zeebeJobType("test"))
                     .done())
@@ -96,7 +96,7 @@ public final class ReplayStateTest {
                 }),
         testCase("throw error end event")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .subProcess("subProcess")
                     .embeddedSubProcess()
@@ -123,7 +123,7 @@ public final class ReplayStateTest {
                 }),
         testCase("interrupting message boundary event on receive task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .receiveTask(
                         "task",
@@ -147,7 +147,7 @@ public final class ReplayStateTest {
                 }),
         testCase("non-interrupting timer boundary event on receive task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .receiveTask(
                         "task",
@@ -167,7 +167,7 @@ public final class ReplayStateTest {
                 }),
         testCase("parallel multi-instance service task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .serviceTask(
                         "task",
@@ -210,7 +210,7 @@ public final class ReplayStateTest {
                 }),
         testCase("sequential multi-instance service task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .serviceTask(
                         "task",
@@ -264,7 +264,7 @@ public final class ReplayStateTest {
                 }),
         testCase("interrupting parallel multi-instance service task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .serviceTask(
                         "task",
@@ -317,7 +317,7 @@ public final class ReplayStateTest {
                 }),
         testCase("link deployed form to job-based user task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("task", t -> t.zeebeFormId("Form_0w7r08e"))
                     .endEvent()
@@ -334,7 +334,7 @@ public final class ReplayStateTest {
                 }),
         testCase("link deployed form to native user task")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("task", t -> t.zeebeFormId("Form_0w7r08e"))
                     .zeebeUserTask()
@@ -351,7 +351,7 @@ public final class ReplayStateTest {
                 }),
         testCase("correlate buffered message to start event")
             .withProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .message("start")
                     .serviceTask("task", t -> t.zeebeJobType("task"))

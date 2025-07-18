@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.sort;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestSort;
+import io.camunda.client.api.search.request.TypedSearchRequest.Sort;
 
-public interface ElementInstanceSort extends SearchRequestSort<ElementInstanceSort> {
+public interface ElementInstanceSort extends Sort<ElementInstanceSort> {
 
   ElementInstanceSort elementInstanceKey();
 

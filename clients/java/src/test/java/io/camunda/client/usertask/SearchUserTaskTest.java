@@ -66,7 +66,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   @Test
   void shouldSearchUserTaskByState() {
     // when
-    client.newUserTaskSearchRequest().filter(f -> f.state(UserTaskState.COMPLETED)).send().join();
+    client.newUserTaskSearchRequest().filter(f -> f.status(UserTaskState.COMPLETED)).send().join();
 
     // then
     final UserTaskSearchQuery request = gatewayService.getLastRequest(UserTaskSearchQuery.class);
@@ -76,7 +76,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   @Test
   void shouldSearchUserTaskByKey() {
     // when
-    client.newUserTaskSearchRequest().filter(f -> f.userTaskKey(12345L)).send().join();
+    client.newUserTaskSearchRequest().filter(f -> f.id(12345L)).send().join();
 
     // then
     final UserTaskSearchQuery request = gatewayService.getLastRequest(UserTaskSearchQuery.class);

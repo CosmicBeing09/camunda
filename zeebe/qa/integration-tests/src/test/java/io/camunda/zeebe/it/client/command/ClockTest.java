@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.ProblemException;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
@@ -109,7 +109,7 @@ class ClockTest {
     // given
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("simple_process").startEvent().endEvent().done());
+            BpmnModelApi.createExecutableProcess("simple_process").startEvent().endEvent().done());
 
     client.newClockPinCommand().time(validInstant).send().join();
 
@@ -131,7 +131,7 @@ class ClockTest {
     // given
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("simple_process").startEvent().endEvent().done());
+            BpmnModelApi.createExecutableProcess("simple_process").startEvent().endEvent().done());
 
     // and: pin the clock to a fixed time
     client.newClockPinCommand().time(FUTURE_FIXED_INSTANT).send().join();
@@ -181,7 +181,7 @@ class ClockTest {
     // deploy a process with an intermediate timer event set to the past date
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process_with_timer_event_in_past")
+            BpmnModelApi.createExecutableProcess("process_with_timer_event_in_past")
                 .startEvent()
                 .intermediateCatchEvent("timerEvent")
                 .timerWithDate(timerInstant.toString())
@@ -227,7 +227,7 @@ class ClockTest {
     // deploy a process with an intermediate timer event based on duration
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process_with_timer_event_based_on_duration")
+            BpmnModelApi.createExecutableProcess("process_with_timer_event_based_on_duration")
                 .startEvent()
                 .intermediateCatchEvent("timerEvent")
                 .timerWithDuration(timerDuration)
@@ -266,7 +266,7 @@ class ClockTest {
     // given: deploy a process with intermediate timer event set to date in future
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process_with_timer_event_in_future")
+            BpmnModelApi.createExecutableProcess("process_with_timer_event_in_future")
                 .startEvent()
                 .intermediateCatchEvent("timerEvent")
                 .timerWithDate(FUTURE_FIXED_INSTANT.toString())
@@ -305,7 +305,7 @@ class ClockTest {
     // when: deploy a process with timer start event set to date in future
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process_with_timer_start_event_in_future")
+            BpmnModelApi.createExecutableProcess("process_with_timer_start_event_in_future")
                 .startEvent("timerStartEvent")
                 .timerWithDate(FUTURE_FIXED_INSTANT.toString())
                 .endEvent()
@@ -332,7 +332,7 @@ class ClockTest {
     // given: deploy a process with boundary timer event set to date in future
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process_with_boundary_timer_event")
+            BpmnModelApi.createExecutableProcess("process_with_boundary_timer_event")
                 .startEvent()
                 .serviceTask("boundary_event_owner", t -> t.zeebeJobType("service_task"))
                 .boundaryEvent(

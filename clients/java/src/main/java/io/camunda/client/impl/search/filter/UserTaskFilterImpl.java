@@ -43,13 +43,13 @@ public class UserTaskFilterImpl
   }
 
   @Override
-  public UserTaskFilter userTaskKey(final Long value) {
+  public UserTaskFilter id(final Long value) {
     filter.setUserTaskKey(ParseUtil.keyToString(value));
     return this;
   }
 
   @Override
-  public UserTaskFilter state(final UserTaskState state) {
+  public UserTaskFilter status(final UserTaskState state) {
     filter.setState(
         EnumUtil.convert(state, io.camunda.client.protocol.rest.UserTaskFilter.StateEnum.class));
     return this;

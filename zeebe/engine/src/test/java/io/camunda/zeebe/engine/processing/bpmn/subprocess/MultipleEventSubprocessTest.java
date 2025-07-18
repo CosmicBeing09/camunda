@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.EmbeddedSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
@@ -277,7 +277,7 @@ public final class MultipleEventSubprocessTest {
 
   private BpmnModelInstance twoEventSubprocModel(
       final boolean timerInterrupt, final boolean msgInterrupt, final String msgName) {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     builder
         .eventSubProcess("event_sub_proc_timer")
@@ -301,7 +301,7 @@ public final class MultipleEventSubprocessTest {
 
   private BpmnModelInstance twoEventSubprocWithTasksModel(
       final boolean timerInterrupt, final boolean msgInterrupt, final String msgName) {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     builder
         .eventSubProcess("event_sub_proc_timer")
@@ -326,7 +326,7 @@ public final class MultipleEventSubprocessTest {
 
   private static BpmnModelInstance nestedMsgModel(final String msgName) {
     final StartEventBuilder procBuilder =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent("proc_start");
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("proc_start");
     procBuilder.serviceTask("proc_task", b -> b.zeebeJobType("proc_type")).endEvent();
     final EmbeddedSubProcessBuilder subProcBuilder =
         procBuilder.subProcess("sub_proc").embeddedSubProcess();

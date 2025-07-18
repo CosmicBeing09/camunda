@@ -266,7 +266,7 @@ public final class EmbeddedBrokerRule extends ExternalResource {
 
     if (brokerCfg.getGateway().isEnable()) {
       try (final var client =
-          CamundaClient.newClientBuilder()
+          CamundaClient.clientBuilder()
               .gatewayAddress(NetUtil.toSocketAddressString(getGatewayAddress()))
               .usePlaintext()
               .build()) {

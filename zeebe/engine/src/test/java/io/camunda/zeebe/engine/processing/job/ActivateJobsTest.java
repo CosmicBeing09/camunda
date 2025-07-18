@@ -18,7 +18,7 @@ import static org.awaitility.Awaitility.await;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -53,7 +53,7 @@ public final class ActivateJobsTest {
   private static final String PROCESS_ID = "process";
   private static final Function<String, BpmnModelInstance> MODEL_SUPPLIER =
       (type) ->
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent("start")
               .serviceTask("task", b -> b.zeebeJobType(type).done())
               .endEvent("end")
@@ -273,7 +273,7 @@ public final class ActivateJobsTest {
     final String jobType3 = Strings.newRandomValidBpmnId();
 
     AbstractFlowNodeBuilder<?, ?> builder =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start");
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start");
 
     for (final String type : Arrays.asList(jobType, jobType2, jobType3)) {
       builder = builder.serviceTask(type, b -> b.zeebeJobType(type));
@@ -306,7 +306,7 @@ public final class ActivateJobsTest {
   public void shouldActivateJobsWithLongCustomHeaders() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "task",
@@ -463,7 +463,7 @@ public final class ActivateJobsTest {
   public void shouldNotActivateJobWithNoRemainingRetries() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", task -> task.zeebeJobType(taskType))
             .endEvent()

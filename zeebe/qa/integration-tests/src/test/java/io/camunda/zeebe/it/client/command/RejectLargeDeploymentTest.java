@@ -10,7 +10,7 @@ package io.camunda.zeebe.it.client.command;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.DeploymentEvent;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -31,7 +31,7 @@ public class RejectLargeDeploymentTest {
     // given - a deployment with a large, unparsable input expression
     final var data = "x".repeat(Short.MAX_VALUE * 2);
     final var process =
-        Bpmn.createExecutableProcess("test")
+        BpmnModelApi.createExecutableProcess("test")
             .startEvent()
             .serviceTask(
                 "task", task -> task.zeebeInput("=<DOCTYPE!" + data, "var").zeebeJobType("test"))

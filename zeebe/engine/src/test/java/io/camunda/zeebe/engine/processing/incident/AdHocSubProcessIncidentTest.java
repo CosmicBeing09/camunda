@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AdHocSubProcessBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -38,7 +38,7 @@ public class AdHocSubProcessIncidentTest {
   @Rule public final RecordingExporterTestWatcher watcher = new RecordingExporterTestWatcher();
 
   private BpmnModelInstance process(final Consumer<AdHocSubProcessBuilder> modifier) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .adHocSubProcess(AD_HOC_SUB_PROCESS_ELEMENT_ID, modifier)
         .endEvent()

@@ -218,7 +218,7 @@ public class Starter extends App {
 
   private CamundaClient createCamundaClient() {
     final CamundaClientBuilder builder =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .gatewayAddress(appCfg.getBrokerUrl())
             .numJobWorkerExecutionThreads(0)
             .withProperties(System.getProperties())

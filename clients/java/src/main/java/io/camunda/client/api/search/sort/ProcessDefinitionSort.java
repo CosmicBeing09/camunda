@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.sort;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestSort;
+import io.camunda.client.api.search.request.TypedSearchRequest.Sort;
 
-public interface ProcessDefinitionSort extends SearchRequestSort<ProcessDefinitionSort> {
+public interface ProcessDefinitionSort extends Sort<ProcessDefinitionSort> {
 
   /** Sort by process definition key. */
   ProcessDefinitionSort processDefinitionKey();

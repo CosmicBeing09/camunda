@@ -53,7 +53,7 @@ final class DefaultAdvertisedAddressIT {
   void shouldFormClusterWithDefaultAdvertisedHost() {
     // given
     final var clientBuilder =
-        CamundaClient.newClientBuilder()
+        CamundaClient.clientBuilder()
             .usePlaintext()
             .restAddress(
                 URI.create("http://localhost:" + cluster.getAvailableGateway().getMappedPort(8080)))

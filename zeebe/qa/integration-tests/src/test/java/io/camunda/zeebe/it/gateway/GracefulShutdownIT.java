@@ -10,7 +10,7 @@ package io.camunda.zeebe.it.gateway;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.ActivatedJob;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestApplication;
 import io.camunda.zeebe.qa.util.cluster.TestCluster;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -39,7 +39,7 @@ final class GracefulShutdownIT {
     final var jobType = Strings.newRandomValidBpmnId();
     final var activatedJob = new AtomicReference<ActivatedJob>();
     final var model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("timer", e -> e.timerWithDuration(Duration.ofSeconds(5)))
             .serviceTask("task", task -> task.zeebeJobType(jobType))

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -54,7 +54,7 @@ public class CreateProcessInstanceSupportedElementTest {
     return List.of(
         new Scenario(
             BpmnElementType.SUB_PROCESS,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(START_ELEMENT_ID)
                 .embeddedSubProcess()
@@ -64,7 +64,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.EVENT_SUB_PROCESS,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     START_ELEMENT_ID, e -> e.startEvent().timerWithDuration("PT1H").endEvent())
                 .startEvent()
@@ -73,7 +73,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.INTERMEDIATE_CATCH_EVENT,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .intermediateCatchEvent(START_ELEMENT_ID)
                 .message(b -> b.name(MESSAGE).zeebeCorrelationKeyExpression("correlationKey"))
@@ -81,7 +81,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Map.of("correlationKey", "value")),
         new Scenario(
             BpmnElementType.INTERMEDIATE_THROW_EVENT,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .intermediateThrowEvent(START_ELEMENT_ID)
                 .endEvent()
@@ -89,18 +89,18 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.END_EVENT,
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent(START_ELEMENT_ID).done(),
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent(START_ELEMENT_ID).done(),
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.SERVICE_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(START_ELEMENT_ID, b -> b.zeebeJobType(JOBTYPE))
                 .done(),
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.RECEIVE_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .receiveTask(START_ELEMENT_ID)
                 .message(b -> b.name(MESSAGE).zeebeCorrelationKeyExpression("correlationKey"))
@@ -108,11 +108,11 @@ public class CreateProcessInstanceSupportedElementTest {
             Map.of("correlationKey", "value")),
         new Scenario(
             BpmnElementType.USER_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask(START_ELEMENT_ID).done(),
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask(START_ELEMENT_ID).done(),
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.MANUAL_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .manualTask(START_ELEMENT_ID)
                 .endEvent()
@@ -120,7 +120,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.EXCLUSIVE_GATEWAY,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .exclusiveGateway(START_ELEMENT_ID)
                 .defaultFlow()
@@ -129,7 +129,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.PARALLEL_GATEWAY,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway(START_ELEMENT_ID)
                 .endEvent()
@@ -137,7 +137,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.EVENT_BASED_GATEWAY,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .eventBasedGateway(START_ELEMENT_ID)
                 .intermediateCatchEvent()
@@ -149,7 +149,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Map.of("correlationKey", "value")),
         new Scenario(
             BpmnElementType.MULTI_INSTANCE_BODY,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     START_ELEMENT_ID,
@@ -161,7 +161,7 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.CALL_ACTIVITY,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .callActivity(START_ELEMENT_ID, c -> c.zeebeProcessId(CHILD_PROCESS_ID))
                 .endEvent()
@@ -169,21 +169,21 @@ public class CreateProcessInstanceSupportedElementTest {
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.BUSINESS_RULE_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .businessRuleTask(START_ELEMENT_ID, b -> b.zeebeJobType(JOBTYPE))
                 .done(),
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.SCRIPT_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .scriptTask(START_ELEMENT_ID, b -> b.zeebeJobType(JOBTYPE))
                 .done(),
             Collections.emptyMap()),
         new Scenario(
             BpmnElementType.SEND_TASK,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .sendTask(START_ELEMENT_ID, b -> b.zeebeJobType(JOBTYPE))
                 .done(),
@@ -225,7 +225,7 @@ public class CreateProcessInstanceSupportedElementTest {
   }
 
   private BpmnModelInstance getChildProcess() {
-    return Bpmn.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
+    return BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
   }
 
   record Scenario(

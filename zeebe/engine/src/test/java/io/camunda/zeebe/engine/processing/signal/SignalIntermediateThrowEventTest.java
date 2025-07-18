@@ -14,7 +14,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -44,7 +44,7 @@ public class SignalIntermediateThrowEventTest {
   public void shouldBroadcastSignalIntermediateThrowEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS)
+        BpmnModelApi.createExecutableProcess(PROCESS)
             .startEvent("start")
             .intermediateThrowEvent("signal_throw_event")
             .signal(SIGNAL_NAME_1)
@@ -86,7 +86,7 @@ public class SignalIntermediateThrowEventTest {
   public void shouldApplyInputMappings() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS)
+        BpmnModelApi.createExecutableProcess(PROCESS)
             .startEvent()
             .intermediateThrowEvent("signal_throw_event")
             .zeebeInputExpression("x", "y")
@@ -131,7 +131,7 @@ public class SignalIntermediateThrowEventTest {
   public void shouldApplyOutputMappings() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS)
+        BpmnModelApi.createExecutableProcess(PROCESS)
             .startEvent()
             .intermediateThrowEvent("signal_throw_event")
             .zeebeOutputExpression("x", "y")
@@ -178,7 +178,7 @@ public class SignalIntermediateThrowEventTest {
 
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS)
+        BpmnModelApi.createExecutableProcess(PROCESS)
             .startEvent()
             .intermediateThrowEvent("signal", b -> b.signal(SIGNAL_NAME_1))
             .endEvent()

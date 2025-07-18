@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.IntermediateCatchEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
@@ -106,7 +106,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
     public void shouldCompleteIntermediateCatchEventWithMultipleExecutionListeners() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .intermediateCatchEvent(scenario.name, c -> scenario.builderFunction.apply(c))
               .zeebeStartExecutionListener(START_EL_TYPE + "_1")
@@ -173,7 +173,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
     public void shouldAccessInputMappingVariablesInStartExecutionListener() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .intermediateCatchEvent(
                   scenario.name,
@@ -200,7 +200,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
     public void shouldAllowEndListenerToAccessStartListenerVariable() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .intermediateCatchEvent(scenario.name, c -> scenario.builderFunction.apply(c))
               .zeebeStartExecutionListener(START_EL_TYPE)
@@ -237,7 +237,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
     public void shouldAllowSubsequentElementToAccessVariableProducedByCatchEventEndListenerJob() {
       // given: deploy process with catch event having end EL and service task following it
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .intermediateCatchEvent(scenario.name, c -> scenario.builderFunction.apply(c))
               .zeebeEndExecutionListener(END_EL_TYPE)
@@ -275,7 +275,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
     public void shouldCancelActiveStartElJobAfterProcessInstanceCancellation() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .intermediateCatchEvent(scenario.name, c -> scenario.builderFunction.apply(c))
               .zeebeStartExecutionListener(START_EL_TYPE)
@@ -336,7 +336,7 @@ public class ExecutionListenerIntermediateCatchEventElementTest {
     @Test
     public void shouldCompleteLinkEventWithMultipleExecutionListeners() {
       // given
-      final ProcessBuilder processBuilder = Bpmn.createExecutableProcess(PROCESS_ID);
+      final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID);
       processBuilder
           .startEvent()
           .intermediateThrowEvent(

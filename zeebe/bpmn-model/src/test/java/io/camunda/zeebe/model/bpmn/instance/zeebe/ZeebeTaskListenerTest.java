@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.instance.zeebe;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.impl.BpmnModelConstants;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstanceTest;
@@ -54,7 +54,7 @@ public class ZeebeTaskListenerTest extends BpmnModelElementInstanceTest {
   public void shouldThrowExceptionForInvalidTaskListenerEventType() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .userTask(
                 "my_user_task",
@@ -65,12 +65,12 @@ public class ZeebeTaskListenerTest extends BpmnModelElementInstanceTest {
             .done();
 
     final String modelXml =
-        Bpmn.convertToString(modelInstance)
+        BpmnModelApi.convertToString(modelInstance)
             .replace("eventType=\"canceling\"", "eventType=\"rejection\"");
 
     // when
     final ZeebeTaskListeners taskListeners =
-        Bpmn.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
+        BpmnModelApi.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
             .<UserTask>getModelElementById("my_user_task")
             .getSingleExtensionElement(ZeebeTaskListeners.class);
 

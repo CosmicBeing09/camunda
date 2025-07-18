@@ -16,7 +16,7 @@ import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.qa.util.multidb.ElasticOpenSearchSetupHelper;
 import io.camunda.qa.util.multidb.MultiDbConfigurator;
 import io.camunda.webapps.schema.descriptors.IndexDescriptors;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.test.util.testcontainers.TestSearchContainers;
 import java.time.Duration;
@@ -93,7 +93,7 @@ public class ElasticsearchUpdateRegressionTest {
     camundaClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess("test").startEvent().endEvent().done(), "test.bpmn")
+            BpmnModelApi.createExecutableProcess("test").startEvent().endEvent().done(), "test.bpmn")
         .send()
         .join();
 

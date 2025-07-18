@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ServiceTask;
 import io.camunda.zeebe.protocol.record.Record;
@@ -32,7 +32,7 @@ public final class ParallelGatewayTest {
   private static final String PROCESS_ID = "process";
 
   private static final BpmnModelInstance FORK_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .parallelGateway("fork")
           .serviceTask("task1", b -> b.zeebeJobType("type1"))
@@ -43,7 +43,7 @@ public final class ParallelGatewayTest {
           .done();
 
   private static final BpmnModelInstance FORK_JOIN_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .parallelGateway("fork")
           .sequenceFlowId("flow1")
@@ -111,7 +111,7 @@ public final class ParallelGatewayTest {
   public void shouldCompleteScopeWithMultipleTokensOnSamePath() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .exclusiveGateway("join")
@@ -143,7 +143,7 @@ public final class ParallelGatewayTest {
   public void shouldPassThroughParallelGateway() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .sequenceFlowId("flow1")
             .parallelGateway("fork")
@@ -183,7 +183,7 @@ public final class ParallelGatewayTest {
   public void shouldCompleteScopeOnParallelGateway() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .sequenceFlowId("flow1")
             .parallelGateway("fork")
@@ -236,7 +236,7 @@ public final class ParallelGatewayTest {
   public void shouldOnlyTriggerGatewayWhenAllBranchesAreActivated() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .exclusiveGateway("exclusiveJoin")
@@ -289,7 +289,7 @@ public final class ParallelGatewayTest {
   public void shouldMergeAndSplitInOneGateway() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .parallelGateway("fork")
             .parallelGateway("join-fork")
@@ -324,7 +324,7 @@ public final class ParallelGatewayTest {
   public void shouldSplitWithUncontrolledFlow() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("start")
             .serviceTask("task1", b -> b.zeebeJobType("type1"))
             .moveToNode("start")
@@ -356,7 +356,7 @@ public final class ParallelGatewayTest {
   public void shouldRejectActivateCommandWhenSequenceFlowIsTakenTwice() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("splitting")
             .parallelGateway("joining")

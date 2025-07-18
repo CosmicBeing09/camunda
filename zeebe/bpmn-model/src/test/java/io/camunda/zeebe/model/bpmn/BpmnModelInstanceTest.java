@@ -27,7 +27,7 @@ public class BpmnModelInstanceTest {
   @Test
   public void testClone() throws Exception {
 
-    final BpmnModelInstance modelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance modelInstance = BpmnModelApi.createEmptyModel();
 
     final Definitions definitions = modelInstance.newInstance(Definitions.class);
     definitions.setId("TestId");

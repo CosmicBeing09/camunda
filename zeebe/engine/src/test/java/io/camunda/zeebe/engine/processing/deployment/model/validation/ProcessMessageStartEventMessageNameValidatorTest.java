@@ -19,7 +19,7 @@ import io.camunda.zeebe.el.ExpressionLanguage;
 import io.camunda.zeebe.el.ResultType;
 import io.camunda.zeebe.el.impl.FeelExpressionLanguage;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.StartEvent;
 import java.time.InstantSource;
@@ -40,7 +40,7 @@ public class ProcessMessageStartEventMessageNameValidatorTest {
   @Test // regression test for #9083
   void shouldNotThrowNPEIfMessageNameIsNull() {
     // given
-    final var model = Bpmn.createProcess().startEvent().message((String) null).endEvent().done();
+    final var model = BpmnModelApi.createProcess().startEvent().message((String) null).endEvent().done();
 
     final var startEvent = model.getModelElementsByType(StartEvent.class).iterator().next();
 
@@ -58,7 +58,7 @@ public class ProcessMessageStartEventMessageNameValidatorTest {
 
     private static final String TEST_EXPRESSION = "expression";
     private static final BpmnModelInstance MODEL =
-        Bpmn.createProcess().startEvent().message(TEST_EXPRESSION).endEvent().done();
+        BpmnModelApi.createProcess().startEvent().message(TEST_EXPRESSION).endEvent().done();
     private static final StartEvent START_EVENT =
         MODEL.getModelElementsByType(StartEvent.class).iterator().next();
     @Mock ExpressionLanguage mockExpressionLanguage;

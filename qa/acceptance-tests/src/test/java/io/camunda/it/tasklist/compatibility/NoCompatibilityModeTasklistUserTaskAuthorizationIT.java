@@ -582,7 +582,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               if (shouldBePreAssigned) {
                 assertThat(result.items().getFirst().getAssignee()).isNotNull();
               }
-              userTaskKey.set(result.items().getFirst().getUserTaskKey());
+              userTaskKey.set(result.items().getFirst().getTaskId());
             });
     return userTaskKey.get();
   }
@@ -617,7 +617,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               final var result =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.userTaskKey(userTaskKey).state(COMPLETED))
+                      .filter(f -> f.id(userTaskKey).status(COMPLETED))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);
@@ -699,7 +699,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               final var result =
                   adminClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.userTaskKey(userTaskKey).assignee(c -> c.exists(false)))
+                      .filter(f -> f.id(userTaskKey).assignee(c -> c.exists(false)))
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);

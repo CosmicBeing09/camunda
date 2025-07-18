@@ -37,7 +37,7 @@ import io.camunda.zeebe.gateway.protocol.GatewayGrpc.GatewayStub;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.DeployResourceRequest;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.DeployResourceResponse;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.Resource;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.grpc.stub.StreamObserver;
 import java.io.ByteArrayOutputStream;
@@ -121,7 +121,7 @@ public final class DeployResourceCommandImpl
   }
 
   @Override
-  public DeployResourceCommandStep2 addResourceBytes(
+  public DeployResourceCommandStep2 addBytes(
       final byte[] resource, final String resourceName) {
 
     if (useRest) {
@@ -139,15 +139,15 @@ public final class DeployResourceCommandImpl
   }
 
   @Override
-  public DeployResourceCommandStep2 addResourceString(
+  public DeployResourceCommandStep2 addString(
       final String resource, final Charset charset, final String resourceName) {
-    return addResourceBytes(resource.getBytes(charset), resourceName);
+    return addBytes(resource.getBytes(charset), resourceName);
   }
 
   @Override
   public DeployResourceCommandStep2 addResourceStringUtf8(
       final String resourceString, final String resourceName) {
-    return addResourceString(resourceString, StandardCharsets.UTF_8, resourceName);
+    return addString(resourceString, StandardCharsets.UTF_8, resourceName);
   }
 
   @Override
@@ -158,7 +158,7 @@ public final class DeployResourceCommandImpl
     try {
       final byte[] bytes = StreamUtil.readInputStream(resourceStream);
 
-      return addResourceBytes(bytes, resourceName);
+      return addBytes(bytes, resourceName);
     } catch (final IOException e) {
       final String exceptionMsg =
           String.format("Cannot deploy bpmn resource from stream. %s", e.getMessage());
@@ -204,8 +204,8 @@ public final class DeployResourceCommandImpl
     ensureNotNull("process model", processDefinition);
 
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, processDefinition);
-    return addResourceBytes(outStream.toByteArray(), resourceName);
+    BpmnModelApi.writeModelToStream(outStream, processDefinition);
+    return addBytes(outStream.toByteArray(), resourceName);
   }
 
   @Override

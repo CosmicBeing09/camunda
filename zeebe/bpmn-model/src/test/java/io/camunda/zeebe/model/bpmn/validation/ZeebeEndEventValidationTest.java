@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.EndEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
@@ -66,7 +66,7 @@ class ZeebeEndEventValidationTest {
   void outgoingSequenceFlow() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .endEvent(END_EVENT_ID)
             // an activity after the end event
@@ -82,7 +82,7 @@ class ZeebeEndEventValidationTest {
 
   private static BpmnModelInstance createProcessWithEndEvent(
       final BpmnElementBuilder elementBuilder) {
-    final StartEventBuilder processBuilder = Bpmn.createExecutableProcess("process").startEvent();
+    final StartEventBuilder processBuilder = BpmnModelApi.createExecutableProcess("process").startEvent();
     return elementBuilder.build(processBuilder).done();
   }
 

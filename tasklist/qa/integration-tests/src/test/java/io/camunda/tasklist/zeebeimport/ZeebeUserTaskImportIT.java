@@ -23,7 +23,7 @@ import io.camunda.tasklist.webapp.security.TasklistURIs;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
 import io.camunda.webapps.schema.entities.usertask.TaskState;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractUserTaskBuilder;
 import java.util.Map;
@@ -89,7 +89,7 @@ public class ZeebeUserTaskImportIT extends TasklistZeebeIntegrationTest {
     final String flowNodeBpmnId2 = "taskB";
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(bpmnProcessId)
+        BpmnModelApi.createExecutableProcess(bpmnProcessId)
             .startEvent("start")
             .userTask(flowNodeBpmnId1)
             .zeebeUserTask()

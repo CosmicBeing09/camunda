@@ -19,7 +19,7 @@ import io.camunda.service.AdHocSubProcessActivityServices.AdHocSubProcessActivat
 import io.camunda.service.security.SecurityContextProvider;
 import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerActivateAdHocSubProcessActivityRequest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.AdHocSubProcess;
 import io.camunda.zeebe.model.bpmn.instance.FlowNode;
@@ -59,7 +59,7 @@ public class AdHocSubProcessActivityServices extends ApiServices<AdHocSubProcess
         processDefinitionServices.getByKey(query.filter().processDefinitionKey());
 
     final BpmnModelInstance modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             new ByteArrayInputStream(
                 processDefinitionEntity.bpmnXml().getBytes(StandardCharsets.UTF_8)));
 

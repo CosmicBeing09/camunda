@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.EventBasedGateway;
@@ -34,7 +34,7 @@ public class ZeebeLinkEventValidationTest {
   void testValidEventLink() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/LinkEventTest.testValidEventLink.bpmn"));
 
@@ -47,7 +47,7 @@ public class ZeebeLinkEventValidationTest {
   void testEventLinkMultipleSources() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/LinkEventTest.testEventLinkMultipleSources.bpmn"));
 
@@ -60,7 +60,7 @@ public class ZeebeLinkEventValidationTest {
   void testInvalidEventLink() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent()
             .linkEventDefinition("linkEvent")
@@ -93,7 +93,7 @@ public class ZeebeLinkEventValidationTest {
   void testInvalidEventLinkMultipleTarget() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/LinkEventTest.testInvalidEventLinkMultipleTarget.bpmn"));
 
@@ -110,7 +110,7 @@ public class ZeebeLinkEventValidationTest {
   void testCatchLinkEventAfterEventBasedGatewayNotAllowed() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/LinkEventTest.testCatchLinkEventAfterEventBasedGatewayNotAllowed.bpmn"));
 
@@ -174,19 +174,19 @@ public class ZeebeLinkEventValidationTest {
   }
 
   public static BpmnModelInstance getLinkEventProcess() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("process");
     process.startEvent().manualTask("manualTask1").intermediateThrowEvent().link("LinkA");
     return process.linkCatchEvent().link("LinkB").manualTask("manualTask2").endEvent().done();
   }
 
   public static BpmnModelInstance getOnlyTargetLinkEventProcess() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("process");
     process.startEvent().endEvent();
     return process.linkCatchEvent().link("LinkB").endEvent().done();
   }
 
   public static BpmnModelInstance getOnlyManyTargetLinkEventProcess() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("process");
     process.startEvent().endEvent();
     process.linkCatchEvent().link("LinkB").endEvent();
 
@@ -194,7 +194,7 @@ public class ZeebeLinkEventValidationTest {
   }
 
   public static BpmnModelInstance getManyLinkEventProcess() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("process");
     process
         .startEvent()
         .manualTask("manualTask1")
@@ -210,7 +210,7 @@ public class ZeebeLinkEventValidationTest {
   }
 
   public static BpmnModelInstance getGoToLinkEventProcess() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("process");
     process
         .startEvent()
         .exclusiveGateway("exclusive1")

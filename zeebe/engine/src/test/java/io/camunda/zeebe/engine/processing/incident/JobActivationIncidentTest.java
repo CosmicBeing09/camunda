@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.incident;
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -44,7 +44,7 @@ public final class JobActivationIncidentTest {
   private String processId;
 
   static BpmnModelInstance createProcess(final String processId, final String jobType) {
-    return Bpmn.createExecutableProcess(processId)
+    return BpmnModelApi.createExecutableProcess(processId)
         .startEvent()
         .serviceTask("task", t -> t.zeebeJobType(jobType))
         .endEvent()

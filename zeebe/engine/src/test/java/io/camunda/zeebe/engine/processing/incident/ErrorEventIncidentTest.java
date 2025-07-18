@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -43,19 +43,19 @@ public final class ErrorEventIncidentTest {
   private static final String ERROR_CODE = "error";
 
   private static final BpmnModelInstance BOUNDARY_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType(JOB_TYPE))
           .boundaryEvent("error", b -> b.error(ERROR_CODE))
           .endEvent()
           .done();
   private static final BpmnModelInstance END_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .endEvent("error", e -> e.error(ERROR_CODE))
           .done();
   private static final BpmnModelInstance EVENT_SUB_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .eventSubProcess(
               "error",
               subprocess ->
@@ -68,7 +68,7 @@ public final class ErrorEventIncidentTest {
           .endEvent()
           .done();
   private static final BpmnModelInstance BOUNDARY_EVENT_SUBPROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .subProcess(
               "subprocess",
@@ -424,7 +424,7 @@ public final class ErrorEventIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .endEvent("error", e -> e.errorExpression("unknown_error_code"))
                 .done())
@@ -468,7 +468,7 @@ public final class ErrorEventIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "sp",

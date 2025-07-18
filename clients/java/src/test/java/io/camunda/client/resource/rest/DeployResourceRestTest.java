@@ -37,7 +37,7 @@ import io.camunda.client.util.ClientRestTest;
 import io.camunda.client.util.RestGatewayPaths;
 import io.camunda.client.util.RestGatewayService;
 import io.camunda.client.util.assertions.LoggedRequestAssert;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -113,7 +113,7 @@ public class DeployResourceRestTest extends ClientRestTest {
     final byte[] bytes = getBytes(filename);
 
     // when
-    client.newDeployResourceCommand().addResourceBytes(bytes, filename).send().join();
+    client.newDeployResourceCommand().addBytes(bytes, filename).send().join();
 
     // then
     LoggedRequestAssert.assertThat(RestGatewayService.getLastRequest())
@@ -130,7 +130,7 @@ public class DeployResourceRestTest extends ClientRestTest {
     // when
     client
         .newDeployResourceCommand()
-        .addResourceString(xml, StandardCharsets.UTF_8, filename)
+        .addString(xml, StandardCharsets.UTF_8, filename)
         .send()
         .join();
 
@@ -160,10 +160,10 @@ public class DeployResourceRestTest extends ClientRestTest {
     // given
     final String filename = "test.bpmn";
     final BpmnModelInstance processModel =
-        Bpmn.createExecutableProcess(BPMN_1_PROCESS_ID).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(BPMN_1_PROCESS_ID).startEvent().endEvent().done();
 
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, processModel);
+    BpmnModelApi.writeModelToStream(outStream, processModel);
     final byte[] expectedBytes = outStream.toByteArray();
 
     // when

@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -41,7 +41,7 @@ public class CreateProcessInstanceRejectionTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .manualTask("task")
                 .endEvent()
@@ -75,7 +75,7 @@ public class CreateProcessInstanceRejectionTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -117,7 +117,7 @@ public class CreateProcessInstanceRejectionTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
                 .eventBasedGateway()
                 .intermediateCatchEvent("timer1", c -> c.timerWithDuration("PT0.1S"))
@@ -153,7 +153,7 @@ public class CreateProcessInstanceRejectionTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -217,7 +217,7 @@ public class CreateProcessInstanceRejectionTest {
     // given
     engine
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -246,7 +246,7 @@ public class CreateProcessInstanceRejectionTest {
     final String fakeTenantId = "bar";
     engine
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())
         .withTenantId(tenantId)
         .deploy();
 

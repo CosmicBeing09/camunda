@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.sort;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestSort;
+import io.camunda.client.api.search.request.TypedSearchRequest.Sort;
 
-public interface VariableSort extends SearchRequestSort<VariableSort> {
+public interface VariableSort extends Sort<VariableSort> {
   VariableSort variableKey();
 
   VariableSort value();

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractActivityBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
@@ -55,7 +55,7 @@ public final class BoundaryEventElementTest {
   }
 
   private BpmnModelInstance process(final ElementWithBoundaryEventBuilder elementBuilder) {
-    final var startEventBuilder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent();
+    final var startEventBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent();
 
     final var processWithElementBuilder = elementBuilder.build(startEventBuilder);
 
@@ -70,7 +70,7 @@ public final class BoundaryEventElementTest {
       ENGINE
           .deployment()
           .withXmlResource(
-              Bpmn.createExecutableProcess(CALL_ACTIVITY_PROCESS)
+              BpmnModelApi.createExecutableProcess(CALL_ACTIVITY_PROCESS)
                   .startEvent()
                   .userTask()
                   .endEvent()

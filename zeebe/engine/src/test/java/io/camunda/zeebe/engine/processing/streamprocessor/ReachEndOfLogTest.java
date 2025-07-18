@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.streamprocessor;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import java.time.Duration;
 import org.awaitility.Awaitility;
 import org.junit.Rule;
@@ -33,7 +33,7 @@ public class ReachEndOfLogTest {
     // given
     engineRule
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -51,7 +51,7 @@ public class ReachEndOfLogTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .exclusiveGateway("test")
                 .defaultFlow()

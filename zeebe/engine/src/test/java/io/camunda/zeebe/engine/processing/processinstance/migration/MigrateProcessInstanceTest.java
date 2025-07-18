@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -43,13 +43,13 @@ public class MigrateProcessInstanceTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId1)
+                BpmnModelApi.createExecutableProcess(processId1)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId2)
+                BpmnModelApi.createExecutableProcess(processId2)
                     .startEvent()
                     .serviceTask("B", a -> a.zeebeJobType("B"))
                     .endEvent()
@@ -95,13 +95,13 @@ public class MigrateProcessInstanceTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(otherProcessId)
+                BpmnModelApi.createExecutableProcess(otherProcessId)
                     .startEvent()
                     .serviceTask("B", a -> a.zeebeJobType("B"))
                     .endEvent()
@@ -150,7 +150,7 @@ public class MigrateProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -160,7 +160,7 @@ public class MigrateProcessInstanceTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .userTask()

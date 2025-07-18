@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ZeebeVariablesMappingBuilder;
 import io.camunda.zeebe.model.bpmn.instance.BoundaryEvent;
@@ -50,21 +50,21 @@ public final class MessageCatchElementOutputMappingTest {
   private static final String MAPPING_ELEMENT_ID = "catch";
 
   private static final BpmnModelInstance CATCH_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent(MAPPING_ELEMENT_ID)
           .message(m -> m.name(MESSAGE_NAME).zeebeCorrelationKeyExpression(CORRELATION_VARIABLE))
           .done();
 
   private static final BpmnModelInstance RECEIVE_TASK_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .receiveTask(MAPPING_ELEMENT_ID)
           .message(m -> m.name(MESSAGE_NAME).zeebeCorrelationKeyExpression(CORRELATION_VARIABLE))
           .done();
 
   private static final BpmnModelInstance INTERRUPTING_BOUNDARY_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent(MAPPING_ELEMENT_ID)
@@ -73,7 +73,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance NON_INTERRUPTING_BOUNDARY_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent(MAPPING_ELEMENT_ID, b -> b.cancelActivity(false))
@@ -82,7 +82,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance EVENT_BASED_GATEWAY_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .eventBasedGateway()
           .id("gateway")
@@ -101,7 +101,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance INTERRUPTING_EVENT_SUBPROCESS_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .eventSubProcess(
               "event-subprocess",
               eventSubProcess ->
@@ -120,7 +120,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance NON_INTERRUPTING_EVENT_SUBPROCESS_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .eventSubProcess(
               "event-subprocess",
               eventSubProcess ->
@@ -139,7 +139,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance INTERRUPTING_BOUNDARY_EVENT_ON_RECEIVE_TASK_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .receiveTask(
               "task",
@@ -152,7 +152,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance NON_INTERRUPTING_BOUNDARY_EVENT_ON_RECEIVE_TASK_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .receiveTask(
               "task",
@@ -165,7 +165,7 @@ public final class MessageCatchElementOutputMappingTest {
           .done();
 
   private static final BpmnModelInstance MESSAGE_START_EVENT_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent(MAPPING_ELEMENT_ID)
           .message(m -> m.name(MESSAGE_NAME).zeebeCorrelationKeyExpression(CORRELATION_VARIABLE))
           .endEvent()

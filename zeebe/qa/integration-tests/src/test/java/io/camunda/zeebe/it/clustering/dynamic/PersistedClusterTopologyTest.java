@@ -10,7 +10,7 @@ package io.camunda.zeebe.it.clustering.dynamic;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.SubscriptionUtil;
 import io.camunda.zeebe.qa.util.cluster.TestCluster;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -76,7 +76,7 @@ public class PersistedClusterTopologyTest {
         .isNotEqualTo(1);
 
     final var processDefinition =
-        Bpmn.createExecutableProcess("catch_event")
+        BpmnModelApi.createExecutableProcess("catch_event")
             .startEvent()
             .serviceTask("service1")
             .zeebeJobType("service1")

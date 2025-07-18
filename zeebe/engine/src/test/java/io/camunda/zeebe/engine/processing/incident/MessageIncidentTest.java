@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -35,7 +35,7 @@ public final class MessageIncidentTest {
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final String PROCESS_ID = "process";
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent(
               "catch",
@@ -52,7 +52,7 @@ public final class MessageIncidentTest {
   }
 
   private BpmnModelInstance createProcessWithMessageNameFeelExpression(final String processId) {
-    return Bpmn.createExecutableProcess(processId)
+    return BpmnModelApi.createExecutableProcess(processId)
         .startEvent()
         .intermediateCatchEvent(
             "catch",

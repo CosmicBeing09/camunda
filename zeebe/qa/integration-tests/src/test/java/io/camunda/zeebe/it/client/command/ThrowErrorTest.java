@@ -17,7 +17,7 @@ import io.camunda.client.api.command.CompleteJobCommandStep1;
 import io.camunda.client.api.command.ThrowErrorCommandStep1;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -148,7 +148,7 @@ public final class ThrowErrorTest {
   private void createProcessInstance(final String jobType) {
     final var processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType(jobType))
                 .boundaryEvent("error", b -> b.error(ERROR_CODE).endEvent())

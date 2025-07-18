@@ -17,7 +17,7 @@ import io.camunda.operate.util.OperateZeebeAbstractIT;
 import io.camunda.operate.util.ZeebeTestUtil;
 import io.camunda.operate.webapp.rest.dto.SequenceFlowDto;
 import io.camunda.webapps.schema.descriptors.template.SequenceFlowTemplate;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.List;
 import org.junit.Test;
@@ -34,7 +34,7 @@ public class SequenceFlowZeebeImportIT extends OperateZeebeAbstractIT {
     // having
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .sequenceFlowId("sf1")
             .serviceTask("task1")

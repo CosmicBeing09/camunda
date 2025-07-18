@@ -24,7 +24,7 @@ import io.camunda.operate.webapp.rest.dto.VariableRequestDto;
 import io.camunda.operate.webapp.rest.dto.listview.SortValuesWrapper;
 import io.camunda.operate.webapp.zeebe.operation.UpdateVariableHandler;
 import io.camunda.webapps.schema.entities.flownode.FlowNodeInstanceEntity;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.List;
 import java.util.Optional;
@@ -58,7 +58,7 @@ public class VariableZeebeImportIT extends OperateZeebeAbstractIT {
     // having
     final String processId = "demoProcess";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .serviceTask("task1")
             .zeebeJobType("task1")

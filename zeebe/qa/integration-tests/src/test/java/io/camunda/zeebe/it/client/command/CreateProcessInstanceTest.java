@@ -15,7 +15,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.CreateProcessInstanceCommandStep1;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceCreationIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -342,10 +342,10 @@ public final class CreateProcessInstanceTest {
     processId2 = processId + "-2";
     firstProcessDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId).startEvent("v1").done(), useRest);
+            BpmnModelApi.createExecutableProcess(processId).startEvent("v1").done(), useRest);
     secondProcessDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent("v2")
                 .parallelGateway()
                 .endEvent("end1")
@@ -355,7 +355,7 @@ public final class CreateProcessInstanceTest {
             useRest);
 
     resourcesHelper.deployProcess(
-        Bpmn.createExecutableProcess(processId2)
+        BpmnModelApi.createExecutableProcess(processId2)
             .eventSubProcess(
                 "event-sub",
                 e ->

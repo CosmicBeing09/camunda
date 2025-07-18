@@ -23,7 +23,7 @@ import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.api.search.response.Incident;
 import io.camunda.client.api.search.response.ProcessInstance;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +54,7 @@ class IncidentPropagationTest {
   static void beforeAll() {
     final String calledProcess2Id = "service_tasks_v1";
     final BpmnModelInstance testProcess =
-        Bpmn.createExecutableProcess(PARENT_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PARENT_PROCESS_ID)
             .startEvent()
             .callActivity(CALL_ACTIVITY_1_ID)
             .zeebeProcessId(CALLED_PROCESS_ID)
@@ -62,7 +62,7 @@ class IncidentPropagationTest {
     DEPLOYED_PROCESSES.addAll(
         deployResource(camundaClient, testProcess, "testProcess.bpmn").getProcesses());
     final BpmnModelInstance testProcess2 =
-        Bpmn.createExecutableProcess(CALLED_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(CALLED_PROCESS_ID)
             .startEvent()
             .parallelGateway("parallel")
             .serviceTask(SERVICE_TASK_ID)

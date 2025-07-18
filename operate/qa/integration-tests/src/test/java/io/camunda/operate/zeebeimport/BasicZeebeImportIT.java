@@ -39,7 +39,7 @@ import io.camunda.webapps.schema.entities.flownode.FlowNodeState;
 import io.camunda.webapps.schema.entities.incident.IncidentEntity;
 import io.camunda.webapps.schema.entities.incident.IncidentState;
 import io.camunda.webapps.schema.entities.listview.ProcessInstanceForListViewEntity;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -344,7 +344,7 @@ public class BasicZeebeImportIT extends OperateZeebeAbstractIT {
     final String activityId = "taskA";
     final String processId = "demoProcess";
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .serviceTask(activityId)
             .zeebeJobType(activityId)
@@ -402,7 +402,7 @@ public class BasicZeebeImportIT extends OperateZeebeAbstractIT {
     final String activityId = "taskA";
     final String processId = "demoProcess";
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .serviceTask(activityId)
             .zeebeJobType(activityId)
@@ -457,13 +457,13 @@ public class BasicZeebeImportIT extends OperateZeebeAbstractIT {
     final String calledProcess2Id = "process";
     final String errorMsg = "Some error";
     final BpmnModelInstance testProcess =
-        Bpmn.createExecutableProcess(parentProcessId)
+        BpmnModelApi.createExecutableProcess(parentProcessId)
             .startEvent()
             .callActivity(callActivity1Id)
             .zeebeProcessId(calledProcess1Id)
             .done();
     final BpmnModelInstance testProcess2 =
-        Bpmn.createExecutableProcess(calledProcess1Id)
+        BpmnModelApi.createExecutableProcess(calledProcess1Id)
             .startEvent()
             .callActivity(callActivity2Id)
             .zeebeProcessId(calledProcess2Id)

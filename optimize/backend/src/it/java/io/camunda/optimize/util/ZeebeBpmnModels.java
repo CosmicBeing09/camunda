@@ -7,7 +7,7 @@
  */
 package io.camunda.optimize.util;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AdHocSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.EndEventBuilder;
@@ -64,7 +64,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createStartEndProcess(
       final String processName, final String processId) {
-    ProcessBuilder executableProcess = Bpmn.createExecutableProcess();
+    ProcessBuilder executableProcess = BpmnModelApi.createExecutableProcess();
     if (processId != null) {
       executableProcess = executableProcess.id(processId);
     }
@@ -78,7 +78,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createSimpleServiceTaskProcess(final String processName) {
-    return Bpmn.createExecutableProcess(processName)
+    return BpmnModelApi.createExecutableProcess(processName)
         .name(processName)
         .startEvent(START_EVENT)
         .name(START_EVENT)
@@ -92,7 +92,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createAdHocSubProcess(
       final String processName, final Consumer<AdHocSubProcessBuilder> modifier) {
-    return Bpmn.createExecutableProcess(processName)
+    return BpmnModelApi.createExecutableProcess(processName)
         .name(processName)
         .startEvent(START_EVENT)
         .adHocSubProcess(ADHOC_SUB_PROCESS, modifier)
@@ -101,7 +101,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createSingleStartDoubleEndEventProcess(final String processName) {
-    return Bpmn.createExecutableProcess(processName)
+    return BpmnModelApi.createExecutableProcess(processName)
         .name(processName)
         .startEvent(START_EVENT)
         .parallelGateway()
@@ -112,7 +112,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createTerminateEndEventProcess(final String processName) {
-    return Bpmn.createExecutableProcess(processName)
+    return BpmnModelApi.createExecutableProcess(processName)
         .name(processName)
         .startEvent()
         .endEvent(TERMINATE_END_EVENT, EndEventBuilder::terminate)
@@ -120,7 +120,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createIncidentProcess(final String processName) {
-    return Bpmn.createExecutableProcess(processName)
+    return BpmnModelApi.createExecutableProcess(processName)
         .name(processName)
         .startEvent(START_EVENT)
         .name(START_EVENT)
@@ -133,7 +133,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createSimpleUserTaskProcess(final String processName) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .versionTag(VERSION_TAG)
         .startEvent(START_EVENT)
@@ -148,7 +148,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createSimpleNativeUserTaskProcessWithAssignee(
       final String processName, final String dueDate, final String assignee) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .startEvent(START_EVENT)
         .name(START_EVENT)
@@ -165,7 +165,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createSimpleNativeUserTaskProcess(
       final String processName, final String dueDate) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .startEvent(START_EVENT)
         .name(START_EVENT)
@@ -181,7 +181,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createSimpleNativeUserTaskProcessWithCandidateGroup(
       final String processName, final String dueDate, final String candidateGroup) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .startEvent(START_EVENT)
         .name(START_EVENT)
@@ -197,7 +197,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createLoopingProcess(final String processName) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .startEvent(START_EVENT)
         .exclusiveGateway(CONVERGING_GATEWAY)
@@ -213,7 +213,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createInclusiveGatewayProcess(final String processName) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .startEvent(START_EVENT)
         .inclusiveGateway(DIVERGING_GATEWAY)
@@ -228,7 +228,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createCompensationEventProcess() {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .startEvent()
         .serviceTask(
             SERVICE_TASK_WITH_COMPENSATION_EVENT,
@@ -247,7 +247,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createInclusiveGatewayProcessWithConverging(
       final String processName) {
-    return Bpmn.createExecutableProcess(processName)
+    return BpmnModelApi.createExecutableProcess(processName)
         .startEvent(START_EVENT)
         .inclusiveGateway(DIVERGING_GATEWAY)
         .sequenceFlowId("s1")
@@ -258,7 +258,7 @@ public class ZeebeBpmnModels {
   }
 
   public static BpmnModelInstance createSendTaskProcess(final String processName) {
-    return Bpmn.createExecutableProcess()
+    return BpmnModelApi.createExecutableProcess()
         .name(processName)
         .startEvent(START_EVENT)
         .sendTask(SEND_TASK)
@@ -268,7 +268,7 @@ public class ZeebeBpmnModels {
 
   public static BpmnModelInstance createProcessWith83SignalEvents(final String startSignalName) {
     // @formatter:off
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess("signalProcess");
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess("signalProcess");
 
     processBuilder
         .eventSubProcess("interruptingSubProcess")

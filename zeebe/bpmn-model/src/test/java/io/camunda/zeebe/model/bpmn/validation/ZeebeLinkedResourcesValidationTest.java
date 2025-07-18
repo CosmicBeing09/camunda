@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeLinkedResource;
@@ -30,7 +30,7 @@ public class ZeebeLinkedResourcesValidationTest {
   void testLinkedResourceTypeNotDefined() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "my_service_task",
@@ -51,7 +51,7 @@ public class ZeebeLinkedResourcesValidationTest {
   void testEventSuccessful() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/ZeebeLinkedResourcesValidationTest.testEvent.bpmn"));
 

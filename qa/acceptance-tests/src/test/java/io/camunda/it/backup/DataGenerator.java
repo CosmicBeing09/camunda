@@ -15,7 +15,7 @@ import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.response.ProcessInstance;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.response.UserTask;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.time.Duration;
 import java.util.List;
@@ -136,7 +136,7 @@ public class DataGenerator implements AutoCloseable {
                     final var itemsFromQuery =
                         camundaClient
                             .newUserTaskSearchRequest()
-                            .filter(f -> f.assignee(assignee).state(UserTaskState.CREATED))
+                            .filter(f -> f.assignee(assignee).status(UserTaskState.CREATED))
                             .send()
                             .join()
                             .items();
@@ -152,10 +152,10 @@ public class DataGenerator implements AutoCloseable {
 
     items.forEach(
         item -> {
-          LOGGER.debug("Completing user task {}", item.getUserTaskKey());
+          LOGGER.debug("Completing user task {}", item.getTaskId());
           assertThat(
                   camundaClient
-                      .newUserTaskCompleteCommand(item.getUserTaskKey())
+                      .newUserTaskCompleteCommand(item.getTaskId())
                       .send()
                       .toCompletableFuture())
               .succeedsWithin(timeout);
@@ -178,7 +178,7 @@ public class DataGenerator implements AutoCloseable {
     }
 
     private BpmnModelInstance createModel() {
-      return Bpmn.createExecutableProcess(bpmnProcessId)
+      return BpmnModelApi.createExecutableProcess(bpmnProcessId)
           .startEvent("start")
           .serviceTask(tasks[0])
           .zeebeJobType(tasks[0])

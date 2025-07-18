@@ -12,7 +12,7 @@ import static io.camunda.zeebe.test.util.TestUtil.doRepeatedly;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ServiceTaskBuilder;
 import io.camunda.zeebe.protocol.Protocol;
@@ -119,7 +119,7 @@ public final class PartitionTestClient {
   public ExecuteCommandResponse deployWithResponse(
       final BpmnModelInstance process, final String resourceName) {
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, process);
+    BpmnModelApi.writeModelToStream(outStream, process);
     final byte[] resource = outStream.toByteArray();
 
     return deployWithResponse(resource, resourceName);
@@ -147,7 +147,7 @@ public final class PartitionTestClient {
   public ProcessMetadata deployProcess(final BpmnModelInstance process) {
     final DeploymentRecord request = new DeploymentRecord();
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, process);
+    BpmnModelApi.writeModelToStream(outStream, process);
 
     request.resources().add().setResource(outStream.toByteArray()).setResourceName("process.bpmn");
 
@@ -246,7 +246,7 @@ public final class PartitionTestClient {
   public long createJob(
       final String type, final Consumer<ServiceTaskBuilder> consumer, final String variables) {
     deploy(
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",

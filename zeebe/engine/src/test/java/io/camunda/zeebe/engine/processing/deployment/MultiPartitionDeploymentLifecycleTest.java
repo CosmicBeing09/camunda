@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandRedistributor;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -51,7 +51,7 @@ public class MultiPartitionDeploymentLifecycleTest {
   public void shouldTestLifecycle() {
     // given - reprocess
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("shouldReDistributeAfterRecovery")
+        BpmnModelApi.createExecutableProcess("shouldReDistributeAfterRecovery")
             .startEvent()
             .endEvent()
             .done();
@@ -176,7 +176,7 @@ public class MultiPartitionDeploymentLifecycleTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("shouldReDistributeAfterRecovery")
+            BpmnModelApi.createExecutableProcess("shouldReDistributeAfterRecovery")
                 .startEvent()
                 .endEvent()
                 .done())
@@ -229,7 +229,7 @@ public class MultiPartitionDeploymentLifecycleTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("shouldReDistributeAfterRecovery")
+            BpmnModelApi.createExecutableProcess("shouldReDistributeAfterRecovery")
                 .startEvent()
                 .endEvent()
                 .done())
@@ -280,7 +280,7 @@ public class MultiPartitionDeploymentLifecycleTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("PROCESS")
+                BpmnModelApi.createExecutableProcess("PROCESS")
                     .startEvent()
                     .documentation(
                         "x".repeat((int) (ByteValue.ofMegabytes(2) - ByteValue.ofKilobytes(3))))

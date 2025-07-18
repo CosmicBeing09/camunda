@@ -11,7 +11,7 @@ import static io.camunda.zeebe.auth.Authorization.AUTHORIZED_USERNAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -38,7 +38,7 @@ public final class MigrateProcessesBatchExecutorTest extends AbstractBatchOperat
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process").startEvent().userTask("userTaskA").done())
+            BpmnModelApi.createExecutableProcess("process").startEvent().userTask("userTaskA").done())
         .deploy()
         .getValue()
         .getProcessesMetadata()
@@ -50,7 +50,7 @@ public final class MigrateProcessesBatchExecutorTest extends AbstractBatchOperat
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2").startEvent().userTask("userTaskB").done())
+                BpmnModelApi.createExecutableProcess("process2").startEvent().userTask("userTaskB").done())
             .deploy()
             .getValue()
             .getProcessesMetadata()
@@ -109,7 +109,7 @@ public final class MigrateProcessesBatchExecutorTest extends AbstractBatchOperat
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .exclusiveGateway()
                 .conditionExpression("canBeMigrated")
@@ -129,7 +129,7 @@ public final class MigrateProcessesBatchExecutorTest extends AbstractBatchOperat
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2").startEvent().userTask("userTaskB").done())
+                BpmnModelApi.createExecutableProcess("process2").startEvent().userTask("userTaskB").done())
             .deploy()
             .getValue()
             .getProcessesMetadata()

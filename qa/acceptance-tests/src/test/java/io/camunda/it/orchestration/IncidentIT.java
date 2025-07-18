@@ -17,7 +17,7 @@ import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.api.search.response.Incident;
 import io.camunda.client.api.search.response.ProcessInstance;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.test.util.Strings;
 import java.time.Duration;
 import java.util.List;
@@ -231,13 +231,13 @@ public class IncidentIT {
 
   private void deployProcesses(final CamundaClient client) {
     final var parentProcess =
-        Bpmn.createExecutableProcess(parentProcessId)
+        BpmnModelApi.createExecutableProcess(parentProcessId)
             .startEvent()
             .callActivity(CALL_ACTIVITY_ID, b -> b.zeebeProcessId(childProcessId))
             .endEvent()
             .done();
     final var childProcess =
-        Bpmn.createExecutableProcess(childProcessId)
+        BpmnModelApi.createExecutableProcess(childProcessId)
             .startEvent()
             .serviceTask(TASK_ID, b -> b.zeebeJobType(jobType))
             .endEvent()

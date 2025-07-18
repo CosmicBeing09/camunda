@@ -10,7 +10,7 @@ package io.camunda.zeebe.it.processing;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -57,7 +57,7 @@ final class BannedInstanceIT {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
                 .serviceTask("task", t -> t.zeebeJobType("type"))
                 .endEvent("end")
@@ -108,7 +108,7 @@ final class BannedInstanceIT {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
                 .intermediateCatchEvent("timer", b -> b.timerWithDurationExpression("duration"))
                 .endEvent("end")
@@ -161,7 +161,7 @@ final class BannedInstanceIT {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     "A",

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.api.response.ProcessInstanceEvent;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.time.Duration;
 import java.time.Instant;
@@ -39,7 +39,7 @@ public class ZeebeClientBasedCamundaSpringProcessTestListenerIT {
   void shouldCreateProcessInstance() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .name("start")
             .zeebeOutputExpression("\"active\"", "status")
@@ -69,7 +69,7 @@ public class ZeebeClientBasedCamundaSpringProcessTestListenerIT {
     final Duration timerDuration = Duration.ofHours(1);
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .name("start")
             .userTask("A")

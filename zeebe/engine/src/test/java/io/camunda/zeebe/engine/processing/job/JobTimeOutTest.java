@@ -16,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -242,7 +242,7 @@ public final class JobTimeOutTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
                 .serviceTask("task", b -> b.zeebeJobType(jobType).done())
                 .endEvent("end")

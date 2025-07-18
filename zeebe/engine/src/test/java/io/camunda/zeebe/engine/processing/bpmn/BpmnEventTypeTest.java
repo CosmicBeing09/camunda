@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -48,14 +48,14 @@ public class BpmnEventTypeTest {
 
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId()).startEvent(elementId()).done();
+              return BpmnModelApi.createExecutableProcess(processId()).startEvent(elementId()).done();
             }
           },
           new BpmnEventTypeScenario(
               "None Throw Event", BpmnElementType.INTERMEDIATE_THROW_EVENT, BpmnEventType.NONE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateThrowEvent(elementId())
                   .done();
@@ -65,7 +65,7 @@ public class BpmnEventTypeTest {
               "None End Event", BpmnElementType.END_EVENT, BpmnEventType.NONE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .endEvent(elementId())
                   .done();
@@ -75,7 +75,7 @@ public class BpmnEventTypeTest {
               "Message Start Event", BpmnElementType.START_EVENT, BpmnEventType.MESSAGE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent(elementId())
                   .message(
                       m -> m.name(messageName()).zeebeCorrelationKeyExpression(CORRELATION_KEY))
@@ -98,7 +98,7 @@ public class BpmnEventTypeTest {
               BpmnEventType.MESSAGE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateCatchEvent(elementId())
                   .message(
@@ -123,7 +123,7 @@ public class BpmnEventTypeTest {
               BpmnEventType.MESSAGE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateThrowEvent(elementId())
                   .message(messageName())
@@ -147,7 +147,7 @@ public class BpmnEventTypeTest {
               "Message End Event", BpmnElementType.END_EVENT, BpmnEventType.MESSAGE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .endEvent(elementId())
                   .message(messageName())
@@ -170,7 +170,7 @@ public class BpmnEventTypeTest {
               "Timer Start Event", BpmnElementType.START_EVENT, BpmnEventType.TIMER) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent(elementId())
                   .timerWithCycle("R1/PT0.01S")
                   .endEvent()
@@ -186,7 +186,7 @@ public class BpmnEventTypeTest {
               "Timer Catch Event", BpmnElementType.INTERMEDIATE_CATCH_EVENT, BpmnEventType.TIMER) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateCatchEvent(elementId())
                   .timerWithDuration("PT0.01S")
@@ -198,7 +198,7 @@ public class BpmnEventTypeTest {
               "Error Start Event", BpmnElementType.START_EVENT, BpmnEventType.ERROR) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .eventSubProcess(
                       "subprocess", sp -> sp.startEvent(elementId()).error(errorCode()).endEvent())
                   .startEvent()
@@ -222,7 +222,7 @@ public class BpmnEventTypeTest {
               "Error Boundary Event", BpmnElementType.BOUNDARY_EVENT, BpmnEventType.ERROR) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .serviceTask("task", t -> t.zeebeJobType(jobType()))
                   .boundaryEvent(elementId())
@@ -246,7 +246,7 @@ public class BpmnEventTypeTest {
               "Error End Event", BpmnElementType.END_EVENT, BpmnEventType.ERROR) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .subProcess(
                       "subProcess",
@@ -263,7 +263,7 @@ public class BpmnEventTypeTest {
               "Terminate End Event", BpmnElementType.END_EVENT, BpmnEventType.TERMINATE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .endEvent(elementId())
                   .terminate()
@@ -274,7 +274,7 @@ public class BpmnEventTypeTest {
               "Link Catch Event", BpmnElementType.INTERMEDIATE_CATCH_EVENT, BpmnEventType.LINK) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateCatchEvent(elementId())
                   .link("link")
@@ -286,7 +286,7 @@ public class BpmnEventTypeTest {
               "Link Throw Event", BpmnElementType.INTERMEDIATE_THROW_EVENT, BpmnEventType.LINK) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateThrowEvent(elementId())
                   .link("link")
@@ -300,7 +300,7 @@ public class BpmnEventTypeTest {
               "Receive Task", BpmnElementType.RECEIVE_TASK, BpmnEventType.MESSAGE) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .receiveTask(
                       elementId(),
@@ -327,7 +327,7 @@ public class BpmnEventTypeTest {
               "Escalation Start Event", BpmnElementType.START_EVENT, BpmnEventType.ESCALATION) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .eventSubProcess(
                       "subprocess",
                       sp -> sp.startEvent(elementId()).escalation(escalationCode()).endEvent())
@@ -343,7 +343,7 @@ public class BpmnEventTypeTest {
               BpmnEventType.ESCALATION) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateThrowEvent(elementId(), e -> e.escalation(escalationCode()))
                   .endEvent()
@@ -356,7 +356,7 @@ public class BpmnEventTypeTest {
               BpmnEventType.ESCALATION) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .subProcess(
                       "subprocess",
@@ -375,7 +375,7 @@ public class BpmnEventTypeTest {
               "Escalation End Event", BpmnElementType.END_EVENT, BpmnEventType.ESCALATION) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .endEvent(elementId(), e -> e.escalation(escalationCode()))
                   .done();
@@ -387,7 +387,7 @@ public class BpmnEventTypeTest {
               BpmnEventType.COMPENSATION) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .intermediateThrowEvent(
                       elementId(),
@@ -400,7 +400,7 @@ public class BpmnEventTypeTest {
               "Compensation End Event", BpmnElementType.END_EVENT, BpmnEventType.COMPENSATION) {
             @Override
             BpmnModelInstance modelInstance() {
-              return Bpmn.createExecutableProcess(processId())
+              return BpmnModelApi.createExecutableProcess(processId())
                   .startEvent()
                   .endEvent(
                       elementId(),

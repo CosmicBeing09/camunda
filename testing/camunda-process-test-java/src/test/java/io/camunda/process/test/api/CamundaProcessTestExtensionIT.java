@@ -23,7 +23,7 @@ import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.response.ProcessInstance;
 import io.camunda.client.api.search.response.UserTask;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.time.Duration;
 import java.time.Instant;
@@ -42,7 +42,7 @@ public class CamundaProcessTestExtensionIT {
   void shouldCreateProcessInstance() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .name("start")
             .zeebeOutputExpression("\"active\"", "status")
@@ -72,7 +72,7 @@ public class CamundaProcessTestExtensionIT {
     final Duration timerDuration = Duration.ofHours(1);
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .name("start")
             .userTask("A")
@@ -114,7 +114,7 @@ public class CamundaProcessTestExtensionIT {
   void shouldQueryProcessInstances() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .name("start")
             .userTask()
@@ -144,7 +144,7 @@ public class CamundaProcessTestExtensionIT {
   void shouldAssertUserTask() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .name("start")
             .userTask(
@@ -171,7 +171,7 @@ public class CamundaProcessTestExtensionIT {
                 filter ->
                     filter
                         .processInstanceKey(processInstance.getProcessInstanceKey())
-                        .state(UserTaskState.CREATED))
+                        .status(UserTaskState.CREATED))
             .send()
             .join()
             .items();
@@ -186,7 +186,7 @@ public class CamundaProcessTestExtensionIT {
         .returns(60, UserTask::getPriority);
 
     // when: complete the user task
-    client.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    client.newUserTaskCompleteCommand(userTask.getTaskId()).send().join();
 
     // then: verify that the user task and the process instance are completed
     CamundaAssert.assertThat(processInstance).hasCompletedElements(byName("task")).isCompleted();

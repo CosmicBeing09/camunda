@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.util;
 
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
@@ -160,8 +160,8 @@ public final class Records {
         .setResourceName("process.bpmn")
         .setResource(
             BufferUtil.wrapString(
-                Bpmn.convertToString(
-                    Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())))
+                BpmnModelApi.convertToString(
+                    BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done())))
         .setVersion(1)
         .setChecksum(BufferUtil.wrapString("checksum"));
     return record;

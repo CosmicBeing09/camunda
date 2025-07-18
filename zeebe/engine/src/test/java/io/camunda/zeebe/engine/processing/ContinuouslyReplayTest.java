@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.logstreams.util.ListLogStorage;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -36,7 +36,7 @@ public class ContinuouslyReplayTest {
     // given
     processing
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         .deploy();
 
     // when

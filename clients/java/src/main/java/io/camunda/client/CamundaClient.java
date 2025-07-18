@@ -140,12 +140,12 @@ public interface CamundaClient extends AutoCloseable, JobClient {
 
   /**
    * @return a new Camunda client with default configuration values. In order to customize
-   *     configuration, use the methods {@link #newClientBuilder()} or {@link
+   *     configuration, use the methods {@link #clientBuilder()} or {@link
    *     #newClient(CamundaClientConfiguration)}. See {@link CamundaClientBuilder} for the
    *     configuration options and default values.
    */
-  static CamundaClient newClient() {
-    return newClientBuilder().build();
+  static CamundaClient createClient() {
+    return clientBuilder().build();
   }
 
   /**
@@ -158,7 +158,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
   /**
    * @return a builder to configure and create a new {@link CamundaClient}.
    */
-  static CamundaClientBuilder newClientBuilder() {
+  static CamundaClientBuilder clientBuilder() {
     return new CamundaClientBuilderImpl();
   }
 

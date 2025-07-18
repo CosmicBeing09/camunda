@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -172,7 +172,7 @@ public final class MessageStartEventSubscriptionTest {
   public void
       shouldResolveCorrelationKeyDefinedInMessageWhenOpeningSubscriptionForEventSubprocess() {
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "subprocess",
                 s ->
@@ -215,7 +215,7 @@ public final class MessageStartEventSubscriptionTest {
   public void
       shouldResolveCorrelationKeyDefinedByOutputMappingInMessageStartEventWhenOpeningSubscriptionForEventSubprocess() {
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "subprocess",
                 s ->
@@ -259,7 +259,7 @@ public final class MessageStartEventSubscriptionTest {
   public void
       shouldResolveCorrelationKeyDefinedByOutputMappingInNoneStartEventWhenOpeningSubscriptionForEventSubprocess() {
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "subprocess",
                 s ->
@@ -311,7 +311,7 @@ public final class MessageStartEventSubscriptionTest {
   }
 
   private static BpmnModelInstance createProcessWithOneMessageStartEvent() {
-    return Bpmn.createExecutableProcess("processId")
+    return BpmnModelApi.createExecutableProcess("processId")
         .startEvent(EVENT_ID1)
         .message(m -> m.name(MESSAGE_NAME1).id("startmsgId"))
         .endEvent()
@@ -319,7 +319,7 @@ public final class MessageStartEventSubscriptionTest {
   }
 
   private static BpmnModelInstance createProcessWithTwoMessageStartEvent() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("processId");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("processId");
     process.startEvent(EVENT_ID1).message(m -> m.name(MESSAGE_NAME1).id("startmsgId1")).endEvent();
     process.startEvent(EVENT_ID2).message(m -> m.name(MESSAGE_NAME2).id("startmsgId2")).endEvent();
 

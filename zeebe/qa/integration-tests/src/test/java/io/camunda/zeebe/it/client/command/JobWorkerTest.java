@@ -14,7 +14,7 @@ import io.camunda.client.api.worker.JobWorker;
 import io.camunda.client.api.worker.JobWorkerBuilderStep1.JobWorkerBuilderStep3;
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.RecordingJobHandler;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -76,7 +76,7 @@ final class JobWorkerTest {
   void shouldActivateJob(final BiFunction<String, JobWorkerBuilderStep3, JobWorker> configurator) {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -229,7 +229,7 @@ final class JobWorkerTest {
       final BiFunction<String, JobWorkerBuilderStep3, JobWorker> configurator) {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -318,7 +318,7 @@ final class JobWorkerTest {
     private final String uniqueId = Strings.newRandomValidBpmnId();
     private final CountDownLatch latch = new CountDownLatch(1);
     private final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(uniqueId)
+        BpmnModelApi.createExecutableProcess(uniqueId)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType(uniqueId))
             .endEvent()

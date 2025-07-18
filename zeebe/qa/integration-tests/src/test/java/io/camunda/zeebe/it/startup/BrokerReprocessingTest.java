@@ -20,7 +20,7 @@ import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -55,20 +55,20 @@ public final class BrokerReprocessingTest {
   private static final String PROCESS_ID = "process";
   private static final String NULL_VARIABLES = "{}";
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .serviceTask("task", t -> t.zeebeJobType("foo"))
           .endEvent("end")
           .done();
   private static final BpmnModelInstance PROCESS_TWO_TASKS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .serviceTask("task1", t -> t.zeebeJobType("foo"))
           .serviceTask("task2", t -> t.zeebeJobType("bar"))
           .endEvent("end")
           .done();
   private static final BpmnModelInstance PROCESS_INCIDENT =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .exclusiveGateway("gateway")
           .sequenceFlowId("to-a")
@@ -80,7 +80,7 @@ public final class BrokerReprocessingTest {
           .endEvent("b")
           .done();
   private static final BpmnModelInstance PROCESS_MESSAGE =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent("catch-event")
           .message(m -> m.name("order canceled").zeebeCorrelationKeyExpression("orderId"))
@@ -88,7 +88,7 @@ public final class BrokerReprocessingTest {
           .endEvent()
           .done();
   private static final BpmnModelInstance PROCESS_TIMER =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT10S"))
           .endEvent()

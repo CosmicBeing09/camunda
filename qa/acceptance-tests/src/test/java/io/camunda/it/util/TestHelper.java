@@ -342,7 +342,7 @@ public final class TestHelper {
                       .newUserTaskSearchRequest()
                       .filter(
                           f ->
-                              f.state(UserTaskState.CREATED)
+                              f.status(UserTaskState.CREATED)
                                   .processInstanceVariables(getScopedVariables(testScopeId)))
                       .send()
                       .join()

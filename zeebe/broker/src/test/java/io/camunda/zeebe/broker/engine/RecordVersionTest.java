@@ -10,7 +10,7 @@ package io.camunda.zeebe.broker.engine;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -43,7 +43,7 @@ public final class RecordVersionTest {
   @Test
   public void deploymentRecordsShouldHaveBrokerVersion() {
     // given
-    final var process = Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
 
     deployProcess(process);
 
@@ -62,7 +62,7 @@ public final class RecordVersionTest {
   @Test
   public void processInstanceRecordsShouldHaveBrokerVersion() {
     // given
-    final var process = Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
 
     deployProcess(process);
     final var processInstanceKey = createProcessInstance(PROCESS_ID);
@@ -77,7 +77,7 @@ public final class RecordVersionTest {
   public void messageSubscriptionRecordsShouldHaveBrokerVersion() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .intermediateCatchEvent(
                 "catch", e -> e.message(m -> m.name("test").zeebeCorrelationKeyExpression("123")))
@@ -107,7 +107,7 @@ public final class RecordVersionTest {
 
   private void deployProcess(final BpmnModelInstance process) {
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, process);
+    BpmnModelApi.writeModelToStream(outStream, process);
     final byte[] resource = outStream.toByteArray();
 
     API_RULE

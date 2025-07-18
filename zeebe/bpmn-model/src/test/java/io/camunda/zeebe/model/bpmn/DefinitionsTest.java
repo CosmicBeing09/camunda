@@ -72,7 +72,7 @@ public class DefinitionsTest extends BpmnModelTest {
   @Test
   public void shouldNotImportWrongOrderedSequence() {
     try {
-      Bpmn.readModelFromStream(
+      BpmnModelApi.readModelFromStream(
           getClass()
               .getResourceAsStream("DefinitionsTest.shouldNotImportWrongOrderedSequence.bpmn"));
       Assert.fail("Model is invalid and should not pass the validation");
@@ -84,7 +84,7 @@ public class DefinitionsTest extends BpmnModelTest {
   @Test
   public void shouldAddChildElementsInCorrectOrder() {
     // create an empty model
-    final BpmnModelInstance bpmnModelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance bpmnModelInstance = BpmnModelApi.createEmptyModel();
 
     // add definitions
     final Definitions definitions = bpmnModelInstance.newInstance(Definitions.class);
@@ -117,7 +117,7 @@ public class DefinitionsTest extends BpmnModelTest {
 
     // validate model
     try {
-      Bpmn.validateModel(bpmnModelInstance);
+      BpmnModelApi.validateModel(bpmnModelInstance);
     } catch (final ModelValidationException e) {
       Assert.fail();
     }
@@ -143,14 +143,14 @@ public class DefinitionsTest extends BpmnModelTest {
 
     // validate model
     try {
-      Bpmn.validateModel(bpmnModelInstance);
+      BpmnModelApi.validateModel(bpmnModelInstance);
     } catch (final ModelValidationException e) {
       Assert.fail();
     }
 
     // convert the model to the XML string representation
     final OutputStream outputStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outputStream, bpmnModelInstance);
+    BpmnModelApi.writeModelToStream(outputStream, bpmnModelInstance);
     InputStream inputStream = IoUtil.convertOutputStreamToInputStream(outputStream);
     final String modelString = IoUtil.getStringFromInputStream(inputStream);
     IoUtil.closeSilently(outputStream);
@@ -169,7 +169,7 @@ public class DefinitionsTest extends BpmnModelTest {
   @Test
   public void shouldAddMessageAndMessageEventDefinition() {
     // create empty model
-    final BpmnModelInstance bpmnModelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance bpmnModelInstance = BpmnModelApi.createEmptyModel();
 
     // add definitions to model
     final Definitions definitions = bpmnModelInstance.newInstance(Definitions.class);
@@ -234,7 +234,7 @@ public class DefinitionsTest extends BpmnModelTest {
 
     // validate model
     try {
-      Bpmn.validateModel(bpmnModelInstance);
+      BpmnModelApi.validateModel(bpmnModelInstance);
     } catch (final ModelValidationException e) {
       Assert.fail();
     }
@@ -243,7 +243,7 @@ public class DefinitionsTest extends BpmnModelTest {
   @Test
   public void shouldAddParentChildElementInCorrectOrder() {
     // create empty model
-    final BpmnModelInstance bpmnModelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance bpmnModelInstance = BpmnModelApi.createEmptyModel();
 
     // add definitions to model
     final Definitions definitions = bpmnModelInstance.newInstance(Definitions.class);
@@ -282,7 +282,7 @@ public class DefinitionsTest extends BpmnModelTest {
 
     // validate model
     try {
-      Bpmn.validateModel(bpmnModelInstance);
+      BpmnModelApi.validateModel(bpmnModelInstance);
     } catch (final ModelValidationException e) {
       Assert.fail();
     }

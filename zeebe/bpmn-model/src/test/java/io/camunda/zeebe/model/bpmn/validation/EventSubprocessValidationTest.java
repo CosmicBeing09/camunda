@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
@@ -59,7 +59,7 @@ class EventSubprocessValidationTest {
                 .compensateEventDefinitionDone();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(SUBPROCESS_ID, eventSubprocessBuilder)
             .startEvent()
             .endEvent()
@@ -88,7 +88,7 @@ class EventSubprocessValidationTest {
                 .compensateEventDefinitionDone();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess()
             .embeddedSubProcess()
@@ -110,7 +110,7 @@ class EventSubprocessValidationTest {
   void conditionalStartEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 SUBPROCESS_ID, eventSubprocess -> eventSubprocess.startEvent().condition("true"))
             .startEvent()
@@ -131,7 +131,7 @@ class EventSubprocessValidationTest {
   void withoutStartEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(SUBPROCESS_ID, eventSubprocess -> {})
             .startEvent()
             .endEvent()
@@ -147,7 +147,7 @@ class EventSubprocessValidationTest {
   void multipleStartEvents() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 SUBPROCESS_ID,
                 eventSubprocess -> {
@@ -166,7 +166,7 @@ class EventSubprocessValidationTest {
   private BpmnModelInstance process(final BpmnElementBuilder elementBuilder) {
 
     final AbstractFlowNodeBuilder<?, ?> processBuilder =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent();
 
     return elementBuilder.build(processBuilder).done();
   }

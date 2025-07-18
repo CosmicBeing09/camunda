@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -32,7 +32,7 @@ public final class ProcessInstanceVariableTest {
   public static final String PROCESS_ID = "process";
   @ClassRule public static final EngineRule ENGINE_RULE = EngineRule.singlePartition();
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test"))
           .endEvent()
@@ -111,7 +111,7 @@ public final class ProcessInstanceVariableTest {
         ENGINE_RULE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("shouldCreateVariableByOutputMapping")
+                BpmnModelApi.createExecutableProcess("shouldCreateVariableByOutputMapping")
                     .startEvent()
                     .serviceTask(
                         "task", t -> t.zeebeJobType("test").zeebeOutputExpression("x", "y"))
@@ -234,7 +234,7 @@ public final class ProcessInstanceVariableTest {
         ENGINE_RULE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("shouldUpdateVariableByOutputMapping")
+                BpmnModelApi.createExecutableProcess("shouldUpdateVariableByOutputMapping")
                     .startEvent()
                     .serviceTask(
                         "task", t -> t.zeebeJobType("test").zeebeOutputExpression("x", "y"))

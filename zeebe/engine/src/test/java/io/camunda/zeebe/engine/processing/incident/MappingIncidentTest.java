@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -39,14 +39,14 @@ public final class MappingIncidentTest {
 
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final BpmnModelInstance PROCESS_INPUT_MAPPING =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent()
           .serviceTask(
               "failingTask",
               t -> t.zeebeJobType("test").zeebeInputExpression("assert(foo, foo != null)", "foo"))
           .done();
   private static final BpmnModelInstance PROCESS_OUTPUT_MAPPING =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent()
           .serviceTask(
               "failingTask",
@@ -114,7 +114,7 @@ public final class MappingIncidentTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask(
                     "service",
@@ -291,7 +291,7 @@ public final class MappingIncidentTest {
   public void shouldCreateNewIncidentAfterResolvedFirstOne() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "failingTask",

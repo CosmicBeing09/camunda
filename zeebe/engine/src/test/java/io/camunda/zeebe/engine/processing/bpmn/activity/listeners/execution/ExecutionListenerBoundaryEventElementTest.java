@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ExpectedValidationResult;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ProcessValidationUtil;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AbstractActivityBuilder;
 import io.camunda.zeebe.model.bpmn.builder.BoundaryEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
@@ -129,7 +129,7 @@ public class ExecutionListenerBoundaryEventElementTest {
       final var modelInstance =
           scenario
               .processBuilder
-              .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+              .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
               .boundaryEvent(
                   boundaryEventElemId, b -> scenario.boundaryEventBuilderFunction.apply(b))
               .zeebeEndExecutionListener(END_EL_TYPE + "_1")
@@ -180,7 +180,7 @@ public class ExecutionListenerBoundaryEventElementTest {
       final var modelInstance =
           scenario
               .processBuilder
-              .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+              .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
               .boundaryEvent(scenario.name, b -> scenario.boundaryEventBuilderFunction.apply(b))
               .zeebeEndExecutionListener(END_EL_TYPE)
               .serviceTask(
@@ -222,7 +222,7 @@ public class ExecutionListenerBoundaryEventElementTest {
       final var modelInstance =
           scenario
               .processBuilder
-              .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+              .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
               .boundaryEvent(
                   boundaryEventElemId, b -> scenario.boundaryEventBuilderFunction.apply(b))
               .zeebeStartExecutionListener(START_EL_TYPE)
@@ -245,7 +245,7 @@ public class ExecutionListenerBoundaryEventElementTest {
       final var modelInstance =
           scenario
               .processBuilder
-              .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+              .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
               .boundaryEvent("boundary", b -> scenario.boundaryEventBuilderFunction.apply(b))
               .zeebeEndExecutionListener(END_EL_TYPE)
               .endEvent("boundary_end")
@@ -310,7 +310,7 @@ public class ExecutionListenerBoundaryEventElementTest {
     public void shouldNotDeployProcessWithCompensationBoundaryEventWithExecutionListeners() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .serviceTask("service_task", t -> t.zeebeJobType(SERVICE_TASK_TYPE))
               .boundaryEvent(

@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import org.junit.runners.Parameterized.Parameters;
 
 public class ZeebeGatewayValidationTest extends AbstractZeebeValidationTest {
@@ -27,7 +27,7 @@ public class ZeebeGatewayValidationTest extends AbstractZeebeValidationTest {
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .exclusiveGateway("gateway")
             .sequenceFlowId("flow1")
@@ -40,7 +40,7 @@ public class ZeebeGatewayValidationTest extends AbstractZeebeValidationTest {
         singletonList(expect("flow1", "Must have a condition or be default flow"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .inclusiveGateway("gateway")
             .sequenceFlowId("flow1")
@@ -58,7 +58,7 @@ public class ZeebeGatewayValidationTest extends AbstractZeebeValidationTest {
         singletonList(expect("inclusiveGateway", "Default flow must start at gateway"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .conditionExpression("foo")
