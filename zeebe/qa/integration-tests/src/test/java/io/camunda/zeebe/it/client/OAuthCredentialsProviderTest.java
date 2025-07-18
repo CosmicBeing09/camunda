@@ -130,8 +130,8 @@ final class OAuthCredentialsProviderTest {
     private String value;
 
     @Override
-    public void put(final String key, final String value) {
-      this.key = key;
+    public void put(final String credentialKey, final String value) {
+      key = credentialKey;
       this.value = value;
     }
 

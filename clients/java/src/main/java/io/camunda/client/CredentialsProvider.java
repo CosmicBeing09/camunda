@@ -58,10 +58,10 @@ public interface CredentialsProvider {
      * Puts the given header key and value into the request headers (e.g. HTTP headers or gRPC
      * metadata).
      *
-     * @param key the header key
+     * @param credentialKey the header key
      * @param value the header value
      */
-    void put(final String key, final String value);
+    void put(final String credentialKey, final String value);
 
     /**
      * Helper method to build a credentials applier out of gRPC metadata.
