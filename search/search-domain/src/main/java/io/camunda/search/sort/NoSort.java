@@ -14,7 +14,7 @@ public class NoSort implements SortOption {
   public static final NoSort NO_SORT = new NoSort();
 
   @Override
-  public List<FieldSorting> getFieldSortings() {
+  public List<FieldSorting> getOrders() {
     return List.of();
   }
 }

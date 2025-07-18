@@ -97,7 +97,7 @@ public class TypedSearchQueryTransformer<F extends FilterBase, S extends SortOpt
   }
 
   private List<SearchSortOptions> toSearchSortOptions(final S sort, final boolean reverse) {
-    final var orderings = sort.getFieldSortings();
+    final var orderings = sort.getOrders();
     final var sortingTransformer = getSortingTransformer(sort.getClass());
     return sortingTransformer.apply(Tuple.of(orderings, reverse));
   }

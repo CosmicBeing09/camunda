@@ -55,7 +55,7 @@ abstract class AbstractEntityReader<T> {
     final var builder = new DbQuerySorting.Builder<T>();
     final var discriminatorColumnList = new ArrayList<>(Arrays.asList(discriminatorColumns));
 
-    for (final FieldSorting fieldSorting : sortOption.getFieldSortings()) {
+    for (final FieldSorting fieldSorting : sortOption.getOrders()) {
       final var column = getSearchColumn(fieldSorting.field());
 
       // remove the column from the discriminator list to not sort double
