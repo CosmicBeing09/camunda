@@ -102,7 +102,7 @@ public class HistoryCleanupIT {
     final Long processInstanceKey =
         ProcessInstanceFixtures.createAndSaveRandomProcessInstance(
                 rdbmsService.createWriter(0), b -> b)
-            .processInstanceKey();
+            .key();
 
     ElementInstanceFixtures.createAndSaveRandomElementInstances(
         rdbmsWriter, b -> b.processInstanceKey(processInstanceKey));
