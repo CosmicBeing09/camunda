@@ -36,22 +36,22 @@ import org.springframework.stereotype.Component;
 
 @Component("process-migrator")
 @EnableConfigurationProperties(ProcessMigrationProperties.class)
-public class ProcessMigrator implements Migrator {
+public class BatchProcessMigrator implements Migrator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ProcessMigrator.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BatchProcessMigrator.class);
 
-  private final ProcessMigrationAdapter adapter;
+  private final ProcessMigrationAdapter processMigrationAdapter;
   private final ProcessMigrationProperties properties;
   private ScheduledFuture<?> countdownTask;
   private final ScheduledExecutorService scheduler;
   private final MetricRegistry metricRegistry;
 
-  public ProcessMigrator(
+  public BatchProcessMigrator(
       final ProcessMigrationProperties properties,
       final ConnectConfiguration connect,
       final MeterRegistry meterRegistry) {
     this.properties = properties;
-    adapter =
+    processMigrationAdapter =
         connect.getTypeEnum().isElasticSearch()
             ? new ElasticsearchAdapter(properties, connect)
             : new OpensearchAdapter(properties, connect);
@@ -63,8 +63,8 @@ public class ProcessMigrator implements Migrator {
   public Void call() {
     LOG.info("Process Migration started");
     try {
-      String lastMigratedProcessDefinitionKey = adapter.readLastMigratedEntity();
-      List<ProcessEntity> items = adapter.nextBatch(lastMigratedProcessDefinitionKey);
+      String lastMigratedProcessDefinitionKey = processMigrationAdapter.readLastMigratedEntity();
+      List<ProcessEntity> items = processMigrationAdapter.nextBatch(lastMigratedProcessDefinitionKey);
       while (shouldContinue(items)) {
         if (!items.isEmpty()) {
           final List<ProcessEntity> finalItems = items;
@@ -81,7 +81,7 @@ public class ProcessMigrator implements Migrator {
           startCountdown();
         }
         delayNextRound();
-        items = adapter.nextBatch(lastMigratedProcessDefinitionKey);
+        items = processMigrationAdapter.nextBatch(lastMigratedProcessDefinitionKey);
       }
     } catch (final Exception e) {
       terminate(scheduler);
@@ -116,9 +116,9 @@ public class ProcessMigrator implements Migrator {
                   }
                 })
             .toList();
-    final String lastMigratedProcessDefinitionKey = adapter.migrate(updatedProcesses);
+    final String lastMigratedProcessDefinitionKey = processMigrationAdapter.migrate(updatedProcesses);
     if (lastMigratedProcessDefinitionKey != null) {
-      adapter.writeLastMigratedEntity(lastMigratedProcessDefinitionKey);
+      processMigrationAdapter.writeLastMigratedEntity(lastMigratedProcessDefinitionKey);
     }
     return lastMigratedProcessDefinitionKey;
   }
@@ -138,20 +138,20 @@ public class ProcessMigrator implements Migrator {
   private void startCountdown() {
     LOG.info(
         "Importer finished, migration will keep running for {}",
-        properties.getImporterFinishedTimeout());
+        properties.getImporterCompletionTimeout());
     countdownTask =
         scheduler.schedule(
             () ->
                 LOG.info(
                     "Importer countdown finished. If more records are present the migration will keep running."),
-            properties.getImporterFinishedTimeout().getSeconds(),
+            properties.getImporterCompletionTimeout().getSeconds(),
             TimeUnit.SECONDS);
   }
 
   private boolean isImporterFinished() {
     final Set<ImportPositionEntity> importPositions;
     try {
-      importPositions = adapter.readImportPosition();
+      importPositions = processMigrationAdapter.readImportPosition();
       return !importPositions.isEmpty()
           && importPositions.stream().allMatch(ImportPositionEntity::getCompleted);
     } catch (final MigrationException e) {
@@ -171,7 +171,7 @@ public class ProcessMigrator implements Migrator {
   private void terminate(final ScheduledExecutorService scheduler) {
     scheduler.shutdown();
     try {
-      adapter.close();
+      processMigrationAdapter.close();
     } catch (final IOException e) {
       LOG.error("Failed to close adapter", e);
     }

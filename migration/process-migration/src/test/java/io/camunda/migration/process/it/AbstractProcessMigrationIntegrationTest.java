@@ -21,7 +21,7 @@ import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.camunda.migration.process.ProcessMigrator;
+import io.camunda.migration.process.BatchProcessMigrator;
 import io.camunda.migration.process.TestData;
 import io.camunda.migration.process.adapter.MigrationProcessorStep;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
@@ -66,8 +66,8 @@ public abstract class AbstractProcessMigrationIntegrationTest {
   protected static OpenSearchClient osClient;
   protected static final ConnectConfiguration elasticsearchConfig = new ConnectConfiguration();
   protected static final ConnectConfiguration openSearchConfig = new ConnectConfiguration();
-  protected static ProcessMigrator osMigrator;
-  protected static ProcessMigrator esMigrator;
+  protected static BatchProcessMigrator osMigrator;
+  protected static BatchProcessMigrator esMigrator;
 
   protected static MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
@@ -100,8 +100,8 @@ public abstract class AbstractProcessMigrationIntegrationTest {
     final var osConnector = new OpensearchConnector(openSearchConfig);
     osObjectMapper = osConnector.objectMapper();
     osClient = osConnector.createClient();
-    esMigrator = new ProcessMigrator(properties, elasticsearchConfig, meterRegistry);
-    osMigrator = new ProcessMigrator(properties, openSearchConfig, meterRegistry);
+    esMigrator = new BatchProcessMigrator(properties, elasticsearchConfig, meterRegistry);
+    osMigrator = new BatchProcessMigrator(properties, openSearchConfig, meterRegistry);
     createIndices();
   }
 
@@ -134,7 +134,7 @@ public abstract class AbstractProcessMigrationIntegrationTest {
   public void cleanUp() throws IOException {
     properties.setBatchSize(5);
     if (isElasticsearch) {
-      esMigrator = new ProcessMigrator(properties, elasticsearchConfig, meterRegistry);
+      esMigrator = new BatchProcessMigrator(properties, elasticsearchConfig, meterRegistry);
       elasticsearchClient.deleteByQuery(
           DeleteByQueryRequest.of(
               d ->
@@ -148,7 +148,7 @@ public abstract class AbstractProcessMigrationIntegrationTest {
       elasticsearchClient.indices().refresh();
 
     } else {
-      osMigrator = new ProcessMigrator(properties, openSearchConfig, meterRegistry);
+      osMigrator = new BatchProcessMigrator(properties, openSearchConfig, meterRegistry);
       osClient.deleteByQuery(
           org.opensearch.client.opensearch.core.DeleteByQueryRequest.of(
               d ->

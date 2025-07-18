@@ -15,7 +15,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class ProcessMigrationProperties {
 
   private int batchSize = 20;
-  private Duration importerFinishedTimeout = Duration.ofMinutes(1);
+  private Duration importerCompletionTimeout = Duration.ofMinutes(1);
   private ProcessMigrationRetryConfiguration retry = new ProcessMigrationRetryConfiguration();
 
   public int getBatchSize() {
@@ -26,12 +26,12 @@ public class ProcessMigrationProperties {
     this.batchSize = batchSize;
   }
 
-  public Duration getImporterFinishedTimeout() {
-    return importerFinishedTimeout;
+  public Duration getImporterCompletionTimeout() {
+    return importerCompletionTimeout;
   }
 
   public void setImporterFinishedTimeout(final Duration importerFinishedTimeout) {
-    this.importerFinishedTimeout = importerFinishedTimeout;
+    importerCompletionTimeout = importerFinishedTimeout;
   }
 
   public ProcessMigrationRetryConfiguration getRetry() {

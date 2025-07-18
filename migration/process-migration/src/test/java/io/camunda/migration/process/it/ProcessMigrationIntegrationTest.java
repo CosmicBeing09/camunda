@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.camunda.migration.api.MigrationException;
-import io.camunda.migration.process.ProcessMigrator;
+import io.camunda.migration.process.BatchProcessMigrator;
 import io.camunda.migration.process.TestData;
 import io.camunda.migration.process.adapter.MigrationProcessorStep;
 import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
@@ -352,8 +352,8 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
 
     // when
     Awaitility.await()
-        .atMost(Duration.ofSeconds(properties.getImporterFinishedTimeout().getSeconds() * 2))
-        .atLeast(properties.getImporterFinishedTimeout())
+        .atMost(Duration.ofSeconds(properties.getImporterCompletionTimeout().getSeconds() * 2))
+        .atLeast(properties.getImporterCompletionTimeout())
         .until(
             () -> {
               runMigration();
@@ -382,7 +382,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     }
     // invalid URL
     connectConfiguration.setUrl("http://localhost:3333");
-    final var migrator = new ProcessMigrator(properties, connectConfiguration, meterRegistry);
+    final var migrator = new BatchProcessMigrator(properties, connectConfiguration, meterRegistry);
     properties.getRetry().setMaxRetries(2);
     properties.getRetry().setMinRetryDelay(Duration.ofSeconds(1));
 
