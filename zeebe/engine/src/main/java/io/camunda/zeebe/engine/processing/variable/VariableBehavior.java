@@ -192,8 +192,8 @@ public final class VariableBehavior {
     final VariableInstance variableInstance =
         variableState.getVariableInstanceLocal(record.getScopeKey(), record.getNameBuffer());
     if (variableInstance == null) {
-      final long key = keyGenerator.nextKey();
-      stateWriter.appendFollowUpEvent(key, VariableIntent.CREATED, record);
+      final long variableKey = keyGenerator.nextKey();
+      stateWriter.appendFollowUpEvent(variableKey, VariableIntent.CREATED, record);
     } else if (!variableInstance.getValue().equals(record.getValueBuffer())) {
       stateWriter.appendFollowUpEvent(variableInstance.getKey(), VariableIntent.UPDATED, record);
     }
