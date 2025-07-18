@@ -39,7 +39,7 @@ final class OAuthCredentialsProviderTest {
   private static final Network NETWORK = Network.newNetwork();
 
   @Container
-  private static final GenericContainer<?> OAUTH_CONTAINER =
+  private static final GenericContainer<?> oauthContainer =
       new GenericContainer<>(DockerImageName.parse("oryd/hydra:v1.11"))
           .withEnv("DSN", "memory")
           .withEnv("STRATEGIES_ACCESS_TOKEN", "jwt")
@@ -48,7 +48,7 @@ final class OAuthCredentialsProviderTest {
           .withCommand("serve all --dangerous-force-http")
           .withNetwork(NETWORK);
 
-  private final TestCredentialsApplier applier = new TestCredentialsApplier();
+  private final TestCredentialsApplier credentialsApplier = new TestCredentialsApplier();
   private final Identity identity =
       new Identity(
           new IdentityConfiguration(
@@ -77,12 +77,12 @@ final class OAuthCredentialsProviderTest {
             .build();
 
     // when
-    credentialsProvider.applyCredentials(applier);
+    credentialsProvider.applyCredentials(credentialsApplier);
 
     // then
-    assertThat(applier.header()).isEqualTo("Authorization");
-    assertThat(applier.tokenType()).isEqualTo("Bearer");
-    identity.authentication().verifyToken(applier.token());
+    assertThat(credentialsApplier.header()).isEqualTo("Authorization");
+    assertThat(credentialsApplier.tokenType()).isEqualTo("Bearer");
+    identity.authentication().verifyToken(credentialsApplier.token());
   }
 
   private static void ensureOAuthClientExists() throws IOException, InterruptedException {
@@ -114,14 +114,14 @@ final class OAuthCredentialsProviderTest {
   private String getAuthUrl(final String path) {
     return String.format(
         "http://%s:%d/%s",
-        OAUTH_CONTAINER.getHost(), OAUTH_CONTAINER.getMappedPort(PUBLIC_PORT), path);
+        oauthContainer.getHost(), oauthContainer.getMappedPort(PUBLIC_PORT), path);
   }
 
   private static URI getAdminEndpoint(final String path) {
     final var endpoint =
         String.format(
             "http://%s:%d/%s",
-            OAUTH_CONTAINER.getHost(), OAUTH_CONTAINER.getMappedPort(ADMIN_PORT), path);
+            oauthContainer.getHost(), oauthContainer.getMappedPort(ADMIN_PORT), path);
     return URI.create(endpoint);
   }
 
