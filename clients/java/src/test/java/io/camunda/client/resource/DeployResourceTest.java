@@ -113,7 +113,7 @@ public final class DeployResourceTest extends ClientTest {
     final byte[] bytes = getBytes(filename);
 
     // when
-    client.newDeployResourceCommand().addResourceBytes(bytes, filename).send().join();
+    client.newDeployResourceCommand().addBytes(bytes, filename).send().join();
 
     // then
     final DeployResourceRequest request = gatewayService.getLastRequest();
@@ -131,7 +131,7 @@ public final class DeployResourceTest extends ClientTest {
     // when
     client
         .newDeployResourceCommand()
-        .addResourceString(xml, StandardCharsets.UTF_8, filename)
+        .addString(xml, StandardCharsets.UTF_8, filename)
         .send()
         .join();
 
