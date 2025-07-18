@@ -29,8 +29,8 @@ import org.slf4j.Logger;
 public class DbDistributionState implements MutableDistributionState {
   private static final Logger LOG = Loggers.STREAM_PROCESSING;
 
-  private final DbLong distributionKey;
-  private final DbInt partitionKey;
+  private final DbLong commandDistributionKey;
+  private final DbInt partitionIdKey;
   private final DbCompositeKey<DbForeignKey<DbLong>, DbInt> distributionPartitionKey;
 
   /** [distribution key | partition id] => [DbNil] */
@@ -64,18 +64,18 @@ public class DbDistributionState implements MutableDistributionState {
 
   public DbDistributionState(
       final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
-    distributionKey = new DbLong();
+    commandDistributionKey = new DbLong();
     final DbForeignKey<DbLong> fkDistribution =
-        new DbForeignKey<>(distributionKey, ZbColumnFamilies.COMMAND_DISTRIBUTION_RECORD);
+        new DbForeignKey<>(commandDistributionKey, ZbColumnFamilies.COMMAND_DISTRIBUTION_RECORD);
     commandDistributionRecordColumnFamily =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.COMMAND_DISTRIBUTION_RECORD,
             transactionContext,
-            distributionKey,
+            commandDistributionKey,
             new PersistedCommandDistribution());
 
-    partitionKey = new DbInt();
-    distributionPartitionKey = new DbCompositeKey<>(fkDistribution, partitionKey);
+    partitionIdKey = new DbInt();
+    distributionPartitionKey = new DbCompositeKey<>(fkDistribution, partitionIdKey);
     pendingDistributionColumnFamily =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.PENDING_DISTRIBUTION,
@@ -91,9 +91,9 @@ public class DbDistributionState implements MutableDistributionState {
             DbNil.INSTANCE);
 
     queueId = new DbString();
-    queuePerPartitionKey = new DbCompositeKey<>(queueId, partitionKey);
+    queuePerPartitionKey = new DbCompositeKey<>(queueId, partitionIdKey);
     queuedDistributionKey =
-        new DbCompositeKey<>(queueId, new DbCompositeKey<>(partitionKey, fkDistribution));
+        new DbCompositeKey<>(queueId, new DbCompositeKey<>(partitionIdKey, fkDistribution));
     queuedCommandDistributionColumnFamily =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.QUEUED_DISTRIBUTION,
@@ -114,42 +114,42 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public void addCommandDistribution(
       final long distributionKey, final CommandDistributionRecord commandDistributionRecord) {
-    this.distributionKey.wrapLong(distributionKey);
+    commandDistributionKey.wrapLong(distributionKey);
     commandDistributionRecordColumnFamily.insert(
-        this.distributionKey, new PersistedCommandDistribution().wrap(commandDistributionRecord));
+        commandDistributionKey, new PersistedCommandDistribution().wrap(commandDistributionRecord));
   }
 
   @Override
   public void removeCommandDistribution(final long distributionKey) {
-    this.distributionKey.wrapLong(distributionKey);
-    commandDistributionRecordColumnFamily.deleteIfExists(this.distributionKey);
+    commandDistributionKey.wrapLong(distributionKey);
+    commandDistributionRecordColumnFamily.deleteIfExists(commandDistributionKey);
   }
 
   @Override
   public void addRetriableDistribution(final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     retriableDistributionColumnFamily.insert(distributionPartitionKey, DbNil.INSTANCE);
   }
 
   @Override
   public void removeRetriableDistribution(final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     retriableDistributionColumnFamily.deleteExisting(distributionPartitionKey);
   }
 
   @Override
   public void addPendingDistribution(final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     pendingDistributionColumnFamily.upsert(distributionPartitionKey, DbNil.INSTANCE);
   }
 
   @Override
   public void removePendingDistribution(final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     pendingDistributionColumnFamily.deleteExisting(distributionPartitionKey);
   }
 
@@ -157,8 +157,8 @@ public class DbDistributionState implements MutableDistributionState {
   public void enqueueCommandDistribution(
       final String queue, final long distributionKey, final int partition) {
     queueId.wrapString(queue);
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     queuedCommandDistributionColumnFamily.insert(queuedDistributionKey, DbNil.INSTANCE);
   }
 
@@ -166,8 +166,8 @@ public class DbDistributionState implements MutableDistributionState {
   public void removeQueuedDistribution(
       final String queue, final int partition, final long distributionKey) {
     queueId.wrapString(queue);
-    partitionKey.wrapInt(partition);
-    this.distributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
     queuedCommandDistributionColumnFamily.deleteExisting(queuedDistributionKey);
   }
 
@@ -191,11 +191,11 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public boolean hasRetriableDistribution(final long distributionKey) {
-    this.distributionKey.wrapLong(distributionKey);
+    commandDistributionKey.wrapLong(distributionKey);
 
     final var hasRetriable = new MutableBoolean();
     retriableDistributionColumnFamily.whileEqualPrefix(
-        this.distributionKey,
+        commandDistributionKey,
         (compositeKey, dbNil) -> {
           hasRetriable.set(true);
           return false;
@@ -206,11 +206,11 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public boolean hasPendingDistribution(final long distributionKey) {
-    this.distributionKey.wrapLong(distributionKey);
+    commandDistributionKey.wrapLong(distributionKey);
 
     final var hasPending = new MutableBoolean();
     pendingDistributionColumnFamily.whileEqualPrefix(
-        this.distributionKey,
+        commandDistributionKey,
         (compositeKey, dbNil) -> {
           hasPending.set(true);
           return false;
@@ -221,25 +221,25 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public boolean hasRetriableDistribution(final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     return retriableDistributionColumnFamily.exists(distributionPartitionKey);
   }
 
   @Override
   public boolean hasPendingDistribution(final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
-    partitionKey.wrapInt(partition);
+    commandDistributionKey.wrapLong(distributionKey);
+    partitionIdKey.wrapInt(partition);
     return pendingDistributionColumnFamily.exists(distributionPartitionKey);
   }
 
   @Override
   public CommandDistributionRecord getCommandDistributionRecord(
       final long distributionKey, final int partition) {
-    this.distributionKey.wrapLong(distributionKey);
+    commandDistributionKey.wrapLong(distributionKey);
 
     final var persistedDistribution =
-        commandDistributionRecordColumnFamily.get(this.distributionKey);
+        commandDistributionRecordColumnFamily.get(commandDistributionKey);
 
     if (persistedDistribution == null) {
       return null;
@@ -256,7 +256,7 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public void foreachCommandDistribution(final CommandDistributionVisitor visitor) {
     commandDistributionRecordColumnFamily.whileTrue(
-        (compositeKey, record) -> visitor.visit(distributionKey.getValue(), record));
+        (compositeKey, record) -> visitor.visit(commandDistributionKey.getValue(), record));
   }
 
   @Override
@@ -327,7 +327,7 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public Optional<Long> getNextQueuedDistributionKey(final String queue, final int partition) {
     queueId.wrapString(queue);
-    partitionKey.wrapInt(partition);
+    partitionIdKey.wrapInt(partition);
     final var nextDistributionKey = new MutableReference<Long>(null);
     queuedCommandDistributionColumnFamily.whileEqualPrefix(
         queuePerPartitionKey,
@@ -340,9 +340,9 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public Optional<String> getQueueIdForDistribution(final long distributionKey) {
-    this.distributionKey.wrapLong(distributionKey);
+    commandDistributionKey.wrapLong(distributionKey);
 
-    return Optional.ofNullable(commandDistributionRecordColumnFamily.get(this.distributionKey))
+    return Optional.ofNullable(commandDistributionRecordColumnFamily.get(commandDistributionKey))
         .flatMap(PersistedCommandDistribution::getQueueId);
   }
 
