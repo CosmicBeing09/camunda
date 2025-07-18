@@ -47,9 +47,9 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
 
   @Override
   public SearchQuery toSearchQuery(final IncidentFilter filter) {
-    final var keyQuery = getKeyQuery(filter.incidentKeyFilters());
+    final var keyQuery = getKeyQuery(filter.incidentKeyOperations());
     final var processDefinitionKeyQuery =
-        getProcessDefinitionKeyQuery(filter.processDefinitionKeyFilters());
+        getProcessDefinitionKeyQuery(filter.processDefinitionKeyOperations());
     final var processDefinitionIdQuery = getProcessDefinitionIds(filter.processDefinitionIdFilters());
     final var processInstanceKeyQuery = getProcessInstanceKeyQuery(filter.processInstanceKeys());
     final var errorTypeQuery = getErrorTypeQuery(filter.errorTypes());
