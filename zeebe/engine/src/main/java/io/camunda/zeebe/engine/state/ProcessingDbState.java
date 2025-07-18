@@ -32,8 +32,8 @@ import io.camunda.zeebe.engine.state.instance.DbElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.DbEventScopeInstanceState;
 import io.camunda.zeebe.engine.state.instance.DbIncidentState;
 import io.camunda.zeebe.engine.state.instance.DbJobState;
+import io.camunda.zeebe.engine.state.instance.DbTaskState;
 import io.camunda.zeebe.engine.state.instance.DbTimerInstanceState;
-import io.camunda.zeebe.engine.state.instance.DbUserTaskState;
 import io.camunda.zeebe.engine.state.message.DbMessageCorrelationState;
 import io.camunda.zeebe.engine.state.message.DbMessageStartEventSubscriptionState;
 import io.camunda.zeebe.engine.state.message.DbMessageState;
@@ -82,7 +82,7 @@ import io.camunda.zeebe.engine.state.signal.DbSignalSubscriptionState;
 import io.camunda.zeebe.engine.state.tenant.DbTenantState;
 import io.camunda.zeebe.engine.state.user.DbUserState;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
 import java.time.InstantSource;
@@ -90,7 +90,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class ProcessingDbState implements MutableAsyncProcessingContext {
-  private final ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private final ZeebeDb<ColumnFamilies> zeebeDb;
   private final KeyGenerator keyGenerator;
   private final MutableProcessState processState;
   private final MutableTimerInstanceState timerInstanceState;
@@ -130,7 +130,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
 
   public ProcessingDbState(
       final int partitionId,
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final KeyGenerator keyGenerator,
       final TransientPendingSubscriptionState transientMessageSubscriptionState,
@@ -167,7 +167,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
     signalSubscriptionState = new DbSignalSubscriptionState(zeebeDb, transactionContext);
     distributionState = new DbDistributionState(zeebeDb, transactionContext);
     mutableMigrationState = new DbMigrationState(zeebeDb, transactionContext);
-    userTaskState = new DbUserTaskState(zeebeDb, transactionContext);
+    userTaskState = new DbTaskState(zeebeDb, transactionContext);
     compensationSubscriptionState =
         new DbCompensationSubscriptionState(zeebeDb, transactionContext);
     userState = new DbUserState(zeebeDb, transactionContext);
@@ -383,7 +383,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
   }
 
   @Override
-  public boolean isEmpty(final ZbColumnFamilies column) {
+  public boolean isEmpty(final ColumnFamilies column) {
     final var newContext = zeebeDb.createContext();
     return zeebeDb.isEmpty(column, newContext);
   }
@@ -401,7 +401,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
    * @param <ValueType> the value type of the column family
    */
   public <KeyType extends DbKey, ValueType extends DbValue> void forEach(
-      final ZbColumnFamilies columnFamily,
+      final ColumnFamilies columnFamily,
       final KeyType keyInstance,
       final ValueType valueInstance,
       final BiConsumer<KeyType, ValueType> visitor) {

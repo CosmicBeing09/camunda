@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.instance.ParentScopeKey;
 import io.camunda.zeebe.engine.state.instance.VariableDocumentState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayList;
@@ -68,11 +68,11 @@ public class DbVariableState implements MutableVariableState {
   private final ObjectHashSet<DirectBuffer> variablesToCollect = new ObjectHashSet<>();
 
   public DbVariableState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     childKey = new DbLong();
     childParentColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ELEMENT_INSTANCE_CHILD_PARENT,
+            ColumnFamilies.ELEMENT_INSTANCE_CHILD_PARENT,
             transactionContext,
             childKey,
             parentKey);
@@ -82,14 +82,14 @@ public class DbVariableState implements MutableVariableState {
     scopeKeyVariableNameKey = new DbCompositeKey<>(scopeKey, variableName);
     variablesColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.VARIABLES,
+            ColumnFamilies.VARIABLES,
             transactionContext,
             scopeKeyVariableNameKey,
             new VariableInstance());
 
     variableDocumentStateByScopeKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.VARIABLE_DOCUMENT_STATE_BY_SCOPE_KEY,
+            ColumnFamilies.VARIABLE_DOCUMENT_STATE_BY_SCOPE_KEY,
             transactionContext,
             scopeKey,
             variableDocumentStateToRead);

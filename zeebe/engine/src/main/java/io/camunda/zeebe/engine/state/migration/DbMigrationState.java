@@ -39,7 +39,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableMigrationState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -133,7 +133,7 @@ public class DbMigrationState implements MutableMigrationState {
   private final DbDistributionMigrationState8dot7 distributionState8dot7;
 
   public DbMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     messageSubscriptionElementInstanceKey = new DbLong();
     messageSubscriptionMessageName = new DbString();
@@ -146,7 +146,7 @@ public class DbMigrationState implements MutableMigrationState {
             messageSubscriptionSentTime, messageSubscriptionElementKeyAndMessageName);
     messageSubscriptionSentTimeColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME,
+            ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME,
             transactionContext,
             messageSubscriptionSentTimeCompositeKey,
             DbNil.INSTANCE);
@@ -162,7 +162,7 @@ public class DbMigrationState implements MutableMigrationState {
             processSubscriptionSentTime, processSubscriptionElementKeyAndMessageName);
     processSubscriptionSentTimeColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME,
+            ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME,
             transactionContext,
             processSubscriptionSentTimeCompositeKey,
             DbNil.INSTANCE);
@@ -171,7 +171,7 @@ public class DbMigrationState implements MutableMigrationState {
     final TemporaryVariables temporaryVariablesValue = new TemporaryVariables();
     temporaryVariableColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.TEMPORARY_VARIABLE_STORE,
+            ColumnFamilies.TEMPORARY_VARIABLE_STORE,
             transactionContext,
             temporaryVariablesKeyInstance,
             temporaryVariablesValue);
@@ -181,17 +181,17 @@ public class DbMigrationState implements MutableMigrationState {
     dbPersistedDecision = new PersistedDecision();
     decisionsByKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISIONS,
+            ColumnFamilies.DEPRECATED_DMN_DECISIONS,
             transactionContext,
             dbDecisionKey,
             dbPersistedDecision);
     dbDecisionId = new DbString();
-    fkDecision = new DbForeignKey<>(dbDecisionKey, ZbColumnFamilies.DEPRECATED_DMN_DECISIONS);
+    fkDecision = new DbForeignKey<>(dbDecisionKey, ColumnFamilies.DEPRECATED_DMN_DECISIONS);
     dbDecisionVersion = new DbInt();
     decisionKeyAndVersion = new DbCompositeKey<>(dbDecisionId, dbDecisionVersion);
     decisionKeyByDecisionIdAndVersion =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
+            ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
             transactionContext,
             decisionKeyAndVersion,
             fkDecision);
@@ -200,11 +200,11 @@ public class DbMigrationState implements MutableMigrationState {
     dbDecisionRequirementsKey = new DbLong();
     fkDecisionRequirements =
         new DbForeignKey<>(
-            dbDecisionRequirementsKey, ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
+            dbDecisionRequirementsKey, ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
     dbPersistedDecisionRequirements = new PersistedDecisionRequirements();
     decisionRequirementsByKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS,
+            ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS,
             transactionContext,
             dbDecisionRequirementsKey,
             dbPersistedDecisionRequirements);
@@ -214,7 +214,7 @@ public class DbMigrationState implements MutableMigrationState {
         new DbCompositeKey<>(dbDecisionRequirementsId, dbDecisionRequirementsVersion);
     decisionRequirementsKeyByIdAndVersionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies
+            ColumnFamilies
                 .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
             transactionContext,
             decisionRequirementsIdAndVersion,
@@ -225,7 +225,7 @@ public class DbMigrationState implements MutableMigrationState {
     elementInstance = new ElementInstance();
     elementInstanceColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+            ColumnFamilies.ELEMENT_INSTANCE_KEY,
             transactionContext,
             elementInstanceKey,
             elementInstance);
@@ -234,7 +234,7 @@ public class DbMigrationState implements MutableMigrationState {
         new DbCompositeKey<>(processDefinitionKey, elementInstanceKey);
     processInstanceKeyByProcessDefinitionKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
+            ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
             transactionContext,
             processInstanceKeyByProcessDefinitionKey,
             DbNil.INSTANCE);
@@ -242,16 +242,16 @@ public class DbMigrationState implements MutableMigrationState {
     parentKey =
         new DbForeignKey<>(
             new DbLong(),
-            ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+            ColumnFamilies.ELEMENT_INSTANCE_KEY,
             MatchType.Full,
             (k) -> k.getValue() == -1);
     parentChildKey =
         new DbCompositeKey<>(
             parentKey,
-            new DbForeignKey<>(elementInstanceKey, ZbColumnFamilies.ELEMENT_INSTANCE_KEY));
+            new DbForeignKey<>(elementInstanceKey, ColumnFamilies.ELEMENT_INSTANCE_KEY));
     parentChildColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
+            ColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
             transactionContext,
             parentChildKey,
             DbNil.INSTANCE);
@@ -259,7 +259,7 @@ public class DbMigrationState implements MutableMigrationState {
     processIdKey = new DbString();
     processVersionInfoColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_PROCESS_VERSION,
+            ColumnFamilies.DEPRECATED_PROCESS_VERSION,
             transactionContext,
             processIdKey,
             new VersionInfo());
@@ -281,7 +281,7 @@ public class DbMigrationState implements MutableMigrationState {
     migratedByVersionKey.wrapString(MIGRATED_BY_VERSION);
     migrationsState =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MIGRATIONS_STATE,
+            ColumnFamilies.MIGRATIONS_STATE,
             transactionContext,
             migratedByVersionKey,
             migratedByVersionValue);

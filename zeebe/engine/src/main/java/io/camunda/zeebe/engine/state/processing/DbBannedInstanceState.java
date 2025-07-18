@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.metrics.BannedInstanceMetrics;
 import io.camunda.zeebe.engine.state.mutable.MutableBannedInstanceState;
 import io.camunda.zeebe.msgpack.UnpackedObject;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceRelatedIntent;
 import io.camunda.zeebe.protocol.record.value.ProcessInstanceRelated;
@@ -40,11 +40,11 @@ public final class DbBannedInstanceState implements MutableBannedInstanceState {
   private final BannedInstanceMetrics bannedInstanceMetrics;
 
   public DbBannedInstanceState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     processInstanceKey = new DbLong();
     bannedInstanceColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.BANNED_INSTANCE,
+            ColumnFamilies.BANNED_INSTANCE,
             transactionContext,
             processInstanceKey,
             DbNil.INSTANCE);

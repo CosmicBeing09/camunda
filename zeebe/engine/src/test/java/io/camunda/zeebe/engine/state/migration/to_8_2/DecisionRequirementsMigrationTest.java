@@ -26,7 +26,7 @@ import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -46,10 +46,10 @@ public class DecisionRequirementsMigrationTest {
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
+      when(mockProcessingState.isEmpty(ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
           .thenReturn(true);
       when(mockProcessingState.isEmpty(
-              ZbColumnFamilies
+              ColumnFamilies
                   .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION))
           .thenReturn(true);
       final var actual =
@@ -66,10 +66,10 @@ public class DecisionRequirementsMigrationTest {
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
+      when(mockProcessingState.isEmpty(ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
           .thenReturn(false);
       when(mockProcessingState.isEmpty(
-              ZbColumnFamilies
+              ColumnFamilies
                   .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION))
           .thenReturn(false);
       final var actual =
@@ -86,10 +86,10 @@ public class DecisionRequirementsMigrationTest {
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
+      when(mockProcessingState.isEmpty(ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
           .thenReturn(false);
       when(mockProcessingState.isEmpty(
-              ZbColumnFamilies
+              ColumnFamilies
                   .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION))
           .thenReturn(true);
       final var actual =
@@ -119,7 +119,7 @@ public class DecisionRequirementsMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   public class BlackboxTest {
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDecisionState legacyDecisionState;
@@ -138,14 +138,14 @@ public class DecisionRequirementsMigrationTest {
       dbDecisionRequirementsKey = new DbLong();
       fkDecisionRequirements =
           new DbForeignKey<>(
-              dbDecisionRequirementsKey, ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
+              dbDecisionRequirementsKey, ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
       dbDecisionRequirementsId = new DbString();
       dbDecisionRequirementsVersion = new DbInt();
       decisionRequirementsIdAndVersion =
           new DbCompositeKey<>(dbDecisionRequirementsId, dbDecisionRequirementsVersion);
       decisionRequirementsKeyByIdAndVersion =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies
+              ColumnFamilies
                   .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
               transactionContext,
               decisionRequirementsIdAndVersion,

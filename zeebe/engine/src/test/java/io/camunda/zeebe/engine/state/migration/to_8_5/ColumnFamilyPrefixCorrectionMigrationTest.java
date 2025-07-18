@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily50
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.List;
@@ -46,7 +46,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   class ColumnFamily48CorrectorTestTest {
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
@@ -73,14 +73,14 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       messagesDeadlineCount = new DbLong();
       wrongMessageStatsColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
+              ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
               transactionContext,
               messagesDeadlineCountKey,
               messagesDeadlineCount);
 
       correctMessageStatsColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MESSAGE_STATS, transactionContext, new DbString(), new DbLong());
+              ColumnFamilies.MESSAGE_STATS, transactionContext, new DbString(), new DbLong());
 
       decisionId = new DbString();
       decisionVersion = new DbInt();
@@ -88,7 +88,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       decisionKey = new DbLong();
       correctDecisionColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
+              ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
               transactionContext,
               decisionIdAndVersion,
               decisionKey);
@@ -185,7 +185,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   class ColumnFamily49CorrectorTestTest {
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
@@ -217,7 +217,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
           new DbCompositeKey<>(processDefinitionKey, elementInstanceKey);
       wrongPiKeyByProcDefKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies
+              ColumnFamilies
                   .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
               transactionContext,
               processInstanceKeyByProcessDefinitionKey,
@@ -225,7 +225,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       correctPiKeyByProcDefKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
+              ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
               transactionContext,
               processInstanceKeyByProcessDefinitionKey,
               DbNil.INSTANCE);
@@ -237,7 +237,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       decisionRequirementsKey = new DbLong();
       correctDecisionRequirementsKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies
+              ColumnFamilies
                   .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
               transactionContext,
               decisionRequirementsIdAndVersion,
@@ -321,7 +321,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   class ColumnFamily50CorrectorTest {
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
@@ -350,14 +350,14 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       migrationTaskState = new MigrationTaskState();
       wrongMigrationStateColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
+              ColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
               transactionContext,
               migrationIdentifier,
               migrationTaskState);
 
       correctMigrationStateColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MIGRATIONS_STATE,
+              ColumnFamilies.MIGRATIONS_STATE,
               transactionContext,
               migrationIdentifier,
               migrationTaskState);
@@ -369,7 +369,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       correctSignalSubscriptionColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
+              ColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
               transactionContext,
               signalNameAndSubscriptionKey,
               signalSubscription);

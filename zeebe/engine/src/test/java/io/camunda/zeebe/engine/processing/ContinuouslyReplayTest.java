@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.logstreams.util.ListLogStorage;
 import io.camunda.zeebe.model.bpmn.Bpmn;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.stream.impl.StreamProcessorMode;
@@ -63,9 +63,9 @@ public class ContinuouslyReplayTest {
               processingState.entrySet().stream()
                   // ignores transient states
                   // this will happen anyway then on leader replay
-                  .filter(entry -> entry.getKey() != ZbColumnFamilies.DEFAULT)
+                  .filter(entry -> entry.getKey() != ColumnFamilies.DEFAULT)
                   // Migrations ColumnFamily is not filled using events, but on broker start
-                  .filter(entry -> entry.getKey() != ZbColumnFamilies.MIGRATIONS_STATE)
+                  .filter(entry -> entry.getKey() != ColumnFamilies.MIGRATIONS_STATE)
                   .forEach(
                       entry -> {
                         final var column = entry.getKey();

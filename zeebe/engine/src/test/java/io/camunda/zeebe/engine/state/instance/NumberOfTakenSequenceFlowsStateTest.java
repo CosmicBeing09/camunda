@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import org.agrona.DirectBuffer;
@@ -179,7 +179,7 @@ public final class NumberOfTakenSequenceFlowsStateTest {
         elementInstanceState.getNumberOfTakenSequenceFlows(FLOW_SCOPE_KEY, GATEWAY_ELEMENT_ID);
     assertThat(number).isZero();
 
-    assertThat(processingState.isEmpty(ZbColumnFamilies.NUMBER_OF_TAKEN_SEQUENCE_FLOWS))
+    assertThat(processingState.isEmpty(ColumnFamilies.NUMBER_OF_TAKEN_SEQUENCE_FLOWS))
         .describedAs("Expected the entries to be removed")
         .isTrue();
   }
@@ -202,7 +202,7 @@ public final class NumberOfTakenSequenceFlowsStateTest {
         elementInstanceState.getNumberOfTakenSequenceFlows(FLOW_SCOPE_KEY, GATEWAY_ELEMENT_ID);
     assertThat(number).isZero();
 
-    assertThat(processingState.isEmpty(ZbColumnFamilies.NUMBER_OF_TAKEN_SEQUENCE_FLOWS))
+    assertThat(processingState.isEmpty(ColumnFamilies.NUMBER_OF_TAKEN_SEQUENCE_FLOWS))
         .describedAs("Expected the entries to be removed")
         .isTrue();
   }

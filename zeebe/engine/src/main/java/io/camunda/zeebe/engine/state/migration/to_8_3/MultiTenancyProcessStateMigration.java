@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.migration.MigrationTask;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContext;
 import io.camunda.zeebe.engine.state.migration.MutableMigrationTaskContext;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 public final class MultiTenancyProcessStateMigration implements MigrationTask {
 
@@ -32,6 +32,6 @@ public final class MultiTenancyProcessStateMigration implements MigrationTask {
   }
 
   private static boolean hasDeployedProcessesInDeprecatedCF(final ProcessingState processingState) {
-    return !processingState.isEmpty(ZbColumnFamilies.DEPRECATED_PROCESS_CACHE);
+    return !processingState.isEmpty(ColumnFamilies.DEPRECATED_PROCESS_CACHE);
   }
 }

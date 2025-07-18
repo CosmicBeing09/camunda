@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +30,7 @@ final class MemoryBoundedColumnIterationTest {
     final var key = new DbLong();
     final var value = new DbLong();
     final var column =
-        db.createColumnFamily(ZbColumnFamilies.DEFAULT, db.createContext(), key, value);
+        db.createColumnFamily(ColumnFamilies.DEFAULT, db.createContext(), key, value);
     final Map<Long, Long> expected = new HashMap<>();
     LongStream.range(0, 100)
         .forEach(
@@ -58,7 +58,7 @@ final class MemoryBoundedColumnIterationTest {
     final var key = new DbLong();
     final var value = new DbLong();
     final var column =
-        db.createColumnFamily(ZbColumnFamilies.DEFAULT, db.createContext(), key, value);
+        db.createColumnFamily(ColumnFamilies.DEFAULT, db.createContext(), key, value);
     LongStream.range(0, 100)
         .forEach(
             i -> {

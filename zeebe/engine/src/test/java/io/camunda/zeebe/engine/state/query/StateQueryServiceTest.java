@@ -16,8 +16,8 @@ import io.camunda.zeebe.engine.state.QueryService.ClosedServiceException;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.Records;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
@@ -35,7 +35,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 final class StateQueryServiceTest {
 
   private StateQueryService sut;
-  private ZeebeDb<ZbColumnFamilies> db;
+  private ZeebeDb<ColumnFamilies> db;
   private MutableAsyncProcessingContext state;
   private TransactionContext transactionContext;
 

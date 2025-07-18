@@ -30,7 +30,7 @@ import io.camunda.zeebe.engine.state.deployment.PersistedProcess.PersistedProces
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessMetadata;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
@@ -110,7 +110,7 @@ public final class DbProcessState implements MutableProcessState {
   private final VersionManager versionManager;
 
   public DbProcessState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final EngineConfiguration config,
       final InstantSource clock) {
@@ -121,10 +121,10 @@ public final class DbProcessState implements MutableProcessState {
     tenantAwareProcessDefinitionKey =
         new DbTenantAwareKey<>(tenantIdKey, processDefinitionKey, PlacementType.PREFIX);
     fkProcessDefinitionKey =
-        new DbForeignKey<>(tenantAwareProcessDefinitionKey, ZbColumnFamilies.PROCESS_CACHE);
+        new DbForeignKey<>(tenantAwareProcessDefinitionKey, ColumnFamilies.PROCESS_CACHE);
     processColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_CACHE,
+            ColumnFamilies.PROCESS_CACHE,
             transactionContext,
             tenantAwareProcessDefinitionKey,
             persistedProcess);
@@ -136,7 +136,7 @@ public final class DbProcessState implements MutableProcessState {
         new DbTenantAwareKey<>(tenantIdKey, idAndVersionKey, PlacementType.PREFIX);
     processByIdAndVersionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_CACHE_BY_ID_AND_VERSION,
+            ColumnFamilies.PROCESS_CACHE_BY_ID_AND_VERSION,
             transactionContext,
             tenantAwareProcessIdAndVersionKey,
             persistedProcess);
@@ -145,11 +145,11 @@ public final class DbProcessState implements MutableProcessState {
     fkTenantAwareProcessId =
         new DbForeignKey<>(
             tenantAwareProcessId,
-            ZbColumnFamilies.PROCESS_CACHE_BY_ID_AND_VERSION,
+            ColumnFamilies.PROCESS_CACHE_BY_ID_AND_VERSION,
             MatchType.Prefix);
     digestByIdColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_CACHE_DIGEST_BY_ID,
+            ColumnFamilies.PROCESS_CACHE_DIGEST_BY_ID,
             transactionContext,
             fkTenantAwareProcessId,
             digest);
@@ -160,7 +160,7 @@ public final class DbProcessState implements MutableProcessState {
             tenantIdKey, new DbCompositeKey<>(processId, deploymentKey), PlacementType.PREFIX);
     processDefinitionKeyByProcessIdAndDeploymentKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_DEFINITION_KEY_BY_PROCESS_ID_AND_DEPLOYMENT_KEY,
+            ColumnFamilies.PROCESS_DEFINITION_KEY_BY_PROCESS_ID_AND_DEPLOYMENT_KEY,
             transactionContext,
             tenantAwareProcessIdAndDeploymentKey,
             fkProcessDefinitionKey);
@@ -171,14 +171,14 @@ public final class DbProcessState implements MutableProcessState {
             tenantIdKey, new DbCompositeKey<>(processId, versionTag), PlacementType.PREFIX);
     processDefinitionKeyByProcessIdAndVersionTagColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_DEFINITION_KEY_BY_PROCESS_ID_AND_VERSION_TAG,
+            ColumnFamilies.PROCESS_DEFINITION_KEY_BY_PROCESS_ID_AND_VERSION_TAG,
             transactionContext,
             tenantAwareProcessIdAndVersionTagKey,
             fkProcessDefinitionKey);
 
     versionManager =
         new VersionManager(
-            DEFAULT_VERSION_VALUE, zeebeDb, ZbColumnFamilies.PROCESS_VERSION, transactionContext);
+            DEFAULT_VERSION_VALUE, zeebeDb, ColumnFamilies.PROCESS_VERSION, transactionContext);
 
     processByTenantAndKeyCache =
         CacheBuilder.newBuilder().maximumSize(config.getProcessCacheCapacity()).build();

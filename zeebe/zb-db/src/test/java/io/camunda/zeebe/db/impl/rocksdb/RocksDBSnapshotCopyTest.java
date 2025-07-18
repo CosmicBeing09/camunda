@@ -14,8 +14,8 @@ import io.camunda.zeebe.db.AccessMetricsConfiguration.Kind;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.RawTransactionalColumnFamily;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.ZeebeTransaction;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.ColumnFamilyScope;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,7 +38,7 @@ public class RocksDBSnapshotCopyTest {
   Path sourceSnapshotPath;
   private RocksDBSnapshotCopy copy;
   private Random random;
-  private ZeebeRocksDbFactory<ZbColumnFamilies> factory;
+  private ZeebeRocksDbFactory<ColumnFamilies> factory;
 
   @BeforeEach
   void setup() {
@@ -78,7 +78,7 @@ public class RocksDBSnapshotCopyTest {
           toCtx.runInTransaction(
               () -> {
                 final var toTx = (ZeebeTransaction) toCtx.getCurrentTransaction();
-                for (final var cf : ZbColumnFamilies.values()) {
+                for (final var cf : ColumnFamilies.values()) {
                   if (cf.partitionScope() == ColumnFamilyScope.GLOBAL) {
                     final var fromCf = new RawTransactionalColumnFamily(fromDB, cf, fromCtx);
                     final var toCf = new RawTransactionalColumnFamily(toDB, cf, toCtx);
@@ -110,21 +110,21 @@ public class RocksDBSnapshotCopyTest {
     return totalSize.get();
   }
 
-  private Map<ZbColumnFamilies, Long> initCounterMap() {
-    final var map = new java.util.EnumMap<ZbColumnFamilies, Long>(ZbColumnFamilies.class);
-    Arrays.stream(ZbColumnFamilies.values()).forEach(cf -> map.put(cf, 0L));
+  private Map<ColumnFamilies, Long> initCounterMap() {
+    final var map = new java.util.EnumMap<ColumnFamilies, Long>(ColumnFamilies.class);
+    Arrays.stream(ColumnFamilies.values()).forEach(cf -> map.put(cf, 0L));
     return map;
   }
 
-  private Map<ZbColumnFamilies, Long> populateSnapshot(
-      final ZeebeRocksDbFactory<ZbColumnFamilies> factory) {
-    final Map<ZbColumnFamilies, Long> expectedRowsPerCF = initCounterMap();
+  private Map<ColumnFamilies, Long> populateSnapshot(
+      final ZeebeRocksDbFactory<ColumnFamilies> factory) {
+    final Map<ColumnFamilies, Long> expectedRowsPerCF = initCounterMap();
     try (final var fromDB = factory.createDb(sourceDBPath.toFile())) {
       final var fromCtx = fromDB.createContext();
       fromCtx.runInTransaction(
           () -> {
             final var ctx = (ZeebeTransaction) fromCtx.getCurrentTransaction();
-            for (final ZbColumnFamilies cf : ZbColumnFamilies.values()) {
+            for (final ColumnFamilies cf : ColumnFamilies.values()) {
               final var transactionalColumnFamily =
                   new RawTransactionalColumnFamily(fromDB, cf, fromCtx);
               for (int i = 0; i < rowsPerCF; i++) {

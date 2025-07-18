@@ -15,23 +15,23 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 
-public class DbUserTaskState implements MutableTaskState {
+public class DbTaskState implements MutableTaskState {
 
   // key => user task record value
   // we need two separate wrapper to not interfere with get and put
   // see https://github.com/zeebe-io/zeebe/issues/1914
-  private final UserTaskRecordValue userTaskRecordToRead = new UserTaskRecordValue();
-  private final UserTaskRecordValue userTaskRecordToWrite = new UserTaskRecordValue();
+  private final TaskRecordValue userTaskRecordToRead = new TaskRecordValue();
+  private final TaskRecordValue userTaskRecordToWrite = new TaskRecordValue();
 
   private final DbLong userTaskKey;
 
-  private final ColumnFamily<DbLong, UserTaskRecordValue> userTasksColumnFamily;
+  private final ColumnFamily<DbLong, TaskRecordValue> userTasksColumnFamily;
 
   // key => job state
   private final DbForeignKey<DbLong> fkUserTask;
@@ -59,37 +59,37 @@ public class DbUserTaskState implements MutableTaskState {
   private final DbString initialAssignee = new DbString();
   private final ColumnFamily<DbLong, DbString> userTasksInitialAssigneeColumnFamily;
 
-  public DbUserTaskState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+  public DbTaskState(
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     userTaskKey = new DbLong();
-    fkUserTask = new DbForeignKey<>(userTaskKey, ZbColumnFamilies.USER_TASKS);
+    fkUserTask = new DbForeignKey<>(userTaskKey, ColumnFamilies.USER_TASKS);
     userTaskIntermediateStateKey = new DbLong();
 
     userTasksColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USER_TASKS, transactionContext, userTaskKey, userTaskRecordToRead);
+            ColumnFamilies.USER_TASKS, transactionContext, userTaskKey, userTaskRecordToRead);
 
     statesUserTaskColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USER_TASK_STATES, transactionContext, fkUserTask, userTaskState);
+            ColumnFamilies.USER_TASK_STATES, transactionContext, fkUserTask, userTaskState);
 
     userTasksIntermediateStatesColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USER_TASK_INTERMEDIATE_STATES,
+            ColumnFamilies.USER_TASK_INTERMEDIATE_STATES,
             transactionContext,
             userTaskIntermediateStateKey,
             userTaskIntermediateStateToRead);
 
     userTasksTransitionTriggerRequestMetadataColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USER_TASK_TRANSITION_TRIGGER_REQUEST_METADATA,
+            ColumnFamilies.USER_TASK_TRANSITION_TRIGGER_REQUEST_METADATA,
             transactionContext,
             userTaskKey,
             userTaskTransitionTriggerRequestMetadata);
 
     userTasksInitialAssigneeColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USER_TASK_INITIAL_ASSIGNEE,
+            ColumnFamilies.USER_TASK_INITIAL_ASSIGNEE,
             transactionContext,
             userTaskKey,
             initialAssignee);
@@ -207,7 +207,7 @@ public class DbUserTaskState implements MutableTaskState {
   @Override
   public UserTaskRecord getUserTask(final long key) {
     userTaskKey.wrapLong(key);
-    final UserTaskRecordValue userTask = userTasksColumnFamily.get(userTaskKey);
+    final TaskRecordValue userTask = userTasksColumnFamily.get(userTaskKey);
     return userTask == null ? null : userTask.getRecord();
   }
 

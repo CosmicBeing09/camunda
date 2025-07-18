@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.immutable.PendingProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
@@ -51,7 +51,7 @@ public final class DbProcessMessageSubscriptionState
   private final InstantSource clock;
 
   public DbProcessMessageSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
       final InstantSource clock) {
@@ -66,7 +66,7 @@ public final class DbProcessMessageSubscriptionState
 
     subscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_KEY,
+            ColumnFamilies.PROCESS_SUBSCRIPTION_BY_KEY,
             transactionContext,
             elementKeyAndMessageName,
             processMessageSubscription);

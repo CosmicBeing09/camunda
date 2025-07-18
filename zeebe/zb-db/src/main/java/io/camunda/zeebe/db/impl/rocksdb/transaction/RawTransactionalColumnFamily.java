@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.startsWith;
 
 import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.impl.DbBytes;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import org.agrona.concurrent.UnsafeBuffer;
 import org.rocksdb.ReadOptions;
 import org.rocksdb.RocksIterator;
@@ -21,14 +21,14 @@ import org.slf4j.LoggerFactory;
 public class RawTransactionalColumnFamily {
   private static final Logger LOG = LoggerFactory.getLogger(RawTransactionalColumnFamily.class);
 
-  protected final ZeebeTransactionDb<ZbColumnFamilies> transactionDb;
-  protected final ZbColumnFamilies columnFamily;
+  protected final ZeebeTransactionDb<ColumnFamilies> transactionDb;
+  protected final ColumnFamilies columnFamily;
   protected final ColumnFamilyContext columnFamilyContext;
   protected final TransactionContext context;
 
   public RawTransactionalColumnFamily(
-      final ZeebeTransactionDb<ZbColumnFamilies> transactionDb,
-      final ZbColumnFamilies columnFamily,
+      final ZeebeTransactionDb<ColumnFamilies> transactionDb,
+      final ColumnFamilies columnFamily,
       final TransactionContext context) {
     this.transactionDb = transactionDb;
     this.columnFamily = columnFamily;

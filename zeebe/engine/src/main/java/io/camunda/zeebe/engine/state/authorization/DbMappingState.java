@@ -14,7 +14,7 @@ import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableMappingState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -36,21 +36,21 @@ public class DbMappingState implements MutableMappingState {
       claimByIdColumnFamily;
 
   public DbMappingState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     claimName = new DbString();
     claimValue = new DbString();
     claim = new DbCompositeKey<>(claimName, claimValue);
     final PersistedMapping persistedMapping = new PersistedMapping();
     mappingColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MAPPINGS, transactionContext, claim, persistedMapping);
+            ColumnFamilies.MAPPINGS, transactionContext, claim, persistedMapping);
 
-    fkClaim = new DbForeignKey<>(claim, ZbColumnFamilies.MAPPINGS);
+    fkClaim = new DbForeignKey<>(claim, ColumnFamilies.MAPPINGS);
 
     mappingId = new DbString();
     claimByIdColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.CLAIM_BY_ID, transactionContext, mappingId, fkClaim);
+            ColumnFamilies.CLAIM_BY_ID, transactionContext, mappingId, fkClaim);
   }
 
   @Override

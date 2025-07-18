@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.message.MessageStartEventSubscription;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
 
 public final class LegacyMessageStartEventSubscriptionState {
@@ -34,13 +34,13 @@ public final class LegacyMessageStartEventSubscriptionState {
       subscriptionsOfProcessDefinitionKeyColumnFamily;
 
   public LegacyMessageStartEventSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     messageName = new DbString();
     processDefinitionKey = new DbLong();
     messageNameAndProcessDefinitionKey = new DbCompositeKey<>(messageName, processDefinitionKey);
     subscriptionsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY,
+            ColumnFamilies.DEPRECATED_MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY,
             transactionContext,
             messageNameAndProcessDefinitionKey,
             messageStartEventSubscription);
@@ -48,7 +48,7 @@ public final class LegacyMessageStartEventSubscriptionState {
     processDefinitionKeyAndMessageName = new DbCompositeKey<>(processDefinitionKey, messageName);
     subscriptionsOfProcessDefinitionKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_MESSAGE_START_EVENT_SUBSCRIPTION_BY_KEY_AND_NAME,
+            ColumnFamilies.DEPRECATED_MESSAGE_START_EVENT_SUBSCRIPTION_BY_KEY_AND_NAME,
             transactionContext,
             processDefinitionKeyAndMessageName,
             DbNil.INSTANCE);

@@ -12,7 +12,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableRoleState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.RoleRecord;
 import java.util.Optional;
 
@@ -23,11 +23,11 @@ public class DbRoleState implements MutableRoleState {
   private final ColumnFamily<DbString, PersistedRole> roleColumnFamily;
 
   public DbRoleState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     roleId = new DbString();
     roleColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ROLES, transactionContext, roleId, new PersistedRole());
+            ColumnFamilies.ROLES, transactionContext, roleId, new PersistedRole());
   }
 
   @Override

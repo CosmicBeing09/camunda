@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.immutable.JobState.State;
 import io.camunda.zeebe.engine.state.instance.JobRecordValue;
 import io.camunda.zeebe.engine.state.instance.JobStateValue;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.util.EnsureUtil;
 import org.agrona.DirectBuffer;
@@ -49,23 +49,23 @@ public class LegacyJobState {
       activatableColumnFamily;
 
   public LegacyJobState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     jobKey = new DbLong();
-    fkJob = new DbForeignKey<>(jobKey, ZbColumnFamilies.JOBS);
+    fkJob = new DbForeignKey<>(jobKey, ColumnFamilies.JOBS);
     jobsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
+            ColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
 
     statesJobColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_STATES, transactionContext, fkJob, jobState);
+            ColumnFamilies.JOB_STATES, transactionContext, fkJob, jobState);
 
     jobTypeKey = new DbString();
     typeJobKey = new DbCompositeKey<>(jobTypeKey, fkJob);
     activatableColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_JOB_ACTIVATABLE,
+            ColumnFamilies.DEPRECATED_JOB_ACTIVATABLE,
             transactionContext,
             typeJobKey,
             DbNil.INSTANCE);

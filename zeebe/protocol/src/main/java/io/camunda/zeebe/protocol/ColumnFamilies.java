@@ -15,7 +15,7 @@
  */
 package io.camunda.zeebe.protocol;
 
-public enum ZbColumnFamilies implements EnumValue, ScopedColumnFamily {
+public enum ColumnFamilies implements EnumValue, ScopedColumnFamily {
   DEFAULT(0),
 
   // util
@@ -105,7 +105,7 @@ public enum ZbColumnFamilies implements EnumValue, ScopedColumnFamily {
 
   EXPORTER(40),
 
-  AWAIT_WORKLOW_RESULT(41),
+  AWAIT_WORKFLOW_RESULT(41),
 
   JOB_BACKOFF(42),
 
@@ -245,12 +245,12 @@ public enum ZbColumnFamilies implements EnumValue, ScopedColumnFamily {
   private final int value;
   private final ColumnFamilyScope columnFamilyScope;
 
-  ZbColumnFamilies(final int value) {
+  ColumnFamilies(final int value) {
     this.value = value;
     columnFamilyScope = ColumnFamilyScope.PARTITION_LOCAL;
   }
 
-  ZbColumnFamilies(final int value, final ColumnFamilyScope columnFamilyScope) {
+  ColumnFamilies(final int value, final ColumnFamilyScope columnFamilyScope) {
     this.value = value;
     this.columnFamilyScope = columnFamilyScope;
   }

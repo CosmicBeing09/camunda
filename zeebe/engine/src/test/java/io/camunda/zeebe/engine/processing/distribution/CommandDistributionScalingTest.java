@@ -29,8 +29,8 @@ import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
@@ -48,7 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class CommandDistributionScalingTest {
   /* Injected from {@link ProcessingStateExtension} */
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private ZeebeDb<ColumnFamilies> zeebeDb;
   private MutableRoutingState routingState;
   private MutableAsyncProcessingContext state;
   private TransactionContext transactionContext;

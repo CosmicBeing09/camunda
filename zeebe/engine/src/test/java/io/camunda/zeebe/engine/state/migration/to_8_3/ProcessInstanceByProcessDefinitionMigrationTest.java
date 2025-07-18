@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -47,12 +47,12 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
     private final DbForeignKey<DbLong> parentKey;
 
     public LegacyElementInstanceState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       elementInstanceKey = new DbLong();
       elementInstance = new ElementInstance();
       elementInstanceColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+              ColumnFamilies.ELEMENT_INSTANCE_KEY,
               transactionContext,
               elementInstanceKey,
               elementInstance);
@@ -60,16 +60,16 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       parentKey =
           new DbForeignKey<>(
               new DbLong(),
-              ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+              ColumnFamilies.ELEMENT_INSTANCE_KEY,
               MatchType.Full,
               (k) -> k.getValue() == -1);
       parentChildKey =
           new DbCompositeKey<>(
               parentKey,
-              new DbForeignKey<>(elementInstanceKey, ZbColumnFamilies.ELEMENT_INSTANCE_KEY));
+              new DbForeignKey<>(elementInstanceKey, ColumnFamilies.ELEMENT_INSTANCE_KEY));
       parentChildColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
+              ColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
               transactionContext,
               parentChildKey,
               DbNil.INSTANCE);
@@ -86,7 +86,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   class ProcessInstanceKeyByProcessDefinitionKeyTest {
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyElementInstanceState legacyState;
@@ -107,7 +107,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       elementInstance = new ElementInstance();
       elementInstanceColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+              ColumnFamilies.ELEMENT_INSTANCE_KEY,
               transactionContext,
               elementInstanceKey,
               elementInstance);
@@ -116,7 +116,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
           new DbCompositeKey<>(processDefinitionKey, elementInstanceKey);
       processInstanceKeyByProcessDefinitionKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
+              ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
               transactionContext,
               processInstanceKeyByProcessDefinitionKey,
               DbNil.INSTANCE);

@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 public class DbDistributionMigrationState {
 
@@ -32,23 +32,23 @@ public class DbDistributionMigrationState {
   private final DbCompositeKey<DbForeignKey<DbLong>, DbInt> distributionPartitionKey;
 
   public DbDistributionMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     distributionKey = new DbLong();
     final var fkDistribution =
-        new DbForeignKey<>(distributionKey, ZbColumnFamilies.COMMAND_DISTRIBUTION_RECORD);
+        new DbForeignKey<>(distributionKey, ColumnFamilies.COMMAND_DISTRIBUTION_RECORD);
 
     partitionKey = new DbInt();
     distributionPartitionKey = new DbCompositeKey<>(fkDistribution, partitionKey);
     pendingDistributionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PENDING_DISTRIBUTION,
+            ColumnFamilies.PENDING_DISTRIBUTION,
             transactionContext,
             distributionPartitionKey,
             DbNil.INSTANCE);
 
     retriableDistributionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RETRIABLE_DISTRIBUTION,
+            ColumnFamilies.RETRIABLE_DISTRIBUTION,
             transactionContext,
             distributionPartitionKey,
             DbNil.INSTANCE);

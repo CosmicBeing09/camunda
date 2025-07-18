@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.migration.ProcessMessageSubscriptionSentTimeMigration;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -39,7 +39,7 @@ public class ProcessMessageSubscriptionSentTimeMigrationTest {
     public void noMigrationNeededWhenColumnIsEmpty() {
       // given
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME))
+      when(mockProcessingState.isEmpty(ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME))
           .thenReturn(true);
       // when
       final var actual =
@@ -54,7 +54,7 @@ public class ProcessMessageSubscriptionSentTimeMigrationTest {
     public void migrationNeededWhenColumnIsNotEmpty() {
       // given
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME))
+      when(mockProcessingState.isEmpty(ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME))
           .thenReturn(false);
 
       // when
@@ -91,7 +91,7 @@ public class ProcessMessageSubscriptionSentTimeMigrationTest {
 
     private static final long TEST_SENT_TIME = 1000L;
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
 
     private MutableAsyncProcessingContext processingState;
 

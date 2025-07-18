@@ -10,7 +10,7 @@ package io.camunda.zeebe.broker.system.partitions;
 import io.atomix.raft.partition.RaftPartition;
 import io.camunda.zeebe.broker.system.monitoring.BrokerHealthCheckService;
 import io.camunda.zeebe.db.ZeebeDb;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.scheduler.ActorControl;
 import io.camunda.zeebe.scheduler.ActorSchedulingService;
 import io.camunda.zeebe.scheduler.ScheduledTimer;
@@ -43,7 +43,7 @@ public interface PartitionStartupContext {
 
   void setMetricsTimer(final ScheduledTimer metricsTimer);
 
-  ZeebeDb<ZbColumnFamilies> getZeebeDb();
+  ZeebeDb<ColumnFamilies> getZeebeDb();
 
   // can be called any time after bootstrap has completed
   PartitionTransitionContext createTransitionContext();

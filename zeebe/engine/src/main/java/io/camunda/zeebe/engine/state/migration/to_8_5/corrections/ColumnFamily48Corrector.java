@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.message.DbMessageState;
 import io.camunda.zeebe.engine.state.migration.DbMigratorImpl;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,17 +28,17 @@ import org.slf4j.LoggerFactory;
  * and version which may contain entries for the MessageStats column family. Vice-versa correction
  * is not needed because no data was written wrongly to the MessageStats column family.
  *
- * <p>Correction: {@link ZbColumnFamilies#DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION} ->
- * {@link ZbColumnFamilies#MESSAGE_STATS}
+ * <p>Correction: {@link ColumnFamilies#DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION} ->
+ * {@link ColumnFamilies#MESSAGE_STATS}
  */
 @SuppressWarnings("deprecation") // deals with deprecated column families
 public final class ColumnFamily48Corrector {
 
   private static final Logger LOG = LoggerFactory.getLogger(DbMigratorImpl.class.getPackageName());
 
-  private static final ZbColumnFamilies CF_UNDER_RECOVERY =
-      ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION;
-  private static final ZbColumnFamilies CF_POSSIBLE_TARGET = ZbColumnFamilies.MESSAGE_STATS;
+  private static final ColumnFamilies CF_UNDER_RECOVERY =
+      ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION;
+  private static final ColumnFamilies CF_POSSIBLE_TARGET = ColumnFamilies.MESSAGE_STATS;
 
   private final ColumnFamily<DbBytes, DbBytes> recoveryDmnDecisionKeyByDecisionIdAndVersion;
 
@@ -50,7 +50,7 @@ public final class ColumnFamily48Corrector {
   private final DbLong messagesDeadlineCount;
 
   public ColumnFamily48Corrector(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     decisionId = new DbString();
     decisionVersion = new DbInt();
     recoveryDmnDecisionKeyByDecisionIdAndVersion =

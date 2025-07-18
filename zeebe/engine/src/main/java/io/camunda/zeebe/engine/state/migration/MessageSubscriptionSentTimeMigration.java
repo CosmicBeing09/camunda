@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.migration;
 
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 /**
  * Reads out the sent time for message subscriptions and sets the {@code correlating} field in
@@ -22,7 +22,7 @@ public class MessageSubscriptionSentTimeMigration implements MigrationTask {
 
   @Override
   public boolean needsToRun(final MigrationTaskContext context) {
-    return !context.processingState().isEmpty(ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME);
+    return !context.processingState().isEmpty(ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME);
   }
 
   @Override

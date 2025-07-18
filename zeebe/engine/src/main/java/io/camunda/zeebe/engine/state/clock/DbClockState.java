@@ -12,7 +12,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableClockState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock.Modification;
 
 public class DbClockState implements MutableClockState {
@@ -23,9 +23,9 @@ public class DbClockState implements MutableClockState {
   private final DbClockModification value = new DbClockModification();
 
   public DbClockState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     columnFamily =
-        zeebeDb.createColumnFamily(ZbColumnFamilies.CLOCK, transactionContext, key, value);
+        zeebeDb.createColumnFamily(ColumnFamilies.CLOCK, transactionContext, key, value);
   }
 
   @Override

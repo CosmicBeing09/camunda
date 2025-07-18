@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
 import org.agrona.collections.Object2ObjectHashMap;
@@ -31,8 +31,8 @@ public final class VersionManager {
 
   public VersionManager(
       final long initialValue,
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
-      final ZbColumnFamilies columnFamily,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final ColumnFamilies columnFamily,
       final TransactionContext transactionContext) {
     this.initialValue = initialValue;
 

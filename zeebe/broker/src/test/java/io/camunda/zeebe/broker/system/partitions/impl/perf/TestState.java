@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.scheduler.ActorScheduler;
 import io.camunda.zeebe.snapshots.ConstructableSnapshotStore;
 import io.camunda.zeebe.snapshots.impl.FileBasedSnapshotStore;
@@ -73,7 +73,7 @@ final class TestState {
       try (final var db = dbFactory.createDb(path.toFile())) {
         final var txn = db.createContext();
         final var columns =
-            Arrays.stream(ZbColumnFamilies.values())
+            Arrays.stream(ColumnFamilies.values())
                 .map(col -> db.createColumnFamily(col, txn, new DbString(), new DbString()))
                 .toList();
         txn.runInTransaction(() -> insertData(columns));
@@ -81,7 +81,7 @@ final class TestState {
     } while (computeSnapshotSize(path) < sizeInBytes);
   }
 
-  private ZeebeRocksDbFactory<ZbColumnFamilies> createDbFactory() {
+  private ZeebeRocksDbFactory<ColumnFamilies> createDbFactory() {
     return new ZeebeRocksDbFactory<>(
         new RocksDbConfiguration(),
         new ConsistencyChecksSettings(false, false),
@@ -127,7 +127,7 @@ final class TestState {
       ActorScheduler actorScheduler,
       Path temporaryFolder,
       FileBasedSnapshotStore snapshotStore,
-      ZeebeDbFactory<ZbColumnFamilies> dbFactory)
+      ZeebeDbFactory<ColumnFamilies> dbFactory)
       implements AutoCloseable {
 
     @Override

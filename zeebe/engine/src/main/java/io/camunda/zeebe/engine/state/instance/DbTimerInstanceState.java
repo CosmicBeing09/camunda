@@ -16,7 +16,7 @@ import io.camunda.zeebe.db.impl.DbForeignKey.MatchType;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.mutable.MutableTimerInstanceState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.util.function.Consumer;
 
 public final class DbTimerInstanceState implements MutableTimerInstanceState {
@@ -38,25 +38,25 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
   private long nextDueDate;
 
   public DbTimerInstanceState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     timerInstance = new TimerInstance();
     timerKey = new DbLong();
     elementInstanceKey =
         new DbForeignKey<>(
             new DbLong(),
-            ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+            ColumnFamilies.ELEMENT_INSTANCE_KEY,
             MatchType.Full,
             (k) -> k.getValue() == -1);
     elementAndTimerKey = new DbCompositeKey<>(elementInstanceKey, timerKey);
     timerInstanceColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.TIMERS, transactionContext, elementAndTimerKey, timerInstance);
+            ColumnFamilies.TIMERS, transactionContext, elementAndTimerKey, timerInstance);
 
     dueDate = new DbLong();
     dueDateCompositeKey = new DbCompositeKey<>(dueDate, elementAndTimerKey);
     dueDateColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.TIMER_DUE_DATES,
+            ColumnFamilies.TIMER_DUE_DATES,
             transactionContext,
             dueDateCompositeKey,
             DbNil.INSTANCE);

@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
@@ -425,7 +425,7 @@ public final class ReplayStateTest {
               final var softly = new SoftAssertions();
 
               processingState.entrySet().stream()
-                  .filter(entry -> entry.getKey() != ZbColumnFamilies.DEFAULT)
+                  .filter(entry -> entry.getKey() != ColumnFamilies.DEFAULT)
                   .forEach(
                       entry -> {
                         final var column = entry.getKey();

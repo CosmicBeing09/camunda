@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_2;
 import io.camunda.zeebe.engine.state.migration.MigrationTask;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContext;
 import io.camunda.zeebe.engine.state.migration.MutableMigrationTaskContext;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 /**
  * This migration will read the decision in the decisionByKey ColumnFamily. It will use this to
@@ -28,8 +28,8 @@ public class DecisionMigration implements MigrationTask {
   public boolean needsToRun(final MigrationTaskContext context) {
     return context
             .processingState()
-            .isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION)
-        && !context.processingState().isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISIONS);
+            .isEmpty(ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION)
+        && !context.processingState().isEmpty(ColumnFamilies.DEPRECATED_DMN_DECISIONS);
   }
 
   @Override

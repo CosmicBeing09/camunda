@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
 import io.camunda.zeebe.util.ReflectUtil;
 import java.io.IOException;
@@ -147,7 +147,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
   private static final class ProcessingStateExtensionState implements CloseableResource {
 
     private Path tempFolder;
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private TransactionContext transactionContext;
     private MutableAsyncProcessingContext processingState;
 
@@ -236,7 +236,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
       return failures;
     }
 
-    private ZeebeDb<ZbColumnFamilies> getZeebeDb() {
+    private ZeebeDb<ColumnFamilies> getZeebeDb() {
       return zeebeDb;
     }
 

@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.instance.JobStateValue;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ public class JobBackoffRestoreMigrationTest {
 
   final JobBackoffRestoreMigration jobBackoffRestoreMigration = new JobBackoffRestoreMigration();
 
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private ZeebeDb<ColumnFamilies> zeebeDb;
   private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
   private final JobRecordValue jobRecordToRead = new JobRecordValue();
@@ -48,20 +48,20 @@ public class JobBackoffRestoreMigrationTest {
   @BeforeEach
   public void setup() {
     jobKey = new DbLong();
-    final DbForeignKey<DbLong> fkJob = new DbForeignKey<>(jobKey, ZbColumnFamilies.JOBS);
+    final DbForeignKey<DbLong> fkJob = new DbForeignKey<>(jobKey, ColumnFamilies.JOBS);
     jobsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
+            ColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
 
     statesJobColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_STATES, transactionContext, fkJob, jobState);
+            ColumnFamilies.JOB_STATES, transactionContext, fkJob, jobState);
 
     backoffKey = new DbLong();
     backoffJobKey = new DbCompositeKey<>(backoffKey, fkJob);
     backoffColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
+            ColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
 
     jobKey.wrapLong(1);
   }

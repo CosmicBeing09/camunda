@@ -8,8 +8,8 @@
 package io.camunda.zeebe.db;
 
 import io.camunda.zeebe.db.impl.rocksdb.transaction.ZeebeTransactionDb;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.ColumnFamilyScope;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import java.nio.file.Path;
 import java.util.Set;
 
@@ -53,9 +53,9 @@ public interface SnapshotCopy {
      * @param toCtx transaction context at toPath
      */
     void accept(
-        ZeebeTransactionDb<ZbColumnFamilies> fromDB,
+        ZeebeTransactionDb<ColumnFamilies> fromDB,
         TransactionContext fromCtx,
-        ZeebeTransactionDb<ZbColumnFamilies> toDB,
+        ZeebeTransactionDb<ColumnFamilies> toDB,
         TransactionContext toCtx);
   }
 }

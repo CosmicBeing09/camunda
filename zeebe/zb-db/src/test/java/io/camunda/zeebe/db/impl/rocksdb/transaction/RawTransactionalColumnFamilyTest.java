@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.ConsistencyChecksSettings;
 import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -31,13 +31,13 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 public class RawTransactionalColumnFamilyTest {
   @TempDir static Path path;
-  @AutoClose static ZeebeTransactionDb<ZbColumnFamilies> db;
-  static Map<ZbColumnFamilies, RawTransactionalColumnFamily> columnFamilies = new HashMap<>();
+  @AutoClose static ZeebeTransactionDb<ColumnFamilies> db;
+  static Map<ColumnFamilies, RawTransactionalColumnFamily> columnFamilies = new HashMap<>();
   private static TransactionContext context;
 
   @BeforeAll
   static void setup() {
-    final ZeebeRocksDbFactory<ZbColumnFamilies> factory =
+    final ZeebeRocksDbFactory<ColumnFamilies> factory =
         new ZeebeRocksDbFactory<>(
             new RocksDbConfiguration(),
             new ConsistencyChecksSettings(),
@@ -46,15 +46,15 @@ public class RawTransactionalColumnFamilyTest {
     db = factory.createDb(path.toFile());
     context = db.createContext();
 
-    for (final var cf : ZbColumnFamilies.values()) {
+    for (final var cf : ColumnFamilies.values()) {
       final var rawCF = new RawTransactionalColumnFamily(db, cf, context);
       columnFamilies.put(cf, rawCF);
     }
   }
 
   @ParameterizedTest
-  @EnumSource(ZbColumnFamilies.class)
-  public void shouldIterateOverAllValues(final ZbColumnFamilies cf) {
+  @EnumSource(ColumnFamilies.class)
+  public void shouldIterateOverAllValues(final ColumnFamilies cf) {
     // given
     final int numEntries = 100;
     final var rawCF = columnFamilies.get(cf);

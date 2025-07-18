@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecisionRequirements;
 import io.camunda.zeebe.engine.state.migration.MemoryBoundedColumnIteration;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyDecisionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbDecisionMigrationState {
@@ -32,7 +32,7 @@ public class DbDecisionMigrationState {
   private final DbDecisionState to;
 
   public DbDecisionMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     final var config = new EngineConfiguration();
     from = new LegacyDecisionState(zeebeDb, transactionContext, config);
     to = new DbDecisionState(zeebeDb, transactionContext);
@@ -193,17 +193,17 @@ public class DbDecisionMigrationState {
         decisionRequirementsKeyByIdAndVersion;
 
     public DbDecisionState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       tenantIdKey = new DbString();
       dbDecisionKey = new DbLong();
       tenantAwareDecisionKey =
           new DbTenantAwareKey<>(tenantIdKey, dbDecisionKey, PlacementType.PREFIX);
-      fkDecision = new DbForeignKey<>(tenantAwareDecisionKey, ZbColumnFamilies.DMN_DECISIONS);
+      fkDecision = new DbForeignKey<>(tenantAwareDecisionKey, ColumnFamilies.DMN_DECISIONS);
 
       dbPersistedDecision = new PersistedDecision();
       decisionsByKey =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_DECISIONS,
+              ColumnFamilies.DMN_DECISIONS,
               transactionContext,
               tenantAwareDecisionKey,
               dbPersistedDecision);
@@ -213,7 +213,7 @@ public class DbDecisionMigrationState {
           new DbTenantAwareKey<>(tenantIdKey, dbDecisionId, PlacementType.PREFIX);
       latestDecisionKeysByDecisionId =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_LATEST_DECISION_BY_ID,
+              ColumnFamilies.DMN_LATEST_DECISION_BY_ID,
               transactionContext,
               tenantAwareDecisionId,
               fkDecision);
@@ -223,11 +223,11 @@ public class DbDecisionMigrationState {
           new DbTenantAwareKey<>(tenantIdKey, dbDecisionRequirementsKey, PlacementType.PREFIX);
       fkDecisionRequirements =
           new DbForeignKey<>(
-              tenantAwareDecisionRequirementsKey, ZbColumnFamilies.DMN_DECISION_REQUIREMENTS);
+              tenantAwareDecisionRequirementsKey, ColumnFamilies.DMN_DECISION_REQUIREMENTS);
       dbPersistedDecisionRequirements = new PersistedDecisionRequirements();
       decisionRequirementsByKey =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_DECISION_REQUIREMENTS,
+              ColumnFamilies.DMN_DECISION_REQUIREMENTS,
               transactionContext,
               tenantAwareDecisionRequirementsKey,
               dbPersistedDecisionRequirements);
@@ -237,7 +237,7 @@ public class DbDecisionMigrationState {
           new DbTenantAwareKey<>(tenantIdKey, dbDecisionRequirementsId, PlacementType.PREFIX);
       latestDecisionRequirementsKeysById =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_LATEST_DECISION_REQUIREMENTS_BY_ID,
+              ColumnFamilies.DMN_LATEST_DECISION_REQUIREMENTS_BY_ID,
               transactionContext,
               tenantAwareDecisionRequirementsId,
               fkDecisionRequirements);
@@ -246,7 +246,7 @@ public class DbDecisionMigrationState {
           new DbCompositeKey<>(fkDecisionRequirements, fkDecision);
       decisionKeyByDecisionRequirementsKey =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_DECISION_KEY_BY_DECISION_REQUIREMENTS_KEY,
+              ColumnFamilies.DMN_DECISION_KEY_BY_DECISION_REQUIREMENTS_KEY,
               transactionContext,
               dbDecisionRequirementsKeyAndDecisionKey,
               DbNil.INSTANCE);
@@ -257,7 +257,7 @@ public class DbDecisionMigrationState {
           new DbTenantAwareKey<>(tenantIdKey, decisionIdAndVersion, PlacementType.PREFIX);
       decisionKeyByDecisionIdAndVersion =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
+              ColumnFamilies.DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
               transactionContext,
               tenantAwareDecisionIdAndVersion,
               fkDecision);
@@ -270,7 +270,7 @@ public class DbDecisionMigrationState {
               tenantIdKey, decisionRequirementsIdAndVersion, PlacementType.PREFIX);
       decisionRequirementsKeyByIdAndVersion =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
+              ColumnFamilies.DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
               transactionContext,
               tenantAwareDecisionRequirementsIdAndVersion,
               fkDecisionRequirements);

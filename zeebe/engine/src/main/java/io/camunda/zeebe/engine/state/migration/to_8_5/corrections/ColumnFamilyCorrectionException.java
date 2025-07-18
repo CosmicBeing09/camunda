@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.state.migration.to_8_5.corrections;
 
 import io.camunda.zeebe.db.impl.DbBytes;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 
 public final class ColumnFamilyCorrectionException extends RuntimeException {
@@ -16,7 +16,7 @@ public final class ColumnFamilyCorrectionException extends RuntimeException {
       final String reason,
       final DbBytes key,
       final DbBytes value,
-      final ZbColumnFamilies columnFamily) {
+      final ColumnFamilies columnFamily) {
     super(formatMessage(reason, key, value, columnFamily));
   }
 
@@ -24,7 +24,7 @@ public final class ColumnFamilyCorrectionException extends RuntimeException {
       final String reason,
       final DbBytes key,
       final DbBytes value,
-      final ZbColumnFamilies columnFamily,
+      final ColumnFamilies columnFamily,
       final Throwable cause) {
     super(formatMessage(reason, key, value, columnFamily), cause);
   }
@@ -33,7 +33,7 @@ public final class ColumnFamilyCorrectionException extends RuntimeException {
       final String reason,
       final DbBytes key,
       final DbBytes value,
-      final ZbColumnFamilies columnFamily) {
+      final ColumnFamilies columnFamily) {
     return String.format(
         "Failed to correct prefix of column family [%d] %s, due to %s - key[%s], value[%s]",
         columnFamily.ordinal(),

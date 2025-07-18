@@ -16,7 +16,7 @@ import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.mutable.MutableCompensationSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +36,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   private final CompensationSubscription compensationSubscription = new CompensationSubscription();
 
   public DbCompensationSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     processInstanceKey = new DbLong();
     recordKey = new DbLong();
     tenantIdKey = new DbString();
@@ -46,7 +46,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
         new DbCompositeKey<>(tenantAwareProcessInstanceKey, recordKey);
     compensationSubscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.COMPENSATION_SUBSCRIPTION,
+            ColumnFamilies.COMPENSATION_SUBSCRIPTION,
             transactionContext,
             tenantAwareProcessInstanceKeyCompensableActivityId,
             compensationSubscription);

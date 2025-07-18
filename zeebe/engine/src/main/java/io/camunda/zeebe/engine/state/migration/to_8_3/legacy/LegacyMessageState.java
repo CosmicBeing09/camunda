@@ -17,7 +17,7 @@ import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.metrics.BufferedMessagesMetrics;
 import io.camunda.zeebe.engine.state.message.StoredMessage;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import org.agrona.DirectBuffer;
 
@@ -115,15 +115,15 @@ public final class LegacyMessageState {
   private Long localMessageDeadlineCount = 0L;
 
   public LegacyMessageState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId) {
     messageKey = new DbLong();
-    fkMessage = new DbForeignKey<>(messageKey, ZbColumnFamilies.MESSAGE_KEY);
+    fkMessage = new DbForeignKey<>(messageKey, ColumnFamilies.MESSAGE_KEY);
     message = new StoredMessage();
     messageColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_KEY, transactionContext, messageKey, message);
+            ColumnFamilies.MESSAGE_KEY, transactionContext, messageKey, message);
 
     messageName = new DbString();
     correlationKey = new DbString();
@@ -131,7 +131,7 @@ public final class LegacyMessageState {
     nameCorrelationMessageKey = new DbCompositeKey<>(nameAndCorrelationKey, fkMessage);
     nameCorrelationMessageColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_MESSAGES,
+            ColumnFamilies.DEPRECATED_MESSAGES,
             transactionContext,
             nameCorrelationMessageKey,
             DbNil.INSTANCE);
@@ -140,7 +140,7 @@ public final class LegacyMessageState {
     deadlineMessageKey = new DbCompositeKey<>(deadline, fkMessage);
     deadlineColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_DEADLINES,
+            ColumnFamilies.MESSAGE_DEADLINES,
             transactionContext,
             deadlineMessageKey,
             DbNil.INSTANCE);
@@ -149,7 +149,7 @@ public final class LegacyMessageState {
     messagesDeadlineCountKey = new DbString();
     messagesDeadlineCountColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_STATS,
+            ColumnFamilies.MESSAGE_STATS,
             transactionContext,
             messagesDeadlineCountKey,
             messagesDeadlineCount);
@@ -160,7 +160,7 @@ public final class LegacyMessageState {
     nameCorrelationMessageIdKey = new DbCompositeKey<>(nameAndCorrelationKey, messageId);
     messageIdColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_IDS,
+            ColumnFamilies.MESSAGE_IDS,
             transactionContext,
             nameCorrelationMessageIdKey,
             DbNil.INSTANCE);
@@ -169,7 +169,7 @@ public final class LegacyMessageState {
     messageBpmnProcessIdKey = new DbCompositeKey<>(fkMessage, bpmnProcessIdKey);
     correlatedMessageColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_CORRELATED,
+            ColumnFamilies.MESSAGE_CORRELATED,
             transactionContext,
             messageBpmnProcessIdKey,
             DbNil.INSTANCE);
@@ -177,7 +177,7 @@ public final class LegacyMessageState {
     bpmnProcessIdCorrelationKey = new DbCompositeKey<>(bpmnProcessIdKey, correlationKey);
     activeProcessInstancesByCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_PROCESSES_ACTIVE_BY_CORRELATION_KEY,
+            ColumnFamilies.MESSAGE_PROCESSES_ACTIVE_BY_CORRELATION_KEY,
             transactionContext,
             bpmnProcessIdCorrelationKey,
             DbNil.INSTANCE);
@@ -185,7 +185,7 @@ public final class LegacyMessageState {
     processInstanceKey = new DbLong();
     processInstanceCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_PROCESS_INSTANCE_CORRELATION_KEYS,
+            ColumnFamilies.MESSAGE_PROCESS_INSTANCE_CORRELATION_KEYS,
             transactionContext,
             processInstanceKey,
             correlationKey);

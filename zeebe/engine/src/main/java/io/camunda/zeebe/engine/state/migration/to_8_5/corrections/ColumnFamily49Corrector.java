@@ -18,7 +18,7 @@ import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.ZeebeDbConstants;
 import io.camunda.zeebe.engine.state.migration.DbMigratorImpl;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,19 +29,19 @@ import org.slf4j.LoggerFactory;
  * was written wrongly to the Process Instance Key by Definition Key column family.
  *
  * <p>Correction: {@link
- * ZbColumnFamilies#DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION}
- * -> {@link ZbColumnFamilies#PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY}
+ * ColumnFamilies#DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION}
+ * -> {@link ColumnFamilies#PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY}
  */
 @SuppressWarnings("deprecation") // deals with deprecated column families
 public class ColumnFamily49Corrector {
 
   private static final Logger LOG = LoggerFactory.getLogger(DbMigratorImpl.class.getPackageName());
 
-  private static final ZbColumnFamilies CF_UNDER_RECOVERY =
-      ZbColumnFamilies
+  private static final ColumnFamilies CF_UNDER_RECOVERY =
+      ColumnFamilies
           .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION;
-  private static final ZbColumnFamilies CF_POSSIBLE_TARGET =
-      ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY;
+  private static final ColumnFamilies CF_POSSIBLE_TARGET =
+      ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY;
 
   private final ColumnFamily<DbBytes, DbBytes> recoverColumnFamily;
 
@@ -54,7 +54,7 @@ public class ColumnFamily49Corrector {
   private final DbCompositeKey<DbString, DbInt> decisionRequirementsIdAndVersion;
 
   public ColumnFamily49Corrector(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     recoverColumnFamily =
         zeebeDb.createColumnFamily(
             CF_UNDER_RECOVERY, transactionContext, new DbBytes(), new DbBytes());
@@ -65,7 +65,7 @@ public class ColumnFamily49Corrector {
         new DbCompositeKey<>(processDefinitionKey, elementInstanceKey);
     processInstanceKeyByProcessDefinitionKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
+            ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
             transactionContext,
             processInstanceKeyByProcessDefinitionKey,
             DbNil.INSTANCE);

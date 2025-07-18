@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.util.EnsureUtil;
 import java.util.List;
@@ -73,17 +73,17 @@ public final class DbJobState implements JobState, MutableJobState {
   private long nextBackOffDueDate;
 
   public DbJobState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     jobKey = new DbLong();
-    fkJob = new DbForeignKey<>(jobKey, ZbColumnFamilies.JOBS);
+    fkJob = new DbForeignKey<>(jobKey, ColumnFamilies.JOBS);
     jobsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
+            ColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
 
     statesJobColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_STATES, transactionContext, fkJob, jobState);
+            ColumnFamilies.JOB_STATES, transactionContext, fkJob, jobState);
 
     jobTypeKey = new DbString();
     tenantIdKey = new DbString();
@@ -91,7 +91,7 @@ public final class DbJobState implements JobState, MutableJobState {
     tenantAwareTypeJobKey = new DbTenantAwareKey<>(tenantIdKey, typeJobKey, PlacementType.SUFFIX);
     activatableColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_ACTIVATABLE,
+            ColumnFamilies.JOB_ACTIVATABLE,
             transactionContext,
             tenantAwareTypeJobKey,
             DbNil.INSTANCE);
@@ -100,13 +100,13 @@ public final class DbJobState implements JobState, MutableJobState {
     deadlineJobKey = new DbCompositeKey<>(deadlineKey, fkJob);
     deadlinesColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_DEADLINES, transactionContext, deadlineJobKey, DbNil.INSTANCE);
+            ColumnFamilies.JOB_DEADLINES, transactionContext, deadlineJobKey, DbNil.INSTANCE);
 
     backoffKey = new DbLong();
     backoffJobKey = new DbCompositeKey<>(backoffKey, fkJob);
     backoffColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
+            ColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
   }
 
   @Override

@@ -51,7 +51,7 @@ import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.logstreams.util.ListLogStorage;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
@@ -516,12 +516,12 @@ public final class EngineRule extends ExternalResource {
     environmentRule.resumeProcessing(partitionId);
   }
 
-  public Map<ZbColumnFamilies, Map<Object, Object>> collectState() {
+  public Map<ColumnFamilies, Map<Object, Object>> collectState() {
 
     final var keyInstance = new VersatileBlob();
     final var valueInstance = new VersatileBlob();
 
-    return Arrays.stream(ZbColumnFamilies.values())
+    return Arrays.stream(ColumnFamilies.values())
         .collect(
             Collectors.toMap(
                 Function.identity(),

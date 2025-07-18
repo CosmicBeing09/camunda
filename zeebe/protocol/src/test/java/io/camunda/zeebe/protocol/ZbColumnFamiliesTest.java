@@ -27,7 +27,7 @@ class ZbColumnFamiliesTest {
 
   @Test
   void shouldNotReuseEnumValues() {
-    assertThat(Arrays.stream(ZbColumnFamilies.values()).map(ZbColumnFamilies::getValue))
+    assertThat(Arrays.stream(ColumnFamilies.values()).map(ColumnFamilies::getValue))
         .doesNotHaveDuplicates();
   }
 
@@ -35,12 +35,12 @@ class ZbColumnFamiliesTest {
   @Test
   void shouldNotSkipEnumValues() {
     assertThat(
-            Arrays.stream(ZbColumnFamilies.values()).mapToInt(ZbColumnFamilies::getValue).toArray())
+            Arrays.stream(ColumnFamilies.values()).mapToInt(ColumnFamilies::getValue).toArray())
         .describedAs("The enum values must be sequential")
-        .isEqualTo(IntStream.range(0, ZbColumnFamilies.values().length).toArray());
+        .isEqualTo(IntStream.range(0, ColumnFamilies.values().length).toArray());
   }
 
   public static Stream<Arguments> values() {
-    return Arrays.stream(ZbColumnFamilies.values()).map(Arguments::of);
+    return Arrays.stream(ColumnFamilies.values()).map(Arguments::of);
   }
 }

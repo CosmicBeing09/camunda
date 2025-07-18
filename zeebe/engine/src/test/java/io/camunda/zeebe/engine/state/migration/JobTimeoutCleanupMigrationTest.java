@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.instance.JobRecordValue;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ public class JobTimeoutCleanupMigrationTest {
 
   final JobTimeoutCleanupMigration jobTimeoutCleanupMigration = new JobTimeoutCleanupMigration();
 
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private ZeebeDb<ColumnFamilies> zeebeDb;
   private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
 
@@ -47,16 +47,16 @@ public class JobTimeoutCleanupMigrationTest {
   @BeforeEach
   public void setup() {
     jobKey = new DbLong();
-    fkJob = new DbForeignKey<>(jobKey, ZbColumnFamilies.JOBS);
+    fkJob = new DbForeignKey<>(jobKey, ColumnFamilies.JOBS);
     jobsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
+            ColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
 
     deadlineKey = new DbLong();
     deadlineJobKey = new DbCompositeKey<>(deadlineKey, fkJob);
     deadlinesColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_DEADLINES, transactionContext, deadlineJobKey, DbNil.INSTANCE);
+            ColumnFamilies.JOB_DEADLINES, transactionContext, deadlineJobKey, DbNil.INSTANCE);
 
     jobKey.wrapLong(1);
   }

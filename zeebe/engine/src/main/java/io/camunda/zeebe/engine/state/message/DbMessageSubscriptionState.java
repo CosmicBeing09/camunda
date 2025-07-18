@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.immutable.PendingMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
@@ -58,7 +58,7 @@ public final class DbMessageSubscriptionState
   private final InstantSource clock;
 
   public DbMessageSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final TransientPendingSubscriptionState transientState,
       final InstantSource clock) {
@@ -70,7 +70,7 @@ public final class DbMessageSubscriptionState
     elementKeyAndMessageName = new DbCompositeKey<>(elementInstanceKey, messageName);
     subscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
+            ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
             transactionContext,
             elementKeyAndMessageName,
             messageSubscription);
@@ -84,7 +84,7 @@ public final class DbMessageSubscriptionState
         new DbCompositeKey<>(tenantAwareNameAndCorrelationKey, elementInstanceKey);
     messageNameAndCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
+            ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
             transactionContext,
             tenantAwareNameCorrelationAndElementInstanceKey,
             DbNil.INSTANCE);

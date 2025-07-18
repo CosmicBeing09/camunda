@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.ProcessExecutor;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.stream.impl.StreamProcessorMode;
@@ -133,11 +133,11 @@ public class ReplayStateRandomizedPropertyTest {
   }
 
   private void assertIdenticalStates(
-      final Map<ZbColumnFamilies, Map<Object, Object>> expectedState,
-      final Map<ZbColumnFamilies, Map<Object, Object>> actualState) {
+      final Map<ColumnFamilies, Map<Object, Object>> expectedState,
+      final Map<ColumnFamilies, Map<Object, Object>> actualState) {
     final var softly = new SoftAssertions();
     expectedState.entrySet().stream()
-        .filter(entry -> entry.getKey() != ZbColumnFamilies.DEFAULT)
+        .filter(entry -> entry.getKey() != ColumnFamilies.DEFAULT)
         .forEach(
             entry -> {
               final var column = entry.getKey();

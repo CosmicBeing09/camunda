@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.state.migration.DbMigratorImpl;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskState;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskState.State;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,17 +28,17 @@ import org.slf4j.LoggerFactory;
  * which may contain entries for the MigrationState column family. Vice-versa correction is not
  * needed because no data was written wrongly to the MigrationState column family.
  *
- * <p>Correction: {@link ZbColumnFamilies#DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY} -> {@link
- * ZbColumnFamilies#MIGRATIONS_STATE}
+ * <p>Correction: {@link ColumnFamilies#DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY} -> {@link
+ * ColumnFamilies#MIGRATIONS_STATE}
  */
 @SuppressWarnings("deprecation") // deals with deprecated column families
 public final class ColumnFamily50Corrector {
 
   private static final Logger LOG = LoggerFactory.getLogger(DbMigratorImpl.class.getPackageName());
 
-  private static final ZbColumnFamilies CF_UNDER_RECOVERY =
-      ZbColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY;
-  private static final ZbColumnFamilies CF_POSSIBLE_TARGET = ZbColumnFamilies.MIGRATIONS_STATE;
+  private static final ColumnFamilies CF_UNDER_RECOVERY =
+      ColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY;
+  private static final ColumnFamilies CF_POSSIBLE_TARGET = ColumnFamilies.MIGRATIONS_STATE;
 
   private final ColumnFamily<DbBytes, DbBytes> recoverySignalNameAndSubscriptionKeyColumnFamily;
 
@@ -52,7 +52,7 @@ public final class ColumnFamily50Corrector {
   private final ColumnFamily<DbString, MigrationTaskState> migrationStateColumnFamily;
 
   public ColumnFamily50Corrector(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     recoverySignalNameAndSubscriptionKeyColumnFamily =
         zeebeDb.createColumnFamily(
             CF_UNDER_RECOVERY, transactionContext, new DbBytes(), new DbBytes());

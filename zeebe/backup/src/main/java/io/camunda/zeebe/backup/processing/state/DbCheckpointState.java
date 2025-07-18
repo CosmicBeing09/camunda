@@ -11,7 +11,7 @@ import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 public final class DbCheckpointState implements CheckpointState {
   private static final String CHECKPOINT_KEY = "checkpoint";
@@ -21,12 +21,12 @@ public final class DbCheckpointState implements CheckpointState {
   private final DbString checkpointInfoKey;
 
   public DbCheckpointState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     checkpointInfoKey = new DbString();
     checkpointInfoKey.wrapString(CHECKPOINT_KEY);
     checkpointColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEFAULT, transactionContext, checkpointInfoKey, checkpointInfo);
+            ColumnFamilies.DEFAULT, transactionContext, checkpointInfoKey, checkpointInfo);
   }
 
   @Override

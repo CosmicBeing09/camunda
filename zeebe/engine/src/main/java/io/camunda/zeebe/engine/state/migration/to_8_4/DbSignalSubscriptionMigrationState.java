@@ -18,7 +18,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.migration.to_8_4.legacy.LegacySignalSubscriptionState;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbSignalSubscriptionMigrationState {
@@ -27,7 +27,7 @@ public class DbSignalSubscriptionMigrationState {
   private final DbSignalSubscriptionState to;
 
   public DbSignalSubscriptionMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacySignalSubscriptionState(zeebeDb, transactionContext);
     to = new DbSignalSubscriptionState(zeebeDb, transactionContext);
   }
@@ -95,7 +95,7 @@ public class DbSignalSubscriptionMigrationState {
         subscriptionKeyAndSignalNameColumnFamily;
 
     public DbSignalSubscriptionState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       signalName = new DbString();
       subscriptionKey = new DbLong();
       tenantIdKey = new DbString();
@@ -104,7 +104,7 @@ public class DbSignalSubscriptionMigrationState {
           new DbCompositeKey<>(tenantAwareSignalName, subscriptionKey);
       signalNameAndSubscriptionKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
+              ColumnFamilies.SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
               transactionContext,
               tenantAwareSignalNameAndSubscriptionKey,
               signalSubscription);
@@ -113,7 +113,7 @@ public class DbSignalSubscriptionMigrationState {
           new DbCompositeKey<>(subscriptionKey, tenantAwareSignalName);
       subscriptionKeyAndSignalNameColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.SIGNAL_SUBSCRIPTION_BY_KEY_AND_NAME,
+              ColumnFamilies.SIGNAL_SUBSCRIPTION_BY_KEY_AND_NAME,
               transactionContext,
               tenantAwareSubscriptionKeyAndSignalName,
               DbNil.INSTANCE);

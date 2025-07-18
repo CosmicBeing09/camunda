@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.metrics.IncidentMetrics;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
 import io.camunda.zeebe.engine.state.mutable.MutableIncidentState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
 import java.util.function.ObjLongConsumer;
 
@@ -47,26 +47,26 @@ public final class DbIncidentState implements MutableIncidentState {
   private final IncidentMetrics metrics;
 
   public DbIncidentState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId) {
     incidentKey = new DbLong();
     incidentColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.INCIDENTS, transactionContext, incidentKey, incidentRead);
+            ColumnFamilies.INCIDENTS, transactionContext, incidentKey, incidentRead);
 
-    elementInstanceKey = new DbForeignKey<>(new DbLong(), ZbColumnFamilies.ELEMENT_INSTANCE_KEY);
+    elementInstanceKey = new DbForeignKey<>(new DbLong(), ColumnFamilies.ELEMENT_INSTANCE_KEY);
     processInstanceIncidentColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.INCIDENT_PROCESS_INSTANCES,
+            ColumnFamilies.INCIDENT_PROCESS_INSTANCES,
             transactionContext,
             elementInstanceKey,
             incidentKeyValue);
 
-    jobKey = new DbForeignKey<>(new DbLong(), ZbColumnFamilies.JOBS);
+    jobKey = new DbForeignKey<>(new DbLong(), ColumnFamilies.JOBS);
     jobIncidentColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.INCIDENT_JOBS, transactionContext, jobKey, incidentKeyValue);
+            ColumnFamilies.INCIDENT_JOBS, transactionContext, jobKey, incidentKeyValue);
 
     metrics = new IncidentMetrics(zeebeDb.getMeterRegistry());
   }

@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.message.MessageSubscription;
 import io.camunda.zeebe.engine.state.migration.MemoryBoundedColumnIteration;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyMessageSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbMessageSubscriptionMigrationState {
@@ -28,7 +28,7 @@ public class DbMessageSubscriptionMigrationState {
   private final DbMessageSubscriptionState to;
 
   public DbMessageSubscriptionMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacyMessageSubscriptionState(zeebeDb, transactionContext);
     to = new DbMessageSubscriptionState(zeebeDb, transactionContext);
   }
@@ -74,7 +74,7 @@ public class DbMessageSubscriptionMigrationState {
         messageNameAndCorrelationKeyColumnFamily;
 
     public DbMessageSubscriptionState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
       elementInstanceKey = new DbLong();
       messageName = new DbString();
@@ -82,7 +82,7 @@ public class DbMessageSubscriptionMigrationState {
       elementKeyAndMessageName = new DbCompositeKey<>(elementInstanceKey, messageName);
       subscriptionColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
+              ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
               transactionContext,
               elementKeyAndMessageName,
               messageSubscription);
@@ -96,7 +96,7 @@ public class DbMessageSubscriptionMigrationState {
           new DbCompositeKey<>(tenantAwareNameAndCorrelationKey, elementInstanceKey);
       messageNameAndCorrelationKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
+              ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
               transactionContext,
               tenantAwareNameCorrelationAndElementInstanceKey,
               DbNil.INSTANCE);

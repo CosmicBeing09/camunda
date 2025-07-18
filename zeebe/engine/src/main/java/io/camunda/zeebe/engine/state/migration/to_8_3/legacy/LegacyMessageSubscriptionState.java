@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.message.MessageSubscription;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
 
 public final class LegacyMessageSubscriptionState {
@@ -37,7 +37,7 @@ public final class LegacyMessageSubscriptionState {
       messageNameAndCorrelationKeyColumnFamily;
 
   public LegacyMessageSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     elementInstanceKey = new DbLong();
     messageName = new DbString();
@@ -45,7 +45,7 @@ public final class LegacyMessageSubscriptionState {
     elementKeyAndMessageName = new DbCompositeKey<>(elementInstanceKey, messageName);
     subscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
+            ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
             transactionContext,
             elementKeyAndMessageName,
             messageSubscription);
@@ -56,7 +56,7 @@ public final class LegacyMessageSubscriptionState {
         new DbCompositeKey<>(nameAndCorrelationKey, elementInstanceKey);
     messageNameAndCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
+            ColumnFamilies.DEPRECATED_MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
             transactionContext,
             nameCorrelationAndElementInstanceKey,
             DbNil.INSTANCE);

@@ -22,7 +22,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.metrics.BufferedMessagesMetrics;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import org.agrona.DirectBuffer;
@@ -131,15 +131,15 @@ public final class DbMessageState implements MutableMessageState {
   private Long localMessageDeadlineCount = 0L;
 
   public DbMessageState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId) {
     messageKey = new DbLong();
-    fkMessage = new DbForeignKey<>(messageKey, ZbColumnFamilies.MESSAGE_KEY);
+    fkMessage = new DbForeignKey<>(messageKey, ColumnFamilies.MESSAGE_KEY);
     message = new StoredMessage();
     messageColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_KEY, transactionContext, messageKey, message);
+            ColumnFamilies.MESSAGE_KEY, transactionContext, messageKey, message);
 
     tenantIdKey = new DbString();
     messageName = new DbString();
@@ -149,7 +149,7 @@ public final class DbMessageState implements MutableMessageState {
     nameCorrelationMessageKey = new DbCompositeKey<>(nameAndCorrelationKey, fkMessage);
     nameCorrelationMessageColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGES,
+            ColumnFamilies.MESSAGES,
             transactionContext,
             nameCorrelationMessageKey,
             DbNil.INSTANCE);
@@ -158,7 +158,7 @@ public final class DbMessageState implements MutableMessageState {
     deadlineMessageKey = new DbCompositeKey<>(deadline, fkMessage);
     deadlineColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_DEADLINES,
+            ColumnFamilies.MESSAGE_DEADLINES,
             transactionContext,
             deadlineMessageKey,
             DbNil.INSTANCE);
@@ -167,7 +167,7 @@ public final class DbMessageState implements MutableMessageState {
     messagesDeadlineCountKey = new DbString();
     messagesDeadlineCountColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_STATS,
+            ColumnFamilies.MESSAGE_STATS,
             transactionContext,
             messagesDeadlineCountKey,
             messagesDeadlineCount);
@@ -178,7 +178,7 @@ public final class DbMessageState implements MutableMessageState {
     nameCorrelationMessageIdKey = new DbCompositeKey<>(nameAndCorrelationKey, messageId);
     messageIdColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_IDS,
+            ColumnFamilies.MESSAGE_IDS,
             transactionContext,
             nameCorrelationMessageIdKey,
             DbNil.INSTANCE);
@@ -187,7 +187,7 @@ public final class DbMessageState implements MutableMessageState {
     messageBpmnProcessIdKey = new DbCompositeKey<>(fkMessage, bpmnProcessIdKey);
     correlatedMessageColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_CORRELATED,
+            ColumnFamilies.MESSAGE_CORRELATED,
             transactionContext,
             messageBpmnProcessIdKey,
             DbNil.INSTANCE);
@@ -195,7 +195,7 @@ public final class DbMessageState implements MutableMessageState {
     bpmnProcessIdCorrelationKey = new DbCompositeKey<>(bpmnProcessIdKey, correlationKey);
     activeProcessInstancesByCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_PROCESSES_ACTIVE_BY_CORRELATION_KEY,
+            ColumnFamilies.MESSAGE_PROCESSES_ACTIVE_BY_CORRELATION_KEY,
             transactionContext,
             bpmnProcessIdCorrelationKey,
             DbNil.INSTANCE);
@@ -203,7 +203,7 @@ public final class DbMessageState implements MutableMessageState {
     processInstanceKey = new DbLong();
     processInstanceCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_PROCESS_INSTANCE_CORRELATION_KEYS,
+            ColumnFamilies.MESSAGE_PROCESS_INSTANCE_CORRELATION_KEYS,
             transactionContext,
             processInstanceKey,
             correlationKey);

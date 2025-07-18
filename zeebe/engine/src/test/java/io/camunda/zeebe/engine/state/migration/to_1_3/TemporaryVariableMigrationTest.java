@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.state.migration.TemporaryVariableMigration;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -51,7 +51,7 @@ public class TemporaryVariableMigrationTest {
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE)).thenReturn(true);
+      when(mockProcessingState.isEmpty(ColumnFamilies.TEMPORARY_VARIABLE_STORE)).thenReturn(true);
       final var actual =
           sutMigration.needsToRun(
               new MigrationTaskContextImpl(new ClusterContextImpl(1), mockProcessingState));
@@ -66,7 +66,7 @@ public class TemporaryVariableMigrationTest {
       final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE))
+      when(mockProcessingState.isEmpty(ColumnFamilies.TEMPORARY_VARIABLE_STORE))
           .thenReturn(false);
       final var actual =
           sutMigration.needsToRun(
@@ -99,7 +99,7 @@ public class TemporaryVariableMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   public class BlackboxTest {
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private ZeebeDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDbTemporaryVariablesState legacyTemporaryVariablesState;

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -432,8 +432,8 @@ public final class ElementInstanceStateTest {
 
     // then
     final var nonEmptyColumns =
-        Arrays.stream(ZbColumnFamilies.values())
-            .filter(not(ZbColumnFamilies.KEY::equals))
+        Arrays.stream(ColumnFamilies.values())
+            .filter(not(ColumnFamilies.KEY::equals))
             .filter(not(processingState::isEmpty))
             .collect(Collectors.toList());
 

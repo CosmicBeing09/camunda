@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
@@ -36,27 +36,27 @@ public final class ProcessExecutionCleanStateTest {
 
   private static final String PROCESS_ID = "process";
 
-  private static final List<ZbColumnFamilies> IGNORE_NON_EMPTY_COLUMNS =
+  private static final List<ColumnFamilies> IGNORE_NON_EMPTY_COLUMNS =
       List.of(
-          ZbColumnFamilies.DEFAULT,
-          ZbColumnFamilies.KEY,
-          ZbColumnFamilies.PROCESS_VERSION,
-          ZbColumnFamilies.PROCESS_CACHE,
-          ZbColumnFamilies.PROCESS_CACHE_BY_ID_AND_VERSION,
-          ZbColumnFamilies.PROCESS_CACHE_DIGEST_BY_ID,
-          ZbColumnFamilies.PROCESS_DEFINITION_KEY_BY_PROCESS_ID_AND_DEPLOYMENT_KEY,
-          ZbColumnFamilies.MESSAGE_STATS,
-          ZbColumnFamilies.MIGRATIONS_STATE,
-          ZbColumnFamilies.DEPLOYMENT_RAW,
-          ZbColumnFamilies.USERS,
-          ZbColumnFamilies.USERNAME_BY_USER_KEY,
-          ZbColumnFamilies.PERMISSIONS,
-          ZbColumnFamilies.ROLES,
-          ZbColumnFamilies.TENANTS,
-          ZbColumnFamilies.AUTHORIZATIONS,
-          ZbColumnFamilies.AUTHORIZATION_KEYS_BY_OWNER,
-          ZbColumnFamilies.ROUTING,
-          ZbColumnFamilies.BOOTSTRAPPED_AT);
+          ColumnFamilies.DEFAULT,
+          ColumnFamilies.KEY,
+          ColumnFamilies.PROCESS_VERSION,
+          ColumnFamilies.PROCESS_CACHE,
+          ColumnFamilies.PROCESS_CACHE_BY_ID_AND_VERSION,
+          ColumnFamilies.PROCESS_CACHE_DIGEST_BY_ID,
+          ColumnFamilies.PROCESS_DEFINITION_KEY_BY_PROCESS_ID_AND_DEPLOYMENT_KEY,
+          ColumnFamilies.MESSAGE_STATS,
+          ColumnFamilies.MIGRATIONS_STATE,
+          ColumnFamilies.DEPLOYMENT_RAW,
+          ColumnFamilies.USERS,
+          ColumnFamilies.USERNAME_BY_USER_KEY,
+          ColumnFamilies.PERMISSIONS,
+          ColumnFamilies.ROLES,
+          ColumnFamilies.TENANTS,
+          ColumnFamilies.AUTHORIZATIONS,
+          ColumnFamilies.AUTHORIZATION_KEYS_BY_OWNER,
+          ColumnFamilies.ROUTING,
+          ColumnFamilies.BOOTSTRAPPED_AT);
 
   @Rule public EngineRule engineRule = EngineRule.singlePartition();
 
@@ -872,7 +872,7 @@ public final class ProcessExecutionCleanStateTest {
         .untilAsserted(
             () -> {
               final var nonEmptyColumns =
-                  Arrays.stream(ZbColumnFamilies.values())
+                  Arrays.stream(ColumnFamilies.values())
                       .filter(not(IGNORE_NON_EMPTY_COLUMNS::contains))
                       .filter(not(processingState::isEmpty))
                       .collect(Collectors.toList());

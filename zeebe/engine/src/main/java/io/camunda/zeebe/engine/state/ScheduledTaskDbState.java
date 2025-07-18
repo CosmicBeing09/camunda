@@ -23,13 +23,13 @@ import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
 import io.camunda.zeebe.engine.state.immutable.TimerInstanceState;
 import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.instance.DbJobState;
+import io.camunda.zeebe.engine.state.instance.DbTaskState;
 import io.camunda.zeebe.engine.state.instance.DbTimerInstanceState;
-import io.camunda.zeebe.engine.state.instance.DbUserTaskState;
 import io.camunda.zeebe.engine.state.message.DbMessageState;
 import io.camunda.zeebe.engine.state.message.DbMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.DbProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.time.InstantSource;
 
 /** Contains read-only state that can be accessed safely by scheduled tasks. */
@@ -46,7 +46,7 @@ public final class ScheduledTaskDbState implements ScheduledTaskState {
   private final BatchOperationState batchOperationState;
 
   public ScheduledTaskDbState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId,
       final TransientPendingSubscriptionState transientMessageSubscriptionState,
@@ -63,7 +63,7 @@ public final class ScheduledTaskDbState implements ScheduledTaskState {
     pendingProcessMessageSubscriptionState =
         new DbProcessMessageSubscriptionState(
             zeebeDb, transactionContext, transientProcessMessageSubscriptionState, clock);
-    userTaskState = new DbUserTaskState(zeebeDb, transactionContext);
+    userTaskState = new DbTaskState(zeebeDb, transactionContext);
     batchOperationState = new DbBatchOperationState(zeebeDb, transactionContext);
   }
 

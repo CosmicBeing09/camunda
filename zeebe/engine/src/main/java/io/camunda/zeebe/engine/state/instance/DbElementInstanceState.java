@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -75,7 +75,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       processInstanceKeyByProcessDefinitionKeyColumnFamily;
 
   public DbElementInstanceState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final ZeebeDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final MutableVariableState variableState) {
 
@@ -85,16 +85,16 @@ public final class DbElementInstanceState implements MutableElementInstanceState
     parentKey =
         new DbForeignKey<>(
             new DbLong(),
-            ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+            ColumnFamilies.ELEMENT_INSTANCE_KEY,
             MatchType.Full,
             (k) -> k.getValue() == -1);
     parentChildKey =
         new DbCompositeKey<>(
             parentKey,
-            new DbForeignKey<>(elementInstanceKey, ZbColumnFamilies.ELEMENT_INSTANCE_KEY));
+            new DbForeignKey<>(elementInstanceKey, ColumnFamilies.ELEMENT_INSTANCE_KEY));
     parentChildColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
+            ColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
             transactionContext,
             parentChildKey,
             DbNil.INSTANCE);
@@ -102,7 +102,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
     elementInstance = new ElementInstance();
     elementInstanceColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+            ColumnFamilies.ELEMENT_INSTANCE_KEY,
             transactionContext,
             elementInstanceKey,
             elementInstance);
@@ -110,7 +110,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
     awaitResultMetadata = new AwaitProcessInstanceResultMetadata();
     awaitProcessInstanceResultMetadataColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.AWAIT_WORKLOW_RESULT,
+            ColumnFamilies.AWAIT_WORKFLOW_RESULT,
             transactionContext,
             elementInstanceKey,
             awaitResultMetadata);
@@ -120,7 +120,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
         new DbCompositeKey<>(flowScopeKeyAndElementId, sequenceFlowElementId);
     numberOfTakenSequenceFlowsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.NUMBER_OF_TAKEN_SEQUENCE_FLOWS,
+            ColumnFamilies.NUMBER_OF_TAKEN_SEQUENCE_FLOWS,
             transactionContext,
             numberOfTakenSequenceFlowsKey,
             numberOfTakenSequenceFlows);
@@ -130,7 +130,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
         new DbCompositeKey<>(processDefinitionKey, elementInstanceKey);
     processInstanceKeyByProcessDefinitionKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
+            ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
             transactionContext,
             processInstanceKeyByProcessDefinitionKey,
             DbNil.INSTANCE);

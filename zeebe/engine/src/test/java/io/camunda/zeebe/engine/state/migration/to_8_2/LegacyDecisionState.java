@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecisionRequirements;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
 
@@ -28,12 +28,12 @@ public class LegacyDecisionState {
   private final ColumnFamily<DbLong, PersistedDecisionRequirements> decisionRequirementsByKey;
 
   public LegacyDecisionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     dbDecisionKey = new DbLong();
     dbPersistedDecision = new PersistedDecision();
     decisionsByKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISIONS,
+            ColumnFamilies.DEPRECATED_DMN_DECISIONS,
             transactionContext,
             dbDecisionKey,
             dbPersistedDecision);
@@ -42,7 +42,7 @@ public class LegacyDecisionState {
     dbPersistedDecisionRequirements = new PersistedDecisionRequirements();
     decisionRequirementsByKey =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS,
+            ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS,
             transactionContext,
             dbDecisionRequirementsKey,
             dbPersistedDecisionRequirements);

@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.util.Collection;
 import java.util.function.BiConsumer;
 import org.agrona.DirectBuffer;
@@ -31,12 +31,12 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
   private final ColumnFamily<DbCompositeKey<DbLong, DbLong>, EventTrigger> eventTriggerColumnFamily;
 
   public DbEventScopeInstanceState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     eventScopeKey = new DbLong();
     eventScopeInstance = new EventScopeInstance();
     eventScopeInstanceColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.EVENT_SCOPE, transactionContext, eventScopeKey, eventScopeInstance);
+            ColumnFamilies.EVENT_SCOPE, transactionContext, eventScopeKey, eventScopeInstance);
 
     eventTriggerScopeKey = new DbLong();
     eventTriggerEventKey = new DbLong();
@@ -44,7 +44,7 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
     eventTrigger = new EventTrigger();
     eventTriggerColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.EVENT_TRIGGER, transactionContext, eventTriggerKey, eventTrigger);
+            ColumnFamilies.EVENT_TRIGGER, transactionContext, eventTriggerKey, eventTrigger);
   }
 
   @Override

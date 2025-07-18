@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_2;
 import io.camunda.zeebe.engine.state.migration.MigrationTask;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContext;
 import io.camunda.zeebe.engine.state.migration.MutableMigrationTaskContext;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 public class DecisionRequirementsMigration implements MigrationTask {
 
@@ -24,11 +24,11 @@ public class DecisionRequirementsMigration implements MigrationTask {
     return context
             .processingState()
             .isEmpty(
-                ZbColumnFamilies
+                ColumnFamilies
                     .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION)
         && !context
             .processingState()
-            .isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
+            .isEmpty(ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
   }
 
   @Override

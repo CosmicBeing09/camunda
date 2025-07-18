@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.migration;
 
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 /** Reads out the temporary variable column and creates an EventTrigger for reach of them. */
 public class TemporaryVariableMigration implements MigrationTask {
@@ -19,7 +19,7 @@ public class TemporaryVariableMigration implements MigrationTask {
 
   @Override
   public boolean needsToRun(final MigrationTaskContext context) {
-    return !context.processingState().isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE);
+    return !context.processingState().isEmpty(ColumnFamilies.TEMPORARY_VARIABLE_STORE);
   }
 
   @Override

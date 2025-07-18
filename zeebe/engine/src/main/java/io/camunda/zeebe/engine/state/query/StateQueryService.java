@@ -15,8 +15,8 @@ import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -28,10 +28,10 @@ public final class StateQueryService implements QueryService {
 
   private volatile boolean isClosed;
   private ProcessingState state;
-  private final ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private final ZeebeDb<ColumnFamilies> zeebeDb;
   private final InstantSource clock;
 
-  public StateQueryService(final ZeebeDb<ZbColumnFamilies> zeebeDb, final InstantSource clock) {
+  public StateQueryService(final ZeebeDb<ColumnFamilies> zeebeDb, final InstantSource clock) {
     this.zeebeDb = zeebeDb;
     this.clock = clock;
   }

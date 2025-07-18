@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -33,7 +33,7 @@ public class DbMigrationStateTest {
 
   private static final long TEST_SENT_TIME = 1000L;
 
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private ZeebeDb<ColumnFamilies> zeebeDb;
 
   private MutableAsyncProcessingContext processingState;
 
@@ -67,7 +67,7 @@ public class DbMigrationStateTest {
 
     // the sent time column family is empty
     assertThat(
-            zeebeDb.isEmpty(ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
+            zeebeDb.isEmpty(ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
         .describedAs("Column family MESSAGE_SUBSCRIPTION_BY_SENT_TIME is empty")
         .isTrue();
 
@@ -159,7 +159,7 @@ public class DbMigrationStateTest {
     // then
     // the sent time column family is empty
     assertThat(
-            zeebeDb.isEmpty(ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
+            zeebeDb.isEmpty(ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
         .describedAs("Column family PROCESS_SUBSCRIPTION_BY_SENT_TIME is empty")
         .isTrue();
 

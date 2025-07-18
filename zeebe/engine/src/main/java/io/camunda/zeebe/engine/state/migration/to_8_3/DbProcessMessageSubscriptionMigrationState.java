@@ -18,7 +18,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
 import io.camunda.zeebe.engine.state.migration.MemoryBoundedColumnIteration;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyProcessMessageSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbProcessMessageSubscriptionMigrationState {
@@ -27,7 +27,7 @@ public class DbProcessMessageSubscriptionMigrationState {
   private final DbProcessMessageSubscriptionState to;
 
   public DbProcessMessageSubscriptionMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacyProcessMessageSubscriptionState(zeebeDb, transactionContext);
     to = new DbProcessMessageSubscriptionState(zeebeDb, transactionContext);
   }
@@ -66,7 +66,7 @@ public class DbProcessMessageSubscriptionMigrationState {
         subscriptionColumnFamily;
 
     public DbProcessMessageSubscriptionState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       elementInstanceKey = new DbLong();
       tenantIdKey = new DbString();
       messageName = new DbString();
@@ -77,7 +77,7 @@ public class DbProcessMessageSubscriptionMigrationState {
 
       subscriptionColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_KEY,
+              ColumnFamilies.PROCESS_SUBSCRIPTION_BY_KEY,
               transactionContext,
               elementKeyAndMessageName,
               processMessageSubscription);

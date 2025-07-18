@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import org.agrona.DirectBuffer;
 
@@ -37,13 +37,13 @@ public class LegacySignalSubscriptionState {
       subscriptionKeyAndSignalNameColumnFamily;
 
   public LegacySignalSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     signalName = new DbString();
     subscriptionKey = new DbLong();
     signalNameAndSubscriptionKey = new DbCompositeKey<>(signalName, subscriptionKey);
     signalNameAndSubscriptionKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
+            ColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_NAME_AND_KEY,
             transactionContext,
             signalNameAndSubscriptionKey,
             signalSubscription);
@@ -51,7 +51,7 @@ public class LegacySignalSubscriptionState {
     subscriptionKeyAndSignalName = new DbCompositeKey<>(subscriptionKey, signalName);
     subscriptionKeyAndSignalNameColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_KEY_AND_NAME,
+            ColumnFamilies.DEPRECATED_SIGNAL_SUBSCRIPTION_BY_KEY_AND_NAME,
             transactionContext,
             subscriptionKeyAndSignalName,
             DbNil.INSTANCE);
