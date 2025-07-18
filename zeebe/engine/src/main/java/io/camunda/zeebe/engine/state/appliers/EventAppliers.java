@@ -82,65 +82,65 @@ public final class EventAppliers implements EventApplier {
   public static final TypedEventApplier<Intent, RecordValue> NOOP_EVENT_APPLIER =
       (key, value) -> {};
 
-  private final Map<Intent, Map<Integer, TypedEventApplier>> mapping = new HashMap<>();
+  private final Map<Intent, Map<Integer, TypedEventApplier>> appliersByIntentAndVersion = new HashMap<>();
 
-  public EventAppliers registerEventAppliers(final MutableProcessingState state) {
-    registerProcessInstanceEventAppliers(state);
-    registerProcessInstanceCreationAppliers(state);
-    registerProcessInstanceModificationAppliers(state);
+  public EventAppliers registerEventAppliers(final MutableProcessingState processingState) {
+    registerProcessInstanceEventAppliers(processingState);
+    registerProcessInstanceCreationAppliers(processingState);
+    registerProcessInstanceModificationAppliers(processingState);
     registerProcessInstanceMigrationAppliers();
     register(ProcessInstanceResultIntent.COMPLETED, NOOP_EVENT_APPLIER);
     register(ProcessInstanceBatchIntent.ACTIVATED, NOOP_EVENT_APPLIER);
     register(ProcessInstanceBatchIntent.TERMINATED, NOOP_EVENT_APPLIER);
 
-    registerProcessAppliers(state);
-    register(ErrorIntent.CREATED, new ErrorCreatedApplier(state.getBannedInstanceState()));
-    registerDeploymentAppliers(state);
+    registerProcessAppliers(processingState);
+    register(ErrorIntent.CREATED, new ErrorCreatedApplier(processingState.getBannedInstanceState()));
+    registerDeploymentAppliers(processingState);
 
-    registerMessageAppliers(state);
-    registerMessageCorrelationAppliers(state);
-    registerMessageSubscriptionAppliers(state);
-    registerMessageStartEventSubscriptionAppliers(state);
+    registerMessageAppliers(processingState);
+    registerMessageCorrelationAppliers(processingState);
+    registerMessageSubscriptionAppliers(processingState);
+    registerMessageStartEventSubscriptionAppliers(processingState);
 
-    registerJobIntentEventAppliers(state);
-    registerVariableEventAppliers(state);
-    register(JobBatchIntent.ACTIVATED, new JobBatchActivatedApplier(state));
-    registerIncidentEventAppliers(state);
-    registerProcessMessageSubscriptionEventAppliers(state);
-    registerTimeEventAppliers(state);
-    registerProcessEventAppliers(state);
+    registerJobIntentEventAppliers(processingState);
+    registerVariableEventAppliers(processingState);
+    register(JobBatchIntent.ACTIVATED, new JobBatchActivatedApplier(processingState));
+    registerIncidentEventAppliers(processingState);
+    registerProcessMessageSubscriptionEventAppliers(processingState);
+    registerTimeEventAppliers(processingState);
+    registerProcessEventAppliers(processingState);
 
-    registerDecisionAppliers(state);
-    registerDecisionRequirementsAppliers(state);
+    registerDecisionAppliers(processingState);
+    registerDecisionRequirementsAppliers(processingState);
     registerDecisionEvaluationAppliers();
 
-    registerFormAppliers(state);
+    registerFormAppliers(processingState);
 
-    registerResourceAppliers(state);
+    registerResourceAppliers(processingState);
 
-    registerUserTaskAppliers(state);
+    registerUserTaskAppliers(processingState);
 
-    registerSignalAppliers(state);
+    registerSignalAppliers(processingState);
 
-    registerCompensationSubscriptionApplier(state);
+    registerCompensationSubscriptionApplier(processingState);
 
-    registerCommandDistributionAppliers(state);
+    registerCommandDistributionAppliers(processingState);
     registerEscalationAppliers();
     registerResourceDeletionAppliers();
 
     registerAdHocSubProcessActivityActivationAppliers();
 
-    registerUserAppliers(state);
-    registerAuthorizationAppliers(state);
-    registerClockAppliers(state);
-    registerRoleAppliers(state);
-    registerGroupAppliers(state);
-    registerScalingAppliers(state);
-    registerTenantAppliers(state);
-    registerMappingAppliers(state);
-    registerBatchOperationAppliers(state);
+    registerUserAppliers(processingState);
+    registerAuthorizationAppliers(processingState);
+    registerClockAppliers(processingState);
+    registerRoleAppliers(processingState);
+    registerGroupAppliers(processingState);
+    registerScalingAppliers(processingState);
+    registerTenantAppliers(processingState);
+    registerMappingAppliers(processingState);
+    registerBatchOperationAppliers(processingState);
     registerIdentitySetupAppliers();
-    registerAsyncRequestAppliers(state);
+    registerAsyncRequestAppliers(processingState);
 
     return this;
   }
@@ -657,7 +657,7 @@ public final class EventAppliers implements EventApplier {
     }
 
     final var previousApplier =
-        mapping.computeIfAbsent(intent, unused -> new HashMap<>()).putIfAbsent(version, applier);
+        appliersByIntentAndVersion.computeIfAbsent(intent, unused -> new HashMap<>()).putIfAbsent(version, applier);
     if (previousApplier != null) {
       throw new IllegalArgumentException(
           String.format(
@@ -667,7 +667,7 @@ public final class EventAppliers implements EventApplier {
 
   @Override
   public int getLatestVersion(final Intent intent) {
-    return mapping.getOrDefault(intent, new HashMap<>()).keySet().stream()
+    return appliersByIntentAndVersion.getOrDefault(intent, new HashMap<>()).keySet().stream()
         .max(Comparator.naturalOrder())
         .orElse(-1);
   }
@@ -676,7 +676,7 @@ public final class EventAppliers implements EventApplier {
   public void applyState(
       final long key, final Intent intent, final RecordValue value, final int recordVersion)
       throws NoSuchEventApplier {
-    final var applierForIntent = mapping.get(intent);
+    final var applierForIntent = appliersByIntentAndVersion.get(intent);
     if (applierForIntent == null) {
       throw new NoApplierForIntent(intent);
     }
