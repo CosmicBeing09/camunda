@@ -17,7 +17,7 @@ package io.camunda.client;
 
 import io.camunda.client.api.ExperimentalApi;
 import io.camunda.client.api.command.ActivateAdHocSubProcessActivitiesCommandStep1;
-import io.camunda.client.api.command.AddMappingToGroupStep1;
+import io.camunda.client.api.command.AssignMappingToGroupCommandStep1;
 import io.camunda.client.api.command.AssignGroupToTenantCommandStep1;
 import io.camunda.client.api.command.AssignMappingToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToClientCommandStep1;
@@ -2203,7 +2203,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder for the command
    */
-  AddMappingToGroupStep1 newAssignMappingToGroupCommand();
+  AssignMappingToGroupCommandStep1 newAssignMappingToGroupCommand();
 
   /**
    * Command to unassign a mapping rule from a group.
