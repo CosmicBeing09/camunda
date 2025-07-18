@@ -42,8 +42,8 @@ public class MessageSubscriptionMigrateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> command) {
-    migrateMessageSubscription(command);
+  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> groupRemovalCommand) {
+    migrateMessageSubscription(groupRemovalCommand);
   }
 
   @Override

@@ -80,35 +80,35 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<MappingRecord> groupRemovalCommand) {
+    final var record = groupRemovalCommand.getValue();
     final String id = record.getMappingId();
     final var persistedMappingOptional = mappingState.get(id);
     if (persistedMappingOptional.isEmpty()) {
       final var errorMessage = MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(id);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var authorizationRequest =
         new AuthorizationRequest(
-            command, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
+            groupRemovalCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
     final long key = keyGenerator.nextKey();
     deleteMapping(persistedMappingOptional.get(), key);
-    responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record, command);
+    responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record, groupRemovalCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

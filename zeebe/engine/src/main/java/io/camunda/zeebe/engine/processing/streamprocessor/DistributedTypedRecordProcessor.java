@@ -37,9 +37,9 @@ public interface DistributedTypedRecordProcessor<T extends UnifiedRecordValue>
   /**
    * Process a command that is not distributed yet
    *
-   * @param command the not yet distributed command to process
+   * @param groupRemovalCommand the not yet distributed command to process
    */
-  void processNewCommand(final TypedRecord<T> command);
+  void processNewCommand(final TypedRecord<T> groupRemovalCommand);
 
   /**
    * Process a command that has been distributed. Be aware to not distribute it again!

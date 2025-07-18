@@ -55,27 +55,27 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ClockRecord> command) {
+  public void processNewCommand(final TypedRecord<ClockRecord> groupRemovalCommand) {
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var intent = (ClockIntent) command.getIntent();
-    final var clockRecord = command.getValue();
+    final var intent = (ClockIntent) groupRemovalCommand.getIntent();
+    final var clockRecord = groupRemovalCommand.getValue();
 
     if (intent == ClockIntent.PIN && clockRecord.getTime() < 0) {
       final var rejectionMessage =
           "Expected pin time to be not negative but it was %d".formatted(clockRecord.getTime());
 
-      rejectionWriter.appendRejection(command, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       responseWriter.writeRejectionOnCommand(
-          command, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+          groupRemovalCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       return;
     }
 
@@ -83,11 +83,11 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (command.hasRequestMetadata()) {
-      responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord, command);
+    if (groupRemovalCommand.hasRequestMetadata()) {
+      responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord, groupRemovalCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(command);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(groupRemovalCommand);
   }
 
   @Override

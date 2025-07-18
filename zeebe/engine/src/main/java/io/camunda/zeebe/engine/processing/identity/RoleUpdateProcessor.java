@@ -52,37 +52,38 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> groupRemovalCommand) {
+    final var record = groupRemovalCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(record.getRoleId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(record.getRoleId());
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var persistedRole = persistedRecord.get();
     record.setRoleKey(persistedRole.getRoleKey());
     stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.UPDATED, record);
-    responseWriter.writeEventOnCommand(record.getRoleKey(), RoleIntent.UPDATED, record, command);
+    responseWriter.writeEventOnCommand(record.getRoleKey(), RoleIntent.UPDATED, record,
+        groupRemovalCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

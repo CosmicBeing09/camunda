@@ -61,38 +61,39 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> command) {
+  public void processNewCommand(final TypedRecord<UserRecord> groupRemovalCommand) {
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.CREATE);
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var username = command.getValue().getUsername();
+    final var username = groupRemovalCommand.getValue().getUsername();
     final var user = userState.getUser(username);
 
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, message);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    command.getValue().setUserKey(key);
+    groupRemovalCommand.getValue().setUserKey(key);
 
-    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, command.getValue());
+    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, groupRemovalCommand.getValue());
     addUserPermissions(key, username);
-    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, command.getValue(), command);
+    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, groupRemovalCommand.getValue(),
+        groupRemovalCommand);
 
     distributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

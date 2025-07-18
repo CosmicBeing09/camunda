@@ -50,24 +50,25 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> groupRemovalCommand) {
+    final var scaleUp = groupRemovalCommand.getValue();
 
-    final var optionalRejection = validateCommand(command);
+    final var optionalRejection = validateCommand(groupRemovalCommand);
     if (optionalRejection.isPresent()) {
       final var rejection = optionalRejection.get();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
     final var scalingKey = keyGenerator.nextKey();
-    scaleUp.setBootstrappedAt(command.getKey());
+    scaleUp.setBootstrappedAt(groupRemovalCommand.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
-    responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp, command);
+    responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp,
+        groupRemovalCommand);
     commandDistributionBehavior
         .withKey(scalingKey)
         .inQueue(DistributionQueue.SCALING)
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

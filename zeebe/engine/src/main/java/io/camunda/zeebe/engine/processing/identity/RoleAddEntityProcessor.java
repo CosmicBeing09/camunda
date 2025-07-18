@@ -69,55 +69,55 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> command) {
-    final var roleRecord = command.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> groupRemovalCommand) {
+    final var roleRecord = groupRemovalCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(roleRecord.getRoleId());
 
     final var authorizationResult = authCheckBehavior.authorizationResult(authorizationRequest);
     if (authorizationResult.isLeft()) {
       final var rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var existingRole = roleState.getRole(roleRecord.getRoleId());
     if (existingRole.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var entityId = roleRecord.getEntityId();
     final var entityType = roleRecord.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(command))) {
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(groupRemovalCommand))) {
       final var errorMessage =
           ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, roleRecord.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
     stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     responseWriter.writeEventOnCommand(
-        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, command);
+        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, groupRemovalCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

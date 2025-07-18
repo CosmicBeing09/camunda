@@ -54,27 +54,27 @@ public class TenantUpdateProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> command) {
+  public void processNewCommand(final TypedRecord<TenantRecord> groupRemovalCommand) {
 
-    final var record = command.getValue();
+    final var record = groupRemovalCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var persistedTenant = tenantState.getTenantById(tenantId);
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          command,
+          groupRemovalCommand,
           RejectionType.NOT_FOUND,
           "Expected to update tenant with id '%s', but no tenant with this id exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!isAuthorizedToUpdate(command, persistedTenant.get())) {
+    if (!isAuthorizedToUpdate(groupRemovalCommand, persistedTenant.get())) {
       return;
     }
 
     updateExistingTenant(persistedTenant.get(), record);
-    updateStateAndDistribute(command, persistedTenant.get());
+    updateStateAndDistribute(groupRemovalCommand, persistedTenant.get());
   }
 
   @Override

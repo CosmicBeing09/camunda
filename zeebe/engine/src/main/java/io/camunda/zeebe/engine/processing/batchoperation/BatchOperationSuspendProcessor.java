@@ -74,47 +74,48 @@ public final class BatchOperationSuspendProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> groupRemovalCommand) {
     final var request =
         new AuthorizationRequest(
-            command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            groupRemovalCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = command.getValue();
-    final var batchOperationKey = command.getValue().getBatchOperationKey();
+    final var recordValue = groupRemovalCommand.getValue();
+    final var batchOperationKey = groupRemovalCommand.getValue().getBatchOperationKey();
     final var suspendKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to suspend batch operation with key '{}': {}",
-        command.getKey(),
+        groupRemovalCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(command, batchOperationKey, recordValue);
+      rejectNotFound(groupRemovalCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be suspended
     if (!batchOperation.get().canSuspend()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(command, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(groupRemovalCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
     suspendBatchOperation(suspendKey, recordValue);
     responseWriter.writeEventOnCommand(
-        suspendKey, BatchOperationIntent.SUSPENDED, command.getValue(), command);
+        suspendKey, BatchOperationIntent.SUSPENDED, groupRemovalCommand.getValue(),
+        groupRemovalCommand);
     commandDistributionBehavior
         .withKey(suspendKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(command);
+        .distribute(groupRemovalCommand);
 
     metrics.recordSuspended(batchOperation.get().getBatchOperationType());
   }

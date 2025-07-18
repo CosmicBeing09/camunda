@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> command) {
+  public void processNewCommand(final TypedRecord<SignalRecord> groupRemovalCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = command.getValue();
+    final var signalRecord = groupRemovalCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(command, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(groupRemovalCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(command, isStartEvent, subscriptionRecord);
+          checkAuthorization(groupRemovalCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,11 +110,12 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (command.hasRequestMetadata()) {
-      responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord, command);
+    if (groupRemovalCommand.hasRequestMetadata()) {
+      responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
+          groupRemovalCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(command);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(groupRemovalCommand);
   }
 
   @Override

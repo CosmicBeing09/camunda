@@ -71,19 +71,19 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> groupRemovalCommand) {
     final var request =
         new AuthorizationRequest(
-            command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            groupRemovalCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = command.getValue();
+    final var recordValue = groupRemovalCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
     final var cancelKey = keyGenerator.nextKey();
     LOGGER.debug(
@@ -95,20 +95,21 @@ public final class BatchOperationCancelProcessor
     if (batchOperation.isPresent() && batchOperation.get().canCancel()) {
       cancelBatchOperationEvent(cancelKey, recordValue);
       responseWriter.writeEventOnCommand(
-          cancelKey, BatchOperationIntent.CANCELED, command.getValue(), command);
+          cancelKey, BatchOperationIntent.CANCELED, groupRemovalCommand.getValue(),
+          groupRemovalCommand);
       commandDistributionBehavior
           .withKey(cancelKey)
           .inQueue(DistributionQueue.BATCH_OPERATION)
-          .distribute(command);
+          .distribute(groupRemovalCommand);
 
       metrics.recordCancelled(batchOperation.get().getBatchOperationType());
     } else {
       rejectionWriter.appendRejection(
-          command,
+          groupRemovalCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
       responseWriter.writeRejectionOnCommand(
-          command,
+          groupRemovalCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
     }

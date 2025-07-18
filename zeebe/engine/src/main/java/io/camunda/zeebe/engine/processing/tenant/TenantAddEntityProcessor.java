@@ -72,21 +72,21 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> groupRemovalCommand) {
+    final var record = groupRemovalCommand.getValue();
     final var tenantId = record.getTenantId();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(command, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(groupRemovalCommand, isAuthorized.getLeft());
       return;
     }
 
     final var tenantLookup = getPersistedTenant(record);
     if (tenantLookup.isLeft()) {
-      rejectCommand(command, RejectionType.NOT_FOUND, tenantLookup.getLeft());
+      rejectCommand(groupRemovalCommand, RejectionType.NOT_FOUND, tenantLookup.getLeft());
       return;
     }
 
@@ -96,20 +96,21 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
 
     final var entityId = record.getEntityId();
     final var entityType = record.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(command))) {
-      createEntityNotExistRejectCommand(command, entityId, entityType, tenantId);
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(groupRemovalCommand))) {
+      createEntityNotExistRejectCommand(groupRemovalCommand, entityId, entityType, tenantId);
       return;
     }
 
     if (isEntityAssigned(record)) {
-      createAlreadyAssignedRejectCommand(command, entityId, entityType, tenantId);
+      createAlreadyAssignedRejectCommand(groupRemovalCommand, entityId, entityType, tenantId);
       return;
     }
 
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_ADDED, record);
-    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_ADDED, record, command);
+    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_ADDED, record,
+        groupRemovalCommand);
 
-    distributeCommand(command);
+    distributeCommand(groupRemovalCommand);
   }
 
   @Override

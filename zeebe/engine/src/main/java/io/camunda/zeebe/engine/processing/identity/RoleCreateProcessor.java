@@ -52,35 +52,35 @@ public class RoleCreateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> command) {
+  public void processNewCommand(final TypedRecord<RoleRecord> groupRemovalCommand) {
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.CREATE);
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.ROLE, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = command.getValue();
+    final var record = groupRemovalCommand.getValue();
     final var persistedRole = roleState.getRole(record.getRoleId());
     if (persistedRole.isPresent()) {
       final var errorMessage = ROLE_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
     final long key = keyGenerator.nextKey();
     record.setRoleKey(key);
 
     stateWriter.appendFollowUpEvent(key, RoleIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, RoleIntent.CREATED, record, command);
+    responseWriter.writeEventOnCommand(key, RoleIntent.CREATED, record, groupRemovalCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

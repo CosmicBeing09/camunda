@@ -49,9 +49,9 @@ public class AuthorizationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> command) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> groupRemovalCommand) {
     permissionsBehavior
-        .isAuthorized(command, PermissionType.CREATE)
+        .isAuthorized(groupRemovalCommand, PermissionType.CREATE)
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
@@ -62,10 +62,10 @@ public class AuthorizationCreateProcessor
         .flatMap(permissionsBehavior::mappingExists)
         .flatMap(permissionsBehavior::permissionsAlreadyExist)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(command, command.getValue()),
+            authorizationRecord -> writeEventAndDistribute(groupRemovalCommand, groupRemovalCommand.getValue()),
             (rejection) -> {
-              rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
             });
   }
 

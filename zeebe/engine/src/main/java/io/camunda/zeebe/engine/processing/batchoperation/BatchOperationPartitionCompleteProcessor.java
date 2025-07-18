@@ -58,11 +58,11 @@ public final class BatchOperationPartitionCompleteProcessor
    * Processes a non-distributed command to mark a partition of a batch operation as completed. This
    * occurs, when the leader marks itself as completed.
    *
-   * @param command the command to process
+   * @param groupRemovalCommand the command to process
    */
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> command) {
-    doProcessRecord(command);
+  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> groupRemovalCommand) {
+    doProcessRecord(groupRemovalCommand);
   }
 
   /**

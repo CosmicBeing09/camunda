@@ -81,40 +81,40 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<UserRecord> groupRemovalCommand) {
+    final var record = groupRemovalCommand.getValue();
     final String username = record.getUsername();
     final var persistedUser = userState.getUser(username);
 
     if (persistedUser.isEmpty()) {
       final var rejectionMessage = USER_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(username);
 
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var user = persistedUser.get();
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.DELETE)
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.USER, PermissionType.DELETE)
             .addResourceId(user.getUsername());
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
     deleteUser(user);
     responseWriter.writeEventOnCommand(
-        user.getUserKey(), UserIntent.DELETED, command.getValue(), command);
+        user.getUserKey(), UserIntent.DELETED, groupRemovalCommand.getValue(), groupRemovalCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

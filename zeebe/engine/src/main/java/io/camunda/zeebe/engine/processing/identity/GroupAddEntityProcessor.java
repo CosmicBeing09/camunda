@@ -61,16 +61,16 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> groupRemovalCommand) {
+    final var record = groupRemovalCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+        new AuthorizationRequest(groupRemovalCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
             .addResourceId(record.getGroupId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
@@ -80,8 +80,8 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
       final var errorMessage =
           "Expected to update group with ID '%s', but a group with this ID does not exist."
               .formatted(groupId);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -92,8 +92,8 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
       final var errorMessage =
           "Expected to add an entity with ID '%s' and type '%s' to group with ID '%s', but the entity does not exist."
               .formatted(entityId, entityType, groupId);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -101,19 +101,20 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(
               record.getEntityId(), record.getGroupId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
     stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_ADDED, record);
-    responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, record, command);
+    responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, record,
+        groupRemovalCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

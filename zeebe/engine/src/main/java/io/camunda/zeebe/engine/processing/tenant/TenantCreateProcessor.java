@@ -54,20 +54,20 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> command) {
-    if (!isAuthorizedToCreate(command)) {
+  public void processNewCommand(final TypedRecord<TenantRecord> groupRemovalCommand) {
+    if (!isAuthorizedToCreate(groupRemovalCommand)) {
       return;
     }
 
-    final var record = command.getValue();
+    final var record = groupRemovalCommand.getValue();
     if (tenantAlreadyExists(record.getTenantId())) {
       rejectCommand(
-          command,
+          groupRemovalCommand,
           RejectionType.ALREADY_EXISTS,
           TENANT_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getTenantId()));
     } else {
-      createTenant(command, record);
-      distributeCommand(command, record);
+      createTenant(groupRemovalCommand, record);
+      distributeCommand(groupRemovalCommand, record);
     }
   }
 

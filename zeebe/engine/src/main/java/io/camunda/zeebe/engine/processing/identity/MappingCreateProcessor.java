@@ -57,19 +57,19 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> command) {
+  public void processNewCommand(final TypedRecord<MappingRecord> groupRemovalCommand) {
     final var authorizationRequest =
         new AuthorizationRequest(
-            command, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
+            groupRemovalCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = command.getValue();
+    final var record = groupRemovalCommand.getValue();
     if (record.getMappingId() == null
         || record.getMappingId().isBlank()
         || record.getName() == null
@@ -84,8 +84,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
               record.getClaimValue(),
               record.getName(),
               record.getMappingId());
-      rejectionWriter.appendRejection(command, RejectionType.NULL_VAL, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NULL_VAL, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.NULL_VAL, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.NULL_VAL, errorMessage);
       return;
     }
 
@@ -95,8 +95,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       final var errorMessage =
           MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
               record.getClaimName(), record.getClaimValue());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -104,8 +104,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
     if (persistedMappingWithSameId.isPresent()) {
       final var errorMessage =
           MAPPING_SAME_ID_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getMappingId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -113,12 +113,12 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
     record.setMappingKey(key);
 
     stateWriter.appendFollowUpEvent(key, MappingIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, MappingIntent.CREATED, record, command);
+    responseWriter.writeEventOnCommand(key, MappingIntent.CREATED, record, groupRemovalCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(groupRemovalCommand);
   }
 
   @Override

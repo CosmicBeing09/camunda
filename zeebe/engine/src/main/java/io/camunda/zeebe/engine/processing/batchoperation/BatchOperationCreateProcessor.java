@@ -66,25 +66,25 @@ public final class BatchOperationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> command) {
-    if (isEmptyOrNullFilter(command)) {
+  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> groupRemovalCommand) {
+    if (isEmptyOrNullFilter(groupRemovalCommand)) {
       rejectionWriter.appendRejection(
-          command, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          groupRemovalCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       responseWriter.writeRejectionOnCommand(
-          command, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          groupRemovalCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
 
-    final var authorizationResult = isAuthorized(command);
+    final var authorizationResult = isAuthorized(groupRemovalCommand);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(groupRemovalCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(groupRemovalCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    final var recordValue = command.getValue();
+    final var recordValue = groupRemovalCommand.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
     metrics.startTotalLatencyMeasure(key, recordValue.getBatchOperationType());
 
@@ -98,11 +98,12 @@ public final class BatchOperationCreateProcessor
         BatchOperationIntent.CREATED,
         recordWithKey,
         FollowUpEventMetadata.of(b -> b.batchOperationReference(key)));
-    responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey, command);
+    responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey,
+        groupRemovalCommand);
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(command.getValueType(), command.getIntent(), recordWithKey);
+        .distribute(groupRemovalCommand.getValueType(), groupRemovalCommand.getIntent(), recordWithKey);
 
     metrics.recordCreated(recordWithKey.getBatchOperationType());
   }
