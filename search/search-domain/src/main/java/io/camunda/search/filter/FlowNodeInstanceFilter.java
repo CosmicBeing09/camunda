@@ -154,13 +154,13 @@ FilterBase {
       return tenantIds(collectValuesAsList(values));
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final List<String> operations) {
+    public FlowNodeInstanceFilter.Builder startDateFilters(final List<String> operations) {
       startDateFilters = addValuesToList(startDateFilters, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final String... values) {
-      return startDates(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder startDateFilters(final String... values) {
+      return startDateFilters(collectValuesAsList(values));
     }
 
     public FlowNodeInstanceFilter.Builder endDates(final List<String> values) {
