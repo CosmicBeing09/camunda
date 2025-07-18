@@ -76,7 +76,7 @@ public class DecisionInstanceIT {
     final var decisionDefinition =
         DecisionDefinitionFixtures.createAndSaveRandomDecisionDefinition(rdbmsWriter, b -> b);
     createAndSaveRandomDecisionInstances(
-        rdbmsWriter, b -> b.decisionDefinitionKey(decisionDefinition.decisionDefinitionKey()));
+        rdbmsWriter, b -> b.decisionDefinitionKey(decisionDefinition.key()));
 
     final var searchResult =
         decisionInstanceReader.search(
@@ -85,7 +85,7 @@ public class DecisionInstanceIT {
                     b.filter(
                             f ->
                                 f.decisionDefinitionKeys(
-                                    decisionDefinition.decisionDefinitionKey()))
+                                    decisionDefinition.key()))
                         .sort(s -> s.evaluationDate().asc().decisionDefinitionName().asc())
                         .page(p -> p.from(0).size(5))));
 
@@ -108,8 +108,8 @@ public class DecisionInstanceIT {
         createAndSaveRandomDecisionInstance(
             rdbmsWriter,
             b ->
-                b.decisionDefinitionKey(decisionDefinition.decisionDefinitionKey())
-                    .decisionDefinitionId(decisionDefinition.decisionDefinitionId()));
+                b.decisionDefinitionKey(decisionDefinition.key())
+                    .decisionDefinitionId(decisionDefinition.id()));
     final var searchResult =
         decisionInstanceReader.search(
             DecisionInstanceQuery.of(
@@ -149,8 +149,8 @@ public class DecisionInstanceIT {
     createAndSaveRandomDecisionInstances(
         rdbmsWriter,
         b ->
-            b.decisionDefinitionKey(decisionDefinition.decisionDefinitionKey())
-                .decisionDefinitionId(decisionDefinition.decisionDefinitionId()));
+            b.decisionDefinitionKey(decisionDefinition.key())
+                .decisionDefinitionId(decisionDefinition.id()));
     final var sort =
         DecisionInstanceSort.of(
             s ->
@@ -165,7 +165,7 @@ public class DecisionInstanceIT {
             DecisionInstanceQuery.of(
                 b ->
                     b.filter(
-                            f -> f.decisionDefinitionIds(decisionDefinition.decisionDefinitionId()))
+                            f -> f.decisionDefinitionIds(decisionDefinition.id()))
                         .sort(sort)));
 
     final var firstPage =
@@ -173,7 +173,7 @@ public class DecisionInstanceIT {
             DecisionInstanceQuery.of(
                 b ->
                     b.filter(
-                            f -> f.decisionDefinitionIds(decisionDefinition.decisionDefinitionId()))
+                            f -> f.decisionDefinitionIds(decisionDefinition.id()))
                         .sort(sort)
                         .page(p -> p.size(15))));
 
@@ -182,7 +182,7 @@ public class DecisionInstanceIT {
             DecisionInstanceQuery.of(
                 b ->
                     b.filter(
-                            f -> f.decisionDefinitionIds(decisionDefinition.decisionDefinitionId()))
+                            f -> f.decisionDefinitionIds(decisionDefinition.id()))
                         .sort(sort)
                         .page(p -> p.size(5).after(firstPage.afterCursor()))));
 
