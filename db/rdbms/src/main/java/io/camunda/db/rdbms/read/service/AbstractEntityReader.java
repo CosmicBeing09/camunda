@@ -53,17 +53,17 @@ abstract class AbstractEntityReader<T> {
   public final DbQuerySorting<T> convertSort(
       final SortOption sortOption, final SearchColumn<T>... discriminatorColumns) {
     final var builder = new DbQuerySorting.Builder<T>();
-    final var discriminatorColumnList = new ArrayList<>(Arrays.asList(discriminatorColumns));
+    final var discriminatorList = new ArrayList<>(Arrays.asList(discriminatorColumns));
 
     for (final FieldSorting fieldSorting : sortOption.getFieldSortings()) {
       final var column = getSearchColumn(fieldSorting.field());
 
       // remove the column from the discriminator list to not sort double
-      discriminatorColumnList.remove(column);
+      discriminatorList.remove(column);
       builder.addEntry(column, fieldSorting.order());
     }
 
-    for (final SearchColumn<T> discriminatorColumn : discriminatorColumnList) {
+    for (final SearchColumn<T> discriminatorColumn : discriminatorList) {
       builder.addEntry(discriminatorColumn, SortOrder.ASC);
     }
 
@@ -71,12 +71,12 @@ abstract class AbstractEntityReader<T> {
   }
 
   public DbQueryPage convertPaging(final DbQuerySorting<T> sort, final SearchQueryPage page) {
-    List<KeySetPagination> keySetPagination = new ArrayList<>();
+    List<KeySetPagination> pages = new ArrayList<>();
     if (page.after() != null || page.before() != null) {
-      keySetPagination = createKeySetPagination(sort, page);
+      pages = createKeySetPagination(sort, page);
     }
 
-    return new DbQueryPage(page.size(), page.from(), keySetPagination);
+    return new DbQueryPage(page.size(), page.from(), pages);
   }
 
   /**
