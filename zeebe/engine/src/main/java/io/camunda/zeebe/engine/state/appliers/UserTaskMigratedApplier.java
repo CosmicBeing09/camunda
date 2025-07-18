@@ -24,7 +24,7 @@ public final class UserTaskMigratedApplier
 
   @Override
   public void applyState(final long key, final UserTaskRecord value) {
-    final UserTaskRecord task = userTaskState.getUserTask(key);
+    final UserTaskRecord task = userTaskState.findUserTask(key);
     task.setProcessDefinitionKey(value.getProcessDefinitionKey())
         .setProcessDefinitionVersion(value.getProcessDefinitionVersion())
         .setBpmnProcessId(value.getBpmnProcessId())

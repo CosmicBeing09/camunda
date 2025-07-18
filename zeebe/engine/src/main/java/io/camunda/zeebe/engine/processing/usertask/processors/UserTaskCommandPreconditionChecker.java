@@ -63,7 +63,7 @@ public class UserTaskCommandPreconditionChecker {
   protected Either<Rejection, UserTaskRecord> check(final TypedRecord<UserTaskRecord> command) {
     final long userTaskKey = command.getKey();
     final var persistedRecord =
-        userTaskState.getUserTask(userTaskKey, authCheckBehavior.getAuthorizedTenantIds(command));
+        userTaskState.findAuthorizedUserTask(userTaskKey, authCheckBehavior.getAuthorizedTenantIds(command));
 
     if (persistedRecord == null) {
       return Either.left(

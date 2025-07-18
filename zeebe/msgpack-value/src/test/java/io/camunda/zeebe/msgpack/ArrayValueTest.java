@@ -341,7 +341,7 @@ public final class ArrayValueTest {
     final StringBuilder builder = new StringBuilder();
 
     // when
-    array.writeJSON(builder);
+    array.writePropertiesAsJson(builder);
 
     // then
     assertThat(builder).hasToString("[{\"longProp\":1},{\"longProp\":2},{\"longProp\":3}]");

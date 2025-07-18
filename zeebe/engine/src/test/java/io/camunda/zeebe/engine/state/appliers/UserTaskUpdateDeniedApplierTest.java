@@ -86,7 +86,7 @@ public class UserTaskUpdateDeniedApplierTest {
         .hasFollowUpDate("");
 
     // Ensure that the actual user task state hasn't been updated yet
-    assertThat(userTaskState.getUserTask(userTaskKey))
+    assertThat(userTaskState.findUserTask(userTaskKey))
         .describedAs(
             "Expect the actual user task state to remain unchanged while the update is in progress")
         .isEqualTo(initialState);
@@ -103,7 +103,7 @@ public class UserTaskUpdateDeniedApplierTest {
         .describedAs("Expect that intermediate state is cleared after denial")
         .isNull();
 
-    assertThat(userTaskState.getUserTask(userTaskKey))
+    assertThat(userTaskState.findUserTask(userTaskKey))
         .describedAs("Expect user task to retain initial values after update was denied")
         .isEqualTo(initialState);
 

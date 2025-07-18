@@ -87,7 +87,7 @@ public class UserTaskCanceledApplierTest {
         .describedAs("Expect that request metadata is cleared after cancellation of the User Task")
         .isEmpty();
 
-    Assertions.assertThat(userTaskState.getUserTask(userTaskKey))
+    Assertions.assertThat(userTaskState.findUserTask(userTaskKey))
         .describedAs("Expect that state is cleared after cancellation of the User Task")
         .isNull();
   }
@@ -116,7 +116,7 @@ public class UserTaskCanceledApplierTest {
         .describedAs("Expect there is no request metadata for the User Task")
         .isEmpty();
 
-    Assertions.assertThat(userTaskState.getUserTask(userTaskKey))
+    Assertions.assertThat(userTaskState.findUserTask(userTaskKey))
         .describedAs("Expect that state is cleared after cancellation of the User Task")
         .isNull();
   }

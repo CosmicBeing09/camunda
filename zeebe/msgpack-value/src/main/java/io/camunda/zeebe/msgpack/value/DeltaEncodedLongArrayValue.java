@@ -27,7 +27,7 @@ import java.util.Objects;
  * DeltaEncodedLongArrayValue#read(MsgPackReader) reading from MsgPack format}, delta encoding is
  * used.
  *
- * <p>{@link DeltaEncodedLongArrayValue#writeJSON(StringBuilder) Writing in JSON format} does not
+ * <p>{@link DeltaEncodedLongArrayValue#writePropertiesAsJson(StringBuilder) Writing in JSON format} does not
  * use delta encoding to keep this optimization internal and not leak to external systems. JSON is
  * not space-efficient in any case, so we'd rather keep the delta-encoding internal as much as
  * possible.
@@ -48,7 +48,7 @@ public final class DeltaEncodedLongArrayValue extends BaseValue {
   private long[] values;
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
+  public void writePropertiesAsJson(final StringBuilder builder) {
     builder.append("[");
 
     for (var i = 0; i < values.length; i++) {

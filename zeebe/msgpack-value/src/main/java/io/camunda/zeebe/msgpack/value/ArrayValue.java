@@ -40,7 +40,7 @@ public final class ArrayValue<T extends BaseValue> extends BaseValue
   }
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
+  public void writePropertiesAsJson(final StringBuilder builder) {
     builder.append("[");
 
     for (int i = 0; i < items.size(); i++) {
@@ -48,7 +48,7 @@ public final class ArrayValue<T extends BaseValue> extends BaseValue
         builder.append(",");
       }
 
-      items.get(i).writeJSON(builder);
+      items.get(i).writePropertiesAsJson(builder);
     }
 
     builder.append("]");

@@ -205,15 +205,15 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
-  public UserTaskRecord getUserTask(final long key) {
+  public UserTaskRecord findUserTask(final long key) {
     userTaskKey.wrapLong(key);
     final UserTaskRecordValue userTask = userTasksColumnFamily.get(userTaskKey);
     return userTask == null ? null : userTask.getRecord();
   }
 
   @Override
-  public UserTaskRecord getUserTask(final long key, final AuthorizedTenants authorizedTenantIds) {
-    final UserTaskRecord userTask = getUserTask(key);
+  public UserTaskRecord findAuthorizedUserTask(final long key, final AuthorizedTenants authorizedTenantIds) {
+    final UserTaskRecord userTask = findUserTask(key);
     if (userTask != null && authorizedTenantIds.isAuthorizedForTenantId(userTask.getTenantId())) {
       return userTask;
     }

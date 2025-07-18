@@ -17,9 +17,9 @@ public interface UserTaskState {
 
   LifecycleState getLifecycleState(final long userTaskKey);
 
-  UserTaskRecord getUserTask(final long userTaskKey);
+  UserTaskRecord findUserTask(final long userTaskKey);
 
-  UserTaskRecord getUserTask(final long userTaskKey, final AuthorizedTenants authorizations);
+  UserTaskRecord findAuthorizedUserTask(final long userTaskKey, final AuthorizedTenants authorizations);
 
   UserTaskIntermediateStateValue getIntermediateState(final long userTaskKey);
 

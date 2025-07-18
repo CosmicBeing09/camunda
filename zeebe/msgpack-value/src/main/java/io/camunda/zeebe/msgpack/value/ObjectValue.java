@@ -51,7 +51,7 @@ public class ObjectValue extends BaseValue {
     }
   }
 
-  private UndeclaredProperty newUndeclaredProperty(final StringValue key) {
+  private UndeclaredProperty createOrRecycleUndeclaredProperty(final StringValue key) {
     final int recycledSize = recycledProperties.size();
 
     UndeclaredProperty prop = null;
@@ -69,7 +69,7 @@ public class ObjectValue extends BaseValue {
   }
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
+  public void writePropertiesAsJson(final StringBuilder builder) {
     builder.append("{");
 
     writeJson(builder, declaredProperties);
@@ -113,7 +113,7 @@ public class ObjectValue extends BaseValue {
       }
 
       if (prop == null) {
-        prop = newUndeclaredProperty(decodedKey);
+        prop = createOrRecycleUndeclaredProperty(decodedKey);
       }
 
       try {

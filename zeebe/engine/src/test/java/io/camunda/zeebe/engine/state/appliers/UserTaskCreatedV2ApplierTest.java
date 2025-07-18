@@ -134,7 +134,7 @@ public class UserTaskCreatedV2ApplierTest {
     userTaskCreatedV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
-    Assertions.assertThat(userTaskState.getUserTask(userTaskKey))
+    Assertions.assertThat(userTaskState.findUserTask(userTaskKey))
         .describedAs(
             "Expect that user task was updated and ensure corrections were stored. "
                 + "Expect that the changed attributes are not persisted. "

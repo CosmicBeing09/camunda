@@ -51,7 +51,7 @@ public class UserTaskStateTest {
     userTaskState.create(expectedRecord);
 
     // then
-    final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
+    final UserTaskRecord storedRecord = userTaskState.findUserTask(5_000);
     assertUserTask(expectedRecord, storedRecord, LifecycleState.CREATING);
   }
 
@@ -64,7 +64,7 @@ public class UserTaskStateTest {
     userTaskState.create(expectedRecord);
 
     // then
-    final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
+    final UserTaskRecord storedRecord = userTaskState.findUserTask(5_000);
     assertUserTask(expectedRecord, "customTenantId", storedRecord, LifecycleState.CREATING);
   }
 
@@ -79,7 +79,7 @@ public class UserTaskStateTest {
     userTaskState.update(expectedRecord);
 
     // then
-    final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
+    final UserTaskRecord storedRecord = userTaskState.findUserTask(5_000);
     assertThat(storedRecord).hasAssignee("myNewAssignee");
   }
 
@@ -118,7 +118,7 @@ public class UserTaskStateTest {
     userTaskState.delete(5_000);
 
     // then
-    assertThat(userTaskState.getUserTask(5_000)).isNull();
+    assertThat(userTaskState.findUserTask(5_000)).isNull();
   }
 
   @Test
@@ -134,7 +134,7 @@ public class UserTaskStateTest {
     for (final Consumer<UserTaskRecord> stateUpdate : stateUpdates) {
       userTask.setVariables(MsgPackUtil.asMsgPack("foo", "bar"));
       stateUpdate.accept(userTask);
-      final DirectBuffer variables = userTaskState.getUserTask(key).getVariablesBuffer();
+      final DirectBuffer variables = userTaskState.findUserTask(key).getVariablesBuffer();
       BufferAssert.assertThatBuffer(variables).isEqualTo(DocumentValue.EMPTY_DOCUMENT);
     }
   }
@@ -150,7 +150,7 @@ public class UserTaskStateTest {
     writtenRecord.setAssignee("foo");
 
     // then
-    final UserTaskRecord readRecord = userTaskState.getUserTask(key);
+    final UserTaskRecord readRecord = userTaskState.findUserTask(key);
     assertThat(readRecord).hasAssignee("test");
     assertThat(writtenRecord).hasAssignee("foo");
   }

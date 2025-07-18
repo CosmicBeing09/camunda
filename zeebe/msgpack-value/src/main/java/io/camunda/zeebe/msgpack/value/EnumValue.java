@@ -45,8 +45,8 @@ public final class EnumValue<E extends Enum<E>> extends BaseValue {
   }
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
-    decodedValue.writeJSON(builder);
+  public void writePropertiesAsJson(final StringBuilder builder) {
+    decodedValue.writePropertiesAsJson(builder);
   }
 
   @Override

@@ -125,7 +125,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     findNextTaskListener(listenerEventType, userTaskElement, userTaskElementInstance)
         .ifPresentOrElse(
             listener -> {
-              final var currentUserTask = userTaskState.getUserTask(command.getKey());
+              final var currentUserTask = userTaskState.findUserTask(command.getKey());
               final var changedAttributes =
                   intermediateUserTaskRecord.determineChangedAttributes(currentUserTask);
               jobBehavior.createNewTaskListenerJob(
@@ -138,7 +138,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
       final TypedRecord<UserTaskRecord> command,
       final LifecycleState lifecycleState,
       final UserTaskRecord userTaskRecord) {
-    final var currentUserTask = userTaskState.getUserTask(command.getKey());
+    final var currentUserTask = userTaskState.findUserTask(command.getKey());
     userTaskRecord.setDiffAsChangedAttributes(currentUserTask);
 
     final var commandProcessor = determineProcessorFromUserTaskLifecycleState(lifecycleState);
@@ -147,7 +147,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   private void processDenyTaskListener(final TypedRecord<UserTaskRecord> command) {
     final var lifecycleState = userTaskState.getLifecycleState(command.getKey());
-    final var persistedRecord = userTaskState.getUserTask(command.getKey());
+    final var persistedRecord = userTaskState.findUserTask(command.getKey());
 
     switch (lifecycleState) {
       case COMPLETING ->

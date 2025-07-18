@@ -24,7 +24,7 @@ public class UserTaskCreatedV2Applier implements TypedEventApplier<UserTaskInten
   @Override
   public void applyState(final long key, final UserTaskRecord value) {
     // Ensure we store any corrections
-    final UserTaskRecord userTask = userTaskState.getUserTask(key);
+    final UserTaskRecord userTask = userTaskState.findUserTask(key);
     userTask.wrapChangedAttributes(value, false);
     userTaskState.update(userTask);
 

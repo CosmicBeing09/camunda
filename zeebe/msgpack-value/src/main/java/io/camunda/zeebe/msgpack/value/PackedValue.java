@@ -39,7 +39,7 @@ public class PackedValue extends BaseValue {
   }
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
+  public void writePropertiesAsJson(final StringBuilder builder) {
     builder.append("[packed value (length=");
     builder.append(length);
     builder.append(")]");

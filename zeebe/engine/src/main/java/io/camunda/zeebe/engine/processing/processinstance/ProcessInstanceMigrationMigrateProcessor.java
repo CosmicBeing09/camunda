@@ -374,7 +374,7 @@ public class ProcessInstanceMigrationMigrateProcessor
     }
 
     if (elementInstance.getUserTaskKey() > 0) {
-      final var userTask = userTaskState.getUserTask(elementInstance.getUserTaskKey());
+      final var userTask = userTaskState.findUserTask(elementInstance.getUserTaskKey());
       if (userTask == null) {
         throw new SafetyCheckFailedException(
             String.format(

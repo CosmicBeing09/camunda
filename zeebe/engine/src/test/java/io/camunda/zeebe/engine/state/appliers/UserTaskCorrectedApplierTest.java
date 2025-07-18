@@ -85,7 +85,7 @@ public class UserTaskCorrectedApplierTest {
     setup.forEach(setupIntent -> testSetup.applyEventToState(userTaskKey, setupIntent, given));
     testSetup.applyEventToState(userTaskKey, mapLifecycleStateToIntent(state), given);
 
-    Assumptions.assumeThat(userTaskState.getUserTask(userTaskKey)).isNotNull();
+    Assumptions.assumeThat(userTaskState.findUserTask(userTaskKey)).isNotNull();
     Assumptions.assumeThat(userTaskState.getLifecycleState(userTaskKey)).isEqualTo(state);
     Assumptions.assumeThat(userTaskState.getIntermediateState(userTaskKey)).isNotNull();
 

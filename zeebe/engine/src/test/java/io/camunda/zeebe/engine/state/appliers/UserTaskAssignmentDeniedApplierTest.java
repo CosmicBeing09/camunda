@@ -62,7 +62,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     testSetup.applyEventToState(
         userTaskKey, UserTaskIntent.ASSIGNING, given.setAssignee(newAssignee));
 
-    Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())
+    Assertions.assertThat(userTaskState.findUserTask(userTaskKey).getAssignee())
         .isEqualTo(initialAssignee);
     Assertions.assertThat(userTaskState.getLifecycleState(userTaskKey))
         .isEqualTo(LifecycleState.ASSIGNING);
@@ -77,7 +77,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     Assertions.assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
         .describedAs("Expect that record request metadata is not present anymore")
         .isEmpty();
-    Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())
+    Assertions.assertThat(userTaskState.findUserTask(userTaskKey).getAssignee())
         .describedAs("Expect that user task assignee has not been updated")
         .isEqualTo(initialAssignee);
     Assertions.assertThat(userTaskState.getLifecycleState(userTaskKey))

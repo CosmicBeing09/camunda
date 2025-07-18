@@ -26,7 +26,7 @@ public final class UserTaskAssignedV1Applier
   @Override
   public void applyState(final long key, final UserTaskRecord value) {
     final String assignee = value.getAssignee();
-    final UserTaskRecord userTask = userTaskState.getUserTask(key);
+    final UserTaskRecord userTask = userTaskState.findUserTask(key);
     userTask.setAssignee(assignee);
     userTaskState.update(userTask);
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);

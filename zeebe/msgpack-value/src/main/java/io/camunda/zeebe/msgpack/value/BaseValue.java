@@ -12,7 +12,7 @@ import io.camunda.zeebe.msgpack.spec.MsgPackReader;
 import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
 
 public abstract class BaseValue implements Recyclable {
-  public abstract void writeJSON(StringBuilder builder);
+  public abstract void writePropertiesAsJson(StringBuilder builder);
 
   public abstract void write(MsgPackWriter writer);
 
@@ -23,7 +23,7 @@ public abstract class BaseValue implements Recyclable {
   @Override
   public String toString() {
     final StringBuilder stringBuilder = new StringBuilder();
-    writeJSON(stringBuilder);
+    writePropertiesAsJson(stringBuilder);
     return stringBuilder.toString();
   }
 }

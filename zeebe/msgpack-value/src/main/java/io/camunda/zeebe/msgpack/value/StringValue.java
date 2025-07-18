@@ -75,7 +75,7 @@ public final class StringValue extends BaseValue {
   }
 
   @Override
-  public void writeJSON(final StringBuilder builder) {
+  public void writePropertiesAsJson(final StringBuilder builder) {
     builder.append("\"");
     builder.append(toString());
     builder.append("\"");

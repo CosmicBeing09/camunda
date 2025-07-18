@@ -318,7 +318,7 @@ public final class BpmnUserTaskBehavior {
     if (!CANCELABLE_LIFECYCLE_STATES.contains(lifecycleState)) {
       return Optional.empty();
     }
-    final UserTaskRecord userTask = userTaskState.getUserTask(userTaskKey);
+    final UserTaskRecord userTask = userTaskState.findUserTask(userTaskKey);
     if (userTask == null) {
       return Optional.empty();
     }

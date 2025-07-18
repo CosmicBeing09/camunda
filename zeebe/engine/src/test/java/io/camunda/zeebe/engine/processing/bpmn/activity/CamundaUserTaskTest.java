@@ -702,7 +702,7 @@ public final class CamundaUserTaskTest {
                 .getValue())
         .hasAssignee("foo");
 
-    Assertions.assertThat(userTaskState.getUserTask(createdUserTask.getUserTaskKey()))
+    Assertions.assertThat(userTaskState.findUserTask(createdUserTask.getUserTaskKey()))
         .hasAssignee("foo");
   }
 
@@ -773,7 +773,7 @@ public final class CamundaUserTaskTest {
                 .getValue())
         .hasAssignee("foo");
 
-    Assertions.assertThat(userTaskState.getUserTask(createdUserTask.getUserTaskKey()))
+    Assertions.assertThat(userTaskState.findUserTask(createdUserTask.getUserTaskKey()))
         .hasAssignee("foo");
   }
 
@@ -837,7 +837,7 @@ public final class CamundaUserTaskTest {
             UserTaskRecord.FOLLOW_UP_DATE,
             UserTaskRecord.PRIORITY);
 
-    Assertions.assertThat(userTaskState.getUserTask(createdUserTask.getUserTaskKey()))
+    Assertions.assertThat(userTaskState.findUserTask(createdUserTask.getUserTaskKey()))
         .hasNoCandidateGroupsList()
         .hasNoCandidateUsersList()
         .hasDueDate("")
