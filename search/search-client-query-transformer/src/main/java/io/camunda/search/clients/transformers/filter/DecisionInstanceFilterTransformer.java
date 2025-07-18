@@ -109,7 +109,7 @@ public final class DecisionInstanceFilterTransformer
         decisionDefinitionKeyOperations.stream()
             .map(
                 op -> {
-                  final var values = op.values().stream().map(String::valueOf).toList();
+                  final var values = op.valueList().stream().map(String::valueOf).toList();
                   return new Operation<>(op.operator(), values);
                 })
             .toList();

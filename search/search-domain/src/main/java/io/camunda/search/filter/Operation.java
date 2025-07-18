@@ -10,10 +10,10 @@ package io.camunda.search.filter;
 import io.camunda.util.CollectionUtil;
 import java.util.List;
 
-public record Operation<T>(Operator operator, List<T> values) {
+public record Operation<T>(Operator operator, List<T> valueList) {
 
-  public Operation(final Operator operator, final T value) {
-    this(operator, CollectionUtil.collectValuesAsList(value));
+  public Operation(final Operator operator, final T singleValue) {
+    this(operator, CollectionUtil.collectValuesAsList(singleValue));
   }
 
   public static <T> Operation<T> of(final Operator operator, final T value) {
@@ -62,14 +62,14 @@ public record Operation<T>(Operator operator, List<T> values) {
   }
 
   public T value() {
-    if (values == null || values.isEmpty()) {
+    if (valueList == null || valueList.isEmpty()) {
       return null;
     }
-    return values.getFirst();
+    return valueList.getFirst();
   }
 
   @Override
   public List<T> values() {
-    return values;
+    return valueList;
   }
 }

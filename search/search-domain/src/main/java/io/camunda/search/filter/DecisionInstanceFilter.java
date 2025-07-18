@@ -130,7 +130,7 @@ public record DecisionInstanceFilter(
     }
 
     public Builder decisionDefinitionKeys(final Long value, final Long... values) {
-      return decisionDefinitionKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
+      return decisionDefinitionKeyOperations(FilterUtil.buildOperationFromValues(value, values));
     }
 
     @SafeVarargs

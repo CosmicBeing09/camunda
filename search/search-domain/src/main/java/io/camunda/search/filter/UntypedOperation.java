@@ -26,9 +26,9 @@ public record UntypedOperation(Operator operator, List<Object> values, ValueType
 
   public static UntypedOperation of(final Operation<?> operation) {
     final List<Object> typedValues;
-    if (operation.values() != null) {
+    if (operation.valueList() != null) {
       typedValues =
-          operation.values().stream()
+          operation.valueList().stream()
               .map(it -> mapValueType(it, ValueTypeUtil.getValueType(it)))
               .toList();
     } else {
