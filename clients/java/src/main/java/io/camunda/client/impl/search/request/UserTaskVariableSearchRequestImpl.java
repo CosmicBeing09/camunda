@@ -112,7 +112,7 @@ public class UserTaskVariableSearchRequestImpl
   }
 
   @Override
-  protected UserTaskVariableSearchQueryRequest getSearchRequestProperty() {
+  protected UserTaskVariableSearchQueryRequest getProperty() {
     return request;
   }
 }

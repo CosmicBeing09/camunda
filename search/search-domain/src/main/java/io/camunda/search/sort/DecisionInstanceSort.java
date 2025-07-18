@@ -27,67 +27,67 @@ public record DecisionInstanceSort(List<FieldSorting> orderings) implements Sort
       implements ObjectBuilder<DecisionInstanceSort> {
 
     public Builder decisionInstanceKey() {
-      currentOrdering = new FieldSorting("decisionInstanceKey", null);
+      currentFieldSorting = new FieldSorting("decisionInstanceKey", null);
       return this;
     }
 
     public Builder decisionInstanceId() {
-      currentOrdering = new FieldSorting("decisionInstanceId", null);
+      currentFieldSorting = new FieldSorting("decisionInstanceId", null);
       return this;
     }
 
     public Builder state() {
-      currentOrdering = new FieldSorting("state", null);
+      currentFieldSorting = new FieldSorting("state", null);
       return this;
     }
 
     public Builder evaluationDate() {
-      currentOrdering = new FieldSorting("evaluationDate", null);
+      currentFieldSorting = new FieldSorting("evaluationDate", null);
       return this;
     }
 
     public Builder evaluationFailure() {
-      currentOrdering = new FieldSorting("evaluationFailure", null);
+      currentFieldSorting = new FieldSorting("evaluationFailure", null);
       return this;
     }
 
     public Builder processDefinitionKey() {
-      currentOrdering = new FieldSorting("processDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("processDefinitionKey", null);
       return this;
     }
 
     public Builder processInstanceKey() {
-      currentOrdering = new FieldSorting("processInstanceKey", null);
+      currentFieldSorting = new FieldSorting("processInstanceKey", null);
       return this;
     }
 
     public Builder decisionDefinitionKey() {
-      currentOrdering = new FieldSorting("decisionDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionKey", null);
       return this;
     }
 
     public Builder decisionDefinitionId() {
-      currentOrdering = new FieldSorting("decisionDefinitionId", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionId", null);
       return this;
     }
 
     public Builder decisionDefinitionName() {
-      currentOrdering = new FieldSorting("decisionDefinitionName", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionName", null);
       return this;
     }
 
     public Builder decisionDefinitionVersion() {
-      currentOrdering = new FieldSorting("decisionDefinitionVersion", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionVersion", null);
       return this;
     }
 
     public Builder decisionDefinitionType() {
-      currentOrdering = new FieldSorting("decisionDefinitionType", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionType", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
@@ -98,7 +98,7 @@ public record DecisionInstanceSort(List<FieldSorting> orderings) implements Sort
 
     @Override
     public DecisionInstanceSort build() {
-      return new DecisionInstanceSort(orderings);
+      return new DecisionInstanceSort(fieldSortings);
     }
   }
 }

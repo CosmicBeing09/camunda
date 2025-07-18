@@ -30,7 +30,7 @@ import io.camunda.client.protocol.rest.ProcessDefinitionStatisticsFilter;
 import io.camunda.client.protocol.rest.ProcessInstanceStateEnum;
 import io.camunda.client.protocol.rest.ProcessInstanceStateFilterProperty;
 import io.camunda.client.protocol.rest.StringFilterProperty;
-import io.camunda.client.protocol.rest.VariableValueFilterRequest;
+import io.camunda.client.protocol.rest.VariableValueFilterProperty;
 import io.camunda.client.util.ClientRestTest;
 import java.time.OffsetDateTime;
 import java.util.Arrays;
@@ -62,13 +62,15 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
     // when
     final OffsetDateTime startDate = OffsetDateTime.now().minusDays(1);
     final OffsetDateTime endDate = OffsetDateTime.now();
-    final Map<String, Object> variablesMap = new LinkedHashMap<>();
-    variablesMap.put("n1", "v1");
-    variablesMap.put("n2", "v2");
-    final List<VariableValueFilterRequest> variables =
+    final Map<String, Object> variablesFilterMap = new LinkedHashMap<>();
+    variablesFilterMap.put("n1", "v1");
+    variablesFilterMap.put("n2", "v2");
+    final List<VariableValueFilterProperty> variableFiltersList =
         Arrays.asList(
-            new VariableValueFilterRequest().name("n1").value(new StringFilterProperty().$eq("v1")),
-            new VariableValueFilterRequest()
+            new VariableValueFilterProperty()
+                .name("n1")
+                .value(new StringFilterProperty().$eq("v1")),
+            new VariableValueFilterProperty()
                 .name("n2")
                 .value(new StringFilterProperty().$eq("v2")));
     client
@@ -83,7 +85,7 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
                     .state(ProcessInstanceState.ACTIVE)
                     .hasIncident(true)
                     .tenantId("tenant")
-                    .variables(variablesMap)
+                    .variables(variablesFilterMap)
                     .batchOperationId("batchOperationId")
                     .errorMessage("Error message")
                     .hasRetriesLeft(true)
@@ -108,7 +110,7 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
     assertThat(filter.getState().get$Eq()).isEqualTo(ProcessInstanceStateEnum.ACTIVE);
     assertThat(filter.getHasIncident()).isEqualTo(true);
     assertThat(filter.getTenantId().get$Eq()).isEqualTo("tenant");
-    assertThat(filter.getVariables()).isEqualTo(variables);
+    assertThat(filter.getVariables()).isEqualTo(variableFiltersList);
     assertThat(filter.getBatchOperationId().get$Eq()).isEqualTo("batchOperationId");
     assertThat(filter.getErrorMessage().get$Eq()).isEqualTo("Error message");
     assertThat(filter.getHasRetriesLeft()).isEqualTo(true);
@@ -183,10 +185,12 @@ public class ProcessDefinitionStatisticsTest extends ClientRestTest {
     final Map<String, Object> variablesMap = new LinkedHashMap<>();
     variablesMap.put("n1", "v1");
     variablesMap.put("n2", "v2");
-    final List<VariableValueFilterRequest> variables =
+    final List<VariableValueFilterProperty> variables =
         Arrays.asList(
-            new VariableValueFilterRequest().name("n1").value(new StringFilterProperty().$eq("v1")),
-            new VariableValueFilterRequest()
+            new VariableValueFilterProperty()
+                .name("n1")
+                .value(new StringFilterProperty().$eq("v1")),
+            new VariableValueFilterProperty()
                 .name("n2")
                 .value(new StringFilterProperty().$eq("v2")));
 

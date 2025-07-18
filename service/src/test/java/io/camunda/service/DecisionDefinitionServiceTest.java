@@ -36,25 +36,26 @@ import org.junit.jupiter.api.function.Executable;
 
 public final class DecisionDefinitionServiceTest {
 
-  private DecisionDefinitionServices services;
-  private DecisionDefinitionSearchClient client;
+  private DecisionDefinitionServices decisionDefinitionServices;
+  private DecisionDefinitionSearchClient decisionDefinitionSearchClient;
   private DecisionRequirementSearchClient decisionRequirementSearchClient;
   private SecurityContextProvider securityContextProvider;
   private Authentication authentication;
 
   @BeforeEach
   public void before() {
-    client = mock(DecisionDefinitionSearchClient.class);
+    decisionDefinitionSearchClient = mock(DecisionDefinitionSearchClient.class);
     decisionRequirementSearchClient = mock(DecisionRequirementSearchClient.class);
     securityContextProvider = mock(SecurityContextProvider.class);
-    when(client.withSecurityContext(any())).thenReturn(client);
+    when(decisionDefinitionSearchClient.withSecurityContext(any())).thenReturn(
+        decisionDefinitionSearchClient);
     when(decisionRequirementSearchClient.withSecurityContext(any()))
         .thenReturn(decisionRequirementSearchClient);
-    services =
+    decisionDefinitionServices =
         new DecisionDefinitionServices(
             mock(BrokerClient.class),
             securityContextProvider,
-            client,
+            decisionDefinitionSearchClient,
             decisionRequirementSearchClient,
             authentication);
   }
@@ -63,14 +64,14 @@ public final class DecisionDefinitionServiceTest {
   public void shouldReturnDecisionDefinition() {
     // given
     final var result = mock(SearchQueryResult.class);
-    when(client.searchDecisionDefinitions(any())).thenReturn(result);
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any())).thenReturn(result);
 
     final DecisionDefinitionQuery searchQuery =
         SearchQueryBuilders.decisionDefinitionSearchQuery().build();
 
     // when
     final SearchQueryResult<DecisionDefinitionEntity> searchQueryResult =
-        services.search(searchQuery);
+        decisionDefinitionServices.search(searchQuery);
 
     // then
     assertThat(searchQueryResult).isEqualTo(result);
@@ -82,7 +83,7 @@ public final class DecisionDefinitionServiceTest {
     final var definitionEntity = mock(DecisionDefinitionEntity.class);
     when(definitionEntity.decisionRequirementsKey()).thenReturn(42L);
     when(definitionEntity.decisionDefinitionId()).thenReturn("decId");
-    when(client.searchDecisionDefinitions(any()))
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any()))
         .thenReturn(new SearchQueryResult<>(1, List.of(definitionEntity), null, null));
 
     final var requirementEntity = mock(DecisionRequirementsEntity.class);
@@ -96,7 +97,7 @@ public final class DecisionDefinitionServiceTest {
         .thenReturn(true);
 
     // when
-    final var xml = services.getDecisionDefinitionXml(42L);
+    final var xml = decisionDefinitionServices.getDecisionDefinitionXml(42L);
 
     // then
     assertThat(xml).isEqualTo("<foo>bar</foo>");
@@ -105,15 +106,15 @@ public final class DecisionDefinitionServiceTest {
   @Test
   public void shouldThrowNotFoundExceptionOnUnmatchedDecisionKey() {
     // given
-    when(client.searchDecisionDefinitions(any()))
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any()))
         .thenReturn(new SearchQueryResult<>(0, List.of(), null, null));
 
     // then
     final var exception =
-        assertThrows(CamundaSearchException.class, () -> services.getDecisionDefinitionXml(1L));
+        assertThrows(CamundaSearchException.class, () -> decisionDefinitionServices.getDecisionDefinitionXml(1L));
     assertThat(exception.getMessage()).isEqualTo("Decision definition with key 1 not found");
     assertThat(exception.getReason()).isEqualTo(CamundaSearchException.Reason.NOT_FOUND);
-    verify(client).searchDecisionDefinitions(any(DecisionDefinitionQuery.class));
+    verify(decisionDefinitionSearchClient).searchDecisionDefinitions(any(DecisionDefinitionQuery.class));
     verify(decisionRequirementSearchClient, never())
         .searchDecisionRequirements(any(DecisionRequirementsQuery.class));
   }
@@ -126,7 +127,7 @@ public final class DecisionDefinitionServiceTest {
     when(definitionEntity.decisionDefinitionId()).thenReturn("decId");
     final var definitionResult = mock(SearchQueryResult.class);
     when(definitionResult.items()).thenReturn(List.of(definitionEntity));
-    when(client.searchDecisionDefinitions(any()))
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any()))
         .thenReturn(new SearchQueryResult<>(1, List.of(definitionEntity), null, null));
     when(decisionRequirementSearchClient.searchDecisionRequirements(any()))
         .thenReturn(new SearchQueryResult<>(0, List.of(), null, null));
@@ -138,7 +139,7 @@ public final class DecisionDefinitionServiceTest {
 
     // then
     final var exception =
-        assertThrows(CamundaSearchException.class, () -> services.getDecisionDefinitionXml(1L));
+        assertThrows(CamundaSearchException.class, () -> decisionDefinitionServices.getDecisionDefinitionXml(1L));
     assertThat(exception.getReason()).isEqualTo(CamundaSearchException.Reason.NOT_FOUND);
     assertThat(exception.getMessage()).isEqualTo("Decision requirements with key 1 not found");
   }
@@ -151,7 +152,7 @@ public final class DecisionDefinitionServiceTest {
     when(definitionEntity.decisionDefinitionId()).thenReturn("decId");
     final var definitionResult = mock(SearchQueryResult.class);
     when(definitionResult.items()).thenReturn(List.of(definitionEntity));
-    when(client.searchDecisionDefinitions(any()))
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any()))
         .thenReturn(new SearchQueryResult(1, List.of(definitionEntity), null, null));
     when(securityContextProvider.isAuthorized(
             "decId",
@@ -160,7 +161,7 @@ public final class DecisionDefinitionServiceTest {
         .thenReturn(true);
 
     // when
-    final DecisionDefinitionEntity decisionDefinition = services.getByKey(42L);
+    final DecisionDefinitionEntity decisionDefinition = decisionDefinitionServices.getByKey(42L);
 
     // then
     assertThat(decisionDefinition.decisionDefinitionKey()).isEqualTo(42L);
@@ -173,7 +174,7 @@ public final class DecisionDefinitionServiceTest {
     when(definitionEntity.decisionDefinitionId()).thenReturn("decId");
     final var definitionResult = mock(SearchQueryResult.class);
     when(definitionResult.items()).thenReturn(List.of(definitionEntity));
-    when(client.searchDecisionDefinitions(any()))
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any()))
         .thenReturn(new SearchQueryResult(1, List.of(definitionEntity), null, null));
     when(securityContextProvider.isAuthorized(
             "decId",
@@ -182,7 +183,7 @@ public final class DecisionDefinitionServiceTest {
         .thenReturn(false);
 
     // when
-    final Executable executable = () -> services.getByKey(1L);
+    final Executable executable = () -> decisionDefinitionServices.getByKey(1L);
 
     // then
     final var exception = assertThrows(ForbiddenException.class, executable);
@@ -198,7 +199,7 @@ public final class DecisionDefinitionServiceTest {
     when(definitionEntity.decisionDefinitionId()).thenReturn("decId");
     final var definitionResult = mock(SearchQueryResult.class);
     when(definitionResult.items()).thenReturn(List.of(definitionEntity));
-    when(client.searchDecisionDefinitions(any()))
+    when(decisionDefinitionSearchClient.searchDecisionDefinitions(any()))
         .thenReturn(new SearchQueryResult(1, List.of(definitionEntity), null, null));
     when(securityContextProvider.isAuthorized(
             "decId",
@@ -207,7 +208,7 @@ public final class DecisionDefinitionServiceTest {
         .thenReturn(false);
 
     // when
-    final Executable executable = () -> services.getDecisionDefinitionXml(1L);
+    final Executable executable = () -> decisionDefinitionServices.getDecisionDefinitionXml(1L);
 
     // then
     final var exception = assertThrows(ForbiddenException.class, executable);

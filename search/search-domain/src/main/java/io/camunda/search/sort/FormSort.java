@@ -26,7 +26,7 @@ public record FormSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<FormSort> {
 
     public Builder version() {
-      currentOrdering = new FieldSorting("version", null);
+      currentFieldSorting = new FieldSorting("version", null);
       return this;
     }
 
@@ -47,7 +47,7 @@ public record FormSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public FormSort build() {
-      return new FormSort(orderings);
+      return new FormSort(fieldSortings);
     }
   }
 }

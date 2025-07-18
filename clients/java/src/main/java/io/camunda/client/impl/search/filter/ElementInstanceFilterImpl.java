@@ -112,7 +112,7 @@ public class ElementInstanceFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.ElementInstanceFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.ElementInstanceFilter getProperty() {
     return filter;
   }
 }

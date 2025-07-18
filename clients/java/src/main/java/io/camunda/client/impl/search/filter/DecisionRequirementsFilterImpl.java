@@ -67,7 +67,7 @@ public class DecisionRequirementsFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.DecisionRequirementsFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.DecisionRequirementsFilter getProperty() {
     return filter;
   }
 }

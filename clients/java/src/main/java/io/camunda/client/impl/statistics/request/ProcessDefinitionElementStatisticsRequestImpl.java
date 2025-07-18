@@ -88,7 +88,7 @@ public class ProcessDefinitionElementStatisticsRequestImpl
   }
 
   @Override
-  protected ProcessDefinitionElementStatisticsQuery getSearchRequestProperty() {
+  protected ProcessDefinitionElementStatisticsQuery getProperty() {
     return request;
   }
 }

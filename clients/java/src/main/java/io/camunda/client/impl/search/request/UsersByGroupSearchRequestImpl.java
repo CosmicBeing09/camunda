@@ -114,7 +114,7 @@ public class UsersByGroupSearchRequestImpl
   }
 
   @Override
-  protected GroupUserSearchQueryRequest getSearchRequestProperty() {
+  protected GroupUserSearchQueryRequest getProperty() {
     return request;
   }
 }

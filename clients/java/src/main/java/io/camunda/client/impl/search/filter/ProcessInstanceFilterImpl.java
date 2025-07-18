@@ -228,14 +228,14 @@ public class ProcessInstanceFilterImpl
   @Override
   public ProcessInstanceFilter variables(
       final List<Consumer<VariableValueFilter>> variableFilters) {
-    filter.setVariables(VariableFilterMapper.toVariableValueFilterRequest(variableFilters));
+    filter.setVariables(VariableFilterMapper.toVariableValueFilterProperty(variableFilters));
     return this;
   }
 
   @Override
   public ProcessInstanceFilter variables(final Map<String, Object> variableValueFilters) {
     if (variableValueFilters != null && !variableValueFilters.isEmpty()) {
-      filter.setVariables(VariableFilterMapper.toVariableValueFilterRequest(variableValueFilters));
+      filter.setVariables(VariableFilterMapper.toVariableValueFilterProperty(variableValueFilters));
     }
     return this;
   }
@@ -323,7 +323,7 @@ public class ProcessInstanceFilterImpl
       final ProcessInstanceFilterImpl orFilter = new ProcessInstanceFilterImpl();
       fn.accept(orFilter);
       final io.camunda.client.protocol.rest.ProcessInstanceFilter protocolFilter =
-          orFilter.getSearchRequestProperty();
+          orFilter.getProperty();
       final ProcessInstanceFilterFields protocolFilterFields =
           ProcessInstanceFilterMapper.from(protocolFilter);
       filter.add$OrItem(protocolFilterFields);
@@ -332,7 +332,7 @@ public class ProcessInstanceFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.ProcessInstanceFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.ProcessInstanceFilter getProperty() {
     return filter;
   }
 }

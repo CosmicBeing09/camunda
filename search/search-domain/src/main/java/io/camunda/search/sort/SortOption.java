@@ -16,17 +16,17 @@ public interface SortOption {
 
   public abstract static class AbstractBuilder<T> {
 
-    protected final List<FieldSorting> orderings = new ArrayList<>();
-    protected FieldSorting currentOrdering;
+    protected final List<FieldSorting> fieldSortings = new ArrayList<>();
+    protected FieldSorting currentFieldSorting;
 
     protected abstract T self();
 
     protected T addOrdering(final SortOrder value) {
-      if (currentOrdering != null) {
-        final var field = currentOrdering.field();
+      if (currentFieldSorting != null) {
+        final var field = currentFieldSorting.field();
         final var newOrdering = new FieldSorting(field, value);
-        orderings.add(newOrdering);
-        currentOrdering = null;
+        fieldSortings.add(newOrdering);
+        currentFieldSorting = null;
       }
       // else if not set, then noop
 

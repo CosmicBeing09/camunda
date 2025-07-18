@@ -108,7 +108,7 @@ public class UsersSearchRequestImpl
   }
 
   @Override
-  protected UserSearchQueryRequest getSearchRequestProperty() {
+  protected UserSearchQueryRequest getProperty() {
     return request;
   }
 }

@@ -102,7 +102,7 @@ public class DecisionRequirementsSearchRequestImpl
   @Override
   public DecisionRequirementsSearchRequest page(final SearchRequestPage value) {
     final SearchRequestPageImpl page = (SearchRequestPageImpl) value;
-    request.setPage(page.getSearchRequestProperty());
+    request.setPage(page.getProperty());
     return this;
   }
 
@@ -112,7 +112,7 @@ public class DecisionRequirementsSearchRequestImpl
   }
 
   @Override
-  protected DecisionRequirementsSearchQuery getSearchRequestProperty() {
+  protected DecisionRequirementsSearchQuery getProperty() {
     return request;
   }
 }

@@ -411,7 +411,7 @@ public final class SearchQueryResponseMapper {
     final List<Object> firstSortValues =
         ofNullable(result.firstSortValues()).map(Arrays::asList).orElse(emptyList());
     final List<Object> lastSortValues =
-        ofNullable(result.lastSortValues()).map(Arrays::asList).orElse(emptyList());
+        ofNullable(result.lastSearchAfter()).map(Arrays::asList).orElse(emptyList());
 
     return new SearchQueryPageResponse()
         .totalItems(result.total())

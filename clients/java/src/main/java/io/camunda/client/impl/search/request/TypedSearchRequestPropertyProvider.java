@@ -17,13 +17,13 @@ package io.camunda.client.impl.search.request;
 
 public abstract class TypedSearchRequestPropertyProvider<T> {
 
-  protected abstract T getSearchRequestProperty();
+  protected abstract T getProperty();
 
-  public static <T> T provideSearchRequestProperty(final Object value) {
-    if (value instanceof TypedSearchRequestPropertyProvider) {
+  public static <T> T provideSearchRequestProperty(final Object searchRequestPropertyValue) {
+    if (searchRequestPropertyValue instanceof TypedSearchRequestPropertyProvider) {
       final TypedSearchRequestPropertyProvider<T> provider =
-          (TypedSearchRequestPropertyProvider<T>) value;
-      return provider.getSearchRequestProperty();
+          (TypedSearchRequestPropertyProvider<T>) searchRequestPropertyValue;
+      return provider.getProperty();
     }
     throw new UnsupportedOperationException(
         "Passed value is not of type " + TypedSearchRequestPropertyProvider.class);

@@ -114,7 +114,7 @@ public class MappingsByGroupSearchRequestImpl
   }
 
   @Override
-  protected MappingSearchQueryRequest getSearchRequestProperty() {
+  protected MappingSearchQueryRequest getProperty() {
     return request;
   }
 }

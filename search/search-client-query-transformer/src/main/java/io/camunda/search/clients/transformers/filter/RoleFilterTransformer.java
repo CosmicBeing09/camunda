@@ -39,11 +39,11 @@ public class RoleFilterTransformer extends IndexFilterTransformer<RoleFilter> {
         filter.memberType() == null
             ? null
             : term(RoleIndex.MEMBER_TYPE, filter.memberType().name()),
-        filter.joinParentId() == null
+        filter.parentRoleId() == null
             ? term(RoleIndex.JOIN, IdentityJoinRelationshipType.ROLE.getType())
             : hasParentQuery(
                 IdentityJoinRelationshipType.ROLE.getType(),
-                term(RoleIndex.ROLE_ID, filter.joinParentId())),
+                term(RoleIndex.ROLE_ID, filter.parentRoleId())),
         filter.memberIds() == null
             ? null
             : filter.memberIds().isEmpty()

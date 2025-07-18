@@ -47,7 +47,7 @@ public class GroupServiceTest {
 
   @BeforeEach
   public void before() {
-    authentication = Authentication.of(builder -> builder.user("foo"));
+    authentication = Authentication.of(builder -> builder.username("foo"));
     stubbedBrokerClient = new StubbedBrokerClient();
     client = mock(GroupSearchClient.class);
     when(client.withSecurityContext(any())).thenReturn(client);

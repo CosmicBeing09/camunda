@@ -26,32 +26,32 @@ public final record VariableSort(List<FieldSorting> orderings) implements SortOp
       implements ObjectBuilder<VariableSort> {
 
     public Builder value() {
-      currentOrdering = new FieldSorting("value", null);
+      currentFieldSorting = new FieldSorting("value", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
     public Builder variableKey() {
-      currentOrdering = new FieldSorting("variableKey", null);
+      currentFieldSorting = new FieldSorting("variableKey", null);
       return this;
     }
 
     public Builder scopeKey() {
-      currentOrdering = new FieldSorting("scopeKey", null);
+      currentFieldSorting = new FieldSorting("scopeKey", null);
       return this;
     }
 
     public Builder processInstanceKey() {
-      currentOrdering = new FieldSorting("processInstanceKey", null);
+      currentFieldSorting = new FieldSorting("processInstanceKey", null);
       return this;
     }
 
@@ -62,7 +62,7 @@ public final record VariableSort(List<FieldSorting> orderings) implements SortOp
 
     @Override
     public VariableSort build() {
-      return new VariableSort(orderings);
+      return new VariableSort(fieldSortings);
     }
   }
 }

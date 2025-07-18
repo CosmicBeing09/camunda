@@ -26,22 +26,22 @@ public record TenantSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<TenantSort> {
 
     public Builder tenantKey() {
-      currentOrdering = new FieldSorting("key", null);
+      currentFieldSorting = new FieldSorting("key", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder memberId() {
-      currentOrdering = new FieldSorting("memberId", null);
+      currentFieldSorting = new FieldSorting("memberId", null);
       return this;
     }
 
@@ -62,7 +62,7 @@ public record TenantSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public TenantSort build() {
-      return new TenantSort(orderings);
+      return new TenantSort(fieldSortings);
     }
   }
 }

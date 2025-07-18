@@ -54,7 +54,7 @@ public class SearchRequestPageImpl
   }
 
   @Override
-  public SearchQueryPageRequest getSearchRequestProperty() {
+  public SearchQueryPageRequest getProperty() {
     return page;
   }
 }

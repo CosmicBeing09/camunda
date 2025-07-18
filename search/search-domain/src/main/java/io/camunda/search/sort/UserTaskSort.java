@@ -26,32 +26,32 @@ public record UserTaskSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<UserTaskSort> {
 
     public Builder creationDate() {
-      currentOrdering = new FieldSorting("creationDate", null);
+      currentFieldSorting = new FieldSorting("creationDate", null);
       return this;
     }
 
     public Builder completionDate() {
-      currentOrdering = new FieldSorting("completionDate", null);
+      currentFieldSorting = new FieldSorting("completionDate", null);
       return this;
     }
 
     public Builder priority() {
-      currentOrdering = new FieldSorting("priority", null);
+      currentFieldSorting = new FieldSorting("priority", null);
       return this;
     }
 
     public Builder dueDate() {
-      currentOrdering = new FieldSorting("dueDate", null);
+      currentFieldSorting = new FieldSorting("dueDate", null);
       return this;
     }
 
     public Builder followUpDate() {
-      currentOrdering = new FieldSorting("followUpDate", null);
+      currentFieldSorting = new FieldSorting("followUpDate", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
@@ -62,7 +62,7 @@ public record UserTaskSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public UserTaskSort build() {
-      return new UserTaskSort(orderings);
+      return new UserTaskSort(fieldSortings);
     }
   }
 }

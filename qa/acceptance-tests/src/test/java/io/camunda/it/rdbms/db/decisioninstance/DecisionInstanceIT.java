@@ -81,10 +81,10 @@ public class DecisionInstanceIT {
     final var searchResult =
         decisionInstanceReader.search(
             DecisionInstanceQuery.of(
-                b ->
-                    b.filter(
-                            f ->
-                                f.decisionDefinitionKeys(
+                queryBuilder ->
+                    queryBuilder.filter(
+                            filterBuilder ->
+                                filterBuilder.decisionDefinitionKeys(
                                     decisionDefinition.decisionDefinitionKey()))
                         .sort(s -> s.evaluationDate().asc().decisionDefinitionName().asc())
                         .page(p -> p.from(0).size(5))));
@@ -101,8 +101,8 @@ public class DecisionInstanceIT {
             firstInstance.decisionDefinitionName(),
             firstInstance.decisionInstanceId());
     final var lastInstance = searchResult.items().getLast();
-    assertThat(searchResult.lastSortValues()).hasSize(3);
-    assertThat(searchResult.lastSortValues())
+    assertThat(searchResult.lastSearchAfter()).hasSize(3);
+    assertThat(searchResult.lastSearchAfter())
         .containsExactly(
             lastInstance.evaluationDate(),
             lastInstance.decisionDefinitionName(),

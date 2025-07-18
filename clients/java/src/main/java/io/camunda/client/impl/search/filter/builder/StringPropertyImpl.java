@@ -55,7 +55,7 @@ public class StringPropertyImpl extends TypedSearchRequestPropertyProvider<Strin
   }
 
   @Override
-  protected StringFilterProperty getSearchRequestProperty() {
+  protected StringFilterProperty getProperty() {
     return filterProperty;
   }
 

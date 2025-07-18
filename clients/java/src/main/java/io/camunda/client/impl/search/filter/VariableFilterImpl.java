@@ -116,7 +116,7 @@ public class VariableFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.VariableFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.VariableFilter getProperty() {
     return filter;
   }
 }

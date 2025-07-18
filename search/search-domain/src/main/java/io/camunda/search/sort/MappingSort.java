@@ -26,27 +26,27 @@ public record MappingSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<MappingSort> {
 
     public Builder mappingKey() {
-      currentOrdering = new FieldSorting("mappingKey", null);
+      currentFieldSorting = new FieldSorting("mappingKey", null);
       return this;
     }
 
     public Builder claimName() {
-      currentOrdering = new FieldSorting("claimName", null);
+      currentFieldSorting = new FieldSorting("claimName", null);
       return this;
     }
 
     public Builder claimValue() {
-      currentOrdering = new FieldSorting("claimValue", null);
+      currentFieldSorting = new FieldSorting("claimValue", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder mappingId() {
-      currentOrdering = new FieldSorting("mappingId", null);
+      currentFieldSorting = new FieldSorting("mappingId", null);
       return this;
     }
 
@@ -67,7 +67,7 @@ public record MappingSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public MappingSort build() {
-      return new MappingSort(orderings);
+      return new MappingSort(fieldSortings);
     }
   }
 }

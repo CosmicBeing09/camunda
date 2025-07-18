@@ -74,7 +74,7 @@ public class GroupSearchRequestImpl
   }
 
   @Override
-  protected GroupSearchQueryRequest getSearchRequestProperty() {
+  protected GroupSearchQueryRequest getProperty() {
     return request;
   }
 

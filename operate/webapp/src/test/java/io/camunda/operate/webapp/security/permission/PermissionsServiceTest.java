@@ -148,7 +148,7 @@ public class PermissionsServiceTest {
       final List<String> roleIds,
       final List<String> groupIds) {
     return new io.camunda.security.auth.Authentication.Builder()
-        .user(username)
+        .username(username)
         .tenants(tenants)
         .roleIds(roleIds)
         .groupIds(groupIds)

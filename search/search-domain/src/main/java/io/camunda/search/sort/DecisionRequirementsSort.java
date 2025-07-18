@@ -27,27 +27,27 @@ public record DecisionRequirementsSort(List<FieldSorting> orderings) implements 
       implements ObjectBuilder<DecisionRequirementsSort> {
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder version() {
-      currentOrdering = new FieldSorting("version", null);
+      currentFieldSorting = new FieldSorting("version", null);
       return this;
     }
 
     public DecisionRequirementsSort.Builder decisionRequirementsKey() {
-      currentOrdering = new FieldSorting("decisionRequirementsKey", null);
+      currentFieldSorting = new FieldSorting("decisionRequirementsKey", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
     public Builder decisionRequirementsId() {
-      currentOrdering = new FieldSorting("decisionRequirementsId", null);
+      currentFieldSorting = new FieldSorting("decisionRequirementsId", null);
       return this;
     }
 
@@ -58,7 +58,7 @@ public record DecisionRequirementsSort(List<FieldSorting> orderings) implements 
 
     @Override
     public DecisionRequirementsSort build() {
-      return new DecisionRequirementsSort(orderings);
+      return new DecisionRequirementsSort(fieldSortings);
     }
   }
 }

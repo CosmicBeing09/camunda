@@ -47,11 +47,11 @@ public class GroupFilterTransformer extends IndexFilterTransformer<GroupFilter> 
         filter.memberType() == null
             ? null
             : term(GroupIndex.MEMBER_TYPE, filter.memberType().name()),
-        filter.joinParentId() == null
+        filter.parentGroupId() == null
             ? term(GroupIndex.JOIN, IdentityJoinRelationshipType.GROUP.getType())
             : hasParentQuery(
                 IdentityJoinRelationshipType.GROUP.getType(),
-                term(GROUP_ID, filter.joinParentId())),
+                term(GROUP_ID, filter.parentGroupId())),
         filter.groupIds() == null
             ? null
             : filter.groupIds().isEmpty() ? matchNone() : stringTerms(GROUP_ID, filter.groupIds()),

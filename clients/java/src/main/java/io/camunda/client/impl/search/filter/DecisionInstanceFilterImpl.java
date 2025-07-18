@@ -171,7 +171,7 @@ public class DecisionInstanceFilterImpl
   }
 
   @Override
-  protected io.camunda.client.protocol.rest.DecisionInstanceFilter getSearchRequestProperty() {
+  protected io.camunda.client.protocol.rest.DecisionInstanceFilter getProperty() {
     return filter;
   }
 }

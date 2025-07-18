@@ -26,17 +26,17 @@ public record RoleSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<RoleSort> {
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder roleId() {
-      currentOrdering = new FieldSorting("roleId", null);
+      currentFieldSorting = new FieldSorting("roleId", null);
       return this;
     }
 
     public Builder memberId() {
-      currentOrdering = new FieldSorting("memberId", null);
+      currentFieldSorting = new FieldSorting("memberId", null);
       return this;
     }
 
@@ -57,7 +57,7 @@ public record RoleSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public RoleSort build() {
-      return new RoleSort(orderings);
+      return new RoleSort(fieldSortings);
     }
   }
 }

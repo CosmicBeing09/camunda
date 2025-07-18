@@ -66,17 +66,19 @@ public class QueryProcessInstanceTest extends ClientRestTest {
     final Map<String, Object> variablesMap = new LinkedHashMap<>();
     variablesMap.put("n1", "v1");
     variablesMap.put("n2", "v2");
-    final List<VariableValueFilterRequest> variables =
+    final List<VariableValueFilterProperty> variables =
         Arrays.asList(
-            new VariableValueFilterRequest().name("n1").value(new StringFilterProperty().$eq("v1")),
-            new VariableValueFilterRequest()
+            new VariableValueFilterProperty()
+                .name("n1")
+                .value(new StringFilterProperty().$eq("v1")),
+            new VariableValueFilterProperty()
                 .name("n2")
                 .value(new StringFilterProperty().$eq("v2")));
     client
         .newProcessInstanceSearchRequest()
         .filter(
-            f ->
-                f.processInstanceKey(123L)
+            filterBuilder ->
+                filterBuilder.processInstanceKey(123L)
                     .processDefinitionId("bpmnProcessId")
                     .processDefinitionName("Demo process")
                     .processDefinitionVersion(7)
@@ -153,7 +155,7 @@ public class QueryProcessInstanceTest extends ClientRestTest {
     // when
     client
         .newProcessInstanceSearchRequest()
-        .filter(f -> f.processInstanceKey(b -> b.notIn(1L, 10L)))
+        .filter(filterBuilder -> filterBuilder.processInstanceKey(b -> b.notIn(1L, 10L)))
         .send()
         .join();
 
@@ -208,10 +210,12 @@ public class QueryProcessInstanceTest extends ClientRestTest {
     final Map<String, Object> variablesMap = new LinkedHashMap<>();
     variablesMap.put("n1", "v1");
     variablesMap.put("n2", "v2");
-    final List<VariableValueFilterRequest> variables =
+    final List<VariableValueFilterProperty> variables =
         Arrays.asList(
-            new VariableValueFilterRequest().name("n1").value(new StringFilterProperty().$eq("v1")),
-            new VariableValueFilterRequest()
+            new VariableValueFilterProperty()
+                .name("n1")
+                .value(new StringFilterProperty().$eq("v1")),
+            new VariableValueFilterProperty()
                 .name("n2")
                 .value(new StringFilterProperty().$eq("v2")));
 

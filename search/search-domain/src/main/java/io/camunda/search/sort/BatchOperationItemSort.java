@@ -27,22 +27,22 @@ public record BatchOperationItemSort(List<FieldSorting> orderings) implements So
       implements ObjectBuilder<BatchOperationItemSort> {
 
     public Builder batchOperationId() {
-      currentOrdering = new FieldSorting("batchOperationId", null);
+      currentFieldSorting = new FieldSorting("batchOperationId", null);
       return this;
     }
 
     public Builder state() {
-      currentOrdering = new FieldSorting("state", null);
+      currentFieldSorting = new FieldSorting("state", null);
       return this;
     }
 
     public Builder itemKey() {
-      currentOrdering = new FieldSorting("itemKey", null);
+      currentFieldSorting = new FieldSorting("itemKey", null);
       return this;
     }
 
     public Builder processInstanceKey() {
-      currentOrdering = new FieldSorting("processInstanceKey", null);
+      currentFieldSorting = new FieldSorting("processInstanceKey", null);
       return this;
     }
 
@@ -53,7 +53,7 @@ public record BatchOperationItemSort(List<FieldSorting> orderings) implements So
 
     @Override
     public BatchOperationItemSort build() {
-      return new BatchOperationItemSort(orderings);
+      return new BatchOperationItemSort(fieldSortings);
     }
   }
 }

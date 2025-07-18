@@ -109,7 +109,7 @@ public class VariableSearchRequestImpl
   }
 
   @Override
-  protected VariableSearchQuery getSearchRequestProperty() {
+  protected VariableSearchQuery getProperty() {
     return request;
   }
 }

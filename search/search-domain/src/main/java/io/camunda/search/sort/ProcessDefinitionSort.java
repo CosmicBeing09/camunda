@@ -28,37 +28,37 @@ public record ProcessDefinitionSort(List<FieldSorting> orderings) implements Sor
       implements ObjectBuilder<ProcessDefinitionSort> {
 
     public Builder processDefinitionKey() {
-      currentOrdering = new FieldSorting("processDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("processDefinitionKey", null);
       return this;
     }
 
     public Builder resourceName() {
-      currentOrdering = new FieldSorting("resourceName", null);
+      currentFieldSorting = new FieldSorting("resourceName", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder version() {
-      currentOrdering = new FieldSorting("version", null);
+      currentFieldSorting = new FieldSorting("version", null);
       return this;
     }
 
     public Builder versionTag() {
-      currentOrdering = new FieldSorting("versionTag", null);
+      currentFieldSorting = new FieldSorting("versionTag", null);
       return this;
     }
 
     public Builder processDefinitionId() {
-      currentOrdering = new FieldSorting("processDefinitionId", null);
+      currentFieldSorting = new FieldSorting("processDefinitionId", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
@@ -69,7 +69,7 @@ public record ProcessDefinitionSort(List<FieldSorting> orderings) implements Sor
 
     @Override
     public ProcessDefinitionSort build() {
-      return new ProcessDefinitionSort(orderings);
+      return new ProcessDefinitionSort(fieldSortings);
     }
   }
 }

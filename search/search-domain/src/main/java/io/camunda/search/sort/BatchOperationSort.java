@@ -27,27 +27,27 @@ public record BatchOperationSort(List<FieldSorting> orderings) implements SortOp
       implements ObjectBuilder<BatchOperationSort> {
 
     public Builder batchOperationId() {
-      currentOrdering = new FieldSorting("batchOperationId", null);
+      currentFieldSorting = new FieldSorting("batchOperationId", null);
       return this;
     }
 
     public Builder state() {
-      currentOrdering = new FieldSorting("state", null);
+      currentFieldSorting = new FieldSorting("state", null);
       return this;
     }
 
     public Builder operationType() {
-      currentOrdering = new FieldSorting("operationType", null);
+      currentFieldSorting = new FieldSorting("operationType", null);
       return this;
     }
 
     public Builder startDate() {
-      currentOrdering = new FieldSorting("startDate", null);
+      currentFieldSorting = new FieldSorting("startDate", null);
       return this;
     }
 
     public Builder endDate() {
-      currentOrdering = new FieldSorting("endDate", null);
+      currentFieldSorting = new FieldSorting("endDate", null);
       return this;
     }
 
@@ -58,7 +58,7 @@ public record BatchOperationSort(List<FieldSorting> orderings) implements SortOp
 
     @Override
     public BatchOperationSort build() {
-      return new BatchOperationSort(orderings);
+      return new BatchOperationSort(fieldSortings);
     }
   }
 }

@@ -72,7 +72,7 @@ public class BasicStringPropertyImpl
   }
 
   @Override
-  protected BasicStringFilterProperty getSearchRequestProperty() {
+  protected BasicStringFilterProperty getProperty() {
     return filterProperty;
   }
 }

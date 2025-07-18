@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record SearchQueryResult<T>(
-    long total, List<T> items, Object[] firstSortValues, Object[] lastSortValues) {
+    long total, List<T> items, Object[] firstSortValues, Object[] lastSearchAfter) {
 
   public static <T> SearchQueryResult<T> empty() {
     return new SearchQueryResult<>(0, Collections.emptyList(), null, null);

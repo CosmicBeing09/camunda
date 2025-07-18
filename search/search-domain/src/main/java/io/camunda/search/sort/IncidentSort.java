@@ -26,62 +26,62 @@ public record IncidentSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<IncidentSort> {
 
     public Builder incidentKey() {
-      currentOrdering = new FieldSorting("incidentKey", null);
+      currentFieldSorting = new FieldSorting("incidentKey", null);
       return this;
     }
 
     public Builder processDefinitionKey() {
-      currentOrdering = new FieldSorting("processDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("processDefinitionKey", null);
       return this;
     }
 
     public Builder processDefinitionId() {
-      currentOrdering = new FieldSorting("processDefinitionId", null);
+      currentFieldSorting = new FieldSorting("processDefinitionId", null);
       return this;
     }
 
     public Builder processInstanceKey() {
-      currentOrdering = new FieldSorting("processInstanceKey", null);
+      currentFieldSorting = new FieldSorting("processInstanceKey", null);
       return this;
     }
 
     public Builder errorType() {
-      currentOrdering = new FieldSorting("errorType", null);
+      currentFieldSorting = new FieldSorting("errorType", null);
       return this;
     }
 
     public Builder errorMessage() {
-      currentOrdering = new FieldSorting("errorMessage", null);
+      currentFieldSorting = new FieldSorting("errorMessage", null);
       return this;
     }
 
     public Builder flowNodeId() {
-      currentOrdering = new FieldSorting("flowNodeId", null);
+      currentFieldSorting = new FieldSorting("flowNodeId", null);
       return this;
     }
 
     public Builder flowNodeInstanceKey() {
-      currentOrdering = new FieldSorting("flowNodeInstanceKey", null);
+      currentFieldSorting = new FieldSorting("flowNodeInstanceKey", null);
       return this;
     }
 
     public Builder creationTime() {
-      currentOrdering = new FieldSorting("creationTime", null);
+      currentFieldSorting = new FieldSorting("creationTime", null);
       return this;
     }
 
     public Builder state() {
-      currentOrdering = new FieldSorting("state", null);
+      currentFieldSorting = new FieldSorting("state", null);
       return this;
     }
 
     public Builder jobKey() {
-      currentOrdering = new FieldSorting("jobKey", null);
+      currentFieldSorting = new FieldSorting("jobKey", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
@@ -92,7 +92,7 @@ public record IncidentSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public IncidentSort build() {
-      return new IncidentSort(orderings);
+      return new IncidentSort(fieldSortings);
     }
   }
 }

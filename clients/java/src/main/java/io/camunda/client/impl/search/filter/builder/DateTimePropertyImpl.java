@@ -82,7 +82,7 @@ public class DateTimePropertyImpl extends TypedSearchRequestPropertyProvider<Dat
   }
 
   @Override
-  protected DateTimeFilterProperty getSearchRequestProperty() {
+  protected DateTimeFilterProperty getProperty() {
     return filterProperty;
   }
 }

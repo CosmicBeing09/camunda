@@ -51,7 +51,7 @@ public abstract class SearchRequestSortBase<T>
   protected abstract T self();
 
   @Override
-  protected List<SearchRequestSort> getSearchRequestProperty() {
+  protected List<SearchRequestSort> getProperty() {
     return sorting;
   }
 }

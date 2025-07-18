@@ -140,7 +140,7 @@ class SearchClientBasedQueryExecutorTest {
             SecurityContext.of(
                 builder ->
                     builder.withAuthentication(
-                        Authentication.of(a -> a.user("foo").tenants(tenantIds)))));
+                        Authentication.of(a -> a.username("foo").tenants(tenantIds)))));
 
     final var query =
         new ProcessDefinitionQuery.Builder()
@@ -185,7 +185,7 @@ class SearchClientBasedQueryExecutorTest {
             SecurityContext.of(
                 builder ->
                     builder.withAuthentication(
-                        Authentication.of(a -> a.user("foo").tenants(tenantIds)))));
+                        Authentication.of(a -> a.username("foo").tenants(tenantIds)))));
 
     final var query =
         new UserQuery.Builder().filter(new UserFilter.Builder().usernames("x").build()).build();

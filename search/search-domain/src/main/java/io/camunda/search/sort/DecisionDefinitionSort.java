@@ -27,37 +27,37 @@ public record DecisionDefinitionSort(List<FieldSorting> orderings) implements So
       implements ObjectBuilder<DecisionDefinitionSort> {
 
     public Builder decisionDefinitionKey() {
-      currentOrdering = new FieldSorting("decisionDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionKey", null);
       return this;
     }
 
     public Builder decisionDefinitionId() {
-      currentOrdering = new FieldSorting("decisionDefinitionId", null);
+      currentFieldSorting = new FieldSorting("decisionDefinitionId", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder version() {
-      currentOrdering = new FieldSorting("version", null);
+      currentFieldSorting = new FieldSorting("version", null);
       return this;
     }
 
     public Builder decisionRequirementsId() {
-      currentOrdering = new FieldSorting("decisionRequirementsId", null);
+      currentFieldSorting = new FieldSorting("decisionRequirementsId", null);
       return this;
     }
 
     public Builder decisionRequirementsKey() {
-      currentOrdering = new FieldSorting("decisionRequirementsKey", null);
+      currentFieldSorting = new FieldSorting("decisionRequirementsKey", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
@@ -68,7 +68,7 @@ public record DecisionDefinitionSort(List<FieldSorting> orderings) implements So
 
     @Override
     public DecisionDefinitionSort build() {
-      return new DecisionDefinitionSort(orderings);
+      return new DecisionDefinitionSort(fieldSortings);
     }
   }
 }

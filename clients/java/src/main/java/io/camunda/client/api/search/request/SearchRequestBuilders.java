@@ -98,9 +98,9 @@ public final class SearchRequestBuilders {
 
   public static ProcessDefinitionFilter processDefinitionFilter(
       final Consumer<ProcessDefinitionFilter> fn) {
-    final ProcessDefinitionFilter filter = new ProcessDefinitionFilterImpl();
-    fn.accept(filter);
-    return filter;
+    final ProcessDefinitionFilter page = new ProcessDefinitionFilterImpl();
+    fn.accept(page);
+    return page;
   }
 
   public static ProcessInstanceFilter processInstanceFilter(
@@ -150,9 +150,9 @@ public final class SearchRequestBuilders {
   }
 
   public static SearchRequestPage searchRequestPage(final Consumer<SearchRequestPage> fn) {
-    final SearchRequestPage filter = new SearchRequestPageImpl();
-    fn.accept(filter);
-    return filter;
+    final SearchRequestPage page = new SearchRequestPageImpl();
+    fn.accept(page);
+    return page;
   }
 
   public static UserTaskFilter userTaskFilter(final Consumer<UserTaskFilter> fn) {
