@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.time.OffsetDateTime;
 
 /* Fork of Operate's migration ProcessorStep entity */
-public class ProcessorStep {
+public class MigrationProcessorStep {
 
   @JsonProperty("@type")
   private final String type = "processorStep";

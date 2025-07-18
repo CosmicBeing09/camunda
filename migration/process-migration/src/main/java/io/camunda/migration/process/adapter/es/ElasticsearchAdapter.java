@@ -22,9 +22,9 @@ import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.bulk.BulkResponseItem;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import io.camunda.migration.api.MigrationException;
+import io.camunda.migration.process.adapter.MigrationProcessorStep;
 import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
-import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
 import io.camunda.search.connect.configuration.ConnectConfiguration;
 import io.camunda.search.connect.es.ElasticsearchConnector;
@@ -139,13 +139,13 @@ public class ElasticsearchAdapter implements ProcessMigrationAdapter {
                                                 t.field(MigrationRepositoryIndex.ID)
                                                     .value(MIGRATION_PROCESSOR_STEP_ID)))))
             .build();
-    final SearchResponse<ProcessorStep> searchResponse;
+    final SearchResponse<MigrationProcessorStep> searchResponse;
 
     try {
       searchResponse =
           retryDecorator.decorate(
               "Fetching last migrated process",
-              () -> client.search(searchRequest, ProcessorStep.class),
+              () -> client.search(searchRequest, MigrationProcessorStep.class),
               res -> res.timedOut() || Boolean.TRUE.equals(res.terminatedEarly()));
     } catch (final Exception e) {
       throw new MigrationException("Failed to fetch last migrated process", e);
@@ -154,16 +154,16 @@ public class ElasticsearchAdapter implements ProcessMigrationAdapter {
     return searchResponse.hits().hits().stream()
         .map(Hit::source)
         .filter(Objects::nonNull)
-        .map(ProcessorStep::getContent)
+        .map(MigrationProcessorStep::getContent)
         .findFirst()
         .orElse(null);
   }
 
   @Override
   public void writeLastMigratedEntity(final String processDefinitionKey) throws MigrationException {
-    final ProcessorStep currentStep = processorStepForKey(processDefinitionKey);
-    final UpdateRequest<ProcessorStep, ProcessorStep> updateRequest =
-        new UpdateRequest.Builder<ProcessorStep, ProcessorStep>()
+    final MigrationProcessorStep currentStep = processorStepForKey(processDefinitionKey);
+    final UpdateRequest<MigrationProcessorStep, MigrationProcessorStep> updateRequest =
+        new UpdateRequest.Builder<MigrationProcessorStep, MigrationProcessorStep>()
             .index(migrationRepositoryIndex.getFullQualifiedName())
             .id(MIGRATION_PROCESSOR_STEP_ID)
             .docAsUpsert(true)
@@ -175,7 +175,7 @@ public class ElasticsearchAdapter implements ProcessMigrationAdapter {
     try {
       retryDecorator.decorate(
           "Update last migrated process",
-          () -> client.update(updateRequest, ProcessorStep.class),
+          () -> client.update(updateRequest, MigrationProcessorStep.class),
           res -> res.result() != Result.Created && res.result() != Result.Updated);
     } catch (final Exception e) {
       throw new MigrationException("Failed to update migrated process", e);

@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import io.camunda.migration.api.MigrationException;
 import io.camunda.migration.process.ProcessMigrator;
 import io.camunda.migration.process.TestData;
+import io.camunda.migration.process.adapter.MigrationProcessorStep;
 import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
-import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.adapter.es.ElasticsearchAdapter;
 import io.camunda.migration.process.adapter.os.OpensearchAdapter;
 import io.camunda.migration.process.util.MigrationUtil;
@@ -58,13 +58,13 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     final String migratedEntityId =
         processMigrationAdapter.migrate(List.of(MigrationUtil.migrate(entityToBeMigrated)));
     processMigrationAdapter.writeLastMigratedEntity(migratedEntityId);
-    awaitRecordsArePresent(ProcessorStep.class, stepIndex.getFullQualifiedName(), 1);
+    awaitRecordsArePresent(MigrationProcessorStep.class, stepIndex.getFullQualifiedName(), 1);
     refreshIndices();
 
     // then
     assertProcessorStepContentIsStored("1");
     final var processorRecords =
-        readRecords(ProcessorStep.class, stepIndex.getFullQualifiedName());
+        readRecords(MigrationProcessorStep.class, stepIndex.getFullQualifiedName());
     assertThat(processorRecords.size()).isEqualTo(1);
     assertThat(processorRecords.getFirst().getContent())
         .isEqualTo(String.valueOf(entityToBeMigrated.getKey()));
@@ -253,7 +253,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     // then
     final var records = readRecords(ProcessEntity.class, processEntityIndex.getFullQualifiedName());
     final var stepRecords =
-        readRecords(ProcessorStep.class, stepIndex.getFullQualifiedName());
+        readRecords(MigrationProcessorStep.class, stepIndex.getFullQualifiedName());
     assertThat(records.size()).isEqualTo(2);
     assertThat(records.stream().allMatch(r -> r.getIsPublic() == null)).isTrue();
     assertThat(records.stream().allMatch(r -> r.getFormId() == null)).isTrue();
@@ -327,7 +327,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     assertThat(latch.getCount()).isEqualTo(0);
 
     final var records =
-        readRecords(ProcessorStep.class, stepIndex.getFullQualifiedName());
+        readRecords(MigrationProcessorStep.class, stepIndex.getFullQualifiedName());
     assertThat(records).isEmpty();
     final var importPositionRecords =
         readRecords(ImportPositionEntity.class, positionIndex.getFullQualifiedName());

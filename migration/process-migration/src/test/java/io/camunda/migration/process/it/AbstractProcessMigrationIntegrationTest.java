@@ -23,8 +23,8 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.migration.process.ProcessMigrator;
 import io.camunda.migration.process.TestData;
+import io.camunda.migration.process.adapter.MigrationProcessorStep;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
-import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
 import io.camunda.search.connect.configuration.ConnectConfiguration;
 import io.camunda.search.connect.es.ElasticsearchConnector;
@@ -231,7 +231,7 @@ public abstract class AbstractProcessMigrationIntegrationTest {
 
   @SuppressWarnings({"unchecked", "rawtypes"})
   protected void writeProcessorStepToIndex(final String processDefinitionId) throws IOException {
-    final ProcessorStep step = new ProcessorStep();
+    final MigrationProcessorStep step = new MigrationProcessorStep();
     step.setContent(processDefinitionId);
     step.setApplied(true);
     step.setIndexName(ProcessIndex.INDEX_NAME);
@@ -325,7 +325,7 @@ public abstract class AbstractProcessMigrationIntegrationTest {
   protected void assertProcessorStepContentIsStored(final String processDefinitionId)
       throws IOException {
     final var records =
-        readRecords(ProcessorStep.class, stepIndex.getFullQualifiedName());
+        readRecords(MigrationProcessorStep.class, stepIndex.getFullQualifiedName());
     assertThat(records.size()).isEqualTo(1);
     assertThat(records.getFirst().getContent()).isEqualTo(String.valueOf(processDefinitionId));
   }
