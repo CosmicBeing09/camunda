@@ -121,8 +121,9 @@ public final class BpmnJobBehavior {
       final JobWorkerProperties jobWorkerProps, final BpmnElementContext context) {
     final var scopeKey = context.getElementInstanceKey();
     return Either.<Failure, JobProperties>right(new JobProperties())
-        .flatMap(p -> evalTypeExp(jobWorkerProps.getType(), scopeKey).map(p::type))
-        .flatMap(p -> evalRetriesExp(jobWorkerProps.getRetries(), scopeKey).map(p::retries))
+        .flatMap(jobProperty -> evalTypeExp(jobWorkerProps.getType(), scopeKey).map(jobProperty::type))
+        .flatMap(
+            jobProperty -> evalRetriesExp(jobWorkerProps.getRetries(), scopeKey).map(jobProperty::retries))
         .flatMap(
             p -> evalLinkedResourceProps(jobWorkerProps, context, scopeKey).map(p::linkedResources))
         .flatMap(
