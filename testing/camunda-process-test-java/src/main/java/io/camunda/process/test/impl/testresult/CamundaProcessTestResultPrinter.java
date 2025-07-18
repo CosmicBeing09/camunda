@@ -62,8 +62,8 @@ public class CamundaProcessTestResultPrinter {
     final String formattedProcessInstance =
         String.format(
             "Process instance: %d [process-id: '%s', state: %s]",
-            processInstance.getProcessInstanceKey(),
-            processInstance.getProcessDefinitionId(),
+            processInstance.getKey(),
+            processInstance.getDefinitionId(),
             processInstance.getState().name().toLowerCase());
 
     return formattedProcessInstance

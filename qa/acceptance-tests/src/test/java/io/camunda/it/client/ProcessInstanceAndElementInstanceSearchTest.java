@@ -137,8 +137,8 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result).isNotNull();
-    assertThat(result.getProcessInstanceKey()).isEqualTo(processInstanceKey);
-    assertThat(result.getProcessDefinitionId()).isEqualTo(bpmnProcessId);
+    assertThat(result.getKey()).isEqualTo(processInstanceKey);
+    assertThat(result.getDefinitionId()).isEqualTo(bpmnProcessId);
     assertThat(result.getProcessDefinitionName()).isEqualTo("Service tasks v1");
     assertThat(result.getProcessDefinitionVersion()).isEqualTo(1);
     assertThat(result.getProcessDefinitionKey()).isEqualTo(processDefinitionKey);
@@ -196,7 +196,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.page().totalItems()).isEqualTo(expectedBpmnProcessIds.size());
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrderElementsOf(expectedBpmnProcessIds);
   }
 
@@ -216,7 +216,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().getFirst().getProcessInstanceKey()).isEqualTo(processInstanceKey);
+    assertThat(result.items().getFirst().getKey()).isEqualTo(processInstanceKey);
   }
 
   @Test
@@ -301,7 +301,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(2);
-    assertThat(result.items().getFirst().getProcessInstanceKey()).isEqualTo(processInstanceKey);
+    assertThat(result.items().getFirst().getKey()).isEqualTo(processInstanceKey);
   }
 
   @Test
@@ -382,8 +382,8 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items()).hasSize(1);
-    assertThat(result.items().getFirst().getProcessInstanceKey())
-        .isEqualTo(pi.getProcessInstanceKey());
+    assertThat(result.items().getFirst().getKey())
+        .isEqualTo(pi.getKey());
   }
 
   @Test
@@ -439,8 +439,8 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items()).hasSize(1);
-    assertThat(result.items().getFirst().getProcessInstanceKey())
-        .isEqualTo(pi.getProcessInstanceKey());
+    assertThat(result.items().getFirst().getKey())
+        .isEqualTo(pi.getKey());
   }
 
   @Test
@@ -465,7 +465,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(2);
-    assertThat(result.items().getFirst().getProcessInstanceKey()).isEqualTo(processInstanceKey);
+    assertThat(result.items().getFirst().getKey()).isEqualTo(processInstanceKey);
   }
 
   @Test
@@ -476,7 +476,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(5);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrder(
             "service_tasks_v1",
             "service_tasks_v1",
@@ -557,7 +557,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(3);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrder("service_tasks_v1", "service_tasks_v1", "incident_process_v1");
   }
 
@@ -667,7 +667,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(5);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrder(
             "service_tasks_v1",
             "service_tasks_v1",
@@ -708,7 +708,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
               // then
               assertThat(result.items().size()).isEqualTo(3);
               assertThat(
-                      result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+                      result.items().stream().map(ProcessInstance::getDefinitionId).toList())
                   .containsExactlyInAnyOrder(
                       "parent_process_v1", "child_process_v1", "manual_process");
             });
@@ -726,7 +726,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(2);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrder("incident_process_v1", "incident_process_v2");
   }
 
@@ -750,7 +750,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrder("child_process_v1");
   }
 
@@ -773,7 +773,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(8);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyElementsOf(expectedBpmnProcessIds);
   }
 
@@ -791,7 +791,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .join();
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrderElementsOf(expectedBpmnProcessIds);
   }
 
@@ -810,7 +810,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrderElementsOf(expectedBpmnProcessIds);
   }
 
@@ -834,7 +834,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrderElementsOf(expectedBpmnProcessIds);
   }
 
@@ -878,7 +878,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(2);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrderElementsOf(expectedBpmnProcessIds);
   }
 
@@ -897,7 +897,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrderElementsOf(expectedBpmnProcessIds);
   }
 
@@ -934,7 +934,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .send()
             .join();
 
-    assertSorted(resultAsc, resultDesc, ProcessInstance::getProcessInstanceKey);
+    assertSorted(resultAsc, resultDesc, ProcessInstance::getKey);
   }
 
   @Test
@@ -1029,7 +1029,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var result =
         camundaClient.newProcessInstanceSearchRequest().page(p -> p.limit(2)).send().join();
     assertThat(result.items().size()).isEqualTo(2);
-    final var key = result.items().getFirst().getProcessInstanceKey();
+    final var key = result.items().getFirst().getKey();
     // apply searchAfter
     final var resultAfter =
         camundaClient
@@ -1039,7 +1039,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .join();
 
     assertThat(resultAfter.items().size()).isEqualTo(7);
-    final var keyAfter = resultAfter.items().getFirst().getProcessInstanceKey();
+    final var keyAfter = resultAfter.items().getFirst().getKey();
     // apply searchBefore
     final var resultBefore =
         camundaClient
@@ -1048,7 +1048,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
-    assertThat(resultBefore.items().getFirst().getProcessInstanceKey()).isEqualTo(key);
+    assertThat(resultBefore.items().getFirst().getKey()).isEqualTo(key);
   }
 
   @Test
@@ -1497,7 +1497,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then:
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().getFirst().getProcessDefinitionId()).isEqualTo("incident_process_v1");
+    assertThat(result.items().getFirst().getDefinitionId()).isEqualTo("incident_process_v1");
   }
 
   @Test
@@ -1512,7 +1512,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then:
     assertThat(result.items().size()).isEqualTo(1);
-    assertThat(result.items().getFirst().getProcessDefinitionId()).isEqualTo("incident_process_v2");
+    assertThat(result.items().getFirst().getDefinitionId()).isEqualTo("incident_process_v2");
   }
 
   @Test
@@ -1675,7 +1675,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
 
     // then
     assertThat(result.items().size()).isEqualTo(2);
-    assertThat(result.items().stream().map(ProcessInstance::getProcessDefinitionId).toList())
+    assertThat(result.items().stream().map(ProcessInstance::getDefinitionId).toList())
         .containsExactlyInAnyOrder("service_tasks_v1", "service_tasks_v1");
   }
 
@@ -1720,7 +1720,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .join()
             .items()
             .getFirst()
-            .getProcessInstanceKey();
+            .getKey();
 
     // when
     final var result =
@@ -1748,7 +1748,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .join()
             .items()
             .getFirst()
-            .getProcessInstanceKey();
+            .getKey();
 
     // when
     final var result =

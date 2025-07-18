@@ -136,7 +136,7 @@ public class CamundaProcessTestExtensionIT {
             () ->
                 assertThat(client.newProcessInstanceSearchRequest().send().join().items())
                     .hasSize(1)
-                    .extracting(ProcessInstance::getProcessInstanceKey)
+                    .extracting(ProcessInstance::getKey)
                     .contains(processInstance.getProcessInstanceKey()));
   }
 

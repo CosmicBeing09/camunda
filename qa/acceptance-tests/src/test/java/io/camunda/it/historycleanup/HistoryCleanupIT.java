@@ -88,6 +88,6 @@ public class HistoryCleanupIT {
     // the other should still exist
     final var result = camundaClient.newProcessInstanceSearchRequest().send().join();
     assertThat(result.page().totalItems()).isEqualTo(1);
-    assertThat(result.items().getFirst().getProcessInstanceKey()).isNotEqualTo(processInstanceKey);
+    assertThat(result.items().getFirst().getKey()).isNotEqualTo(processInstanceKey);
   }
 }

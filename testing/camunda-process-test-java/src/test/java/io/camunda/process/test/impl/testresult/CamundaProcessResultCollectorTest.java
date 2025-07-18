@@ -96,7 +96,7 @@ public class CamundaProcessResultCollectorTest {
     assertThat(result.getProcessInstanceTestResults())
         .hasSize(2)
         .extracting(ProcessInstanceResult::getProcessInstance)
-        .extracting(ProcessInstance::getProcessInstanceKey, ProcessInstance::getProcessDefinitionId)
+        .extracting(ProcessInstance::getKey, ProcessInstance::getDefinitionId)
         .contains(tuple(1L, "process-a"), tuple(2L, "process-b"));
 
     assertThat(result.getProcessInstanceTestResults())
@@ -129,8 +129,8 @@ public class CamundaProcessResultCollectorTest {
 
     // assert that it collects only global variables
     variableFilterCaptor.getValue().accept(variableFilter);
-    verify(variableFilter).processInstanceKey(PROCESS_INSTANCE_1.getProcessInstanceKey());
-    verify(variableFilter).scopeKey(PROCESS_INSTANCE_1.getProcessInstanceKey());
+    verify(variableFilter).processInstanceKey(PROCESS_INSTANCE_1.getKey());
+    verify(variableFilter).scopeKey(PROCESS_INSTANCE_1.getKey());
   }
 
   @Test
@@ -165,28 +165,28 @@ public class CamundaProcessResultCollectorTest {
 
     final ElementInstance elementInstance1 =
         ElementInstanceBuilder.newActiveElementInstance(
-                "A", PROCESS_INSTANCE_1.getProcessInstanceKey())
+                "A", PROCESS_INSTANCE_1.getKey())
             .setIncident(true)
             .setIncidentKey(10L)
             .build();
 
     final ElementInstance elementInstance2 =
         ElementInstanceBuilder.newActiveElementInstance(
-                "B", PROCESS_INSTANCE_1.getProcessInstanceKey())
+                "B", PROCESS_INSTANCE_1.getKey())
             .setIncident(true)
             .setIncidentKey(11L)
             .build();
 
     final ElementInstance elementInstance3 =
         ElementInstanceBuilder.newActiveElementInstance(
-                "C", PROCESS_INSTANCE_2.getProcessInstanceKey())
+                "C", PROCESS_INSTANCE_2.getKey())
             .setIncident(true)
             .setIncidentKey(12L)
             .build();
 
     final ElementInstance elementInstance4 =
         ElementInstanceBuilder.newActiveElementInstance(
-                "D", PROCESS_INSTANCE_2.getProcessInstanceKey())
+                "D", PROCESS_INSTANCE_2.getKey())
             .setIncident(false)
             .build();
 
@@ -242,18 +242,18 @@ public class CamundaProcessResultCollectorTest {
         .thenReturn(
             Arrays.asList(
                 ElementInstanceBuilder.newActiveElementInstance(
-                        "A", PROCESS_INSTANCE_1.getProcessInstanceKey())
+                        "A", PROCESS_INSTANCE_1.getKey())
                     .build(),
                 ElementInstanceBuilder.newActiveElementInstance(
-                        "B", PROCESS_INSTANCE_1.getProcessInstanceKey())
+                        "B", PROCESS_INSTANCE_1.getKey())
                     .build()))
         .thenReturn(
             Arrays.asList(
                 ElementInstanceBuilder.newActiveElementInstance(
-                        "C", PROCESS_INSTANCE_2.getProcessInstanceKey())
+                        "C", PROCESS_INSTANCE_2.getKey())
                     .build(),
                 ElementInstanceBuilder.newActiveElementInstance(
-                        "D", PROCESS_INSTANCE_2.getProcessInstanceKey())
+                        "D", PROCESS_INSTANCE_2.getKey())
                     .build()));
 
     // when

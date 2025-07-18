@@ -95,7 +95,7 @@ public class DataGenerator implements AutoCloseable {
               // remove all completed instances
               response.get().items().stream()
                   .filter(inst -> inst.getState().equals(ProcessInstanceState.COMPLETED))
-                  .map(ProcessInstance::getProcessInstanceKey)
+                  .map(ProcessInstance::getKey)
                   .forEach(instanceKeys::remove);
             });
   }
