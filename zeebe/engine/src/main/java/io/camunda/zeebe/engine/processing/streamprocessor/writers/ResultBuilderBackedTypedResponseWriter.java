@@ -18,7 +18,7 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import java.util.function.Supplier;
 
 public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilderBackedWriter
-    implements TypedResponseWriter {
+    implements ResponseWriter {
 
   ResultBuilderBackedTypedResponseWriter(
       final Supplier<ProcessingResultBuilder> resultBuilderSupplier) {
@@ -26,7 +26,7 @@ public class ResultBuilderBackedTypedResponseWriter extends AbstractResultBuilde
   }
 
   @Override
-  public void writeRejectionOnCommand(
+  public void writeRejectionFor(
       final TypedRecord<?> command, final RejectionType type, final String reason) {
     writeRejection(command, type, reason, command.getRequestId(), command.getRequestStreamId());
   }

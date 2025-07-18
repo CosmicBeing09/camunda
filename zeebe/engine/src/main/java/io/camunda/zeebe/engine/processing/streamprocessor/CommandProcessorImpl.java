@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor.Comma
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -50,7 +50,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
 
   private RejectionType rejectionType;
   private String rejectionReason;
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
 
   public CommandProcessorImpl(
       final CommandProcessor<T> commandProcessor,
@@ -82,7 +82,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
     } else {
       rejectionWriter.appendRejection(command, rejectionType, rejectionReason);
       if (respond) {
-        responseWriter.writeRejectionOnCommand(command, rejectionType, rejectionReason);
+        responseWriter.writeRejectionFor(command, rejectionType, rejectionReason);
       }
     }
   }

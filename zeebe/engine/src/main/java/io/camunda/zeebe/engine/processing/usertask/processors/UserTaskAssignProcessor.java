@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.usertask.processors;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.TaskState;
@@ -28,7 +28,7 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
 
   private final TaskState userTaskState;
   private final StateWriter stateWriter;
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
   public UserTaskAssignProcessor(

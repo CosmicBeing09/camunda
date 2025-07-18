@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.state.immutable.MappingState;
@@ -37,7 +37,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
   private final KeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
 
   public MappingUpdateProcessor(
@@ -75,7 +75,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
               record.getName(),
               record.getMappingId());
       rejectionWriter.appendRejection(command, RejectionType.NULL_VAL, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NULL_VAL, errorMessage);
+      responseWriter.writeRejectionFor(command, RejectionType.NULL_VAL, errorMessage);
       return;
     }
 
@@ -83,7 +83,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
     if (persistedRecord.isEmpty()) {
       final var errorMessage = MAPPING_ID_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(mappingId);
       rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionFor(command, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -95,7 +95,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionFor(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -107,7 +107,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
           MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
               record.getClaimName(), record.getClaimValue());
       rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionFor(command, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 

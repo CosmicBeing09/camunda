@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.protocol.impl.record.value.decision.DecisionEvaluationRecord;
@@ -38,7 +38,7 @@ public class DecisionEvaluationEvaluteProcessor
 
   private final DecisionBehavior decisionBehavior;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final KeyGenerator keyGenerator;
@@ -82,7 +82,7 @@ public class DecisionEvaluationEvaluteProcessor
                 ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                     "evaluate a decision", record.getDecisionKey(), "such decision")
                 : rejection.reason();
-        responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
+        responseWriter.writeRejectionFor(command, rejection.type(), errorMessage);
         rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
         return;
       }
@@ -120,7 +120,7 @@ public class DecisionEvaluationEvaluteProcessor
             },
             rejection -> {
               final String reason = rejection.reason();
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), reason);
+              responseWriter.writeRejectionFor(command, rejection.type(), reason);
               rejectionWriter.appendRejection(command, rejection.type(), reason);
             });
   }

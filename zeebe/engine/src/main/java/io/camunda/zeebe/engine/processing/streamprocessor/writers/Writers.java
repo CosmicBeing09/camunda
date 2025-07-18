@@ -18,7 +18,7 @@ public final class Writers {
   private final TypedRejectionWriter rejectionWriter;
   private final StateWriter stateWriter;
 
-  private final TypedResponseWriter responseWriter;
+  private final ResponseWriter responseWriter;
   private final SideEffectWriter sideEffectWriter;
 
   public Writers(
@@ -64,7 +64,7 @@ public final class Writers {
    *
    * @return the response writer, which is used during processing
    */
-  public TypedResponseWriter response() {
+  public ResponseWriter response() {
     return responseWriter;
   }
 }
