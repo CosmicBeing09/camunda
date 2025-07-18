@@ -23,15 +23,15 @@ public class TestProcessCache implements ExporterEntityCache<Long, CachedProcess
   }
 
   @Override
-  public Map<Long, CachedProcessEntity> getAll(Iterable<Long> keys) {
+  public Map<Long, CachedProcessEntity> getAll(final Iterable<Long> keys) {
     final Map<Long, CachedProcessEntity> map = new HashMap<>();
     keys.forEach(k -> map.put(k, get(k).orElse(null)));
     return map;
   }
 
   @Override
-  public void put(final Long entityKey, final CachedProcessEntity processEntity) {
-    cache.put(entityKey, processEntity);
+  public void put(final Long entityKey, final CachedProcessEntity formEntity) {
+    cache.put(entityKey, formEntity);
   }
 
   @Override

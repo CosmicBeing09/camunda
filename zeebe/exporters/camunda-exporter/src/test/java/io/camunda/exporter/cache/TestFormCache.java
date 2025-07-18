@@ -23,15 +23,15 @@ public class TestFormCache implements ExporterEntityCache<String, CachedFormEnti
   }
 
   @Override
-  public Map<String, CachedFormEntity> getAll(Iterable<String> keys) {
+  public Map<String, CachedFormEntity> getAll(final Iterable<String> keys) {
     final Map<String, CachedFormEntity> map = new HashMap<>();
     keys.forEach(k -> map.put(k, get(k).orElse(null)));
     return map;
   }
 
   @Override
-  public void put(final String entityKey, final CachedFormEntity processEntity) {
-    cache.put(entityKey, processEntity);
+  public void put(final String entityKey, final CachedFormEntity formEntity) {
+    cache.put(entityKey, formEntity);
   }
 
   @Override
