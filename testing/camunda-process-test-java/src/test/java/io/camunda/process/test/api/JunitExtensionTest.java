@@ -211,7 +211,7 @@ public class JunitExtensionTest {
     final ZeebeClientConfiguration configuration = newZeebeClient.getConfiguration();
     assertThat(configuration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
     assertThat(configuration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
-    assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("test");
+    assertThat(configuration.getWorkerName()).isEqualTo("test");
   }
 
   @Test

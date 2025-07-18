@@ -67,8 +67,8 @@ public final class StreamJobsCommandImpl
     this.retryPredicate = retryPredicate;
     builder = StreamActivatedJobsRequest.newBuilder();
 
-    timeout(config.getDefaultJobTimeout());
-    workerName(config.getDefaultJobWorkerName());
+    timeout(config.getJobTimeout());
+    workerName(config.getWorkerName());
 
     defaultTenantIds = new HashSet<>(config.getDefaultJobWorkerTenantIds());
     customTenantIds = new HashSet<>();

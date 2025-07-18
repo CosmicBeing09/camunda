@@ -98,8 +98,8 @@ public final class ZeebeClientTest extends ClientTest {
       assertThat(configuration.getRestAddress()).isEqualTo(DEFAULT_REST_ADDRESS);
       assertThat(configuration.getDefaultJobWorkerMaxJobsActive()).isEqualTo(32);
       assertThat(configuration.getNumJobWorkerExecutionThreads()).isEqualTo(1);
-      assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("default");
-      assertThat(configuration.getDefaultJobTimeout()).isEqualTo(Duration.ofMinutes(5));
+      assertThat(configuration.getWorkerName()).isEqualTo("default");
+      assertThat(configuration.getJobTimeout()).isEqualTo(Duration.ofMinutes(5));
       assertThat(configuration.getDefaultJobPollInterval()).isEqualTo(Duration.ofMillis(100));
       assertThat(configuration.getDefaultMessageTimeToLive()).isEqualTo(DEFAULT_MESSAGE_TTL);
       assertThat(configuration.getDefaultRequestTimeout()).isEqualTo(Duration.ofSeconds(10));

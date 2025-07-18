@@ -197,8 +197,8 @@ public final class ActivateJobsTest extends ClientTest {
     // then
     final ActivateJobsRequest request = gatewayService.getLastRequest();
     assertThat(request.getTimeout())
-        .isEqualTo(client.getConfiguration().getDefaultJobTimeout().toMillis());
-    assertThat(request.getWorker()).isEqualTo(client.getConfiguration().getDefaultJobWorkerName());
+        .isEqualTo(client.getConfiguration().getJobTimeout().toMillis());
+    assertThat(request.getWorker()).isEqualTo(client.getConfiguration().getWorkerName());
     assertThat(request.getRequestTimeout())
         .isEqualTo(client.getConfiguration().getDefaultRequestTimeout().toMillis());
   }

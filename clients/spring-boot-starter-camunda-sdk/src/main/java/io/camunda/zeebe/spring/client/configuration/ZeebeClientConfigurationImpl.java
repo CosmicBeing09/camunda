@@ -73,12 +73,12 @@ public class ZeebeClientConfigurationImpl implements ZeebeClientConfiguration {
   }
 
   @Override
-  public String getDefaultJobWorkerName() {
+  public String getWorkerName() {
     return camundaClientConfiguration.getDefaultJobWorkerName();
   }
 
   @Override
-  public Duration getDefaultJobTimeout() {
+  public Duration getJobTimeout() {
     return camundaClientConfiguration.getDefaultJobTimeout();
   }
 
