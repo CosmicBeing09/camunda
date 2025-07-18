@@ -20,5 +20,5 @@ public enum UserTaskState {
   COMPLETED,
   CANCELED,
   FAILED,
-  UNKNOWN_ENUM_VALUE;
+  UNKNOWN;
 }
