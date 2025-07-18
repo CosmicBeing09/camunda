@@ -17,7 +17,7 @@ import static io.camunda.webapps.schema.descriptors.index.TenantIndex.KEY;
 import static io.camunda.webapps.schema.descriptors.index.TenantIndex.NAME;
 import static io.camunda.webapps.schema.descriptors.index.TenantIndex.TENANT_ID;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.TenantFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.descriptors.index.TenantIndex;
@@ -30,7 +30,7 @@ public class TenantFilterTransformer extends IndexFilterTransformer<TenantFilter
   }
 
   @Override
-  public SearchQuery toSearchQuery(final TenantFilter filter) {
+  public Query toSearchQuery(final TenantFilter filter) {
     return and(
         filter.key() == null ? null : term(KEY, filter.key()),
         filter.tenantId() == null ? null : term(TENANT_ID, filter.tenantId()),

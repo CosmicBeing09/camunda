@@ -7,22 +7,21 @@
  */
 package io.camunda.search.es.transformers.query;
 
-import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryVariant;
-import io.camunda.search.clients.query.SearchQuery;
-import io.camunda.search.clients.query.SearchQueryOption;
+import io.camunda.search.clients.query.Query;
+import io.camunda.search.clients.query.QueryOption;
 import io.camunda.search.clients.transformers.SearchTransfomer;
 import io.camunda.search.es.transformers.ElasticsearchTransformer;
 import io.camunda.search.es.transformers.ElasticsearchTransformers;
 
-public final class QueryTransformer extends ElasticsearchTransformer<SearchQuery, Query> {
+public final class QueryTransformer extends ElasticsearchTransformer<Query, co.elastic.clients.elasticsearch._types.query_dsl.Query> {
 
   public QueryTransformer(final ElasticsearchTransformers transformers) {
     super(transformers);
   }
 
   @Override
-  public Query apply(final SearchQuery value) {
+  public co.elastic.clients.elasticsearch._types.query_dsl.Query apply(final Query value) {
     final var queryOption = value.queryOption();
 
     if (queryOption == null) {
@@ -36,7 +35,7 @@ public final class QueryTransformer extends ElasticsearchTransformer<SearchQuery
     return query;
   }
 
-  public <T extends SearchQueryOption, R extends QueryVariant>
+  public <T extends QueryOption, R extends QueryVariant>
       SearchTransfomer<T, R> getQueryOptionTransformer(final Class<?> cls) {
     return getTransformer(cls);
   }

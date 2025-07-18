@@ -7,9 +7,9 @@
  */
 package io.camunda.search.clients.query;
 
-public interface SearchQueryOption {
+public interface QueryOption {
 
-  default SearchQuery toSearchQuery() {
-    return new SearchQuery(this);
+  default Query toSearchQuery() {
+    return new Query(this);
   }
 }

@@ -13,7 +13,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.variableOperat
 import static io.camunda.webapps.schema.descriptors.template.VariableTemplate.NAME;
 import static io.camunda.webapps.schema.descriptors.template.VariableTemplate.VALUE;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.VariableValueFilter;
 import java.util.ArrayList;
 
@@ -21,18 +21,18 @@ public final class VariableValueFilterTransformer
     implements FilterTransformer<VariableValueFilter> {
 
   @Override
-  public SearchQuery toSearchQuery(final VariableValueFilter value) {
+  public Query toSearchQuery(final VariableValueFilter value) {
     return toSearchQuery(value, NAME, VALUE);
   }
 
-  public SearchQuery toSearchQuery(
+  public Query toSearchQuery(
       final VariableValueFilter value, final String varName, final String varValue) {
     final var variableNameQuery = term(varName, value.name());
     if (value.valueOperations().isEmpty()) {
       return variableNameQuery;
     }
 
-    final var queries = new ArrayList<SearchQuery>();
+    final var queries = new ArrayList<Query>();
     queries.add(variableNameQuery);
     queries.addAll(variableOperations(varValue, value.valueOperations()));
     return and(queries);

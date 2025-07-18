@@ -14,7 +14,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.matchNone;
 import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 import static io.camunda.search.clients.query.SearchQueryBuilders.term;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.RoleFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.descriptors.index.RoleIndex;
@@ -26,7 +26,7 @@ public class RoleFilterTransformer extends IndexFilterTransformer<RoleFilter> {
   }
 
   @Override
-  public SearchQuery toSearchQuery(final RoleFilter filter) {
+  public Query toSearchQuery(final RoleFilter filter) {
     return and(
         filter.roleId() == null ? null : term(RoleIndex.ROLE_ID, filter.roleId()),
         filter.name() == null ? null : term(RoleIndex.NAME, filter.name()),

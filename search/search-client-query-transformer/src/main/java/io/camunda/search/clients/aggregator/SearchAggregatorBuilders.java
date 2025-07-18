@@ -7,7 +7,7 @@
  */
 package io.camunda.search.clients.aggregator;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 
 public final class SearchAggregatorBuilders {
 
@@ -39,7 +39,7 @@ public final class SearchAggregatorBuilders {
     return new SearchFilterAggregator.Builder();
   }
 
-  public static SearchFilterAggregator filter(final String name, final SearchQuery filter) {
+  public static SearchFilterAggregator filter(final String name, final Query filter) {
     return filter().name(name).query(filter).build();
   }
 

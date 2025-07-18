@@ -22,7 +22,7 @@ import static io.camunda.webapps.schema.descriptors.template.VariableTemplate.SC
 import static io.camunda.webapps.schema.descriptors.template.VariableTemplate.VALUE;
 import static java.util.Optional.ofNullable;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.Operation;
 import io.camunda.search.filter.UntypedOperation;
 import io.camunda.search.filter.VariableFilter;
@@ -37,8 +37,8 @@ public class VariableFilterTransformer extends IndexFilterTransformer<VariableFi
   }
 
   @Override
-  public SearchQuery toSearchQuery(final VariableFilter filter) {
-    final var queries = new ArrayList<SearchQuery>();
+  public Query toSearchQuery(final VariableFilter filter) {
+    final var queries = new ArrayList<Query>();
     queries.addAll(stringOperations(NAME, filter.nameOperations()));
     queries.addAll(getVariablesQuery(filter.valueOperations()));
     queries.addAll(getScopeKeyQuery(filter.scopeKeyOperations()));
@@ -49,28 +49,28 @@ public class VariableFilterTransformer extends IndexFilterTransformer<VariableFi
     return and(queries);
   }
 
-  private List<SearchQuery> getVariablesQuery(final List<UntypedOperation> variableFilters) {
+  private List<Query> getVariablesQuery(final List<UntypedOperation> variableFilters) {
     return variableOperations(VALUE, variableFilters);
   }
 
-  private List<SearchQuery> getScopeKeyQuery(final List<Operation<Long>> scopeKey) {
+  private List<Query> getScopeKeyQuery(final List<Operation<Long>> scopeKey) {
     return longOperations(SCOPE_KEY, scopeKey);
   }
 
-  private List<SearchQuery> getProcessInstanceKeyQuery(
+  private List<Query> getProcessInstanceKeyQuery(
       final List<Operation<Long>> processInstanceKey) {
     return longOperations(PROCESS_INSTANCE_KEY, processInstanceKey);
   }
 
-  private List<SearchQuery> getVariableKeyQuery(final List<Operation<Long>> variableKeys) {
+  private List<Query> getVariableKeyQuery(final List<Operation<Long>> variableKeys) {
     return longOperations(KEY, variableKeys);
   }
 
-  private SearchQuery getTenantIdQuery(final List<String> tenant) {
+  private Query getTenantIdQuery(final List<String> tenant) {
     return stringTerms(TENANT_ID, tenant);
   }
 
-  private SearchQuery getIsTruncatedQuery(final Boolean isTruncated) {
+  private Query getIsTruncatedQuery(final Boolean isTruncated) {
     if (isTruncated == null) {
       return null;
     }

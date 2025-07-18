@@ -10,12 +10,12 @@ package io.camunda.search.clients.transformers.filter;
 import static io.camunda.search.filter.Operation.eq;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.search.clients.query.Query;
+import io.camunda.search.clients.query.QueryOption;
 import io.camunda.search.clients.query.SearchBoolQuery;
 import io.camunda.search.clients.query.SearchExistsQuery;
 import io.camunda.search.clients.query.SearchHasChildQuery;
 import io.camunda.search.clients.query.SearchHasParentQuery;
-import io.camunda.search.clients.query.SearchQuery;
-import io.camunda.search.clients.query.SearchQueryOption;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
 import io.camunda.search.filter.UntypedOperation;
@@ -38,7 +38,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final SearchQueryOption queryVariant = searchRequest.queryOption();
+    final QueryOption queryVariant = searchRequest.queryOption();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
@@ -344,7 +344,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
             outerBoolQuery -> {
               assertThat(outerBoolQuery.must()).isNotEmpty();
 
-              final SearchQuery outerMustQuery = outerBoolQuery.must().get(0);
+              final Query outerMustQuery = outerBoolQuery.must().get(0);
               assertThat(outerMustQuery.queryOption()).isInstanceOf(SearchHasParentQuery.class);
 
               // Drill down into the nested SearchBoolQuery

@@ -9,10 +9,10 @@ package io.camunda.search.clients.transformers.filter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.search.clients.query.QueryOption;
 import io.camunda.search.clients.query.SearchBoolQuery;
 import io.camunda.search.clients.query.SearchHasChildQuery;
 import io.camunda.search.clients.query.SearchMatchQuery;
-import io.camunda.search.clients.query.SearchQueryOption;
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.clients.query.SearchTermsQuery;
@@ -663,7 +663,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
   }
 
   private void assertIsSearchTermQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final String expectedValue) {
     assertThat(searchQueryOption)
@@ -676,7 +676,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
   }
 
   private void assertIsSearchMatchQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final String expectedValue) {
     assertThat(searchQueryOption)
@@ -689,7 +689,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
   }
 
   private void assertIsSearchTermQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final Long expectedValue) {
     assertThat(searchQueryOption)
@@ -702,7 +702,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
   }
 
   private void assertIsSearchTermQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final Integer expectedValue) {
     assertThat(searchQueryOption)
@@ -715,7 +715,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
   }
 
   private void assertIsSearchTermQuery(
-      final SearchQueryOption searchQueryOption,
+      final QueryOption searchQueryOption,
       final String expectedField,
       final Boolean expectedValue) {
     assertThat(searchQueryOption)

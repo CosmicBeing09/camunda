@@ -10,13 +10,13 @@ package io.camunda.search.clients.query;
 import io.camunda.util.ObjectBuilder;
 import java.util.Objects;
 
-public record SearchConstantScoreQuery(SearchQuery query) implements SearchQueryOption {
+public record SearchConstantScoreQuery(Query query) implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchConstantScoreQuery> {
 
-    private SearchQuery filter;
+    private Query filter;
 
-    public Builder filter(final SearchQuery value) {
+    public Builder filter(final Query value) {
       filter = value;
       return this;
     }

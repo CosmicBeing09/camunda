@@ -10,7 +10,7 @@ package io.camunda.search.os.transformers.query;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchQueryBuilders;
 import io.camunda.search.clients.transformers.SearchTransfomer;
 import io.camunda.search.os.transformers.OpensearchTransformers;
@@ -24,18 +24,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.opensearch.client.opensearch._types.query_dsl.Query;
 
 public class TermQueryTransformerTest {
 
   private final OpensearchTransformers transformers = new OpensearchTransformers();
-  private SearchTransfomer<SearchQuery, Query> transformer;
+  private SearchTransfomer<Query, org.opensearch.client.opensearch._types.query_dsl.Query> transformer;
 
   private OSQuerySerializer osQuerySerializer;
 
   @BeforeEach
   public void before() throws IOException {
-    transformer = transformers.getTransformer(SearchQuery.class);
+    transformer = transformers.getTransformer(Query.class);
 
     // To serialize OS queries to json
     osQuerySerializer = new OSQuerySerializer();
@@ -90,7 +89,7 @@ public class TermQueryTransformerTest {
   @ParameterizedTest
   @MethodSource("provideQueries")
   public void shouldApplyTransformer(
-      final SearchQuery rangeQuery, final String expectedResultQuery) {
+      final Query rangeQuery, final String expectedResultQuery) {
     // given
     final var expectedQuery = expectedResultQuery.replace("'", "\"");
 

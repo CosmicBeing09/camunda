@@ -7,7 +7,7 @@
  */
 package io.camunda.search.clients.aggregator;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.util.ObjectBuilder;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 
 public record SearchFiltersAggregator(
-    String name, Map<String, SearchQuery> queries, List<SearchAggregator> aggregations)
+    String name, Map<String, Query> queries, List<SearchAggregator> aggregations)
     implements SearchAggregator {
 
   @Override
@@ -31,14 +31,14 @@ public record SearchFiltersAggregator(
   public static final class Builder extends AbstractBuilder<Builder>
       implements ObjectBuilder<SearchFiltersAggregator> {
 
-    private Map<String, SearchQuery> queries;
+    private Map<String, Query> queries;
 
     @Override
     protected Builder self() {
       return this;
     }
 
-    public Builder namedQuery(final String name, final SearchQuery query) {
+    public Builder namedQuery(final String name, final Query query) {
       if (queries == null) {
         queries = new HashMap<>();
       }

@@ -13,7 +13,7 @@ import static io.camunda.webapps.schema.descriptors.template.ListViewTemplate.JO
 import static io.camunda.webapps.schema.descriptors.template.ListViewTemplate.PROCESS_INSTANCE_JOIN_RELATION;
 import static io.camunda.webapps.schema.descriptors.template.ListViewTemplate.PROCESS_INSTANCE_KEY;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.ProcessInstanceStatisticsFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -25,7 +25,7 @@ public class ProcessInstanceStatisticsFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final ProcessInstanceStatisticsFilter filter) {
+  public Query toSearchQuery(final ProcessInstanceStatisticsFilter filter) {
     return and(
         term(JOIN_RELATION, PROCESS_INSTANCE_JOIN_RELATION),
         term(PROCESS_INSTANCE_KEY, filter.processInstanceKey()));

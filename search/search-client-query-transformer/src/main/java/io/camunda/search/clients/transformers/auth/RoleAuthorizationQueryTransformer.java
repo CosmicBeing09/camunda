@@ -9,7 +9,7 @@ package io.camunda.search.clients.transformers.auth;
 
 import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.List;
 public class RoleAuthorizationQueryTransformer implements AuthorizationQueryTransformer {
 
   @Override
-  public SearchQuery toSearchQuery(
+  public Query toSearchQuery(
       final AuthorizationResourceType resourceType,
       final PermissionType permissionType,
       final List<String> resourceIds) {

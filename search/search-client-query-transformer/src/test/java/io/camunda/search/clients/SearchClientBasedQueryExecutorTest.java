@@ -17,7 +17,7 @@ import io.camunda.search.clients.auth.AuthorizationQueryStrategy;
 import io.camunda.search.clients.core.SearchQueryHit;
 import io.camunda.search.clients.core.SearchQueryRequest;
 import io.camunda.search.clients.core.SearchQueryResponse;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.transformers.ServiceTransformers;
 import io.camunda.search.clients.transformers.filter.ProcessDefinitionFilterTransformer;
 import io.camunda.search.clients.transformers.filter.UserFilterTransformer;
@@ -154,7 +154,7 @@ class SearchClientBasedQueryExecutorTest {
     // then
     assertThat(searchQueryRequest.query())
         .isEqualTo(
-            SearchQuery.of(
+            Query.of(
                 q ->
                     q.bool(
                         b ->
@@ -163,7 +163,7 @@ class SearchClientBasedQueryExecutorTest {
                                     new ProcessDefinitionFilterTransformer(
                                             new ProcessIndex("", true))
                                         .toSearchQuery(query.filter()),
-                                    SearchQuery.of(
+                                    Query.of(
                                         q2 ->
                                             q2.terms(
                                                 t ->

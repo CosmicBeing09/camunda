@@ -18,7 +18,7 @@ import static io.camunda.webapps.schema.descriptors.index.DecisionRequirementsIn
 import static io.camunda.webapps.schema.descriptors.index.DecisionRequirementsIndex.RESOURCE_NAME;
 import static io.camunda.webapps.schema.descriptors.index.DecisionRequirementsIndex.VERSION;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.DecisionRequirementsFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -30,7 +30,7 @@ public final class DecisionRequirementsFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final DecisionRequirementsFilter filter) {
+  public Query toSearchQuery(final DecisionRequirementsFilter filter) {
     return and(
         longTerms(KEY, filter.decisionRequirementsKeys()),
         stringTerms(NAME, filter.names()),

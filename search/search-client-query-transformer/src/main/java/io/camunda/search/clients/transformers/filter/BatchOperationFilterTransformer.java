@@ -10,7 +10,7 @@ package io.camunda.search.clients.transformers.filter;
 import static io.camunda.search.clients.query.SearchQueryBuilders.*;
 import static io.camunda.webapps.schema.descriptors.template.BatchOperationTemplate.*;
 
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.filter.BatchOperationFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 
@@ -22,7 +22,7 @@ public final class BatchOperationFilterTransformer
   }
 
   @Override
-  public SearchQuery toSearchQuery(final BatchOperationFilter filter) {
+  public Query toSearchQuery(final BatchOperationFilter filter) {
     return and(
         stringOperations(ID, filter.batchOperationIdOperations()),
         stringOperations(STATE, filter.stateOperations()),

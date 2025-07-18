@@ -13,7 +13,7 @@ import static io.camunda.security.auth.Authorization.WILDCARD;
 
 import io.camunda.search.clients.AuthorizationSearchClient;
 import io.camunda.search.clients.core.SearchQueryRequest;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.transformers.auth.AuthorizationQueryTransformers;
 import io.camunda.search.query.SearchQueryBase;
 import io.camunda.security.auth.SecurityContext;
@@ -49,7 +49,7 @@ public class DocumentAuthorizationQueryStrategy implements AuthorizationQueryStr
     }
 
     // create a new search query request with the authorization applied
-    final SearchQuery authorizedQuery;
+    final Query authorizedQuery;
     if (resourceKeys.isEmpty()) {
       authorizedQuery = matchNone();
     } else {

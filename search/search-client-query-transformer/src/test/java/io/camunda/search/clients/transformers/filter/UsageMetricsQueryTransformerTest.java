@@ -10,8 +10,8 @@ package io.camunda.search.clients.transformers.filter;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchBoolQuery;
-import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
@@ -51,7 +51,7 @@ public final class UsageMetricsQueryTransformerTest extends AbstractTransformerT
               assertThat(musts).contains(eventSearchTermQuery);
               final var rangeQuery =
                   musts.stream()
-                      .map(SearchQuery::queryOption)
+                      .map(Query::queryOption)
                       .filter(SearchRangeQuery.class::isInstance)
                       .findFirst();
               assertThat(rangeQuery)

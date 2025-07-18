@@ -11,7 +11,7 @@ import io.camunda.util.ObjectBuilder;
 import java.util.Objects;
 
 public record SearchMatchQuery(String field, String query, SearchMatchQueryOperator operator)
-    implements SearchQueryOption {
+    implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchMatchQuery> {
 

@@ -37,24 +37,24 @@ public final class SearchQueryBuilders {
 
   private SearchQueryBuilders() {}
 
-  private static SearchQuery must(final List<SearchQuery> queries) {
+  private static Query must(final List<Query> queries) {
     return bool().must(queries).build().toSearchQuery();
   }
 
-  private static SearchQuery should(final List<SearchQuery> queries) {
+  private static Query should(final List<Query> queries) {
     return bool().should(queries).build().toSearchQuery();
   }
 
-  private static SearchQuery mustNot(final List<SearchQuery> queries) {
+  private static Query mustNot(final List<Query> queries) {
     return bool().mustNot(queries).build().toSearchQuery();
   }
 
-  private static SearchQuery mustNot(final SearchQuery... queries) {
+  private static Query mustNot(final Query... queries) {
     return bool().mustNot(List.of(queries)).build().toSearchQuery();
   }
 
-  private static SearchQuery map(
-      final List<SearchQuery> queries, final Function<List<SearchQuery>, SearchQuery> mapper) {
+  private static Query map(
+      final List<Query> queries, final Function<List<Query>, Query> mapper) {
     final var nonNullQueries = withoutNull(queries);
     if (nonNullQueries == null || nonNullQueries.isEmpty()) {
       return null;
@@ -74,24 +74,24 @@ public final class SearchQueryBuilders {
     return fn.apply(bool()).build();
   }
 
-  public static SearchQuery and(final SearchQuery query, final SearchQuery... queries) {
+  public static Query and(final Query query, final Query... queries) {
     return and(collectValues(query, queries));
   }
 
-  public static SearchQuery and(final List<SearchQuery> queries) {
+  public static Query and(final List<Query> queries) {
     return map(queries, SearchQueryBuilders::must);
   }
 
   @SafeVarargs
-  public static SearchQuery and(final List<SearchQuery>... queries) {
+  public static Query and(final List<Query>... queries) {
     return map(Arrays.stream(queries).flatMap(List::stream).toList(), SearchQueryBuilders::must);
   }
 
-  public static SearchQuery not(final SearchQuery query, final SearchQuery... queries) {
+  public static Query not(final Query query, final Query... queries) {
     return not(collectValues(query, queries));
   }
 
-  public static SearchQuery not(final List<SearchQuery> queries) {
+  public static Query not(final List<Query> queries) {
     final var nonNullQueries = withoutNull(queries);
     if (nonNullQueries != null && !nonNullQueries.isEmpty()) {
       return SearchQueryBuilders.mustNot(queries);
@@ -99,11 +99,11 @@ public final class SearchQueryBuilders {
     return null;
   }
 
-  public static SearchQuery or(final SearchQuery query, final SearchQuery... queries) {
+  public static Query or(final Query query, final Query... queries) {
     return or(collectValues(query, queries));
   }
 
-  public static SearchQuery or(final List<SearchQuery> queries) {
+  public static Query or(final List<Query> queries) {
     return map(queries, SearchQueryBuilders::should);
   }
 
@@ -117,7 +117,7 @@ public final class SearchQueryBuilders {
     return fn.apply(constantScore()).build();
   }
 
-  public static SearchQuery constantScore(final SearchQuery query) {
+  public static Query constantScore(final Query query) {
     return constantScore(q -> q.filter(query)).toSearchQuery();
   }
 
@@ -130,7 +130,7 @@ public final class SearchQueryBuilders {
     return fn.apply(exists()).build();
   }
 
-  public static SearchQuery exists(final String field) {
+  public static Query exists(final String field) {
     return exists(q -> q.field(field)).toSearchQuery();
   }
 
@@ -152,15 +152,15 @@ public final class SearchQueryBuilders {
     return fn.apply(ids()).build();
   }
 
-  public static SearchQuery ids(final List<String> ids) {
+  public static Query ids(final List<String> ids) {
     return ids(q -> q.values(withoutNull(ids))).toSearchQuery();
   }
 
-  public static SearchQuery ids(final Collection<String> ids) {
+  public static Query ids(final Collection<String> ids) {
     return ids(new ArrayList<>(Objects.requireNonNullElse(ids, List.of())));
   }
 
-  public static SearchQuery ids(final String... ids) {
+  public static Query ids(final String... ids) {
     return ids(List.of(Objects.requireNonNullElse(ids, new String[0])));
   }
 
@@ -173,16 +173,16 @@ public final class SearchQueryBuilders {
     return fn.apply(match()).build();
   }
 
-  public static <A> SearchQuery match(
+  public static <A> Query match(
       final String field, final String value, final SearchMatchQueryOperator operator) {
     return match((q) -> q.field(field).query(value).operator(operator)).toSearchQuery();
   }
 
-  public static SearchQuery matchAll() {
+  public static Query matchAll() {
     return new SearchMatchAllQuery.Builder().build().toSearchQuery();
   }
 
-  public static SearchQuery matchNone() {
+  public static Query matchNone() {
     return new SearchMatchNoneQuery.Builder().build().toSearchQuery();
   }
 
@@ -195,16 +195,16 @@ public final class SearchQueryBuilders {
     return fn.apply(prefix()).build();
   }
 
-  public static SearchQuery prefix(final String field, final String value) {
+  public static Query prefix(final String field, final String value) {
     return prefix(q -> q.field(field).value(value)).toSearchQuery();
   }
 
-  public static SearchQuery.Builder query() {
-    return new SearchQuery.Builder();
+  public static Query.Builder query() {
+    return new Query.Builder();
   }
 
-  public static SearchQuery query(
-      final Function<SearchQuery.Builder, ObjectBuilder<SearchQuery>> fn) {
+  public static Query query(
+      final Function<Query.Builder, ObjectBuilder<Query>> fn) {
     return fn.apply(query()).build();
   }
 
@@ -217,31 +217,31 @@ public final class SearchQueryBuilders {
     return fn.apply(range()).build();
   }
 
-  public static <A> SearchQuery gt(final String field, final A gt) {
+  public static <A> Query gt(final String field, final A gt) {
     return SearchRangeQuery.of(q -> q.field(field).gt(gt)).toSearchQuery();
   }
 
-  public static <A> SearchQuery gte(final String field, final A gte) {
+  public static <A> Query gte(final String field, final A gte) {
     return SearchRangeQuery.of(q -> q.field(field).gte(gte)).toSearchQuery();
   }
 
-  public static <A> SearchQuery lt(final String field, final A lt) {
+  public static <A> Query lt(final String field, final A lt) {
     return SearchRangeQuery.of(q -> q.field(field).lt(lt)).toSearchQuery();
   }
 
-  public static <A> SearchQuery lte(final String field, final A lte) {
+  public static <A> Query lte(final String field, final A lte) {
     return SearchRangeQuery.of(q -> q.field(field).lte(lte)).toSearchQuery();
   }
 
-  public static <A> SearchQuery gteLte(final String field, final A gte, final A lte) {
+  public static <A> Query gteLte(final String field, final A gte, final A lte) {
     return SearchRangeQuery.of(q -> q.field(field).gte(gte).lte(lte)).toSearchQuery();
   }
 
-  public static <A> SearchQuery gtLte(final String field, final A gt, final A lte) {
+  public static <A> Query gtLte(final String field, final A gt, final A lte) {
     return SearchRangeQuery.of(q -> q.field(field).gt(gt).lte(lte)).toSearchQuery();
   }
 
-  public static SearchQuery hasChildQuery(final String type, final SearchQuery query) {
+  public static Query hasChildQuery(final String type, final Query query) {
     return hasChild(q -> q.query(query).type(type)).toSearchQuery();
   }
 
@@ -254,27 +254,27 @@ public final class SearchQueryBuilders {
     return fn.apply(term()).build();
   }
 
-  public static SearchQuery term(final String field, final Integer value) {
+  public static Query term(final String field, final Integer value) {
     return term((q) -> q.field(field).value(value)).toSearchQuery();
   }
 
-  public static SearchQuery term(final String field, final Long value) {
+  public static Query term(final String field, final Long value) {
     return term((q) -> q.field(field).value(value)).toSearchQuery();
   }
 
-  public static SearchQuery term(final String field, final Double value) {
+  public static Query term(final String field, final Double value) {
     return term((q) -> q.field(field).value(value)).toSearchQuery();
   }
 
-  public static SearchQuery term(final String field, final String value) {
+  public static Query term(final String field, final String value) {
     return term((q) -> q.field(field).value(value)).toSearchQuery();
   }
 
-  public static SearchQuery term(final String field, final boolean value) {
+  public static Query term(final String field, final boolean value) {
     return term((q) -> q.field(field).value(value)).toSearchQuery();
   }
 
-  public static SearchQuery term(final String field, final TypedValue value) {
+  public static Query term(final String field, final TypedValue value) {
     return term((q) -> q.field(field).value(value)).toSearchQuery();
   }
 
@@ -287,7 +287,7 @@ public final class SearchQueryBuilders {
     return fn.apply(terms()).build();
   }
 
-  public static <C extends Collection<Integer>> SearchQuery intTerms(
+  public static <C extends Collection<Integer>> Query intTerms(
       final String field, final C values) {
     final var fieldValues = withoutNull(values);
     if (fieldValues == null || fieldValues.isEmpty()) {
@@ -299,7 +299,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends Collection<Long>> SearchQuery longTerms(
+  public static <C extends Collection<Long>> Query longTerms(
       final String field, final C values) {
     final var fieldValues = withoutNull(values);
     if (fieldValues == null || fieldValues.isEmpty()) {
@@ -311,7 +311,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static SearchQuery stringTerms(final String field, final Collection<String> values) {
+  public static Query stringTerms(final String field, final Collection<String> values) {
     final var fieldValues = withoutNull(values);
     if (fieldValues == null || fieldValues.isEmpty()) {
       return null;
@@ -322,7 +322,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static SearchQuery objectTerms(final String field, final Collection<Object> values) {
+  public static Query objectTerms(final String field, final Collection<Object> values) {
     final var fieldValues = withoutNull(values);
     if (fieldValues == null || fieldValues.isEmpty()) {
       return null;
@@ -339,12 +339,12 @@ public final class SearchQueryBuilders {
     return new IllegalStateException("Unexpected %s operation: %s".formatted(type, op));
   }
 
-  public static <C extends List<Operation<Integer>>> List<SearchQuery> intOperations(
+  public static <C extends List<Operation<Integer>>> List<Query> intOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
     } else {
-      final var queries = new ArrayList<SearchQuery>();
+      final var queries = new ArrayList<Query>();
       SearchRangeQuery.Builder rangeQueryBuilder = null;
 
       for (final Operation<Integer> op : operations) {
@@ -376,12 +376,12 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends List<Operation<Long>>> List<SearchQuery> longOperations(
+  public static <C extends List<Operation<Long>>> List<Query> longOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
     } else {
-      final var queries = new ArrayList<SearchQuery>();
+      final var queries = new ArrayList<Query>();
       SearchRangeQuery.Builder rangeQueryBuilder = null;
 
       for (final Operation<Long> op : operations) {
@@ -413,12 +413,12 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends List<Operation<String>>> List<SearchQuery> stringOperations(
+  public static <C extends List<Operation<String>>> List<Query> stringOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
     } else {
-      final var searchQueries = new ArrayList<SearchQuery>();
+      final var searchQueries = new ArrayList<Query>();
       operations.forEach(
           op -> {
             searchQueries.add(
@@ -438,7 +438,7 @@ public final class SearchQueryBuilders {
   }
 
   public static <C extends List<Operation<String>>>
-      List<SearchQuery> stringMatchWithHasChildOperations(
+      List<Query> stringMatchWithHasChildOperations(
           final String field,
           final C operations,
           final String childType,
@@ -507,12 +507,12 @@ public final class SearchQueryBuilders {
     return builder;
   }
 
-  public static <C extends List<Operation<OffsetDateTime>>> List<SearchQuery> dateTimeOperations(
+  public static <C extends List<Operation<OffsetDateTime>>> List<Query> dateTimeOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
     } else {
-      final var queries = new ArrayList<SearchQuery>();
+      final var queries = new ArrayList<Query>();
       SearchRangeQuery.Builder rangeQueryBuilder = null;
       for (final Operation<OffsetDateTime> op : operations) {
         switch (op.operator()) {
@@ -542,7 +542,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends UntypedOperation> SearchQuery variableOperation(
+  public static <C extends UntypedOperation> Query variableOperation(
       final String field, final C operation) {
     // Handle common operations
     final var res =
@@ -595,7 +595,7 @@ public final class SearchQueryBuilders {
     return null;
   }
 
-  public static <C extends List<UntypedOperation>> List<SearchQuery> variableOperations(
+  public static <C extends List<UntypedOperation>> List<Query> variableOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
@@ -616,7 +616,7 @@ public final class SearchQueryBuilders {
     return fn.apply(wildcard()).build();
   }
 
-  public static SearchQuery wildcardQuery(final String field, final String value) {
+  public static Query wildcardQuery(final String field, final String value) {
     return wildcard(q -> q.field(field).value(value)).toSearchQuery();
   }
 
@@ -629,7 +629,7 @@ public final class SearchQueryBuilders {
     return fn.apply(hasParent()).build();
   }
 
-  public static SearchQuery hasParentQuery(final String parent, final SearchQuery query) {
+  public static Query hasParentQuery(final String parent, final Query query) {
     return hasParent(q -> q.parentType(parent).query(query)).toSearchQuery();
   }
 }

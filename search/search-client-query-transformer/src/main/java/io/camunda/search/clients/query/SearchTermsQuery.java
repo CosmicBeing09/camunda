@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public record SearchTermsQuery(String field, List<TypedValue> values) implements SearchQueryOption {
+public record SearchTermsQuery(String field, List<TypedValue> values) implements QueryOption {
 
   public static SearchTermsQuery of(final Function<Builder, ObjectBuilder<SearchTermsQuery>> fn) {
     return SearchQueryBuilders.terms(fn);

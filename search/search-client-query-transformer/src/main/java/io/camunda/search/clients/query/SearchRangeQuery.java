@@ -13,7 +13,7 @@ import java.util.function.Function;
 
 public final record SearchRangeQuery(
     String field, Object gt, Object gte, Object lt, Object lte, String format)
-    implements SearchQueryOption {
+    implements QueryOption {
 
   static SearchRangeQuery of(final Function<Builder, ObjectBuilder<SearchRangeQuery>> fn) {
     return SearchQueryBuilders.range(fn);

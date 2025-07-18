@@ -12,7 +12,7 @@ import io.camunda.util.ObjectBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-public record SearchIdsQuery(List<String> values) implements SearchQueryOption {
+public record SearchIdsQuery(List<String> values) implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchIdsQuery> {
 

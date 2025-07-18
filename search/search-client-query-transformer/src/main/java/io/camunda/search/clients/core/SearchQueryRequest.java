@@ -12,7 +12,7 @@ import static io.camunda.util.CollectionUtil.addValuesToList;
 import static io.camunda.util.CollectionUtil.collectValues;
 
 import io.camunda.search.clients.aggregator.SearchAggregator;
-import io.camunda.search.clients.query.SearchQuery;
+import io.camunda.search.clients.query.Query;
 import io.camunda.search.clients.query.SearchQueryBuilders;
 import io.camunda.search.clients.source.SearchSourceConfig;
 import io.camunda.search.clients.source.SourceConfigBuilders;
@@ -25,7 +25,7 @@ import java.util.function.Function;
 
 public record SearchQueryRequest(
     List<String> index,
-    SearchQuery query,
+    Query query,
     List<SearchAggregator> aggregations,
     List<SearchSortOptions> sort,
     Object[] searchAfter,
@@ -53,7 +53,7 @@ public record SearchQueryRequest(
   public static final class Builder implements ObjectBuilder<SearchQueryRequest> {
 
     private List<String> index;
-    private SearchQuery query;
+    private Query query;
     private List<SearchAggregator> aggregations;
     private List<SearchSortOptions> sort;
     private Object[] searchAfter;
@@ -70,12 +70,12 @@ public record SearchQueryRequest(
       return index(collectValues(value, values));
     }
 
-    public Builder query(final SearchQuery value) {
+    public Builder query(final Query value) {
       query = value;
       return this;
     }
 
-    public Builder query(final Function<SearchQuery.Builder, ObjectBuilder<SearchQuery>> fn) {
+    public Builder query(final Function<Query.Builder, ObjectBuilder<Query>> fn) {
       return query(SearchQueryBuilders.query(fn));
     }
 

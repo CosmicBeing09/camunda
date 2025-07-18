@@ -12,7 +12,7 @@ import io.camunda.util.ObjectBuilder;
 import java.util.Objects;
 
 public record SearchTermQuery(String field, TypedValue value, Boolean caseInsensitive)
-    implements SearchQueryOption {
+    implements QueryOption {
 
   public static final class Builder implements ObjectBuilder<SearchTermQuery> {
 

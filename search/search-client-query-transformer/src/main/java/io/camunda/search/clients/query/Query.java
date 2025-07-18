@@ -12,15 +12,15 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.query;
 import io.camunda.util.ObjectBuilder;
 import java.util.function.Function;
 
-public final record SearchQuery(SearchQueryOption queryOption) {
+public final record Query(QueryOption queryOption) {
 
-  public static SearchQuery of(final Function<Builder, ObjectBuilder<SearchQuery>> fn) {
+  public static Query of(final Function<Builder, ObjectBuilder<Query>> fn) {
     return query(fn);
   }
 
-  public static final class Builder implements ObjectBuilder<SearchQuery> {
+  public static final class Builder implements ObjectBuilder<Query> {
 
-    private SearchQueryOption queryOption;
+    private QueryOption queryOption;
 
     public Builder bool(final SearchBoolQuery query) {
       queryOption = query;
@@ -153,8 +153,8 @@ public final record SearchQuery(SearchQueryOption queryOption) {
     }
 
     @Override
-    public SearchQuery build() {
-      return new SearchQuery(queryOption);
+    public Query build() {
+      return new Query(queryOption);
     }
   }
 }
