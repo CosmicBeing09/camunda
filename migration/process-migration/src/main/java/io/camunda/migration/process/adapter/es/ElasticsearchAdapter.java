@@ -22,7 +22,7 @@ import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import co.elastic.clients.elasticsearch.core.bulk.BulkResponseItem;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import io.camunda.migration.api.MigrationException;
-import io.camunda.migration.process.adapter.Adapter;
+import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
 import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
@@ -40,7 +40,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class ElasticsearchAdapter implements Adapter {
+public class ElasticsearchAdapter implements ProcessMigrationAdapter {
 
   private final ElasticsearchClient client;
   private final ProcessMigrationProperties properties;
@@ -137,7 +137,7 @@ public class ElasticsearchAdapter implements Adapter {
                                         m.term(
                                             t ->
                                                 t.field(MigrationRepositoryIndex.ID)
-                                                    .value(PROCESSOR_STEP_ID)))))
+                                                    .value(MIGRATION_PROCESSOR_STEP_ID)))))
             .build();
     final SearchResponse<ProcessorStep> searchResponse;
 
@@ -165,7 +165,7 @@ public class ElasticsearchAdapter implements Adapter {
     final UpdateRequest<ProcessorStep, ProcessorStep> updateRequest =
         new UpdateRequest.Builder<ProcessorStep, ProcessorStep>()
             .index(migrationRepositoryIndex.getFullQualifiedName())
-            .id(PROCESSOR_STEP_ID)
+            .id(MIGRATION_PROCESSOR_STEP_ID)
             .docAsUpsert(true)
             .doc(currentStep)
             .refresh(Refresh.True)

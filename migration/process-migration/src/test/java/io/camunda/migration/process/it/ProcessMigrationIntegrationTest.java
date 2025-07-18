@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import io.camunda.migration.api.MigrationException;
 import io.camunda.migration.process.ProcessMigrator;
 import io.camunda.migration.process.TestData;
-import io.camunda.migration.process.adapter.Adapter;
+import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.adapter.es.ElasticsearchAdapter;
 import io.camunda.migration.process.adapter.os.OpensearchAdapter;
@@ -35,7 +35,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 @TestInstance(Lifecycle.PER_CLASS)
-public class ProcessMigrationIntegrationTest extends AdapterTest {
+public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationIntegrationTest {
 
   @ParameterizedTest
   @ValueSource(booleans = {true, false})
@@ -43,7 +43,7 @@ public class ProcessMigrationIntegrationTest extends AdapterTest {
     // given
     isElasticsearch = useElasticsearch;
     properties.setBatchSize(1);
-    final Adapter searchAdapter =
+    final ProcessMigrationAdapter processMigrationAdapter =
         useElasticsearch
             ? new ElasticsearchAdapter(properties, elasticsearchConfig)
             : new OpensearchAdapter(properties, openSearchConfig);
@@ -56,8 +56,8 @@ public class ProcessMigrationIntegrationTest extends AdapterTest {
 
     // when
     final String migratedEntityId =
-        searchAdapter.migrate(List.of(MigrationUtil.migrate(entityToBeMigrated)));
-    searchAdapter.writeLastMigratedEntity(migratedEntityId);
+        processMigrationAdapter.migrate(List.of(MigrationUtil.migrate(entityToBeMigrated)));
+    processMigrationAdapter.writeLastMigratedEntity(migratedEntityId);
     awaitRecordsArePresent(ProcessorStep.class, stepIndex.getFullQualifiedName(), 1);
     refreshIndices();
 
@@ -100,7 +100,7 @@ public class ProcessMigrationIntegrationTest extends AdapterTest {
                 .get()
                 .getIsFormEmbedded())
         .isNull();
-    searchAdapter.close();
+    processMigrationAdapter.close();
   }
 
   @ParameterizedTest
@@ -309,7 +309,7 @@ public class ProcessMigrationIntegrationTest extends AdapterTest {
     properties.setImporterFinishedTimeout(Duration.ofSeconds(5));
     writeImportPositionToIndex(
         TestData.completedImportPosition(1), TestData.notCompletedImportPosition(2));
-    esClient.indices().refresh();
+    elasticsearchClient.indices().refresh();
     awaitRecordsArePresent(
         ImportPositionEntity.class, positionIndex.getFullQualifiedName(), 2);
     final var latch = new CountDownLatch(1);
@@ -402,7 +402,7 @@ public class ProcessMigrationIntegrationTest extends AdapterTest {
       openSearchConfig.setIndexPrefix(MISCONFIGURED_PREFIX);
     }
 
-    final Adapter adapter =
+    final ProcessMigrationAdapter processMigrationAdapter =
         isElasticsearch
             ? new ElasticsearchAdapter(properties, elasticsearchConfig)
             : new OpensearchAdapter(properties, openSearchConfig);
@@ -411,7 +411,7 @@ public class ProcessMigrationIntegrationTest extends AdapterTest {
 
     // when
     final String migratedEntityId =
-        adapter.migrate(List.of(MigrationUtil.migrate(entityToBeMigrated)));
+        processMigrationAdapter.migrate(List.of(MigrationUtil.migrate(entityToBeMigrated)));
 
     // then
     assertThat(migratedEntityId).isNull();

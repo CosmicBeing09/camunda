@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface Adapter {
-  String PROCESSOR_STEP_ID = VersionUtil.getVersion() + "-1";
+public interface ProcessMigrationAdapter {
+  String MIGRATION_PROCESSOR_STEP_ID = VersionUtil.getVersion() + "-1";
   String PROCESSOR_STEP_TYPE = "processorStep";
   String PROCESS_DEFINITION_KEY = "key";
   String STEP_DESCRIPTION = "Process Migration last migrated document";

@@ -10,7 +10,7 @@ package io.camunda.migration.process;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import io.camunda.migration.api.MigrationException;
 import io.camunda.migration.api.Migrator;
-import io.camunda.migration.process.adapter.Adapter;
+import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.es.ElasticsearchAdapter;
 import io.camunda.migration.process.adapter.os.OpensearchAdapter;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
@@ -40,7 +40,7 @@ public class ProcessMigrator implements Migrator {
 
   private static final Logger LOG = LoggerFactory.getLogger(ProcessMigrator.class);
 
-  private final Adapter adapter;
+  private final ProcessMigrationAdapter adapter;
   private final ProcessMigrationProperties properties;
   private ScheduledFuture<?> countdownTask;
   private final ScheduledExecutorService scheduler;

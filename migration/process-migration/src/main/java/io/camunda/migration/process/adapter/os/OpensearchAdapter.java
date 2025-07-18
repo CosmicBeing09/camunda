@@ -8,7 +8,7 @@
 package io.camunda.migration.process.adapter.os;
 
 import io.camunda.migration.api.MigrationException;
-import io.camunda.migration.process.adapter.Adapter;
+import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
 import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
@@ -40,7 +40,7 @@ import org.opensearch.client.opensearch.core.bulk.BulkResponseItem;
 import org.opensearch.client.opensearch.core.search.Hit;
 import org.opensearch.client.opensearch.generic.OpenSearchClientException;
 
-public class OpensearchAdapter implements Adapter {
+public class OpensearchAdapter implements ProcessMigrationAdapter {
 
   private final ProcessMigrationProperties properties;
   private final OpenSearchClient client;
@@ -141,7 +141,8 @@ public class OpensearchAdapter implements Adapter {
                                         m.term(
                                             t ->
                                                 t.field(MigrationRepositoryIndex.ID)
-                                                    .value(FieldValue.of(PROCESSOR_STEP_ID))))))
+                                                    .value(FieldValue.of(
+                                                        MIGRATION_PROCESSOR_STEP_ID))))))
             .build();
 
     final SearchResponse<ProcessorStep> searchResponse;
@@ -170,7 +171,7 @@ public class OpensearchAdapter implements Adapter {
     final UpdateRequest<ProcessorStep, ProcessorStep> updateRequest =
         new UpdateRequest.Builder<ProcessorStep, ProcessorStep>()
             .index(migrationRepositoryIndex.getFullQualifiedName())
-            .id(PROCESSOR_STEP_ID)
+            .id(MIGRATION_PROCESSOR_STEP_ID)
             .docAsUpsert(true)
             .doc(currentStep)
             .build();

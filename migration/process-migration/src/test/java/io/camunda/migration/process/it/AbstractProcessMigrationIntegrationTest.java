@@ -7,8 +7,8 @@
  */
 package io.camunda.migration.process.it;
 
-import static io.camunda.migration.process.adapter.Adapter.PROCESSOR_STEP_ID;
-import static io.camunda.migration.process.adapter.Adapter.STEP_DESCRIPTION;
+import static io.camunda.migration.process.adapter.ProcessMigrationAdapter.MIGRATION_PROCESSOR_STEP_ID;
+import static io.camunda.migration.process.adapter.ProcessMigrationAdapter.STEP_DESCRIPTION;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
@@ -55,14 +55,14 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
-public abstract class AdapterTest {
+public abstract class AbstractProcessMigrationIntegrationTest {
   protected static final String MISCONFIGURED_PREFIX = "misconfigured";
   protected static ProcessIndex processEntityIndex;
   protected static MigrationRepositoryIndex stepIndex;
   protected static ImportPositionIndex positionIndex;
   protected static TestData.MisconfiguredProcessIndex misconfiguredProcessIndex;
   protected static ProcessMigrationProperties properties;
-  protected static ElasticsearchClient esClient;
+  protected static ElasticsearchClient elasticsearchClient;
   protected static OpenSearchClient osClient;
   protected static final ConnectConfiguration elasticsearchConfig = new ConnectConfiguration();
   protected static final ConnectConfiguration openSearchConfig = new ConnectConfiguration();
@@ -96,7 +96,7 @@ public abstract class AdapterTest {
     openSearchConfig.setUrl("http://localhost:" + OS_CONTAINER.getMappedPort(9200));
     final var esConnector = new ElasticsearchConnector(elasticsearchConfig);
     esObjectMapper = esConnector.objectMapper();
-    esClient = esConnector.createClient();
+    elasticsearchClient = esConnector.createClient();
     final var osConnector = new OpensearchConnector(openSearchConfig);
     osObjectMapper = osConnector.objectMapper();
     osClient = osConnector.createClient();
@@ -118,7 +118,7 @@ public abstract class AdapterTest {
     osEngine.createIndex(misconfiguredProcessIndex, new IndexConfiguration());
 
     final ElasticsearchEngineClient esEngine =
-        new ElasticsearchEngineClient(esClient, esObjectMapper);
+        new ElasticsearchEngineClient(elasticsearchClient, esObjectMapper);
     processEntityIndex = new ProcessIndex(elasticsearchConfig.getIndexPrefix(), true);
     stepIndex =
         new MigrationRepositoryIndex(elasticsearchConfig.getIndexPrefix(), true);
@@ -135,7 +135,7 @@ public abstract class AdapterTest {
     properties.setBatchSize(5);
     if (isElasticsearch) {
       esMigrator = new ProcessMigrator(properties, elasticsearchConfig, meterRegistry);
-      esClient.deleteByQuery(
+      elasticsearchClient.deleteByQuery(
           DeleteByQueryRequest.of(
               d ->
                   d.index(
@@ -145,7 +145,7 @@ public abstract class AdapterTest {
                           misconfiguredProcessIndex.getFullQualifiedName())
                       .conflicts(Conflicts.Proceed)
                       .query(q -> q.matchAll(m -> m))));
-      esClient.indices().refresh();
+      elasticsearchClient.indices().refresh();
 
     } else {
       osMigrator = new ProcessMigrator(properties, openSearchConfig, meterRegistry);
@@ -173,7 +173,7 @@ public abstract class AdapterTest {
 
   protected void refreshIndices() throws IOException {
     if (isElasticsearch) {
-      esClient.indices().refresh();
+      elasticsearchClient.indices().refresh();
     } else {
       osClient.indices().refresh();
     }
@@ -194,7 +194,7 @@ public abstract class AdapterTest {
             "bpmnProcessId",
             entity.getBpmnProcessId());
     if (isElasticsearch) {
-      esClient.index(
+      elasticsearchClient.index(
           new co.elastic.clients.elasticsearch.core.IndexRequest.Builder()
               .index(misconfiguredProcessIndex.getFullQualifiedName())
               .document(document)
@@ -213,7 +213,7 @@ public abstract class AdapterTest {
   @SuppressWarnings({"unchecked", "rawtypes"})
   protected void writeProcessToIndex(final ProcessEntity entity) throws IOException {
     if (isElasticsearch) {
-      esClient.index(
+      elasticsearchClient.index(
           new co.elastic.clients.elasticsearch.core.IndexRequest.Builder()
               .index(processEntityIndex.getFullQualifiedName())
               .document(entity)
@@ -238,11 +238,11 @@ public abstract class AdapterTest {
     step.setDescription(STEP_DESCRIPTION);
     step.setVersion(VersionUtil.getVersion());
     if (isElasticsearch) {
-      esClient.index(
+      elasticsearchClient.index(
           new IndexRequest.Builder()
               .index(stepIndex.getFullQualifiedName())
               .document(step)
-              .id(PROCESSOR_STEP_ID)
+              .id(MIGRATION_PROCESSOR_STEP_ID)
               .refresh(Refresh.True)
               .build());
     } else {
@@ -250,7 +250,7 @@ public abstract class AdapterTest {
           new org.opensearch.client.opensearch.core.IndexRequest.Builder<>()
               .index(stepIndex.getFullQualifiedName())
               .document(step)
-              .id(PROCESSOR_STEP_ID)
+              .id(MIGRATION_PROCESSOR_STEP_ID)
               .refresh(org.opensearch.client.opensearch._types.Refresh.True)
               .build());
     }
@@ -271,7 +271,7 @@ public abstract class AdapterTest {
                                       .document(imp)
                                       .index(positionIndex.getFullQualifiedName()))));
 
-      esClient.bulk(req.build());
+      elasticsearchClient.bulk(req.build());
     } else {
       final var req =
           new org.opensearch.client.opensearch.core.BulkRequest.Builder()
@@ -298,7 +298,7 @@ public abstract class AdapterTest {
           new SearchRequest.Builder().index(indexName).size(30).query(q -> q.matchAll(m -> m));
       final SearchResponse<T> searchResponse;
 
-      searchResponse = esClient.search(searchRequest.build(), clazz);
+      searchResponse = elasticsearchClient.search(searchRequest.build(), clazz);
       return searchResponse.hits().hits().stream().map(Hit::source).toList();
     } else {
       final org.opensearch.client.opensearch.core.SearchRequest.Builder searchRequest =
