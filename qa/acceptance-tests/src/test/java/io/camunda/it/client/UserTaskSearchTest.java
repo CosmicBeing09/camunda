@@ -513,7 +513,7 @@ class UserTaskSearchTest {
     final var resultBefore =
         camundaClient
             .newUserTaskSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(1);

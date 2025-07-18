@@ -1044,7 +1044,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
@@ -1071,7 +1071,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
@@ -1463,7 +1463,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var resultBefore =
         camundaClient
             .newElementInstanceSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().searchBeforeCursor()))
+            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(2);
