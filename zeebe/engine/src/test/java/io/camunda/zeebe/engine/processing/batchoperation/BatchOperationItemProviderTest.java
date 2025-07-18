@@ -64,7 +64,7 @@ class BatchOperationItemProviderTest {
 
     // given
     final var auth = mock(Authentication.class);
-    final var result =
+    final var firstPage =
         new SearchQueryResult.Builder<ProcessInstanceEntity>()
             .items(
                 List.of(
@@ -73,7 +73,7 @@ class BatchOperationItemProviderTest {
                     mockProcessInstanceEntity(3L)))
             .total(3)
             .build();
-    when(searchClientsProxy.searchProcessInstances(queryCaptor.capture())).thenReturn(result);
+    when(searchClientsProxy.searchProcessInstances(queryCaptor.capture())).thenReturn(firstPage);
 
     // when
     final var filter = new ProcessInstanceFilter.Builder().build();
@@ -125,12 +125,12 @@ class BatchOperationItemProviderTest {
                     mockProcessInstanceEntity(10L)))
             .total(10)
             .build();
-    final var result3 =
+    final var emptyPage =
         new SearchQueryResult.Builder<ProcessInstanceEntity>().items(List.of()).total(10).build();
     when(searchClientsProxy.searchProcessInstances(queryCaptor.capture()))
         .thenReturn(result)
         .thenReturn(result2)
-        .thenReturn(result3);
+        .thenReturn(emptyPage);
 
     // when
     final var filter = new ProcessInstanceFilter.Builder().build();
