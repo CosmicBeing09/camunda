@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Objects;
 
 public record IncidentFilter(
-    List<Long> incidentKeys,
-    List<Long> processDefinitionKeys,
+    List<Long> incidentKeyOperations,
+    List<Long> processDefinitionKeyOperations,
     List<String> processDefinitionIds,
     List<Long> processInstanceKeyOperations,
     List<ErrorType> errorTypes,
