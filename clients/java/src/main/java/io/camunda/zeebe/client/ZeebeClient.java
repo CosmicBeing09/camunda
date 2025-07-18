@@ -81,8 +81,8 @@ public interface ZeebeClient extends AutoCloseable, JobClient {
   /**
    * @return a new {@link ZeebeClient} using the provided configuration.
    */
-  static ZeebeClient newClient(final ZeebeClientConfiguration configuration) {
-    return new ZeebeClientImpl(configuration);
+  static ZeebeClient newClient(final ZeebeClientConfiguration config) {
+    return new ZeebeClientImpl(config);
   }
 
   /**
@@ -192,10 +192,10 @@ public interface ZeebeClient extends AutoCloseable, JobClient {
    *    .send();
    * </pre>
    *
-   * @param processInstanceKey the key which identifies the corresponding process instance
+   * @param instanceKey the key which identifies the corresponding process instance
    * @return a builder for the command
    */
-  ModifyProcessInstanceCommandStep1 newModifyProcessInstanceCommand(long processInstanceKey);
+  ModifyProcessInstanceCommandStep1 newModifyProcessInstanceCommand(long instanceKey);
 
   /**
    * Command to migrate a process instance to a different process definition.
