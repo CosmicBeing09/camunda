@@ -17,8 +17,8 @@ import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -59,7 +59,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   private final JobBackoffChecker jobBackoffChecker;
   private final VariableBehavior variableBehavior;
   private final BpmnJobActivationBehavior jobActivationBehavior;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final SideEffectWriter sideEffectWriter;
   private final JobCommandPreconditionChecker preconditionChecker;
   private final ElementInstanceState elementInstanceState;
@@ -72,7 +72,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
       final JobProcessingMetrics jobMetrics,
       final JobBackoffChecker jobBackoffChecker,
       final BpmnBehaviors bpmnBehaviors,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     jobState = state.getJobState();
     elementInstanceState = state.getElementInstanceState();
     processState = state.getProcessState();
@@ -202,7 +202,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   private Either<Rejection, JobRecord> checkAuthorization(
       final TypedRecord<JobRecord> command, final JobRecord job) {
     final var request =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,

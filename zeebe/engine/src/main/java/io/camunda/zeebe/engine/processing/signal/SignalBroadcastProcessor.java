@@ -12,9 +12,9 @@ import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEvent;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ForbiddenException;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.ForbiddenException;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -45,7 +45,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final ProcessState processState;
   private final ElementInstanceState elementInstanceState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public SignalBroadcastProcessor(
       final Writers writers,
@@ -54,7 +54,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
       final BpmnStateBehavior stateBehavior,
       final EventTriggerBehavior eventTriggerBehavior,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -138,7 +138,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
             ? PermissionType.CREATE_PROCESS_INSTANCE
             : PermissionType.UPDATE_PROCESS_INSTANCE;
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 permissionType,

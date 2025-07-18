@@ -12,8 +12,8 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.message.MessageCorrelateBehavior.MessageData;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
@@ -46,7 +46,7 @@ public final class MessageCorrelationCorrelateProcessor
 
   private final MessageCorrelateBehavior correlateBehavior;
   private final RecordKeyProvider keyGenerator;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -61,7 +61,7 @@ public final class MessageCorrelationCorrelateProcessor
       final MessageState messageState,
       final MessageSubscriptionState messageSubscriptionState,
       final SubscriptionCommandSender commandSender,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -175,7 +175,7 @@ public final class MessageCorrelationCorrelateProcessor
       final TypedRecord<MessageCorrelationRecord> command,
       final Subscriptions correlatingSubscriptions,
       final String tenantId) {
-    final AtomicReference<AuthorizationRequest> request = new AtomicReference<>();
+    final AtomicReference<AccessControlRequest> request = new AtomicReference<>();
     final AtomicReference<Rejection> rejection = new AtomicReference<>();
 
     final var isAuthorized =
@@ -187,7 +187,7 @@ public final class MessageCorrelationCorrelateProcessor
                       : PermissionType.UPDATE_PROCESS_INSTANCE;
 
               request.set(
-                  new AuthorizationRequest(
+                  new AccessControlRequest(
                       command,
                       AuthorizationResourceType.PROCESS_DEFINITION,
                       permissionType,

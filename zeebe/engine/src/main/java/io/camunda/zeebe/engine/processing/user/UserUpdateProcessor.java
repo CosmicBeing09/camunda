@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.user;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -34,14 +34,14 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
   private final CommandDistributionBehavior distributionBehavior;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public UserUpdateProcessor(
       final RecordKeyProvider keyGenerator,
       final ProcessingState state,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;
     userState = state.getUserState();
     stateWriter = writers.state();
@@ -70,7 +70,7 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
     final var persistedUser = persistedUserOptional.get();
 
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.UPDATE)
+        new AccessControlRequest(command, AuthorizationResourceType.USER, PermissionType.UPDATE)
             .addResourceId(persistedUser.getUsername());
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {

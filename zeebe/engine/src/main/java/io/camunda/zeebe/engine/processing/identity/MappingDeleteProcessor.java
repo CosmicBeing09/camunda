@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -52,7 +52,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   private final GroupState groupState;
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -61,7 +61,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
 
   public MappingDeleteProcessor(
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -92,7 +92,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
     }
 
     final var authorizationRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
             command, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

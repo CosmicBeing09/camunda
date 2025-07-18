@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -29,7 +29,7 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
 
   private final GroupState groupState;
   private final RecordKeyProvider keyGenerator;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
@@ -38,7 +38,7 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
   public GroupUpdateProcessor(
       final GroupState groupState,
       final RecordKeyProvider keyGenerator,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.groupState = groupState;
@@ -56,7 +56,7 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
     final var groupId = record.getGroupId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+        new AccessControlRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
             .addResourceId(groupId);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

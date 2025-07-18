@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.processing.deployment.model.element.TaskListener;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.incident.RetryTypedRecord;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
@@ -74,7 +74,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
       final RecordKeyProvider keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     commandProcessors =
         new TaskCommandProcessors(
             state, keyGenerator, bpmnBehaviors, writers, authCheckBehavior);

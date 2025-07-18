@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 
 import static org.mockito.Mockito.*;
 
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
@@ -57,7 +57,7 @@ class BatchOperationSuspendProcessorTest {
     final var state = mock(ProcessingState.class);
     when(state.getBatchOperationState()).thenReturn(batchOperationState);
 
-    final var authCheckBehavior = mock(AuthorizationCheckBehavior.class);
+    final var authCheckBehavior = mock(AccessControlBehavior.class);
     when(authCheckBehavior.isAuthorized(any())).thenReturn(Either.right(null));
 
     when(keyGenerator.nextKey()).thenReturn(1L);

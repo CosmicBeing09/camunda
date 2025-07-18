@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.processing.tenant;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -42,7 +42,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   private final AuthorizationState authorizationState;
   private final UserState userState;
   private final MembershipState membershipState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -51,7 +51,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
 
   public TenantDeleteProcessor(
       final ProcessingState state,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -80,7 +80,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
     }
 
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.TENANT, PermissionType.DELETE)
+        new AccessControlRequest(command, AuthorizationResourceType.TENANT, PermissionType.DELETE)
             .addResourceId(persistedTenantRecord.get().getTenantId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

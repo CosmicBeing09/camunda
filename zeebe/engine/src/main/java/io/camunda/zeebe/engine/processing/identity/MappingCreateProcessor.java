@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -34,7 +34,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       "Expected to create mapping with id '%s', but a mapping with this id already exists.";
 
   private final MappingState mappingState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -43,7 +43,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
 
   public MappingCreateProcessor(
       final MappingState mappingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -59,7 +59,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
   @Override
   public void processNewCommand(final TypedRecord<MappingRecord> command) {
     final var authorizationRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
             command, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

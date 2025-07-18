@@ -11,8 +11,8 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -39,7 +39,7 @@ public class DecisionEvaluationEvaluteProcessor
   private final DecisionBehavior decisionBehavior;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final RecordKeyProvider keyGenerator;
 
@@ -47,7 +47,7 @@ public class DecisionEvaluationEvaluteProcessor
       final DecisionBehavior decisionBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
 
     this.decisionBehavior = decisionBehavior;
     this.keyGenerator = keyGenerator;
@@ -67,7 +67,7 @@ public class DecisionEvaluationEvaluteProcessor
       final var decision = decisionOrFailure.get();
       final var decisionId = bufferAsString(decision.getDecisionId());
       final var authRequest =
-          new AuthorizationRequest(
+          new AccessControlRequest(
                   command,
                   AuthorizationResourceType.DECISION_DEFINITION,
                   PermissionType.CREATE_DECISION_INSTANCE,
@@ -79,7 +79,7 @@ public class DecisionEvaluationEvaluteProcessor
         final var rejection = isAuthorized.getLeft();
         final String errorMessage =
             RejectionType.NOT_FOUND.equals(rejection.type())
-                ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+                ? AccessControlBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                     "evaluate a decision", record.getDecisionKey(), "such decision")
                 : rejection.reason();
         responseWriter.writeRejectionFor(command, rejection.type(), errorMessage);

@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -38,7 +38,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   private final RoleState roleState;
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -47,7 +47,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
 
   public RoleDeleteProcessor(
       final ProcessingState state,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -67,7 +67,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
     final var record = command.getValue();
     final String roleId = record.getRoleId();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.DELETE)
+        new AccessControlRequest(command, AuthorizationResourceType.ROLE, PermissionType.DELETE)
             .addResourceId(roleId);
 
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);

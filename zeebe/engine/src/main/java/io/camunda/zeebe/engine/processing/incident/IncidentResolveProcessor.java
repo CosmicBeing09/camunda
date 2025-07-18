@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.incident;
 
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -60,7 +60,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   private final ResponseWriter responseWriter;
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final JobState jobState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public IncidentResolveProcessor(
       final ProcessingState processingState,
@@ -68,7 +68,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
       final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.bpmnStreamProcessor = bpmnStreamProcessor;
     this.userTaskProcessor = userTaskProcessor;
     stateWriter = writers.state();
@@ -94,7 +94,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     }
 
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,

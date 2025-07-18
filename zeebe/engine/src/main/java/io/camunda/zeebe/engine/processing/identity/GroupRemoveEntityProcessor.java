@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -35,7 +35,7 @@ public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcess
   private final GroupState groupState;
   private final MappingState mappingState;
   private final MembershipState membershipState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -44,7 +44,7 @@ public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcess
 
   public GroupRemoveEntityProcessor(
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -65,7 +65,7 @@ public class GroupRemoveEntityProcessor implements DistributedTypedRecordProcess
     final var groupId = record.getGroupId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+        new AccessControlRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
             .addResourceId(groupId);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

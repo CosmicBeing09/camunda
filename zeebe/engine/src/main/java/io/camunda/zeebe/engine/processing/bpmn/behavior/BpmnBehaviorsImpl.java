@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
@@ -62,7 +62,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
       final DueDateTimerChecker timerChecker,
       final JobStreamer jobStreamer,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
     expressionBehavior =
         new ExpressionProcessor(

@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -40,7 +40,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
   public UserTaskClaimProcessor(
       final ProcessingState state,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     userTaskState = state.getUserTaskState();
     stateWriter = writers.state();
     responseWriter = writers.response();

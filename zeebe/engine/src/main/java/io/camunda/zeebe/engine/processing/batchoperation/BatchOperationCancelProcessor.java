@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -46,14 +46,14 @@ public final class BatchOperationCancelProcessor
   private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final BatchOperationState batchOperationState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
 
   public BatchOperationCancelProcessor(
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
@@ -68,7 +68,7 @@ public final class BatchOperationCancelProcessor
   public void processNewCommand(
       final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
     final var request =
-        new AuthorizationRequest(
+        new AccessControlRequest(
             command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.isAuthorized(request);
     if (authorizationResult.isLeft()) {

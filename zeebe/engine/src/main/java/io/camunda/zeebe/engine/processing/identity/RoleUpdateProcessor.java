@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -30,7 +30,7 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
       "Expected to update role with ID '%s', but a role with this ID does not exist.";
   private final RoleState roleState;
   private final RecordKeyProvider keyGenerator;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
@@ -39,7 +39,7 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   public RoleUpdateProcessor(
       final RoleState roleState,
       final RecordKeyProvider keyGenerator,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.roleState = roleState;
@@ -55,7 +55,7 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   public void processNewCommand(final TypedRecord<RoleRecord> command) {
     final var record = command.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AccessControlRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(record.getRoleId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.adhocsubprocess.AdHocSubProcessActivit
 import io.camunda.zeebe.engine.processing.bpmn.BpmnStreamProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.message.PendingProcessMessageSubscriptionChecker;
 import io.camunda.zeebe.engine.processing.message.ProcessMessageSubscriptionCorrelateProcessor;
 import io.camunda.zeebe.engine.processing.message.ProcessMessageSubscriptionCreateProcessor;
@@ -72,7 +72,7 @@ public final class BpmnProcessors {
       final RoutingInfo routingInfo,
       final InstantSource clock,
       final EngineConfiguration config,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
       final ProcessEngineMetrics processEngineMetrics) {
     final MutableProcessMessageSubscriptionState subscriptionState =
@@ -138,7 +138,7 @@ public final class BpmnProcessors {
       final Writers writers,
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     typedRecordProcessors.onCommand(
         ValueType.PROCESS_INSTANCE,
         ProcessInstanceIntent.CANCEL,
@@ -223,7 +223,7 @@ public final class BpmnProcessors {
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final MutableUserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     typedRecordProcessors.onCommand(
         ValueType.VARIABLE_DOCUMENT,
         VariableDocumentIntent.UPDATE,
@@ -243,7 +243,7 @@ public final class BpmnProcessors {
       final BpmnBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,
       final EngineConfiguration config,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     final MutableElementInstanceState elementInstanceState =
         processingState.getElementInstanceState();
     final RecordKeyProvider keyGenerator = processingState.getKeyGenerator();
@@ -271,7 +271,7 @@ public final class BpmnProcessors {
       final ProcessingState processingState,
       final Writers writers,
       final BpmnBehaviors bpmnBehaviors,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     final ProcessInstanceModificationModifyProcessor modificationProcessor =
         new ProcessInstanceModificationModifyProcessor(
             writers,
@@ -293,7 +293,7 @@ public final class BpmnProcessors {
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
       final RoutingInfo routingInfo,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.PROCESS_INSTANCE_MIGRATION,
@@ -335,7 +335,7 @@ public final class BpmnProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final MutableProcessingState processingState,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,

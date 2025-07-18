@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.job.behaviour;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -32,12 +32,12 @@ public class JobUpdateBehaviour {
 
   private final JobState jobState;
   private final InstantSource clock;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public JobUpdateBehaviour(
       final JobState jobState,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.jobState = jobState;
     this.clock = clock;
     this.authCheckBehavior = authCheckBehavior;
@@ -58,7 +58,7 @@ public class JobUpdateBehaviour {
   public Either<Rejection, JobRecord> isAuthorized(
       final TypedRecord<JobRecord> command, final JobRecord job) {
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,

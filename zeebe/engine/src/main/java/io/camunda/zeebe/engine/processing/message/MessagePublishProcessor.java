@@ -12,8 +12,8 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.message.MessageCorrelateBehavior.MessageData;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
@@ -48,7 +48,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
   private long messageKey;
   private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public MessagePublishProcessor(
       final MessageState messageState,
@@ -61,7 +61,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
       final ProcessState processState,
       final EventTriggerBehavior eventTriggerBehavior,
       final BpmnStateBehavior stateBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.messageState = messageState;
     this.keyGenerator = keyGenerator;
     stateWriter = writers.state();
@@ -89,7 +89,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
   @Override
   public void processRecord(final TypedRecord<MessageRecord> command) {
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
             command,
             AuthorizationResourceType.MESSAGE,
             PermissionType.CREATE,

@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor.CommandControl;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.JobState.State;
@@ -29,13 +29,13 @@ public final class DefaultJobCommandPreconditionGuard {
   private final JobState state;
   private final JobAcceptFunction acceptCommand;
   private final JobCommandPreconditionChecker preconditionChecker;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public DefaultJobCommandPreconditionGuard(
       final String intent,
       final JobState state,
       final JobAcceptFunction acceptCommand,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this(intent, state, acceptCommand, authCheckBehavior, List.of());
   }
 
@@ -43,7 +43,7 @@ public final class DefaultJobCommandPreconditionGuard {
       final String intent,
       final JobState state,
       final JobAcceptFunction acceptCommand,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final List<JobCommandCheck> customChecks) {
     this.state = state;
     this.acceptCommand = acceptCommand;
@@ -75,7 +75,7 @@ public final class DefaultJobCommandPreconditionGuard {
   private Either<Rejection, JobRecord> checkAuthorization(
       final TypedRecord<JobRecord> command, final JobRecord job) {
     final var request =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,

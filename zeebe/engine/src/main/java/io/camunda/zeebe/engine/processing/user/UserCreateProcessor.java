@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.user;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -41,7 +41,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
   private final CommandDistributionBehavior distributionBehavior;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final TypedCommandWriter commandWriter;
 
   public UserCreateProcessor(
@@ -49,7 +49,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
       final ProcessingState state,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     userState = state.getUserState();
     this.keyGenerator = keyGenerator;
     stateWriter = writers.state();
@@ -63,7 +63,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   @Override
   public void processNewCommand(final TypedRecord<UserRecord> command) {
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.CREATE);
+        new AccessControlRequest(command, AuthorizationResourceType.USER, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();

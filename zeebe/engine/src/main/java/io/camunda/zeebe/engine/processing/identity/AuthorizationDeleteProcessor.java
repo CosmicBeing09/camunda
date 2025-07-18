@@ -39,7 +39,7 @@ public class AuthorizationDeleteProcessor
       final RecordKeyProvider keyGenerator,
       final MutableProcessingState processingState,
       final CommandDistributionBehavior distributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;
     this.distributionBehavior = distributionBehavior;
     stateWriter = writers.state();

@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -36,7 +36,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   private final GroupState groupState;
   private final MappingState mappingState;
   private final MembershipState membershipState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -45,7 +45,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
 
   public GroupAddEntityProcessor(
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -64,7 +64,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   public void processNewCommand(final TypedRecord<GroupRecord> command) {
     final var record = command.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+        new AccessControlRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
             .addResourceId(record.getGroupId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {

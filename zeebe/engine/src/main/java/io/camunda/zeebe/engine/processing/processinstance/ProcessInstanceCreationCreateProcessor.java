@@ -19,8 +19,8 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlo
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableProcess;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSequenceFlow;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor.ProcessingError;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
@@ -84,7 +84,7 @@ public final class ProcessInstanceCreationCreateProcessor
   private final ProcessEngineMetrics metrics;
 
   private final ElementActivationBehavior elementActivationBehavior;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public ProcessInstanceCreationCreateProcessor(
       final ProcessState processState,
@@ -92,7 +92,7 @@ public final class ProcessInstanceCreationCreateProcessor
       final Writers writers,
       final BpmnBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.processState = processState;
     variableBehavior = bpmnBehaviors.variableBehavior();
     this.keyGenerator = keyGenerator;
@@ -140,7 +140,7 @@ public final class ProcessInstanceCreationCreateProcessor
       final DeployedProcess deployedProcess) {
     final var processId = bufferAsString(deployedProcess.getBpmnProcessId());
     final var request =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.CREATE_PROCESS_INSTANCE,
@@ -155,7 +155,7 @@ public final class ProcessInstanceCreationCreateProcessor
     final var rejection = isAuthorized.getLeft();
     final String errorMessage =
         RejectionType.NOT_FOUND.equals(rejection.type())
-            ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+            ? AccessControlBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                 "create an instance of process",
                 command.getValue().getProcessDefinitionKey(),
                 "such process")

@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.engine.processing.processinstance;
 
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
@@ -42,12 +42,12 @@ public final class ProcessInstanceCancelProcessor
   private final ResponseWriter responseWriter;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
 
   public ProcessInstanceCancelProcessor(
       final ProcessingState processingState,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     elementInstanceState = processingState.getElementInstanceState();
     responseWriter = writers.response();
     commandWriter = writers.command();
@@ -89,7 +89,7 @@ public final class ProcessInstanceCancelProcessor
     }
 
     final var request =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
@@ -100,7 +100,7 @@ public final class ProcessInstanceCancelProcessor
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
-              ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+              ? AccessControlBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                   "cancel a process instance",
                   elementInstance.getValue().getProcessInstanceKey(),
                   "such process")

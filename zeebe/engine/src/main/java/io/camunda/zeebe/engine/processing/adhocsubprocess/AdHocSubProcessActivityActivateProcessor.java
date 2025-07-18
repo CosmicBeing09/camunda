@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.processing.adhocsubprocess;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableAdHocSubProcess;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.ResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -54,13 +54,13 @@ public class AdHocSubProcessActivityActivateProcessor
   private final TypedCommandWriter commandWriter;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
 
   public AdHocSubProcessActivityActivateProcessor(
       final Writers writers,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
@@ -214,7 +214,7 @@ public class AdHocSubProcessActivityActivateProcessor
       final TypedRecord<AdHocSubProcessActivityActivationRecord> command,
       final ElementInstance adHocSubProcessElementInstance) {
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,

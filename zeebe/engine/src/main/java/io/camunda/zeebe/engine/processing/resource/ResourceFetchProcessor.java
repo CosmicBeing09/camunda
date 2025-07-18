@@ -7,9 +7,9 @@
  */
 package io.camunda.zeebe.engine.processing.resource;
 
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ForbiddenException;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.ForbiddenException;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -38,12 +38,12 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
   private final StateWriter stateWriter;
   private final ResourceState resourceState;
   private final TenantState tenantState;
-  private final AuthorizationCheckBehavior authorizationCheckBehavior;
+  private final AccessControlBehavior authorizationCheckBehavior;
 
   public ResourceFetchProcessor(
       final Writers writers,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authorizationCheckBehavior) {
+      final AccessControlBehavior authorizationCheckBehavior) {
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
     stateWriter = writers.state();
@@ -137,7 +137,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
   private void checkAuthorization(
       final TypedRecord<ResourceRecord> command, final PersistedResource resource) {
     final var authRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.RESOURCE,
                 PermissionType.READ,

@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -42,14 +42,14 @@ public final class BatchOperationCreateProcessor
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RoutingInfo routingInfo;
 
   public BatchOperationCreateProcessor(
       final Writers writers,
       final RecordKeyProvider keyGenerator,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RoutingInfo routingInfo) {
     stateWriter = writers.state();
     rejectionWriter = writers.rejection();
@@ -111,7 +111,7 @@ public final class BatchOperationCreateProcessor
     // first check for general CREATE_BATCH_OPERATION permission
     final var isAuthorized =
         authCheckBehavior.isAuthorized(
-            new AuthorizationRequest(
+            new AccessControlRequest(
                 command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.CREATE));
     if (isAuthorized.isLeft()) {
       // if that's not present, check for the BO type dependent permission
@@ -126,7 +126,7 @@ public final class BatchOperationCreateProcessor
             case RESOLVE_INCIDENT -> PermissionType.CREATE_BATCH_OPERATION_RESOLVE_INCIDENT;
           };
       return authCheckBehavior.isAuthorized(
-          new AuthorizationRequest(command, AuthorizationResourceType.BATCH_OPERATION, permission));
+          new AccessControlRequest(command, AuthorizationResourceType.BATCH_OPERATION, permission));
     }
 
     return isAuthorized;

@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.batchoperation.handlers.MigrateProcess
 import io.camunda.zeebe.engine.processing.batchoperation.handlers.ModifyProcessInstanceBatchOperationExecutor;
 import io.camunda.zeebe.engine.processing.batchoperation.handlers.ResolveIncidentBatchOperationExecutor;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -36,7 +36,7 @@ public final class BatchOperationSetupProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final AuthorizationCheckBehavior authorizationCheckBehavior,
+      final AccessControlBehavior authorizationCheckBehavior,
       final Supplier<ScheduledTaskState> scheduledTaskStateFactory,
       final SearchClientsProxy searchClientsProxy,
       final ProcessingState processingState,

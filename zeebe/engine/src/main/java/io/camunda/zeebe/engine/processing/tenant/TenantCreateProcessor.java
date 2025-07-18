@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.processing.tenant;
 
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -31,7 +31,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   private static final String TENANT_ALREADY_EXISTS_ERROR_MESSAGE =
       "Expected to create tenant with ID '%s', but a tenant with this ID already exists";
   private final TenantState tenantState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -40,7 +40,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
 
   public TenantCreateProcessor(
       final TenantState tenantState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -89,7 +89,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
 
   private boolean isAuthorizedToCreate(final TypedRecord<TenantRecord> command) {
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.TENANT, PermissionType.CREATE);
+        new AccessControlRequest(command, AuthorizationResourceType.TENANT, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
     if (isAuthorized.isLeft()) {
       rejectCommandWithUnauthorizedError(command, isAuthorized.getLeft());

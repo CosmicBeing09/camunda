@@ -37,7 +37,7 @@ public class AuthorizationUpdateProcessor
       final RecordKeyProvider keyGenerator,
       final ProcessingState processingState,
       final CommandDistributionBehavior distributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;
     this.distributionBehavior = distributionBehavior;
     stateWriter = writers.state();

@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.clock;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -33,7 +33,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   private final RecordKeyProvider keyGenerator;
   private final ControllableStreamClock clock;
   private final CommandDistributionBehavior commandDistributionBehavior;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
 
@@ -42,7 +42,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
       final RecordKeyProvider keyGenerator,
       final ControllableStreamClock clock,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AccessControlBehavior authCheckBehavior) {
     sideEffectWriter = writers.sideEffect();
     stateWriter = writers.state();
     this.keyGenerator = keyGenerator;
@@ -57,7 +57,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   @Override
   public void processNewCommand(final TypedRecord<ClockRecord> command) {
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
+        new AccessControlRequest(command, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();

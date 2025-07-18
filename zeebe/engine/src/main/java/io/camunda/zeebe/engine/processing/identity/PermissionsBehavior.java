@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.state.authorization.PersistedAuthorization;
 import io.camunda.zeebe.engine.state.immutable.AuthorizationState;
 import io.camunda.zeebe.engine.state.immutable.MappingState;
@@ -34,11 +34,11 @@ public class PermissionsBehavior {
       "Expected to create or update authorization with ownerId '%s', but a mapping with this ID does not exist.";
 
   private final AuthorizationState authorizationState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final MappingState mappingState;
 
   public PermissionsBehavior(
-      final ProcessingState processingState, final AuthorizationCheckBehavior authCheckBehavior) {
+      final ProcessingState processingState, final AccessControlBehavior authCheckBehavior) {
     authorizationState = processingState.getAuthorizationState();
     mappingState = processingState.getMappingState();
     this.authCheckBehavior = authCheckBehavior;
@@ -52,7 +52,7 @@ public class PermissionsBehavior {
   public Either<Rejection, AuthorizationRecord> isAuthorized(
       final TypedRecord<AuthorizationRecord> command, final PermissionType permissionType) {
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.AUTHORIZATION, permissionType);
+        new AccessControlRequest(command, AuthorizationResourceType.AUTHORIZATION, permissionType);
     return authCheckBehavior.isAuthorized(authorizationRequest).map(unused -> command.getValue());
   }
 

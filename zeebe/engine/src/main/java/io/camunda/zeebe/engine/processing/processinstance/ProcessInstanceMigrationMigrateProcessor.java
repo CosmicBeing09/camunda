@@ -16,8 +16,8 @@ import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSequenceFlow;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior;
+import io.camunda.zeebe.engine.processing.identity.AccessControlBehavior.AccessControlRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -82,7 +82,7 @@ public class ProcessInstanceMigrationMigrateProcessor
   private final IncidentState incidentState;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final MessageState messageState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AccessControlBehavior authCheckBehavior;
   private final ProcessInstanceMigrationCatchEventBehaviour migrationCatchEventBehaviour;
   private final RecordKeyProvider keyGenerator;
 
@@ -93,7 +93,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
       final RoutingInfo routingInfo,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AccessControlBehavior authCheckBehavior,
       final RecordKeyProvider keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
@@ -133,7 +133,7 @@ public class ProcessInstanceMigrationMigrateProcessor
     requireNonNullProcessInstance(processInstance, processInstanceKey);
 
     final var authorizationRequest =
-        new AuthorizationRequest(
+        new AccessControlRequest(
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
@@ -144,7 +144,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
-              ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+              ? AccessControlBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                   "migrate a process instance",
                   processInstance.getValue().getProcessInstanceKey(),
                   "such process instance")
