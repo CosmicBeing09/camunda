@@ -30,7 +30,7 @@ public final class AdHocSubProcessActivityActivationElement extends ObjectValue
 
   @Override
   public String getElementId() {
-    return BufferUtil.bufferAsString(elementId.getValue());
+    return BufferUtil.bufferAsString(elementId.getBuffer());
   }
 
   public AdHocSubProcessActivityActivationElement setElementId(final String elementId) {

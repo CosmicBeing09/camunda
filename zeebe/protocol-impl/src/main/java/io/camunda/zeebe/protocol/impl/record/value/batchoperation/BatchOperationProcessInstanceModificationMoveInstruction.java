@@ -25,7 +25,7 @@ public final class BatchOperationProcessInstanceModificationMoveInstruction exte
 
   @Override
   public String getSourceElementId() {
-    return BufferUtil.bufferAsString(sourceElementIdProperty.getValue());
+    return BufferUtil.bufferAsString(sourceElementIdProperty.getBuffer());
   }
 
   public BatchOperationProcessInstanceModificationMoveInstruction setSourceElementId(
@@ -36,7 +36,7 @@ public final class BatchOperationProcessInstanceModificationMoveInstruction exte
 
   @Override
   public String getTargetElementId() {
-    return BufferUtil.bufferAsString(targetElementIdProperty.getValue());
+    return BufferUtil.bufferAsString(targetElementIdProperty.getBuffer());
   }
 
   public BatchOperationProcessInstanceModificationMoveInstruction setTargetElementId(

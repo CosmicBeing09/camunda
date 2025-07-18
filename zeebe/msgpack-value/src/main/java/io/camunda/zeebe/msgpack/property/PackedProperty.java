@@ -24,7 +24,7 @@ public class PackedProperty extends BaseProperty<PackedValue> {
   }
 
   public void setValue(final DirectBuffer buffer, final int offset, final int length) {
-    value.wrap(buffer, offset, length);
+    stringValue.wrap(buffer, offset, length);
     isSet = true;
   }
 }

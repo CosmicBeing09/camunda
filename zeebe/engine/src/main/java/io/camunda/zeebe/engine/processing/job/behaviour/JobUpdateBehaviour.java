@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.job.behaviour;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -32,12 +32,12 @@ public class JobUpdateBehaviour {
 
   private final JobState jobState;
   private final InstantSource clock;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
 
   public JobUpdateBehaviour(
       final JobState jobState,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     this.jobState = jobState;
     this.clock = clock;
     this.authCheckBehavior = authCheckBehavior;

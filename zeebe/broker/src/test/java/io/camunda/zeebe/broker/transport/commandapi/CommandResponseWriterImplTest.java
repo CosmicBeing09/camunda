@@ -45,8 +45,8 @@ public final class CommandResponseWriterImplTest {
     eventWriter.wrap(new UnsafeBuffer(EVENT), 0, EVENT.length);
 
     responseWriter
-        .partitionId(PARTITION_ID)
-        .key(KEY)
+        .setPartitionId(PARTITION_ID)
+        .setKey(KEY)
         .recordType(RecordType.EVENT)
         .valueType(ValueType.JOB)
         .intent(JobIntent.CREATED)

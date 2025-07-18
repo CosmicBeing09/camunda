@@ -117,8 +117,8 @@ public final class TestStreams {
 
     mockCommandResponseWriter = mock(CommandResponseWriter.class);
     when(mockCommandResponseWriter.intent(any())).thenReturn(mockCommandResponseWriter);
-    when(mockCommandResponseWriter.key(anyLong())).thenReturn(mockCommandResponseWriter);
-    when(mockCommandResponseWriter.partitionId(anyInt())).thenReturn(mockCommandResponseWriter);
+    when(mockCommandResponseWriter.setKey(anyLong())).thenReturn(mockCommandResponseWriter);
+    when(mockCommandResponseWriter.setPartitionId(anyInt())).thenReturn(mockCommandResponseWriter);
     when(mockCommandResponseWriter.recordType(any())).thenReturn(mockCommandResponseWriter);
     when(mockCommandResponseWriter.rejectionType(any())).thenReturn(mockCommandResponseWriter);
     when(mockCommandResponseWriter.rejectionReason(any())).thenReturn(mockCommandResponseWriter);
@@ -453,7 +453,7 @@ public final class TestStreams {
     }
 
     public FluentLogWriter requestStreamId(final int requestStreamId) {
-      metadata.requestStreamId(requestStreamId);
+      metadata.requestPartitionId(requestStreamId);
       return this;
     }
 

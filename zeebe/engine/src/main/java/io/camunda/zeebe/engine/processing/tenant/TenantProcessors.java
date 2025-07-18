@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.tenant;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -21,8 +21,8 @@ public class TenantProcessors {
   public static void addTenantProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final AuthorizationValidationBehavior authorizationCheckBehavior,
+      final KeyGenerator tenantKeyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     typedRecordProcessors
@@ -31,8 +31,8 @@ public class TenantProcessors {
             TenantIntent.CREATE,
             new TenantCreateProcessor(
                 processingState.getTenantState(),
-                authCheckBehavior,
-                keyGenerator,
+                authorizationCheckBehavior,
+                tenantKeyGenerator,
                 writers,
                 commandDistributionBehavior))
         .onCommand(
@@ -40,8 +40,8 @@ public class TenantProcessors {
             TenantIntent.UPDATE,
             new TenantUpdateProcessor(
                 processingState.getTenantState(),
-                authCheckBehavior,
-                keyGenerator,
+                authorizationCheckBehavior,
+                tenantKeyGenerator,
                 writers,
                 commandDistributionBehavior))
         .onCommand(
@@ -49,8 +49,8 @@ public class TenantProcessors {
             TenantIntent.ADD_ENTITY,
             new TenantAddEntityProcessor(
                 processingState,
-                authCheckBehavior,
-                keyGenerator,
+                authorizationCheckBehavior,
+                tenantKeyGenerator,
                 writers,
                 commandDistributionBehavior))
         .onCommand(
@@ -58,8 +58,8 @@ public class TenantProcessors {
             TenantIntent.REMOVE_ENTITY,
             new TenantRemoveEntityProcessor(
                 processingState,
-                authCheckBehavior,
-                keyGenerator,
+                authorizationCheckBehavior,
+                tenantKeyGenerator,
                 writers,
                 commandDistributionBehavior))
         .onCommand(
@@ -67,8 +67,8 @@ public class TenantProcessors {
             TenantIntent.DELETE,
             new TenantDeleteProcessor(
                 processingState,
-                authCheckBehavior,
-                keyGenerator,
+                authorizationCheckBehavior,
+                tenantKeyGenerator,
                 writers,
                 commandDistributionBehavior));
   }

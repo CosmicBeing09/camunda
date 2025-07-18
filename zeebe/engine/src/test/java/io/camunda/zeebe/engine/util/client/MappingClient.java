@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.util.client;
 
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import io.camunda.zeebe.protocol.record.Record;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.MappingRecordValue;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import java.util.function.Function;
@@ -39,7 +39,7 @@ public class MappingClient {
     private static final Function<Long, Record<MappingRecordValue>> SUCCESS_SUPPLIER =
         (position) ->
             RecordingExporter.mappingRecords()
-                .withIntent(MappingIntent.CREATED)
+                .withIntent(MappingAction.CREATED)
                 .withSourceRecordPosition(position)
                 .getFirst();
 
@@ -47,7 +47,7 @@ public class MappingClient {
         (position) ->
             RecordingExporter.mappingRecords()
                 .onlyCommandRejections()
-                .withIntent(MappingIntent.CREATE)
+                .withIntent(MappingAction.CREATE)
                 .withSourceRecordPosition(position)
                 .getFirst();
     private final CommandWriter writer;
@@ -76,12 +76,12 @@ public class MappingClient {
     }
 
     public Record<MappingRecordValue> create() {
-      final long position = writer.writeCommand(MappingIntent.CREATE, mappingRecord);
+      final long position = writer.writeCommand(MappingAction.CREATE, mappingRecord);
       return expectation.apply(position);
     }
 
     public Record<MappingRecordValue> create(final String username) {
-      final long position = writer.writeCommand(MappingIntent.CREATE, username, mappingRecord);
+      final long position = writer.writeCommand(MappingAction.CREATE, username, mappingRecord);
       return expectation.apply(position);
     }
 
@@ -96,7 +96,7 @@ public class MappingClient {
     private static final Function<Long, Record<MappingRecordValue>> SUCCESS_SUPPLIER =
         (position) ->
             RecordingExporter.mappingRecords()
-                .withIntent(MappingIntent.DELETED)
+                .withIntent(MappingAction.DELETED)
                 .withSourceRecordPosition(position)
                 .getFirst();
 
@@ -104,7 +104,7 @@ public class MappingClient {
         (position) ->
             RecordingExporter.mappingRecords()
                 .onlyCommandRejections()
-                .withIntent(MappingIntent.DELETE)
+                .withIntent(MappingAction.DELETE)
                 .withSourceRecordPosition(position)
                 .getFirst();
     private final CommandWriter writer;
@@ -118,7 +118,7 @@ public class MappingClient {
     }
 
     public Record<MappingRecordValue> delete() {
-      final long position = writer.writeCommand(MappingIntent.DELETE, mappingRecord);
+      final long position = writer.writeCommand(MappingAction.DELETE, mappingRecord);
       return expectation.apply(position);
     }
 
@@ -133,7 +133,7 @@ public class MappingClient {
     private static final Function<String, Record<MappingRecordValue>> SUCCESS_SUPPLIER =
         (position) ->
             RecordingExporter.mappingRecords()
-                .withIntent(MappingIntent.UPDATED)
+                .withIntent(MappingAction.UPDATED)
                 .filter(
                     mappingRecordValueRecord ->
                         mappingRecordValueRecord.getValue().getMappingId().equals(position))
@@ -143,7 +143,7 @@ public class MappingClient {
         (position) ->
             RecordingExporter.mappingRecords()
                 .onlyCommandRejections()
-                .withIntent(MappingIntent.UPDATE)
+                .withIntent(MappingAction.UPDATE)
                 .filter(
                     mappingRecordValueRecord ->
                         mappingRecordValueRecord.getValue().getMappingId().equals(position))
@@ -159,12 +159,12 @@ public class MappingClient {
     }
 
     public Record<MappingRecordValue> update() {
-      writer.writeCommand(MappingIntent.UPDATE, mappingRecord);
+      writer.writeCommand(MappingAction.UPDATE, mappingRecord);
       return expectation.apply(mappingRecord.getMappingId());
     }
 
     public Record<MappingRecordValue> update(final String username) {
-      writer.writeCommand(MappingIntent.UPDATE, username, mappingRecord);
+      writer.writeCommand(MappingAction.UPDATE, username, mappingRecord);
       return expectation.apply(mappingRecord.getMappingId());
     }
 

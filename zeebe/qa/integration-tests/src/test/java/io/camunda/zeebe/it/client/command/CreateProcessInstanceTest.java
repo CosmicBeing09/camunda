@@ -122,7 +122,7 @@ public final class CreateProcessInstanceTest {
     // then
     final var createdEvent =
         RecordingExporter.processInstanceCreationRecords()
-            .withIntent(ProcessInstanceCreationIntent.CREATED)
+            .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
             .withInstanceKey(event.getProcessInstanceKey())
             .getFirst();
 
@@ -142,7 +142,7 @@ public final class CreateProcessInstanceTest {
     // then
     final var createdEvent =
         RecordingExporter.processInstanceCreationRecords()
-            .withIntent(ProcessInstanceCreationIntent.CREATED)
+            .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
             .withInstanceKey(event.getProcessInstanceKey())
             .getFirst();
 
@@ -167,7 +167,7 @@ public final class CreateProcessInstanceTest {
     // then
     final var createdEvent =
         RecordingExporter.processInstanceCreationRecords()
-            .withIntent(ProcessInstanceCreationIntent.CREATED)
+            .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
             .withInstanceKey(event.getProcessInstanceKey())
             .getFirst();
 
@@ -194,7 +194,7 @@ public final class CreateProcessInstanceTest {
     // then
     final var createdEvent =
         RecordingExporter.processInstanceCreationRecords()
-            .withIntent(ProcessInstanceCreationIntent.CREATED)
+            .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
             .withInstanceKey(event.getProcessInstanceKey())
             .getFirst();
 

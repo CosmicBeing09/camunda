@@ -42,11 +42,11 @@ public class AuthInfo extends UnpackedObject {
   }
 
   public DirectBuffer getAuthDataBuffer() {
-    return authDataProp.getValue();
+    return authDataProp.getBuffer();
   }
 
   public String getAuthData() {
-    return BufferUtil.bufferAsString(authDataProp.getValue());
+    return BufferUtil.bufferAsString(authDataProp.getBuffer());
   }
 
   public AuthInfo setAuthData(final String authData) {

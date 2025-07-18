@@ -59,7 +59,7 @@ public class PersistedCommandDistribution extends UnpackedObject implements DbVa
   }
 
   public Optional<String> getQueueId() {
-    final var value = BufferUtil.bufferAsString(queueIdProperty.getValue());
+    final var value = BufferUtil.bufferAsString(queueIdProperty.getBuffer());
     return value.isEmpty() ? Optional.empty() : Optional.of(value);
   }
 

@@ -112,7 +112,7 @@ public final class ProcessInstanceModificationActivateInstruction extends Object
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProperty.getValue();
+    return elementIdProperty.getBuffer();
   }
 
   public void copy(final ProcessInstanceModificationActivateInstruction object) {

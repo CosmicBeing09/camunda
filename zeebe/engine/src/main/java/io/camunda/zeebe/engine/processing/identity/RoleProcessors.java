@@ -19,7 +19,7 @@ public class RoleProcessors {
   public static void addRoleProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final KeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {

@@ -28,7 +28,7 @@ public abstract class RdbmsBatchOperationStatusExportHandler<T extends RecordVal
 
   @Override
   public boolean canExport(final Record<T> record) {
-    return record.getOperationReference() != operationReferenceNullValue()
+    return record.getOperationKey() != operationReferenceNullValue()
         && (isCompleted(record) || isFailed(record));
   }
 
@@ -36,14 +36,14 @@ public abstract class RdbmsBatchOperationStatusExportHandler<T extends RecordVal
   public void export(final Record<T> record) {
     if (isCompleted(record)) {
       batchOperationWriter.updateItem(
-          String.valueOf(record.getOperationReference()),
+          String.valueOf(record.getOperationKey()),
           getItemKey(record),
           BatchOperationItemState.COMPLETED,
           DateUtil.toOffsetDateTime(record.getTimestamp()),
           null);
     } else if (isFailed(record)) {
       batchOperationWriter.updateItem(
-          String.valueOf(record.getOperationReference()),
+          String.valueOf(record.getOperationKey()),
           getItemKey(record),
           BatchOperationItemState.FAILED,
           DateUtil.toOffsetDateTime(record.getTimestamp()),

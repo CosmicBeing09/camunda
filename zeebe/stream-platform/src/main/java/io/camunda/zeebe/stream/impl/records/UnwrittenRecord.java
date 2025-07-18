@@ -79,7 +79,7 @@ public class UnwrittenRecord implements TypedRecord {
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return metadata.getAuthorization().toDecodedMap();
   }
 
@@ -94,7 +94,7 @@ public class UnwrittenRecord implements TypedRecord {
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return metadata.getOperationReference();
   }
 
@@ -109,7 +109,7 @@ public class UnwrittenRecord implements TypedRecord {
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getRequestPartitionId() {
     return metadata.getRequestStreamId();
   }
 

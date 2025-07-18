@@ -31,7 +31,7 @@ public enum ProcessInstanceResultIntent implements Intent, ProcessInstanceRelate
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 

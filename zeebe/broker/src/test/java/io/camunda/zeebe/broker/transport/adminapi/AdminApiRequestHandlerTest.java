@@ -230,7 +230,7 @@ final class AdminApiRequestHandlerTest {
 
     @Test
     void shouldSoftPauseExportingForGivenPartition() {
-      when(adminAccess.softPauseExporting()).thenReturn(CompletableActorFuture.completed(null));
+      when(adminAccess.temporarilySuspendExporting()).thenReturn(CompletableActorFuture.completed(null));
 
       // when
       final var responseFuture = handleRequest(request, handler);
@@ -239,13 +239,13 @@ final class AdminApiRequestHandlerTest {
       // then
       assertThat(responseFuture).succeedsWithin(Duration.ofMinutes(1)).matches(Either::isRight);
       verify(adminAccess).forPartition(request.getPartitionId());
-      verify(adminAccess).softPauseExporting();
+      verify(adminAccess).temporarilySuspendExporting();
     }
 
     @Test
     void shouldRespondWithFailureIfPausingFails() {
       // given
-      when(adminAccess.softPauseExporting())
+      when(adminAccess.temporarilySuspendExporting())
           .thenReturn(
               CompletableActorFuture.completedExceptionally(
                   new RuntimeException("Exporting fails")));

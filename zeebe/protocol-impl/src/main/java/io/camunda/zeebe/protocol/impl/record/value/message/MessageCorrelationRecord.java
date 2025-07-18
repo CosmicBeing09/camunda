@@ -57,12 +57,12 @@ public final class MessageCorrelationRecord extends UnifiedRecordValue
 
   @Override
   public String getName() {
-    return bufferAsString(nameProp.getValue());
+    return bufferAsString(nameProp.getBuffer());
   }
 
   @Override
   public String getCorrelationKey() {
-    return bufferAsString(correlationKeyProp.getValue());
+    return bufferAsString(correlationKeyProp.getBuffer());
   }
 
   public MessageCorrelationRecord setCorrelationKey(final String correlationKey) {
@@ -107,12 +107,12 @@ public final class MessageCorrelationRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getNameBuffer() {
-    return nameProp.getValue();
+    return nameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getCorrelationKeyBuffer() {
-    return correlationKeyProp.getValue();
+    return correlationKeyProp.getBuffer();
   }
 
   @Override
@@ -132,7 +132,7 @@ public final class MessageCorrelationRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public MessageCorrelationRecord setTenantId(final String tenantId) {

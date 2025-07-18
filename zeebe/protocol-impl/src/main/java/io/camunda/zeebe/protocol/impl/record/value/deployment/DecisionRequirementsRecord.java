@@ -55,12 +55,12 @@ public final class DecisionRequirementsRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionRequirementsId() {
-    return bufferAsString(decisionRequirementsIdProp.getValue());
+    return bufferAsString(decisionRequirementsIdProp.getBuffer());
   }
 
   @Override
   public String getDecisionRequirementsName() {
-    return bufferAsString(decisionRequirementsNameProp.getValue());
+    return bufferAsString(decisionRequirementsNameProp.getBuffer());
   }
 
   @Override
@@ -75,12 +75,12 @@ public final class DecisionRequirementsRecord extends UnifiedRecordValue
 
   @Override
   public String getNamespace() {
-    return bufferAsString(namespaceProp.getValue());
+    return bufferAsString(namespaceProp.getBuffer());
   }
 
   @Override
   public String getResourceName() {
-    return bufferAsString(resourceNameProp.getValue());
+    return bufferAsString(resourceNameProp.getBuffer());
   }
 
   @Override
@@ -142,22 +142,22 @@ public final class DecisionRequirementsRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getDecisionRequirementsIdBuffer() {
-    return decisionRequirementsIdProp.getValue();
+    return decisionRequirementsIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getDecisionRequirementsNameBuffer() {
-    return decisionRequirementsNameProp.getValue();
+    return decisionRequirementsNameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getNamespaceBuffer() {
-    return namespaceProp.getValue();
+    return namespaceProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   @JsonIgnore
@@ -172,7 +172,7 @@ public final class DecisionRequirementsRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public DecisionRequirementsRecord setTenantId(final String tenantId) {

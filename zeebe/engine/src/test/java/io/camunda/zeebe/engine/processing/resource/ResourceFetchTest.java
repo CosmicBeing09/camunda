@@ -74,7 +74,7 @@ public class ResourceFetchTest {
     final var timeout = timeout(Duration.ofSeconds(1).toMillis());
     verify(mockCommandResponseWriter, timeout).intent(ResourceIntent.FETCHED);
     verify(mockCommandResponseWriter, timeout).valueType(ValueType.RESOURCE);
-    verify(mockCommandResponseWriter, timeout).key(resourceKey);
+    verify(mockCommandResponseWriter, timeout).setKey(resourceKey);
     verify(mockCommandResponseWriter, timeout).tryWriteResponse(10, 123456789L);
     ResourceAssert.assertThat(resourceResponse)
         .isNotNull()

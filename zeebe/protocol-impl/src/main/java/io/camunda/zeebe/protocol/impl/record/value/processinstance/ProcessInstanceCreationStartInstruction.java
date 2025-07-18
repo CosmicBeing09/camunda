@@ -32,12 +32,12 @@ public final class ProcessInstanceCreationStartInstruction extends ObjectValue
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   @Override
   public String getElementId() {
-    return BufferUtil.bufferAsString(elementIdProp.getValue());
+    return BufferUtil.bufferAsString(elementIdProp.getBuffer());
   }
 
   public ProcessInstanceCreationStartInstruction setElementId(final String elementId) {

@@ -257,7 +257,7 @@ public final class BrokerAdminServiceImpl extends Actor implements BrokerAdminSe
     LOG.info("Soft Pausing exporting on all partitions.");
     return partitionManager.getZeebePartitions().stream()
         .map(ZeebePartition::getAdminAccess)
-        .map(PartitionAdminAccess::softPauseExporting)
+        .map(PartitionAdminAccess::temporarilySuspendExporting)
         .collect(new ActorFutureCollector<>(actor));
   }
 

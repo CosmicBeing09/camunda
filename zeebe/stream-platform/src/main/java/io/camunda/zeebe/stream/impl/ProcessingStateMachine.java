@@ -115,7 +115,7 @@ public final class ProcessingStateMachine {
   private static final String ERROR_MESSAGE_HANDLING_PROCESSING_ERROR_FAILED =
       "Expected to process command '{} {}' successfully on stream processor, but caught unexpected exception. Failed to handle the exception gracefully.";
   private final EventFilter processingFilter;
-  private final EventFilter isEventOrRejection =
+  private final EventFilter eventOrRejectionFilter =
       new MetadataEventFilter(
           recordMetadata -> {
             final var recordType = recordMetadata.getRecordType();
@@ -129,7 +129,7 @@ public final class ProcessingStateMachine {
   private final RetryStrategy writeRetryStrategy;
   private final RetryStrategy sideEffectsRetryStrategy;
   private final RetryStrategy updateStateRetryStrategy;
-  private final BooleanSupplier shouldProcessNext;
+  private final BooleanSupplier canProcessNext;
   private final BooleanSupplier abortCondition;
   private final RecordValues recordValues;
   private final TypedRecordImpl typedCommand;
@@ -179,7 +179,7 @@ public final class ProcessingStateMachine {
     writeRetryStrategy = new AbortableRetryStrategy(actor);
     sideEffectsRetryStrategy = new AbortableRetryStrategy(actor);
     updateStateRetryStrategy = new RecoverableRetryStrategy(actor);
-    this.shouldProcessNext = shouldProcessNext;
+    canProcessNext = shouldProcessNext;
 
     final int partitionId = context.getLogStream().getPartitionId();
     typedCommand = new TypedRecordImpl(partitionId);
@@ -221,12 +221,12 @@ public final class ProcessingStateMachine {
       //  * and this was the last record written (records that have been written to the dispatcher
       //    might not be written to the log yet, which means they will appear shortly after this)
       reachedEnd =
-          isEventOrRejection.applies(previousRecord)
+          eventOrRejectionFilter.applies(previousRecord)
               && !hasNext
               && lastWrittenPosition <= previousRecord.getPosition();
     }
 
-    if (shouldProcessNext.getAsBoolean() && hasNext && !inProcessing) {
+    if (canProcessNext.getAsBoolean() && hasNext && !inProcessing) {
       currentRecord = logStreamReader.next();
 
       if (processingFilter.applies(currentRecord)) {
@@ -337,7 +337,7 @@ public final class ProcessingStateMachine {
     // be appended to the followup events
     final var processingResultBuilder =
         new BufferedProcessingResultBuilder(
-            logStreamWriter::canWriteEvents, initialCommand.getOperationReference());
+            logStreamWriter::canWriteEvents, initialCommand.getOperationKey());
     var lastProcessingResultSize = 0;
 
     // It might be that we reached the batch size limit during processing a command.
@@ -521,7 +521,7 @@ public final class ProcessingStateMachine {
     final var rejectionReason = errorMessage != null ? errorMessage : "";
     final ProcessingResultBuilder processingResultBuilder =
         new BufferedProcessingResultBuilder(
-            logStreamWriter::canWriteEvents, typedCommand.getOperationReference());
+            logStreamWriter::canWriteEvents, typedCommand.getOperationKey());
     final var errorRecord = new ErrorRecord();
     errorRecord.initErrorRecord(
         new CommandRejectionException(rejectionReason), currentRecord.getPosition());
@@ -534,7 +534,7 @@ public final class ProcessingStateMachine {
             .recordVersion(RecordMetadata.DEFAULT_RECORD_VERSION)
             .rejectionType(RejectionType.NULL_VAL)
             .rejectionReason("")
-            .operationReference(typedCommand.getOperationReference());
+            .operationReference(typedCommand.getOperationKey());
     processingResultBuilder.appendRecord(currentRecord.getKey(), errorRecord, recordMetadata);
     processingResultBuilder.withResponse(
         RecordType.COMMAND_REJECTION,
@@ -545,7 +545,7 @@ public final class ProcessingStateMachine {
         RejectionType.PROCESSING_ERROR,
         rejectionReason,
         typedCommand.getRequestId(),
-        typedCommand.getRequestStreamId());
+        typedCommand.getRequestPartitionId());
     currentProcessingResult = processingResultBuilder.build();
 
     pendingWrites = currentProcessingResult.getRecordBatch().entries();
@@ -562,7 +562,7 @@ public final class ProcessingStateMachine {
         () -> {
           final ProcessingResultBuilder processingResultBuilder =
               new BufferedProcessingResultBuilder(
-                  logStreamWriter::canWriteEvents, typedCommand.getOperationReference());
+                  logStreamWriter::canWriteEvents, typedCommand.getOperationKey());
           currentProcessingResult =
               currentProcessor.onProcessingError(
                   processingException, typedCommand, processingResultBuilder);
@@ -672,11 +672,11 @@ public final class ProcessingStateMachine {
                 final var recordMetadata = responseValue.recordMetadata();
                 responseWriter
                     .intent(recordMetadata.getIntent())
-                    .key(responseValue.key())
+                    .setKey(responseValue.key())
                     .recordType(recordMetadata.getRecordType())
                     .rejectionReason(BufferUtil.wrapString(recordMetadata.getRejectionReason()))
                     .rejectionType(recordMetadata.getRejectionType())
-                    .partitionId(context.getPartitionId())
+                    .setPartitionId(context.getPartitionId())
                     .valueType(recordMetadata.getValueType())
                     .valueWriter(responseValue.recordValue())
                     .tryWriteResponse(

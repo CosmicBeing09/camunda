@@ -28,7 +28,7 @@ public final class BinaryProperty extends BaseProperty<BinaryValue> {
   }
 
   public void setValue(final DirectBuffer data, final int offset, final int length) {
-    value.wrap(data, offset, length);
+    stringValue.wrap(data, offset, length);
     isSet = true;
   }
 }

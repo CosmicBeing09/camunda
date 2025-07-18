@@ -34,7 +34,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionContin
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionFinishProcessor;
 import io.camunda.zeebe.engine.processing.distribution.CommandRedistributor;
 import io.camunda.zeebe.engine.processing.dmn.DecisionEvaluationEvaluteProcessor;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationProcessors;
 import io.camunda.zeebe.engine.processing.identity.GroupProcessors;
 import io.camunda.zeebe.engine.processing.identity.IdentitySetupProcessors;
@@ -125,7 +125,7 @@ public final class EngineProcessors {
     final var decisionBehavior =
         new DecisionBehavior(
             DecisionEngineFactory.createDecisionEngine(), processingState, processEngineMetrics);
-    final var authCheckBehavior = new AuthorizationCheckBehavior(processingState, securityConfig);
+    final var authCheckBehavior = new AuthorizationValidationBehavior(processingState, securityConfig);
     final var transientProcessMessageSubscriptionState =
         typedRecordProcessorContext.getTransientProcessMessageSubscriptionState();
     final BpmnBehaviorsImpl bpmnBehaviors =
@@ -254,7 +254,7 @@ public final class EngineProcessors {
         commandDistributionBehavior,
         authCheckBehavior);
 
-    ClockProcessors.addClockProcessors(
+    ClockProcessors.addControllableStreamClockProcessors(
         typedRecordProcessors,
         writers,
         keyGenerator,
@@ -331,7 +331,7 @@ public final class EngineProcessors {
       final MutableProcessingState processingState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     return new UserTaskProcessor(
         processingState,
         processingState.getUserTaskState(),
@@ -351,7 +351,7 @@ public final class EngineProcessors {
       final JobProcessingMetrics jobMetrics,
       final DecisionBehavior decisionBehavior,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
     return new BpmnBehaviorsImpl(
         processingState,
@@ -380,7 +380,7 @@ public final class EngineProcessors {
       final RoutingInfo routingInfo,
       final InstantSource clock,
       final EngineConfiguration config,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
       final ProcessEngineMetrics processEngineMetrics) {
     return BpmnProcessors.addBpmnStreamProcessor(
@@ -413,7 +413,7 @@ public final class EngineProcessors {
       final CommandDistributionBehavior distributionBehavior,
       final EngineConfiguration config,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final RoutingInfo routingInfo) {
 
     // on deployment partition CREATE Command is received and processed
@@ -452,7 +452,7 @@ public final class EngineProcessors {
         new DeploymentDistributionCompleteProcessor(processingState.getDeploymentState(), writers);
     typedRecordProcessors.onCommand(
         ValueType.DEPLOYMENT_DISTRIBUTION,
-        DeploymentDistributionIntent.COMPLETE,
+        DeploymentDistributionIntent.DEPLOYMENT_DISTRIBUTION_COMPLETE,
         completeDeploymentDistributionProcessor);
 
     typedRecordProcessors.onCommand(
@@ -471,7 +471,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     IncidentEventProcessors.addProcessors(
         typedRecordProcessors,
         processingState,
@@ -493,7 +493,7 @@ public final class EngineProcessors {
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior commandDistributionBehavior,
       final InstantSource clock,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     MessageEventProcessors.addMessageProcessors(
         bpmnBehaviors,
         typedRecordProcessors,
@@ -513,7 +513,7 @@ public final class EngineProcessors {
       final DecisionBehavior decisionBehavior,
       final Writers writers,
       final MutableProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
 
     final DecisionEvaluationEvaluteProcessor decisionEvaluationEvaluteProcessor =
         new DecisionEvaluationEvaluteProcessor(
@@ -530,7 +530,7 @@ public final class EngineProcessors {
       final MutableProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
       final BpmnBehaviors bpmnBehaviors,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     final var resourceDeletionProcessor =
         new ResourceDeletionDeleteProcessor(
             writers,
@@ -547,11 +547,11 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     final var resourceFetchProcessor =
         new ResourceFetchProcessor(writers, processingState, authCheckBehavior);
     typedRecordProcessors.onCommand(
-        ValueType.RESOURCE, ResourceIntent.FETCH, resourceFetchProcessor);
+        ValueType.RESOURCE, ResourceIntent.FETCH_REQUEST, resourceFetchProcessor);
   }
 
   private static void addSignalBroadcastProcessors(
@@ -560,7 +560,7 @@ public final class EngineProcessors {
       final Writers writers,
       final MutableProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     final var signalBroadcastProcessor =
         new SignalBroadcastProcessor(
             writers,

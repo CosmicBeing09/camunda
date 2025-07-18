@@ -44,7 +44,7 @@ public class EscalationRecord extends UnifiedRecordValue implements EscalationRe
 
   @Override
   public String getEscalationCode() {
-    return BufferUtil.bufferAsString(escalationCodeProp.getValue());
+    return BufferUtil.bufferAsString(escalationCodeProp.getBuffer());
   }
 
   public EscalationRecord setEscalationCode(final String escalationCode) {
@@ -54,12 +54,12 @@ public class EscalationRecord extends UnifiedRecordValue implements EscalationRe
 
   @Override
   public String getThrowElementId() {
-    return BufferUtil.bufferAsString(throwElementIdProp.getValue());
+    return BufferUtil.bufferAsString(throwElementIdProp.getBuffer());
   }
 
   @Override
   public String getCatchElementId() {
-    return BufferUtil.bufferAsString(catchElementIdProp.getValue());
+    return BufferUtil.bufferAsString(catchElementIdProp.getBuffer());
   }
 
   public EscalationRecord setCatchElementId(final DirectBuffer catchElementId) {

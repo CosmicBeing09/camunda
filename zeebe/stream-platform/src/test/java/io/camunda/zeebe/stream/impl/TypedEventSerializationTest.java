@@ -49,7 +49,7 @@ public final class TypedEventSerializationTest {
         .rejectionReason(rejectionReason)
         .rejectionType(rejectionType)
         .requestId(requestId)
-        .requestStreamId(requestStreamId);
+        .requestPartitionId(requestStreamId);
 
     final String resourceName = "resource";
     final DirectBuffer resource = wrapString("contents");

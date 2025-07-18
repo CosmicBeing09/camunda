@@ -106,7 +106,7 @@ public final class CommandDistributionRecord extends UnifiedRecordValue
 
   @Override
   public String getQueueId() {
-    final var value = BufferUtil.bufferAsString(queueIdProperty.getValue());
+    final var value = BufferUtil.bufferAsString(queueIdProperty.getBuffer());
     return value.isEmpty() ? null : value;
   }
 

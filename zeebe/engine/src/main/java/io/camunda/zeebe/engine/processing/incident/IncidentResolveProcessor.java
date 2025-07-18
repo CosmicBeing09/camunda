@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.incident;
 
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -60,7 +60,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   private final TypedResponseWriter responseWriter;
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final JobState jobState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
 
   public IncidentResolveProcessor(
       final ProcessingState processingState,
@@ -68,7 +68,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
       final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     this.bpmnStreamProcessor = bpmnStreamProcessor;
     this.userTaskProcessor = userTaskProcessor;
     stateWriter = writers.state();

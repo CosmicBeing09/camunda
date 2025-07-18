@@ -32,7 +32,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class AuthorizationCheckBehavior {
+public final class AuthorizationValidationBehavior {
 
   public static final String FORBIDDEN_ERROR_MESSAGE =
       "Insufficient permissions to perform operation '%s' on resource '%s'";
@@ -52,7 +52,7 @@ public final class AuthorizationCheckBehavior {
   private final boolean authorizationsEnabled;
   private final boolean multiTenancyEnabled;
 
-  public AuthorizationCheckBehavior(
+  public AuthorizationValidationBehavior(
       final ProcessingState processingState, final SecurityConfiguration securityConfig) {
     authorizationState = processingState.getAuthorizationState();
     mappingState = processingState.getMappingState();
@@ -79,7 +79,7 @@ public final class AuthorizationCheckBehavior {
     }
 
     if (!request.getCommand().hasRequestMetadata()
-        && request.getCommand().getOperationReference() == operationReferenceNullValue()) {
+        && request.getCommand().getOperationKey() == operationReferenceNullValue()) {
       // The command is written by Zeebe internally. Internal Zeebe commands are always authorized
       return Either.right(null);
     }
@@ -171,7 +171,7 @@ public final class AuthorizationCheckBehavior {
    * already checks authorizations and tenancy.
    */
   private boolean isAuthorizedAnonymousUser(final TypedRecord<?> command) {
-    final var authorizationClaims = command.getAuthorizations();
+    final var authorizationClaims = command.getAuthorizationData();
     final var authorizedAnonymousUserClaim =
         authorizationClaims.get(Authorization.AUTHORIZED_ANONYMOUS_USER);
     return Optional.ofNullable(authorizedAnonymousUserClaim).map(Boolean.class::cast).orElse(false);
@@ -183,7 +183,7 @@ public final class AuthorizationCheckBehavior {
 
   private Optional<String> getUsername(final TypedRecord<?> command) {
     return Optional.ofNullable(
-        (String) command.getAuthorizations().get(Authorization.AUTHORIZED_USERNAME));
+        (String) command.getAuthorizationData().get(Authorization.AUTHORIZED_USERNAME));
   }
 
   private Optional<String> getClientId(final AuthorizationRequest request) {
@@ -192,7 +192,7 @@ public final class AuthorizationCheckBehavior {
 
   private Optional<String> getClientId(final TypedRecord<?> command) {
     return Optional.ofNullable(
-        (String) command.getAuthorizations().get(Authorization.AUTHORIZED_CLIENT_ID));
+        (String) command.getAuthorizationData().get(Authorization.AUTHORIZED_CLIENT_ID));
   }
 
   private Stream<String> getAuthorizedTenantIds(
@@ -390,7 +390,7 @@ public final class AuthorizationCheckBehavior {
   }
 
   private Stream<PersistedMapping> getPersistedMappings(final TypedRecord<?> command) {
-    return command.getAuthorizations().entrySet().stream()
+    return command.getAuthorizationData().entrySet().stream()
         .filter(entry -> entry.getKey().startsWith(Authorization.USER_TOKEN_CLAIM_PREFIX))
         .flatMap(
             claimEntry -> {

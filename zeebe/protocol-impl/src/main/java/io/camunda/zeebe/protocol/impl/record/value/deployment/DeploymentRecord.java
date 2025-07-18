@@ -233,7 +233,7 @@ public final class DeploymentRecord extends UnifiedRecordValue implements Deploy
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public DeploymentRecord setTenantId(final String tenantId) {

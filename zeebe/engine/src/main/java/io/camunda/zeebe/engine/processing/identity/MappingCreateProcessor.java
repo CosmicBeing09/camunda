@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.state.immutable.MappingState;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -32,7 +32,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       "Expected to create mapping with id '%s', but a mapping with this id already exists.";
 
   private final MappingState mappingState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -41,7 +41,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
 
   public MappingCreateProcessor(
       final MappingState mappingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final KeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -91,8 +91,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
     final long key = keyGenerator.nextKey();
     record.setMappingKey(key);
 
-    stateWriter.appendFollowUpEvent(key, MappingIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, MappingIntent.CREATED, record, command);
+    stateWriter.appendFollowUpEvent(key, MappingAction.CREATED, record);
+    responseWriter.writeEventOnCommand(key, MappingAction.CREATED, record, command);
 
     commandDistributionBehavior
         .withKey(key)
@@ -112,7 +112,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
                       existingMapping.getMappingId());
               rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(command.getKey(), MappingIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(command.getKey(), MappingAction.CREATED, record));
 
     commandDistributionBehavior.acknowledgeCommand(command);
   }

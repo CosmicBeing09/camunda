@@ -80,7 +80,7 @@ public class CompensationSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return BufferUtil.bufferAsString(tenantIdProperty.getValue());
+    return BufferUtil.bufferAsString(tenantIdProperty.getBuffer());
   }
 
   public CompensationSubscriptionRecord setTenantId(final String tenantId) {
@@ -110,12 +110,12 @@ public class CompensationSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getCompensableActivityId() {
-    return BufferUtil.bufferAsString(compensableActivityIdProperty.getValue());
+    return BufferUtil.bufferAsString(compensableActivityIdProperty.getBuffer());
   }
 
   @Override
   public String getThrowEventId() {
-    return BufferUtil.bufferAsString(throwEventIdProperty.getValue());
+    return BufferUtil.bufferAsString(throwEventIdProperty.getBuffer());
   }
 
   @Override
@@ -125,7 +125,7 @@ public class CompensationSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getCompensationHandlerId() {
-    return BufferUtil.bufferAsString(compensationHandlerIdProperty.getValue());
+    return BufferUtil.bufferAsString(compensationHandlerIdProperty.getBuffer());
   }
 
   @Override

@@ -105,7 +105,7 @@ abstract class AbstractBatchOperationTest {
 
     return engine
         .batchOperation()
-        .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+        .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
         .withFilter(filterBuffer)
         .withAuthentication(authenticationBuffer)
         .create(DEFAULT_USER.getUsername())
@@ -144,7 +144,7 @@ abstract class AbstractBatchOperationTest {
 
     return engine
         .batchOperation()
-        .newCreation(BatchOperationType.MODIFY_PROCESS_INSTANCE)
+        .newCreationClient(BatchOperationType.MODIFY_PROCESS_INSTANCE)
         .withFilter(filterBuffer)
         .withAuthentication(authenticationBuffer)
         .withModificationPlan(modificationPlan)
@@ -163,7 +163,7 @@ abstract class AbstractBatchOperationTest {
 
     return engine
         .batchOperation()
-        .newCreation(BatchOperationType.CANCEL_PROCESS_INSTANCE)
+        .newCreationClient(BatchOperationType.CANCEL_PROCESS_INSTANCE)
         .withFilter(filterBuffer)
         .waitForStarted()
         .create(DEFAULT_USER.getUsername())
@@ -204,7 +204,7 @@ abstract class AbstractBatchOperationTest {
 
     return engine
         .batchOperation()
-        .newCreation(BatchOperationType.RESOLVE_INCIDENT)
+        .newCreationClient(BatchOperationType.RESOLVE_INCIDENT)
         .withFilter(filterBuffer)
         .withAuthentication(authenticationBuffer)
         .create(DEFAULT_USER.getUsername())
@@ -248,7 +248,7 @@ abstract class AbstractBatchOperationTest {
 
     return engine
         .batchOperation()
-        .newCreation(BatchOperationType.MIGRATE_PROCESS_INSTANCE)
+        .newCreationClient(BatchOperationType.MIGRATE_PROCESS_INSTANCE)
         .withFilter(filterBuffer)
         .withAuthentication(authenticationBuffer)
         .withMigrationPlan(migrationPlan)

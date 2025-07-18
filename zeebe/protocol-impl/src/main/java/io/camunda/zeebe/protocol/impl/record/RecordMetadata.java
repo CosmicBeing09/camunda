@@ -46,7 +46,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   private Intent intent = null;
   private long requestId;
   private short intentValue = Intent.NULL_VAL;
-  private int requestStreamId;
+  private int requestPartitionId;
   private final AuthInfo authorization = new AuthInfo();
   private RejectionType rejectionType;
   private final UnsafeBuffer rejectionReason = new UnsafeBuffer(0, 0);
@@ -73,7 +73,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
 
     // working with fixed-length fields
     recordType = decoder.recordType();
-    requestStreamId = decoder.requestStreamId();
+    requestPartitionId = decoder.requestStreamId();
     requestId = decoder.requestId();
     protocolVersion = decoder.protocolVersion();
     valueType = decoder.valueType();
@@ -142,7 +142,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     // working with fixed-length fields
     encoder
         .recordType(recordType)
-        .requestStreamId(requestStreamId)
+        .requestStreamId(requestPartitionId)
         .requestId(requestId)
         .protocolVersion(protocolVersion)
         .valueType(valueType)
@@ -172,11 +172,11 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   }
 
   public int getRequestStreamId() {
-    return requestStreamId;
+    return requestPartitionId;
   }
 
-  public RecordMetadata requestStreamId(final int requestStreamId) {
-    this.requestStreamId = requestStreamId;
+  public RecordMetadata requestPartitionId(final int requestStreamId) {
+    requestPartitionId = requestStreamId;
     return this;
   }
 
@@ -285,7 +285,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   public RecordMetadata reset() {
     recordType = RecordType.NULL_VAL;
     requestId = RecordMetadataEncoder.requestIdNullValue();
-    requestStreamId = RecordMetadataEncoder.requestStreamIdNullValue();
+    requestPartitionId = RecordMetadataEncoder.requestPartitionIdNullValue();
     protocolVersion = Protocol.PROTOCOL_VERSION;
     valueType = ValueType.NULL_VAL;
     intentValue = Intent.NULL_VAL;
@@ -306,7 +306,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
         valueType,
         recordType,
         intentValue,
-        requestStreamId,
+        requestPartitionId,
         rejectionType,
         rejectionReason,
         authorization,
@@ -327,7 +327,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     final RecordMetadata that = (RecordMetadata) o;
     return requestId == that.requestId
         && intentValue == that.intentValue
-        && requestStreamId == that.requestStreamId
+        && requestPartitionId == that.requestPartitionId
         && protocolVersion == that.protocolVersion
         && valueType == that.valueType
         && recordType == that.recordType

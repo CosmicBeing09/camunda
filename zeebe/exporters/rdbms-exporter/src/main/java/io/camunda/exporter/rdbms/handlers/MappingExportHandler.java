@@ -13,14 +13,14 @@ import io.camunda.db.rdbms.write.service.MappingWriter;
 import io.camunda.exporter.rdbms.RdbmsExportHandler;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.Intent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.MappingRecordValue;
 import java.util.Set;
 
 public class MappingExportHandler implements RdbmsExportHandler<MappingRecordValue> {
 
   private static final Set<Intent> MAPPING_INTENT =
-      Set.of(MappingIntent.CREATED, MappingIntent.DELETED);
+      Set.of(MappingAction.CREATED, MappingAction.DELETED);
 
   private final MappingWriter mappingWriter;
 
@@ -35,9 +35,9 @@ public class MappingExportHandler implements RdbmsExportHandler<MappingRecordVal
 
   @Override
   public void export(final Record<MappingRecordValue> record) {
-    if (record.getIntent().equals(MappingIntent.CREATED)) {
+    if (record.getIntent().equals(MappingAction.CREATED)) {
       mappingWriter.create(map(record));
-    } else if (record.getIntent().equals(MappingIntent.DELETED)) {
+    } else if (record.getIntent().equals(MappingAction.DELETED)) {
       mappingWriter.delete(record.getValue().getMappingId());
     }
   }

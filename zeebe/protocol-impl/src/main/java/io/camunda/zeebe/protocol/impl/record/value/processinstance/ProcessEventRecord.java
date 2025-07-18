@@ -56,7 +56,7 @@ public final class ProcessEventRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getTargetElementIdBuffer() {
-    return targetElementIdProperty.getValue();
+    return targetElementIdProperty.getBuffer();
   }
 
   public ProcessEventRecord setTargetElementIdBuffer(final DirectBuffer targetElementIdBuffer) {
@@ -116,7 +116,7 @@ public final class ProcessEventRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return BufferUtil.bufferAsString(tenantIdProperty.getValue());
+    return BufferUtil.bufferAsString(tenantIdProperty.getBuffer());
   }
 
   public ProcessEventRecord setTenantId(final String tenantId) {

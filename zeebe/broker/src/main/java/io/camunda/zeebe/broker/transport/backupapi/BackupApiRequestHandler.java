@@ -114,7 +114,7 @@ public final class BackupApiRequestHandler
             .valueType(ValueType.CHECKPOINT)
             .intent(CheckpointIntent.CREATE)
             .requestId(requestId)
-            .requestStreamId(requestStreamId);
+            .requestPartitionId(requestStreamId);
     final var checkpointRecord = new CheckpointRecord().setCheckpointId(requestReader.backupId());
     final var written =
         logStreamWriter.tryWrite(

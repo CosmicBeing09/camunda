@@ -39,11 +39,11 @@ public class PersistedRole extends UnpackedObject implements DbValue {
   }
 
   public String getRoleId() {
-    return BufferUtil.bufferAsString(roleIdProp.getValue());
+    return BufferUtil.bufferAsString(roleIdProp.getBuffer());
   }
 
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   public PersistedRole setName(final String name) {
@@ -52,7 +52,7 @@ public class PersistedRole extends UnpackedObject implements DbValue {
   }
 
   public String getDescription() {
-    return BufferUtil.bufferAsString(descriptionProp.getValue());
+    return BufferUtil.bufferAsString(descriptionProp.getBuffer());
   }
 
   public PersistedRole setDescription(final String description) {

@@ -73,7 +73,7 @@ public class AvailabilityTest {
     // then
     final List<Integer> partitionIds =
         RecordingExporter.processInstanceCreationRecords()
-            .withIntent(ProcessInstanceCreationIntent.CREATED)
+            .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
             .map(Record::getPartitionId)
             .limit(2 * partitionCount)
             .collect(Collectors.toList());
@@ -103,7 +103,7 @@ public class AvailabilityTest {
     // then
     assertThat(
             RecordingExporter.processInstanceCreationRecords()
-                .withIntent(ProcessInstanceCreationIntent.CREATED)
+                .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
                 .filter(r -> r.getPartitionId() == failingPartition))
         .hasSizeGreaterThanOrEqualTo(1);
   }

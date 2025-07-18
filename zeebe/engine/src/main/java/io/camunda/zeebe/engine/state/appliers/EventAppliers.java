@@ -42,7 +42,7 @@ import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.intent.MessageCorrelationIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
@@ -161,7 +161,7 @@ public final class EventAppliers implements EventApplier {
   }
 
   private void registerDeploymentAppliers(final MutableProcessingState state) {
-    register(DeploymentDistributionIntent.DISTRIBUTING, new DeploymentDistributionApplier(state));
+    register(DeploymentDistributionIntent.DEPLOYMENT_DISTRIBUTION_IN_PROGRESS, new DeploymentDistributionApplier(state));
     register(
         DeploymentDistributionIntent.COMPLETED,
         new DeploymentDistributionCompletedApplier(state.getDeploymentState()));
@@ -262,7 +262,7 @@ public final class EventAppliers implements EventApplier {
     final var elementInstanceState = state.getElementInstanceState();
 
     register(
-        ProcessInstanceCreationIntent.CREATED,
+        ProcessInstanceCreationIntent.CREATED_EVENT,
         new ProcessInstanceCreationCreatedApplier(processState, elementInstanceState));
   }
 
@@ -573,7 +573,7 @@ public final class EventAppliers implements EventApplier {
     register(ScaleIntent.SCALING_UP, new ScalingUpApplier(state.getRoutingState()));
     register(ScaleIntent.SCALED_UP, new ScaledUpApplier(state.getRoutingState()));
     register(ScaleIntent.STATUS_RESPONSE, new ScaleUpStatusResponseApplier());
-    register(RedistributionIntent.STARTED, new RedistributionStartedApplier(state));
+    register(RedistributionIntent.REDISTRIBUTION_STARTED, new RedistributionStartedApplier(state));
     register(RedistributionIntent.COMPLETED, new RedistributionCompletedApplier(state));
   }
 
@@ -586,9 +586,9 @@ public final class EventAppliers implements EventApplier {
   }
 
   private void registerMappingAppliers(final MutableProcessingState state) {
-    register(MappingIntent.CREATED, new MappingCreatedApplier(state.getMappingState()));
-    register(MappingIntent.DELETED, new MappingDeletedApplier(state.getMappingState()));
-    register(MappingIntent.UPDATED, new MappingUpdatedApplier(state.getMappingState()));
+    register(MappingAction.CREATED, new MappingCreatedApplier(state.getMappingState()));
+    register(MappingAction.DELETED, new MappingDeletedApplier(state.getMappingState()));
+    register(MappingAction.UPDATED, new MappingUpdatedApplier(state.getMappingState()));
   }
 
   private void registerBatchOperationAppliers(final MutableProcessingState state) {

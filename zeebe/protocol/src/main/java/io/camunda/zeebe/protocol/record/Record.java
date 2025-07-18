@@ -101,7 +101,7 @@ public interface Record<T extends RecordValue> extends JsonSerializable {
    *
    * @return a Map of authorization data for this record or an empty Map if not set.
    */
-  Map<String, Object> getAuthorizations();
+  Map<String, Object> getAuthorizationData();
 
   /**
    * A record version is an integer starting from 1. The version of a record is defined when it is
@@ -137,7 +137,7 @@ public interface Record<T extends RecordValue> extends JsonSerializable {
    *
    * @return the reference for the operation that produced this record
    */
-  long getOperationReference();
+  long getOperationKey();
 
   /**
    * Creates a deep copy of the current record. Can be used to collect records.

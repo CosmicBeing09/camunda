@@ -83,12 +83,12 @@ public final class JobBatchRecord extends UnifiedRecordValue implements JobBatch
 
   @Override
   public String getType() {
-    return BufferUtil.bufferAsString(typeProp.getValue());
+    return BufferUtil.bufferAsString(typeProp.getBuffer());
   }
 
   @Override
   public String getWorker() {
-    return BufferUtil.bufferAsString(workerProp.getValue());
+    return BufferUtil.bufferAsString(workerProp.getBuffer());
   }
 
   @Override
@@ -185,11 +185,11 @@ public final class JobBatchRecord extends UnifiedRecordValue implements JobBatch
 
   @JsonIgnore
   public DirectBuffer getTypeBuffer() {
-    return typeProp.getValue();
+    return typeProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getWorkerBuffer() {
-    return workerProp.getValue();
+    return workerProp.getBuffer();
   }
 }

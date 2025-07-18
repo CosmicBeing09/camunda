@@ -51,12 +51,12 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getSignalNameBuffer() {
-    return signalNameProp.getValue();
+    return signalNameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getCatchEventIdBuffer() {
-    return catchEventIdProp.getValue();
+    return catchEventIdProp.getBuffer();
   }
 
   @Override
@@ -66,12 +66,12 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   @Override
   public String getCatchEventId() {
-    return bufferAsString(catchEventIdProp.getValue());
+    return bufferAsString(catchEventIdProp.getBuffer());
   }
 
   @Override
@@ -81,7 +81,7 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getSignalName() {
-    return bufferAsString(signalNameProp.getValue());
+    return bufferAsString(signalNameProp.getBuffer());
   }
 
   public SignalSubscriptionRecord setSignalName(final DirectBuffer signalName) {
@@ -111,7 +111,7 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @JsonIgnore
@@ -122,7 +122,7 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public SignalSubscriptionRecord setTenantId(final String tenantId) {

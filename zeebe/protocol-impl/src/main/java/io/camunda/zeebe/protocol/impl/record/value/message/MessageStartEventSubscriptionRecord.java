@@ -63,12 +63,12 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
 
   @JsonIgnore
   public DirectBuffer getMessageNameBuffer() {
-    return messageNameProp.getValue();
+    return messageNameProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getStartEventIdBuffer() {
-    return startEventIdProp.getValue();
+    return startEventIdProp.getBuffer();
   }
 
   @Override
@@ -83,17 +83,17 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   @Override
   public String getStartEventId() {
-    return bufferAsString(startEventIdProp.getValue());
+    return bufferAsString(startEventIdProp.getBuffer());
   }
 
   @Override
   public String getMessageName() {
-    return bufferAsString(messageNameProp.getValue());
+    return bufferAsString(messageNameProp.getBuffer());
   }
 
   public MessageStartEventSubscriptionRecord setMessageName(final DirectBuffer messageName) {
@@ -108,7 +108,7 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
 
   @Override
   public String getCorrelationKey() {
-    return bufferAsString(correlationKeyProp.getValue());
+    return bufferAsString(correlationKeyProp.getBuffer());
   }
 
   public MessageStartEventSubscriptionRecord setCorrelationKey(final DirectBuffer correlationKey) {
@@ -143,12 +143,12 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getCorrelationKeyBuffer() {
-    return correlationKeyProp.getValue();
+    return correlationKeyProp.getBuffer();
   }
 
   @Override
@@ -168,7 +168,7 @@ public final class MessageStartEventSubscriptionRecord extends UnifiedRecordValu
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public MessageStartEventSubscriptionRecord setTenantId(final String tenantId) {

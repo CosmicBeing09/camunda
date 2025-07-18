@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.protocol.record.intent.GroupIntent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
@@ -52,7 +52,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   private final GroupState groupState;
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -61,7 +61,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
 
   public MappingDeleteProcessor(
       final ProcessingState processingState,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final KeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
@@ -103,7 +103,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
     }
     final long key = keyGenerator.nextKey();
     deleteMapping(persistedMappingOptional.get(), key);
-    responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record, command);
+    responseWriter.writeEventOnCommand(key, MappingAction.DELETED, record, command);
 
     commandDistributionBehavior
         .withKey(key)
@@ -169,7 +169,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
               .setEntityType(EntityType.MAPPING));
     }
     stateWriter.appendFollowUpEvent(
-        key, MappingIntent.DELETED, new MappingRecord().setMappingId(mapping.getMappingId()));
+        key, MappingAction.DELETED, new MappingRecord().setMappingId(mapping.getMappingId()));
   }
 
   private void deleteAuthorizations(final String mappingId) {

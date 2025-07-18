@@ -31,8 +31,8 @@ final class CommandApiRequestHandler
     extends AsyncApiRequestHandler<CommandApiRequestReader, CommandApiResponseWriter> {
   private static final Logger LOG = Loggers.TRANSPORT_LOGGER;
 
-  private final Int2ObjectHashMap<LogStreamWriter> leadingStreams = new Int2ObjectHashMap<>();
-  private boolean isDiskSpaceAvailable = true;
+  private final Int2ObjectHashMap<LogStreamWriter> partitionLeaderLogWriters = new Int2ObjectHashMap<>();
+  private boolean diskSpaceAvailable = true;
   private final Map<Integer, Boolean> processingPaused = new HashMap<>();
 
   CommandApiRequestHandler() {
@@ -79,7 +79,7 @@ final class CommandApiRequestHandler
       final CommandApiResponseWriter responseWriter,
       final ErrorResponseWriter errorWriter) {
 
-    if (!isDiskSpaceAvailable) {
+    if (!diskSpaceAvailable) {
       return Either.left(errorWriter.outOfDiskSpace(partitionId));
     }
 
@@ -90,7 +90,7 @@ final class CommandApiRequestHandler
     }
 
     final var command = reader.getMessageDecoder();
-    final var logStreamWriter = leadingStreams.get(partitionId);
+    final var logStreamWriter = partitionLeaderLogWriters.get(partitionId);
 
     final var valueType = command.valueType();
     final var intent = Intent.fromProtocolValue(valueType, command.intent());
@@ -99,7 +99,7 @@ final class CommandApiRequestHandler
     final var metadata = reader.metadata();
 
     metadata.requestId(requestId);
-    metadata.requestStreamId(partitionId);
+    metadata.requestPartitionId(partitionId);
     metadata.recordType(RecordType.COMMAND);
     metadata.intent(intent);
     metadata.valueType(valueType);
@@ -157,22 +157,22 @@ final class CommandApiRequestHandler
   }
 
   void addPartition(final int partitionId, final LogStreamWriter logStreamWriter) {
-    actor.submit(() -> leadingStreams.put(partitionId, logStreamWriter));
+    actor.submit(() -> partitionLeaderLogWriters.put(partitionId, logStreamWriter));
   }
 
   void removePartition(final int partitionId) {
-    actor.submit(() -> leadingStreams.remove(partitionId));
+    actor.submit(() -> partitionLeaderLogWriters.remove(partitionId));
   }
 
   void onDiskSpaceNotAvailable() {
     actor.submit(
         () -> {
-          isDiskSpaceAvailable = false;
+          diskSpaceAvailable = false;
           LOG.debug("Broker is out of disk space. All client requests will be rejected");
         });
   }
 
   void onDiskSpaceAvailable() {
-    actor.submit(() -> isDiskSpaceAvailable = true);
+    actor.submit(() -> diskSpaceAvailable = true);
   }
 }

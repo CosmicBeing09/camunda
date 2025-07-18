@@ -22,12 +22,12 @@ public final class StringProperty extends BaseProperty<StringValue> {
     super(key, new StringValue(), new StringValue(defaultValue));
   }
 
-  public DirectBuffer getValue() {
+  public DirectBuffer getBuffer() {
     return resolveValue().getValue();
   }
 
-  public void setValue(final String value) {
-    this.value.wrap(getBytes(value));
+  public void setValue(final String stringValue) {
+    this.stringValue.wrap(getBytes(stringValue));
     isSet = true;
   }
 
@@ -36,7 +36,7 @@ public final class StringProperty extends BaseProperty<StringValue> {
   }
 
   public void setValue(final DirectBuffer buffer, final int offset, final int length) {
-    value.wrap(buffer, offset, length);
+    stringValue.wrap(buffer, offset, length);
     isSet = true;
   }
 }

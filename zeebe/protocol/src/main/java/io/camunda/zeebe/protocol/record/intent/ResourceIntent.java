@@ -18,7 +18,7 @@ package io.camunda.zeebe.protocol.record.intent;
 public enum ResourceIntent implements Intent {
   CREATED((short) 0),
   DELETED((short) 1),
-  FETCH((short) 2),
+  FETCH_REQUEST((short) 2),
   FETCHED((short) 3);
 
   private final short value;
@@ -27,7 +27,7 @@ public enum ResourceIntent implements Intent {
     this.value = value;
   }
 
-  public short getIntent() {
+  public short getValue() {
     return value;
   }
 
@@ -38,7 +38,7 @@ public enum ResourceIntent implements Intent {
       case 1:
         return DELETED;
       case 2:
-        return FETCH;
+        return FETCH_REQUEST;
       case 3:
         return FETCHED;
       default:
@@ -47,7 +47,7 @@ public enum ResourceIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 

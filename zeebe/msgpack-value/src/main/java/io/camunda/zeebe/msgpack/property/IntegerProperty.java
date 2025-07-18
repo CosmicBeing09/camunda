@@ -23,7 +23,7 @@ public final class IntegerProperty extends BaseProperty<IntegerValue> {
   }
 
   public void setValue(final int value) {
-    this.value.setValue(value);
+    stringValue.setValue(value);
     isSet = true;
   }
 

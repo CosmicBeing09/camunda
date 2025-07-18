@@ -36,7 +36,7 @@ public abstract class AbstractOperationHandler<R extends RecordValue>
 
   @Override
   public List<String> generateIds(final Record<R> record) {
-    final long operationReference = record.getOperationReference();
+    final long operationReference = record.getOperationKey();
     if (operationReference > 0) {
       return List.of(String.valueOf(operationReference));
     }

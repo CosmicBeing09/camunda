@@ -59,7 +59,7 @@ public class JobActivationPropertiesImpl extends UnpackedObject implements JobAc
 
   @Override
   public DirectBuffer worker() {
-    return workerProp.getValue();
+    return workerProp.getBuffer();
   }
 
   @Override

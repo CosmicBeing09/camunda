@@ -67,12 +67,12 @@ public class ProcessInstanceMigrationMappingInstruction extends ObjectValue
 
   @JsonIgnore
   public DirectBuffer getSourceElementIdBuffer() {
-    return sourceElementIdProperty.getValue();
+    return sourceElementIdProperty.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getTargetElementIdBuffer() {
-    return targetElementIdProperty.getValue();
+    return targetElementIdProperty.getBuffer();
   }
 
   public void copy(final ProcessInstanceMigrationMappingInstruction other) {

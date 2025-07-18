@@ -47,7 +47,7 @@ public class ProcessMetadata extends UnpackedObject {
   }
 
   public DirectBuffer getBpmnProcessId() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   public ProcessMetadata setBpmnProcessId(final DirectBuffer directBuffer) {
@@ -61,7 +61,7 @@ public class ProcessMetadata extends UnpackedObject {
   }
 
   public DirectBuffer getResourceName() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public ProcessMetadata setResourceName(final DirectBuffer resourceName) {

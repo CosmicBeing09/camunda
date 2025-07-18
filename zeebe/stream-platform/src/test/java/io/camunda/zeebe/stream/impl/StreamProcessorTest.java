@@ -75,8 +75,8 @@ import org.mockito.verification.VerificationWithTimeout;
 @ExtendWith(StreamPlatformExtension.class)
 public final class StreamProcessorTest {
 
-  private static final long TIMEOUT_MILLIS = 2_000L;
-  private static final VerificationWithTimeout TIMEOUT = timeout(TIMEOUT_MILLIS);
+  private static final long DEFAULT_TIMEOUT_MILLIS = 2_000L;
+  private static final VerificationWithTimeout DEFAULT_VERIFICATION_TIMEOUT = timeout(DEFAULT_TIMEOUT_MILLIS);
 
   @SuppressWarnings("unused") // injected by the extension
   private StreamPlatform streamPlatform;
@@ -97,10 +97,10 @@ public final class StreamProcessorTest {
     final var mockProcessorLifecycleAware = streamPlatform.getMockProcessorLifecycleAware();
 
     final InOrder inOrder = inOrder(mockProcessorLifecycleAware);
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onRecovered(ArgumentMatchers.any());
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onPaused();
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onResumed();
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onClose();
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onRecovered(ArgumentMatchers.any());
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onPaused();
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onResumed();
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onClose();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -119,10 +119,10 @@ public final class StreamProcessorTest {
     final var mockProcessorLifecycleAware = streamPlatform.getMockProcessorLifecycleAware();
 
     final InOrder inOrder = inOrder(mockProcessorLifecycleAware);
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onRecovered(ArgumentMatchers.any());
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onPaused();
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onResumed();
-    inOrder.verify(mockProcessorLifecycleAware, TIMEOUT).onClose();
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onRecovered(ArgumentMatchers.any());
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onPaused();
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onResumed();
+    inOrder.verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onClose();
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -162,7 +162,7 @@ public final class StreamProcessorTest {
     streamPlatform.startStreamProcessor();
 
     // then
-    verify(mockProcessorLifecycleAware, TIMEOUT).onFailed();
+    verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onFailed();
   }
 
   @Test
@@ -185,11 +185,11 @@ public final class StreamProcessorTest {
 
     // then
     final var inOrder = inOrder(defaultRecordProcessor);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).init(any());
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).replay(any());
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).process(any(), any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).init(any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).replay(any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).process(any(), any());
     inOrder.verifyNoMoreInteractions();
   }
 
@@ -210,11 +210,11 @@ public final class StreamProcessorTest {
 
     // then
     final var inOrder = inOrder(defaultRecordProcessor);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).init(any());
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).process(any(), any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).init(any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).process(any(), any());
     inOrder
-        .verify(defaultRecordProcessor, TIMEOUT)
+        .verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT)
         .onProcessingError(eq(processingError), any(), any());
     inOrder.verifyNoMoreInteractions();
   }
@@ -308,11 +308,11 @@ public final class StreamProcessorTest {
 
     // then
     final var inOrder = inOrder(defaultRecordProcessor);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).init(any());
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).process(any(), any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).init(any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).process(any(), any());
     inOrder
-        .verify(defaultRecordProcessor, TIMEOUT.atLeast(5))
+        .verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.atLeast(5))
         .onProcessingError(eq(processingError), any(), any());
   }
 
@@ -332,7 +332,7 @@ public final class StreamProcessorTest {
             .causedBy(0));
 
     // then
-    verify(defaultRecordProcessor, TIMEOUT.atLeast(2)).process(any(), any());
+    verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.atLeast(2)).process(any(), any());
   }
 
   @Test
@@ -350,7 +350,7 @@ public final class StreamProcessorTest {
             .causedBy(0));
 
     // then
-    verify(defaultRecordProcessor, TIMEOUT).accepts(any());
+    verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).accepts(any());
     verify(defaultRecordProcessor, never()).process(any(), any());
   }
 
@@ -369,7 +369,7 @@ public final class StreamProcessorTest {
         RecordToWrite.rejection().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultRecordProcessor, TIMEOUT.times(1)).process(any(), any());
+    verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).process(any(), any());
   }
 
   @Test
@@ -422,7 +422,7 @@ public final class StreamProcessorTest {
             .processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
     await("Last written position should be updated")
         .untilAsserted(
             () -> assertThat(streamPlatform.getLogStream().getLastWrittenPosition()).isEqualTo(4));
@@ -493,7 +493,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var logStreamReader = streamPlatform.getLogStream().newLogStreamReader();
     logStreamReader.seekToFirstEvent();
@@ -577,7 +577,7 @@ public final class StreamProcessorTest {
           RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
       // then
-      verify(defaultRecordProcessor, TIMEOUT.times(1)).process(any(), any());
+      verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).process(any(), any());
 
     } finally {
       // free schedule service
@@ -640,7 +640,7 @@ public final class StreamProcessorTest {
                 actorClock.addTime(Duration.ofMillis(100));
                 return asyncServiceLatch.await(100, TimeUnit.MILLISECONDS);
               });
-      verify(defaultRecordProcessor, TIMEOUT).process(any(), any());
+      verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).process(any(), any());
 
     } finally {
       // free schedule service
@@ -664,7 +664,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(mockPostCommitTask, TIMEOUT).flush();
+    verify(mockPostCommitTask, DEFAULT_VERIFICATION_TIMEOUT).flush();
   }
 
   @Test
@@ -685,7 +685,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(mockPostCommitTask, TIMEOUT.atLeast(5)).flush();
+    verify(mockPostCommitTask, DEFAULT_VERIFICATION_TIMEOUT.atLeast(5)).flush();
   }
 
   @Test
@@ -709,8 +709,8 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(mockPostCommitTask, TIMEOUT.times(1)).flush();
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(mockPostCommitTask, DEFAULT_VERIFICATION_TIMEOUT.times(1)).flush();
   }
 
   @Test
@@ -746,7 +746,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(testProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var nextKey = keyGenerator.nextKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 4);
@@ -784,7 +784,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(testProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var nextKey = keyGenerator.nextKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 1);
@@ -822,7 +822,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(testProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var nextKey = keyGenerator.nextKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 4);
@@ -866,7 +866,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(testProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var nextKey = keyGenerator.nextKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 1);
@@ -900,16 +900,16 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, TIMEOUT.times(1)).key(3);
-    verify(commandResponseWriter, TIMEOUT.times(1))
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(3);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1))
         .intent(ProcessInstanceIntent.ELEMENT_ACTIVATING);
-    verify(commandResponseWriter, TIMEOUT.times(1)).recordType(RecordType.EVENT);
-    verify(commandResponseWriter, TIMEOUT.times(1)).valueType(ValueType.PROCESS_INSTANCE);
-    verify(commandResponseWriter, TIMEOUT.times(1)).tryWriteResponse(anyInt(), anyLong());
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).recordType(RecordType.EVENT);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).valueType(ValueType.PROCESS_INSTANCE);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).tryWriteResponse(anyInt(), anyLong());
   }
 
   @Test
@@ -960,12 +960,12 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, TIMEOUT.times(1)).key(3);
-    verify(commandResponseWriter, TIMEOUT.times(1)).key(4);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(3);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(4);
   }
 
   @Test
@@ -1027,11 +1027,11 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(3)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(3)).process(any(), any());
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, TIMEOUT.times(1)).tryWriteResponse(eq(12), eq(1L));
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).tryWriteResponse(eq(12), eq(1L));
   }
 
   @Test
@@ -1061,17 +1061,17 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(1)).process(any(), any());
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(1)).onProcessingError(any(), any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).onProcessingError(any(), any(), any());
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, TIMEOUT.times(1)).key(3);
-    verify(commandResponseWriter, TIMEOUT.times(1))
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(3);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1))
         .intent(ProcessInstanceIntent.ELEMENT_ACTIVATING);
-    verify(commandResponseWriter, TIMEOUT.times(1)).recordType(RecordType.EVENT);
-    verify(commandResponseWriter, TIMEOUT.times(1)).valueType(ValueType.PROCESS_INSTANCE);
-    verify(commandResponseWriter, TIMEOUT.times(1)).tryWriteResponse(anyInt(), anyLong());
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).recordType(RecordType.EVENT);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).valueType(ValueType.PROCESS_INSTANCE);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).tryWriteResponse(anyInt(), anyLong());
   }
 
   @Test
@@ -1124,12 +1124,12 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(1)).onProcessingError(any(), any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).onProcessingError(any(), any(), any());
 
     final var commandResponseWriter = streamPlatform.getMockCommandResponseWriter();
 
-    verify(commandResponseWriter, TIMEOUT.times(1)).key(4);
+    verify(commandResponseWriter, DEFAULT_VERIFICATION_TIMEOUT.times(1)).setKey(4);
   }
 
   @Test
@@ -1148,8 +1148,8 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(1)).onProcessingError(any(), any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).onProcessingError(any(), any(), any());
   }
 
   @Test
@@ -1177,8 +1177,8 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(1)).process(any(), any());
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(1)).onProcessingError(any(), any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(1)).onProcessingError(any(), any(), any());
 
     final var logStreamReader = streamPlatform.getLogStream().newLogStreamReader();
     logStreamReader.seekToFirstEvent();
@@ -1212,8 +1212,8 @@ public final class StreamProcessorTest {
 
     // then
 
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(mockStreamProcessorListener, TIMEOUT.times(2)).onProcessed(any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(mockStreamProcessorListener, DEFAULT_VERIFICATION_TIMEOUT.times(2)).onProcessed(any());
   }
 
   @Test
@@ -1231,8 +1231,8 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(mockStreamProcessorListener, TIMEOUT.times(2)).onSkipped(any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(mockStreamProcessorListener, DEFAULT_VERIFICATION_TIMEOUT.times(2)).onSkipped(any());
   }
 
   @Test
@@ -1251,8 +1251,8 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(mockStreamProcessorListener, TIMEOUT.times(0)).onSkipped(any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(mockStreamProcessorListener, DEFAULT_VERIFICATION_TIMEOUT.times(0)).onSkipped(any());
   }
 
   @Test
@@ -1278,9 +1278,9 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
     final var loggedEventArgumentCaptor = ArgumentCaptor.forClass(LoggedEvent.class);
-    verify(mockStreamProcessorListener, TIMEOUT.times(2))
+    verify(mockStreamProcessorListener, DEFAULT_VERIFICATION_TIMEOUT.times(2))
         .onSkipped(loggedEventArgumentCaptor.capture());
 
     Assertions.assertThat(loggedEventArgumentCaptor.getAllValues())
@@ -1318,8 +1318,8 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
-    verify(mockStreamProcessorListener, TIMEOUT.times(0)).onSkipped(any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
+    verify(mockStreamProcessorListener, DEFAULT_VERIFICATION_TIMEOUT.times(0)).onSkipped(any());
   }
 
   @Test
@@ -1329,8 +1329,8 @@ public final class StreamProcessorTest {
     streamPlatform.pauseProcessing();
 
     final var mockProcessorLifecycleAware = streamPlatform.getMockProcessorLifecycleAware();
-    verify(mockProcessorLifecycleAware, TIMEOUT).onRecovered(ArgumentMatchers.any());
-    verify(mockProcessorLifecycleAware, TIMEOUT).onPaused();
+    verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onRecovered(ArgumentMatchers.any());
+    verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onPaused();
 
     // when
     streamPlatform.writeBatch(
@@ -1349,8 +1349,8 @@ public final class StreamProcessorTest {
     streamPlatform.pauseProcessing();
 
     final var mockProcessorLifecycleAware = streamPlatform.getMockProcessorLifecycleAware();
-    verify(mockProcessorLifecycleAware, TIMEOUT).onRecovered(ArgumentMatchers.any());
-    verify(mockProcessorLifecycleAware, TIMEOUT).onPaused();
+    verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onRecovered(ArgumentMatchers.any());
+    verify(mockProcessorLifecycleAware, DEFAULT_VERIFICATION_TIMEOUT).onPaused();
     streamPlatform.writeBatch(
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)),
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
@@ -1362,7 +1362,7 @@ public final class StreamProcessorTest {
     streamPlatform.resumeProcessing();
 
     // then
-    verify(defaultMockedRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultMockedRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
   }
 
   @Test
@@ -1378,7 +1378,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(defaultRecordProcessor, TIMEOUT.times(2)).process(any(), any());
+    verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT.times(2)).process(any(), any());
     await("Last written position should be updated")
         .untilAsserted(
             () ->
@@ -1417,11 +1417,11 @@ public final class StreamProcessorTest {
 
     // then
     final var inOrder = inOrder(defaultRecordProcessor);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).init(any());
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
-    inOrder.verify(defaultRecordProcessor, TIMEOUT).process(any(), any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).init(any());
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).accepts(ValueType.PROCESS_INSTANCE);
+    inOrder.verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT).process(any(), any());
     inOrder
-        .verify(defaultRecordProcessor, TIMEOUT)
+        .verify(defaultRecordProcessor, DEFAULT_VERIFICATION_TIMEOUT)
         .onProcessingError(eq(processingError), any(), any());
     inOrder.verifyNoMoreInteractions();
   }
@@ -1483,7 +1483,7 @@ public final class StreamProcessorTest {
     writing.countDown(); // only now allow the scheduled task to write something
 
     // then -- closing the stream processor is not blocked by the scheduled task retrying the write
-    streamPlatform.getStreamProcessor().closeAsync().join(TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
+    streamPlatform.getStreamProcessor().closeAsync().join(DEFAULT_TIMEOUT_MILLIS, TimeUnit.MILLISECONDS);
   }
 
   @Test
@@ -1497,7 +1497,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then -- command is skipped and processor is not used
-    verify(streamPlatform.getMockStreamProcessorListener(), timeout(TIMEOUT_MILLIS))
+    verify(streamPlatform.getMockStreamProcessorListener(), timeout(DEFAULT_TIMEOUT_MILLIS))
         .onSkipped(any());
     verify(streamPlatform.getDefaultMockedRecordProcessor(), never()).accepts(any());
     verify(streamPlatform.getDefaultMockedRecordProcessor(), never()).process(any(), any());
@@ -1536,7 +1536,7 @@ public final class StreamProcessorTest {
         RecordToWrite.command().processInstance(ACTIVATE_ELEMENT, Records.processInstance(1)));
 
     // then
-    verify(failureListener, TIMEOUT)
+    verify(failureListener, DEFAULT_VERIFICATION_TIMEOUT)
         .onUnrecoverableFailure(
             Mockito.argThat(
                 healthReport ->

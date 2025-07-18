@@ -148,7 +148,7 @@ public final class CopiedRecord<T extends UnifiedRecordValue> implements Record<
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return authorization.toDecodedMap();
   }
 
@@ -168,7 +168,7 @@ public final class CopiedRecord<T extends UnifiedRecordValue> implements Record<
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return operationReference;
   }
 

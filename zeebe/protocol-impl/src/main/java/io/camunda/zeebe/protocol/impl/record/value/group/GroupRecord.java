@@ -49,7 +49,7 @@ public class GroupRecord extends UnifiedRecordValue implements GroupRecordValue 
 
   @Override
   public String getGroupId() {
-    return BufferUtil.bufferAsString(groupId.getValue());
+    return BufferUtil.bufferAsString(groupId.getBuffer());
   }
 
   public GroupRecord setGroupId(final String groupId) {
@@ -59,7 +59,7 @@ public class GroupRecord extends UnifiedRecordValue implements GroupRecordValue 
 
   @Override
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   public GroupRecord setName(final String name) {
@@ -69,7 +69,7 @@ public class GroupRecord extends UnifiedRecordValue implements GroupRecordValue 
 
   @Override
   public String getDescription() {
-    return BufferUtil.bufferAsString(descriptionProp.getValue());
+    return BufferUtil.bufferAsString(descriptionProp.getBuffer());
   }
 
   public GroupRecord setDescription(final String description) {
@@ -84,7 +84,7 @@ public class GroupRecord extends UnifiedRecordValue implements GroupRecordValue 
 
   @Override
   public String getEntityId() {
-    return BufferUtil.bufferAsString(entityIdProp.getValue());
+    return BufferUtil.bufferAsString(entityIdProp.getBuffer());
   }
 
   public GroupRecord setEntityId(final String entityId) {
@@ -104,6 +104,6 @@ public class GroupRecord extends UnifiedRecordValue implements GroupRecordValue 
 
   @JsonIgnore
   public DirectBuffer getNameBuffer() {
-    return nameProp.getValue();
+    return nameProp.getBuffer();
   }
 }

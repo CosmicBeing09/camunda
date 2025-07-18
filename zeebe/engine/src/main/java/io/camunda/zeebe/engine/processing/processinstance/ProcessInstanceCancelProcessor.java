@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.engine.processing.processinstance;
 
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -42,12 +42,12 @@ public final class ProcessInstanceCancelProcessor
   private final TypedResponseWriter responseWriter;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
 
   public ProcessInstanceCancelProcessor(
       final ProcessingState processingState,
       final Writers writers,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     elementInstanceState = processingState.getElementInstanceState();
     responseWriter = writers.response();
     commandWriter = writers.command();
@@ -100,7 +100,7 @@ public final class ProcessInstanceCancelProcessor
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
-              ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+              ? AuthorizationValidationBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                   "cancel a process instance",
                   elementInstance.getValue().getProcessInstanceKey(),
                   "such process")

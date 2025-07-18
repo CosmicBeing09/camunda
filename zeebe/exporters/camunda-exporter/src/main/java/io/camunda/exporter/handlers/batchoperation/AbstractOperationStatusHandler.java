@@ -45,13 +45,13 @@ public abstract class AbstractOperationStatusHandler<R extends RecordValue>
 
   @Override
   public boolean handlesRecord(final Record<R> record) {
-    return record.getOperationReference() != operationReferenceNullValue()
+    return record.getOperationKey() != operationReferenceNullValue()
         && (isCompleted(record) || isFailed(record));
   }
 
   @Override
   public List<String> generateIds(final Record<R> record) {
-    return List.of(generateId(record.getOperationReference(), getItemKey(record)));
+    return List.of(generateId(record.getOperationKey(), getItemKey(record)));
   }
 
   @Override

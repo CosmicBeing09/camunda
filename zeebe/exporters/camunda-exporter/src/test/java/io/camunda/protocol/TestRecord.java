@@ -67,7 +67,7 @@ public record TestRecord(long position, ValueType valueType) implements Record<T
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return Map.of();
   }
 
@@ -87,7 +87,7 @@ public record TestRecord(long position, ValueType valueType) implements Record<T
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return 0;
   }
 

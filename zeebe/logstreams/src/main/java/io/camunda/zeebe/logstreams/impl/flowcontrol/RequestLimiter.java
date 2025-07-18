@@ -27,7 +27,7 @@ public final class RequestLimiter extends AbstractLimiter<Intent> {
           ProcessInstanceIntent.CANCEL,
           DeploymentIntent.CREATE,
           DeploymentIntent.DISTRIBUTE,
-          DeploymentDistributionIntent.COMPLETE,
+          DeploymentDistributionIntent.DEPLOYMENT_DISTRIBUTION_COMPLETE,
           CommandDistributionIntent.ACKNOWLEDGE);
   private final LogStreamMetrics metrics;
 

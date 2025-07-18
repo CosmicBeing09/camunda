@@ -76,11 +76,11 @@ public final class PersistedDecision extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getDecisionId() {
-    return decisionIdProp.getValue();
+    return decisionIdProp.getBuffer();
   }
 
   public DirectBuffer getDecisionName() {
-    return decisionNameProp.getValue();
+    return decisionNameProp.getBuffer();
   }
 
   public int getVersion() {
@@ -92,7 +92,7 @@ public final class PersistedDecision extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getDecisionRequirementsId() {
-    return decisionRequirementsIdProp.getValue();
+    return decisionRequirementsIdProp.getBuffer();
   }
 
   public long getDecisionRequirementsKey() {
@@ -100,7 +100,7 @@ public final class PersistedDecision extends UnpackedObject implements DbValue {
   }
 
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public void setTenantId(final String tenantId) {
@@ -120,6 +120,6 @@ public final class PersistedDecision extends UnpackedObject implements DbValue {
   }
 
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 }

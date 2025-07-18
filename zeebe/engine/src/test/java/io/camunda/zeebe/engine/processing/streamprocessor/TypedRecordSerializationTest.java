@@ -26,9 +26,9 @@ import io.camunda.zeebe.util.collection.Tuple;
 import org.agrona.DirectBuffer;
 import org.junit.Test;
 
-public final class TypedEventSerializationTest {
+public final class TypedRecordSerializationTest {
 
-  private static Tuple<TypedRecord, CopiedRecord> createRecordTuple() {
+  private static Tuple<TypedRecord, CopiedRecord> createTypedRecordTuple() {
     final RecordMetadata recordMetadata = new RecordMetadata();
 
     final DeploymentIntent intent = DeploymentIntent.CREATE;
@@ -49,7 +49,7 @@ public final class TypedEventSerializationTest {
         .rejectionReason(rejectionReason)
         .rejectionType(rejectionType)
         .requestId(requestId)
-        .requestStreamId(requestStreamId);
+        .requestPartitionId(requestStreamId);
 
     final String resourceName = "resource";
     final DirectBuffer resource = wrapString("contents");
@@ -90,7 +90,7 @@ public final class TypedEventSerializationTest {
   @Test
   public void shouldCreateSameJson() {
     // given
-    final Tuple<TypedRecord, CopiedRecord> records = createRecordTuple();
+    final Tuple<TypedRecord, CopiedRecord> records = createTypedRecordTuple();
     final String expectedJson = records.getRight().toJson();
 
     // when

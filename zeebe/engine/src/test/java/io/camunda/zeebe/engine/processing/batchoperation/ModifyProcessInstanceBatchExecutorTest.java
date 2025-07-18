@@ -82,7 +82,7 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
     assertThat(modificationCommands).hasSize(1);
     assertThat(modificationCommands.getFirst().getIntent())
         .isEqualTo(ProcessInstanceModificationIntent.MODIFY);
-    assertThat(modificationCommands.getFirst().getAuthorizations()).isEqualTo(claims);
+    assertThat(modificationCommands.getFirst().getAuthorizationData()).isEqualTo(claims);
   }
 
   @Test

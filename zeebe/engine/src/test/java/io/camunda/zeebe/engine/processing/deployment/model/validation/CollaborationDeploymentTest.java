@@ -78,7 +78,7 @@ public final class CollaborationDeploymentTest {
     verify(engine.getCommandResponseWriter(), VERIFICATION_TIMEOUT).valueType(ValueType.DEPLOYMENT);
     verify(engine.getCommandResponseWriter(), VERIFICATION_TIMEOUT)
         .intent(DeploymentIntent.CREATED);
-    verify(engine.getCommandResponseWriter(), VERIFICATION_TIMEOUT).key(deployment.getKey());
+    verify(engine.getCommandResponseWriter(), VERIFICATION_TIMEOUT).setKey(deployment.getKey());
     verify(engine.getCommandResponseWriter(), VERIFICATION_TIMEOUT)
         .tryWriteResponse(anyInt(), anyLong());
   }

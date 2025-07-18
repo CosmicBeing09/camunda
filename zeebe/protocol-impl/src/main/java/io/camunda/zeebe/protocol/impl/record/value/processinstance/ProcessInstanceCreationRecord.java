@@ -58,7 +58,7 @@ public final class ProcessInstanceCreationRecord extends UnifiedRecordValue
 
   @Override
   public String getBpmnProcessId() {
-    return BufferUtil.bufferAsString(bpmnProcessIdProperty.getValue());
+    return BufferUtil.bufferAsString(bpmnProcessIdProperty.getBuffer());
   }
 
   @Override
@@ -157,7 +157,7 @@ public final class ProcessInstanceCreationRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProperty.getValue();
+    return bpmnProcessIdProperty.getBuffer();
   }
 
   @JsonIgnore
@@ -167,7 +167,7 @@ public final class ProcessInstanceCreationRecord extends UnifiedRecordValue
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProperty.getValue());
+    return bufferAsString(tenantIdProperty.getBuffer());
   }
 
   public ProcessInstanceCreationRecord setTenantId(final String tenantId) {

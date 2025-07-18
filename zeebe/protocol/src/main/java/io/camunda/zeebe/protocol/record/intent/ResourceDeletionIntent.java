@@ -31,7 +31,7 @@ public enum ResourceDeletionIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 

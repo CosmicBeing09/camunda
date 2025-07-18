@@ -42,7 +42,7 @@ public final class DeploymentDistributionCommandSender {
     sender.sendCommand(
         DEPLOYMENT_PARTITION,
         ValueType.DEPLOYMENT_DISTRIBUTION,
-        DeploymentDistributionIntent.COMPLETE,
+        DeploymentDistributionIntent.DEPLOYMENT_DISTRIBUTION_COMPLETE,
         deploymentKey,
         distributionRecord);
   }

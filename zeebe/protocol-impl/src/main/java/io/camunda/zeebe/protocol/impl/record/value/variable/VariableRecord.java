@@ -44,7 +44,7 @@ public final class VariableRecord extends UnifiedRecordValue implements Variable
 
   @Override
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   @Override
@@ -79,7 +79,7 @@ public final class VariableRecord extends UnifiedRecordValue implements Variable
 
   @Override
   public String getBpmnProcessId() {
-    return BufferUtil.bufferAsString(bpmnProcessIdProp.getValue());
+    return BufferUtil.bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   public VariableRecord setBpmnProcessId(final DirectBuffer bpmnProcessId) {
@@ -109,7 +109,7 @@ public final class VariableRecord extends UnifiedRecordValue implements Variable
 
   @JsonIgnore
   public DirectBuffer getNameBuffer() {
-    return nameProp.getValue();
+    return nameProp.getBuffer();
   }
 
   @JsonIgnore
@@ -119,12 +119,12 @@ public final class VariableRecord extends UnifiedRecordValue implements Variable
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public VariableRecord setTenantId(final String tenantId) {

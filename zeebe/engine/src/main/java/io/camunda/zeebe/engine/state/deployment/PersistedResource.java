@@ -61,7 +61,7 @@ public class PersistedResource extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getResourceId() {
-    return resourceIdProp.getValue();
+    return resourceIdProp.getBuffer();
   }
 
   public int getVersion() {
@@ -69,7 +69,7 @@ public class PersistedResource extends UnpackedObject implements DbValue {
   }
 
   public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   public long getResourceKey() {
@@ -81,11 +81,11 @@ public class PersistedResource extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getResourceName() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public long getDeploymentKey() {
@@ -93,7 +93,7 @@ public class PersistedResource extends UnpackedObject implements DbValue {
   }
 
   public String getResource() {
-    return bufferAsString(resourceProp.getValue());
+    return bufferAsString(resourceProp.getBuffer());
   }
 
   public void wrap(final ResourceRecord record) {

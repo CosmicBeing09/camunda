@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
 import io.camunda.zeebe.test.util.record.RecordingExporterTestWatcher;
 import java.time.Duration;
@@ -61,10 +61,10 @@ public class UpdateMappingMultiPartitionTest {
               RecordingExporter.mappingRecords()
                   .withPartitionId(partitionId)
                   .skip(2)
-                  .limit(record -> record.getIntent().equals(MappingIntent.UPDATED))
+                  .limit(record -> record.getIntent().equals(MappingAction.UPDATED))
                   .toList())
           .extracting(Record::getIntent)
-          .containsExactly(MappingIntent.UPDATE, MappingIntent.UPDATED);
+          .containsExactly(MappingAction.UPDATE, MappingAction.UPDATED);
     }
   }
 
@@ -135,8 +135,8 @@ public class UpdateMappingMultiPartitionTest {
                 .limit(2))
         .extracting(r -> r.getValue().getValueType(), r -> r.getValue().getIntent())
         .containsExactly(
-            tuple(ValueType.MAPPING, MappingIntent.CREATE),
-            tuple(ValueType.MAPPING, MappingIntent.UPDATE));
+            tuple(ValueType.MAPPING, MappingAction.CREATE),
+            tuple(ValueType.MAPPING, MappingAction.UPDATE));
   }
 
   private void interceptCreateForPartition(final int partitionId) {
@@ -147,7 +147,7 @@ public class UpdateMappingMultiPartitionTest {
             return true;
           }
           hasInterceptedPartition.set(true);
-          return !(receiverPartitionId == partitionId && intent == MappingIntent.CREATE);
+          return !(receiverPartitionId == partitionId && intent == MappingAction.CREATE);
         });
   }
 }

@@ -43,7 +43,7 @@ public final class TimerRecord extends UnifiedRecordValue implements TimerRecord
 
   @JsonIgnore
   public DirectBuffer getTargetElementIdBuffer() {
-    return targetElementId.getValue();
+    return targetElementId.getBuffer();
   }
 
   @Override
@@ -73,7 +73,7 @@ public final class TimerRecord extends UnifiedRecordValue implements TimerRecord
 
   @Override
   public String getTargetElementId() {
-    return BufferUtil.bufferAsString(targetElementId.getValue());
+    return BufferUtil.bufferAsString(targetElementId.getBuffer());
   }
 
   @Override
@@ -108,7 +108,7 @@ public final class TimerRecord extends UnifiedRecordValue implements TimerRecord
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public TimerRecord setTenantId(final String tenantId) {

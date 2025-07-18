@@ -122,7 +122,7 @@ public enum JobIntent implements ProcessInstanceRelatedIntent {
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 

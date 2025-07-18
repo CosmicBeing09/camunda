@@ -39,7 +39,7 @@ public final class MatchedRuleRecord extends UnifiedRecordValue implements Match
 
   @Override
   public String getRuleId() {
-    return bufferAsString(ruleIdProp.getValue());
+    return bufferAsString(ruleIdProp.getBuffer());
   }
 
   public MatchedRuleRecord setRuleId(final String ruleId) {
@@ -73,7 +73,7 @@ public final class MatchedRuleRecord extends UnifiedRecordValue implements Match
 
   @JsonIgnore
   public DirectBuffer getRuleIdBuffer() {
-    return ruleIdProp.getValue();
+    return ruleIdProp.getBuffer();
   }
 
   @JsonIgnore

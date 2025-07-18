@@ -57,7 +57,7 @@ public class OperationReferenceTest {
                 .withRecordKey(processInstanceKey)
                 .limit(1)
                 .getFirst()
-                .getOperationReference())
+                .getOperationKey())
         .describedAs("Should contain client operationReference")
         .isEqualTo(OPERATION_REFERENCE);
   }
@@ -95,7 +95,7 @@ public class OperationReferenceTest {
     assertThat(followUpRecords)
         .hasSizeGreaterThan(0)
         .describedAs("Should contain client operationReference")
-        .allMatch(r -> r.getOperationReference() == OPERATION_REFERENCE);
+        .allMatch(r -> r.getOperationKey() == OPERATION_REFERENCE);
   }
 
   @Test
@@ -115,7 +115,7 @@ public class OperationReferenceTest {
                 .withRecordKey(processInstanceKey)
                 .limit(1)
                 .getFirst()
-                .getOperationReference())
+                .getOperationKey())
         .describedAs("Should contain -1 operationReference")
         .isEqualTo(-1);
   }
@@ -137,7 +137,7 @@ public class OperationReferenceTest {
                 .withRecordKey(processInstanceKey)
                 .limit(1)
                 .getFirst()
-                .getOperationReference())
+                .getOperationKey())
         .describedAs("Should contain client operationReference")
         .isEqualTo(-1);
   }

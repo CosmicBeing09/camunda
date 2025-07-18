@@ -34,7 +34,7 @@ final class ResultBuilderBackedRejectionWriter extends AbstractResultBuilderBack
             .intent(command.getIntent())
             .rejectionType(rejectionType)
             .rejectionReason(reason)
-            .operationReference(command.getOperationReference());
+            .operationReference(command.getOperationKey());
     resultBuilder().appendRecord(command.getKey(), command.getValue(), metadata);
   }
 }

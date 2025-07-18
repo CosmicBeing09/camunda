@@ -42,7 +42,7 @@ public class MappingRecord extends UnifiedRecordValue implements MappingRecordVa
 
   @Override
   public String getClaimName() {
-    return BufferUtil.bufferAsString(claimNameProp.getValue());
+    return BufferUtil.bufferAsString(claimNameProp.getBuffer());
   }
 
   public MappingRecord setClaimName(final String claimName) {
@@ -52,7 +52,7 @@ public class MappingRecord extends UnifiedRecordValue implements MappingRecordVa
 
   @Override
   public String getClaimValue() {
-    return BufferUtil.bufferAsString(claimValueProp.getValue());
+    return BufferUtil.bufferAsString(claimValueProp.getBuffer());
   }
 
   public MappingRecord setClaimValue(final String claimValue) {
@@ -62,7 +62,7 @@ public class MappingRecord extends UnifiedRecordValue implements MappingRecordVa
 
   @Override
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   public MappingRecord setName(final String name) {
@@ -72,7 +72,7 @@ public class MappingRecord extends UnifiedRecordValue implements MappingRecordVa
 
   @Override
   public String getMappingId() {
-    return BufferUtil.bufferAsString(mappingIdProp.getValue());
+    return BufferUtil.bufferAsString(mappingIdProp.getBuffer());
   }
 
   public MappingRecord setMappingId(final String mappingId) {

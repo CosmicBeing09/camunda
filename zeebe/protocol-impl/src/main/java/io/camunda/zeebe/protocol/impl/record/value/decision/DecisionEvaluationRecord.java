@@ -94,7 +94,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionId() {
-    return bufferAsString(decisionIdProp.getValue());
+    return bufferAsString(decisionIdProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setDecisionId(final String decisionId) {
@@ -109,7 +109,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionName() {
-    return bufferAsString(decisionNameProp.getValue());
+    return bufferAsString(decisionNameProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setDecisionName(final String decisionName) {
@@ -134,7 +134,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @Override
   public String getDecisionRequirementsId() {
-    return bufferAsString(decisionRequirementsIdProp.getValue());
+    return bufferAsString(decisionRequirementsIdProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setDecisionRequirementsId(final String decisionRequirementsId) {
@@ -170,7 +170,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @Override
   public String getBpmnProcessId() {
-    return bufferAsString(bpmnProcessIdProp.getValue());
+    return bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setBpmnProcessId(final String bpmnProcessId) {
@@ -205,7 +205,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @Override
   public String getElementId() {
-    return bufferAsString(elementIdProp.getValue());
+    return bufferAsString(elementIdProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setElementId(final String elementId) {
@@ -244,12 +244,12 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @Override
   public String getEvaluationFailureMessage() {
-    return bufferAsString(evaluationFailureMessageProp.getValue());
+    return bufferAsString(evaluationFailureMessageProp.getBuffer());
   }
 
   @Override
   public String getFailedDecisionId() {
-    return bufferAsString(failedDecisionIdProp.getValue());
+    return bufferAsString(failedDecisionIdProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setFailedDecisionId(final String failedDecisionId) {
@@ -275,12 +275,12 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getEvaluationFailureMessageBuffer() {
-    return evaluationFailureMessageProp.getValue();
+    return evaluationFailureMessageProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getFailedDecisionIdBuffer() {
-    return failedDecisionIdProp.getValue();
+    return failedDecisionIdProp.getBuffer();
   }
 
   @JsonIgnore
@@ -295,7 +295,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getDecisionRequirementsIdBuffer() {
-    return decisionRequirementsIdProp.getValue();
+    return decisionRequirementsIdProp.getBuffer();
   }
 
   @JsonIgnore
@@ -305,27 +305,27 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getElementIdBuffer() {
-    return elementIdProp.getValue();
+    return elementIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getDecisionIdBuffer() {
-    return decisionIdProp.getValue();
+    return decisionIdProp.getBuffer();
   }
 
   @JsonIgnore
   public DirectBuffer getDecisionNameBuffer() {
-    return decisionNameProp.getValue();
+    return decisionNameProp.getBuffer();
   }
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public DecisionEvaluationRecord setTenantId(final String tenantId) {

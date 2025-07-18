@@ -175,7 +175,7 @@ final class JsonSerializableToJsonTest {
                   .rejectionReason(rejectionReason)
                   .rejectionType(rejectionType)
                   .requestId(requestId)
-                  .requestStreamId(requestStreamId)
+                  .requestPartitionId(requestStreamId)
                   .authorization(authInfo)
                   .operationReference(1234);
 

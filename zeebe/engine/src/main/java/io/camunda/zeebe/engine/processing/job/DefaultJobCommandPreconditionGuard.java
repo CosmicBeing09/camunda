@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor.CommandControl;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.JobState.State;
@@ -29,13 +29,13 @@ public final class DefaultJobCommandPreconditionGuard {
   private final JobState state;
   private final JobAcceptFunction acceptCommand;
   private final JobCommandPreconditionChecker preconditionChecker;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
 
   public DefaultJobCommandPreconditionGuard(
       final String intent,
       final JobState state,
       final JobAcceptFunction acceptCommand,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     this(intent, state, acceptCommand, authCheckBehavior, List.of());
   }
 
@@ -43,7 +43,7 @@ public final class DefaultJobCommandPreconditionGuard {
       final String intent,
       final JobState state,
       final JobAcceptFunction acceptCommand,
-      final AuthorizationCheckBehavior authCheckBehavior,
+      final AuthorizationValidationBehavior authCheckBehavior,
       final List<JobCommandCheck> customChecks) {
     this.state = state;
     this.acceptCommand = acceptCommand;

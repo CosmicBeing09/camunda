@@ -438,7 +438,7 @@ public final class CreateProcessInstanceTest {
     final var processInstanceKey =
         RecordingExporter.processInstanceCreationRecords()
             .withBpmnProcessId(processId)
-            .withIntent(ProcessInstanceCreationIntent.CREATED)
+            .withIntent(ProcessInstanceCreationIntent.CREATED_EVENT)
             .getFirst()
             .getValue()
             .getProcessInstanceKey();

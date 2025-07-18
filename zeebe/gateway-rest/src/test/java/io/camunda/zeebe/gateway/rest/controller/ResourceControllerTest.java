@@ -537,7 +537,7 @@ public class ResourceControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        ResourceIntent.FETCH, 1L, RejectionType.NOT_FOUND, "Resource not found"))));
+                        ResourceIntent.FETCH_REQUEST, 1L, RejectionType.NOT_FOUND, "Resource not found"))));
     final var url = GET_RESOURCE_ENDPOINT.formatted(1);
 
     // when / then
@@ -571,7 +571,7 @@ public class ResourceControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        ResourceIntent.FETCH,
+                        ResourceIntent.FETCH_REQUEST,
                         1L,
                         RejectionType.PROCESSING_ERROR,
                         "something went wrong"))));
@@ -668,7 +668,7 @@ public class ResourceControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        ResourceIntent.FETCH, 1L, RejectionType.NOT_FOUND, "Resource not found"))));
+                        ResourceIntent.FETCH_REQUEST, 1L, RejectionType.NOT_FOUND, "Resource not found"))));
     final var url = GET_RESOURCE_CONTENT_ENDPOINT.formatted(1);
 
     // when / then
@@ -702,7 +702,7 @@ public class ResourceControllerTest extends RestControllerTest {
             CompletableFuture.failedFuture(
                 new CamundaBrokerException(
                     new BrokerRejection(
-                        ResourceIntent.FETCH,
+                        ResourceIntent.FETCH_REQUEST,
                         1L,
                         RejectionType.PROCESSING_ERROR,
                         "something went wrong"))));

@@ -11,14 +11,14 @@ import io.camunda.zeebe.broker.client.api.dto.BrokerExecuteCommand;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import org.agrona.DirectBuffer;
 
 public class BrokerMappingDeleteRequest extends BrokerExecuteCommand<MappingRecord> {
   private final MappingRecord requestDto = new MappingRecord();
 
   public BrokerMappingDeleteRequest() {
-    super(ValueType.MAPPING, MappingIntent.DELETE);
+    super(ValueType.MAPPING, MappingAction.DELETE);
     setPartitionId(Protocol.DEPLOYMENT_PARTITION);
   }
 

@@ -30,7 +30,7 @@ public class ResourceFetchClient {
       (position) ->
           RecordingExporter.resourceRecords()
               .onlyCommandRejections()
-              .withIntent(ResourceIntent.FETCH)
+              .withIntent(ResourceIntent.FETCH_REQUEST)
               .withSourceRecordPosition(position)
               .getFirst();
 
@@ -71,14 +71,14 @@ public class ResourceFetchClient {
             resourceRecord.getResourceKey(),
             requestStreamId,
             requestId,
-            ResourceIntent.FETCH,
+            ResourceIntent.FETCH_REQUEST,
             resourceRecord,
             authorizedTenantIds.toArray(new String[0]));
     return expectation.apply(position);
   }
 
   public Record<Resource> fetch(final AuthInfo authorizations) {
-    final long position = writer.writeCommand(ResourceIntent.FETCH, resourceRecord, authorizations);
+    final long position = writer.writeCommand(ResourceIntent.FETCH_REQUEST, resourceRecord, authorizations);
     return expectation.apply(position);
   }
 

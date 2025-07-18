@@ -231,7 +231,7 @@ public final class ExporterTest {
     }
 
     @Override
-    public Map<String, Object> getAuthorizations() {
+    public Map<String, Object> getAuthorizationData() {
       return Map.of();
     }
 
@@ -251,7 +251,7 @@ public final class ExporterTest {
     }
 
     @Override
-    public long getOperationReference() {
+    public long getOperationKey() {
       return 0;
     }
   }

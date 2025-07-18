@@ -57,12 +57,22 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   @Override
   public String getBpmnProcessId() {
-    return BufferUtil.bufferAsString(bpmnProcessIdProp.getValue());
+    return BufferUtil.bufferAsString(bpmnProcessIdProp.getBuffer());
   }
 
   @Override
   public int getVersion() {
     return versionProp.getValue();
+  }
+
+  public ProcessMetadata setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return bufferAsString(versionTagProp.getBuffer());
   }
 
   @Override
@@ -72,7 +82,7 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   @Override
   public String getResourceName() {
-    return BufferUtil.bufferAsString(resourceNameProp.getValue());
+    return BufferUtil.bufferAsString(resourceNameProp.getBuffer());
   }
 
   @Override
@@ -115,8 +125,8 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
     return this;
   }
 
-  public ProcessMetadata setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessMetadata setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -147,7 +157,7 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   @JsonIgnore
   public DirectBuffer getBpmnProcessIdBuffer() {
-    return bpmnProcessIdProp.getValue();
+    return bpmnProcessIdProp.getBuffer();
   }
 
   @Override
@@ -164,7 +174,7 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   @JsonIgnore
   public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
+    return resourceNameProp.getBuffer();
   }
 
   public ProcessMetadata setBpmnProcessId(
@@ -175,21 +185,11 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   @Override
   public String getTenantId() {
-    return bufferAsString(tenantIdProp.getValue());
+    return bufferAsString(tenantIdProp.getBuffer());
   }
 
   public ProcessMetadata setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessMetadata setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }

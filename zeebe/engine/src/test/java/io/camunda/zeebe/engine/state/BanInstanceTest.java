@@ -187,7 +187,7 @@ public final class BanInstanceTest {
       //////// PROCESS INSTANCE CRE /////////
       ////////////////////////////////////////
       {ValueType.PROCESS_INSTANCE_CREATION, ProcessInstanceCreationIntent.CREATE, false},
-      {ValueType.PROCESS_INSTANCE_CREATION, ProcessInstanceCreationIntent.CREATED, true},
+      {ValueType.PROCESS_INSTANCE_CREATION, ProcessInstanceCreationIntent.CREATED_EVENT, true},
 
       ////////////////////////////////////////
       //////// PROCESS INSTANCE SUB /////////

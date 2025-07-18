@@ -19,7 +19,7 @@ public final class ProcessMetadataAndResource extends ProcessMetadata {
   }
 
   public DirectBuffer getBpmnXml() {
-    return bpmnXmlProp.getValue();
+    return bpmnXmlProp.getBuffer();
   }
 
   public ProcessMetadataAndResource setBpmnXml(final String bpmnXml) {

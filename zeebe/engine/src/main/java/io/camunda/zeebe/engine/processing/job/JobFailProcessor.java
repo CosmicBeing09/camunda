@@ -17,8 +17,8 @@ import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
@@ -59,7 +59,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   private final JobBackoffChecker jobBackoffChecker;
   private final VariableBehavior variableBehavior;
   private final BpmnJobActivationBehavior jobActivationBehavior;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
   private final SideEffectWriter sideEffectWriter;
   private final JobCommandPreconditionChecker preconditionChecker;
   private final ElementInstanceState elementInstanceState;
@@ -72,7 +72,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
       final JobProcessingMetrics jobMetrics,
       final JobBackoffChecker jobBackoffChecker,
       final BpmnBehaviors bpmnBehaviors,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     jobState = state.getJobState();
     elementInstanceState = state.getElementInstanceState();
     processState = state.getProcessState();

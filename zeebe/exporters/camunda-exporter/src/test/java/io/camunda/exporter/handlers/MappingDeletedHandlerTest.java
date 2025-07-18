@@ -17,7 +17,7 @@ import io.camunda.exporter.store.BatchRequest;
 import io.camunda.webapps.schema.entities.usermanagement.MappingEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.MappingRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
 import org.junit.jupiter.api.Test;
@@ -41,7 +41,7 @@ public class MappingDeletedHandlerTest {
   void shouldHandleRecord() {
     // given
     final io.camunda.zeebe.protocol.record.Record<MappingRecordValue> mappingCreatedRecord =
-        factory.generateRecordWithIntent(ValueType.MAPPING, MappingIntent.DELETED);
+        factory.generateRecordWithIntent(ValueType.MAPPING, MappingAction.DELETED);
 
     // when - then
     assertThat(underTest.handlesRecord(mappingCreatedRecord)).isTrue();
@@ -51,7 +51,7 @@ public class MappingDeletedHandlerTest {
   void shouldGenerateIds() {
     // given
     final Record<MappingRecordValue> mappingRecord =
-        factory.generateRecordWithIntent(ValueType.MAPPING, MappingIntent.DELETED);
+        factory.generateRecordWithIntent(ValueType.MAPPING, MappingAction.DELETED);
 
     // when
     final var idList = underTest.generateIds(mappingRecord);

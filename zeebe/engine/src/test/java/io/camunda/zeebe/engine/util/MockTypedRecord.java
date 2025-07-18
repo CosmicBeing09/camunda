@@ -47,7 +47,7 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getRequestPartitionId() {
     return metadata.getRequestStreamId();
   }
 
@@ -115,7 +115,7 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return metadata.getAuthorization().getClaims();
   }
 
@@ -130,7 +130,7 @@ public final class MockTypedRecord<T extends UnifiedRecordValue> implements Type
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return metadata.getOperationReference();
   }
 

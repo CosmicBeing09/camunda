@@ -22,8 +22,8 @@ package io.camunda.zeebe.protocol.record.intent;
  */
 @Deprecated
 public enum DeploymentDistributionIntent implements Intent {
-  DISTRIBUTING((short) 0),
-  COMPLETE((short) 1),
+  DEPLOYMENT_DISTRIBUTION_IN_PROGRESS((short) 0),
+  DEPLOYMENT_DISTRIBUTION_COMPLETE((short) 1),
   COMPLETED((short) 2);
 
   private final short value;
@@ -39,9 +39,9 @@ public enum DeploymentDistributionIntent implements Intent {
   public static Intent from(final short value) {
     switch (value) {
       case 0:
-        return DISTRIBUTING;
+        return DEPLOYMENT_DISTRIBUTION_IN_PROGRESS;
       case 1:
-        return COMPLETE;
+        return DEPLOYMENT_DISTRIBUTION_COMPLETE;
       case 2:
         return COMPLETED;
       default:
@@ -50,7 +50,7 @@ public enum DeploymentDistributionIntent implements Intent {
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 
@@ -58,7 +58,7 @@ public enum DeploymentDistributionIntent implements Intent {
   public boolean isEvent() {
     switch (this) {
       case COMPLETED:
-      case DISTRIBUTING:
+      case DEPLOYMENT_DISTRIBUTION_IN_PROGRESS:
         return true;
       default:
         return false;

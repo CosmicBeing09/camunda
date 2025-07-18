@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.user;
 
-import static io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.WILDCARD_PERMISSION;
+import static io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.WILDCARD_PERMISSION;
 
 import io.camunda.security.configuration.InitializationConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;

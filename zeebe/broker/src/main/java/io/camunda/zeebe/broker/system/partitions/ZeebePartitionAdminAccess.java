@@ -97,7 +97,7 @@ class ZeebePartitionAdminAccess implements PartitionAdminAccess {
   }
 
   @Override
-  public ActorFuture<Void> softPauseExporting() {
+  public ActorFuture<Void> temporarilySuspendExporting() {
     final ActorFuture<Void> completed = concurrencyControl.createFuture();
     concurrencyControl.run(
         () -> {
@@ -178,7 +178,7 @@ class ZeebePartitionAdminAccess implements PartitionAdminAccess {
   }
 
   @Override
-  public ActorFuture<Void> banInstance(final long processInstanceKey) {
+  public ActorFuture<Void> banProcessInstance(final long processInstanceKey) {
     final ActorFuture<Void> future = concurrencyControl.createFuture();
     concurrencyControl.run(
         () -> {

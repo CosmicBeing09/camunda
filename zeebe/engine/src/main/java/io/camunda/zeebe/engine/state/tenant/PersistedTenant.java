@@ -61,7 +61,7 @@ public class PersistedTenant extends UnpackedObject implements DbValue {
    * @return the tenant ID as a string
    */
   public String getTenantId() {
-    return BufferUtil.bufferAsString(tenantIdProp.getValue());
+    return BufferUtil.bufferAsString(tenantIdProp.getBuffer());
   }
 
   /**
@@ -81,7 +81,7 @@ public class PersistedTenant extends UnpackedObject implements DbValue {
    * @return the name of the tenant as a string
    */
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   /**
@@ -96,7 +96,7 @@ public class PersistedTenant extends UnpackedObject implements DbValue {
   }
 
   public String getDescription() {
-    return BufferUtil.bufferAsString(descriptionProp.getValue());
+    return BufferUtil.bufferAsString(descriptionProp.getBuffer());
   }
 
   public PersistedTenant setDescription(final String description) {

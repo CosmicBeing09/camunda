@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
@@ -31,7 +31,7 @@ public class UserTaskCommandPreconditionChecker {
 
   private final List<LifecycleState> validLifecycleStates;
   private final String intent;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
   private final BiFunction<
           TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
       additionalChecks;
@@ -41,7 +41,7 @@ public class UserTaskCommandPreconditionChecker {
       final List<LifecycleState> validLifecycleStates,
       final String intent,
       final UserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     this(validLifecycleStates, intent, null, userTaskState, authCheckBehavior);
   }
 
@@ -52,7 +52,7 @@ public class UserTaskCommandPreconditionChecker {
               TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
           additionalChecks,
       final UserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
+      final AuthorizationValidationBehavior authCheckBehavior) {
     this.validLifecycleStates = validLifecycleStates;
     this.intent = intent;
     this.authCheckBehavior = authCheckBehavior;

@@ -65,7 +65,7 @@ public class JobResult extends UnpackedObject implements JobResultValue {
 
   @Override
   public String getDeniedReason() {
-    return bufferAsString(deniedReasonProp.getValue());
+    return bufferAsString(deniedReasonProp.getBuffer());
   }
 
   public JobResult setDeniedReason(final String deniedReason) {

@@ -37,7 +37,7 @@ public final class ArrayProperty<T extends BaseValue> extends BaseProperty<Array
   @Override
   public T add() {
     try {
-      return value.add();
+      return stringValue.add();
     } catch (final Exception e) {
       throw new MsgpackPropertyException(getKey(), e);
     }
@@ -46,7 +46,7 @@ public final class ArrayProperty<T extends BaseValue> extends BaseProperty<Array
   @Override
   public T add(final int index) {
     try {
-      return value.add(index);
+      return stringValue.add(index);
     } catch (final Exception e) {
       throw new MsgpackPropertyException(getKey(), e);
     }
@@ -60,10 +60,10 @@ public final class ArrayProperty<T extends BaseValue> extends BaseProperty<Array
   }
 
   public boolean isEmpty() {
-    return value.isEmpty();
+    return stringValue.isEmpty();
   }
 
   public int size() {
-    return value.size();
+    return stringValue.size();
   }
 }

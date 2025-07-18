@@ -88,7 +88,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    */
   public Intent getIntent() {
     return Intent.fromProtocolValue(
-        triggerTypeProperty.getValue(), BufferUtil.bufferAsString(intentProperty.getValue()));
+        triggerTypeProperty.getValue(), BufferUtil.bufferAsString(intentProperty.getBuffer()));
   }
 
   /**

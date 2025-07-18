@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.security.configuration.AuthorizationsConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.state.appliers.AuthorizationCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupEntityAddedApplier;
@@ -57,7 +57,7 @@ final class AuthorizationCheckBehaviorTest {
   @SuppressWarnings("unused") // injected by the extension
   private MutableProcessingState processingState;
 
-  private AuthorizationCheckBehavior authorizationCheckBehavior;
+  private AuthorizationValidationBehavior authorizationCheckBehavior;
   private UserCreatedApplier userCreatedApplier;
   private MappingCreatedApplier mappingCreatedApplier;
   private AuthorizationCreatedApplier authorizationCreatedApplier;
@@ -73,7 +73,7 @@ final class AuthorizationCheckBehaviorTest {
     final var authConfig = new AuthorizationsConfiguration();
     authConfig.setEnabled(true);
     securityConfig.setAuthorizations(authConfig);
-    authorizationCheckBehavior = new AuthorizationCheckBehavior(processingState, securityConfig);
+    authorizationCheckBehavior = new AuthorizationValidationBehavior(processingState, securityConfig);
 
     userCreatedApplier = new UserCreatedApplier(processingState.getUserState());
     mappingCreatedApplier = new MappingCreatedApplier(processingState.getMappingState());
@@ -403,7 +403,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(
             Map.of(
                 USER_TOKEN_CLAIM_PREFIX + firstClaimName,
@@ -453,7 +453,7 @@ final class AuthorizationCheckBehaviorTest {
 
     // when
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(
             Map.of(
                 USER_TOKEN_CLAIM_PREFIX + claimName, List.of(firstClaimValue, secondClaimValue)));
@@ -732,7 +732,7 @@ final class AuthorizationCheckBehaviorTest {
 
   private TypedRecord<?> mockCommandWithMapping(final String claimName, final String claimValue) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(Map.of(USER_TOKEN_CLAIM_PREFIX + claimName, claimValue));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
@@ -812,21 +812,21 @@ final class AuthorizationCheckBehaviorTest {
 
   private TypedRecord<?> mockCommand(final String username) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithAnonymousUser() {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithClientId(final String clientId) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_CLIENT_ID, clientId));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_CLIENT_ID, clientId));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }

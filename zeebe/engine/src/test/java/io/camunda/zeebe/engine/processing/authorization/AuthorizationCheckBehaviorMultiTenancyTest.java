@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 import io.camunda.security.configuration.AuthorizationsConfiguration;
 import io.camunda.security.configuration.MultiTenancyConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.appliers.AuthorizationCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.GroupCreatedApplier;
@@ -62,7 +62,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
   @SuppressWarnings("unused") // injected by the extension
   private MutableProcessingState processingState;
 
-  private AuthorizationCheckBehavior authorizationCheckBehavior;
+  private AuthorizationValidationBehavior authorizationCheckBehavior;
   private UserCreatedApplier userCreatedApplier;
   private MappingCreatedApplier mappingCreatedApplier;
   private AuthorizationCreatedApplier authorizationCreatedApplier;
@@ -83,7 +83,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
     final var multiTenancyConfig = new MultiTenancyConfiguration();
     multiTenancyConfig.setEnabled(true);
     securityConfig.setMultiTenancy(multiTenancyConfig);
-    authorizationCheckBehavior = new AuthorizationCheckBehavior(processingState, securityConfig);
+    authorizationCheckBehavior = new AuthorizationValidationBehavior(processingState, securityConfig);
 
     userCreatedApplier = new UserCreatedApplier(processingState.getUserState());
     mappingCreatedApplier = new MappingCreatedApplier(processingState.getMappingState());
@@ -689,7 +689,7 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
   private TypedRecord<?> mockCommandWithMapping(final String claimName, final String claimValue) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations())
+    when(command.getAuthorizationData())
         .thenReturn(Map.of(USER_TOKEN_CLAIM_PREFIX + claimName, claimValue));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
@@ -793,14 +793,14 @@ final class AuthorizationCheckBehaviorMultiTenancyTest {
 
   private TypedRecord<?> mockCommand(final String username) {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_USERNAME, username));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }
 
   private TypedRecord<?> mockCommandWithAnonymousUser() {
     final var command = mock(TypedRecord.class);
-    when(command.getAuthorizations()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
+    when(command.getAuthorizationData()).thenReturn(Map.of(AUTHORIZED_ANONYMOUS_USER, true));
     when(command.hasRequestMetadata()).thenReturn(true);
     return command;
   }

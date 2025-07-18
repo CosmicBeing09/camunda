@@ -12,8 +12,8 @@ import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior;
+import io.camunda.zeebe.engine.processing.identity.AuthorizationValidationBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
@@ -58,7 +58,7 @@ public final class VariableDocumentUpdateProcessor
   private final VariableBehavior variableBehavior;
   private final BpmnJobBehavior jobBehavior;
   private final Writers writers;
-  private final AuthorizationCheckBehavior authCheckBehavior;
+  private final AuthorizationValidationBehavior authCheckBehavior;
 
   public VariableDocumentUpdateProcessor(
       final ProcessingState processingState,
@@ -66,13 +66,13 @@ public final class VariableDocumentUpdateProcessor
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final MutableUserTaskState userTaskState,
-      final AuthorizationCheckBehavior authCheckBehavior) {
-    this.elementInstanceState = processingState.getElementInstanceState();
+      final AuthorizationValidationBehavior authCheckBehavior) {
+    elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;
-    this.processState = processingState.getProcessState();
+    processState = processingState.getProcessState();
     this.keyGenerator = keyGenerator;
-    this.variableBehavior = bpmnBehaviors.variableBehavior();
-    this.jobBehavior = bpmnBehaviors.jobBehavior();
+    variableBehavior = bpmnBehaviors.variableBehavior();
+    jobBehavior = bpmnBehaviors.jobBehavior();
     this.writers = writers;
     this.authCheckBehavior = authCheckBehavior;
   }
@@ -101,7 +101,7 @@ public final class VariableDocumentUpdateProcessor
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =
           RejectionType.NOT_FOUND.equals(rejection.type())
-              ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
+              ? AuthorizationValidationBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                   "update variables for element",
                   scope.getValue().getProcessInstanceKey(),
                   "such element")
@@ -216,7 +216,7 @@ public final class VariableDocumentUpdateProcessor
     return !DocumentValue.EMPTY_DOCUMENT.equals(record.getVariablesBuffer());
   }
 
-  private static boolean isCamundaUserTask(ElementInstance elementInstance) {
+  private static boolean isCamundaUserTask(final ElementInstance elementInstance) {
     return elementInstance.getValue().getBpmnElementType() == BpmnElementType.USER_TASK
         && elementInstance.getUserTaskKey() > -1L;
   }
@@ -238,7 +238,7 @@ public final class VariableDocumentUpdateProcessor
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.VARIABLE_DOCUMENT)
             .setRequestId(command.getRequestId())
-            .setRequestStreamId(command.getRequestStreamId());
+            .setRequestStreamId(command.getRequestPartitionId());
     userTaskState.storeRecordRequestMetadata(userTaskKey, metadata);
   }
 }

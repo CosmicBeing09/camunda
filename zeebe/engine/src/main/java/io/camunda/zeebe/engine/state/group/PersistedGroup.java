@@ -46,7 +46,7 @@ public class PersistedGroup extends UnpackedObject implements DbValue {
   }
 
   public String getGroupId() {
-    return BufferUtil.bufferAsString(groupIdProp.getValue());
+    return BufferUtil.bufferAsString(groupIdProp.getBuffer());
   }
 
   public PersistedGroup setGroupId(final String groupId) {
@@ -55,7 +55,7 @@ public class PersistedGroup extends UnpackedObject implements DbValue {
   }
 
   public String getDescription() {
-    return BufferUtil.bufferAsString(descriptionProp.getValue());
+    return BufferUtil.bufferAsString(descriptionProp.getBuffer());
   }
 
   public PersistedGroup setDescription(final String description) {
@@ -64,7 +64,7 @@ public class PersistedGroup extends UnpackedObject implements DbValue {
   }
 
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   public PersistedGroup setName(final String name) {

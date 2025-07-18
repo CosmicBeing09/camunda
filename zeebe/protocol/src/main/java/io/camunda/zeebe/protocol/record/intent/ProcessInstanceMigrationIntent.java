@@ -26,7 +26,7 @@ public enum ProcessInstanceMigrationIntent implements Intent, ProcessInstanceRel
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 

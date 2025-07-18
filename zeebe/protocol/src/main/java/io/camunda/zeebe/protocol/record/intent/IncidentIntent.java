@@ -54,7 +54,7 @@ public enum IncidentIntent implements ProcessInstanceRelatedIntent {
   }
 
   @Override
-  public short value() {
+  public short getIntentValue() {
     return value;
   }
 

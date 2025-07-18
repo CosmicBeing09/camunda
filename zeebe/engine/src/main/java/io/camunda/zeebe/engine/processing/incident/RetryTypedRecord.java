@@ -92,7 +92,7 @@ public final class RetryTypedRecord<T extends UnifiedRecordValue> implements Typ
   }
 
   @Override
-  public Map<String, Object> getAuthorizations() {
+  public Map<String, Object> getAuthorizationData() {
     return Map.of();
   }
 
@@ -107,7 +107,7 @@ public final class RetryTypedRecord<T extends UnifiedRecordValue> implements Typ
   }
 
   @Override
-  public long getOperationReference() {
+  public long getOperationKey() {
     return 0;
   }
 
@@ -127,8 +127,8 @@ public final class RetryTypedRecord<T extends UnifiedRecordValue> implements Typ
   }
 
   @Override
-  public int getRequestStreamId() {
-    return RecordMetadataEncoder.requestStreamIdNullValue();
+  public int getRequestPartitionId() {
+    return RecordMetadataEncoder.requestPartitionIdNullValue();
   }
 
   @Override

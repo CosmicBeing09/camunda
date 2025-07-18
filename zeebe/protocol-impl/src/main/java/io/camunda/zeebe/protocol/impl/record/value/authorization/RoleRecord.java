@@ -47,7 +47,7 @@ public class RoleRecord extends UnifiedRecordValue implements RoleRecordValue {
 
   @Override
   public String getRoleId() {
-    return BufferUtil.bufferAsString(roleIdProp.getValue());
+    return BufferUtil.bufferAsString(roleIdProp.getBuffer());
   }
 
   public RoleRecord setRoleId(final String roleId) {
@@ -57,7 +57,7 @@ public class RoleRecord extends UnifiedRecordValue implements RoleRecordValue {
 
   @Override
   public String getName() {
-    return BufferUtil.bufferAsString(nameProp.getValue());
+    return BufferUtil.bufferAsString(nameProp.getBuffer());
   }
 
   public RoleRecord setName(final String name) {
@@ -67,7 +67,7 @@ public class RoleRecord extends UnifiedRecordValue implements RoleRecordValue {
 
   @Override
   public String getDescription() {
-    return BufferUtil.bufferAsString(descriptionProp.getValue());
+    return BufferUtil.bufferAsString(descriptionProp.getBuffer());
   }
 
   public RoleRecord setDescription(final String description) {
@@ -82,7 +82,7 @@ public class RoleRecord extends UnifiedRecordValue implements RoleRecordValue {
 
   @Override
   public String getEntityId() {
-    return BufferUtil.bufferAsString(entityIdProp.getValue());
+    return BufferUtil.bufferAsString(entityIdProp.getBuffer());
   }
 
   public RoleRecord setEntityId(final String entityId) {
