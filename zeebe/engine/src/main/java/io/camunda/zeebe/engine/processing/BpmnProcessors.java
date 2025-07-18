@@ -212,7 +212,7 @@ public final class BpmnProcessors {
             ValueType.TIMER,
             TimerIntent.CANCEL,
             new TimerCancelProcessor(
-                processingState.getTimerState(), writers.state(), writers.rejection()))
+                processingState.getTimerInstanceState(), writers.state(), writers.rejection()))
         .withListener(timerChecker);
   }
 

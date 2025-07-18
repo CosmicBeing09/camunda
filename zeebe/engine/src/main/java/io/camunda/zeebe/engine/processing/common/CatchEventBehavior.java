@@ -86,7 +86,7 @@ public final class CatchEventBehavior {
     this.sideEffectWriter = sideEffectWriter;
     this.routingInfo = routingInfo;
 
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     processMessageSubscriptionState = processingState.getProcessMessageSubscriptionState();
     processState = processingState.getProcessState();
     signalSubscriptionState = processingState.getSignalSubscriptionState();

@@ -69,7 +69,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
 
     processState = processingState.getProcessState();
     elementInstanceState = processingState.getElementInstanceState();
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     keyGenerator = processingState.getKeyGenerator();
     eventHandle =
         new EventHandle(

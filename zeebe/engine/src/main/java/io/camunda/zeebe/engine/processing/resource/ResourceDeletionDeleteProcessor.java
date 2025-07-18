@@ -104,7 +104,7 @@ public class ResourceDeletionDeleteProcessor
     this.commandDistributionBehavior = commandDistributionBehavior;
     processState = processingState.getProcessState();
     elementInstanceState = processingState.getElementInstanceState();
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     bannedInstanceState = processingState.getBannedInstanceState();
     catchEventBehavior = bpmnBehaviors.catchEventBehavior();
     expressionProcessor = bpmnBehaviors.expressionBehavior();

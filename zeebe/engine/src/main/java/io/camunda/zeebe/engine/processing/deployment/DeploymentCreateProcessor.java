@@ -105,7 +105,7 @@ public final class DeploymentCreateProcessor
     decisionState = processingState.getDecisionState();
     formState = processingState.getFormState();
     resourceState = processingState.getResourceState();
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     this.keyGenerator = keyGenerator;
     stateWriter = writers.state();
     rejectionWriter = writers.rejection();

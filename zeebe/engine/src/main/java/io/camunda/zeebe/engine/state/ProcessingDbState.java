@@ -248,7 +248,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableTimerInstanceState getTimerState() {
+  public MutableTimerInstanceState getTimerInstanceState() {
     return timerInstanceState;
   }
 
