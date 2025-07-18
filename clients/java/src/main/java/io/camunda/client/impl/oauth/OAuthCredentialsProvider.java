@@ -81,7 +81,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
       JSON_MAPPER.readerFor(CamundaClientCredentials.class);
   private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
   private final URL authorizationServerUrl;
-  private final String payload;
+  private final String formEncodedRequestBody;
   private final String clientId;
   private final Path keystorePath;
   private final String keystorePassword;
@@ -100,7 +100,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     truststorePath = builder.getTruststorePath();
     truststorePassword = builder.getTruststorePassword();
     clientId = builder.getClientId();
-    payload = createParams(builder);
+    formEncodedRequestBody = createParams(builder);
     credentialsCache = new OAuthCredentialsCache(builder.getCredentialsCache());
     connectionTimeout = builder.getConnectTimeout();
     readTimeout = builder.getReadTimeout();
@@ -112,15 +112,15 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     final CamundaClientCredentials camundaClientCredentials =
         credentialsCache.computeIfMissingOrInvalid(clientId, this::fetchCredentials);
 
-    String type = camundaClientCredentials.getTokenType();
-    if (type == null || type.isEmpty()) {
+    String tokenType = camundaClientCredentials.getTokenType();
+    if (tokenType == null || tokenType.isEmpty()) {
       throw new IOException(
-          String.format("Expected valid token type but was absent or invalid '%s'", type));
+          String.format("Expected valid token type but was absent or invalid '%s'", tokenType));
     }
 
-    type = Character.toUpperCase(type.charAt(0)) + type.substring(1);
+    tokenType = Character.toUpperCase(tokenType.charAt(0)) + tokenType.substring(1);
     applier.put(
-        HEADER_AUTH_KEY, String.format("%s %s", type, camundaClientCredentials.getAccessToken()));
+        HEADER_AUTH_KEY, String.format("%s %s", tokenType, camundaClientCredentials.getAccessToken()));
   }
 
   /**
@@ -196,7 +196,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     connection.setRequestProperty("User-Agent", "camunda-client-java/" + VersionUtil.getVersion());
 
     try (final OutputStream os = connection.getOutputStream()) {
-      final byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+      final byte[] input = formEncodedRequestBody.getBytes(StandardCharsets.UTF_8);
       os.write(input, 0, input.length);
     }
 
