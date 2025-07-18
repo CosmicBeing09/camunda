@@ -123,8 +123,8 @@ public record IncidentFilter(
       return flowNodeIds(collectValues(value, values));
     }
 
-    public Builder flowNodeIds(final List<String> values) {
-      flowNodeIds = addValuesToList(flowNodeIds, values);
+    public Builder flowNodeIds(final List<String> flowNodeIdsList) {
+      flowNodeIds = addValuesToList(flowNodeIds, flowNodeIdsList);
       return this;
     }
 
@@ -132,8 +132,8 @@ public record IncidentFilter(
       return flowNodeInstanceKeys(collectValues(value, values));
     }
 
-    public Builder flowNodeInstanceKeys(final List<Long> values) {
-      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
+    public Builder flowNodeInstanceKeys(final List<Long> flowNodeInstanceKeysList) {
+      flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, flowNodeInstanceKeysList);
       return this;
     }
 
