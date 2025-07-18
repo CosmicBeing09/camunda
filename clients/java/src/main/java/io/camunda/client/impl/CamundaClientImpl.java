@@ -90,7 +90,7 @@ import io.camunda.client.api.command.UpdateRoleCommandStep1;
 import io.camunda.client.api.command.UpdateTenantCommandStep1;
 import io.camunda.client.api.command.UpdateTimeoutJobCommandStep1;
 import io.camunda.client.api.command.UpdateUserCommandStep1;
-import io.camunda.client.api.command.UpdateUserTaskCommandStep1;
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.api.fetch.BatchOperationGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetXmlRequest;
@@ -682,7 +682,7 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 newUserTaskUpdateCommand(final long userTaskKey) {
+  public UserTaskUpdateBuilder newUserTaskUpdateCommand(final long userTaskKey) {
     return new UpdateUserTaskCommandImpl(httpClient, jsonMapper, userTaskKey);
   }
 

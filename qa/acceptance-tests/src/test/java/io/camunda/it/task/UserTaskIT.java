@@ -118,7 +118,7 @@ public class UserTaskIT {
         .priority(99)
         .candidateUsers("demoUsers")
         .candidateGroups("demoGroup")
-        .dueDate(dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
+        .due(dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
         .followUpDate(dateTime.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME))
         .send()
         .join();

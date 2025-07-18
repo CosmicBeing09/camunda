@@ -79,7 +79,7 @@ import io.camunda.client.api.command.UpdateRoleCommandStep1;
 import io.camunda.client.api.command.UpdateTenantCommandStep1;
 import io.camunda.client.api.command.UpdateTimeoutJobCommandStep1;
 import io.camunda.client.api.command.UpdateUserCommandStep1;
-import io.camunda.client.api.command.UpdateUserTaskCommandStep1;
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.api.fetch.BatchOperationGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetRequest;
 import io.camunda.client.api.fetch.DecisionDefinitionGetXmlRequest;
@@ -632,7 +632,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    * @param userTaskKey the key of the user task
    * @return a builder for the command
    */
-  UpdateUserTaskCommandStep1 newUserTaskUpdateCommand(long userTaskKey);
+  UserTaskUpdateBuilder newUserTaskUpdateCommand(long userTaskKey);
 
   /**
    * Command to unassign a user task.

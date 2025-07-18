@@ -18,7 +18,7 @@ package io.camunda.client.impl.command;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.FinalCommandStep;
-import io.camunda.client.api.command.UpdateUserTaskCommandStep1;
+import io.camunda.client.api.command.UserTaskUpdateBuilder;
 import io.camunda.client.api.response.UpdateUserTaskResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
 import io.camunda.client.impl.http.HttpClient;
@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.config.RequestConfig;
 
-public final class UpdateUserTaskCommandImpl implements UpdateUserTaskCommandStep1 {
+public final class UpdateUserTaskCommandImpl implements UserTaskUpdateBuilder {
 
   private final long userTaskKey;
   private final UserTaskUpdateRequest request;
@@ -66,46 +66,46 @@ public final class UpdateUserTaskCommandImpl implements UpdateUserTaskCommandSte
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 action(final String action) {
+  public UserTaskUpdateBuilder action(final String action) {
     request.setAction(action);
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 dueDate(final String dueDate) {
+  public UserTaskUpdateBuilder due(final String dueDate) {
     ArgumentUtil.ensureNotNull("dueDate", dueDate);
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_DUE_DATE, dueDate);
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 clearDueDate() {
+  public UserTaskUpdateBuilder clearDueDate() {
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_DUE_DATE, "");
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 followUpDate(final String followUpDate) {
+  public UserTaskUpdateBuilder followUpDate(final String followUpDate) {
     ArgumentUtil.ensureNotNull("followUpDate", followUpDate);
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_FOLLOW_UP_DATE, followUpDate);
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 clearFollowUpDate() {
+  public UserTaskUpdateBuilder clearFollowUpDate() {
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_FOLLOW_UP_DATE, "");
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 candidateGroups(final List<String> candidateGroups) {
+  public UserTaskUpdateBuilder candidateGroups(final List<String> candidateGroups) {
     ArgumentUtil.ensureNotNull("candidateGroups", candidateGroups);
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_CANDIDATE_GROUPS, candidateGroups);
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 candidateGroups(final String... candidateGroups) {
+  public UserTaskUpdateBuilder candidateGroups(final String... candidateGroups) {
     ArgumentUtil.ensureNotNull("candidateGroups", candidateGroups);
     getChangesetEnsureInitialized()
         .put(Changeset.JSON_PROPERTY_CANDIDATE_GROUPS, Arrays.asList(candidateGroups));
@@ -113,21 +113,21 @@ public final class UpdateUserTaskCommandImpl implements UpdateUserTaskCommandSte
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 clearCandidateGroups() {
+  public UserTaskUpdateBuilder clearCandidateGroups() {
     getChangesetEnsureInitialized()
         .put(Changeset.JSON_PROPERTY_CANDIDATE_GROUPS, Collections.emptyList());
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 candidateUsers(final List<String> candidateUsers) {
+  public UserTaskUpdateBuilder candidateUsers(final List<String> candidateUsers) {
     ArgumentUtil.ensureNotNull("candidateUsers", candidateUsers);
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_CANDIDATE_USERS, candidateUsers);
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 candidateUsers(final String... candidateUsers) {
+  public UserTaskUpdateBuilder candidateUsers(final String... candidateUsers) {
     ArgumentUtil.ensureNotNull("candidateUsers", candidateUsers);
     getChangesetEnsureInitialized()
         .put(Changeset.JSON_PROPERTY_CANDIDATE_USERS, Arrays.asList(candidateUsers));
@@ -135,14 +135,14 @@ public final class UpdateUserTaskCommandImpl implements UpdateUserTaskCommandSte
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 clearCandidateUsers() {
+  public UserTaskUpdateBuilder clearCandidateUsers() {
     getChangesetEnsureInitialized()
         .put(Changeset.JSON_PROPERTY_CANDIDATE_USERS, Collections.emptyList());
     return this;
   }
 
   @Override
-  public UpdateUserTaskCommandStep1 priority(final Integer priority) {
+  public UserTaskUpdateBuilder priority(final Integer priority) {
     getChangesetEnsureInitialized().put(Changeset.JSON_PROPERTY_PRIORITY, priority);
     return this;
   }
