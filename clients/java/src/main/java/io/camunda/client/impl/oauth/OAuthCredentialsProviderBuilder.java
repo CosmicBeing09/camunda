@@ -63,8 +63,8 @@ public final class OAuthCredentialsProviderBuilder {
   private String keystoreKeyPassword;
   private Path truststorePath;
   private String truststorePassword;
-  private String credentialsCacheFilePath;
-  private File credentialsCache;
+  private String credentialsCachePath;
+  private File credentialsCacheFile;
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
@@ -221,7 +221,7 @@ public final class OAuthCredentialsProviderBuilder {
    * $HOME/.camunda/credentials
    */
   public OAuthCredentialsProviderBuilder credentialsCacheFilePath(final String cachePath) {
-    credentialsCacheFilePath = cachePath;
+    credentialsCachePath = cachePath;
     return this;
   }
 
@@ -229,7 +229,7 @@ public final class OAuthCredentialsProviderBuilder {
    * @see OAuthCredentialsProviderBuilder#credentialsCacheFilePath(String)
    */
   File getCredentialsCache() {
-    return credentialsCache;
+    return credentialsCacheFile;
   }
 
   /**
@@ -383,8 +383,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyDefaults() {
-    if (credentialsCacheFilePath == null) {
-      credentialsCacheFilePath =
+    if (credentialsCachePath == null) {
+      credentialsCachePath =
           Paths.get(System.getProperty("user.home"), ".camunda", "credentials")
               .toAbsolutePath()
               .toString();
@@ -429,9 +429,9 @@ public final class OAuthCredentialsProviderBuilder {
         throw new IllegalArgumentException("Truststore path does not exist: " + keystorePath);
       }
 
-      credentialsCache = new File(credentialsCacheFilePath);
+      credentialsCacheFile = new File(credentialsCachePath);
 
-      if (credentialsCache.isDirectory()) {
+      if (credentialsCacheFile.isDirectory()) {
         throw new IllegalArgumentException(
             "Expected specified credentials cache to be a file but found directory instead.");
       }
