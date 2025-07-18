@@ -213,7 +213,7 @@ public final class ProcessInstanceModificationModifyProcessor
 
     final var processInstanceRecord = processInstance.getValue();
     final var process =
-        processState.getProcessByKeyAndTenant(
+        processState.getProcessByProcessDefinitionKeyAndTenant(
             processInstanceRecord.getProcessDefinitionKey(), processInstanceRecord.getTenantId());
 
     final var validationResult = validateCommand(command, process);

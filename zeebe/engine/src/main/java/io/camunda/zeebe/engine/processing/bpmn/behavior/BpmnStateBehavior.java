@@ -149,7 +149,7 @@ public final class BpmnStateBehavior {
   public Optional<DeployedProcess> getProcess(
       final long processDefinitionKey, final String tenantId) {
     return Optional.ofNullable(
-        processState.getProcessByKeyAndTenant(processDefinitionKey, tenantId));
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, tenantId));
   }
 
   public Optional<DeployedProcess> getLatestProcessVersion(

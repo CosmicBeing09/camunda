@@ -264,7 +264,7 @@ public final class ProcessStateTest {
     // given
 
     // when
-    final DeployedProcess deployedProcess = processState.getProcessByKeyAndTenant(0, TENANT_ID);
+    final DeployedProcess deployedProcess = processState.getProcessByProcessDefinitionKeyAndTenant(0, TENANT_ID);
 
     // then
     Assertions.assertThat(deployedProcess).isNull();
@@ -342,7 +342,7 @@ public final class ProcessStateTest {
     assertThat(deployedProcess.getDeploymentKey()).isEqualTo(processRecord.getDeploymentKey());
 
     final var processByKey =
-        processState.getProcessByKeyAndTenant(processRecord.getKey(), processRecord.getTenantId());
+        processState.getProcessByProcessDefinitionKeyAndTenant(processRecord.getKey(), processRecord.getTenantId());
     assertThat(processByKey).isNotNull();
     assertThat(processByKey.getBpmnProcessId()).isEqualTo(wrapString("processId"));
     assertThat(processByKey.getVersion()).isEqualTo(1);
@@ -615,7 +615,7 @@ public final class ProcessStateTest {
     // when
     final long processDefinitionKey = FIRST_PROCESS_KEY;
     final DeployedProcess deployedProcess =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, deploymentRecord.getTenantId());
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, deploymentRecord.getTenantId());
 
     // then
     final ExecutableProcess process = deployedProcess.getProcess();
@@ -755,7 +755,7 @@ public final class ProcessStateTest {
     final var processRecord = creatingProcessRecord(processingState).setKey(processDefinitionKey);
     processState.putProcess(processDefinitionKey, processRecord);
     final var initialProcess =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
 
     // when
     processState.updateProcessState(processRecord, PersistedProcessState.PENDING_DELETION);
@@ -763,7 +763,7 @@ public final class ProcessStateTest {
     // then
     assertThat(initialProcess.getState()).isEqualTo(PersistedProcessState.ACTIVE);
     final var updatedProcess =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
     assertThat(updatedProcess.getState()).isEqualTo(PersistedProcessState.PENDING_DELETION);
   }
 
@@ -782,7 +782,7 @@ public final class ProcessStateTest {
 
     // then
     assertThat(
-            processState.getProcessByKeyAndTenant(
+            processState.getProcessByProcessDefinitionKeyAndTenant(
                 processDefinitionKey, processRecord.getTenantId()))
         .isNull();
     assertThat(
@@ -830,7 +830,7 @@ public final class ProcessStateTest {
     processState.deleteProcess(oldProcess);
 
     // then
-    assertThat(processState.getProcessByKeyAndTenant(oldDefinitionKey, oldProcess.getTenantId()))
+    assertThat(processState.getProcessByProcessDefinitionKeyAndTenant(oldDefinitionKey, oldProcess.getTenantId()))
         .isNull();
     assertThat(
             processState.getLatestProcessVersionByProcessId(
@@ -890,7 +890,7 @@ public final class ProcessStateTest {
     processState.deleteProcess(newProcess);
 
     // then
-    assertThat(processState.getProcessByKeyAndTenant(newDefinitionKey, newProcess.getTenantId()))
+    assertThat(processState.getProcessByProcessDefinitionKeyAndTenant(newDefinitionKey, newProcess.getTenantId()))
         .isNull();
     assertThat(
             processState.getLatestProcessVersionByProcessId(
@@ -958,9 +958,9 @@ public final class ProcessStateTest {
     processState.deleteProcess(newProcess);
 
     // then
-    assertThat(processState.getProcessByKeyAndTenant(midDefinitionKey, midProcess.getTenantId()))
+    assertThat(processState.getProcessByProcessDefinitionKeyAndTenant(midDefinitionKey, midProcess.getTenantId()))
         .isNull();
-    assertThat(processState.getProcessByKeyAndTenant(newDefinitionKey, midProcess.getTenantId()))
+    assertThat(processState.getProcessByProcessDefinitionKeyAndTenant(newDefinitionKey, midProcess.getTenantId()))
         .isNull();
     assertThat(
             processState.getLatestProcessVersionByProcessId(
@@ -1036,7 +1036,7 @@ public final class ProcessStateTest {
         .isEqualTo(newProcessRecord.getResourceNameBuffer());
 
     final var processByKey =
-        processState.getProcessByKeyAndTenant(
+        processState.getProcessByProcessDefinitionKeyAndTenant(
             newProcessRecord.getKey(), newProcessRecord.getTenantId());
     assertThat(processByKey).isNotNull();
     assertThat(processByKey.getBpmnProcessId()).isEqualTo(wrapString(processId));
@@ -1104,7 +1104,7 @@ public final class ProcessStateTest {
     processState.putProcess(process1.getKey(), process1);
     final var initialDeploymentKey =
         processState
-            .getProcessByKeyAndTenant(process1.getKey(), process1.getTenantId())
+            .getProcessByProcessDefinitionKeyAndTenant(process1.getKey(), process1.getTenantId())
             .getDeploymentKey();
 
     // when
@@ -1113,7 +1113,7 @@ public final class ProcessStateTest {
     // then
     final var updatedDeploymentKey =
         processState
-            .getProcessByKeyAndTenant(process1.getKey(), process1.getTenantId())
+            .getProcessByProcessDefinitionKeyAndTenant(process1.getKey(), process1.getTenantId())
             .getDeploymentKey();
 
     assertThat(initialDeploymentKey).isEqualTo(noDeploymentKey);
@@ -1130,7 +1130,7 @@ public final class ProcessStateTest {
     processState.putProcess(process.getKey(), process);
     final var initialDeploymentKey =
         processState
-            .getProcessByKeyAndTenant(process.getKey(), process.getTenantId())
+            .getProcessByProcessDefinitionKeyAndTenant(process.getKey(), process.getTenantId())
             .getDeploymentKey();
     processState.setMissingDeploymentKey(process.getTenantId(), process.getKey(), 1L);
 
@@ -1140,7 +1140,7 @@ public final class ProcessStateTest {
     // then
     final var updatedDeploymentKey =
         processState
-            .getProcessByKeyAndTenant(process.getKey(), process.getTenantId())
+            .getProcessByProcessDefinitionKeyAndTenant(process.getKey(), process.getTenantId())
             .getDeploymentKey();
 
     assertThat(initialDeploymentKey).isEqualTo(noDeploymentKey);

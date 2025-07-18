@@ -233,7 +233,7 @@ public final class EventHandle {
         targetElementId,
         variablesBuffer);
 
-    final var process = processState.getProcessByKeyAndTenant(processDefinitionKey, tenantId);
+    final var process = processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, tenantId);
 
     recordForPICreation
         .setBpmnProcessId(process.getBpmnProcessId())

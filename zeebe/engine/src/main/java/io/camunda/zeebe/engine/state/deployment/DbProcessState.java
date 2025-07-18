@@ -467,7 +467,7 @@ public final class DbProcessState implements MutableProcessState {
             tenantAwareProcessIdAndVersionTagKey);
     if (foreignKey != null) {
       final var processDefinitionKey = foreignKey.inner().wrappedKey().getValue();
-      return getProcessByKeyAndTenant(processDefinitionKey, tenantId);
+      return getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, tenantId);
     }
     return null;
   }
@@ -487,12 +487,12 @@ public final class DbProcessState implements MutableProcessState {
     }
 
     return (cachedProcessDefinitionKey != null)
-        ? getProcessByKeyAndTenant(cachedProcessDefinitionKey, tenantId)
+        ? getProcessByProcessDefinitionKeyAndTenant(cachedProcessDefinitionKey, tenantId)
         : null;
   }
 
   @Override
-  public DeployedProcess getProcessByKeyAndTenant(final long key, final String tenantId) {
+  public DeployedProcess getProcessByProcessDefinitionKeyAndTenant(final long key, final String tenantId) {
     final var tenantIdAndProcessDefinitionKey = new TenantIdAndProcessDefinitionKey(tenantId, key);
     final DeployedProcess cachedProcess =
         processByTenantAndKeyCache.getIfPresent(tenantIdAndProcessDefinitionKey);
@@ -535,7 +535,7 @@ public final class DbProcessState implements MutableProcessState {
       final DirectBuffer elementId,
       final Class<T> elementType) {
 
-    final var deployedProcess = getProcessByKeyAndTenant(processDefinitionKey, tenantId);
+    final var deployedProcess = getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, tenantId);
     if (deployedProcess == null) {
       throw new IllegalStateException(
           String.format(

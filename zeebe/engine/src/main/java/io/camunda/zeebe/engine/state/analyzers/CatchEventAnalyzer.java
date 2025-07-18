@@ -240,7 +240,7 @@ public final class CatchEventAnalyzer {
   private ExecutableProcess getProcess(final long processDefinitionKey, final String tenantId) {
 
     final var deployedProcess =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, tenantId);
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, tenantId);
     if (deployedProcess == null) {
       throw new IllegalStateException(
           String.format(

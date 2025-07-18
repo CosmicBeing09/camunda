@@ -58,7 +58,7 @@ final class ProcessInstanceModifiedEventApplier
       final ProcessInstanceModificationRecord value, final ElementInstance processInstance) {
     final var process =
         processState
-            .getProcessByKeyAndTenant(
+            .getProcessByProcessDefinitionKeyAndTenant(
                 processInstance.getValue().getProcessDefinitionKey(),
                 processInstance.getValue().getTenantId())
             .getProcess();

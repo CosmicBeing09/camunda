@@ -142,7 +142,7 @@ public class StartEventSubscriptionManager {
   private void openStartEventSubscriptions(final ProcessMetadata processRecord) {
     final long processDefinitionKey = processRecord.getKey();
     final DeployedProcess processDefinition =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
+        processState.getProcessByProcessDefinitionKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
     final ExecutableProcess process = processDefinition.getProcess();
     final List<ExecutableStartEvent> startEvents = process.getStartEvents();
     for (final ExecutableStartEvent startEvent : startEvents) {

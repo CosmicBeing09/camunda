@@ -115,7 +115,7 @@ public class MultiTenancyMigrationTest {
 
       // then
       assertProcessPersisted(
-          processState.getProcessByKeyAndTenant(123, TenantOwned.DEFAULT_TENANT_IDENTIFIER),
+          processState.getProcessByProcessDefinitionKeyAndTenant(123, TenantOwned.DEFAULT_TENANT_IDENTIFIER),
           new PersistedProcess(
               "processId",
               1,

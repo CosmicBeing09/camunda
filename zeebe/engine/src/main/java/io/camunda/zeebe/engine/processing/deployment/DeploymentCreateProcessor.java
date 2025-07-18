@@ -329,7 +329,7 @@ public final class DeploymentCreateProcessor
       if (!processMetadata.isDuplicate()) {
         final List<ExecutableStartEvent> startEvents =
             processState
-                .getProcessByKeyAndTenant(processMetadata.getKey(), processMetadata.getTenantId())
+                .getProcessByProcessDefinitionKeyAndTenant(processMetadata.getKey(), processMetadata.getTenantId())
                 .getProcess()
                 .getStartEvents();
 
@@ -373,7 +373,7 @@ public final class DeploymentCreateProcessor
       final ProcessMetadata processMetadata, final TimerInstance timer) {
     final DirectBuffer timerBpmnId =
         processState
-            .getProcessByKeyAndTenant(timer.getProcessDefinitionKey(), timer.getTenantId())
+            .getProcessByProcessDefinitionKeyAndTenant(timer.getProcessDefinitionKey(), timer.getTenantId())
             .getBpmnProcessId();
 
     if (timerBpmnId.equals(processMetadata.getBpmnProcessIdBuffer())

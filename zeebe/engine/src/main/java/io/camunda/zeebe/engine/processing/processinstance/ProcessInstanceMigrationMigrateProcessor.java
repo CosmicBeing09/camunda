@@ -157,10 +157,10 @@ public class ProcessInstanceMigrationMigrateProcessor
     requireNonDuplicateSourceElementIds(mappingInstructions, processInstanceKey);
 
     final DeployedProcess targetProcessDefinition =
-        processState.getProcessByKeyAndTenant(
+        processState.getProcessByProcessDefinitionKeyAndTenant(
             targetProcessDefinitionKey, processInstance.getValue().getTenantId());
     final DeployedProcess sourceProcessDefinition =
-        processState.getProcessByKeyAndTenant(
+        processState.getProcessByProcessDefinitionKeyAndTenant(
             processInstance.getValue().getProcessDefinitionKey(),
             processInstance.getValue().getTenantId());
 
