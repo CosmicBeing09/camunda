@@ -37,8 +37,8 @@ public final class JobUpdateRetriesProcessor implements TypedRecordProcessor<Job
   public void processRecord(final TypedRecord<JobRecord> command) {
     final long jobKey = command.getKey();
     jobUpdateBehaviour
-        .getJob(jobKey, command)
-        .flatMap(job -> jobUpdateBehaviour.isAuthorized(command, job))
+        .fetchJobOrReject(jobKey, command)
+        .flatMap(job -> jobUpdateBehaviour.authorizeJobUpdate(command, job))
         .ifRightOrLeft(
             job ->
                 jobUpdateBehaviour
