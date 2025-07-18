@@ -187,7 +187,7 @@ public final class ProcessInstanceServiceTest {
   void shouldCancelProcessInstanceBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -283,7 +283,7 @@ public final class ProcessInstanceServiceTest {
   void shouldResolveIncidentBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -314,7 +314,7 @@ public final class ProcessInstanceServiceTest {
   void shouldMigrateProcessInstanceBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();
@@ -362,7 +362,7 @@ public final class ProcessInstanceServiceTest {
   void shouldModifyProcessInstanceBatchOperationWithResult() {
     // given
     final var filter =
-        FilterBuilders.processInstance(b -> b.processDefinitionIds("test-process-definition-id"));
+        FilterBuilders.processInstance(b -> b.processDefinitionIdOperations("test-process-definition-id"));
 
     final long batchOperationKey = 123L;
     final var record = new BatchOperationCreationRecord();

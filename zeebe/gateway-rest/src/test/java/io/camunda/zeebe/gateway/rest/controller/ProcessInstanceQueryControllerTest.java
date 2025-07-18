@@ -700,9 +700,9 @@ public class ProcessInstanceQueryControllerTest extends RestControllerTest {
 
     final var orFilters =
         List.of(
-            new ProcessInstanceFilter.Builder().processDefinitionIds("process_v1").build(),
+            new ProcessInstanceFilter.Builder().processDefinitionIdOperations("process_v1").build(),
             new ProcessInstanceFilter.Builder()
-                .processDefinitionIds("process_v2")
+                .processDefinitionIdOperations("process_v2")
                 .hasIncident(true)
                 .build());
 
