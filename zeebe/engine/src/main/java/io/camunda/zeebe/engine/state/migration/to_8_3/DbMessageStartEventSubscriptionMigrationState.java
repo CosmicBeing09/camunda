@@ -48,7 +48,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
         (key, value) -> {
           value.getRecord().setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
           to.messageName.setValueFromBuffer(key.first().getBuffer());
-          to.processDefinitionKey.wrapLong(key.second().getValue());
+          to.processDefinitionKey.setValue(key.second().getValue());
           to.subscriptionsColumnFamily.insert(to.messageNameAndProcessDefinitionKey, value);
         });
 
@@ -59,7 +59,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
     iterator.drain(
         from.getSubscriptionsOfProcessDefinitionKeyColumnFamily(),
         (key, value) -> {
-          to.processDefinitionKey.wrapLong(key.first().getValue());
+          to.processDefinitionKey.setValue(key.first().getValue());
           to.messageName.setValueFromBuffer(key.second().getBuffer());
           to.subscriptionsOfProcessDefinitionKeyColumnFamily.insert(
               to.processDefinitionKeyAndMessageName, DbNil.INSTANCE);

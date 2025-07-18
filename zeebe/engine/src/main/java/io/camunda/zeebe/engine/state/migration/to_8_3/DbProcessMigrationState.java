@@ -167,7 +167,7 @@ public final class DbProcessMigrationState {
         deprecatedProcessCacheColumnFamily,
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          processDefinitionKey.wrapLong(key.getValue());
+          processDefinitionKey.setValue(key.getValue());
           processColumnFamily.insert(tenantAwareProcessDefinitionKey, value);
         });
 
@@ -176,7 +176,7 @@ public final class DbProcessMigrationState {
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
           processId.setValueFromBuffer(value.getBpmnProcessId());
-          processVersion.wrapLong(value.getVersion());
+          processVersion.setValue(value.getVersion());
           processByIdAndVersionColumnFamily.insert(tenantAwareProcessIdAndVersionKey, value);
         });
 

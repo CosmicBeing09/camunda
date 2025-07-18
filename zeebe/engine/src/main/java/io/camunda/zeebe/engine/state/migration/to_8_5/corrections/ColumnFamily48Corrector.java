@@ -202,7 +202,7 @@ public final class ColumnFamily48Corrector {
     if (currentCount != null) {
       LOG.trace(
           "Found existing message stats entry with key [{}] and value [{}]", key, currentCount);
-      messagesDeadlineCount.wrapLong(valueToMove + currentCount.getValue());
+      messagesDeadlineCount.setValue(valueToMove + currentCount.getValue());
     }
 
     moveEntryFromRecoveryColumnFamilyToMessageStatsColumnFamily(

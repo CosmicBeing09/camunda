@@ -47,7 +47,7 @@ public class DbMessageSubscriptionMigrationState {
         (key, value) -> {
           to.messageName.setValueFromBuffer(key.first().first().getBuffer());
           to.correlationKey.setValueFromBuffer(key.first().second().getBuffer());
-          to.elementInstanceKey.wrapLong(key.second().getValue());
+          to.elementInstanceKey.setValue(key.second().getValue());
           to.messageNameAndCorrelationKeyColumnFamily.insert(
               to.tenantAwareNameCorrelationAndElementInstanceKey, DbNil.INSTANCE);
         });

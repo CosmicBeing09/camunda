@@ -52,7 +52,7 @@ public class DbDecisionMigrationState {
         from.getDecisionsByKey(),
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          to.dbDecisionKey.wrapLong(key.getValue());
+          to.dbDecisionKey.setValue(key.getValue());
           to.decisionsByKey.insert(to.tenantAwareDecisionKey, value);
         });
 
@@ -65,7 +65,7 @@ public class DbDecisionMigrationState {
         from.getDecisionRequirementsByKey(),
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          to.dbDecisionRequirementsKey.wrapLong(key.getValue());
+          to.dbDecisionRequirementsKey.setValue(key.getValue());
           to.decisionRequirementsByKey.insert(to.tenantAwareDecisionRequirementsKey, value);
         });
 
@@ -78,7 +78,7 @@ public class DbDecisionMigrationState {
         from.getLatestDecisionKeysByDecisionId(),
         (key, value) -> {
           to.dbDecisionId.setValueFromBuffer(key.getBuffer());
-          to.dbDecisionKey.wrapLong(value.inner().getValue());
+          to.dbDecisionKey.setValue(value.inner().getValue());
           to.latestDecisionKeysByDecisionId.insert(to.tenantAwareDecisionId, to.fkDecision);
         });
 
@@ -91,7 +91,7 @@ public class DbDecisionMigrationState {
         from.getLatestDecisionRequirementsKeysById(),
         (key, value) -> {
           to.dbDecisionRequirementsId.setValueFromBuffer(key.getBuffer());
-          to.dbDecisionRequirementsKey.wrapLong(value.inner().getValue());
+          to.dbDecisionRequirementsKey.setValue(value.inner().getValue());
           to.latestDecisionRequirementsKeysById.insert(
               to.tenantAwareDecisionRequirementsId, to.fkDecisionRequirements);
         });
@@ -103,8 +103,8 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getDecisionKeyByDecisionRequirementsKey(),
         (key, value) -> {
-          to.dbDecisionRequirementsKey.wrapLong(key.first().inner().getValue());
-          to.dbDecisionKey.wrapLong(key.second().inner().getValue());
+          to.dbDecisionRequirementsKey.setValue(key.first().inner().getValue());
+          to.dbDecisionKey.setValue(key.second().inner().getValue());
           to.decisionKeyByDecisionRequirementsKey.insert(
               to.dbDecisionRequirementsKeyAndDecisionKey, DbNil.INSTANCE);
         });
@@ -119,7 +119,7 @@ public class DbDecisionMigrationState {
         (key, value) -> {
           to.dbDecisionId.setValueFromBuffer(key.first().getBuffer());
           to.dbDecisionVersion.wrapInt(key.second().getValue());
-          to.dbDecisionKey.wrapLong(value.inner().getValue());
+          to.dbDecisionKey.setValue(value.inner().getValue());
           to.decisionKeyByDecisionIdAndVersion.insert(
               to.tenantAwareDecisionIdAndVersion, to.fkDecision);
         });
@@ -134,7 +134,7 @@ public class DbDecisionMigrationState {
         (key, value) -> {
           to.dbDecisionRequirementsId.setValueFromBuffer(key.first().getBuffer());
           to.dbDecisionRequirementsVersion.wrapInt(key.second().getValue());
-          to.dbDecisionRequirementsKey.wrapLong(value.inner().getValue());
+          to.dbDecisionRequirementsKey.setValue(value.inner().getValue());
           to.decisionRequirementsKeyByIdAndVersion.insert(
               to.tenantAwareDecisionRequirementsIdAndVersion, to.fkDecisionRequirements);
         });

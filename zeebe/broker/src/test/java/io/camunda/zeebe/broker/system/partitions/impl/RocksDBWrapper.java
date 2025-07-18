@@ -34,7 +34,7 @@ public final class RocksDBWrapper {
 
   public void putInt(final String key, final int value) {
     this.key.setValueFromString(key);
-    this.value.wrapLong(value);
+    this.value.setValue(value);
     defaultColumnFamily.upsert(this.key, this.value);
   }
 }

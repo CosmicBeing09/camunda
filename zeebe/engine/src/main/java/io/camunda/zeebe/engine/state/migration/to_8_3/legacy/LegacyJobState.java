@@ -83,7 +83,7 @@ public class LegacyJobState {
   }
 
   private void createJobRecord(final long key, final JobRecord record) {
-    jobKey.wrapLong(key);
+    jobKey.setValue(key);
     // do not persist variables in job state
     jobRecordToWrite.setRecordWithoutVariables(record);
     jobsColumnFamily.insert(jobKey, jobRecordToWrite);
@@ -94,7 +94,7 @@ public class LegacyJobState {
 
     jobTypeKey.setValueFromBuffer(type);
 
-    jobKey.wrapLong(key);
+    jobKey.setValue(key);
     // Need to upsert here because jobs can be marked as failed (and thus made activatable)
     // without activating them first
     activatableColumnFamily.upsert(typeJobKey, DbNil.INSTANCE);

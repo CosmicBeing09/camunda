@@ -65,7 +65,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   public List<CompensationSubscription> findSubscriptionsByProcessInstanceKey(
       final String tenantId, final long piKey) {
     tenantIdKey.setValueFromString(tenantId);
-    processInstanceKey.wrapLong(piKey);
+    processInstanceKey.setValue(piKey);
 
     final List<CompensationSubscription> subscriptions = new ArrayList<>();
     compensationSubscriptionColumnFamily.whileEqualPrefix(
@@ -80,7 +80,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   public Optional<CompensationSubscription> findSubscriptionByCompensationHandlerId(
       final String tenantId, final long piKey, final String compensationHandlerId) {
     tenantIdKey.setValueFromString(tenantId);
-    processInstanceKey.wrapLong(piKey);
+    processInstanceKey.setValue(piKey);
 
     final List<CompensationSubscription> compensationSubscription = new ArrayList<>();
     compensationSubscriptionColumnFamily.whileEqualPrefix(
@@ -98,7 +98,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   public List<CompensationSubscription> findSubscriptionsByThrowEventInstanceKey(
       final String tenantId, final long piKey, final long throwEventInstanceKey) {
     tenantIdKey.setValueFromString(tenantId);
-    processInstanceKey.wrapLong(piKey);
+    processInstanceKey.setValue(piKey);
 
     final List<CompensationSubscription> compensations = new ArrayList<>();
     compensationSubscriptionColumnFamily.whileEqualPrefix(
@@ -139,8 +139,8 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
 
   private void wrapCompensationKeys(
       final long processInstance, final long key, final String tenantId) {
-    processInstanceKey.wrapLong(processInstance);
-    recordKey.wrapLong(key);
+    processInstanceKey.setValue(processInstance);
+    recordKey.setValue(key);
     tenantIdKey.setValueFromString(tenantId);
   }
 }

@@ -117,7 +117,7 @@ public class DbDistributionMigrationState8dot7 {
         (compositeKey, nil) -> {
           final var distributionKey = compositeKey.first().inner().getValue();
           final var partitionId = compositeKey.second().getValue();
-          this.distributionKey.wrapLong(distributionKey);
+          this.distributionKey.setValue(distributionKey);
           partitionKey.wrapInt(partitionId);
 
           final var persistedDistribution =

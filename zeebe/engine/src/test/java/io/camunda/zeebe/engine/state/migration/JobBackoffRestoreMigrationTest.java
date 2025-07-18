@@ -63,7 +63,7 @@ public class JobBackoffRestoreMigrationTest {
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
 
-    jobKey.wrapLong(1);
+    jobKey.setValue(1);
   }
 
   // regression test of https://github.com/camunda/camunda/issues/14329
@@ -74,7 +74,7 @@ public class JobBackoffRestoreMigrationTest {
     final JobRecord record = createJobRecord(1000);
     jobState.create(jobKey.getValue(), record);
     jobState.fail(jobKey.getValue(), record);
-    backoffKey.wrapLong(record.getRecurringTime());
+    backoffKey.setValue(record.getRecurringTime());
     backoffColumnFamily.deleteExisting(backoffJobKey);
 
     // when
@@ -94,14 +94,14 @@ public class JobBackoffRestoreMigrationTest {
     final JobRecord record = createJobRecord(1000);
     jobState.create(jobKey.getValue(), record);
     jobState.fail(jobKey.getValue(), record);
-    backoffKey.wrapLong(record.getRecurringTime());
+    backoffKey.setValue(record.getRecurringTime());
     backoffColumnFamily.deleteExisting(backoffJobKey);
 
-    jobKey.wrapLong(2);
+    jobKey.setValue(2);
     final JobRecord backoffRecord = createJobRecord(2000);
     jobState.create(jobKey.getValue(), backoffRecord);
     jobState.fail(jobKey.getValue(), backoffRecord);
-    backoffKey.wrapLong(backoffRecord.getRecurringTime());
+    backoffKey.setValue(backoffRecord.getRecurringTime());
     assertThat(backoffColumnFamily.count()).isEqualTo(1);
 
     // when
@@ -123,7 +123,7 @@ public class JobBackoffRestoreMigrationTest {
     jobState.create(jobKey.getValue(), record);
     jobState.fail(jobKey.getValue(), record);
 
-    jobKey.wrapLong(2);
+    jobKey.setValue(2);
     final JobRecord backoffRecord = createJobRecord(2000);
     jobState.create(jobKey.getValue(), backoffRecord);
     jobState.fail(jobKey.getValue(), backoffRecord);
@@ -147,9 +147,9 @@ public class JobBackoffRestoreMigrationTest {
     jobState.create(jobKey.getValue(), record);
     record = jobState.updateJobRetries(jobKey.getValue(), 0);
     jobState.fail(jobKey.getValue(), record);
-    backoffKey.wrapLong(record.getRecurringTime());
+    backoffKey.setValue(record.getRecurringTime());
 
-    jobKey.wrapLong(2);
+    jobKey.setValue(2);
     final JobRecord backoffRecord = createJobRecord(2000);
     jobState.create(jobKey.getValue(), backoffRecord);
     jobState.fail(jobKey.getValue(), backoffRecord);
@@ -172,14 +172,14 @@ public class JobBackoffRestoreMigrationTest {
     final JobRecord record = createJobRecord(1000);
     jobState.create(jobKey.getValue(), record);
     jobState.fail(jobKey.getValue(), record);
-    backoffKey.wrapLong(record.getRecurringTime());
+    backoffKey.setValue(record.getRecurringTime());
     jobState.updateJobRetries(jobKey.getValue(), 0);
 
-    jobKey.wrapLong(2);
+    jobKey.setValue(2);
     final JobRecord backoffRecord = createJobRecord(2000);
     jobState.create(jobKey.getValue(), backoffRecord);
     jobState.fail(jobKey.getValue(), backoffRecord);
-    backoffKey.wrapLong(backoffRecord.getRecurringTime());
+    backoffKey.setValue(backoffRecord.getRecurringTime());
 
     // when
     final var context = new MigrationTaskContextImpl(new ClusterContextImpl(1), processingState);
@@ -189,7 +189,7 @@ public class JobBackoffRestoreMigrationTest {
     // then
     assertThat(backoffColumnFamily.isEmpty()).isFalse();
     assertThat(backoffColumnFamily.count()).isEqualTo(1);
-    backoffKey.wrapLong(record.getRecurringTime());
+    backoffKey.setValue(record.getRecurringTime());
     assertThat(backoffColumnFamily.exists(backoffJobKey)).isFalse();
   }
 

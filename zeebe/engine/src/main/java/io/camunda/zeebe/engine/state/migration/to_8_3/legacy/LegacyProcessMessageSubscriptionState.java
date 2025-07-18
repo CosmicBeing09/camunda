@@ -53,7 +53,7 @@ public final class LegacyProcessMessageSubscriptionState {
   }
 
   private void wrapSubscriptionKeys(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.setValue(elementInstanceKey);
     this.messageName.setValueFromBuffer(messageName);
   }
 

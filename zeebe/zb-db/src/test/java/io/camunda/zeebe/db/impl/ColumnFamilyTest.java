@@ -47,12 +47,12 @@ public final class ColumnFamilyTest {
   @Test
   public void shouldInsertValue() {
     // given
-    key.wrapLong(1213);
-    value.wrapLong(255);
+    key.setValue(1213);
+    value.setValue(255);
 
     // when
     columnFamily.insert(key, value);
-    value.wrapLong(221);
+    value.setValue(221);
 
     // then
     final DbLong zbLong = columnFamily.get(key);
@@ -67,7 +67,7 @@ public final class ColumnFamilyTest {
   @Test
   public void shouldReturnNullIfNotExist() {
     // given
-    key.wrapLong(1213);
+    key.setValue(1213);
 
     // when
     final DbLong zbLong = columnFamily.get(key);
@@ -83,16 +83,16 @@ public final class ColumnFamilyTest {
 
     // when
     upsertKeyValuePair(456789, 12345);
-    value.wrapLong(221);
+    value.setValue(221);
 
     // then
-    key.wrapLong(1213);
+    key.setValue(1213);
     DbLong longValue = columnFamily.get(key);
 
     assertThat(longValue).isNotNull();
     assertThat(longValue.getValue()).isEqualTo(255);
 
-    key.wrapLong(456789);
+    key.setValue(456789);
     longValue = columnFamily.get(key);
 
     assertThat(longValue).isNotNull();
@@ -107,17 +107,17 @@ public final class ColumnFamilyTest {
     // when
     DbLong longValue = columnFamily.get(key);
     upsertKeyValuePair(456789, 12345);
-    value.wrapLong(221);
+    value.setValue(221);
 
     // then
     assertThat(longValue.getValue()).isEqualTo(221);
-    key.wrapLong(1213);
+    key.setValue(1213);
     longValue = columnFamily.get(key);
 
     assertThat(longValue).isNotNull();
     assertThat(longValue.getValue()).isEqualTo(255);
 
-    key.wrapLong(456789);
+    key.setValue(456789);
     longValue = columnFamily.get(key);
 
     assertThat(longValue).isNotNull();
@@ -139,7 +139,7 @@ public final class ColumnFamilyTest {
   @Test
   public void shouldNotExist() {
     // given
-    key.wrapLong(1213);
+    key.setValue(1213);
 
     // when
     final boolean exists = columnFamily.exists(key);
@@ -170,11 +170,11 @@ public final class ColumnFamilyTest {
     upsertKeyValuePair(1213, 255);
 
     // when
-    key.wrapLong(700);
+    key.setValue(700);
     columnFamily.deleteIfExists(key);
 
     // then
-    key.wrapLong(1213);
+    key.setValue(1213);
     final boolean exists = columnFamily.exists(key);
     assertThat(exists).isTrue();
 
@@ -246,19 +246,19 @@ public final class ColumnFamilyTest {
     // then
     assertThat(keys).isEmpty();
     assertThat(values).isEmpty();
-    key.wrapLong(4567L);
+    key.setValue(4567L);
     assertThat(columnFamily.exists(key)).isFalse();
 
-    key.wrapLong(6734);
+    key.setValue(6734);
     assertThat(columnFamily.exists(key)).isFalse();
 
-    key.wrapLong(1213);
+    key.setValue(1213);
     assertThat(columnFamily.exists(key)).isFalse();
 
-    key.wrapLong(1);
+    key.setValue(1);
     assertThat(columnFamily.exists(key)).isFalse();
 
-    key.wrapLong(Short.MAX_VALUE);
+    key.setValue(Short.MAX_VALUE);
     assertThat(columnFamily.exists(key)).isFalse();
   }
 
@@ -320,7 +320,7 @@ public final class ColumnFamilyTest {
   public void shouldUseWhileTrueWithStartAt() {
     // given
     final var startAt = new DbLong();
-    startAt.wrapLong(1213);
+    startAt.setValue(1213);
 
     upsertKeyValuePair(4567, 123);
     upsertKeyValuePair(6734, 921);
@@ -349,7 +349,7 @@ public final class ColumnFamilyTest {
   public void shouldUseWhileTrueWithStartAtMissingKey() {
     // given
     final var startAt = new DbLong();
-    startAt.wrapLong(1212);
+    startAt.setValue(1212);
 
     upsertKeyValuePair(4567, 123);
     upsertKeyValuePair(6734, 921);
@@ -411,8 +411,8 @@ public final class ColumnFamilyTest {
 
   @Test
   public void shouldThrowOnInsert() {
-    key.wrapLong(1);
-    value.wrapLong(10);
+    key.setValue(1);
+    value.setValue(10);
     columnFamily.insert(key, value);
     assertThatThrownBy(() -> columnFamily.insert(key, value))
         .hasMessageContaining("already exists")
@@ -421,8 +421,8 @@ public final class ColumnFamilyTest {
 
   @Test
   public void shouldThrowOnUpdate() {
-    key.wrapLong(1);
-    value.wrapLong(10);
+    key.setValue(1);
+    value.setValue(10);
     assertThatThrownBy(() -> columnFamily.update(key, value))
         .hasMessageContaining("does not exist")
         .isInstanceOf(ZeebeDbInconsistentException.class);
@@ -430,7 +430,7 @@ public final class ColumnFamilyTest {
 
   @Test
   public void shouldThrowOnDeleteExisting() {
-    key.wrapLong(1);
+    key.setValue(1);
     assertThatThrownBy(() -> columnFamily.deleteExisting(key))
         .hasMessageContaining("does not exist")
         .isInstanceOf(ZeebeDbInconsistentException.class);
@@ -439,7 +439,7 @@ public final class ColumnFamilyTest {
   @Test
   public void shouldThrowOnMissingForeignKeyInKeyPosition() {
     // given
-    key.wrapLong(1);
+    key.setValue(1);
     final var foreignKey = new DbForeignKey<>(key, DefaultColumnFamily.DEFAULT);
     final var value = new DbLong();
     final var columnFamilyWithForeignKey =
@@ -455,7 +455,7 @@ public final class ColumnFamilyTest {
   @Test
   public void shouldThrowOnMissingForeignKeyInValuePosition() {
     // given
-    key.wrapLong(1);
+    key.setValue(1);
     final var foreignKey = new DbForeignKey<>(new DbLong(), DefaultColumnFamily.DEFAULT);
     final var columnFamilyWithForeignKey =
         zeebeDb.createColumnFamily(
@@ -467,8 +467,8 @@ public final class ColumnFamilyTest {
   }
 
   private void upsertKeyValuePair(final int key, final int value) {
-    this.key.wrapLong(key);
-    this.value.wrapLong(value);
+    this.key.setValue(key);
+    this.value.setValue(value);
     columnFamily.upsert(this.key, this.value);
   }
 }

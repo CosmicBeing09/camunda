@@ -22,8 +22,8 @@ public final class DbCompositeKeyTest {
     final DbLong secondLong = new DbLong();
     final DbCompositeKey<DbLong, DbLong> compositeKey = new DbCompositeKey<>(firstLong, secondLong);
 
-    firstLong.wrapLong(23);
-    secondLong.wrapLong(121);
+    firstLong.setValue(23);
+    secondLong.setValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -42,8 +42,8 @@ public final class DbCompositeKeyTest {
     final DbLong secondLong = new DbLong();
     final DbCompositeKey<DbLong, DbLong> compositeKey = new DbCompositeKey<>(firstLong, secondLong);
 
-    firstLong.wrapLong(23);
-    secondLong.wrapLong(121);
+    firstLong.setValue(23);
+    secondLong.setValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -68,7 +68,7 @@ public final class DbCompositeKeyTest {
         new DbCompositeKey<>(firstString, secondLong);
 
     firstString.setValueFromString("foo");
-    secondLong.wrapLong(121);
+    secondLong.setValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -94,7 +94,7 @@ public final class DbCompositeKeyTest {
         new DbCompositeKey<>(firstString, secondLong);
 
     firstString.setValueFromString("foo");
-    secondLong.wrapLong(121);
+    secondLong.setValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -123,8 +123,8 @@ public final class DbCompositeKeyTest {
         new DbCompositeKey<>(compositeKey, thirdLong);
 
     firstString.setValueFromString("foo");
-    secondLong.wrapLong(121);
-    thirdLong.wrapLong(100_234L);
+    secondLong.setValue(121);
+    thirdLong.setValue(100_234L);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -163,8 +163,8 @@ public final class DbCompositeKeyTest {
         new DbCompositeKey<>(compositeKey, thirdLong);
 
     firstString.setValueFromString("foo");
-    secondLong.wrapLong(121);
-    thirdLong.wrapLong(100_234L);
+    secondLong.setValue(121);
+    thirdLong.setValue(100_234L);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();

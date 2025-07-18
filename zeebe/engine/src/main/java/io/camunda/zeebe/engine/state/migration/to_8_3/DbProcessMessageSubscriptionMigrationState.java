@@ -45,7 +45,7 @@ public class DbProcessMessageSubscriptionMigrationState {
     iterator.drain(
         from.getSubscriptionColumnFamily(),
         (key, value) -> {
-          to.elementInstanceKey.wrapLong(key.first().getValue());
+          to.elementInstanceKey.setValue(key.first().getValue());
           to.messageName.setValueFromBuffer(key.second().getBuffer());
           value.getRecord().setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
           to.subscriptionColumnFamily.insert(to.elementKeyAndMessageName, value);

@@ -58,7 +58,7 @@ public class JobTimeoutCleanupMigrationTest {
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.JOB_DEADLINES, transactionContext, deadlineJobKey, DbNil.INSTANCE);
 
-    jobKey.wrapLong(1);
+    jobKey.setValue(1);
   }
 
   @Test
@@ -66,7 +66,7 @@ public class JobTimeoutCleanupMigrationTest {
     // given
     final int deadline = 123;
     jobsColumnFamily.upsert(jobKey, createJobRecordValue(deadline));
-    deadlineKey.wrapLong(deadline);
+    deadlineKey.setValue(deadline);
     deadlinesColumnFamily.upsert(deadlineJobKey, DbNil.INSTANCE);
 
     // when
@@ -81,7 +81,7 @@ public class JobTimeoutCleanupMigrationTest {
   public void afterCleanupOrphanedTimeoutIsDeleted() {
     // given
     jobsColumnFamily.upsert(jobKey, new JobRecordValue());
-    deadlineKey.wrapLong(123);
+    deadlineKey.setValue(123);
     deadlinesColumnFamily.upsert(deadlineJobKey, DbNil.INSTANCE);
     jobsColumnFamily.deleteExisting(jobKey);
 
@@ -99,9 +99,9 @@ public class JobTimeoutCleanupMigrationTest {
     final int firstDeadline = 123;
     final int secondDeadline = 456;
     jobsColumnFamily.upsert(jobKey, createJobRecordValue(secondDeadline));
-    deadlineKey.wrapLong(firstDeadline);
+    deadlineKey.setValue(firstDeadline);
     deadlinesColumnFamily.upsert(deadlineJobKey, DbNil.INSTANCE);
-    deadlineKey.wrapLong(secondDeadline);
+    deadlineKey.setValue(secondDeadline);
     deadlinesColumnFamily.upsert(deadlineJobKey, DbNil.INSTANCE);
 
     // when
@@ -109,9 +109,9 @@ public class JobTimeoutCleanupMigrationTest {
         new MigrationTaskContextImpl(new ClusterContextImpl(1), processingState));
 
     // then
-    deadlineKey.wrapLong(firstDeadline);
+    deadlineKey.setValue(firstDeadline);
     assertThat(deadlinesColumnFamily.exists(deadlineJobKey)).isFalse();
-    deadlineKey.wrapLong(secondDeadline);
+    deadlineKey.setValue(secondDeadline);
     assertThat(deadlinesColumnFamily.exists(deadlineJobKey)).isTrue();
   }
 

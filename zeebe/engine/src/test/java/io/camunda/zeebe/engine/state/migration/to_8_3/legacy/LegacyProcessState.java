@@ -150,11 +150,11 @@ public final class LegacyProcessState {
 
   private void persistProcess(final long processDefinitionKey, final ProcessRecord processRecord) {
     persistedProcess.wrap(processRecord, processDefinitionKey);
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
     processColumnFamily.upsert(this.processDefinitionKey, persistedProcess);
 
     processId.setValueFromBuffer(processRecord.getBpmnProcessIdBuffer());
-    processVersion.wrapLong(processRecord.getVersion());
+    processVersion.setValue(processRecord.getVersion());
 
     processByIdAndVersionColumnFamily.upsert(idAndVersionKey, persistedProcess);
   }
@@ -316,7 +316,7 @@ public final class LegacyProcessState {
   }
 
   private DeployedProcess lookupProcessByIdAndPersistedVersion(final long latestVersion) {
-    processVersion.wrapLong(latestVersion);
+    processVersion.setValue(latestVersion);
 
     final PersistedProcess processWithVersionAndId =
         processByIdAndVersionColumnFamily.get(idAndVersionKey);
@@ -330,7 +330,7 @@ public final class LegacyProcessState {
   private DeployedProcess lookupPersistenceState(
       final DirectBuffer processIdBuffer, final int version) {
     processId.setValueFromBuffer(processIdBuffer);
-    processVersion.wrapLong(version);
+    processVersion.setValue(version);
 
     final PersistedProcess processWithVersionAndId =
         processByIdAndVersionColumnFamily.get(idAndVersionKey);
@@ -350,7 +350,7 @@ public final class LegacyProcessState {
   }
 
   private DeployedProcess lookupPersistenceStateForProcessByKey(final long processDefinitionKey) {
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
 
     final PersistedProcess processWithKey = processColumnFamily.get(this.processDefinitionKey);
     if (processWithKey != null) {

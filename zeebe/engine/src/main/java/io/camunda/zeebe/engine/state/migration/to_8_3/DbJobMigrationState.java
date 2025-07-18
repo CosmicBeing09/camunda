@@ -46,7 +46,7 @@ public class DbJobMigrationState {
         from.getActivatableColumnFamily(),
         (key, value) -> {
           to.jobTypeKey.setValueFromString(key.first().toString());
-          to.fkJob.inner().wrapLong(key.second().inner().getValue());
+          to.fkJob.inner().setValue(key.second().inner().getValue());
           to.activatableColumnFamily.insert(to.tenantAwareTypeJobKey, DbNil.INSTANCE);
         });
   }

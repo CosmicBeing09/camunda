@@ -188,7 +188,7 @@ public class DecisionMigrationTest {
 
     private void assertContainsDecision(final DecisionRecord decisionRecord) {
       dbDecisionId.setValueFromString(decisionRecord.getDecisionId());
-      dbDecisionKey.wrapLong(decisionRecord.getDecisionKey());
+      dbDecisionKey.setValue(decisionRecord.getDecisionKey());
       dbDecisionVersion.wrapInt(decisionRecord.getVersion());
       assertThat(decisionKeyByDecisionIdAndVersion.exists(decisionIdAndVersion)).isTrue();
       assertThat(decisionKeyByDecisionIdAndVersion.get(decisionIdAndVersion).inner().getValue())
