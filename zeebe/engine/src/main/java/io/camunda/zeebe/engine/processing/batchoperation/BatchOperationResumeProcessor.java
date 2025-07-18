@@ -82,45 +82,45 @@ public final class BatchOperationResumeProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> tenantCreateCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> roleCreateCommand) {
     final var request =
         new AuthorizationRequest(
-            tenantCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            roleCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = tenantCreateCommand.getValue();
-    final var batchOperationKey = tenantCreateCommand.getValue().getBatchOperationKey();
+    final var recordValue = roleCreateCommand.getValue();
+    final var batchOperationKey = roleCreateCommand.getValue().getBatchOperationKey();
     final var resumeKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to resume a batch operation with key '{}': {}",
-        tenantCreateCommand.getKey(),
+        roleCreateCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(tenantCreateCommand, batchOperationKey, recordValue);
+      rejectNotFound(roleCreateCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be resumed
     if (!batchOperation.get().canResume()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(tenantCreateCommand, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(roleCreateCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
-    resumeBatchOperation(resumeKey, batchOperation.get(), tenantCreateCommand.getValue());
+    resumeBatchOperation(resumeKey, batchOperation.get(), roleCreateCommand.getValue());
     commandDistributionBehavior
         .withKey(resumeKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
 
     metrics.recordResumed(batchOperation.get().getBatchOperationType());
   }

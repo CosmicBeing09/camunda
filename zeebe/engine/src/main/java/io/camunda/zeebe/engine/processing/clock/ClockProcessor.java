@@ -55,27 +55,27 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ClockRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<ClockRecord> roleCreateCommand) {
     final var authRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var intent = (ClockIntent) tenantCreateCommand.getIntent();
-    final var clockRecord = tenantCreateCommand.getValue();
+    final var intent = (ClockIntent) roleCreateCommand.getIntent();
+    final var clockRecord = roleCreateCommand.getValue();
 
     if (intent == ClockIntent.PIN && clockRecord.getTime() < 0) {
       final var rejectionMessage =
           "Expected pin time to be not negative but it was %d".formatted(clockRecord.getTime());
 
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       responseWriter.writeRejectionOnCommand(
-          tenantCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+          roleCreateCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       return;
     }
 
@@ -83,12 +83,12 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (tenantCreateCommand.hasRequestMetadata()) {
+    if (roleCreateCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord,
-          tenantCreateCommand);
+          roleCreateCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(tenantCreateCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(roleCreateCommand);
   }
 
   @Override

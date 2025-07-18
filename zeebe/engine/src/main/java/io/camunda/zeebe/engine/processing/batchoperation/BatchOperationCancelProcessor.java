@@ -71,19 +71,19 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> tenantCreateCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> roleCreateCommand) {
     final var request =
         new AuthorizationRequest(
-            tenantCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            roleCreateCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = tenantCreateCommand.getValue();
+    final var recordValue = roleCreateCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
     final var cancelKey = keyGenerator.nextKey();
     LOGGER.debug(
@@ -95,21 +95,21 @@ public final class BatchOperationCancelProcessor
     if (batchOperation.isPresent() && batchOperation.get().canCancel()) {
       cancelBatchOperationEvent(cancelKey, recordValue);
       responseWriter.writeEventOnCommand(
-          cancelKey, BatchOperationIntent.CANCELED, tenantCreateCommand.getValue(),
-          tenantCreateCommand);
+          cancelKey, BatchOperationIntent.CANCELED, roleCreateCommand.getValue(),
+          roleCreateCommand);
       commandDistributionBehavior
           .withKey(cancelKey)
           .inQueue(DistributionQueue.BATCH_OPERATION)
-          .distribute(tenantCreateCommand);
+          .distribute(roleCreateCommand);
 
       metrics.recordCancelled(batchOperation.get().getBatchOperationType());
     } else {
       rejectionWriter.appendRejection(
-          tenantCreateCommand,
+          roleCreateCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
       responseWriter.writeRejectionOnCommand(
-          tenantCreateCommand,
+          roleCreateCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
     }

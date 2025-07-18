@@ -66,25 +66,25 @@ public final class BatchOperationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> tenantCreateCommand) {
-    if (isEmptyOrNullFilter(tenantCreateCommand)) {
+  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> roleCreateCommand) {
+    if (isEmptyOrNullFilter(roleCreateCommand)) {
       rejectionWriter.appendRejection(
-          tenantCreateCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          roleCreateCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       responseWriter.writeRejectionOnCommand(
-          tenantCreateCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          roleCreateCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
 
-    final var authorizationResult = isAuthorized(tenantCreateCommand);
+    final var authorizationResult = isAuthorized(roleCreateCommand);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    final var recordValue = tenantCreateCommand.getValue();
+    final var recordValue = roleCreateCommand.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
     metrics.startTotalLatencyMeasure(key, recordValue.getBatchOperationType());
 
@@ -99,11 +99,11 @@ public final class BatchOperationCreateProcessor
         recordWithKey,
         FollowUpEventMetadata.of(b -> b.batchOperationReference(key)));
     responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey,
-        tenantCreateCommand);
+        roleCreateCommand);
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(tenantCreateCommand.getValueType(), tenantCreateCommand.getIntent(), recordWithKey);
+        .distribute(roleCreateCommand.getValueType(), roleCreateCommand.getIntent(), recordWithKey);
 
     metrics.recordCreated(recordWithKey.getBatchOperationType());
   }

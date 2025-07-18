@@ -52,24 +52,24 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> tenantCreateCommand) {
-    final var record = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> roleCreateCommand) {
+    final var record = roleCreateCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(record.getRoleId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(record.getRoleId());
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -77,13 +77,13 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
     record.setRoleKey(persistedRole.getRoleKey());
     stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.UPDATED, record);
     responseWriter.writeEventOnCommand(record.getRoleKey(), RoleIntent.UPDATED, record,
-        tenantCreateCommand);
+        roleCreateCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

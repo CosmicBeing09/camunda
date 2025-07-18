@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<SignalRecord> roleCreateCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = tenantCreateCommand.getValue();
+    final var signalRecord = roleCreateCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(tenantCreateCommand, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(roleCreateCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(tenantCreateCommand, isStartEvent, subscriptionRecord);
+          checkAuthorization(roleCreateCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,12 +110,12 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (tenantCreateCommand.hasRequestMetadata()) {
+    if (roleCreateCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
-          tenantCreateCommand);
+          roleCreateCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(tenantCreateCommand);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(roleCreateCommand);
   }
 
   @Override

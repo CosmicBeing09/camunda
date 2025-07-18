@@ -81,41 +81,41 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> tenantCreateCommand) {
-    final var record = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<UserRecord> roleCreateCommand) {
+    final var record = roleCreateCommand.getValue();
     final String username = record.getUsername();
     final var persistedUser = userState.getUser(username);
 
     if (persistedUser.isEmpty()) {
       final var rejectionMessage = USER_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(username);
 
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var user = persistedUser.get();
     final var authRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.USER, PermissionType.DELETE)
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.USER, PermissionType.DELETE)
             .addResourceId(user.getUsername());
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
     deleteUser(user);
     responseWriter.writeEventOnCommand(
-        user.getUserKey(), UserIntent.DELETED, tenantCreateCommand.getValue(),
-        tenantCreateCommand);
+        user.getUserKey(), UserIntent.DELETED, roleCreateCommand.getValue(),
+        roleCreateCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

@@ -80,36 +80,36 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> tenantCreateCommand) {
-    final var record = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<MappingRecord> roleCreateCommand) {
+    final var record = roleCreateCommand.getValue();
     final String id = record.getMappingId();
     final var persistedMappingOptional = mappingState.getMappingById(id);
     if (persistedMappingOptional.isEmpty()) {
       final var errorMessage = MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(id);
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var authorizationRequest =
         new AuthorizationRequest(
-            tenantCreateCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
+            roleCreateCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
     final long key = keyGenerator.nextKey();
     deleteMapping(persistedMappingOptional.get(), key);
     responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record,
-        tenantCreateCommand);
+        roleCreateCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

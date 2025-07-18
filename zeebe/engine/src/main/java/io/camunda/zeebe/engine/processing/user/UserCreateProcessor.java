@@ -61,39 +61,39 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<UserRecord> roleCreateCommand) {
     final var authRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var username = tenantCreateCommand.getValue().getUsername();
+    final var username = roleCreateCommand.getValue().getUsername();
     final var user = userState.getUser(username);
 
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.ALREADY_EXISTS, message);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    tenantCreateCommand.getValue().setUserKey(key);
+    roleCreateCommand.getValue().setUserKey(key);
 
-    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, tenantCreateCommand.getValue());
+    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, roleCreateCommand.getValue());
     addUserPermissions(key, username);
-    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, tenantCreateCommand.getValue(),
-        tenantCreateCommand);
+    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, roleCreateCommand.getValue(),
+        roleCreateCommand);
 
     distributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

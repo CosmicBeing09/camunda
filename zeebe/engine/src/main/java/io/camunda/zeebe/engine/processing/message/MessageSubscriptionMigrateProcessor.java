@@ -42,8 +42,8 @@ public class MessageSubscriptionMigrateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> tenantCreateCommand) {
-    migrateMessageSubscription(tenantCreateCommand);
+  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> roleCreateCommand) {
+    migrateMessageSubscription(roleCreateCommand);
   }
 
   @Override

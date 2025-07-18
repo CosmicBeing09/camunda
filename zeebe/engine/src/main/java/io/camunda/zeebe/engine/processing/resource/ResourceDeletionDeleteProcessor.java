@@ -113,23 +113,23 @@ public class ResourceDeletionDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> tenantCreateCommand) {
-    final var resourceDeletionRecord = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<ResourceDeletionRecord> roleCreateCommand) {
+    final var resourceDeletionRecord = roleCreateCommand.getValue();
     final long eventKey = keyGenerator.nextKey();
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING,
         resourceDeletionRecord);
 
-    tryDeleteResources(tenantCreateCommand);
+    tryDeleteResources(roleCreateCommand);
 
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETED,
         resourceDeletionRecord);
     commandDistributionBehavior
         .withKey(eventKey)
         .inQueue(DistributionQueue.DEPLOYMENT)
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
     responseWriter.writeEventOnCommand(eventKey, ResourceDeletionIntent.DELETING,
         resourceDeletionRecord,
-        tenantCreateCommand);
+        roleCreateCommand);
   }
 
   @Override

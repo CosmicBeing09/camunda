@@ -49,9 +49,9 @@ public class AuthorizationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> roleCreateCommand) {
     permissionsBehavior
-        .isAuthorized(tenantCreateCommand, PermissionType.CREATE)
+        .isAuthorized(roleCreateCommand, PermissionType.CREATE)
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
@@ -62,10 +62,10 @@ public class AuthorizationCreateProcessor
         .flatMap(permissionsBehavior::mappingExists)
         .flatMap(permissionsBehavior::permissionsAlreadyExist)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(tenantCreateCommand, tenantCreateCommand.getValue()),
+            authorizationRecord -> writeEventAndDistribute(roleCreateCommand, roleCreateCommand.getValue()),
             (rejection) -> {
-              rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
             });
   }
 

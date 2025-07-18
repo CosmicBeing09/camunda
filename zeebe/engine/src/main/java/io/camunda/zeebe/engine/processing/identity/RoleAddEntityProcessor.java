@@ -69,55 +69,55 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> tenantCreateCommand) {
-    final var roleRecord = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> roleCreateCommand) {
+    final var roleRecord = roleCreateCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(roleRecord.getRoleId());
 
     final var authorizationResult = authCheckBehavior.authorizationResult(authorizationRequest);
     if (authorizationResult.isLeft()) {
       final var rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var existingRole = roleState.getRole(roleRecord.getRoleId());
     if (existingRole.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var entityId = roleRecord.getEntityId();
     final var entityType = roleRecord.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(tenantCreateCommand))) {
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(roleCreateCommand))) {
       final var errorMessage =
           ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, roleRecord.getRoleId());
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
     stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     responseWriter.writeEventOnCommand(
-        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, tenantCreateCommand);
+        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, roleCreateCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

@@ -128,26 +128,26 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> roleCreateCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            tenantCreateCommand,
+            roleCreateCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            tenantCreateCommand.getValue().getTenantId(),
+            roleCreateCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(tenantCreateCommand);
+    transformAndDistributeDeployment(roleCreateCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(tenantCreateCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(roleCreateCommand.getValue());
   }
 
   @Override

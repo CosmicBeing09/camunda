@@ -47,9 +47,9 @@ public class AuthorizationUpdateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> roleCreateCommand) {
     permissionsBehavior
-        .isAuthorized(tenantCreateCommand)
+        .isAuthorized(roleCreateCommand)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
@@ -57,16 +57,16 @@ public class AuthorizationUpdateProcessor
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
-                    tenantCreateCommand.getValue(),
-                    tenantCreateCommand.getValue().getPermissionTypes(),
+                    roleCreateCommand.getValue(),
+                    roleCreateCommand.getValue().getPermissionTypes(),
                     record.getResourceType(),
                     "Expected to update authorization with permission types '%s' and resource type '%s', but these permissions are not supported. Supported permission types are: '%s'"))
         .flatMap(permissionsBehavior::mappingExists)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(tenantCreateCommand, authorizationRecord),
+            authorizationRecord -> writeEventAndDistribute(roleCreateCommand, authorizationRecord),
             (rejection) -> {
-              rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
             });
   }
 

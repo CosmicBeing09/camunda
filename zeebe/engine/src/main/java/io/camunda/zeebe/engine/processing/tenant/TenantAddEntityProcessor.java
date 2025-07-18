@@ -72,21 +72,21 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> tenantCreateCommand) {
-    final var record = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> roleCreateCommand) {
+    final var record = roleCreateCommand.getValue();
     final var tenantId = record.getTenantId();
     final var authorizationRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(tenantCreateCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(roleCreateCommand, isAuthorized.getLeft());
       return;
     }
 
     final var tenantLookup = getPersistedTenant(record);
     if (tenantLookup.isLeft()) {
-      rejectCommand(tenantCreateCommand, RejectionType.NOT_FOUND, tenantLookup.getLeft());
+      rejectCommand(roleCreateCommand, RejectionType.NOT_FOUND, tenantLookup.getLeft());
       return;
     }
 
@@ -96,21 +96,21 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
 
     final var entityId = record.getEntityId();
     final var entityType = record.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(tenantCreateCommand))) {
-      createEntityNotExistRejectCommand(tenantCreateCommand, entityId, entityType, tenantId);
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(roleCreateCommand))) {
+      createEntityNotExistRejectCommand(roleCreateCommand, entityId, entityType, tenantId);
       return;
     }
 
     if (isEntityAssigned(record)) {
-      createAlreadyAssignedRejectCommand(tenantCreateCommand, entityId, entityType, tenantId);
+      createAlreadyAssignedRejectCommand(roleCreateCommand, entityId, entityType, tenantId);
       return;
     }
 
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_ADDED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_ADDED, record,
-        tenantCreateCommand);
+        roleCreateCommand);
 
-    distributeCommand(tenantCreateCommand);
+    distributeCommand(roleCreateCommand);
   }
 
   @Override

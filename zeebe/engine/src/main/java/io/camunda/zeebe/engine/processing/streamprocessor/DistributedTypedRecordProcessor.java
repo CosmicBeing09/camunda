@@ -37,9 +37,9 @@ public interface DistributedTypedRecordProcessor<T extends UnifiedRecordValue>
   /**
    * Process a command that is not distributed yet
    *
-   * @param tenantCreateCommand the not yet distributed command to process
+   * @param roleCreateCommand the not yet distributed command to process
    */
-  void processNewCommand(final TypedRecord<T> tenantCreateCommand);
+  void processNewCommand(final TypedRecord<T> roleCreateCommand);
 
   /**
    * Process a command that has been distributed. Be aware to not distribute it again!

@@ -50,25 +50,25 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> tenantCreateCommand) {
-    final var scaleUp = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> roleCreateCommand) {
+    final var scaleUp = roleCreateCommand.getValue();
 
-    final var optionalRejection = validateCommand(tenantCreateCommand);
+    final var optionalRejection = validateCommand(roleCreateCommand);
     if (optionalRejection.isPresent()) {
       final var rejection = optionalRejection.get();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
     final var scalingKey = keyGenerator.nextKey();
-    scaleUp.setBootstrappedAt(tenantCreateCommand.getKey());
+    scaleUp.setBootstrappedAt(roleCreateCommand.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
     responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp,
-        tenantCreateCommand);
+        roleCreateCommand);
     commandDistributionBehavior
         .withKey(scalingKey)
         .inQueue(DistributionQueue.SCALING)
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

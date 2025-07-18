@@ -51,18 +51,18 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> tenantCreateCommand) {
-    final var record = tenantCreateCommand.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> roleCreateCommand) {
+    final var record = roleCreateCommand.getValue();
     final var groupId = record.getGroupId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
             .addResourceId(groupId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
@@ -71,19 +71,19 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
       final var errorMessage =
           "Expected to update group with ID '%s', but a group with this ID does not exist."
               .formatted(groupId);
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     updateExistingGroup(persistedRecord.get(), record);
-    updateState(tenantCreateCommand, persistedRecord.get());
+    updateState(roleCreateCommand, persistedRecord.get());
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override

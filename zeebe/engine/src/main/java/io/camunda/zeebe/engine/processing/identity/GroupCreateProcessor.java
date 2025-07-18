@@ -52,25 +52,25 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> tenantCreateCommand) {
+  public void processNewCommand(final TypedRecord<GroupRecord> roleCreateCommand) {
     final var authorizationRequest =
-        new AuthorizationRequest(tenantCreateCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
+        new AuthorizationRequest(roleCreateCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
 
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(tenantCreateCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(roleCreateCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = tenantCreateCommand.getValue();
+    final var record = roleCreateCommand.getValue();
     final var groupId = record.getGroupId();
     final var persistedGroup = groupState.get(groupId);
     if (persistedGroup.isPresent()) {
       final var errorMessage = GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(tenantCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(roleCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(roleCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -78,12 +78,12 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
     record.setGroupKey(key);
 
     stateWriter.appendFollowUpEvent(key, GroupIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, tenantCreateCommand);
+    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, roleCreateCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(tenantCreateCommand);
+        .distribute(roleCreateCommand);
   }
 
   @Override
