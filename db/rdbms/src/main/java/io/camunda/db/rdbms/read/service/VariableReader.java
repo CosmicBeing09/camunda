@@ -31,10 +31,10 @@ public class VariableReader extends AbstractEntityReader<VariableEntity> {
     this.variableMapper = variableMapper;
   }
 
-  public VariableEntity findOne(final Long key) {
+  public VariableEntity findOne(final Long variableKey) {
     return search(
             new VariableQuery(
-                new Builder().variableKeys(key).build(),
+                new Builder().variableKeys(variableKey).build(),
                 VariableSort.of(b -> b),
                 SearchQueryPage.of(b -> b.from(0).size(1))))
         .items()
@@ -42,14 +42,14 @@ public class VariableReader extends AbstractEntityReader<VariableEntity> {
   }
 
   public SearchQueryResult<VariableEntity> search(final VariableQuery query) {
-    final var dbSort = convertSort(query.sort(), VariableSearchColumn.VAR_KEY);
+    final var sort = convertSort(query.sort(), VariableSearchColumn.VAR_KEY);
     final var dbQuery =
         VariableDbQuery.of(
-            b -> b.filter(query.filter()).sort(dbSort).page(convertPaging(dbSort, query.page())));
+            b -> b.filter(query.filter()).sort(sort).page(convertPaging(sort, query.page())));
     LOG.trace("[RDBMS DB] Search for variables with filter {}", query);
     final var totalHits = variableMapper.count(dbQuery);
     final var hits = variableMapper.search(dbQuery);
-    return buildSearchQueryResult(totalHits, hits, dbSort);
+    return buildSearchQueryResult(totalHits, hits, sort);
   }
 
   public record SearchResult(List<VariableEntity> hits, Integer total) {}
