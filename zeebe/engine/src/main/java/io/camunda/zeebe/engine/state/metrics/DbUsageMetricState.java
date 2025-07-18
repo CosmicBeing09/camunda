@@ -42,7 +42,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public Map<String, List<Long>> getActiveMetricBuckets(final long eventTime) {
+  public Map<String, List<Long>> getActiveUsageMetricsByTenant(final long eventTime) {
     final var tenantIdPIsMap = new HashMap<String, List<Long>>();
     eventTimeKey.wrapLong(eventTime);
     rPIColumnFamily.whileEqualPrefix(
@@ -56,7 +56,7 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   }
 
   @Override
-  public void createRPIMetric(
+  public void insertUsageMetric(
       final long eventTime, final long processInstanceKey, final String tenantId) {
     eventTimeKey.wrapLong(eventTime);
     piKey.wrapLong(processInstanceKey);
