@@ -196,7 +196,7 @@ public final class SearchQueryRequestMapper {
   private static Either<List<String>, ProcessDefinitionStatisticsFilter.Builder>
       toBaseProcessInstanceFilterFields(
           final long processDefinitionKey, final BaseProcessInstanceFilterFields filter) {
-    final var builder = FilterBuilders.processDefinitionStatisticsFilter(processDefinitionKey);
+    final var builder = FilterBuilders.processDefinitionStatistics(processDefinitionKey);
     final List<String> validationErrors = new ArrayList<>();
     if (filter != null) {
       ofNullable(filter.getProcessInstanceKey())
