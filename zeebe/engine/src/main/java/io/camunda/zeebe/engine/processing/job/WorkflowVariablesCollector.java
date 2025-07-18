@@ -20,15 +20,15 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.agrona.DirectBuffer;
 
-public class JobVariablesCollector {
+public class WorkflowVariablesCollector {
 
   private final VariableState variableState;
-  private final TaskState userTaskState;
+  private final TaskState taskListenerState;
   private final ElementInstanceState elementInstanceState;
 
-  public JobVariablesCollector(final ProcessingState processingState) {
+  public WorkflowVariablesCollector(final ProcessingState processingState) {
     variableState = processingState.getVariableState();
-    userTaskState = processingState.getUserTaskState();
+    taskListenerState = processingState.getUserTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 
@@ -69,7 +69,7 @@ public class JobVariablesCollector {
       return Map.of();
     }
     final var userTaskIntermediateState =
-        userTaskState.getIntermediateState(elementInstance.getUserTaskKey());
+        taskListenerState.getIntermediateState(elementInstance.getUserTaskKey());
     if (userTaskIntermediateState == null) {
       return Map.of();
     }

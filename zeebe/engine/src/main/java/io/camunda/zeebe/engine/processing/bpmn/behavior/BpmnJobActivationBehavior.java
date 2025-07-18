@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
 import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
-import io.camunda.zeebe.engine.processing.job.JobVariablesCollector;
+import io.camunda.zeebe.engine.processing.job.WorkflowVariablesCollector;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer.JobStream;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
@@ -40,7 +40,7 @@ import org.agrona.concurrent.UnsafeBuffer;
  */
 public class BpmnJobActivationBehavior {
   private final JobStreamer jobStreamer;
-  private final JobVariablesCollector jobVariablesCollector;
+  private final WorkflowVariablesCollector jobVariablesCollector;
   private final StateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
   private final KeyGenerator keyGenerator;
@@ -57,7 +57,7 @@ public class BpmnJobActivationBehavior {
     this.jobStreamer = jobStreamer;
     this.keyGenerator = keyGenerator;
     this.jobMetrics = jobMetrics;
-    jobVariablesCollector = new JobVariablesCollector(state);
+    jobVariablesCollector = new WorkflowVariablesCollector(state);
     stateWriter = writers.state();
     sideEffectWriter = writers.sideEffect();
     this.clock = clock;
