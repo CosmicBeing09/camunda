@@ -425,7 +425,7 @@ public final class ActivateJobsRestTest extends ClientRestTest {
 
     // then
     final JobActivationRequest request = gatewayService.getLastRequest(JobActivationRequest.class);
-    assertThat(request.getWorker()).isEqualTo(CamundaClientBuilderImpl.DEFAULT_JOB_WORKER_NAME_VAR);
+    assertThat(request.getWorker()).isEqualTo(CamundaClientBuilderImpl.DEFAULT_JOB_WORKER_NAME);
   }
 
   private static final class VariablesPojo {

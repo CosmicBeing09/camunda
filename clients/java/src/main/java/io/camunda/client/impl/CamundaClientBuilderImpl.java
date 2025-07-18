@@ -19,7 +19,6 @@ import static io.camunda.client.ClientProperties.APPLY_ENVIRONMENT_VARIABLES_OVE
 import static io.camunda.client.ClientProperties.CA_CERTIFICATE_PATH;
 import static io.camunda.client.ClientProperties.DEFAULT_JOB_POLL_INTERVAL;
 import static io.camunda.client.ClientProperties.DEFAULT_JOB_TIMEOUT;
-import static io.camunda.client.ClientProperties.DEFAULT_JOB_WORKER_NAME;
 import static io.camunda.client.ClientProperties.DEFAULT_JOB_WORKER_TENANT_IDS;
 import static io.camunda.client.ClientProperties.DEFAULT_MESSAGE_TIME_TO_LIVE;
 import static io.camunda.client.ClientProperties.DEFAULT_REQUEST_TIMEOUT;
@@ -58,6 +57,7 @@ import static io.camunda.client.impl.util.DataSizeUtil.ONE_MB;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.CamundaClientBuilder;
 import io.camunda.client.CamundaClientConfiguration;
+import io.camunda.client.ClientProperties;
 import io.camunda.client.CredentialsProvider;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.command.CommandWithTenantStep;
@@ -84,7 +84,7 @@ public final class CamundaClientBuilderImpl
   public static final URI DEFAULT_GRPC_ADDRESS =
       getURIFromString("http://" + DEFAULT_GATEWAY_ADDRESS);
   public static final URI DEFAULT_REST_ADDRESS = getURIFromString("http://0.0.0.0:8080");
-  public static final String DEFAULT_JOB_WORKER_NAME_VAR = "default";
+  public static final String DEFAULT_JOB_WORKER_NAME = "default";
   public static final Duration DEFAULT_MESSAGE_TTL = Duration.ofHours(1);
   private static final String TENANT_ID_LIST_SEPARATOR = ",";
   private static final boolean DEFAULT_PREFER_REST_OVER_GRPC = false;
@@ -102,7 +102,7 @@ public final class CamundaClientBuilderImpl
       Collections.singletonList(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
   private int jobWorkerMaxJobsActive = 32;
   private int numJobWorkerExecutionThreads = 1;
-  private String defaultJobWorkerName = DEFAULT_JOB_WORKER_NAME_VAR;
+  private String defaultJobWorkerName = DEFAULT_JOB_WORKER_NAME;
   private Duration defaultJobTimeout = Duration.ofMinutes(5);
   private Duration defaultJobPollInterval = Duration.ofMillis(100);
   private Duration defaultMessageTimeToLive = DEFAULT_MESSAGE_TTL;
@@ -316,7 +316,7 @@ public final class CamundaClientBuilderImpl
         io.camunda.zeebe.client.ClientProperties.JOB_WORKER_MAX_JOBS_ACTIVE);
 
     BuilderUtils.applyPropertyValueIfNotNull(
-        properties, this::defaultJobWorkerName, DEFAULT_JOB_WORKER_NAME);
+        properties, this::defaultJobWorkerName, ClientProperties.DEFAULT_JOB_WORKER_NAME);
 
     BuilderUtils.applyPropertyValueIfNotNull(
         properties,
@@ -453,8 +453,8 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder numJobWorkerExecutionThreads(final int numSubscriptionThreads) {
-    numJobWorkerExecutionThreads = numSubscriptionThreads;
+  public CamundaClientBuilder numJobWorkerExecutionThreads(final int numJobWorkerExecutionThreads) {
+    this.numJobWorkerExecutionThreads = numJobWorkerExecutionThreads;
     return this;
   }
 
