@@ -30,20 +30,20 @@ public class MappingReader extends AbstractEntityReader<MappingEntity> {
 
   public Optional<MappingEntity> findOne(final String mappingId) {
     LOG.trace("[RDBMS DB] Search for mapping with mapping ID {}", mappingId);
-    final SearchQueryResult<MappingEntity> queryResult =
+    final SearchQueryResult<MappingEntity> result =
         search(MappingQuery.of(b -> b.filter(f -> f.mappingId(mappingId))));
-    return Optional.ofNullable(queryResult.items()).flatMap(hits -> hits.stream().findFirst());
+    return Optional.ofNullable(result.items()).flatMap(hits -> hits.stream().findFirst());
   }
 
   public SearchQueryResult<MappingEntity> search(final MappingQuery query) {
-    final var dbSort = convertSort(query.sort(), MappingSearchColumn.MAPPING_ID);
+    final var sort = convertSort(query.sort(), MappingSearchColumn.MAPPING_ID);
     final var dbQuery =
         MappingDbQuery.of(
-            b -> b.filter(query.filter()).sort(dbSort).page(convertPaging(dbSort, query.page())));
+            b -> b.filter(query.filter()).sort(sort).page(convertPaging(sort, query.page())));
 
     LOG.trace("[RDBMS DB] Search for mapping with filter {}", dbQuery);
     final var totalHits = mappingMapper.count(dbQuery);
     final var hits = mappingMapper.search(dbQuery);
-    return buildSearchQueryResult(totalHits, hits, dbSort);
+    return buildSearchQueryResult(totalHits, hits, sort);
   }
 }
