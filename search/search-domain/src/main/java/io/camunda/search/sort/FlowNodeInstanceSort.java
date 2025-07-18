@@ -27,68 +27,68 @@ public record FlowNodeInstanceSort(List<FieldSorting> orderings) implements Sort
       implements ObjectBuilder<FlowNodeInstanceSort> {
 
     public Builder flowNodeInstanceKey() {
-      currentOrdering = new FieldSorting("flowNodeInstanceKey", null);
+      currentFieldSorting = new FieldSorting("flowNodeInstanceKey", null);
       return this;
     }
 
     public Builder processInstanceKey() {
-      currentOrdering = new FieldSorting("processInstanceKey", null);
+      currentFieldSorting = new FieldSorting("processInstanceKey", null);
       return this;
     }
 
     public Builder processDefinitionKey() {
-      currentOrdering = new FieldSorting("processDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("processDefinitionKey", null);
       return this;
     }
 
     public Builder processDefinitionId() {
-      currentOrdering = new FieldSorting("processDefinitionId", null);
+      currentFieldSorting = new FieldSorting("processDefinitionId", null);
       return this;
     }
 
     public Builder startDate() {
-      currentOrdering = new FieldSorting("startDate", null);
+      currentFieldSorting = new FieldSorting("startDate", null);
       return this;
     }
 
     public Builder endDate() {
-      currentOrdering = new FieldSorting("endDate", null);
+      currentFieldSorting = new FieldSorting("endDate", null);
       return this;
     }
 
     public Builder flowNodeId() {
-      currentOrdering = new FieldSorting("flowNodeId", null);
+      currentFieldSorting = new FieldSorting("flowNodeId", null);
       return this;
     }
 
     public Builder flowNodeName() {
-      currentOrdering = new FieldSorting("flowNodeName", null);
+      currentFieldSorting = new FieldSorting("flowNodeName", null);
       return this;
     }
 
     public Builder type() {
-      currentOrdering = new FieldSorting("type", null);
+      currentFieldSorting = new FieldSorting("type", null);
       return this;
     }
 
     public Builder state() {
-      currentOrdering = new FieldSorting("state", null);
+      currentFieldSorting = new FieldSorting("state", null);
       return this;
     }
 
     public Builder incidentKey() {
-      currentOrdering = new FieldSorting("incidentKey", null);
+      currentFieldSorting = new FieldSorting("incidentKey", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
     @Override
     public FlowNodeInstanceSort build() {
-      return new FlowNodeInstanceSort(orderings);
+      return new FlowNodeInstanceSort(fieldSortings);
     }
 
     @Override

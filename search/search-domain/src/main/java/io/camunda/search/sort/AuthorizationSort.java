@@ -26,22 +26,22 @@ public record AuthorizationSort(List<FieldSorting> orderings) implements SortOpt
       implements ObjectBuilder<AuthorizationSort> {
 
     public Builder ownerId() {
-      currentOrdering = new FieldSorting("ownerId", null);
+      currentFieldSorting = new FieldSorting("ownerId", null);
       return this;
     }
 
     public Builder ownerType() {
-      currentOrdering = new FieldSorting("ownerType", null);
+      currentFieldSorting = new FieldSorting("ownerType", null);
       return this;
     }
 
     public Builder resourceId() {
-      currentOrdering = new FieldSorting("resourceId", null);
+      currentFieldSorting = new FieldSorting("resourceId", null);
       return this;
     }
 
     public Builder resourceType() {
-      currentOrdering = new FieldSorting("resourceType", null);
+      currentFieldSorting = new FieldSorting("resourceType", null);
       return this;
     }
 
@@ -62,7 +62,7 @@ public record AuthorizationSort(List<FieldSorting> orderings) implements SortOpt
 
     @Override
     public AuthorizationSort build() {
-      return new AuthorizationSort(orderings);
+      return new AuthorizationSort(fieldSortings);
     }
   }
 }

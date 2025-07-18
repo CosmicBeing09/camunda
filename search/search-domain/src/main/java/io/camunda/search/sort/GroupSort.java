@@ -25,22 +25,22 @@ public record GroupSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<GroupSort> {
 
     public Builder groupKey() {
-      currentOrdering = new FieldSorting("groupKey", null);
+      currentFieldSorting = new FieldSorting("groupKey", null);
       return this;
     }
 
     public Builder groupId() {
-      currentOrdering = new FieldSorting("groupId", null);
+      currentFieldSorting = new FieldSorting("groupId", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder memberId() {
-      currentOrdering = new FieldSorting("memberId", null);
+      currentFieldSorting = new FieldSorting("memberId", null);
       return this;
     }
 
@@ -61,7 +61,7 @@ public record GroupSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public GroupSort build() {
-      return new GroupSort(orderings);
+      return new GroupSort(fieldSortings);
     }
   }
 }

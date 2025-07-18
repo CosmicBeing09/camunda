@@ -26,22 +26,22 @@ public record UsageMetricsSort(List<FieldSorting> orderings) implements SortOpti
       implements ObjectBuilder<UsageMetricsSort> {
 
     public Builder id() {
-      currentOrdering = new FieldSorting("id", null);
+      currentFieldSorting = new FieldSorting("id", null);
       return this;
     }
 
     public Builder event() {
-      currentOrdering = new FieldSorting("event", null);
+      currentFieldSorting = new FieldSorting("event", null);
       return this;
     }
 
     public Builder eventTime() {
-      currentOrdering = new FieldSorting("eventTime", null);
+      currentFieldSorting = new FieldSorting("eventTime", null);
       return this;
     }
 
     public Builder value() {
-      currentOrdering = new FieldSorting("value", null);
+      currentFieldSorting = new FieldSorting("value", null);
       return this;
     }
 
@@ -52,7 +52,7 @@ public record UsageMetricsSort(List<FieldSorting> orderings) implements SortOpti
 
     @Override
     public UsageMetricsSort build() {
-      return new UsageMetricsSort(orderings);
+      return new UsageMetricsSort(fieldSortings);
     }
   }
 }

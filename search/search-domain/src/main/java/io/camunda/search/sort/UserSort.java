@@ -26,22 +26,22 @@ public record UserSort(List<FieldSorting> orderings) implements SortOption {
       implements ObjectBuilder<UserSort> {
 
     public Builder key() {
-      currentOrdering = new FieldSorting("userKey", null);
+      currentFieldSorting = new FieldSorting("userKey", null);
       return this;
     }
 
     public Builder username() {
-      currentOrdering = new FieldSorting("username", null);
+      currentFieldSorting = new FieldSorting("username", null);
       return this;
     }
 
     public Builder name() {
-      currentOrdering = new FieldSorting("name", null);
+      currentFieldSorting = new FieldSorting("name", null);
       return this;
     }
 
     public Builder email() {
-      currentOrdering = new FieldSorting("email", null);
+      currentFieldSorting = new FieldSorting("email", null);
       return this;
     }
 
@@ -62,7 +62,7 @@ public record UserSort(List<FieldSorting> orderings) implements SortOption {
 
     @Override
     public UserSort build() {
-      return new UserSort(orderings);
+      return new UserSort(fieldSortings);
     }
   }
 }

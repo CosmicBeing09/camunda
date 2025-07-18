@@ -27,67 +27,67 @@ public record ProcessInstanceSort(List<FieldSorting> orderings) implements SortO
       implements ObjectBuilder<ProcessInstanceSort> {
 
     public Builder processInstanceKey() {
-      currentOrdering = new FieldSorting("processInstanceKey", null);
+      currentFieldSorting = new FieldSorting("processInstanceKey", null);
       return this;
     }
 
     public Builder processDefinitionId() {
-      currentOrdering = new FieldSorting("processDefinitionId", null);
+      currentFieldSorting = new FieldSorting("processDefinitionId", null);
       return this;
     }
 
     public Builder processDefinitionName() {
-      currentOrdering = new FieldSorting("processDefinitionName", null);
+      currentFieldSorting = new FieldSorting("processDefinitionName", null);
       return this;
     }
 
     public Builder processDefinitionVersion() {
-      currentOrdering = new FieldSorting("processDefinitionVersion", null);
+      currentFieldSorting = new FieldSorting("processDefinitionVersion", null);
       return this;
     }
 
     public Builder processDefinitionVersionTag() {
-      currentOrdering = new FieldSorting("processDefinitionVersionTag", null);
+      currentFieldSorting = new FieldSorting("processDefinitionVersionTag", null);
       return this;
     }
 
     public Builder processDefinitionKey() {
-      currentOrdering = new FieldSorting("processDefinitionKey", null);
+      currentFieldSorting = new FieldSorting("processDefinitionKey", null);
       return this;
     }
 
     public Builder parentProcessInstanceKey() {
-      currentOrdering = new FieldSorting("parentProcessInstanceKey", null);
+      currentFieldSorting = new FieldSorting("parentProcessInstanceKey", null);
       return this;
     }
 
     public Builder parentFlowNodeInstanceKey() {
-      currentOrdering = new FieldSorting("parentFlowNodeInstanceKey", null);
+      currentFieldSorting = new FieldSorting("parentFlowNodeInstanceKey", null);
       return this;
     }
 
     public Builder startDate() {
-      currentOrdering = new FieldSorting("startDate", null);
+      currentFieldSorting = new FieldSorting("startDate", null);
       return this;
     }
 
     public Builder endDate() {
-      currentOrdering = new FieldSorting("endDate", null);
+      currentFieldSorting = new FieldSorting("endDate", null);
       return this;
     }
 
     public Builder state() {
-      currentOrdering = new FieldSorting("state", null);
+      currentFieldSorting = new FieldSorting("state", null);
       return this;
     }
 
     public Builder hasIncident() {
-      currentOrdering = new FieldSorting("hasIncident", null);
+      currentFieldSorting = new FieldSorting("hasIncident", null);
       return this;
     }
 
     public Builder tenantId() {
-      currentOrdering = new FieldSorting("tenantId", null);
+      currentFieldSorting = new FieldSorting("tenantId", null);
       return this;
     }
 
@@ -98,7 +98,7 @@ public record ProcessInstanceSort(List<FieldSorting> orderings) implements SortO
 
     @Override
     public ProcessInstanceSort build() {
-      return new ProcessInstanceSort(orderings);
+      return new ProcessInstanceSort(fieldSortings);
     }
   }
 }
