@@ -113,7 +113,7 @@ public class DeployResourceRestTest extends ClientRestTest {
     final byte[] bytes = getBytes(filename);
 
     // when
-    client.newDeployResourceCommand().addResourceBytes(bytes, filename).send().join();
+    client.newDeployResourceCommand().addBytes(bytes, filename).send().join();
 
     // then
     LoggedRequestAssert.assertThat(RestGatewayService.getLastRequest())
@@ -130,7 +130,7 @@ public class DeployResourceRestTest extends ClientRestTest {
     // when
     client
         .newDeployResourceCommand()
-        .addResourceString(xml, StandardCharsets.UTF_8, filename)
+        .addString(xml, StandardCharsets.UTF_8, filename)
         .send()
         .join();
 
