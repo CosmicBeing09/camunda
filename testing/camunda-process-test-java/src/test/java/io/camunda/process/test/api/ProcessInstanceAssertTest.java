@@ -106,7 +106,7 @@ public class ProcessInstanceAssertTest {
       verify(camundaDataSource).findProcessInstances(processInstanceFilterCapture.capture());
 
       processInstanceFilterCapture.getValue().accept(processInstanceFilter);
-      verify(processInstanceFilter).processInstanceKey(ACTIVE_PROCESS_INSTANCE_KEY);
+      verify(processInstanceFilter).key(ACTIVE_PROCESS_INSTANCE_KEY);
     }
 
     @Test
@@ -123,7 +123,7 @@ public class ProcessInstanceAssertTest {
       verify(camundaDataSource).findProcessInstances(processInstanceFilterCapture.capture());
 
       processInstanceFilterCapture.getValue().accept(processInstanceFilter);
-      verify(processInstanceFilter).processInstanceKey(ACTIVE_PROCESS_INSTANCE_KEY);
+      verify(processInstanceFilter).key(ACTIVE_PROCESS_INSTANCE_KEY);
     }
 
     @Test
@@ -153,7 +153,7 @@ public class ProcessInstanceAssertTest {
       verify(camundaDataSource).findProcessInstances(processInstanceFilterCapture.capture());
 
       processInstanceFilterCapture.getValue().accept(processInstanceFilter);
-      verify(processInstanceFilter).processInstanceKey(ACTIVE_PROCESS_INSTANCE_KEY);
+      verify(processInstanceFilter).key(ACTIVE_PROCESS_INSTANCE_KEY);
     }
 
     @Test
@@ -183,7 +183,7 @@ public class ProcessInstanceAssertTest {
       verify(camundaDataSource).findProcessInstances(processInstanceFilterCapture.capture());
 
       processInstanceFilterCapture.getValue().accept(processInstanceFilter);
-      verify(processInstanceFilter).processInstanceKey(ACTIVE_PROCESS_INSTANCE_KEY);
+      verify(processInstanceFilter).key(ACTIVE_PROCESS_INSTANCE_KEY);
     }
 
     @Test

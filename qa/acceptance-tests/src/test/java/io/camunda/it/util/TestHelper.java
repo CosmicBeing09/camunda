@@ -568,7 +568,7 @@ public final class TestHelper {
               final var result =
                   camundaClient
                       .newProcessInstanceSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.key(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.items().getFirst().getEndDate()).isNotNull();

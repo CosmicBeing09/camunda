@@ -210,7 +210,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var result =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .filter(f -> f.processInstanceKey(processInstanceKey))
+            .filter(f -> f.key(processInstanceKey))
             .send()
             .join();
 
@@ -245,7 +245,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var result =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .filter(f -> f.processInstanceKey(b -> b.in(processInstanceKeys)))
+            .filter(f -> f.key(b -> b.in(processInstanceKeys)))
             .send()
             .join();
 
@@ -268,7 +268,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
     final var result =
         camundaClient
             .newProcessInstanceSearchRequest()
-            .filter(f -> f.processInstanceKey(b -> b.notIn(processInstanceKeys)))
+            .filter(f -> f.key(b -> b.notIn(processInstanceKeys)))
             .send()
             .join();
 
@@ -1652,7 +1652,7 @@ public class ProcessInstanceAndElementInstanceSearchTest {
             .newProcessInstanceSearchRequest()
             .filter(
                 f ->
-                    f.processInstanceKey(elementInstance.getProcessInstanceKey())
+                    f.key(elementInstance.getProcessInstanceKey())
                         .elementId(elementInstance.getElementId()))
             .send()
             .join();

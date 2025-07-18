@@ -61,7 +61,7 @@ public class ProcessInstanceSelectors {
 
     @Override
     public void applyFilter(final ProcessInstanceFilter filter) {
-      filter.processInstanceKey(processInstanceKey);
+      filter.key(processInstanceKey);
     }
   }
 

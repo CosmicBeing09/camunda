@@ -131,7 +131,7 @@ public class OperateInternalApiRolePermissionsIT {
                 assertThat(
                         adminClient
                             .newProcessInstanceSearchRequest()
-                            .filter(f -> f.processInstanceKey(processInstanceKey))
+                            .filter(f -> f.key(processInstanceKey))
                             .send()
                             .join()
                             .items())

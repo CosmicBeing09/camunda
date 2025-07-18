@@ -32,11 +32,11 @@ public interface ProcessInstanceFilter extends ProcessInstanceFilterBase {
 
   /** Filter by processInstanceKey */
   @Override
-  ProcessInstanceFilter processInstanceKey(final Long processInstanceKey);
+  ProcessInstanceFilter key(final Long processInstanceKey);
 
   /** Filter by processInstanceKey using {@link BasicLongProperty} consumer */
   @Override
-  ProcessInstanceFilter processInstanceKey(final Consumer<BasicLongProperty> fn);
+  ProcessInstanceFilter key(final Consumer<BasicLongProperty> fn);
 
   /** Filter by processDefinitionId */
   @Override

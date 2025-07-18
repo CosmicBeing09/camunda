@@ -82,7 +82,7 @@ public class DataGenerator implements AutoCloseable {
                       .newProcessInstanceSearchRequest()
                       .filter(
                           b ->
-                              b.processInstanceKey(p -> p.in(instanceKeys.stream().toList()))
+                              b.key(p -> p.in(instanceKeys.stream().toList()))
                                   .state(state))
                       .page(b -> b.limit(instanceKeys.size()).from(0))
                       .send();

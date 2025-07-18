@@ -32,10 +32,10 @@ import java.util.function.Consumer;
 public interface ProcessInstanceFilterBase extends Filter {
 
   /** Filter by processInstanceKey */
-  ProcessInstanceFilterBase processInstanceKey(final Long processInstanceKey);
+  ProcessInstanceFilterBase key(final Long processInstanceKey);
 
   /** Filter by processInstanceKey using {@link BasicLongProperty} consumer */
-  ProcessInstanceFilterBase processInstanceKey(final Consumer<BasicLongProperty> fn);
+  ProcessInstanceFilterBase key(final Consumer<BasicLongProperty> fn);
 
   /** Filter by processDefinitionId */
   ProcessInstanceFilterBase processDefinitionId(final String processDefinitionId);

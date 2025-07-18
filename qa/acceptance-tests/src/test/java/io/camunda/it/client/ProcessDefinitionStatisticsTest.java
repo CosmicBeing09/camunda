@@ -388,7 +388,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(
         1,
         f ->
-            f.processInstanceKey(userTask.getProcessInstanceKey())
+            f.key(userTask.getProcessInstanceKey())
                 .state(ProcessInstanceState.COMPLETED));
 
     // when
@@ -421,7 +421,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(
         1,
         f ->
-            f.processInstanceKey(userTask.getProcessInstanceKey())
+            f.key(userTask.getProcessInstanceKey())
                 .state(ProcessInstanceState.COMPLETED));
 
     // when
@@ -454,7 +454,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(
         1,
         f ->
-            f.processInstanceKey(userTask.getProcessInstanceKey())
+            f.key(userTask.getProcessInstanceKey())
                 .state(ProcessInstanceState.COMPLETED));
 
     // when
@@ -527,7 +527,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(
         1,
         f ->
-            f.processInstanceKey(userTask.getProcessInstanceKey())
+            f.key(userTask.getProcessInstanceKey())
                 .state(ProcessInstanceState.COMPLETED));
 
     // when
@@ -704,7 +704,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(
         1,
         f ->
-            f.processInstanceKey(userTask.getProcessInstanceKey())
+            f.key(userTask.getProcessInstanceKey())
                 .state(ProcessInstanceState.COMPLETED));
 
     // when
@@ -734,7 +734,7 @@ public class ProcessDefinitionStatisticsTest {
     waitForProcessInstances(
         1,
         f ->
-            f.processInstanceKey(userTask.getProcessInstanceKey())
+            f.key(userTask.getProcessInstanceKey())
                 .state(ProcessInstanceState.COMPLETED));
 
     // when
@@ -884,7 +884,7 @@ public class ProcessDefinitionStatisticsTest {
   private static ProcessInstance getProcessInstance(final long piKey) {
     return camundaClient
         .newProcessInstanceSearchRequest()
-        .filter(f -> f.processInstanceKey(piKey))
+        .filter(f -> f.key(piKey))
         .page(p -> p.limit(1))
         .send()
         .join()

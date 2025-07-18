@@ -164,7 +164,7 @@ public class BatchOperationModifyProcessInstanceTest {
                     .filter(
                         f ->
                             f.variables(getScopedVariables(testScopeId))
-                                .processInstanceKey(processInstanceKey1)));
+                                .key(processInstanceKey1)));
     final var batchOperationId2 =
         modifyProcessInstance(
             b ->
@@ -172,7 +172,7 @@ public class BatchOperationModifyProcessInstanceTest {
                     .filter(
                         f ->
                             f.variables(getScopedVariables(testScopeId))
-                                .processInstanceKey(processInstanceKey1)));
+                                .key(processInstanceKey1)));
     final var batchOperationId3 =
         modifyProcessInstance(
             b ->
@@ -180,7 +180,7 @@ public class BatchOperationModifyProcessInstanceTest {
                     .filter(
                         f ->
                             f.variables(getScopedVariables(testScopeId))
-                                .processInstanceKey(processInstanceKey2)));
+                                .key(processInstanceKey2)));
 
     // then wait if batch has correct amount of items. (If not, fail fast)
     waitForBatchOperationWithCorrectTotalCount(camundaClient, batchOperationId1, 1);

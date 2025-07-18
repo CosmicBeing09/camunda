@@ -69,7 +69,7 @@ public class HistoryCleanupIT {
               final var result =
                   camundaClient
                       .newProcessInstanceSearchRequest()
-                      .filter(f -> f.processInstanceKey(processInstanceKey))
+                      .filter(f -> f.key(processInstanceKey))
                       .send()
                       .join();
               assertThat(result.page().totalItems()).isEqualTo(0);

@@ -69,7 +69,7 @@ public class ProcessMigrationIT {
     // then
     processInstanceExistAndMatches(
         client,
-        f -> f.processInstanceKey(processInstanceKey).processDefinitionId("migration-process_v2"),
+        f -> f.key(processInstanceKey).processDefinitionId("migration-process_v2"),
         f -> assertThat(f).hasSize(1));
     processInstanceHasUserTask(
         client,

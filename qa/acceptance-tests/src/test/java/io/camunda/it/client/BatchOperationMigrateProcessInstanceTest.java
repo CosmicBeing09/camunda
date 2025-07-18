@@ -124,7 +124,7 @@ public class BatchOperationMigrateProcessInstanceTest {
     for (final var processInstanceKey : processInstances) {
       processInstanceExistAndMatches(
           client,
-          f -> f.processInstanceKey(processInstanceKey).processDefinitionId("migration-process_v2"),
+          f -> f.key(processInstanceKey).processDefinitionId("migration-process_v2"),
           f -> assertThat(f).hasSize(1));
       processInstanceHasUserTask(
           client,
