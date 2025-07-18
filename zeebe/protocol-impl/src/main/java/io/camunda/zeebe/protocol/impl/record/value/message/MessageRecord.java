@@ -31,7 +31,7 @@ public final class MessageRecord extends UnifiedRecordValue implements MessageRe
   private final DocumentProperty variablesProp = new DocumentProperty("variables");
   private final StringProperty messageIdProp = new StringProperty("messageId", "");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public MessageRecord() {
     super(7);

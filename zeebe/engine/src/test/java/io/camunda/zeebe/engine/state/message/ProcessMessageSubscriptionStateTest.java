@@ -43,7 +43,7 @@ public final class ProcessMessageSubscriptionStateTest {
     // when
     final boolean exist =
         state.existSubscriptionForElementInstance(
-            2, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            2, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(exist).isFalse();
@@ -58,7 +58,7 @@ public final class ProcessMessageSubscriptionStateTest {
     // when
     final boolean exist =
         state.existSubscriptionForElementInstance(
-            1, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            1, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(exist).isTrue();
@@ -75,7 +75,7 @@ public final class ProcessMessageSubscriptionStateTest {
         state.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(subscription).isNotNull();
@@ -90,13 +90,13 @@ public final class ProcessMessageSubscriptionStateTest {
     state.put(1L, record);
 
     // when
-    state.remove(1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.remove(1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.remove(1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_ID);
+    state.remove(1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(
             state.existSubscriptionForElementInstance(
-                1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_ID))
         .isFalse();
   }
 
@@ -107,12 +107,12 @@ public final class ProcessMessageSubscriptionStateTest {
     state.put(2L, subscriptionRecord("messageName", "correlationKey", 2L));
 
     // when
-    state.remove(2L, wrapString("messageName"), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.remove(2L, wrapString("messageName"), TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(
             state.existSubscriptionForElementInstance(
-                1L, wrapString("messageName"), TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                1L, wrapString("messageName"), TenantOwned.DEFAULT_TENANT_ID))
         .isTrue();
   }
 
@@ -146,13 +146,13 @@ public final class ProcessMessageSubscriptionStateTest {
     state.put(1L, record);
 
     // when
-    state.remove(1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.remove(1L, record.getMessageNameBuffer(), TenantOwned.DEFAULT_TENANT_ID);
 
     final var subscription =
         state.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(subscription).isNull();

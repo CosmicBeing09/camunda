@@ -46,7 +46,7 @@ public final class UserTaskClient {
   private final CommandWriter writer;
   private long processInstanceKey;
   private long userTaskKey = DEFAULT_KEY;
-  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+  private List<String> authorizedTenantIds = List.of(TenantOwned.DEFAULT_TENANT_ID);
 
   private Function<Long, Record<UserTaskRecordValue>> expectation = SUCCESS_SUPPLIER;
 
@@ -214,7 +214,7 @@ public final class UserTaskClient {
             UserTaskIntent.ASSIGN,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     return expectation.apply(position);
   }
 
@@ -241,7 +241,7 @@ public final class UserTaskClient {
             UserTaskIntent.CLAIM,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     return expectation.apply(position);
   }
 
@@ -280,7 +280,7 @@ public final class UserTaskClient {
             UserTaskIntent.COMPLETE,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     return expectation.apply(position);
   }
 
@@ -368,7 +368,7 @@ public final class UserTaskClient {
             UserTaskIntent.UPDATE,
             username,
             userTaskRecord.setUserTaskKey(userTaskKey),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     return expectation.apply(position);
   }
 }

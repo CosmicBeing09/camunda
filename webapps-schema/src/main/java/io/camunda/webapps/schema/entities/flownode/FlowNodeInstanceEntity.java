@@ -42,7 +42,7 @@ public class FlowNodeInstanceEntity
   private int level;
   private Long position;
   private boolean incident;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
   private Long scopeKey;
 
   @JsonIgnore private Object[] sortValues;

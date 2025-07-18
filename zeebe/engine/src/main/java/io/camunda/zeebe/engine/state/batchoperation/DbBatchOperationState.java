@@ -67,7 +67,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   @Override
   public void create(final long batchOperationKey, final BatchOperationCreationRecord record) {
     LOGGER.debug("Creating batch operation with key {}", record.getBatchOperationKey());
-    batchKey.wrapLong(record.getBatchOperationKey());
+    batchKey.setValue(record.getBatchOperationKey());
     final var batchOperation = new PersistedBatchOperation();
     batchOperation.wrap(record).setStatus(BatchOperationStatus.CREATED);
     batchOperationColumnFamily.upsert(batchKey, batchOperation);
@@ -77,7 +77,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   @Override
   public void start(final long batchOperationKey) {
     LOGGER.debug("Starting batch operation with key {}", batchOperationKey);
-    batchKey.wrapLong(batchOperationKey);
+    batchKey.setValue(batchOperationKey);
     final var batchOperation = get(batchOperationKey);
     if (batchOperation.isPresent()) {
       batchOperation.get().setStatus(BatchOperationStatus.STARTED);
@@ -92,7 +92,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   @Override
   public void fail(final long batchOperationKey) {
     LOGGER.debug("Failing batch operation with key {}", batchOperationKey);
-    batchKey.wrapLong(batchOperationKey);
+    batchKey.setValue(batchOperationKey);
     final var batchOperation = get(batchOperationKey);
     if (batchOperation.isPresent()) {
       batchOperation.get().setStatus(BatchOperationStatus.FAILED);
@@ -164,10 +164,10 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   @Override
   public void suspend(final long batchOperationKey) {
     LOGGER.trace("Suspending batch operation with key {}", batchOperationKey);
-    batchKey.wrapLong(batchOperationKey);
+    batchKey.setValue(batchOperationKey);
 
     // Set status to SUSPENDED
-    final var batch = batchOperationColumnFamily.get(batchKey);
+    final var batch = batchOperationColumnFamily.getValue(batchKey);
     batch.setStatus(BatchOperationStatus.SUSPENDED);
     batchOperationColumnFamily.update(batchKey, batch);
   }
@@ -175,10 +175,10 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   @Override
   public void resume(final long batchOperationKey) {
     LOGGER.trace("Resume batch operation with key {}", batchOperationKey);
-    batchKey.wrapLong(batchOperationKey);
+    batchKey.setValue(batchOperationKey);
 
     // Set status to STARTED
-    final var batch = batchOperationColumnFamily.get(batchKey);
+    final var batch = batchOperationColumnFamily.getValue(batchKey);
     batch.setStatus(
         batch.isInitialized() ? BatchOperationStatus.STARTED : BatchOperationStatus.CREATED);
     batchOperationColumnFamily.update(batchKey, batch);
@@ -194,9 +194,9 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   public void finishPartition(final long batchOperationKey, final int partitionId) {
     LOGGER.trace(
         "Finish batch operation with key {} on partition {}", batchOperationKey, partitionId);
-    batchKey.wrapLong(batchOperationKey);
+    batchKey.setValue(batchOperationKey);
 
-    final var batch = batchOperationColumnFamily.get(batchKey);
+    final var batch = batchOperationColumnFamily.getValue(batchKey);
     batch.addFinishedPartition(partitionId);
     batchOperationColumnFamily.update(batchKey, batch);
   }
@@ -208,15 +208,15 @@ public class DbBatchOperationState implements MutableBatchOperationState {
 
   @Override
   public Optional<PersistedBatchOperation> get(final long key) {
-    batchKey.wrapLong(key);
-    return Optional.ofNullable(batchOperationColumnFamily.get(batchKey));
+    batchKey.setValue(key);
+    return Optional.ofNullable(batchOperationColumnFamily.getValue(batchKey));
   }
 
   @Override
   public void foreachPendingBatchOperation(final BatchOperationVisitor visitor) {
     pendingBatchOperationColumnFamily.whileTrue(
         (key, nil) -> {
-          final var batchOperation = batchOperationColumnFamily.get(key);
+          final var batchOperation = batchOperationColumnFamily.getValue(key);
           if (batchOperation != null) {
             visitor.visit(batchOperation);
           }
@@ -237,8 +237,8 @@ public class DbBatchOperationState implements MutableBatchOperationState {
       return List.of();
     }
 
-    chunkKey.wrapLong(batch.get().getMinChunkKey());
-    final var chunk = batchOperationChunksColumnFamily.get(fkBatchKeyAndChunkKey);
+    chunkKey.setValue(batch.get().getMinChunkKey());
+    final var chunk = batchOperationChunksColumnFamily.getValue(fkBatchKeyAndChunkKey);
     final var chunkKeys = chunk.getItemKeys();
 
     return chunkKeys.stream().limit(batchSize).toList();
@@ -246,7 +246,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
 
   /** This deletes everything related to the batch operation. */
   private void deleteBatchOperation(final long batchOperationKey) {
-    batchKey.wrapLong(batchOperationKey);
+    batchKey.setValue(batchOperationKey);
 
     // first delete the batch operation from the pendingBatchOperationColumnFamily if it exists
     pendingBatchOperationColumnFamily.deleteIfExists(batchKey);
@@ -268,7 +268,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
 
     final var batchChunk = new PersistedBatchOperationChunk();
     batchChunk.setKey(currentChunkKey).setBatchOperationKey(batch.getKey());
-    chunkKey.wrapLong(batchChunk.getKey());
+    chunkKey.setValue(batchChunk.getKey());
 
     batchOperationChunksColumnFamily.insert(fkBatchKeyAndChunkKey, batchChunk);
 
@@ -277,8 +277,8 @@ public class DbBatchOperationState implements MutableBatchOperationState {
 
   /** Returns the chunk for min chunk key */
   private PersistedBatchOperationChunk getMinChunk(final PersistedBatchOperation batch) {
-    chunkKey.wrapLong(batch.getMinChunkKey());
-    return batchOperationChunksColumnFamily.get(fkBatchKeyAndChunkKey);
+    chunkKey.setValue(batch.getMinChunkKey());
+    return batchOperationChunksColumnFamily.getValue(fkBatchKeyAndChunkKey);
   }
 
   /**
@@ -311,8 +311,8 @@ public class DbBatchOperationState implements MutableBatchOperationState {
     if (currentChunkKey == -1) {
       return createNewChunk(batch);
     } else {
-      chunkKey.wrapLong(currentChunkKey);
-      return batchOperationChunksColumnFamily.get(fkBatchKeyAndChunkKey);
+      chunkKey.setValue(currentChunkKey);
+      return batchOperationChunksColumnFamily.getValue(fkBatchKeyAndChunkKey);
     }
   }
 

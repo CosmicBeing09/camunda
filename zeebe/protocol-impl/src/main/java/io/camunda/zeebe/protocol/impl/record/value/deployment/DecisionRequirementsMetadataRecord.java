@@ -40,7 +40,7 @@ public class DecisionRequirementsMetadataRecord extends UnifiedRecordValue
 
   private final BooleanProperty isDuplicateProp = new BooleanProperty("isDuplicate", false);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public DecisionRequirementsMetadataRecord() {
     super(9);

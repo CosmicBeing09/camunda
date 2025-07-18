@@ -33,27 +33,27 @@ public class DbMessageCorrelationState implements MutableMessageCorrelationState
 
   @Override
   public void removeMessageCorrelation(final long messageKey) {
-    this.messageKey.wrapLong(messageKey);
+    this.messageKey.setValue(messageKey);
     messageCorrelationColumnFamily.deleteExisting(this.messageKey);
   }
 
   @Override
   public void putMessageCorrelation(
       final long messageKey, final long requestId, final int requestStreamId) {
-    this.messageKey.wrapLong(messageKey);
+    this.messageKey.setValue(messageKey);
     requestData.setRequestIdProp(requestId).setRequestStreamIdProp(requestStreamId);
     messageCorrelationColumnFamily.insert(this.messageKey, requestData);
   }
 
   @Override
   public RequestData getRequestData(final long messageKey) {
-    this.messageKey.wrapLong(messageKey);
-    return messageCorrelationColumnFamily.get(this.messageKey).copy();
+    this.messageKey.setValue(messageKey);
+    return messageCorrelationColumnFamily.getValue(this.messageKey).copy();
   }
 
   @Override
   public boolean existsRequestDataForMessageKey(final long messageKey) {
-    this.messageKey.wrapLong(messageKey);
+    this.messageKey.setValue(messageKey);
     return messageCorrelationColumnFamily.exists(this.messageKey);
   }
 }

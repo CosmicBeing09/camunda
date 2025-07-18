@@ -39,7 +39,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 public final class IdentitySetupInitializer implements StreamProcessorLifecycleAware, Task {
-  public static final String DEFAULT_TENANT_ID = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+  public static final String DEFAULT_TENANT_ID = TenantOwned.DEFAULT_TENANT_ID;
   public static final String DEFAULT_TENANT_NAME = "Default";
   private static final Logger LOG = Loggers.PROCESS_PROCESSOR_LOGGER;
   private final SecurityConfiguration securityConfig;

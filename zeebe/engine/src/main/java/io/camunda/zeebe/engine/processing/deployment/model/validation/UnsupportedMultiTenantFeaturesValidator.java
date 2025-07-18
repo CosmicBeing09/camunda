@@ -49,7 +49,7 @@ public final class UnsupportedMultiTenantFeaturesValidator {
       final List<ExecutableProcess> executableProcesses,
       final String tenantId) {
 
-    if (Objects.equals(tenantId, TenantOwned.DEFAULT_TENANT_IDENTIFIER)) {
+    if (Objects.equals(tenantId, TenantOwned.DEFAULT_TENANT_ID)) {
       // All elements are supported when the default tenant is used
       return Either.right(null);
     }

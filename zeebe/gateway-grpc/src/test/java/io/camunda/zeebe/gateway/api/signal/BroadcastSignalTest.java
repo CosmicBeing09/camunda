@@ -30,7 +30,7 @@ public class BroadcastSignalTest extends GatewayTest {
     final BroadcastSignalStub stub = new BroadcastSignalStub();
     stub.registerWith(brokerClient);
 
-    final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+    final String tenantId = TenantOwned.DEFAULT_TENANT_ID;
     final String variables = JsonUtil.toJson(Collections.singletonMap("key", "value"));
 
     final BroadcastSignalRequest request =

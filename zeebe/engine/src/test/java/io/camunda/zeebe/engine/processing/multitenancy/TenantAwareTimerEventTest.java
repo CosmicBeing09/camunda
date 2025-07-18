@@ -51,7 +51,7 @@ public class TenantAwareTimerEventTest {
                     .timerWithDuration(Duration.ofMinutes(10))
                     .endEvent()
                     .done())
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .deploy();
 
     // then

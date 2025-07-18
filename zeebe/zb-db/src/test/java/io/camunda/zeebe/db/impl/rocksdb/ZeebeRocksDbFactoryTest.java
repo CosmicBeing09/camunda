@@ -162,7 +162,7 @@ final class ZeebeRocksDbFactoryTest {
       final var column =
           db.createColumnFamily(
               DefaultColumnFamily.DEFAULT, db.createContext(), new DbString(), new DbString());
-      snapshotValue = column.get(key).toString();
+      snapshotValue = column.getValue(key).toString();
     }
 
     assertThat(snapshotValue).isEqualTo("bar");

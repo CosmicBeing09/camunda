@@ -14,7 +14,7 @@ import java.util.Objects;
 public class MetricEntity implements ExporterEntity<MetricEntity>, TenantOwned {
 
   private String id;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
   private String event;
   private String value;
   private OffsetDateTime eventTime;

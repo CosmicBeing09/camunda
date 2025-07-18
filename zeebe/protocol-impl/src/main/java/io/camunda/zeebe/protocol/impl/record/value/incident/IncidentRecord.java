@@ -38,7 +38,7 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
   private final LongProperty jobKeyProp = new LongProperty("jobKey", -1L);
   private final LongProperty variableScopeKeyProp = new LongProperty("variableScopeKey", -1L);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final ArrayProperty<ArrayValue<LongValue>> elementInstancePathProp =
       new ArrayProperty<>("elementInstancePath", () -> new ArrayValue<>(LongValue::new));
   private final ArrayProperty<LongValue> processDefinitionPathProp =

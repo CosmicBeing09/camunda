@@ -47,13 +47,13 @@ public final class DbRoutingState implements MutableRoutingState {
   @Override
   public Set<Integer> currentPartitions() {
     key.wrapString(CURRENT_KEY);
-    return columnFamily.get(key).getPartitions();
+    return columnFamily.getValue(key).getPartitions();
   }
 
   @Override
   public Set<Integer> desiredPartitions() {
     key.wrapString(DESIRED_KEY);
-    final var desiredRoutingInfo = columnFamily.get(key);
+    final var desiredRoutingInfo = columnFamily.getValue(key);
     if (desiredRoutingInfo == null) {
       return Set.of();
     }
@@ -63,7 +63,7 @@ public final class DbRoutingState implements MutableRoutingState {
   @Override
   public MessageCorrelation messageCorrelation() {
     key.wrapString(CURRENT_KEY);
-    return columnFamily.get(key).getMessageCorrelation();
+    return columnFamily.getValue(key).getMessageCorrelation();
   }
 
   @Override
@@ -75,7 +75,7 @@ public final class DbRoutingState implements MutableRoutingState {
   @Override
   public long bootstrappedAt(final int partitionCount) {
     partitionIdKey.wrapInt(partitionCount);
-    final var value = bootstrappedAtColumnFamily.get(partitionIdKey);
+    final var value = bootstrappedAtColumnFamily.getValue(partitionIdKey);
     if (value == null) {
       return -1L;
     }
@@ -112,10 +112,10 @@ public final class DbRoutingState implements MutableRoutingState {
   @Override
   public boolean activatePartition(final int partitionId) {
     key.wrapString(DESIRED_KEY);
-    final var desiredState = columnFamily.get(key);
+    final var desiredState = columnFamily.getValue(key);
     if (desiredState.getPartitions().contains(partitionId)) {
       key.wrapString(CURRENT_KEY);
-      final var current = columnFamily.get(key);
+      final var current = columnFamily.getValue(key);
       final var newPartitions = new TreeSet<>(current.getPartitions());
       newPartitions.add(partitionId);
       current.setPartitions(newPartitions);
@@ -128,8 +128,8 @@ public final class DbRoutingState implements MutableRoutingState {
 
   private void setBootstrappedAt(final int partitionCount, final long key) {
     partitionIdKey.wrapInt(partitionCount);
-    dbLong.wrapLong(key);
-    if (bootstrappedAtColumnFamily.get(partitionIdKey) == null) {
+    dbLong.setValue(key);
+    if (bootstrappedAtColumnFamily.getValue(partitionIdKey) == null) {
       // do not override if it's already set
       bootstrappedAtColumnFamily.insert(partitionIdKey, dbLong);
     }

@@ -31,13 +31,13 @@ public final class DbCheckpointState implements CheckpointState {
 
   @Override
   public long getCheckpointId() {
-    final CheckpointInfo info = checkpointColumnFamily.get(checkpointInfoKey);
+    final CheckpointInfo info = checkpointColumnFamily.getValue(checkpointInfoKey);
     return info != null ? info.getId() : NO_CHECKPOINT;
   }
 
   @Override
   public long getCheckpointPosition() {
-    final CheckpointInfo info = checkpointColumnFamily.get(checkpointInfoKey);
+    final CheckpointInfo info = checkpointColumnFamily.getValue(checkpointInfoKey);
     return info != null ? info.getPosition() : NO_CHECKPOINT;
   }
 

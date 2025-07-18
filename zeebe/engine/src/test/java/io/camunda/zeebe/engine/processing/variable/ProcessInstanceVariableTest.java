@@ -72,7 +72,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("x")
         .hasValue("1");
   }
@@ -99,7 +99,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("x")
         .hasValue("1");
   }
@@ -146,7 +146,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("y")
         .hasValue("1");
   }
@@ -172,7 +172,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("x")
         .hasValue("1");
   }
@@ -222,7 +222,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("x")
         .hasValue("2");
   }
@@ -269,7 +269,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("y")
         .hasValue("2");
   }
@@ -295,7 +295,7 @@ public final class ProcessInstanceVariableTest {
     Assertions.assertThat(variableRecord.getValue())
         .hasScopeKey(processInstanceKey)
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasName("x")
         .hasValue("2");
   }

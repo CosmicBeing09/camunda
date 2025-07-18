@@ -144,7 +144,7 @@ public class EventSubProcessIncidentTest {
         .hasElementId("event_sub_proc")
         .hasElementInstanceKey(failureEvent.getKey())
         .hasVariableScopeKey(failureEvent.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(incidentEventValue.getErrorMessage())
         .contains("Assertion failure on evaluate the expression");

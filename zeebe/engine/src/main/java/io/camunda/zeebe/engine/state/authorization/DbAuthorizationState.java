@@ -79,7 +79,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
 
   @Override
   public void create(final long authorizationKey, final AuthorizationRecord authorization) {
-    this.authorizationKey.wrapLong(authorizationKey);
+    this.authorizationKey.setValue(authorizationKey);
     persistedAuthorization.wrap(authorization);
     authorizationByAuthorizationKeyColumnFamily.insert(
         this.authorizationKey, persistedAuthorization);
@@ -89,7 +89,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     resourceType.wrapString(authorization.getResourceType().name());
 
     final var permissions =
-        Optional.ofNullable(permissionsColumnFamily.get(ownerTypeOwnerIdAndResourceType))
+        Optional.ofNullable(permissionsColumnFamily.getValue(ownerTypeOwnerIdAndResourceType))
             .orElse(new Permissions());
 
     authorization
@@ -102,7 +102,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
 
     // add authorization key to owner
     final var keys =
-        Optional.ofNullable(authorizationKeysByOwnerColumnFamily.get(ownerTypeAndOwnerId))
+        Optional.ofNullable(authorizationKeysByOwnerColumnFamily.getValue(ownerTypeAndOwnerId))
             .orElse(new AuthorizationKeys());
     keys.addAuthorizationKey(authorizationKey);
     authorizationKeysByOwnerColumnFamily.upsert(ownerTypeAndOwnerId, keys);
@@ -119,9 +119,9 @@ public class DbAuthorizationState implements MutableAuthorizationState {
 
   @Override
   public void delete(final long authorizationKey) {
-    this.authorizationKey.wrapLong(authorizationKey);
+    this.authorizationKey.setValue(authorizationKey);
     final var persistedAuthorization =
-        authorizationByAuthorizationKeyColumnFamily.get(this.authorizationKey);
+        authorizationByAuthorizationKeyColumnFamily.getValue(this.authorizationKey);
 
     // remove the old permissions
     persistedAuthorization
@@ -142,16 +142,16 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     // remove authorization key from owner
     ownerId.wrapString(persistedAuthorization.getOwnerId());
     ownerType.wrapString(persistedAuthorization.getOwnerType().name());
-    final var keys = authorizationKeysByOwnerColumnFamily.get(ownerTypeAndOwnerId);
+    final var keys = authorizationKeysByOwnerColumnFamily.getValue(ownerTypeAndOwnerId);
     keys.removeAuthorizationKey(authorizationKey);
     authorizationKeysByOwnerColumnFamily.update(ownerTypeAndOwnerId, keys);
   }
 
   @Override
   public Optional<PersistedAuthorization> get(final long authorizationKey) {
-    this.authorizationKey.wrapLong(authorizationKey);
+    this.authorizationKey.setValue(authorizationKey);
     final var persistedAuthorization =
-        authorizationByAuthorizationKeyColumnFamily.get(this.authorizationKey);
+        authorizationByAuthorizationKeyColumnFamily.getValue(this.authorizationKey);
     return Optional.ofNullable(persistedAuthorization);
   }
 
@@ -165,7 +165,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     this.ownerId.wrapString(ownerId);
     this.resourceType.wrapString(resourceType.name());
 
-    final var persistedPermissions = permissionsColumnFamily.get(ownerTypeOwnerIdAndResourceType);
+    final var persistedPermissions = permissionsColumnFamily.getValue(ownerTypeOwnerIdAndResourceType);
 
     return persistedPermissions == null
         ? Collections.emptySet()
@@ -179,7 +179,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
       final AuthorizationOwnerType ownerType, final String ownerId) {
     this.ownerType.wrapString(ownerType.name());
     this.ownerId.wrapString(ownerId);
-    final var keys = authorizationKeysByOwnerColumnFamily.get(ownerTypeAndOwnerId);
+    final var keys = authorizationKeysByOwnerColumnFamily.getValue(ownerTypeAndOwnerId);
     return keys == null ? Collections.emptySet() : keys.getAuthorizationKeys();
   }
 
@@ -193,7 +193,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     this.ownerId.wrapString(ownerId);
     this.resourceType.wrapString(resourceType.name());
 
-    final var permissions = permissionsColumnFamily.get(ownerTypeOwnerIdAndResourceType);
+    final var permissions = permissionsColumnFamily.getValue(ownerTypeOwnerIdAndResourceType);
     permissions.removeResourceIdentifiers(permissionType, resourceIds);
 
     if (permissions.isEmpty()) {

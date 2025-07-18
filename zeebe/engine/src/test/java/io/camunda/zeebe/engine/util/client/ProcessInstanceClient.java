@@ -286,7 +286,7 @@ public final class ProcessInstanceClient {
     public ExistingInstanceClient(final CommandWriter writer, final long processInstanceKey) {
       this.writer = writer;
       this.processInstanceKey = processInstanceKey;
-      authorizedTenants = new String[] {TenantOwned.DEFAULT_TENANT_IDENTIFIER};
+      authorizedTenants = new String[] {TenantOwned.DEFAULT_TENANT_ID};
     }
 
     public ExistingInstanceClient onPartition(final int partition) {

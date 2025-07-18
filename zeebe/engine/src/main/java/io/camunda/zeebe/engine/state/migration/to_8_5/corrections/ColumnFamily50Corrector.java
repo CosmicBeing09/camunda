@@ -176,7 +176,7 @@ public final class ColumnFamily50Corrector {
 
     if (migrationTaskState.getState() == State.NOT_STARTED) {
       // we don't want to override it if it is already marked as finished
-      final var currentState = migrationStateColumnFamily.get(migrationIdentifier);
+      final var currentState = migrationStateColumnFamily.getValue(migrationIdentifier);
       if (currentState != null && currentState.getState() == State.FINISHED) {
         // already marked as finished in the actual column family
         // no need to override it, let's just delete the entry stored in the wrong cf

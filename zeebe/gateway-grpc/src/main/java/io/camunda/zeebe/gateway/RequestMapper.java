@@ -83,13 +83,13 @@ public final class RequestMapper extends RequestUtil {
 
   public static BrokerDeployResourceRequest toDeployProcessRequest(
       final DeployProcessRequest grpcRequest) {
-    ensureTenantIdSet("DeployProcess", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    ensureTenantIdSet("DeployProcess", TenantOwned.DEFAULT_TENANT_ID);
     final BrokerDeployResourceRequest brokerRequest = new BrokerDeployResourceRequest();
 
     for (final ProcessRequestObject process : grpcRequest.getProcessesList()) {
       brokerRequest.addResource(process.getName(), process.getDefinition().toByteArray());
     }
-    brokerRequest.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    brokerRequest.setTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     return brokerRequest;
   }
@@ -386,11 +386,11 @@ public final class RequestMapper extends RequestUtil {
 
     final boolean hasTenantId = !StringUtils.isBlank(tenantId);
     if (!isMultiTenancyEnabled) {
-      if (hasTenantId && !TenantOwned.DEFAULT_TENANT_IDENTIFIER.equals(tenantId)) {
+      if (hasTenantId && !TenantOwned.DEFAULT_TENANT_ID.equals(tenantId)) {
         throw new InvalidTenantRequestException(commandName, tenantId, "multi-tenancy is disabled");
       }
 
-      return TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+      return TenantOwned.DEFAULT_TENANT_ID;
     }
 
     if (!hasTenantId) {
@@ -403,7 +403,7 @@ public final class RequestMapper extends RequestUtil {
           commandName, tenantId, "tenant identifier is longer than 31 characters");
     }
 
-    if (!TenantOwned.DEFAULT_TENANT_IDENTIFIER.equals(tenantId)
+    if (!TenantOwned.DEFAULT_TENANT_ID.equals(tenantId)
         && !TENANT_ID_MASK.matcher(tenantId).matches()) {
       throw new InvalidTenantRequestException(
           commandName, tenantId, "tenant identifier contains illegal characters");
@@ -417,7 +417,7 @@ public final class RequestMapper extends RequestUtil {
 
     if (tenantIds.isEmpty()) {
       if (!isMultiTenancyEnabled) {
-        return List.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        return List.of(TenantOwned.DEFAULT_TENANT_ID);
       }
 
       throw new InvalidTenantRequestException(

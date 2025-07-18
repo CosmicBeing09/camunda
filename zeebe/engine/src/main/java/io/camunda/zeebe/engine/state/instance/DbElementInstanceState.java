@@ -163,13 +163,13 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
   @Override
   public void removeInstance(final long key) {
-    elementInstanceKey.wrapLong(key);
-    final var instance = elementInstanceColumnFamily.get(elementInstanceKey);
+    elementInstanceKey.setValue(key);
+    final var instance = elementInstanceColumnFamily.getValue(elementInstanceKey);
     if (instance == null) {
       return;
     }
     final long parent = instance.getParentKey();
-    parentKey.inner().wrapLong(parent);
+    parentKey.inner().setValue(parent);
     parentChildColumnFamily.deleteIfExists(parentChildKey);
     elementInstanceColumnFamily.deleteExisting(elementInstanceKey);
     variableState.removeScope(key);
@@ -178,14 +178,14 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
     final var recordValue = instance.getValue();
     if (recordValue.getBpmnElementType() == BpmnElementType.PROCESS) {
-      processDefinitionKey.wrapLong(recordValue.getProcessDefinitionKey());
+      processDefinitionKey.setValue(recordValue.getProcessDefinitionKey());
       processInstanceKeyByProcessDefinitionKeyColumnFamily.deleteExisting(
           processInstanceKeyByProcessDefinitionKey);
     }
 
     if (parent > 0) {
-      elementInstanceKey.wrapLong(parent);
-      final var parentInstance = elementInstanceColumnFamily.get(elementInstanceKey);
+      elementInstanceKey.setValue(parent);
+      final var parentInstance = elementInstanceColumnFamily.getValue(elementInstanceKey);
       if (parentInstance == null) {
         final var errorMsg =
             "Expected to find parent instance for element instance with key %d, but none was found.";
@@ -198,8 +198,8 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
   @Override
   public void createInstance(final ElementInstance instance) {
-    elementInstanceKey.wrapLong(instance.getKey());
-    parentKey.inner().wrapLong(instance.getParentKey());
+    elementInstanceKey.setValue(instance.getKey());
+    parentKey.inner().setValue(instance.getParentKey());
 
     elementInstanceColumnFamily.insert(elementInstanceKey, instance);
     parentChildColumnFamily.insert(parentChildKey, DbNil.INSTANCE);
@@ -207,7 +207,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
     final var recordValue = instance.getValue();
     if (recordValue.getBpmnElementType() == BpmnElementType.PROCESS) {
-      processDefinitionKey.wrapLong(recordValue.getProcessDefinitionKey());
+      processDefinitionKey.setValue(recordValue.getProcessDefinitionKey());
       processInstanceKeyByProcessDefinitionKeyColumnFamily.insert(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
     }
@@ -215,15 +215,15 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
   @Override
   public void updateInstance(final ElementInstance scopeInstance) {
-    elementInstanceKey.wrapLong(scopeInstance.getKey());
-    parentKey.inner().wrapLong(scopeInstance.getParentKey());
+    elementInstanceKey.setValue(scopeInstance.getKey());
+    parentKey.inner().setValue(scopeInstance.getParentKey());
     elementInstanceColumnFamily.update(elementInstanceKey, scopeInstance);
   }
 
   @Override
   public void updateInstance(final long key, final Consumer<ElementInstance> modifier) {
-    elementInstanceKey.wrapLong(key);
-    final var scopeInstance = elementInstanceColumnFamily.get(elementInstanceKey);
+    elementInstanceKey.setValue(key);
+    final var scopeInstance = elementInstanceColumnFamily.getValue(elementInstanceKey);
     modifier.accept(scopeInstance);
     updateInstance(scopeInstance);
   }
@@ -231,7 +231,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public void setAwaitResultRequestMetadata(
       final long processInstanceKey, final AwaitProcessInstanceResultMetadata metadata) {
-    elementInstanceKey.wrapLong(processInstanceKey);
+    elementInstanceKey.setValue(processInstanceKey);
     awaitProcessInstanceResultMetadataColumnFamily.insert(elementInstanceKey, metadata);
   }
 
@@ -240,11 +240,11 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       final long flowScopeKey,
       final DirectBuffer gatewayElementId,
       final DirectBuffer sequenceFlowElementId) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
     this.gatewayElementId.wrapBuffer(gatewayElementId);
     this.sequenceFlowElementId.wrapBuffer(sequenceFlowElementId);
 
-    final var number = numberOfTakenSequenceFlowsColumnFamily.get(numberOfTakenSequenceFlowsKey);
+    final var number = numberOfTakenSequenceFlowsColumnFamily.getValue(numberOfTakenSequenceFlowsKey);
 
     var newValue = 1;
     if (number != null) {
@@ -259,7 +259,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public void decrementNumberOfTakenSequenceFlows(
       final long flowScopeKey, final DirectBuffer gatewayElementId) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
     this.gatewayElementId.wrapBuffer(gatewayElementId);
 
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(
@@ -280,11 +280,11 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       final long flowScopeKey,
       final DirectBuffer gatewayElementId,
       final DirectBuffer sequenceFlowElementId) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
     this.gatewayElementId.wrapBuffer(gatewayElementId);
     this.sequenceFlowElementId.wrapBuffer(sequenceFlowElementId);
 
-    final var number = numberOfTakenSequenceFlowsColumnFamily.get(numberOfTakenSequenceFlowsKey);
+    final var number = numberOfTakenSequenceFlowsColumnFamily.getValue(numberOfTakenSequenceFlowsKey);
 
     final var newValue = number.getValue() - 1;
     if (newValue > 0) {
@@ -299,8 +299,8 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public void insertProcessInstanceKeyByDefinitionKey(
       final long processInstanceKey, final long processDefinitionKey) {
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
-    elementInstanceKey.wrapLong(processInstanceKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
+    elementInstanceKey.setValue(processInstanceKey);
     processInstanceKeyByProcessDefinitionKeyColumnFamily.insert(
         processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
   }
@@ -308,16 +308,16 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public void deleteProcessInstanceKeyByDefinitionKey(
       final long processInstanceKey, final long processDefinitionKey) {
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
-    elementInstanceKey.wrapLong(processInstanceKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
+    elementInstanceKey.setValue(processInstanceKey);
     processInstanceKeyByProcessDefinitionKeyColumnFamily.deleteExisting(
         processInstanceKeyByProcessDefinitionKey);
   }
 
   @Override
   public ElementInstance getInstance(final long key) {
-    elementInstanceKey.wrapLong(key);
-    final ElementInstance elementInstance = elementInstanceColumnFamily.get(elementInstanceKey);
+    elementInstanceKey.setValue(key);
+    final ElementInstance elementInstance = elementInstanceColumnFamily.getValue(elementInstanceKey);
     return copyElementInstance(elementInstance);
   }
 
@@ -326,7 +326,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
     final List<ElementInstance> children = new ArrayList<>();
     final ElementInstance parentInstance = getInstance(parentKey);
     if (parentInstance != null) {
-      this.parentKey.inner().wrapLong(parentKey);
+      this.parentKey.inner().setValue(parentKey);
 
       parentChildColumnFamily.whileEqualPrefix(
           this.parentKey,
@@ -355,8 +355,8 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       final long startAtKey,
       final BiFunction<Long, ElementInstance, Boolean> visitor,
       final Predicate<ElementInstance> filter) {
-    this.parentKey.inner().wrapLong(parentKey);
-    elementInstanceKey.wrapLong(startAtKey);
+    this.parentKey.inner().setValue(parentKey);
+    elementInstanceKey.setValue(startAtKey);
 
     // If startAtKey is a negative value we should use null instead. This will make it so we start
     // the iteration at the first child of the parent.
@@ -379,14 +379,14 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public AwaitProcessInstanceResultMetadata getAwaitResultRequestMetadata(
       final long processInstanceKey) {
-    elementInstanceKey.wrapLong(processInstanceKey);
-    return awaitProcessInstanceResultMetadataColumnFamily.get(elementInstanceKey);
+    elementInstanceKey.setValue(processInstanceKey);
+    return awaitProcessInstanceResultMetadataColumnFamily.getValue(elementInstanceKey);
   }
 
   @Override
   public int getNumberOfTakenSequenceFlows(
       final long flowScopeKey, final DirectBuffer gatewayElementId) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
     this.gatewayElementId.wrapBuffer(gatewayElementId);
 
     final var count = new MutableInteger(0);
@@ -401,7 +401,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
 
   @Override
   public int getNumberOfTakenSequenceFlows(final long flowScopeKey) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
 
     final var count = new MutableInteger(0);
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(
@@ -416,7 +416,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public Set<DirectBuffer> getTakenSequenceFlows(
       final long flowScopeKey, final DirectBuffer gatewayElementId) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
     this.gatewayElementId.wrapBuffer(gatewayElementId);
 
     final Set<DirectBuffer> takenSequenceFlows = new LinkedHashSet<>();
@@ -432,7 +432,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public void visitTakenSequenceFlows(
       final long flowScopeKey, final TakenSequenceFlowVisitor visitor) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(
         this.flowScopeKey,
         (key, number) -> {
@@ -447,7 +447,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public List<Long> getProcessInstanceKeysByDefinitionKey(final long processDefinitionKey) {
     final List<Long> processInstanceKeys = new ArrayList<>();
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
 
     processInstanceKeyByProcessDefinitionKeyColumnFamily.whileEqualPrefix(
         this.processDefinitionKey,
@@ -461,7 +461,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   @Override
   public boolean hasActiveProcessInstances(
       final long processDefinitionKey, final List<Long> bannedInstances) {
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
     final AtomicBoolean hasActiveInstances = new AtomicBoolean(false);
 
     processInstanceKeyByProcessDefinitionKeyColumnFamily.whileEqualPrefix(
@@ -493,7 +493,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   }
 
   private void removeNumberOfTakenSequenceFlows(final long flowScopeKey) {
-    this.flowScopeKey.wrapLong(flowScopeKey);
+    this.flowScopeKey.setValue(flowScopeKey);
 
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(
         this.flowScopeKey,

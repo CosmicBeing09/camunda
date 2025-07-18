@@ -106,7 +106,7 @@ public final class ActivateJobsTest extends GatewayTest {
       assertThat(job.getProcessDefinitionVersion()).isEqualTo(stub.getProcessDefinitionVersion());
       assertThat(job.getProcessDefinitionKey()).isEqualTo(stub.getProcessDefinitionKey());
       assertThat(job.getElementId()).isEqualTo(stub.getElementId());
-      assertThat(job.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(job.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
       assertThat(job.getElementInstanceKey()).isEqualTo(stub.getElementInstanceKey());
       JsonUtil.assertEquality(job.getCustomHeaders(), stub.getCustomHeaders());
       JsonUtil.assertEquality(job.getVariables(), stub.getVariables());
@@ -122,7 +122,7 @@ public final class ActivateJobsTest extends GatewayTest {
         .extracting(v -> BufferUtil.bufferAsString(v.getValue()))
         .containsExactlyInAnyOrderElementsOf(fetchVariables);
     assertThat(brokerRequestValue.getTenantIds())
-        .containsExactly(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .containsExactly(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

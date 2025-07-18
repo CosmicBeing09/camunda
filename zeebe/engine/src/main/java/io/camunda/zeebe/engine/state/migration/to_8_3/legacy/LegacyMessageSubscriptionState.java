@@ -63,7 +63,7 @@ public final class LegacyMessageSubscriptionState {
   }
 
   public void put(final long key, final MessageSubscriptionRecord record) {
-    elementInstanceKey.wrapLong(record.getElementInstanceKey());
+    elementInstanceKey.setValue(record.getElementInstanceKey());
     messageName.wrapBuffer(record.getMessageNameBuffer());
 
     messageSubscription.setKey(key).setRecord(record).setCorrelating(false);

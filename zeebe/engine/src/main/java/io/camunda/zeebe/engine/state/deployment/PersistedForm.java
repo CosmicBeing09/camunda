@@ -31,7 +31,7 @@ public final class PersistedForm extends UnpackedObject implements DbValue {
   private final BinaryProperty resourceProp = new BinaryProperty("resource", new UnsafeBuffer());
   private final BinaryProperty checksumProp = new BinaryProperty("checksum", new UnsafeBuffer());
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty deploymentKeyProp =
       new LongProperty("deploymentKey", NO_DEPLOYMENT_KEY);
   private final StringProperty versionTagProp = new StringProperty("versionTag", "");

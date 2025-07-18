@@ -21,7 +21,7 @@ public class DecisionDefinitionEntity
   private int version;
   private String decisionRequirementsId;
   private long decisionRequirementsKey;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   @Override
   public String getId() {

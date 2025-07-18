@@ -41,7 +41,7 @@ public class DbGroupState implements MutableGroupState {
   @Override
   public void update(final GroupRecord group) {
     groupId.wrapString(group.getGroupId());
-    final var persistedGroup = groupColumnFamily.get(groupId);
+    final var persistedGroup = groupColumnFamily.getValue(groupId);
     if (persistedGroup != null) {
       persistedGroup.copyFrom(group);
       groupColumnFamily.update(groupId, persistedGroup);
@@ -57,7 +57,7 @@ public class DbGroupState implements MutableGroupState {
   @Override
   public Optional<PersistedGroup> get(final String groupId) {
     this.groupId.wrapString(groupId);
-    final var persistedGroup = groupColumnFamily.get(this.groupId);
+    final var persistedGroup = groupColumnFamily.getValue(this.groupId);
     return Optional.ofNullable(persistedGroup);
   }
 }

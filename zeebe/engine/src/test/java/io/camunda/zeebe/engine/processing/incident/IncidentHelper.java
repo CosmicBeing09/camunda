@@ -19,7 +19,7 @@ public class IncidentHelper {
   public static IncidentRecordValueAssert assertIncidentCreated(
       final Record<IncidentRecordValue> incident,
       final Record<ProcessInstanceRecordValue> elementInstance) {
-    return assertIncidentCreated(incident, elementInstance, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    return assertIncidentCreated(incident, elementInstance, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   public static IncidentRecordValueAssert assertIncidentCreated(

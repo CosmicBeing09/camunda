@@ -29,7 +29,7 @@ public final class VariableRecord extends UnifiedRecordValue implements Variable
   private final LongProperty processDefinitionKeyProp = new LongProperty("processDefinitionKey");
   private final StringProperty bpmnProcessIdProp = new StringProperty("bpmnProcessId", "");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public VariableRecord() {
     super(7);

@@ -38,7 +38,7 @@ public final class DecisionRequirementsRecord extends UnifiedRecordValue
   private final BinaryProperty checksumProp = new BinaryProperty("checksum", new UnsafeBuffer());
   private final BinaryProperty resourceProp = new BinaryProperty("resource", new UnsafeBuffer());
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public DecisionRequirementsRecord() {
     super(9);

@@ -44,7 +44,7 @@ public interface ColumnFamily<KeyType extends DbKey, ValueType extends DbValue>
    * @param key the key
    * @return if the key was found in the column family then the value, otherwise null
    */
-  ValueType get(KeyType key);
+  ValueType getValue(KeyType key);
 
   /**
    * Visits the values, which are stored in the column family. The ordering depends on the key.
@@ -55,13 +55,13 @@ public interface ColumnFamily<KeyType extends DbKey, ValueType extends DbValue>
    *
    * @param consumer the consumer which accepts the value
    */
-  void forEach(Consumer<ValueType> consumer);
+  void visitValues(Consumer<ValueType> consumer);
 
   /**
    * Visits the key-value pairs, which are stored in the column family. The ordering depends on the
    * key.
    *
-   * <p>Similar to {@link #forEach(Consumer)}.
+   * <p>Similar to {@link #visitValues(Consumer)}.
    *
    * @param consumer the consumer which accepts the key-value pairs
    */

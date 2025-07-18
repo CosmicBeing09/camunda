@@ -38,7 +38,7 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
   // should be set to true if the process was already deployed - property should not be exported
   private final BooleanProperty isDuplicateProp = new BooleanProperty("isDuplicate", false);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty deploymentKeyProp = new LongProperty("deploymentKey", -1);
   private final StringProperty versionTagProp = new StringProperty("versionTag", "");
 
@@ -63,6 +63,16 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
   @Override
   public int getVersion() {
     return versionProp.getValue();
+  }
+
+  public ProcessMetadata setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return bufferAsString(versionTagProp.getValue());
   }
 
   @Override
@@ -115,8 +125,8 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
     return this;
   }
 
-  public ProcessMetadata setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessMetadata setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -180,16 +190,6 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
 
   public ProcessMetadata setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessMetadata setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }

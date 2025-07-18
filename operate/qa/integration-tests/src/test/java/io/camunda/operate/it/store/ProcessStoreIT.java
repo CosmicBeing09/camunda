@@ -59,7 +59,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setKey(2251799813685248L)
             .setId("2251799813685248")
             .setBpmnProcessId("demoProcess")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setName("Demo process")
             .setBpmnXml(resourceXml);
 
@@ -68,7 +68,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setKey(2251799813685249L)
             .setId("2251799813685249")
             .setBpmnProcessId("demoProcess-1")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setName("Demo process 1")
             .setBpmnXml(resourceXml);
 
@@ -91,7 +91,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setBpmnProcessId("demoProcess")
             .setState(ProcessInstanceState.ACTIVE)
             .setTreePath("PI_4503599627370497")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
 
     secondProcessInstance =
@@ -105,7 +105,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setBpmnProcessId("demoProcess-1")
             .setState(ProcessInstanceState.COMPLETED)
             .setTreePath("PI_2251799813685251")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setIncident(false)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
 
@@ -120,7 +120,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setBpmnProcessId("demoProcess-1")
             .setState(ProcessInstanceState.ACTIVE)
             .setTreePath("PI_2251799813685252")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setIncident(true)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
 
@@ -169,7 +169,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
   public void testGetProcessesGrouped() {
     final Map<ProcessStore.ProcessKey, List<ProcessEntity>> results =
         processStore.getProcessesGrouped(
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+            TenantOwned.DEFAULT_TENANT_ID,
             Set.of(
                 firstProcessDefinition.getBpmnProcessId(),
                 secondProcessDefinition.getBpmnProcessId(),
@@ -181,7 +181,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
                 .get(
                     new ProcessStore.ProcessKey(
                         firstProcessDefinition.getBpmnProcessId(),
-                        TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                        TenantOwned.DEFAULT_TENANT_ID))
                 .size())
         .isEqualTo(1);
     assertThat(
@@ -189,7 +189,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
                 .get(
                     new ProcessStore.ProcessKey(
                         secondProcessDefinition.getBpmnProcessId(),
-                        TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                        TenantOwned.DEFAULT_TENANT_ID))
                 .size())
         .isEqualTo(1);
   }
@@ -245,7 +245,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setKey(processKey)
             .setId(String.valueOf(processKey))
             .setBpmnProcessId("fakeProcess")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID));
 
     searchContainerManager.refreshIndices("*operate-list*");
 
@@ -348,14 +348,14 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
         new ProcessEntity()
             .setKey(2251799813685298L)
             .setBpmnProcessId("testProcess1")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setName("Test process 1"));
     testSearchRepository.createOrUpdateDocumentFromObject(
         processDefinitionIndex.getFullQualifiedName(),
         new ProcessEntity()
             .setKey(2251799813685299L)
             .setBpmnProcessId("testProcess2")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setName("Test process 2"));
     searchContainerManager.refreshIndices("*operate-process*");
 
@@ -375,7 +375,7 @@ public class ProcessStoreIT extends OperateSearchAbstractIT {
             .setKey(processKey)
             .setId(String.valueOf(processKey))
             .setBpmnProcessId("fakeProcess")
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID));
 
     testSearchRepository.createOrUpdateDocumentFromObject(
         getFullIndexNameForDependant(FlowNodeInstanceTemplate.INDEX_NAME),

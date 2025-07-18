@@ -73,7 +73,7 @@ public class MultiTenancyIT {
   private static final ElasticsearchContainer CONTAINER =
       TestSearchContainers.createDefeaultElasticsearchContainer();
 
-  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_ID;
   private static final String TENANT_A = "tenantA";
   private static final String TENANT_B = "tenantB";
   private static final String USER_TENANT_A = "userTenantA";
@@ -252,7 +252,7 @@ public class MultiTenancyIT {
           .withMessageContaining(
               "Expected to perform operation 'CREATE' on resource 'RESOURCE' for tenant '%s', but user is not assigned to this tenant"
                   .formatted(
-                      TenantOwned.DEFAULT_TENANT_IDENTIFIER, USER_TENANT_A_WITHOUT_DEFAULT_TENANT));
+                      TenantOwned.DEFAULT_TENANT_ID, USER_TENANT_A_WITHOUT_DEFAULT_TENANT));
     }
   }
 
@@ -274,7 +274,7 @@ public class MultiTenancyIT {
           .withMessageContaining(
               "Expected to perform operation 'CREATE' on resource 'RESOURCE' for tenant '%s', but user is not assigned to this tenant"
                   .formatted(
-                      TenantOwned.DEFAULT_TENANT_IDENTIFIER, USER_TENANT_A_WITHOUT_DEFAULT_TENANT));
+                      TenantOwned.DEFAULT_TENANT_ID, USER_TENANT_A_WITHOUT_DEFAULT_TENANT));
     }
   }
 

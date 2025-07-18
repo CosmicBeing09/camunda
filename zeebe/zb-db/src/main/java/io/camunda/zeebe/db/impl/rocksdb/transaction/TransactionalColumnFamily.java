@@ -39,7 +39,7 @@ import org.rocksdb.RocksIterator;
  *       transaction is already open and don't need to call ensureInOpenTransaction.
  *   <li>Iteration is implemented in terms of {@link TransactionalColumnFamily#forEachInPrefix} to
  *       depend difficult to follow call chains between the different public methods such as {@link
- *       TransactionalColumnFamily#forEach(Consumer)} and {@link
+ *       TransactionalColumnFamily#visitValues(Consumer)} and {@link
  *       TransactionalColumnFamily#whileEqualPrefix(DbKey, BiConsumer)}
  * </ul>
  */
@@ -136,7 +136,7 @@ class TransactionalColumnFamily<
   }
 
   @Override
-  public ValueType get(final KeyType key) {
+  public ValueType getValue(final KeyType key) {
     try (final var timer = metrics.measureGetLatency()) {
       ensureInOpenTransaction(
           transaction -> {
@@ -159,7 +159,7 @@ class TransactionalColumnFamily<
   }
 
   @Override
-  public void forEach(final Consumer<ValueType> consumer) {
+  public void visitValues(final Consumer<ValueType> consumer) {
     ensureInOpenTransaction(
         transaction ->
             forEachInPrefix(

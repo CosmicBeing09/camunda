@@ -105,7 +105,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   private final StringProperty elementIdProp = new StringProperty("elementId", EMPTY_STRING);
   private final LongProperty elementInstanceKeyProp = new LongProperty("elementInstanceKey", -1L);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   /**
    * Tracks the names of user task attributes that are intended to be modified (e.g. on `UPDATE`),

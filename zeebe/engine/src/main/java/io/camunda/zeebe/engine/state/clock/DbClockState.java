@@ -55,7 +55,7 @@ public class DbClockState implements MutableClockState {
   @Override
   public Modification getModification() {
     key.wrapString(KEY);
-    final var modification = columnFamily.get(key);
+    final var modification = columnFamily.getValue(key);
 
     if (modification == null) {
       return Modification.none();

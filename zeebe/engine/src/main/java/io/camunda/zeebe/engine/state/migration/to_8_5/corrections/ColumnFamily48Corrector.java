@@ -198,11 +198,11 @@ public final class ColumnFamily48Corrector {
     // Note that we have to read the current value first, as the messagesDeadlineCount will receive
     // a different value when looking up the current value.
     final long valueToMove = messagesDeadlineCount.getValue();
-    final var currentCount = messageStatsColumnFamily.get(messagesDeadlineCountKey);
+    final var currentCount = messageStatsColumnFamily.getValue(messagesDeadlineCountKey);
     if (currentCount != null) {
       LOG.trace(
           "Found existing message stats entry with key [{}] and value [{}]", key, currentCount);
-      messagesDeadlineCount.wrapLong(valueToMove + currentCount.getValue());
+      messagesDeadlineCount.setValue(valueToMove + currentCount.getValue());
     }
 
     moveEntryFromRecoveryColumnFamilyToMessageStatsColumnFamily(

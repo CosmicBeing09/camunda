@@ -312,7 +312,7 @@ public class DbMigrationState implements MutableMigrationState {
             transientState.onSent(
                 elementInstanceKey,
                 BufferUtil.bufferAsString(messageName),
-                TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+                TenantOwned.DEFAULT_TENANT_ID,
                 sentTime);
           }
 
@@ -334,7 +334,7 @@ public class DbMigrationState implements MutableMigrationState {
 
           final var processMessageSubscription =
               persistentState.getSubscription(
-                  elementInstanceKey, messageName, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+                  elementInstanceKey, messageName, TenantOwned.DEFAULT_TENANT_ID);
           if (processMessageSubscription != null) {
 
             final var record = processMessageSubscription.getRecord();
@@ -410,7 +410,7 @@ public class DbMigrationState implements MutableMigrationState {
     decisionsByKeyColumnFamily.forEach(
         (key, value) -> {
           dbDecisionId.wrapBuffer(value.getDecisionId());
-          dbDecisionKey.wrapLong(value.getDecisionKey());
+          dbDecisionKey.setValue(value.getDecisionKey());
           dbDecisionVersion.wrapInt(value.getVersion());
           decisionKeyByDecisionIdAndVersion.insert(decisionKeyAndVersion, fkDecision);
         });
@@ -421,7 +421,7 @@ public class DbMigrationState implements MutableMigrationState {
     decisionRequirementsByKeyColumnFamily.forEach(
         (key, value) -> {
           dbDecisionRequirementsId.wrapBuffer(value.getDecisionRequirementsId());
-          dbDecisionRequirementsKey.wrapLong(value.getDecisionRequirementsKey());
+          dbDecisionRequirementsKey.setValue(value.getDecisionRequirementsKey());
           dbDecisionRequirementsVersion.wrapInt(value.getDecisionRequirementsVersion());
           decisionRequirementsKeyByIdAndVersionColumnFamily.insert(
               decisionRequirementsIdAndVersion, fkDecisionRequirements);
@@ -430,14 +430,14 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public void migrateElementInstancePopulateProcessInstanceByDefinitionKey() {
-    parentKey.inner().wrapLong(NO_PARENT_KEY);
+    parentKey.inner().setValue(NO_PARENT_KEY);
     parentChildColumnFamily.whileEqualPrefix(
         parentKey,
         (key, nil) -> {
-          elementInstanceKey.wrapLong(key.second().inner().getValue());
+          elementInstanceKey.setValue(key.second().inner().getValue());
           final ElementInstance processInstance =
-              elementInstanceColumnFamily.get(elementInstanceKey);
-          processDefinitionKey.wrapLong(processInstance.getValue().getProcessDefinitionKey());
+              elementInstanceColumnFamily.getValue(elementInstanceKey);
+          processDefinitionKey.setValue(processInstance.getValue().getProcessDefinitionKey());
           processInstanceKeyByProcessDefinitionKeyColumnFamily.upsert(
               processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
         });
@@ -486,7 +486,7 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public boolean shouldRunElementInstancePopulateProcessInstanceByDefinitionKey() {
-    parentKey.inner().wrapLong(NO_PARENT_KEY);
+    parentKey.inner().setValue(NO_PARENT_KEY);
     return processInstanceKeyByProcessDefinitionKeyColumnFamily.isEmpty()
         || processInstanceKeyByProcessDefinitionKeyColumnFamily.count()
             != parentChildColumnFamily.countEqualPrefix(parentKey);
@@ -494,7 +494,7 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public String getMigratedByVersion() {
-    final var value = migrationsState.get(migratedByVersionKey);
+    final var value = migrationsState.getValue(migratedByVersionKey);
     return value == null ? null : value.toString();
   }
 

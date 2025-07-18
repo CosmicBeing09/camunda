@@ -44,7 +44,7 @@ public final class EvaluatedDecisionRecord extends UnifiedRecordValue
       new ArrayProperty<>("matchedRules", MatchedRuleRecord::new);
 
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public EvaluatedDecisionRecord() {
     super(9);

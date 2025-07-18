@@ -74,7 +74,7 @@ public final class CompleteUserTaskTest {
     Assertions.assertThat(recordValue)
         .hasUserTaskKey(userTaskKey)
         .hasAction("complete")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -102,7 +102,7 @@ public final class CompleteUserTaskTest {
     Assertions.assertThat(recordValue)
         .hasUserTaskKey(userTaskKey)
         .hasAction("customAction")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test

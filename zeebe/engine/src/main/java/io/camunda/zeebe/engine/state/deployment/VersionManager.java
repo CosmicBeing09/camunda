@@ -48,7 +48,7 @@ public final class VersionManager {
     return versionByTenantCache.computeIfAbsent(
         new TenantIdAndResourceId(tenantIdKey.toString(), idKey.toString()),
         (key) -> {
-          final var persistedVersionInfo = versionInfoColumnFamily.get(tenantAwareIdKey);
+          final var persistedVersionInfo = versionInfoColumnFamily.getValue(tenantAwareIdKey);
 
           if (persistedVersionInfo == null) {
             return new VersionInfo().setHighestVersionIfHigher(initialValue);
@@ -156,7 +156,7 @@ public final class VersionManager {
   }
 
   public void forEachResource(final ResourceVisitor resourceVisitor) {
-    versionInfoColumnFamily.forEach(
+    versionInfoColumnFamily.visitValues(
         versionInfo ->
             resourceVisitor.visit(
                 idKey.getBuffer(), tenantAwareIdKey.tenantKey().toString(), versionInfo));

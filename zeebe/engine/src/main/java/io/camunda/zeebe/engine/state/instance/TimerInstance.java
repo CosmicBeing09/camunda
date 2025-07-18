@@ -29,7 +29,7 @@ public final class TimerInstance extends UnpackedObject implements DbValue, Tena
   private final LongProperty elementInstanceKeyProp = new LongProperty("elementInstanceKey", 0L);
   private final LongProperty processInstanceKeyProp = new LongProperty("processInstanceKey", 0L);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty dueDateProp = new LongProperty("dueDate", 0L);
   private final IntegerProperty repetitionsProp = new IntegerProperty("repetitions", 0);
 

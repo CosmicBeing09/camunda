@@ -71,15 +71,15 @@ public final class ZeebeRocksDbIterationTest {
     final long suffixes = 5;
 
     for (long prefix = 0; prefix < prefixes; prefix++) {
-      firstKey.wrapLong(prefix);
+      firstKey.setValue(prefix);
       for (long suffix = 0; suffix < suffixes; suffix++) {
-        secondKey.wrapLong(suffix);
+        secondKey.setValue(suffix);
         columnFamily.upsert(compositeKey, DbNil.INSTANCE);
       }
     }
 
     // when
-    firstKey.wrapLong(1);
+    firstKey.setValue(1);
     columnFamily.whileEqualPrefix(firstKey, ((key, value) -> {}));
 
     // then

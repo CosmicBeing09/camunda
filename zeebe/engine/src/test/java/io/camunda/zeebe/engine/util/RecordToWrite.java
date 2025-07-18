@@ -72,7 +72,7 @@ public final class RecordToWrite implements LogAppendEntry {
     final RecordMetadata recordMetadata = new RecordMetadata();
     recordMetadata.recordType(RecordType.COMMAND);
     recordMetadata.authorization(
-        AuthorizationUtil.getAuthInfo(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+        AuthorizationUtil.getAuthInfo(TenantOwned.DEFAULT_TENANT_ID));
     return new RecordToWrite(recordMetadata);
   }
 

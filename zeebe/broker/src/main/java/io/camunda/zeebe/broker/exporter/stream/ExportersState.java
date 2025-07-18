@@ -86,7 +86,7 @@ public final class ExportersState {
 
   private Optional<ExporterStateEntry> findExporterStateEntry(final String exporterId) {
     this.exporterId.wrapString(exporterId);
-    return Optional.ofNullable(exporterPositionColumnFamily.get(this.exporterId));
+    return Optional.ofNullable(exporterPositionColumnFamily.getValue(this.exporterId));
   }
 
   public void visitExporterState(final BiConsumer<String, ExporterStateEntry> consumer) {

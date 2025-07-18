@@ -97,7 +97,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMoveMessageStatsToCorrectColumnFamily() {
       // given
-      messagesDeadlineCount.wrapLong(123);
+      messagesDeadlineCount.setValue(123);
       wrongMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
 
       // when
@@ -105,7 +105,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       // then
       Assertions.assertThat(wrongMessageStatsColumnFamily.isEmpty()).isTrue();
-      Assertions.assertThat(correctMessageStatsColumnFamily.get(messagesDeadlineCountKey))
+      Assertions.assertThat(correctMessageStatsColumnFamily.getValue(messagesDeadlineCountKey))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(123L);
@@ -114,9 +114,9 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMergeWithCorrectMessageStats() {
       // given
-      messagesDeadlineCount.wrapLong(123);
+      messagesDeadlineCount.setValue(123);
       wrongMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
-      messagesDeadlineCount.wrapLong(456);
+      messagesDeadlineCount.setValue(456);
       correctMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
 
       // when
@@ -124,7 +124,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       // then
       Assertions.assertThat(wrongMessageStatsColumnFamily.isEmpty()).isTrue();
-      Assertions.assertThat(correctMessageStatsColumnFamily.get(messagesDeadlineCountKey))
+      Assertions.assertThat(correctMessageStatsColumnFamily.getValue(messagesDeadlineCountKey))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(123L + 456L);
@@ -135,15 +135,15 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // given
       decisionId.wrapString("decision");
       decisionVersion.wrapInt(1);
-      decisionKey.wrapLong(123);
+      decisionKey.setValue(123);
       correctDecisionColumnFamily.insert(decisionIdAndVersion, decisionKey);
 
-      messagesDeadlineCount.wrapLong(123);
+      messagesDeadlineCount.setValue(123);
       wrongMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
 
       decisionId.wrapString("decision2");
       decisionVersion.wrapInt(2);
-      decisionKey.wrapLong(234);
+      decisionKey.setValue(234);
       correctDecisionColumnFamily.insert(decisionIdAndVersion, decisionKey);
 
       Assertions.assertThat(correctDecisionColumnFamily.count()).isEqualTo(3);
@@ -158,19 +158,19 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       decisionId.wrapString("decision");
       decisionVersion.wrapInt(1);
-      Assertions.assertThat(correctDecisionColumnFamily.get(decisionIdAndVersion))
+      Assertions.assertThat(correctDecisionColumnFamily.getValue(decisionIdAndVersion))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(123L);
 
       decisionId.wrapString("decision2");
       decisionVersion.wrapInt(2);
-      Assertions.assertThat(correctDecisionColumnFamily.get(decisionIdAndVersion))
+      Assertions.assertThat(correctDecisionColumnFamily.getValue(decisionIdAndVersion))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(234L);
 
-      Assertions.assertThat(correctMessageStatsColumnFamily.get(messagesDeadlineCountKey))
+      Assertions.assertThat(correctMessageStatsColumnFamily.getValue(messagesDeadlineCountKey))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(123L);
@@ -247,8 +247,8 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMovePiKeyByProcDefKeyToCorrectColumnFamily() {
       // given
-      elementInstanceKey.wrapLong(123);
-      processDefinitionKey.wrapLong(456);
+      elementInstanceKey.setValue(123);
+      processDefinitionKey.setValue(456);
       wrongPiKeyByProcDefKeyColumnFamily.insert(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
 
@@ -267,18 +267,18 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // given
       decisionRequirementsId.wrapString("drg");
       decisionRequirementsVersion.wrapInt(1);
-      decisionRequirementsKey.wrapLong(543);
+      decisionRequirementsKey.setValue(543);
       correctDecisionRequirementsKeyColumnFamily.insert(
           decisionRequirementsIdAndVersion, decisionRequirementsKey);
 
-      elementInstanceKey.wrapLong(123);
-      processDefinitionKey.wrapLong(456);
+      elementInstanceKey.setValue(123);
+      processDefinitionKey.setValue(456);
       wrongPiKeyByProcDefKeyColumnFamily.insert(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
 
       decisionRequirementsId.wrapString("drg2");
       decisionRequirementsVersion.wrapInt(2);
-      decisionRequirementsKey.wrapLong(987);
+      decisionRequirementsKey.setValue(987);
       correctDecisionRequirementsKeyColumnFamily.insert(
           decisionRequirementsIdAndVersion, decisionRequirementsKey);
 
@@ -293,8 +293,8 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // simply count the entries
       Assertions.assertThat(correctDecisionRequirementsKeyColumnFamily.count()).isEqualTo(2);
 
-      elementInstanceKey.wrapLong(123);
-      processDefinitionKey.wrapLong(456);
+      elementInstanceKey.setValue(123);
+      processDefinitionKey.setValue(456);
       Assertions.assertThat(
               correctPiKeyByProcDefKeyColumnFamily.exists(processInstanceKeyByProcessDefinitionKey))
           .isTrue();
@@ -302,7 +302,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       decisionRequirementsId.wrapString("drg");
       decisionRequirementsVersion.wrapInt(1);
       Assertions.assertThat(
-              correctDecisionRequirementsKeyColumnFamily.get(decisionRequirementsIdAndVersion))
+              correctDecisionRequirementsKeyColumnFamily.getValue(decisionRequirementsIdAndVersion))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(543L);
@@ -310,7 +310,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       decisionRequirementsId.wrapString("drg2");
       decisionRequirementsVersion.wrapInt(2);
       Assertions.assertThat(
-              correctDecisionRequirementsKeyColumnFamily.get(decisionRequirementsIdAndVersion))
+              correctDecisionRequirementsKeyColumnFamily.getValue(decisionRequirementsIdAndVersion))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(987L);
@@ -387,7 +387,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       // then
       Assertions.assertThat(wrongMigrationStateColumnFamily.isEmpty()).isTrue();
-      Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
+      Assertions.assertThat(correctMigrationStateColumnFamily.getValue(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.FINISHED);
@@ -409,7 +409,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       // then
       Assertions.assertThat(wrongMigrationStateColumnFamily.isEmpty()).isTrue();
-      Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
+      Assertions.assertThat(correctMigrationStateColumnFamily.getValue(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.FINISHED);
@@ -431,7 +431,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
 
       // then
       Assertions.assertThat(wrongMigrationStateColumnFamily.isEmpty()).isTrue();
-      Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
+      Assertions.assertThat(correctMigrationStateColumnFamily.getValue(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.FINISHED);
@@ -454,12 +454,12 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // then
       Assertions.assertThat(wrongMigrationStateColumnFamily.isEmpty()).isTrue();
       migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
-      Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
+      Assertions.assertThat(correctMigrationStateColumnFamily.getValue(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.NOT_STARTED);
       migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER + "2");
-      Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
+      Assertions.assertThat(correctMigrationStateColumnFamily.getValue(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.FINISHED);
@@ -469,7 +469,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     void shouldIgnoreSignalSubscriptionEntries() {
       // given
       signalName.wrapString("signal");
-      subscriptionKey.wrapLong(123);
+      subscriptionKey.setValue(123);
       signalSubscription
           .setKey(123)
           .setRecord(new SignalSubscriptionRecord().setSignalName(BufferUtil.wrapString("signal")));
@@ -481,7 +481,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       wrongMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
 
       signalName.wrapString("signal2");
-      subscriptionKey.wrapLong(234);
+      subscriptionKey.setValue(234);
       signalSubscription
           .setKey(234)
           .setRecord(
@@ -501,20 +501,20 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       Assertions.assertThat(correctSignalSubscriptionColumnFamily.count()).isEqualTo(2);
 
       signalName.wrapString("signal");
-      subscriptionKey.wrapLong(123);
-      Assertions.assertThat(correctSignalSubscriptionColumnFamily.get(signalNameAndSubscriptionKey))
+      subscriptionKey.setValue(123);
+      Assertions.assertThat(correctSignalSubscriptionColumnFamily.getValue(signalNameAndSubscriptionKey))
           .isNotNull()
           .extracting(SignalSubscription::getKey, s -> s.getRecord().getSignalName())
           .isEqualTo(List.of(123L, "signal"));
 
       signalName.wrapString("signal2");
-      subscriptionKey.wrapLong(234);
-      Assertions.assertThat(correctSignalSubscriptionColumnFamily.get(signalNameAndSubscriptionKey))
+      subscriptionKey.setValue(234);
+      Assertions.assertThat(correctSignalSubscriptionColumnFamily.getValue(signalNameAndSubscriptionKey))
           .isNotNull()
           .extracting(SignalSubscription::getKey, s -> s.getRecord().getSignalName())
           .isEqualTo(List.of(234L, "signal2"));
 
-      Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
+      Assertions.assertThat(correctMigrationStateColumnFamily.getValue(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.FINISHED);

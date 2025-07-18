@@ -64,29 +64,29 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
 
   @Override
   public void store(final TimerInstance timer) {
-    timerKey.wrapLong(timer.getKey());
-    elementInstanceKey.inner().wrapLong(timer.getElementInstanceKey());
+    timerKey.setValue(timer.getKey());
+    elementInstanceKey.inner().setValue(timer.getElementInstanceKey());
 
     timerInstanceColumnFamily.insert(elementAndTimerKey, timer);
 
-    dueDate.wrapLong(timer.getDueDate());
+    dueDate.setValue(timer.getDueDate());
     dueDateColumnFamily.insert(dueDateCompositeKey, DbNil.INSTANCE);
   }
 
   @Override
   public void remove(final TimerInstance timer) {
-    elementInstanceKey.inner().wrapLong(timer.getElementInstanceKey());
-    timerKey.wrapLong(timer.getKey());
+    elementInstanceKey.inner().setValue(timer.getElementInstanceKey());
+    timerKey.setValue(timer.getKey());
     timerInstanceColumnFamily.deleteExisting(elementAndTimerKey);
 
-    dueDate.wrapLong(timer.getDueDate());
+    dueDate.setValue(timer.getDueDate());
     dueDateColumnFamily.deleteExisting(dueDateCompositeKey);
   }
 
   @Override
   public void update(final TimerInstance timer) {
-    elementInstanceKey.inner().wrapLong(timer.getElementInstanceKey());
-    timerKey.wrapLong(timer.getKey());
+    elementInstanceKey.inner().setValue(timer.getElementInstanceKey());
+    timerKey.setValue(timer.getKey());
     timerInstanceColumnFamily.update(elementAndTimerKey, timer);
   }
 
@@ -101,7 +101,7 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
 
           boolean consumed = false;
           if (dueDate <= timestamp) {
-            final var timerInstance = timerInstanceColumnFamily.get(elementAndTimerKey);
+            final var timerInstance = timerInstanceColumnFamily.getValue(elementAndTimerKey);
             if (timerInstance == null) {
               // Time for due date no longer exists. This can occur due to the following data race:
               // 1. Scheduled task reads a due date for a timer
@@ -125,7 +125,7 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
   @Override
   public void forEachTimerForElementInstance(
       final long elementInstanceKey, final Consumer<TimerInstance> action) {
-    this.elementInstanceKey.inner().wrapLong(elementInstanceKey);
+    this.elementInstanceKey.inner().setValue(elementInstanceKey);
 
     timerInstanceColumnFamily.whileEqualPrefix(
         this.elementInstanceKey,
@@ -136,9 +136,9 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
 
   @Override
   public TimerInstance get(final long elementInstanceKey, final long timerKey) {
-    this.elementInstanceKey.inner().wrapLong(elementInstanceKey);
-    this.timerKey.wrapLong(timerKey);
+    this.elementInstanceKey.inner().setValue(elementInstanceKey);
+    this.timerKey.setValue(timerKey);
 
-    return timerInstanceColumnFamily.get(elementAndTimerKey);
+    return timerInstanceColumnFamily.getValue(elementAndTimerKey);
   }
 }

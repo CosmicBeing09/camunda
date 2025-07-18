@@ -59,7 +59,7 @@ class CorrelateMessageTest {
 
     // then
     assertThat(response.getMessageKey()).isNotNull();
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     assertThat(response.getProcessInstanceKey()).isNotNull();
   }
 
@@ -83,7 +83,7 @@ class CorrelateMessageTest {
 
     // then
     assertThat(response.getMessageKey()).isNotNull();
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     assertThat(response.getProcessInstanceKey()).isNotNull();
   }
 
@@ -116,7 +116,7 @@ class CorrelateMessageTest {
 
     // then
     assertThat(response.getMessageKey()).isNotNull();
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     assertThat(response.getProcessInstanceKey()).isEqualTo(processInstanceKey);
   }
 
@@ -159,7 +159,7 @@ class CorrelateMessageTest {
 
     // then
     assertThat(response.getMessageKey()).isNotNull();
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     assertThat(response.getProcessInstanceKey()).isNotNull();
     assertThat(response.getProcessInstanceKey()).isNotEqualTo(messageCatchProcessInstanceKey);
   }

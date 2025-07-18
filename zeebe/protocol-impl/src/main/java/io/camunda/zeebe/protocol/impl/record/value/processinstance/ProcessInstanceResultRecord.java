@@ -29,7 +29,7 @@ public final class ProcessInstanceResultRecord extends UnifiedRecordValue
       new LongProperty("processDefinitionKey", -1);
   private final IntegerProperty versionProperty = new IntegerProperty("version", -1);
   private final StringProperty tenantIdProperty =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final DocumentProperty variablesProperty = new DocumentProperty("variables");
   private final LongProperty processInstanceKeyProperty =
       new LongProperty("processInstanceKey", -1);

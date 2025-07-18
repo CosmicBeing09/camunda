@@ -54,7 +54,7 @@ public final class DbStringColumnFamilyTest {
     value.wrapString("yes");
 
     // then
-    final DbString zbLong = columnFamily.get(key);
+    final DbString zbLong = columnFamily.getValue(key);
 
     assertThat(zbLong).isNotNull();
     assertThat(zbLong.toString()).isEqualTo("baring");
@@ -74,7 +74,7 @@ public final class DbStringColumnFamilyTest {
 
     // when
     final List<String> values = new ArrayList<>();
-    columnFamily.forEach((value) -> values.add(value.toString()));
+    columnFamily.visitValues((value) -> values.add(value.toString()));
 
     // then
     assertThat(values).containsExactly("baring", "world", "be good", "string", "as you know");

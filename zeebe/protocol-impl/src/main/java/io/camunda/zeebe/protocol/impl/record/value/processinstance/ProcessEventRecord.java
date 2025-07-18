@@ -31,7 +31,7 @@ public final class ProcessEventRecord extends UnifiedRecordValue
       new LongProperty("processInstanceKey", -1);
 
   private final StringProperty tenantIdProperty =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public ProcessEventRecord() {
     super(6);

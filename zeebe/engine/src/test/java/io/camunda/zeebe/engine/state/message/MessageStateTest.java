@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public final class MessageStateTest {
 
-  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_ID;
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableMessageState messageState;
@@ -51,7 +51,7 @@ public final class MessageStateTest {
             wrapString("otherName"),
             wrapString("correlationKey"),
             wrapString("id"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(exist).isFalse();
@@ -69,7 +69,7 @@ public final class MessageStateTest {
             wrapString("name"),
             wrapString("otherCorrelationKey"),
             wrapString("id"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(exist).isFalse();
@@ -87,7 +87,7 @@ public final class MessageStateTest {
             wrapString("name"),
             wrapString("otherCorrelationKey"),
             wrapString("otherId"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(exist).isFalse();
@@ -105,7 +105,7 @@ public final class MessageStateTest {
             wrapString("name"),
             wrapString("correlationKey"),
             wrapString("id"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     // then
     assertThat(exist).isTrue();
@@ -120,7 +120,7 @@ public final class MessageStateTest {
     // when
     final List<StoredMessage> messages = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         messages::add);
@@ -145,7 +145,7 @@ public final class MessageStateTest {
     // when
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -166,7 +166,7 @@ public final class MessageStateTest {
     // when
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         m -> {
@@ -187,7 +187,7 @@ public final class MessageStateTest {
     // when
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("otherName"),
         wrapString("correlationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -205,7 +205,7 @@ public final class MessageStateTest {
     // when
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("otherCorrelationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -380,7 +380,7 @@ public final class MessageStateTest {
     // and
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -393,7 +393,7 @@ public final class MessageStateTest {
             wrapString("messageName"),
             wrapString("correlationKey"),
             wrapString("id"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     assertThat(exist).isFalse();
 
     // and
@@ -421,7 +421,7 @@ public final class MessageStateTest {
     // and
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -450,7 +450,7 @@ public final class MessageStateTest {
     // and
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -463,7 +463,7 @@ public final class MessageStateTest {
             wrapString("messageName"),
             wrapString("correlationKey"),
             wrapString("id"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     assertThat(exist).isFalse();
   }
 
@@ -493,7 +493,7 @@ public final class MessageStateTest {
     // and
     final List<Long> keys = new ArrayList<>();
     messageState.visitMessages(
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER,
+        TenantOwned.DEFAULT_TENANT_ID,
         wrapString("name"),
         wrapString("correlationKey"),
         m -> keys.add(m.getMessageKey()));
@@ -506,7 +506,7 @@ public final class MessageStateTest {
             wrapString("name"),
             wrapString("correlationKey"),
             wrapString("id1"),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     assertThat(exist).isTrue();
 
     // and

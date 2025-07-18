@@ -91,7 +91,7 @@ public final class AssignUserTaskTest {
                     .hasAction(DEFAULT_ACTION)
                     .hasAssignee("foo")
                     .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test
@@ -172,7 +172,7 @@ public final class AssignUserTaskTest {
                     .describedAs(
                         "Expect that `changedAttributes` is empty as the task was assigned to the same assignee")
                     .hasNoChangedAttributes()
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test
@@ -215,7 +215,7 @@ public final class AssignUserTaskTest {
                     .hasAction("customAction")
                     .hasAssignee("foo")
                     .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test

@@ -219,7 +219,7 @@ public class DeploymentStateTest {
     assertThat(pendings)
         .extracting(Triple::getRight)
         .containsOnly(
-            BufferUtil.createCopy(deployment.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)));
+            BufferUtil.createCopy(deployment.setTenantId(TenantOwned.DEFAULT_TENANT_ID)));
   }
 
   @Test
@@ -249,7 +249,7 @@ public class DeploymentStateTest {
         .extracting(Triple::getRight)
         .containsOnly(
             deployments.stream()
-                .map(record -> record.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER))
+                .map(record -> record.setTenantId(TenantOwned.DEFAULT_TENANT_ID))
                 .map(BufferUtil::createCopy)
                 .toArray(DirectBuffer[]::new));
   }

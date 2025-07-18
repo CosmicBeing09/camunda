@@ -59,7 +59,7 @@ public final class DecisionEvaluationRecord extends UnifiedRecordValue
       new StringProperty("evaluationFailureMessage", "");
   private final StringProperty failedDecisionIdProp = new StringProperty("failedDecisionId", "");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public DecisionEvaluationRecord() {
     super(17);

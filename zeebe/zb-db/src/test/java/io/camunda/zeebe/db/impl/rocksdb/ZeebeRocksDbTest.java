@@ -74,7 +74,7 @@ final class ZeebeRocksDbTest {
     // then
     columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
-    final DbString zbString = columnFamily.get(key);
+    final DbString zbString = columnFamily.getValue(key);
     assertThat(zbString).hasToString("bar");
     db.close();
   }
@@ -107,7 +107,7 @@ final class ZeebeRocksDbTest {
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
 
     // then
-    final DbString dbString = columnFamily.get(key);
+    final DbString dbString = columnFamily.getValue(key);
     assertThat(dbString).hasToString("bar");
   }
 

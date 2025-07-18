@@ -28,7 +28,7 @@ public final class TimerRecord extends UnifiedRecordValue implements TimerRecord
   private final IntegerProperty repetitionsProp = new IntegerProperty("repetitions");
   private final LongProperty processDefinitionKeyProp = new LongProperty("processDefinitionKey");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public TimerRecord() {
     super(7);

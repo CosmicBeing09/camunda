@@ -50,12 +50,12 @@ public final class VariableClient {
   private final VariableDocumentRecord variableDocumentRecord;
   private final CommandWriter writer;
 
-  private long requestId = new Random().nextLong();
-  private int requestStreamId = new Random().nextInt();
+  private final long requestId = new Random().nextLong();
+  private final int requestStreamId = new Random().nextInt();
 
   private LongFunction<Record<VariableDocumentRecordValue>> expectation =
       UPDATED_EXPECTATION_SUPPLIER;
-  private String[] authorizedTenants = new String[] {TenantOwned.DEFAULT_TENANT_IDENTIFIER};
+  private String[] authorizedTenants = new String[] {TenantOwned.DEFAULT_TENANT_ID};
 
   public VariableClient(final CommandWriter writer) {
     this.writer = writer;

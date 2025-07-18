@@ -93,7 +93,7 @@ public final class DbMessageSubscriptionState
 
   @Override
   public void onRecovered(final ReadonlyStreamProcessorContext context) {
-    subscriptionColumnFamily.forEach(
+    subscriptionColumnFamily.visitValues(
         subscription -> {
           if (subscription.isCorrelating()) {
             transientState.add(
@@ -107,8 +107,8 @@ public final class DbMessageSubscriptionState
   @Override
   public MessageSubscription get(final long elementInstanceKey, final DirectBuffer messageName) {
     this.messageName.wrapBuffer(messageName);
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
-    return subscriptionColumnFamily.get(elementKeyAndMessageName);
+    this.elementInstanceKey.setValue(elementInstanceKey);
+    return subscriptionColumnFamily.getValue(elementKeyAndMessageName);
   }
 
   @Override
@@ -132,7 +132,7 @@ public final class DbMessageSubscriptionState
   @Override
   public boolean existSubscriptionForElementInstance(
       final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.setValue(elementInstanceKey);
     this.messageName.wrapBuffer(messageName);
 
     return subscriptionColumnFamily.exists(elementKeyAndMessageName);
@@ -193,11 +193,11 @@ public final class DbMessageSubscriptionState
 
   @Override
   public boolean remove(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.setValue(elementInstanceKey);
     this.messageName.wrapBuffer(messageName);
 
     final MessageSubscription messageSubscription =
-        subscriptionColumnFamily.get(elementKeyAndMessageName);
+        subscriptionColumnFamily.getValue(elementKeyAndMessageName);
 
     final boolean found = messageSubscription != null;
     if (found) {
@@ -244,7 +244,7 @@ public final class DbMessageSubscriptionState
   private void updateCorrelatingFlag(
       final MessageSubscription subscription, final boolean correlating) {
     final var record = subscription.getRecord();
-    elementInstanceKey.wrapLong(record.getElementInstanceKey());
+    elementInstanceKey.setValue(record.getElementInstanceKey());
     messageName.wrapBuffer(record.getMessageNameBuffer());
 
     subscription.setCorrelating(correlating);
@@ -255,7 +255,7 @@ public final class DbMessageSubscriptionState
       final DbCompositeKey<DbLong, DbString> elementKeyAndMessageName,
       final MessageSubscriptionVisitor visitor) {
     final MessageSubscription messageSubscription =
-        subscriptionColumnFamily.get(elementKeyAndMessageName);
+        subscriptionColumnFamily.getValue(elementKeyAndMessageName);
 
     if (messageSubscription == null) {
       throw new IllegalStateException(
@@ -298,7 +298,7 @@ public final class DbMessageSubscriptionState
 
   private void wrapSubscriptionKeys(
       final long elementInstanceKey, final DirectBuffer messageName, final String tenantId) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.setValue(elementInstanceKey);
     this.messageName.wrapBuffer(messageName);
     tenantIdKey.wrapString(tenantId);
   }

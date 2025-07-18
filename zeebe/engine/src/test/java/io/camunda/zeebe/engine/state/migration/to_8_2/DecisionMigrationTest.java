@@ -188,10 +188,10 @@ public class DecisionMigrationTest {
 
     private void assertContainsDecision(final DecisionRecord decisionRecord) {
       dbDecisionId.wrapString(decisionRecord.getDecisionId());
-      dbDecisionKey.wrapLong(decisionRecord.getDecisionKey());
+      dbDecisionKey.setValue(decisionRecord.getDecisionKey());
       dbDecisionVersion.wrapInt(decisionRecord.getVersion());
       assertThat(decisionKeyByDecisionIdAndVersion.exists(decisionIdAndVersion)).isTrue();
-      assertThat(decisionKeyByDecisionIdAndVersion.get(decisionIdAndVersion).inner().getValue())
+      assertThat(decisionKeyByDecisionIdAndVersion.getValue(decisionIdAndVersion).inner().getValue())
           .isEqualTo(decisionRecord.getDecisionKey());
     }
   }

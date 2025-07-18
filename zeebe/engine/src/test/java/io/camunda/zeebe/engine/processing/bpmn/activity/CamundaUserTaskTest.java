@@ -90,7 +90,7 @@ public final class CamundaUserTaskTest {
             RecordingExporter.processInstanceRecords()
                 .withProcessInstanceKey(processInstanceKey)
                 .withElementType(BpmnElementType.USER_TASK)
-                .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
                 .limit(3))
         .extracting(Record::getRecordType, Record::getIntent)
         .containsSequence(
@@ -101,7 +101,7 @@ public final class CamundaUserTaskTest {
     final Record<ProcessInstanceRecordValue> userTask =
         RecordingExporter.processInstanceRecords()
             .withProcessInstanceKey(processInstanceKey)
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .withIntent(ProcessInstanceIntent.ELEMENT_ACTIVATING)
             .withElementType(BpmnElementType.USER_TASK)
             .getFirst();

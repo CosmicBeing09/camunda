@@ -59,7 +59,7 @@ import org.junit.Test;
 public final class MessageStreamProcessorTest {
 
   private static final EngineConfiguration DEFAULT_ENGINE_CONFIGURATION = new EngineConfiguration();
-  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+  private static final String DEFAULT_TENANT = TenantOwned.DEFAULT_TENANT_ID;
 
   @Rule public final StreamProcessorRule rule = new StreamProcessorRule();
 
@@ -134,7 +134,7 @@ public final class MessageStreamProcessorTest {
             eq(subscription.getElementInstanceKey()),
             any(),
             anyBoolean(),
-            eq(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+            eq(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test
@@ -266,7 +266,7 @@ public final class MessageStreamProcessorTest {
             eq(subscription.getProcessInstanceKey()),
             eq(subscription.getElementInstanceKey()),
             any(DirectBuffer.class),
-            eq(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+            eq(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test

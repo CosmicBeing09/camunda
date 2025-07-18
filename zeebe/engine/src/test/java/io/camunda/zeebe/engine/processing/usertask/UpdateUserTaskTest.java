@@ -91,7 +91,7 @@ public final class UpdateUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction(DEFAULT_ACTION)
                     .hasPriority(DEFAULT_PRIORITY)
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
                     .hasNoChangedAttributes());
   }
 
@@ -126,7 +126,7 @@ public final class UpdateUserTaskTest {
                 Assertions.assertThat(recordValue)
                     .hasUserTaskKey(userTaskKey)
                     .hasAction("customAction")
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
                     .hasNoChangedAttributes());
   }
 

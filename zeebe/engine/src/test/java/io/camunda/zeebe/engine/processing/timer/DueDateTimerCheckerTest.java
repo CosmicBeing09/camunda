@@ -53,7 +53,7 @@ class DueDateTimerCheckerTest {
       final var mockTimer = mock(TimerInstance.class, Mockito.RETURNS_DEEP_STUBS);
       final var timerKey = 42L;
       when(mockTimer.getKey()).thenReturn(timerKey);
-      when(mockTimer.getTenantId()).thenReturn(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      when(mockTimer.getTenantId()).thenReturn(TenantOwned.DEFAULT_TENANT_ID);
 
       final var testActorClock = new TestActorClock();
 
@@ -95,7 +95,7 @@ class DueDateTimerCheckerTest {
       final var mockTimer = mock(TimerInstance.class, Mockito.RETURNS_DEEP_STUBS);
       final var timerKey = 42L;
       when(mockTimer.getKey()).thenReturn(timerKey);
-      when(mockTimer.getTenantId()).thenReturn(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      when(mockTimer.getTenantId()).thenReturn(TenantOwned.DEFAULT_TENANT_ID);
 
       final var testActorClock = new TestActorClock();
 

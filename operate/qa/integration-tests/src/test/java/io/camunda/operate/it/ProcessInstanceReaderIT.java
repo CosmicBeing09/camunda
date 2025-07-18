@@ -58,7 +58,7 @@ public class ProcessInstanceReaderIT extends OperateSearchAbstractIT {
             .setState(ProcessInstanceState.ACTIVE)
             .setTreePath("PI_2251799813685251")
             .setIncident(true)
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .setProcessInstanceKey(processInstanceKey)
             .setJoinRelation(new ListViewJoinRelation("processInstance"));
 

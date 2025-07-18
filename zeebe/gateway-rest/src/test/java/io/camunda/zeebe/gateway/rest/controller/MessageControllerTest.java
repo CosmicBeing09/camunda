@@ -65,7 +65,7 @@ public class MessageControllerTest extends RestControllerTest {
             CompletableFuture.completedFuture(
                 new MessageCorrelationRecord()
                     .setMessageKey(123L)
-                    .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                    .setTenantId(TenantOwned.DEFAULT_TENANT_ID)
                     .setProcessInstanceKey(321L)));
 
     final var request =
@@ -96,7 +96,7 @@ public class MessageControllerTest extends RestControllerTest {
     assertThat(capturedRequest.name()).isEqualTo("messageName");
     assertThat(capturedRequest.correlationKey()).isEqualTo("correlationKey");
     assertThat(capturedRequest.variables()).containsExactly(Map.entry("key", "value"));
-    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
 
     response
         .expectBody()
@@ -419,7 +419,7 @@ public class MessageControllerTest extends RestControllerTest {
     assertThat(capturedRequest.timeToLive()).isEqualTo(123L);
     assertThat(capturedRequest.messageId()).isEqualTo("messageId");
     assertThat(capturedRequest.variables()).containsExactly(Map.entry("key", "value"));
-    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -459,7 +459,7 @@ public class MessageControllerTest extends RestControllerTest {
     assertThat(capturedRequest.timeToLive()).isEqualTo(123L);
     assertThat(capturedRequest.messageId()).isEqualTo("messageId");
     assertThat(capturedRequest.variables()).containsExactly(Map.entry("key", "value"));
-    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -498,7 +498,7 @@ public class MessageControllerTest extends RestControllerTest {
     assertThat(capturedRequest.timeToLive()).isEqualTo(0L);
     assertThat(capturedRequest.messageId()).isEqualTo("messageId");
     assertThat(capturedRequest.variables()).containsExactly(Map.entry("key", "value"));
-    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(capturedRequest.tenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -547,7 +547,7 @@ public class MessageControllerTest extends RestControllerTest {
             .setName("messageName")
             .setCorrelationKey("correlationKey")
             .setTimeToLive(123L)
-            .setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            .setTenantId(TenantOwned.DEFAULT_TENANT_ID);
     return CompletableFuture.completedFuture(new BrokerResponse<>(record, 1, 123));
   }
 }

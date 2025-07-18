@@ -229,6 +229,6 @@ public class DbMigrationStateTest {
     return subscriptionState.getSubscription(
         subscription.getRecord().getElementInstanceKey(),
         subscription.getRecord().getMessageNameBuffer(),
-        TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        TenantOwned.DEFAULT_TENANT_ID);
   }
 }

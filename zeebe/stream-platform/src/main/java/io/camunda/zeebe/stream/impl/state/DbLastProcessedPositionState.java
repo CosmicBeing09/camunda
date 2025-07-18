@@ -34,7 +34,7 @@ public final class DbLastProcessedPositionState implements MutableLastProcessedP
 
   @Override
   public long getLastSuccessfulProcessedRecordPosition() {
-    final LastProcessedPosition position = positionColumnFamily.get(positionKey);
+    final LastProcessedPosition position = positionColumnFamily.getValue(positionKey);
     return position != null ? position.get() : NO_EVENTS_PROCESSED;
   }
 

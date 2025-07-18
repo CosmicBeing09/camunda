@@ -47,7 +47,7 @@ public final class PublishMessageTest extends GatewayTest {
 
     // then
     assertThat(response).isNotNull();
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
 
     final BrokerPublishMessageRequest brokerRequest = brokerClient.getSingleBrokerRequest();
     assertThat(brokerRequest.getIntent()).isEqualTo(MessageIntent.PUBLISH);
@@ -61,6 +61,6 @@ public final class PublishMessageTest extends GatewayTest {
         .isEqualTo(request.getMessageId());
     assertThat(brokerRequestValue.getTimeToLive()).isEqualTo(request.getTimeToLive());
     MsgPackUtil.assertEqualityExcluding(brokerRequestValue.getVariablesBuffer(), variables);
-    assertThat(brokerRequestValue.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(brokerRequestValue.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 }

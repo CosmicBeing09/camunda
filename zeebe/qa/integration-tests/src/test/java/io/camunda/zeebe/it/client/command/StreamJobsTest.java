@@ -89,7 +89,7 @@ final class StreamJobsTest {
             .consumer(jobHandler)
             .workerName("streamer")
             .fetchVariables("foo")
-            .tenantIds(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .tenantIds(TenantOwned.DEFAULT_TENANT_ID)
             .timeout(Duration.ofSeconds(5))
             .send();
     final var initialTime = System.currentTimeMillis();
@@ -244,7 +244,7 @@ final class StreamJobsTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(process, "sequence.bpmn")
-        .tenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .tenantId(TenantOwned.DEFAULT_TENANT_ID)
         .send()
         .join();
   }

@@ -59,7 +59,7 @@ public class JobBackoffCleanupMigrationTest {
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
 
-    jobKey.wrapLong(1);
+    jobKey.setValue(1);
   }
 
   // regression test of https://github.com/camunda/camunda/issues/14329

@@ -28,7 +28,7 @@ public final class MessageCorrelationRecord extends UnifiedRecordValue
   private final StringProperty correlationKeyProp = new StringProperty("correlationKey");
   private final DocumentProperty variablesProp = new DocumentProperty("variables");
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   private final LongProperty messageKey = new LongProperty("messageKey", -1L);
   private final LongProperty requestIdProp = new LongProperty("requestId", -1L);

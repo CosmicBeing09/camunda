@@ -60,7 +60,7 @@ public final class NextValueManager {
   }
 
   private long getCurrentValue() {
-    final NextValue readValue = nextValueColumnFamily.get(nextValueKey);
+    final NextValue readValue = nextValueColumnFamily.getValue(nextValueKey);
 
     long currentValue = initialValue;
     if (readValue != null) {

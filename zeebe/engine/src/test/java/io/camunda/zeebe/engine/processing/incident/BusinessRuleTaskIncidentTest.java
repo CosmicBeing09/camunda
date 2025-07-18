@@ -58,7 +58,7 @@ public class BusinessRuleTaskIncidentTest {
   private IncidentRecordValueAssert assertIncidentCreated(
       final long processInstanceKey, final long elementInstanceKey) {
     return assertIncidentCreated(
-        processInstanceKey, elementInstanceKey, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        processInstanceKey, elementInstanceKey, TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private IncidentRecordValueAssert assertIncidentCreated(

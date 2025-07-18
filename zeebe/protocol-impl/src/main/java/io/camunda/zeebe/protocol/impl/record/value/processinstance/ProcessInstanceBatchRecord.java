@@ -74,6 +74,6 @@ public final class ProcessInstanceBatchRecord extends UnifiedRecordValue
   @Override
   public String getTenantId() {
     // todo(#13774): replace dummy implementation
-    return TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+    return TenantOwned.DEFAULT_TENANT_ID;
   }
 }

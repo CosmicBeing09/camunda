@@ -45,7 +45,7 @@ public class DbUserState implements UserState, MutableUserState {
   @Override
   public void create(final UserRecord user) {
     username.wrapBuffer(user.getUsernameBuffer());
-    userKey.wrapLong(user.getUserKey());
+    userKey.setValue(user.getUserKey());
     persistedUser.setUser(user);
 
     usersColumnFamily.insert(username, persistedUser);
@@ -69,7 +69,7 @@ public class DbUserState implements UserState, MutableUserState {
   @Override
   public Optional<PersistedUser> getUser(final String username) {
     this.username.wrapString(username);
-    final var persistedUser = usersColumnFamily.get(this.username);
+    final var persistedUser = usersColumnFamily.getValue(this.username);
 
     if (persistedUser == null) {
       return Optional.empty();
@@ -79,8 +79,8 @@ public class DbUserState implements UserState, MutableUserState {
 
   @Override
   public Optional<PersistedUser> getUser(final long userKey) {
-    this.userKey.wrapLong(userKey);
-    final var username = userKeyByUsernameColumnFamily.get(this.userKey);
+    this.userKey.setValue(userKey);
+    final var username = userKeyByUsernameColumnFamily.getValue(this.userKey);
 
     return Optional.ofNullable(username)
         .flatMap(dbUsername -> getUser(dbUsername.inner().toString()));

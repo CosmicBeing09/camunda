@@ -70,7 +70,7 @@ public class MultiTenancyDisabledTest extends GatewayTest {
         .isInstanceOf(TenantOwned.class);
     assertThat(((TenantOwned) brokerRequest.getRequestWriter()).getTenantId())
         .describedAs("The tenant id should be set to the <default> tenant")
-        .isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   private void assertThatRejectsRequest(final ThrowingCallable requestCallable, final String name) {
@@ -118,19 +118,19 @@ public class MultiTenancyDisabledTest extends GatewayTest {
     assertThat(response).isNotNull();
 
     // then
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
 
     assumeThat(response.getDeploymentsCount())
         .describedAs("Any metadata of the deployed resources should also contain the tenant id")
         .isEqualTo(3);
     final ProcessMetadata process = response.getDeployments(0).getProcess();
-    assertThat(process.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(process.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
 
     final DecisionMetadata decision = response.getDeployments(1).getDecision();
-    assertThat(decision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(decision.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
 
     final DecisionRequirementsMetadata drg = response.getDeployments(2).getDecisionRequirements();
-    assertThat(drg.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(drg.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -163,7 +163,7 @@ public class MultiTenancyDisabledTest extends GatewayTest {
     assertThat(response).isNotNull();
 
     // then
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -197,7 +197,7 @@ public class MultiTenancyDisabledTest extends GatewayTest {
     assertThat(response).isNotNull();
 
     // then
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -243,7 +243,7 @@ public class MultiTenancyDisabledTest extends GatewayTest {
     // then
     final ActivateJobsResponse response = responses.next();
     for (final ActivatedJob activatedJob : response.getJobsList()) {
-      assertThat(activatedJob.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      assertThat(activatedJob.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
     }
   }
 
@@ -303,6 +303,6 @@ public class MultiTenancyDisabledTest extends GatewayTest {
     assertThat(response).isNotNull();
 
     // then
-    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(response.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_ID);
   }
 }

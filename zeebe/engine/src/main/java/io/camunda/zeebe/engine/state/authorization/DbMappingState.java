@@ -123,9 +123,9 @@ public class DbMappingState implements MutableMappingState {
   @Override
   public Optional<PersistedMapping> get(final String id) {
     mappingId.wrapString(id);
-    final var fk = claimByIdColumnFamily.get(mappingId);
+    final var fk = claimByIdColumnFamily.getValue(mappingId);
     if (fk != null) {
-      return Optional.of(mappingColumnFamily.get(fk.inner()));
+      return Optional.of(mappingColumnFamily.getValue(fk.inner()));
     }
     return Optional.empty();
   }
@@ -134,7 +134,7 @@ public class DbMappingState implements MutableMappingState {
   public Optional<PersistedMapping> get(final String claimName, final String claimValue) {
     this.claimName.wrapString(claimName);
     this.claimValue.wrapString(claimValue);
-    final var persistedMapping = mappingColumnFamily.get(claim);
+    final var persistedMapping = mappingColumnFamily.getValue(claim);
 
     if (persistedMapping == null) {
       return Optional.empty();
@@ -146,7 +146,7 @@ public class DbMappingState implements MutableMappingState {
   @Override
   public Collection<PersistedMapping> getAll() {
     final var mappings = new LinkedList<PersistedMapping>();
-    mappingColumnFamily.forEach(mapping -> mappings.add(mapping.copy()));
+    mappingColumnFamily.visitValues(mapping -> mappings.add(mapping.copy()));
     return mappings;
   }
 }

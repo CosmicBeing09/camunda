@@ -209,7 +209,7 @@ public class TenantAwareResourceFetchTest {
         engine
             .deployment()
             .withJsonResource(resourceBytes, "test.rpa")
-            .withTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+            .withTenantId(TenantOwned.DEFAULT_TENANT_ID)
             .deploy();
     final var resourceMetadata = deployment.getValue().getResourceMetadata().getFirst();
     final var resourceKey = resourceMetadata.getResourceKey();
@@ -230,7 +230,7 @@ public class TenantAwareResourceFetchTest {
                 resourceKey,
                 deployment.getKey(),
                 resourceMetadata.getChecksum(),
-                TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                TenantOwned.DEFAULT_TENANT_ID));
     assertThat(resourceResponse)
         .satisfies(
             resourceProperties(
@@ -238,7 +238,7 @@ public class TenantAwareResourceFetchTest {
                 resourceKey,
                 deployment.getKey(),
                 resourceMetadata.getChecksum(),
-                TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test

@@ -114,7 +114,7 @@ public final class TimerStartEventTest {
         .hasProcessInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
         .hasTargetElementId("start_1")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     final long now = engine.getClock().getCurrentTimeInMillis();
     assertThat(timerRecord.getDueDate()).isBetween(now, now + 1000L);
@@ -143,7 +143,7 @@ public final class TimerStartEventTest {
         .hasProcessInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
         .hasTargetElementId("start_5")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     final long expected =
         ZonedDateTime.of(LocalDate.of(2178, 11, 25), LocalTime.of(0, 0, 0), ZoneId.of("UTC"))
@@ -318,7 +318,7 @@ public final class TimerStartEventTest {
         .hasProcessInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
         .hasTargetElementId("start_6")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     final long now = engine.getClock().getCurrentTimeInMillis();
     assertThat(timerRecord.getDueDate()).isBetween(now, now + 10000L);
@@ -359,7 +359,7 @@ public final class TimerStartEventTest {
         .hasBpmnProcessId("process")
         .hasVersion(deployedProcess.getVersion())
         .hasProcessDefinitionKey(processDefinitionKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     final var processInstanceKey =
         RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -806,7 +806,7 @@ public final class TimerStartEventTest {
         .hasDueDate(triggerTime.toEpochMilli())
         .hasTargetElementId("start_2")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -850,7 +850,7 @@ public final class TimerStartEventTest {
         .hasDueDate(triggerTime.toEpochMilli())
         .hasTargetElementId("start_2")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -924,7 +924,7 @@ public final class TimerStartEventTest {
         .hasProcessInstanceKey(processInstanceKey)
         .hasElementInstanceKey(-1L)
         .hasTargetElementId("start_1")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -989,7 +989,7 @@ public final class TimerStartEventTest {
         .hasDueDate(firstDueDate)
         .hasTargetElementId("start_1")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_COMPLETED)
@@ -1025,7 +1025,7 @@ public final class TimerStartEventTest {
         .hasDueDate(secondDueDate)
         .hasTargetElementId("start_2")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -1163,7 +1163,7 @@ public final class TimerStartEventTest {
         .hasDueDate(dueDate)
         .hasTargetElementId("start")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -1244,7 +1244,7 @@ public final class TimerStartEventTest {
         .hasDueDate(dueDate)
         .hasTargetElementId("start")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(
             RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_ACTIVATED)
@@ -1291,7 +1291,7 @@ public final class TimerStartEventTest {
         .hasDueDate(start.toInstant().toEpochMilli())
         .hasTargetElementId("start")
         .hasElementInstanceKey(TimerInstance.NO_ELEMENT_INSTANCE)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(firstRecord.getTimestamp()).isGreaterThan(enginePausedTime);
 

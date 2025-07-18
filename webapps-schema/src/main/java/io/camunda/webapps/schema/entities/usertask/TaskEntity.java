@@ -22,7 +22,7 @@ public class TaskEntity
 
   private long key;
 
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   private int partitionId;
 

@@ -25,7 +25,7 @@ public class CompensationSubscriptionRecord extends UnifiedRecordValue
   private static final String EMPTY_STRING = "";
 
   private final StringProperty tenantIdProperty =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty processInstanceKeyProperty =
       new LongProperty("processInstanceKey", -1);
   private final LongProperty processDefinitionKeyProperty =

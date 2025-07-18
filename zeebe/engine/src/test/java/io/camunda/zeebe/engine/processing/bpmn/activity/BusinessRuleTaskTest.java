@@ -121,7 +121,7 @@ public final class BusinessRuleTaskTest {
         .hasFlowScopeKey(processInstanceKey)
         .hasBpmnProcessId(PROCESS_ID)
         .hasProcessInstanceKey(processInstanceKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 
   @Test
@@ -331,7 +331,7 @@ public final class BusinessRuleTaskTest {
         .hasDecisionOutput("\"Obi-Wan Kenobi\"")
         .hasFailedDecisionId("")
         .hasEvaluationFailureMessage("")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(decisionEvaluationValue)
         .hasProcessDefinitionKey(businessRuleTaskActivated.getValue().getProcessDefinitionKey())
@@ -350,7 +350,7 @@ public final class BusinessRuleTaskTest {
         .hasDecisionVersion(requiredDecision.getVersion())
         .hasDecisionType("DECISION_TABLE")
         .hasDecisionOutput("\"Jedi\"")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .satisfies(
             evaluatedDecision -> {
               assertThat(evaluatedDecision.getEvaluatedInputs()).hasSize(1);
@@ -380,7 +380,7 @@ public final class BusinessRuleTaskTest {
         .hasDecisionVersion(calledDecision.getVersion())
         .hasDecisionType("DECISION_TABLE")
         .hasDecisionOutput("\"Obi-Wan Kenobi\"")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .satisfies(
             evaluatedDecision -> {
               assertThat(evaluatedDecision.getEvaluatedInputs()).hasSize(2);
@@ -723,7 +723,7 @@ public final class BusinessRuleTaskTest {
         .hasDecisionVersion(calledDecision.getVersion())
         .hasDecisionRequirementsKey(calledDecision.getDecisionRequirementsKey())
         .hasDecisionRequirementsId(calledDecision.getDecisionRequirementsId())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasDecisionOutput("null")
         .hasFailedDecisionId("jedi_or_sith")
         .hasEvaluationFailureMessage(
@@ -749,7 +749,7 @@ public final class BusinessRuleTaskTest {
         .hasDecisionVersion(requiredDecision.getVersion())
         .hasDecisionType("DECISION_TABLE")
         .hasDecisionOutput("null")
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .satisfies(
             evaluatedDecision -> {
               assertThat(evaluatedDecision.getEvaluatedInputs()).isEmpty();
@@ -853,6 +853,6 @@ public final class BusinessRuleTaskTest {
     assertThat(decisionEvaluationRecord.getValue())
         .hasDecisionKey(lastDeployedDecision.getDecisionKey())
         .hasDecisionRequirementsKey(lastDeployedDecisionRequirements.getDecisionRequirementsKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
   }
 }

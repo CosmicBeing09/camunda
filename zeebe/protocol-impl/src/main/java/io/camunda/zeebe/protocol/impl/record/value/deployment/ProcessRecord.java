@@ -31,7 +31,7 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
   private final BinaryProperty checksumProp = new BinaryProperty("checksum", new UnsafeBuffer());
   private final BinaryProperty resourceProp = new BinaryProperty("resource", new UnsafeBuffer());
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
   private final LongProperty deploymentKeyProp = new LongProperty("deploymentKey", -1);
   private final StringProperty versionTagProp = new StringProperty("versionTag", "");
 
@@ -69,6 +69,16 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
   @Override
   public int getVersion() {
     return versionProp.getValue();
+  }
+
+  public ProcessRecord setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return BufferUtil.bufferAsString(versionTagProp.getValue());
   }
 
   @Override
@@ -116,8 +126,8 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
     return this;
   }
 
-  public ProcessRecord setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessRecord setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -201,16 +211,6 @@ public final class ProcessRecord extends UnifiedRecordValue implements Process {
 
   public ProcessRecord setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return BufferUtil.bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessRecord setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }

@@ -140,7 +140,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
         persistentState.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     pendingSubscriptionState.onSent(existingSubscription.getRecord(), 1_500);
 
     keys.clear();
@@ -161,7 +161,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
         persistentState.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     Assertions.assertThat(subscription.isOpening()).isTrue();
 
@@ -174,7 +174,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
         persistentState.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     Assertions.assertThat(updatedSubscription.isOpening()).isFalse();
 
     // and
@@ -200,7 +200,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
         persistentState.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
 
     Assertions.assertThat(subscription.isClosing()).isFalse();
 
@@ -217,7 +217,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
         persistentState.getSubscription(
             record.getElementInstanceKey(),
             record.getMessageNameBuffer(),
-            TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+            TenantOwned.DEFAULT_TENANT_ID);
     assertThat(updatedSubscription.isClosing()).isTrue();
 
     // and

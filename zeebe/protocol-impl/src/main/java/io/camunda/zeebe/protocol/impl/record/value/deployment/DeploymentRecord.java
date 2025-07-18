@@ -51,7 +51,7 @@ public final class DeploymentRecord extends UnifiedRecordValue implements Deploy
       new ArrayProperty<>("resourceMetadata", ResourceMetadataRecord::new);
 
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   private final LongProperty deploymentKeyProp = new LongProperty("deploymentKey", -1);
 

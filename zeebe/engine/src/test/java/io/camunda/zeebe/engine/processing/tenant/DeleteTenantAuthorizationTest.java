@@ -62,7 +62,7 @@ public class DeleteTenantAuthorizationTest {
 
     // when
     final var tenantRecord =
-        engine.tenant().deleteTenant(TenantOwned.DEFAULT_TENANT_IDENTIFIER).delete(defaultUsername);
+        engine.tenant().deleteTenant(TenantOwned.DEFAULT_TENANT_ID).delete(defaultUsername);
 
     // then
     assertThat(tenantRecord).isNotNull();

@@ -74,7 +74,7 @@ public final class DbProcessMessageSubscriptionState
 
   @Override
   public void onRecovered(final ReadonlyStreamProcessorContext context) {
-    subscriptionColumnFamily.forEach(
+    subscriptionColumnFamily.visitValues(
         subscription -> {
           if (subscription.isOpening() || subscription.isClosing()) {
             final var record = subscription.getRecord();
@@ -138,13 +138,13 @@ public final class DbProcessMessageSubscriptionState
       final long elementInstanceKey, final DirectBuffer messageName, final String tenantId) {
     wrapSubscriptionKeys(elementInstanceKey, messageName, tenantId);
 
-    return subscriptionColumnFamily.get(elementKeyAndMessageName);
+    return subscriptionColumnFamily.getValue(elementKeyAndMessageName);
   }
 
   @Override
   public void visitElementSubscriptions(
       final long elementInstanceKey, final ProcessMessageSubscriptionVisitor visitor) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.setValue(elementInstanceKey);
 
     subscriptionColumnFamily.whileEqualPrefix(
         this.elementInstanceKey,
@@ -224,7 +224,7 @@ public final class DbProcessMessageSubscriptionState
 
   private void wrapSubscriptionKeys(
       final long elementInstanceKey, final DirectBuffer messageName, final String tenantId) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.setValue(elementInstanceKey);
     this.messageName.wrapBuffer(messageName);
     tenantIdKey.wrapString(tenantId);
   }

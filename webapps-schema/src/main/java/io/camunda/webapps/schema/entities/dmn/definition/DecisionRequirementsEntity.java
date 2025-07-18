@@ -21,7 +21,7 @@ public class DecisionRequirementsEntity
   private int version;
   private String xml;
   private String resourceName;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   @Override
   public String getId() {

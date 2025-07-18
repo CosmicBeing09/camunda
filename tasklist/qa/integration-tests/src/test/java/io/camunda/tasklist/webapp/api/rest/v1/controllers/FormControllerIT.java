@@ -8,7 +8,7 @@
 package io.camunda.tasklist.webapp.api.rest.v1.controllers;
 
 import static io.camunda.tasklist.util.assertions.CustomAssertions.assertThat;
-import static io.camunda.zeebe.protocol.record.value.TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+import static io.camunda.zeebe.protocol.record.value.TenantOwned.DEFAULT_TENANT_ID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
@@ -86,7 +86,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
                 assertThat(form.getProcessDefinitionKey())
                     .isEqualTo(tester.getProcessDefinitionKey());
                 assertThat(form.getSchema()).isNotBlank();
-                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_IDENTIFIER);
+                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_ID);
               });
     }
   }
@@ -163,7 +163,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
                 assertThat(form.getProcessDefinitionKey())
                     .isEqualTo(tester.getProcessDefinitionKey());
                 assertThat(form.getIsDeleted()).isEqualTo(true);
-                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_IDENTIFIER);
+                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_ID);
               });
     }
 
@@ -191,7 +191,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
                     .isEqualTo(tester.getProcessDefinitionKey());
                 assertThat(form.getIsDeleted()).isEqualTo(false);
                 assertThat(form.getSchema()).isNotBlank().doesNotContain("taglist");
-                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_IDENTIFIER);
+                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_ID);
               });
     }
 
@@ -219,7 +219,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
                 assertThat(form.getProcessDefinitionKey())
                     .isEqualTo(tester.getProcessDefinitionKey());
                 assertThat(form.getIsDeleted()).isEqualTo(false);
-                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_IDENTIFIER);
+                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_ID);
               });
     }
 
@@ -246,7 +246,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
                     .isEqualTo(tester.getProcessDefinitionKey());
                 assertThat(form.getIsDeleted()).isEqualTo(false);
                 assertThat(form.getVersion()).isEqualTo(2L);
-                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_IDENTIFIER);
+                assertThat(form.getTenantId()).isEqualTo(DEFAULT_TENANT_ID);
               });
     }
   }

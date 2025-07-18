@@ -167,7 +167,7 @@ public class OutputMappingIncidentTest {
         .hasProcessInstanceKey(processInstanceKey)
         .hasElementId(elementId)
         .hasElementInstanceKey(failureCommand.getKey())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasVariableScopeKey(failureCommand.getKey());
 
     assertThat(incidentEvent.getValue().getErrorMessage())

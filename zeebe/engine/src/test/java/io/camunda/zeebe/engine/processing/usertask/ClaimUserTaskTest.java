@@ -85,7 +85,7 @@ public class ClaimUserTaskTest {
                     .hasAction(DEFAULT_ACTION)
                     .hasAssignee("foo")
                     .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test
@@ -128,7 +128,7 @@ public class ClaimUserTaskTest {
                     .hasAction("customAction")
                     .hasAssignee("foo")
                     .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID));
   }
 
   @Test
@@ -244,7 +244,7 @@ public class ClaimUserTaskTest {
                 Assertions.assertThat(recordValue)
                     .hasUserTaskKey(userTaskKey)
                     .hasAction(DEFAULT_ACTION)
-                    .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+                    .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
                     .hasAssignee(initialAssignee)
                     .describedAs(
                         "Expect that the `changedAttributes` field is empty because the task was "

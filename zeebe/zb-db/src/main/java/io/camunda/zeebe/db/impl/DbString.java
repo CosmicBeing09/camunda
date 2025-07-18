@@ -18,14 +18,14 @@ import org.agrona.concurrent.UnsafeBuffer;
 
 public final class DbString implements DbKey, DbValue {
 
-  private final DirectBuffer bytes = new UnsafeBuffer(0, 0);
+  private final DirectBuffer buffer = new UnsafeBuffer(0, 0);
 
   public void wrapString(final String string) {
-    bytes.wrap(string.getBytes());
+    buffer.wrap(string.getBytes());
   }
 
   public void wrapBuffer(final DirectBuffer buffer) {
-    bytes.wrap(buffer);
+    this.buffer.wrap(buffer);
   }
 
   @Override
@@ -35,30 +35,30 @@ public final class DbString implements DbKey, DbValue {
 
     final byte[] b = new byte[stringLen];
     directBuffer.getBytes(offset, b);
-    bytes.wrap(b);
+    buffer.wrap(b);
   }
 
   @Override
   public int getLength() {
     return Integer.BYTES // length of the string
-        + bytes.capacity();
+        + buffer.capacity();
   }
 
   @Override
   public void write(final MutableDirectBuffer mutableDirectBuffer, int offset) {
-    final int length = bytes.capacity();
+    final int length = buffer.capacity();
     mutableDirectBuffer.putInt(offset, length, ZB_DB_BYTE_ORDER);
     offset += Integer.BYTES;
 
-    mutableDirectBuffer.putBytes(offset, bytes, 0, bytes.capacity());
+    mutableDirectBuffer.putBytes(offset, buffer, 0, buffer.capacity());
   }
 
   @Override
   public String toString() {
-    return BufferUtil.bufferAsString(bytes);
+    return BufferUtil.bufferAsString(buffer);
   }
 
   public DirectBuffer getBuffer() {
-    return bytes;
+    return buffer;
   }
 }

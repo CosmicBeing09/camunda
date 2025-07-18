@@ -78,7 +78,7 @@ public final class CreateProcessInstanceTest {
         .hasFlowScopeKey(-1)
         .hasBpmnProcessId("process")
         .hasProcessInstanceKey(processInstanceKey)
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID);
 
     assertThat(value.getCallingElementPath()).isEmpty();
     assertThat(value.getElementInstancePath()).hasSize(1);
@@ -351,7 +351,7 @@ public final class CreateProcessInstanceTest {
   public void shouldCreateProcessInstanceForDefaultTenant() {
     // given
     final String processId = "process";
-    final String tenantId = TenantOwned.DEFAULT_TENANT_IDENTIFIER;
+    final String tenantId = TenantOwned.DEFAULT_TENANT_ID;
     ENGINE
         .deployment()
         .withXmlResource(Bpmn.createExecutableProcess(processId).startEvent().endEvent().done())

@@ -110,7 +110,7 @@ public final class CompleteJobTest {
         .hasType(job.getType())
         .hasRetries(job.getRetries())
         .hasDeadline(job.getDeadline())
-        .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER)
+        .hasTenantId(TenantOwned.DEFAULT_TENANT_ID)
         .hasResult(new JobResult().setDenied(false));
   }
 

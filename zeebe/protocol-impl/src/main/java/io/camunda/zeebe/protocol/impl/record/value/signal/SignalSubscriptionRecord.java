@@ -28,7 +28,7 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
   private final LongProperty catchEventInstanceKeyProp =
       new LongProperty("catchEventInstanceKey", -1L);
   private final StringProperty tenantIdProp =
-      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+      new StringProperty("tenantId", TenantOwned.DEFAULT_TENANT_ID);
 
   public SignalSubscriptionRecord() {
     super(6);

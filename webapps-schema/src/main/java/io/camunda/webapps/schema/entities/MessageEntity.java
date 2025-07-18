@@ -22,7 +22,7 @@ public class MessageEntity implements ExporterEntity<MessageEntity>, TenantOwned
   private Long timeToLive;
   private String messageId;
   private String variables;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
 
   @Override
   public String getId() {

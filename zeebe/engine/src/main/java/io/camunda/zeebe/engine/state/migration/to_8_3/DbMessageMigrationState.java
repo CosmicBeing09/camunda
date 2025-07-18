@@ -39,7 +39,7 @@ public class DbMessageMigrationState {
   public void migrateMessageStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_ID);
 
     /*
      `DEPRECATED_MESSAGES` -> `MESSAGES`
@@ -50,7 +50,7 @@ public class DbMessageMigrationState {
         (key, value) -> {
           to.messageName.wrapBuffer(key.first().first().getBuffer());
           to.correlationKey.wrapBuffer(key.first().second().getBuffer());
-          to.messageKey.wrapLong(key.second().inner().getValue());
+          to.messageKey.setValue(key.second().inner().getValue());
           to.nameCorrelationMessageColumnFamily.insert(
               to.nameCorrelationMessageKey, DbNil.INSTANCE);
         });

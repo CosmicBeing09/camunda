@@ -19,7 +19,7 @@ public class TaskProcessInstanceEntity
         TenantOwned {
 
   private String id;
-  private String tenantId = DEFAULT_TENANT_IDENTIFIER;
+  private String tenantId = DEFAULT_TENANT_ID;
   private int partitionId;
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
