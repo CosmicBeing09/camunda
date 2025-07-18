@@ -37,7 +37,7 @@ public final class FlowNodeInstanceFilterTest extends AbstractTransformerTest {
 
   @Test
   public void shouldQueryByProcessInstanceKey() {
-    final var filter = FilterBuilders.flowNodeInstance(f -> f.processInstanceKeys(2L));
+    final var filter = FilterBuilders.flowNodeInstance(f -> f.processInstanceKeyOperations(2L));
     // when
     final var searchRequest = transformQuery(filter);
 
@@ -54,7 +54,7 @@ public final class FlowNodeInstanceFilterTest extends AbstractTransformerTest {
 
   @Test
   public void shouldQueryByProcessDefinitionKey() {
-    final var filter = FilterBuilders.flowNodeInstance(f -> f.processDefinitionKeys(3L));
+    final var filter = FilterBuilders.flowNodeInstance(f -> f.processDefinitionKeyOperations(3L));
     // when
     final var searchRequest = transformQuery(filter);
 

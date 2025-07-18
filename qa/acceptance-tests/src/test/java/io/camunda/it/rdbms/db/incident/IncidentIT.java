@@ -42,12 +42,12 @@ public class IncidentIT {
   public void shouldSaveAndFindIncidentByKey(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final IncidentReader processInstanceReader = rdbmsService.getIncidentReader();
+    final IncidentReader incidentReader = rdbmsService.getIncidentReader();
 
     final var original = IncidentFixtures.createRandomized(b -> b);
     createAndSaveIncident(rdbmsWriter, original);
 
-    final var instance = processInstanceReader.findOne(original.incidentKey()).orElse(null);
+    final var instance = incidentReader.findOne(original.incidentKey()).orElse(null);
 
     compareIncident(instance, original);
   }
@@ -56,14 +56,14 @@ public class IncidentIT {
   public void shouldSaveAndResolveIncident(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final IncidentReader processInstanceReader = rdbmsService.getIncidentReader();
+    final IncidentReader incidentReader = rdbmsService.getIncidentReader();
 
     final var original = IncidentFixtures.createRandomized(b -> b);
     createAndSaveIncident(rdbmsWriter, original);
     rdbmsWriter.getIncidentWriter().resolve(original.incidentKey());
     rdbmsWriter.flush();
 
-    final var instance = processInstanceReader.findOne(original.incidentKey()).orElse(null);
+    final var instance = incidentReader.findOne(original.incidentKey()).orElse(null);
 
     assertThat(instance).isNotNull();
     assertThat(instance.state()).isEqualTo(IncidentEntity.IncidentState.RESOLVED);
@@ -83,7 +83,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(original.processDefinitionId()))
+                    b.filter(f -> f.bpmnProcessIdOperations(original.processDefinitionId()))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(10))));
 
@@ -109,7 +109,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionIds(processDefinitionId))
+                    b.filter(f -> f.bpmnProcessIdOperations(processDefinitionId))
                         .sort(s -> s.creationTime().asc().flowNodeId().asc())
                         .page(p -> p.from(0).size(5))));
 
@@ -146,16 +146,16 @@ public class IncidentIT {
                 b ->
                     b.filter(
                             f ->
-                                f.incidentKeys(original.incidentKey())
-                                    .processInstanceKeys(original.processInstanceKey())
-                                    .processDefinitionIds(original.processDefinitionId())
-                                    .processDefinitionKeys(original.processDefinitionKey())
+                                f.incidentKeyOperations(original.incidentKey())
+                                    .processInstanceKeyOperations(original.processInstanceKey())
+                                    .bpmnProcessIdOperations(original.processDefinitionId())
+                                    .processDefinitionKeyOperations(original.processDefinitionKey())
                                     .states(original.state())
                                     .errorTypes(original.errorType())
                                     .errorMessages(original.errorMessage())
                                     .errorMessageHashes(original.errorMessageHash())
                                     .flowNodeInstanceKeys(original.flowNodeInstanceKey())
-                                    .flowNodeIds(original.flowNodeId())
+                                    .flowNodeIdOperations(original.flowNodeId())
                                     .jobKeys(original.jobKey())
                                     .tenantIds(original.tenantId())
                                     .creationTime(
@@ -183,7 +183,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(processDefinitionKey))
+                    b.filter(f -> f.processDefinitionKeyOperations(processDefinitionKey))
                         .sort(sort)
                         .page(p -> p.from(0).size(20))));
 
@@ -192,7 +192,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(processDefinitionKey))
+                    b.filter(f -> f.processDefinitionKeyOperations(processDefinitionKey))
                         .sort(sort)
                         .page(
                             p ->
@@ -256,7 +256,7 @@ public class IncidentIT {
         reader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(definition.processDefinitionKey()))
+                    b.filter(f -> f.processDefinitionKeyOperations(definition.processDefinitionKey()))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(20))));
 

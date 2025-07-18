@@ -166,9 +166,9 @@ public class ElementInstanceIT {
             new FlowNodeInstanceQuery(
                 new FlowNodeInstanceFilter.Builder()
                     .flowNodeInstanceKeys(instance.flowNodeInstanceKey())
-                    .processInstanceKeys(instance.processInstanceKey())
+                    .processInstanceKeyOperations(instance.processInstanceKey())
                     .processDefinitionIds(instance.processDefinitionId())
-                    .processDefinitionKeys(instance.processDefinitionKey())
+                    .processDefinitionKeyOperations(instance.processDefinitionKey())
                     .flowNodeIds(instance.flowNodeId())
                     .types(instance.type())
                     .states(instance.state().name())
@@ -292,7 +292,7 @@ public class ElementInstanceIT {
         reader.search(
             FlowNodeInstanceQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(definition.processDefinitionKey()))
+                    b.filter(f -> f.processDefinitionKeyOperations(definition.processDefinitionKey()))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(20))));
 

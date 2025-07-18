@@ -838,7 +838,7 @@ public final class SearchQueryRequestMapper {
 
   public static Either<List<String>, ProcessInstanceFilter.Builder> toProcessInstanceFilterFields(
       final io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceFilterFields filter) {
-    final var builder = FilterBuilders.processInstance();
+    final var builder = FilterBuilders.processInstanceFilterBuilder();
     final List<String> validationErrors = new ArrayList<>();
     if (filter != null) {
       ofNullable(filter.getProcessInstanceKey())
@@ -998,10 +998,10 @@ public final class SearchQueryRequestMapper {
                   .ifPresent(builder::flowNodeInstanceKeys);
               Optional.ofNullable(f.getProcessInstanceKey())
                   .map(KeyUtil::keyToLong)
-                  .ifPresent(builder::processInstanceKeys);
+                  .ifPresent(builder::processInstanceKeyOperations);
               Optional.ofNullable(f.getProcessDefinitionKey())
                   .map(KeyUtil::keyToLong)
-                  .ifPresent(builder::processDefinitionKeys);
+                  .ifPresent(builder::processDefinitionKeyOperations);
               Optional.ofNullable(f.getProcessDefinitionId())
                   .ifPresent(builder::processDefinitionIds);
               Optional.ofNullable(f.getState())
@@ -1115,18 +1115,18 @@ public final class SearchQueryRequestMapper {
     final var builder = FilterBuilders.incident();
 
     if (filter != null) {
-      ofNullable(filter.getIncidentKey()).map(KeyUtil::keyToLong).ifPresent(builder::incidentKeys);
+      ofNullable(filter.getIncidentKey()).map(KeyUtil::keyToLong).ifPresent(builder::incidentKeyOperations);
       ofNullable(filter.getProcessDefinitionKey())
           .map(KeyUtil::keyToLong)
-          .ifPresent(builder::processDefinitionKeys);
-      ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::processDefinitionIds);
+          .ifPresent(builder::processDefinitionKeyOperations);
+      ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::bpmnProcessIdOperations);
       ofNullable(filter.getProcessInstanceKey())
           .map(KeyUtil::keyToLong)
-          .ifPresent(builder::processInstanceKeys);
+          .ifPresent(builder::processInstanceKeyOperations);
       ofNullable(filter.getErrorType())
           .ifPresent(t -> builder.errorTypes(IncidentEntity.ErrorType.valueOf(t.getValue())));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessages);
-      ofNullable(filter.getElementId()).ifPresent(builder::flowNodeIds);
+      ofNullable(filter.getElementId()).ifPresent(builder::flowNodeIdOperations);
       ofNullable(filter.getElementInstanceKey())
           .map(KeyUtil::keyToLong)
           .ifPresent(builder::flowNodeInstanceKeys);

@@ -90,11 +90,11 @@ public class IncidentSpecificFilterIT {
 
   static List<IncidentFilter> shouldFindIncidentWithSpecificFilterParameters() {
     return List.of(
-        new IncidentFilter.Builder().incidentKeys(1337L).build(),
-        new IncidentFilter.Builder().processDefinitionKeys(2000L).build(),
-        new IncidentFilter.Builder().processDefinitionIds("sorting-test-process").build(),
-        new IncidentFilter.Builder().processInstanceKeys(3000L).build(),
-        new IncidentFilter.Builder().flowNodeIds("sorting-flow-node").build(),
+        new IncidentFilter.Builder().incidentKeyOperations(1337L).build(),
+        new IncidentFilter.Builder().processDefinitionKeyOperations(2000L).build(),
+        new IncidentFilter.Builder().bpmnProcessIdOperations("sorting-test-process").build(),
+        new IncidentFilter.Builder().processInstanceKeyOperations(3000L).build(),
+        new IncidentFilter.Builder().flowNodeIdOperations("sorting-flow-node").build(),
         new IncidentFilter.Builder().flowNodeInstanceKeys(4000L).build(),
         new IncidentFilter.Builder().errorTypes(ErrorType.JOB_NO_RETRIES).build(),
         new IncidentFilter.Builder().errorMessages("error-message-5000").build(),

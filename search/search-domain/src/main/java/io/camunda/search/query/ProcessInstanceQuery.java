@@ -35,7 +35,7 @@ public record ProcessInstanceQuery(
           ProcessInstanceQuery, Builder, ProcessInstanceFilter, ProcessInstanceSort> {
 
     private static final ProcessInstanceFilter EMPTY_FILTER =
-        FilterBuilders.processInstance().build();
+        FilterBuilders.processInstanceFilterBuilder().build();
     private static final ProcessInstanceSort EMPTY_SORT =
         SortOptionBuilders.processInstance().build();
     private static final ProcessInstanceQueryResultConfig RESULT_CONFIG =

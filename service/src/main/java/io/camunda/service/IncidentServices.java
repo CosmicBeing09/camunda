@@ -59,12 +59,13 @@ public class IncidentServices
         brokerClient, securityContextProvider, incidentSearchClient, authentication);
   }
 
-  public IncidentEntity getByKey(final Long key) {
+  public IncidentEntity getByKey(final Long incidentKey) {
     final var result =
         incidentSearchClient
             .withSecurityContext(securityContextProvider.provideSecurityContext(authentication))
-            .searchIncidents(incidentSearchQuery(q -> q.filter(f -> f.incidentKeys(key))));
-    final var incidentEntity = getSingleResultOrThrow(result, key, "Incident");
+            .searchIncidents(incidentSearchQuery(q -> q.filter(f -> f.incidentKeyOperations(
+                incidentKey))));
+    final var incidentEntity = getSingleResultOrThrow(result, incidentKey, "Incident");
     final var authorization = Authorization.of(a -> a.processDefinition().readProcessInstance());
     if (!securityContextProvider.isAuthorized(
         incidentEntity.processDefinitionId(), authentication, authorization)) {

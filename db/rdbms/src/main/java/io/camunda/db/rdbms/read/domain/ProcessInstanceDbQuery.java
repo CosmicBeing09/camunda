@@ -26,7 +26,7 @@ public record ProcessInstanceDbQuery(
   public static final class Builder implements ObjectBuilder<ProcessInstanceDbQuery> {
 
     private static final ProcessInstanceFilter EMPTY_FILTER =
-        FilterBuilders.processInstance().build();
+        FilterBuilders.processInstanceFilterBuilder().build();
 
     private ProcessInstanceFilter filter;
     private DbQuerySorting<ProcessInstanceEntity> sort;

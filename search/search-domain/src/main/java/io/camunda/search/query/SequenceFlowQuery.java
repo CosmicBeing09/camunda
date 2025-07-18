@@ -42,7 +42,7 @@ public record SequenceFlowQuery(SequenceFlowFilter filter)
   public static final class Builder extends AbstractQueryBuilder<Builder>
       implements TypedSearchQueryBuilder<
           SequenceFlowQuery, SequenceFlowQuery.Builder, SequenceFlowFilter, NoSort> {
-    private static final SequenceFlowFilter EMPTY_FILTER = FilterBuilders.sequenceFlow().build();
+    private static final SequenceFlowFilter EMPTY_FILTER = FilterBuilders.sequenceFlowFilterBuilder().build();
 
     private SequenceFlowFilter filter;
 
