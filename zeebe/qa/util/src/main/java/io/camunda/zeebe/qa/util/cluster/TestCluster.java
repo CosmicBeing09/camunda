@@ -265,7 +265,7 @@ public final class TestCluster implements CloseableSilently {
    */
   @SuppressWarnings("resource")
   public CamundaClientBuilder newClientBuilder() {
-    return CamundaClient.newClientBuilder()
+    return CamundaClient.buildClient()
         .usePlaintext()
         .restAddress(availableGateway().restAddress())
         .grpcAddress(availableGateway().grpcAddress());

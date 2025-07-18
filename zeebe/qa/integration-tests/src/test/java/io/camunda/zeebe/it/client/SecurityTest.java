@@ -99,7 +99,7 @@ public final class SecurityTest {
   }
 
   private CamundaClientBuilder newSecureClient(final boolean useRest) {
-    return configureClientForTls(CamundaClient.newClientBuilder())
+    return configureClientForTls(CamundaClient.buildClient())
         .preferRestOverGrpc(useRest)
         .grpcAddress(testCluster.anyGateway().grpcAddress())
         .restAddress(testCluster.anyGateway().restAddress());

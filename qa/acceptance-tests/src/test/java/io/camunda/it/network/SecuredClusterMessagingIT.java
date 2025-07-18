@@ -166,7 +166,7 @@ final class SecuredClusteredMessagingIT {
     // when - note the client is using plaintext since we only care about inter-cluster TLS
     final Topology topology;
     try (final var client =
-        CamundaClient.newClientBuilder()
+        CamundaClient.buildClient()
             .usePlaintext()
             .restAddress(
                 URI.create("http://" + zeebe.getExternalHost() + ":" + zeebe.getMappedPort(8080)))

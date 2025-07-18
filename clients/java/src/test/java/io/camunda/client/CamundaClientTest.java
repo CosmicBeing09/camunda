@@ -123,13 +123,13 @@ public final class CamundaClientTest {
   @Test
   public void shouldFailIfCertificateDoesNotExist() {
     assertThatThrownBy(
-            () -> CamundaClient.newClientBuilder().caCertificatePath("/wrong/path").build())
+            () -> CamundaClient.buildClient().caCertificatePath("/wrong/path").build())
         .hasCauseInstanceOf(FileNotFoundException.class);
   }
 
   @Test
   public void shouldFailWithEmptyCertificatePath() {
-    assertThatThrownBy(() -> CamundaClient.newClientBuilder().caCertificatePath("").build())
+    assertThatThrownBy(() -> CamundaClient.buildClient().caCertificatePath("").build())
         .isInstanceOf(IllegalArgumentException.class);
   }
 
@@ -436,7 +436,7 @@ public final class CamundaClientTest {
     final String region = "asdf-123";
 
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId(clusterId)
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -459,7 +459,7 @@ public final class CamundaClientTest {
     // given
     final String clusterId = "clusterId";
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId(clusterId)
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -482,7 +482,7 @@ public final class CamundaClientTest {
     final String gatewayAddress = "localhost:10000";
     final NoopCredentialsProvider credentialsProvider = new NoopCredentialsProvider();
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -504,7 +504,7 @@ public final class CamundaClientTest {
     final Properties properties = new Properties();
     properties.putIfAbsent(propertyName, region);
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -527,7 +527,7 @@ public final class CamundaClientTest {
     // given
     final String defaultRegion = "bru-2";
     try (final CamundaClient client =
-        CamundaClient.newCloudClientBuilder()
+        CamundaClient.buildCloudClient()
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
@@ -549,7 +549,7 @@ public final class CamundaClientTest {
     // given
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try (final CamundaClient client =
-        CamundaClient.newClientBuilder().jobWorkerExecutor(executor, true).build()) {
+        CamundaClient.buildClient().jobWorkerExecutor(executor, true).build()) {
       // when
       client.close();
 
@@ -563,7 +563,7 @@ public final class CamundaClientTest {
     // given
     final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
     try (final CamundaClient client =
-        CamundaClient.newClientBuilder().jobWorkerExecutor(executor, false).build()) {
+        CamundaClient.buildClient().jobWorkerExecutor(executor, false).build()) {
       // when
       client.close();
 
@@ -580,7 +580,7 @@ public final class CamundaClientTest {
     final ScheduledThreadPoolExecutor executor = spy(new ScheduledThreadPoolExecutor(1));
     final Duration pollInterval = Duration.ZERO;
     try (final CamundaClient client =
-            CamundaClient.newClientBuilder().jobWorkerExecutor(executor).build();
+            CamundaClient.buildClient().jobWorkerExecutor(executor).build();
         final JobWorker ignored =
             client
                 .newWorker()

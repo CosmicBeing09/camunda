@@ -37,7 +37,7 @@ public class ZeebeConnector {
   public CamundaClient newCamundaClient(final ZeebeProperties zeebeProperties) {
     final var gatewayAddress = getGatewayAddress(zeebeProperties);
     final CamundaClientBuilder builder =
-        CamundaClient.newClientBuilder()
+        CamundaClient.buildClient()
             .gatewayAddress(gatewayAddress)
             .defaultMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE);
     if (zeebeProperties.isSecure()) {
