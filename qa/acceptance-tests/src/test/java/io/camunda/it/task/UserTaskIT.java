@@ -309,7 +309,7 @@ public class UserTaskIT {
             .addResourceFromClasspath("form/form.form")
             .send()
             .join()
-            .getForm()
+            .getForms()
             .getFirst();
 
     // when

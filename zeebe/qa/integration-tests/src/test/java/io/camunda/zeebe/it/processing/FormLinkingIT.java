@@ -67,8 +67,8 @@ final class FormLinkingIT {
             .send()
             .join();
 
-    final var formKey = deployment.getForm().getFirst().getFormKey();
-    final var formKey2 = deployment.getForm().getLast().getFormKey();
+    final var formKey = deployment.getForms().getFirst().getFormKey();
+    final var formKey2 = deployment.getForms().getLast().getFormKey();
 
     // take snapshot and start the engine from snapshot
     partitions.takeSnapshot();

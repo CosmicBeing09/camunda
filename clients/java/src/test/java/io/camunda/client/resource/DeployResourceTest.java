@@ -409,7 +409,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // then
     assertThat(response.getKey()).isEqualTo(deploymentKey);
-    assertThat(response.getForm())
+    assertThat(response.getForms())
         .containsExactly(new FormImpl(formId, version, formKey, filename, DEFAULT_TENANT));
   }
 
@@ -439,7 +439,7 @@ public final class DeployResourceTest extends ClientTest {
 
     // then
     assertThat(response.getKey()).isEqualTo(key);
-    assertThat(response.getForm())
+    assertThat(response.getForms())
         .containsExactly(
             new FormImpl(formId1, 1, 1, filename1, DEFAULT_TENANT),
             new FormImpl(formId2, 1, 2, filename2, DEFAULT_TENANT));

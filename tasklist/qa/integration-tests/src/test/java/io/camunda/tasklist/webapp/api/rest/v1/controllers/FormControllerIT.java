@@ -123,7 +123,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
                 .join();
 
         final var formKey =
-            lastVersionDeployedData.getForm().stream().findFirst().get().getFormKey();
+            lastVersionDeployedData.getForms().stream().findFirst().get().getFormKey();
         camundaClient.newDeleteResourceCommand(formKey).send().join();
 
         tester
@@ -199,7 +199,7 @@ public class FormControllerIT extends TasklistZeebeIntegrationTest {
     public void getLinkedFormByFormKey() {
       // given
       final var formId = "Form_0mik7px";
-      final var formKey = v2DeployedData.getForm().stream().findFirst().get().getFormKey();
+      final var formKey = v2DeployedData.getForms().stream().findFirst().get().getFormKey();
 
       // when
       final var result =

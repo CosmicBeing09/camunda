@@ -41,12 +41,12 @@ public interface DeploymentEvent {
   /**
    * @return the deployed form metadata
    */
-  List<Form> getForm();
+  List<Form> getForms();
 
   /**
    * @return the deployed resource metadata
    */
-  List<Resource> getResource();
+  List<Resource> getResources();
 
   /**
    * @return the tenant identifier that owns this deployment
