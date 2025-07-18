@@ -26,8 +26,8 @@ import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
 import io.camunda.process.test.impl.configuration.CamundaRuntimeConfiguration;
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.proxy.CamundaClientProxy;
 import io.camunda.process.test.impl.proxy.CamundaProcessTestContextProxy;
 import io.camunda.process.test.impl.proxy.ZeebeClientProxy;
@@ -69,7 +69,7 @@ public class ExecutionListenerTest {
   private CamundaContainerRuntimeBuilder camundaContainerRuntimeBuilder;
 
   @Mock private CamundaContainerRuntime camundaContainerRuntime;
-  @Mock private CamundaContainer camundaContainer;
+  @Mock private Container camundaContainer;
   @Mock private ConnectorsContainer connectorsContainer;
 
   @Mock private CamundaClientProxy camundaClientProxy;

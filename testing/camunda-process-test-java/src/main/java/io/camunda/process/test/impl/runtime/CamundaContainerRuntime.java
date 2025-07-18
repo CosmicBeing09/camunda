@@ -15,8 +15,8 @@
  */
 package io.camunda.process.test.impl.runtime;
 
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.containers.ContainerFactory;
 import io.camunda.process.test.impl.runtime.logging.CamundaLogEntry;
 import io.camunda.process.test.impl.runtime.logging.ConnectorsLogEntry;
@@ -53,7 +53,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
   private final ContainerFactory containerFactory;
 
   private final Network network;
-  private final CamundaContainer camundaContainer;
+  private final Container camundaContainer;
   private final ConnectorsContainer connectorsContainer;
 
   private final boolean connectorsEnabled;
@@ -92,9 +92,9 @@ public class CamundaContainerRuntime implements AutoCloseable {
     return container;
   }
 
-  private CamundaContainer createCamundaContainer(
+  private Container createCamundaContainer(
       final Network network, final CamundaContainerRuntimeBuilder builder) {
-    final CamundaContainer container =
+    final Container container =
         containerFactory
             .createCamundaContainer(
                 builder.getCamundaDockerImageName(), builder.getCamundaDockerImageVersion())
@@ -151,7 +151,7 @@ public class CamundaContainerRuntime implements AutoCloseable {
     LOGGER.info("Camunda container runtime started in {}", startupTime);
   }
 
-  public CamundaContainer getCamundaContainer() {
+  public Container getCamundaContainer() {
     return camundaContainer;
   }
 

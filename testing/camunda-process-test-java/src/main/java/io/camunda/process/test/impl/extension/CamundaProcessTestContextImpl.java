@@ -27,8 +27,8 @@ import io.camunda.process.test.api.assertions.UserTaskSelector;
 import io.camunda.process.test.api.assertions.UserTaskSelectors;
 import io.camunda.process.test.api.mock.JobWorkerMock;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.mock.JobWorkerMockImpl;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.ZeebeClientBuilder;
@@ -62,13 +62,13 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
 
   private static final int TIMEOUT = 40;
 
-  private final CamundaContainer camundaContainer;
+  private final Container camundaContainer;
   private final ConnectorsContainer connectorsContainer;
   private final Consumer<AutoCloseable> clientCreationCallback;
   private final CamundaManagementClient camundaManagementClient;
 
   public CamundaProcessTestContextImpl(
-      final CamundaContainer camundaContainer,
+      final Container camundaContainer,
       final ConnectorsContainer connectorsContainer,
       final Consumer<AutoCloseable> clientCreationCallback,
       final CamundaManagementClient camundaManagementClient) {

@@ -24,8 +24,8 @@ import static org.mockito.Mockito.when;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.CamundaClientConfiguration;
 import io.camunda.process.test.impl.client.CamundaManagementClient;
-import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ConnectorsContainer;
+import io.camunda.process.test.impl.containers.Container;
 import io.camunda.process.test.impl.runtime.CamundaContainerRuntime;
 import io.camunda.process.test.impl.runtime.CamundaContainerRuntimeBuilder;
 import io.camunda.process.test.impl.testresult.CamundaProcessTestResultCollector;
@@ -62,7 +62,7 @@ public class JunitExtensionTest {
   private CamundaContainerRuntimeBuilder runtimeBuilder;
 
   @Mock private CamundaContainerRuntime camundaContainerRuntime;
-  @Mock private CamundaContainer camundaContainer;
+  @Mock private Container camundaContainer;
   @Mock private ConnectorsContainer connectorsContainer;
   @Mock private CamundaManagementClient camundaManagementClient;
   @Mock private CamundaProcessTestResultCollector camundaProcessTestResultCollector;

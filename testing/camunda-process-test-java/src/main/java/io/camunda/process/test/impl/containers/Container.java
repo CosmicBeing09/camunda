@@ -15,8 +15,8 @@
  */
 package io.camunda.process.test.impl.containers;
 
-import static io.camunda.process.test.impl.containers.CamundaContainer.H2Configuration.*;
-import static io.camunda.process.test.impl.containers.CamundaContainer.H2Configuration.DATABASE_TYPE;
+import static io.camunda.process.test.impl.containers.Container.H2Configuration.*;
+import static io.camunda.process.test.impl.containers.Container.H2Configuration.DATABASE_TYPE;
 import static io.camunda.process.test.impl.runtime.ContainerRuntimeEnvs.CAMUNDA_ENV_CAMUNDA_DATABASE_URL;
 import static io.camunda.process.test.impl.runtime.ContainerRuntimeEnvs.CAMUNDA_ENV_DATABASE_PASSWORD;
 import static io.camunda.process.test.impl.runtime.ContainerRuntimeEnvs.CAMUNDA_ENV_DATABASE_TYPE;
@@ -42,7 +42,7 @@ import org.testcontainers.containers.wait.strategy.WaitAllStrategy;
 import org.testcontainers.containers.wait.strategy.WaitAllStrategy.Mode;
 import org.testcontainers.utility.DockerImageName;
 
-public class CamundaContainer extends GenericContainer<CamundaContainer> {
+public class Container extends GenericContainer<Container> {
 
   private static final Duration DEFAULT_STARTUP_TIMEOUT = Duration.ofMinutes(1);
   private static final Duration DEFAULT_READINESS_TIMEOUT = Duration.ofSeconds(10);
@@ -56,7 +56,7 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
   private static final String CAMUNDA_EXPORTER_CLASSNAME = "io.camunda.exporter.CamundaExporter";
   private static final String CAMUNDA_EXPORTER_BULK_SIZE = "1";
 
-  public CamundaContainer(final DockerImageName dockerImageName) {
+  public Container(final DockerImageName dockerImageName) {
     super(dockerImageName);
     applyDefaultConfiguration();
   }
@@ -76,9 +76,9 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
             ContainerRuntimePorts.CAMUNDA_REST_API);
   }
 
-  public CamundaContainer withH2() {
+  public Container withH2() {
     withEnv(CAMUNDA_ENV_DATABASE_TYPE, DATABASE_TYPE)
-        .withEnv(CAMUNDA_ENV_CAMUNDA_DATABASE_URL, databaseUrL(UUID.randomUUID()))
+        .withEnv(CAMUNDA_ENV_CAMUNDA_DATABASE_URL, H2Configuration.databaseUrl(UUID.randomUUID()))
         .withEnv(CAMUNDA_ENV_DATABASE_USERNAME, DATABASE_USERNAME)
         .withEnv(CAMUNDA_ENV_DATABASE_PASSWORD, DATABASE_PASSWORD)
         .withEnv(
@@ -102,7 +102,7 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
     return this;
   }
 
-  public CamundaContainer withElasticsearchUrl(final String url) {
+  public Container withElasticsearchUrl(final String url) {
     withEnv(
         ContainerRuntimeEnvs.CAMUNDA_ENV_CAMUNDA_EXPORTER_CLASSNAME, CAMUNDA_EXPORTER_CLASSNAME);
     withEnv(ContainerRuntimeEnvs.CAMUNDA_ENV_CAMUNDA_EXPORTER_ARGS_CONNECT_URL, url);
@@ -133,11 +133,11 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
         .forPath(TOPOLOGY_ENDPOINT)
         .forPort(ContainerRuntimePorts.CAMUNDA_REST_API)
         .forStatusCodeMatching(status -> status >= 200 && status < 300)
-        .forResponsePredicate(CamundaContainer::isPartitionReady)
+        .forResponsePredicate(io.camunda.process.test.impl.containers.Container::isPartitionReady)
         .withReadTimeout(DEFAULT_READINESS_TIMEOUT);
   }
 
-  private static boolean isPartitionReady(String response) {
+  private static boolean isPartitionReady(final String response) {
     return response.matches(".*\"partitionId\"\\s*:\\s*1.*")
         && response.matches(".*\"role\"\\s*:\\s*\"leader\".*")
         && response.matches(".*\"health\"\\s*:\\s*\"healthy\".*");
@@ -194,7 +194,7 @@ public class CamundaContainer extends GenericContainer<CamundaContainer> {
     public static final String LOGGING_LEVEL_IO_CAMUNDA_DB_RDBMS = "DEBUG";
     public static final String LOGGING_LEVEL_ORG_MYBATIS = "DEBUG";
 
-    public static String databaseUrL(final UUID uuid) {
+    public static String databaseUrl(final UUID uuid) {
       return "jdbc:h2:mem:cpt+" + uuid + ";DB_CLOSE_DELAY=-1;MODE=PostgreSQL";
     }
   }
