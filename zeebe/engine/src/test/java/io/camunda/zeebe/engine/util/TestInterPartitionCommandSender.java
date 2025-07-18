@@ -24,13 +24,13 @@ import java.util.function.Function;
 
 public class TestInterPartitionCommandSender implements InterPartitionCommandSender {
 
-  private final Map<Integer, CompletableFuture<LogStreamWriter>> writers =
+  private final Map<Integer, CompletableFuture<LogStreamWriter>> partitionWriters =
       new ConcurrentHashMap<>();
-  private final Function<Integer, LogStreamWriter> writerFactory;
+  private final Function<Integer, LogStreamWriter> logStreamWriterFactory;
   private CommandInterceptor interceptor = CommandInterceptor.SEND_ALL;
 
   public TestInterPartitionCommandSender(final Function<Integer, LogStreamWriter> writerFactory) {
-    this.writerFactory = writerFactory;
+    logStreamWriterFactory = writerFactory;
   }
 
   @Override
@@ -54,7 +54,7 @@ public class TestInterPartitionCommandSender implements InterPartitionCommandSen
     }
     final var metadata =
         new RecordMetadata().recordType(RecordType.COMMAND).intent(intent).valueType(valueType);
-    final var writer = writers.computeIfAbsent(receiverPartitionId, i -> new CompletableFuture<>());
+    final var writer = partitionWriters.computeIfAbsent(receiverPartitionId, i -> new CompletableFuture<>());
     final LogAppendEntry entry;
     if (recordKey != null) {
       entry = LogAppendEntry.of(recordKey, metadata, command);
@@ -73,7 +73,8 @@ public class TestInterPartitionCommandSender implements InterPartitionCommandSen
     for (int i = Protocol.DEPLOYMENT_PARTITION;
         i < Protocol.DEPLOYMENT_PARTITION + partitionCount;
         i++) {
-      writers.computeIfAbsent(i, k -> new CompletableFuture<>()).complete(writerFactory.apply(i));
+      partitionWriters.computeIfAbsent(i, k -> new CompletableFuture<>()).complete(
+          logStreamWriterFactory.apply(i));
     }
   }
 
