@@ -33,7 +33,7 @@ public class HistoryCleanupIT {
   private static CamundaClient camundaClient;
 
   @Test
-  void shouldDeleteProcessesWhichAreMarkedForCleanup() {
+  void shouldDeleteMarkedProcesses() {
     // given
     deployResource(camundaClient, RESOURCE_NAME).getProcesses().getFirst();
     waitForProcessesToBeDeployed(camundaClient, 1);
