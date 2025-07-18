@@ -171,7 +171,7 @@ public class CamundaProcessTestExtensionIT {
                 filter ->
                     filter
                         .processInstanceKey(processInstance.getProcessInstanceKey())
-                        .state(UserTaskState.CREATED))
+                        .status(UserTaskState.CREATED))
             .send()
             .join()
             .items();

@@ -94,7 +94,7 @@ public class UserTaskIT {
         client,
         f -> {
           f.processInstanceKey(processInstanceId);
-          f.state(UserTaskState.COMPLETED);
+          f.status(UserTaskState.COMPLETED);
         });
 
     userTasks = fetchUserTasks(client, processInstanceId);

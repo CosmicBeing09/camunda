@@ -77,7 +77,7 @@ public class HistoryCleanupIT {
               final var taskAmount =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(b -> b.userTaskKey(userTask.getUserTaskKey()))
+                      .filter(b -> b.id(userTask.getUserTaskKey()))
                       .send()
                       .join()
                       .page()

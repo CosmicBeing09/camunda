@@ -393,7 +393,7 @@ class UserTaskSearchTest {
     final var resultCreated =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.CREATED))
+            .filter(f -> f.status(UserTaskState.CREATED))
             .send()
             .join();
     assertThat(resultCreated.items().size()).isEqualTo(7);
@@ -404,7 +404,7 @@ class UserTaskSearchTest {
     final var resultCompleted =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .send()
             .join();
     assertThat(resultCompleted.items().size()).isEqualTo(1);
@@ -944,7 +944,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -980,7 +980,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1015,7 +1015,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1056,7 +1056,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1131,7 +1131,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1164,7 +1164,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1197,7 +1197,7 @@ class UserTaskSearchTest {
     final var userTaskListComplete =
         camundaClient
             .newUserTaskSearchRequest()
-            .filter(f -> f.state(UserTaskState.COMPLETED))
+            .filter(f -> f.status(UserTaskState.COMPLETED))
             .page(p -> p.limit(1))
             .send()
             .join();
@@ -1454,7 +1454,7 @@ class UserTaskSearchTest {
               final var resultComplete =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(f -> f.state(UserTaskState.COMPLETED))
+                      .filter(f -> f.status(UserTaskState.COMPLETED))
                       .send()
                       .join();
               assertThat(resultComplete.items().size()).isEqualTo(1);

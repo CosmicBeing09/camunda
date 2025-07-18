@@ -34,7 +34,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param value the key of the user task
    * @return the updated filter
    */
-  UserTaskFilter userTaskKey(final Long value);
+  UserTaskFilter id(final Long value);
 
   /**
    * Filters user tasks by the specified state.
@@ -42,7 +42,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param state the state of the user task
    * @return the updated filter
    */
-  UserTaskFilter state(final UserTaskState state);
+  UserTaskFilter status(final UserTaskState state);
 
   /**
    * Filters user tasks by the specified assignee.
