@@ -47,7 +47,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
 
   @Override
   public SearchQuery toSearchQuery(final IncidentFilter filter) {
-    final var keyQuery = getKeyQuery(filter.incidentKeys());
+    final var incidentKeyQuery = getIncidentKeyQuery(filter.incidentKeys());
     final var processDefinitionKeyQuery =
         getProcessDefinitionKeyQuery(filter.processDefinitionKeys());
     final var processDefinitionIdQuery = getProcessDefinitionIds(filter.processDefinitionIds());
@@ -64,7 +64,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var errorMessageHashesQuery = getErrorMessageHashesQuery(filter.errorMessageHashes());
 
     return and(
-        keyQuery,
+        incidentKeyQuery,
         processDefinitionKeyQuery,
         processDefinitionIdQuery,
         processInstanceKeyQuery,
@@ -136,7 +136,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     return stringTerms(ERROR_MSG, errorMessages);
   }
 
-  private SearchQuery getKeyQuery(final List<Long> keys) {
+  private SearchQuery getIncidentKeyQuery(final List<Long> keys) {
     return longTerms(KEY, keys);
   }
 
