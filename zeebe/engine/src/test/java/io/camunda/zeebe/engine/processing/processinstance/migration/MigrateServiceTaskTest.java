@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -41,13 +41,13 @@ public class MigrateServiceTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .userTask()
@@ -98,13 +98,13 @@ public class MigrateServiceTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", a -> a.zeebeJobType("B"))
                     .endEvent()
@@ -154,13 +154,13 @@ public class MigrateServiceTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", a -> a.zeebeJobType("B"))
                     .endEvent()
@@ -212,13 +212,13 @@ public class MigrateServiceTaskTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .endEvent("source_process_end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", a -> a.zeebeJobType("B"))
                     .endEvent("target_process_end")

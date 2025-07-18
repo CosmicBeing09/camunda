@@ -18,7 +18,7 @@ import io.camunda.client.api.search.enums.ProcessInstanceState;
 import io.camunda.client.api.search.filter.ProcessInstanceFilter;
 import io.camunda.client.impl.statistics.response.ProcessElementStatisticsImpl;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.function.Consumer;
 import org.awaitility.Awaitility;
@@ -107,7 +107,7 @@ public class ProcessInstanceStatisticsTest {
   void shouldGetStatisticsForIncidents() {
     // given
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .scriptTask(
                 "ScriptTask",
@@ -139,7 +139,7 @@ public class ProcessInstanceStatisticsTest {
   void shouldReturnStatisticsForCanceled() {
     // given
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .userTask("UserTask")
             .endEvent()
@@ -171,7 +171,7 @@ public class ProcessInstanceStatisticsTest {
   void shouldGetAllStatisticsForMultiInstanceActivity() {
     // given
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .userTask("UserTaskMultiInstance")
             .zeebeUserTask()
@@ -215,7 +215,7 @@ public class ProcessInstanceStatisticsTest {
 
   private static long deployCompleteBPMN() {
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .endEvent("EndEvent")
             .done();
@@ -227,7 +227,7 @@ public class ProcessInstanceStatisticsTest {
 
   private static long deployActiveBPMN() {
     final var processModel =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("StartEvent")
             .userTask("UserTask")
             .zeebeUserTask()

@@ -21,7 +21,7 @@ import io.camunda.zeebe.exporter.api.context.Controller;
 import io.camunda.zeebe.logstreams.log.LogStream;
 import io.camunda.zeebe.logstreams.log.LogStreamReader;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordAssert;
@@ -224,7 +224,7 @@ public class SingleBrokerDataDeletionTest {
         .getClient()
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess("process").startEvent().done(), "process.bpmn")
+            BpmnModelApi.createExecutableProcess("process").startEvent().done(), "process.bpmn")
         .send()
         .join();
   }

@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.CallActivityBuilder;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -50,7 +50,7 @@ public class CallActivityInterruptionTest {
     final var parentProcess = parentProcess(CallActivityBuilder::done);
 
     final var childProcess =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD)
             .startEvent()
             .serviceTask("child-task", t -> t.zeebeJobType(jobType))
             .done();
@@ -122,7 +122,7 @@ public class CallActivityInterruptionTest {
 
   private static BpmnModelInstance parentProcess(final Consumer<CallActivityBuilder> consumer) {
     final var builder =
-        Bpmn.createExecutableProcess(PROCESS_ID_PARENT)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_PARENT)
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId(PROCESS_ID_CHILD));
 

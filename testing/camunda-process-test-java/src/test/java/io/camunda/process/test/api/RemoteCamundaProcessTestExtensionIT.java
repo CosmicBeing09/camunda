@@ -20,7 +20,7 @@ import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.process.test.impl.containers.CamundaContainer;
 import io.camunda.process.test.impl.containers.ContainerFactory;
 import io.camunda.process.test.impl.runtime.CamundaProcessTestRuntimeDefaults;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -64,7 +64,7 @@ public class RemoteCamundaProcessTestExtensionIT {
   void shouldCreateProcessInstance() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task", t -> t.name("Task").zeebeJobType("task"))
             .endEvent("end")

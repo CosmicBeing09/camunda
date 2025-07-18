@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -42,7 +42,7 @@ public class MigrateSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .subProcess(
                         "sub1",
@@ -54,7 +54,7 @@ public class MigrateSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .subProcess(
                         "sub2",
@@ -106,7 +106,7 @@ public class MigrateSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .subProcess(
                         "sub1",
@@ -124,7 +124,7 @@ public class MigrateSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .subProcess(
                         "sub2",

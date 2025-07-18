@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -69,7 +69,7 @@ public class NativeUserTaskFormTest {
   public void shouldActivateUserTaskWithLatestFormVersionIfBindingTypeNotSet() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             .zeebeFormId(FORM_ID_1)
@@ -90,7 +90,7 @@ public class NativeUserTaskFormTest {
   public void shouldActivateUserTaskWithLatestFormVersionForBindingTypeLatest() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             .zeebeFormId(FORM_ID_1)
@@ -112,7 +112,7 @@ public class NativeUserTaskFormTest {
   public void shouldActivateUserTaskWithFormVersionInSameDeploymentForBindingTypeDeployment() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             .zeebeFormId(FORM_ID_1)
@@ -136,7 +136,7 @@ public class NativeUserTaskFormTest {
   public void shouldActivateUserTaskWithLatestFormVersionWithVersionTagForBindingTypeVersionTag() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             .zeebeFormId(FORM_ID_1)
@@ -215,7 +215,7 @@ public class NativeUserTaskFormTest {
     // given
     deployForm(TEST_FORM_1);
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             // an incident can only occur at run time if the target form ID is an expression;
@@ -251,7 +251,7 @@ public class NativeUserTaskFormTest {
   public void shouldRaiseAnIncidentIfFormWithVersionTagIsNotDeployedForBindingTypeVersionTag() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             .zeebeFormId(FORM_ID_1)
@@ -277,7 +277,7 @@ public class NativeUserTaskFormTest {
 
   private void deployProcess(final String formId) {
     final BpmnModelInstance processWithFormId =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask("task")
             .zeebeFormId(formId)

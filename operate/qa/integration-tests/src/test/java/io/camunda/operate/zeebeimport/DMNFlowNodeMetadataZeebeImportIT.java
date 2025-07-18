@@ -13,7 +13,7 @@ import io.camunda.operate.util.OperateZeebeAbstractIT;
 import io.camunda.operate.webapp.rest.dto.metadata.BusinessRuleTaskInstanceMetadataDto;
 import io.camunda.operate.webapp.rest.dto.metadata.FlowNodeMetadataDto;
 import io.camunda.webapps.schema.entities.incident.ErrorType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import org.junit.Test;
 
@@ -29,7 +29,7 @@ public class DMNFlowNodeMetadataZeebeImportIT extends OperateZeebeAbstractIT {
 
     final String elementId = "task";
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess(bpmnProcessId)
+        BpmnModelApi.createExecutableProcess(bpmnProcessId)
             .startEvent()
             .businessRuleTask(
                 elementId,

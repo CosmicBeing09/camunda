@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.impl.ZeebeConstants;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeCalledElement;
@@ -30,12 +30,12 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process").startEvent().callActivity("call").done(),
+        BpmnModelApi.createExecutableProcess("process").startEvent().callActivity("call").done(),
         singletonList(
             expect("call", "Must have exactly one 'zeebe:calledElement' extension element"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId(null))
             .endEvent()
@@ -44,7 +44,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
             expect(ZeebeCalledElement.class, "Attribute 'processId' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "call",
@@ -61,7 +61,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
                 "Attribute 'bindingType' must be one of: deployment, latest, versionTag"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "call", c -> c.zeebeProcessId("x").zeebeBindingType(ZeebeBindingType.versionTag))
@@ -73,7 +73,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "call",
@@ -89,7 +89,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "call",
@@ -105,7 +105,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "call",
@@ -121,7 +121,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' may only be used if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity(
                 "call",
@@ -137,7 +137,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' may only be used if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("x"))
             .endEvent()
@@ -145,7 +145,7 @@ public class ZeebeCallActivityTest extends AbstractZeebeValidationTest {
         valid()
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessIdExpression("y"))
             .endEvent()

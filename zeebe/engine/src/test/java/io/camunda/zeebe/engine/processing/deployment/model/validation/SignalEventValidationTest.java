@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.deployment.model.validation;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskDefinition;
@@ -42,7 +42,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId).startEvent("start").signal("signalName").done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent("start").signal("signalName").done();
 
     final Record<DeploymentRecordValue> deployment =
         ENGINE.deployment().withXmlResource(processDefinition).deploy();
@@ -60,7 +60,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .endEvent()
             .addExtensionElement(ZeebeTaskDefinition.class, b -> b.setType("type"))
@@ -88,7 +88,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId).startEvent("start").endEvent().signal("").done();
+        BpmnModelApi.createExecutableProcess(processId).startEvent("start").endEvent().signal("").done();
 
     final Record<DeploymentRecordValue> rejectedDeployment =
         ENGINE.deployment().withXmlResource(processDefinition).expectRejection().deploy();
@@ -111,7 +111,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .endEvent("signal_end_event")
             .signal("signalName")
@@ -133,7 +133,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .intermediateThrowEvent()
             .signal("")
@@ -161,7 +161,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .intermediateThrowEvent("signal_throw_event")
             .signal("signalName")
@@ -199,7 +199,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .manualTask()
             .boundaryEvent("signal_boundary_event", b -> b.signal(m -> m.name("signalName")))
@@ -222,7 +222,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .manualTask()
             .boundaryEvent("signal_boundary_event", b -> b.signal(m -> m.name("")))
@@ -245,7 +245,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .signal("start-signal")
             .manualTask("task")
@@ -290,7 +290,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .intermediateCatchEvent("signal_catch_event")
             .signal("signalName")
@@ -312,7 +312,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .intermediateCatchEvent("signal_catch_event")
             .signal("")
@@ -334,7 +334,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .eventSubProcess(
                 "signal_event_subprocess",
                 sub -> sub.startEvent("signal_event", s -> s.signal("signal")))
@@ -357,7 +357,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .eventSubProcess(
                 "signal_event_subprocess", sub -> sub.startEvent("signal_event", s -> s.signal("")))
             .startEvent()
@@ -379,7 +379,7 @@ public final class SignalEventValidationTest {
 
     // when
     final BpmnModelInstance processDefinition =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .signal(m -> m.id("start-signal").name("signalName"))
             .manualTask()
@@ -419,7 +419,7 @@ public final class SignalEventValidationTest {
 
   private static BpmnModelInstance
       getEventSubProcessWithEmbeddedSubProcessWithBoundarySignalEvent() {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess("process");
     builder
         .eventSubProcess("event_sub_proc")
         .startEvent(
@@ -439,7 +439,7 @@ public final class SignalEventValidationTest {
   }
 
   public static BpmnModelInstance processWithMultipleSignalStartEvents() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess();
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess();
     process.startEvent().signal("s1").endEvent();
     process.startEvent().signal("s2").endEvent();
     process.startEvent().signal(s -> s.nameExpression("=\"signal_static_expression\"")).endEvent();
@@ -447,7 +447,7 @@ public final class SignalEventValidationTest {
   }
 
   private static BpmnModelInstance getProcessWithMultipleStartEventsWithSameSignal() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess("processId");
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess("processId");
     final String signalName = "signalName";
     process.startEvent("start1").signal(m -> m.id("start-signal").name(signalName)).endEvent();
     process.startEvent("start2").signal(signalName).endEvent();

@@ -15,7 +15,7 @@
  */
 package io.camunda.zeebe.model.bpmn.instance;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.Query;
 import io.camunda.zeebe.model.bpmn.impl.QueryImpl;
 import java.io.InputStream;
@@ -47,7 +47,7 @@ public abstract class AbstractEventDefinitionTest extends BpmnModelElementInstan
     final InputStream inputStream =
         ReflectUtil.getResourceAsStream("io/camunda/zeebe/model/bpmn/EventDefinitionsTest.xml");
     final IntermediateThrowEvent event =
-        Bpmn.readModelFromStream(inputStream).getModelElementById("event");
+        BpmnModelApi.readModelFromStream(inputStream).getModelElementById("event");
     eventDefinitionQuery = new QueryImpl<>(event.getEventDefinitions());
   }
 }

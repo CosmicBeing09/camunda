@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.multitenancy;
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent;
@@ -38,7 +38,7 @@ public class TenantAwareModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
@@ -94,7 +94,7 @@ public class TenantAwareModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
@@ -136,7 +136,7 @@ public class TenantAwareModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()

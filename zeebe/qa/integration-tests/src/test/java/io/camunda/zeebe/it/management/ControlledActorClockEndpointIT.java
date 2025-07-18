@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.camunda.client.CamundaClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RecordAssert;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -59,7 +59,7 @@ final class ControlledActorClockEndpointIT {
         buildRequest("pin")
             .POST(BodyPublishers.ofByteArray(MAPPER.writeValueAsBytes(Map.of("epochMilli", now))))
             .build();
-    final var process = Bpmn.createExecutableProcess().startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess().startEvent().endEvent().done();
     final var response = httpClient.send(request, newResponseHandler());
 
     // when - producing records
@@ -78,7 +78,7 @@ final class ControlledActorClockEndpointIT {
   @Test
   void testOffsetTime() throws IOException, InterruptedException {
     // given - Zeebe actor clock is offset
-    final var process = Bpmn.createExecutableProcess().startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess().startEvent().endEvent().done();
     final var offset = Duration.ofHours(5);
     final var request =
         buildRequest("add")

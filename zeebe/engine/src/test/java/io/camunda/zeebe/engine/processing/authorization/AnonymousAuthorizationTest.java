@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.auth.Authorization;
 import io.camunda.zeebe.engine.util.AuthorizationUtil;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -38,13 +38,13 @@ public class AnonymousAuthorizationTest {
   private static final String TENANT = "foo";
   private static String username;
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test").zeebeJobRetries("5"))
           .endEvent()
           .done();
   private static final BpmnModelInstance PROCESS_WITH_NOT_EXISTING_FORM =
-      Bpmn.createExecutableProcess(PROCESS_ID_WITH_NOT_EXISTING_FORM)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID_WITH_NOT_EXISTING_FORM)
           .startEvent()
           .userTask("task")
           .zeebeFormId(FORM_ID_1)

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.SignalClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
@@ -43,7 +43,7 @@ public class BroadcastSignalMultiplePartitionsTest {
   public void shouldWriteDistributingRecordsForOtherPartitions() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent().signal(SIGNAL_NAME).endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().signal(SIGNAL_NAME).endEvent().done();
     // when
     ENGINE.deployment().withXmlResource(process).deploy();
 
@@ -68,14 +68,14 @@ public class BroadcastSignalMultiplePartitionsTest {
   public void shouldTriggerMultipleSignalCatchEvent() {
     // given
     final var process1 =
-        Bpmn.createExecutableProcess("wf_1")
+        BpmnModelApi.createExecutableProcess("wf_1")
             .startEvent()
             .intermediateCatchEvent("catch1")
             .signal(SIGNAL_NAME)
             .endEvent()
             .done();
     final var process2 =
-        Bpmn.createExecutableProcess("wf_2")
+        BpmnModelApi.createExecutableProcess("wf_2")
             .startEvent()
             .intermediateCatchEvent("catch2")
             .signal(SIGNAL_NAME)

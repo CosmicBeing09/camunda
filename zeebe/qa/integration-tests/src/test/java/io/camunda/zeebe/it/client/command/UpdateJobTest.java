@@ -18,7 +18,7 @@ import io.camunda.client.api.command.UpdateRetriesJobCommandStep1;
 import io.camunda.client.api.command.UpdateTimeoutJobCommandStep1;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -414,7 +414,7 @@ public class UpdateJobTest {
   private void createProcessInstance(final String jobType) {
     final var processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType(jobType))
                 .endEvent()

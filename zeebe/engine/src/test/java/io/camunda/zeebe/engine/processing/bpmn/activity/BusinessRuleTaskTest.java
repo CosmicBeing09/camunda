@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.BusinessRuleTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
@@ -71,7 +71,7 @@ public final class BusinessRuleTaskTest {
 
   private static BpmnModelInstance processWithBusinessRuleTask(
       final Consumer<BusinessRuleTaskBuilder> modifier) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .businessRuleTask(TASK_ID, modifier)
         .done();

@@ -15,7 +15,7 @@ import io.camunda.zeebe.exporter.api.Exporter;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.exporter.api.context.Controller;
 import io.camunda.zeebe.management.cluster.PlannedOperationsResponse;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.qa.util.actuator.ExportersActuator;
 import io.camunda.zeebe.qa.util.cluster.TestCluster;
@@ -175,7 +175,7 @@ final class ExporterEnableTest {
     client
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(), "process.bpmn")
+            BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(), "process.bpmn")
         .send()
         .join();
   }

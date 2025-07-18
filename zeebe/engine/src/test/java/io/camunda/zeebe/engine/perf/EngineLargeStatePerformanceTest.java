@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.perf;
 
 import io.camunda.zeebe.engine.perf.TestEngine.TestContext;
 import io.camunda.zeebe.engine.util.client.ProcessInstanceClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.JobRecordValue;
@@ -66,7 +66,7 @@ public class EngineLargeStatePerformanceTest {
     singlePartitionEngine
         .createDeploymentClient()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", (t) -> t.zeebeJobType("task").done())
                 .endEvent()

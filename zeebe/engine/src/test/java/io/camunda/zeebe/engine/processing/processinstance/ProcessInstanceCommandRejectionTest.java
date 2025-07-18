@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.processinstance;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -38,7 +38,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given (synthetic situation - is not expected in regular processing)
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -88,7 +88,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given (synthetic situation - is not expected in regular processing)
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -138,7 +138,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given (synthetic situation - is not expected in regular processing)
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done());
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done());
 
     RecordingExporter.processInstanceRecords(ProcessInstanceIntent.ELEMENT_COMPLETED)
         .withProcessInstanceKey(processInstanceKey)
@@ -177,7 +177,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .serviceTask("a", t -> t.zeebeJobType("a"))
@@ -219,7 +219,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .serviceTask("b", t -> t.zeebeJobType("b"))
@@ -255,7 +255,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "interrupt",
                     s -> s.startEvent().interrupting(true).timerWithDuration("PT1M").endEvent())
@@ -303,7 +303,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .serviceTask("b", t -> t.zeebeJobType("b"))
@@ -339,7 +339,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "interrupt",
                     s -> s.startEvent().interrupting(true).timerWithDuration("PT1M").endEvent())
@@ -382,7 +382,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given (synthetic situation - is not expected in regular processing)
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     "a",
@@ -425,7 +425,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given (synthetic situation - is not expected in regular processing)
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .serviceTask("b", t -> t.zeebeJobType("b"))
@@ -468,7 +468,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .boundaryEvent("interrupt", b -> b.cancelActivity(true).timerWithDuration("PT1M"))
@@ -507,7 +507,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .done());
@@ -544,7 +544,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .done());
@@ -581,7 +581,7 @@ public final class ProcessInstanceCommandRejectionTest {
     // given
     final var processInstanceKey =
         createProcessInstance(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("a", t -> t.zeebeJobType("a"))
                 .boundaryEvent("interrupt", b -> b.cancelActivity(true).timerWithDuration("PT1M"))

@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.instance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.Arrays;
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class TextAnnotationTest extends BpmnModelElementInstanceTest {
   @BeforeClass
   public static void parseModel() {
     modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             TextAnnotationTest.class.getResourceAsStream("TextAnnotationTest.bpmn"));
   }
 

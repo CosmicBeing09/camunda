@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -56,7 +56,7 @@ public class ExecutionListenerTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     "service_task",
@@ -101,7 +101,7 @@ public class ExecutionListenerTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .manualTask()
                 .subProcess(
@@ -173,7 +173,7 @@ public class ExecutionListenerTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     SUB_PROCESS_ID,
@@ -213,7 +213,7 @@ public class ExecutionListenerTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .manualTask()
                 .subProcess(
@@ -252,7 +252,7 @@ public class ExecutionListenerTest {
     final long processInstanceKey =
         createProcessInstance(
             ENGINE,
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     SUB_PROCESS_ID,
@@ -296,14 +296,14 @@ public class ExecutionListenerTest {
   public void shouldCompleteCallActivitySubProcessWithMultipleExecutionListeners() {
     // given
     final var childProcess =
-        Bpmn.createExecutableProcess(SUB_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(SUB_PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType(SERVICE_TASK_TYPE + "_sub"))
             .endEvent()
             .done();
 
     final var parentProcess =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .zeebeStartExecutionListener(START_EL_TYPE)
             .startEvent()
             .callActivity(SUB_PROCESS_ID, c -> c.zeebeProcessId(SUB_PROCESS_ID))
@@ -367,14 +367,14 @@ public class ExecutionListenerTest {
   public void shouldCancelActiveStartElJobForCallActivityAfterProcessInstanceCancellation() {
     // given
     final var childProcess =
-        Bpmn.createExecutableProcess(SUB_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(SUB_PROCESS_ID)
             .startEvent()
             .manualTask("task")
             .endEvent()
             .done();
 
     final var parentProcess =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity(SUB_PROCESS_ID, c -> c.zeebeProcessId(SUB_PROCESS_ID))
             .zeebeStartExecutionListener(START_EL_TYPE + "_sub")
@@ -416,7 +416,7 @@ public class ExecutionListenerTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     messageSubprocessId,
                     sub ->
@@ -517,7 +517,7 @@ public class ExecutionListenerTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     messageSubprocessId,
                     sub ->

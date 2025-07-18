@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.resource;
 import static io.camunda.zeebe.protocol.record.RecordAssert.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceCreationIntent;
@@ -131,7 +131,7 @@ public class ResourceDeletionRejectionTest {
     return engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId).startEvent().userTask().endEvent().done())
+            BpmnModelApi.createExecutableProcess(processId).startEvent().userTask().endEvent().done())
         .deploy()
         .getValue()
         .getProcessesMetadata()

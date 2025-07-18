@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import io.camunda.zeebe.engine.state.mutable.MutableDistributionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
@@ -436,14 +436,14 @@ public final class DistributionStateTest {
 
   private DeploymentRecord createDeploymentRecord() {
     final var modelInstance =
-        Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
     final var deploymentRecord = new DeploymentRecord();
 
     deploymentRecord
         .resources()
         .add()
         .setResourceName(wrapString("resource"))
-        .setResource(wrapString(Bpmn.convertToString(modelInstance)));
+        .setResource(wrapString(BpmnModelApi.convertToString(modelInstance)));
 
     deploymentRecord
         .processesMetadata()

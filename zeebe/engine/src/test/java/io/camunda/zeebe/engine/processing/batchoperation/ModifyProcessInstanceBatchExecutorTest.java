@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationExecutionIntent;
@@ -33,7 +33,7 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .userTask("userTaskA")
                     .userTask("userTaskB")
@@ -87,7 +87,7 @@ public final class ModifyProcessInstanceBatchExecutorTest extends AbstractBatchO
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .userTask("userTaskA")
                     .userTask("userTaskB")

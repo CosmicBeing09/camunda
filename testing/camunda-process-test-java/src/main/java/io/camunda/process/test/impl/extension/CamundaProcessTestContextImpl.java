@@ -32,7 +32,7 @@ import io.camunda.process.test.impl.mock.JobWorkerMockImpl;
 import io.camunda.process.test.impl.runtime.CamundaProcessTestRuntime;
 import io.camunda.zeebe.client.ZeebeClient;
 import io.camunda.zeebe.client.ZeebeClientBuilder;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.ByteArrayInputStream;
 import java.net.URI;
@@ -160,7 +160,7 @@ public class CamundaProcessTestContextImpl implements CamundaProcessTestContext 
   public void mockChildProcess(final String childProcessId, final Map<String, Object> variables) {
     final CamundaClient client = createClient();
     final BpmnModelInstance processModel =
-        Bpmn.createExecutableProcess(childProcessId)
+        BpmnModelApi.createExecutableProcess(childProcessId)
             .startEvent()
             .endEvent(
                 "child-end",

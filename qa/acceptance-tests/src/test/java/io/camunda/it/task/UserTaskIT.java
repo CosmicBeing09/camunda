@@ -16,7 +16,7 @@ import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.filter.UserTaskFilter;
 import io.camunda.client.api.search.response.UserTask;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractUserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
@@ -368,7 +368,7 @@ public class UserTaskIT {
       final String elementBpmnId,
       final Consumer<UserTaskBuilder>... taskModifiers) {
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .userTask(
                 elementBpmnId,

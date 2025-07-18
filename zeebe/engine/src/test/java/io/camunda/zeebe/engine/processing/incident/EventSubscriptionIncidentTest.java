@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.incident;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -48,7 +48,7 @@ public final class EventSubscriptionIncidentTest {
   private static final String CORRELATION_VARIABLE_2 = "key2";
   private static final String WF_RECEIVE_TASK_ID = "wf-receive-task";
   private static final BpmnModelInstance WF_RECEIVE_TASK =
-      Bpmn.createExecutableProcess(WF_RECEIVE_TASK_ID)
+      BpmnModelApi.createExecutableProcess(WF_RECEIVE_TASK_ID)
           .startEvent()
           .receiveTask("task")
           .message(
@@ -64,7 +64,7 @@ public final class EventSubscriptionIncidentTest {
           .done();
   private static final String WF_RECEIVE_TASK_2_ID = "wf-receive-task-2";
   private static final BpmnModelInstance WF_RECEIVE_TASK_2 =
-      Bpmn.createExecutableProcess(WF_RECEIVE_TASK_2_ID)
+      BpmnModelApi.createExecutableProcess(WF_RECEIVE_TASK_2_ID)
           .startEvent()
           .receiveTask("task")
           .message(
@@ -80,7 +80,7 @@ public final class EventSubscriptionIncidentTest {
           .done();
   private static final String WF_EVENT_BASED_GATEWAY_ID = "wf-event-based-gateway";
   private static final BpmnModelInstance WF_EVENT_BASED_GATEWAY =
-      Bpmn.createExecutableProcess(WF_EVENT_BASED_GATEWAY_ID)
+      BpmnModelApi.createExecutableProcess(WF_EVENT_BASED_GATEWAY_ID)
           .startEvent()
           .eventBasedGateway("gateway")
           .intermediateCatchEvent(
@@ -103,7 +103,7 @@ public final class EventSubscriptionIncidentTest {
           .done();
   private static final String WF_EVENT_BASED_GATEWAY_2_ID = "wf-event-based-gateway-2";
   private static final BpmnModelInstance WF_EVENT_BASED_GATEWAY_2 =
-      Bpmn.createExecutableProcess(WF_EVENT_BASED_GATEWAY_2_ID)
+      BpmnModelApi.createExecutableProcess(WF_EVENT_BASED_GATEWAY_2_ID)
           .startEvent()
           .eventBasedGateway("gateway")
           .intermediateCatchEvent(
@@ -126,7 +126,7 @@ public final class EventSubscriptionIncidentTest {
           .done();
   private static final String WF_BOUNDARY_EVENT_ID = "wf-boundary-event";
   private static final BpmnModelInstance WF_BOUNDARY_EVENT =
-      Bpmn.createExecutableProcess(WF_BOUNDARY_EVENT_ID)
+      BpmnModelApi.createExecutableProcess(WF_BOUNDARY_EVENT_ID)
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test"))
           .boundaryEvent(
@@ -149,7 +149,7 @@ public final class EventSubscriptionIncidentTest {
           .done();
   private static final String WF_BOUNDARY_EVENT_2_ID = "wf-boundary-event-2";
   private static final BpmnModelInstance WF_BOUNDARY_EVENT_2 =
-      Bpmn.createExecutableProcess(WF_BOUNDARY_EVENT_2_ID)
+      BpmnModelApi.createExecutableProcess(WF_BOUNDARY_EVENT_2_ID)
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test"))
           .boundaryEvent(

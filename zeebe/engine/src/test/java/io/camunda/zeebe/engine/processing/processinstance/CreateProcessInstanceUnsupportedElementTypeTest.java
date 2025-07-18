@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance;
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceCreationIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -50,7 +50,7 @@ public class CreateProcessInstanceUnsupportedElementTypeTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("rootStartEvent")
                 .sequenceFlowId("sequenceFlow")
                 .subProcess(

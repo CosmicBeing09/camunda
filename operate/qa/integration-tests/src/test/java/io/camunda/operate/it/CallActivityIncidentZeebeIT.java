@@ -33,7 +33,7 @@ import io.camunda.operate.webapp.rest.dto.listview.ListViewProcessInstanceDto;
 import io.camunda.operate.webapp.rest.dto.listview.ListViewQueryDto;
 import io.camunda.operate.webapp.rest.dto.listview.ListViewRequestDto;
 import io.camunda.operate.webapp.rest.dto.listview.ListViewResponseDto;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.List;
 import java.util.Map;
@@ -65,13 +65,13 @@ public class CallActivityIncidentZeebeIT extends OperateZeebeAbstractIT {
   @Before
   public void createData() {
     final BpmnModelInstance parentProcess =
-        Bpmn.createExecutableProcess(PARENT_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PARENT_PROCESS_ID)
             .startEvent()
             .callActivity(CALL_ACTIVITY_ID)
             .zeebeProcessId(CALLED_PROCESS_ID)
             .done();
     final BpmnModelInstance childProcess =
-        Bpmn.createExecutableProcess(CALLED_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(CALLED_PROCESS_ID)
             .startEvent()
             .parallelGateway("parallel")
             .serviceTask(TASK_ID)

@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -42,7 +42,7 @@ public class MigrateEscalationEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -57,7 +57,7 @@ public class MigrateEscalationEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub2",
                         s ->
@@ -136,7 +136,7 @@ public class MigrateEscalationEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -151,7 +151,7 @@ public class MigrateEscalationEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub2",
                         s ->
@@ -229,7 +229,7 @@ public class MigrateEscalationEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -244,7 +244,7 @@ public class MigrateEscalationEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .serviceTask("B", t -> t.zeebeJobType("B"))
                     .endEvent("target_process_end")
@@ -305,13 +305,13 @@ public class MigrateEscalationEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub1",
                         s ->

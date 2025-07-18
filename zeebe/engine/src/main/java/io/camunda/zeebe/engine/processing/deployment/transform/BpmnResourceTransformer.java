@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.validation.Unsupporte
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.BaseElement;
 import io.camunda.zeebe.model.bpmn.instance.Process;
@@ -149,7 +149,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
     try {
       final DirectBuffer resource = deploymentResource.getResourceBuffer();
       final DirectBufferInputStream resourceStream = new DirectBufferInputStream(resource);
-      return Either.right(Bpmn.readModelFromStream(resourceStream));
+      return Either.right(BpmnModelApi.readModelFromStream(resourceStream));
     } catch (final ModelParseException e) {
       final var failureMessage =
           String.format(

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.client.api.worker.JobHandler;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.qa.util.actuator.PartitionsActuator;
 import io.camunda.zeebe.qa.util.testcontainers.ZeebeTestContainerDefaults;
@@ -58,7 +58,7 @@ import org.testcontainers.utility.DockerImageName;
 final class RollingUpdateTest {
 
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent()
           .serviceTask("task1", s -> s.zeebeJobType("firstTask"))
           .serviceTask("task2", s -> s.zeebeJobType("secondTask"))

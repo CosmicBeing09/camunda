@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -53,7 +53,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -66,7 +66,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -185,7 +185,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .receiveTask(
                         "receive1",
@@ -201,7 +201,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .receiveTask(
                         "receive2",
@@ -327,7 +327,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -344,7 +344,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -466,7 +466,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .callActivity(
                         "callActivity1",
@@ -479,7 +479,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .callActivity(
                         "callActivity2",
@@ -492,7 +492,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent("multi_instance_target_process_end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(childProcessId)
+                BpmnModelApi.createExecutableProcess(childProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .endEvent()
@@ -590,7 +590,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -603,7 +603,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -728,7 +728,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -743,7 +743,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -822,7 +822,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -838,7 +838,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -919,7 +919,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -934,7 +934,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -1026,7 +1026,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -1043,7 +1043,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -1151,7 +1151,7 @@ public class MigrateParallelMultiInstanceBodyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -1164,7 +1164,7 @@ public class MigrateParallelMultiInstanceBodyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",

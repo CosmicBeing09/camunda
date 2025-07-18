@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.protocol.Protocol;
@@ -44,7 +44,7 @@ public class InterruptingEventSubprocessConcurrencyTest {
   // https://github.com/camunda/camunda/issues/6552
   public void shouldEndProcess() {
     // given
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     process
         .eventSubProcess("event_sub_proc")
@@ -118,7 +118,7 @@ public class InterruptingEventSubprocessConcurrencyTest {
   // https://github.com/camunda-cloud/zeebe/issues/6587
   public void shouldInterruptBoundaryEvent() {
     // given
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     process
         .eventSubProcess("event_sub_proc")

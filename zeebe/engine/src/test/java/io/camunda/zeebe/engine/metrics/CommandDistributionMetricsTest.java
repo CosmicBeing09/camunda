@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandRedistributor;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
@@ -180,7 +180,7 @@ public class CommandDistributionMetricsTest {
         engine
             .deployment()
             .withXmlResource(
-                "process.bpmn", Bpmn.createExecutableProcess().startEvent().endEvent().done())
+                "process.bpmn", BpmnModelApi.createExecutableProcess().startEvent().endEvent().done())
             .expectCreated()
             .deploy();
 

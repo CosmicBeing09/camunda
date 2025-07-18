@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CamundaClient;
 import io.camunda.webapps.schema.descriptors.IndexDescriptors;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.test.util.testcontainers.TestSearchContainers;
 import java.time.Duration;
@@ -101,7 +101,7 @@ public class ElasticsearchSetupHelperTest {
       camundaClient
           .newDeployResourceCommand()
           .addProcessModel(
-              Bpmn.createExecutableProcess("test").startEvent().endEvent().done(), "process.bpmn")
+              BpmnModelApi.createExecutableProcess("test").startEvent().endEvent().done(), "process.bpmn")
           .send()
           .join();
 

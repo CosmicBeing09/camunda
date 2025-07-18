@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
@@ -34,7 +34,7 @@ public class BusinessRuleTaskBuilderTest {
   void shouldSetDecisionId() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask("task", task -> task.zeebeCalledDecisionId("decision-id-1"))
             .done();
@@ -53,7 +53,7 @@ public class BusinessRuleTaskBuilderTest {
   void shouldSetDecisionIdExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask(
                 "task", task -> task.zeebeCalledDecisionIdExpression("decisionIdExpr"))
@@ -73,7 +73,7 @@ public class BusinessRuleTaskBuilderTest {
   void shouldSetResultVariable() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask("task", task -> task.zeebeResultVariable("result"))
             .done();
@@ -92,7 +92,7 @@ public class BusinessRuleTaskBuilderTest {
   void shouldSetDecisionIdAndResultVariable() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask(
                 "task",
@@ -114,7 +114,7 @@ public class BusinessRuleTaskBuilderTest {
   void shouldSetBindingType(final ZeebeBindingType bindingType) {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask("task", task -> task.zeebeBindingType(bindingType))
             .done();
@@ -133,7 +133,7 @@ public class BusinessRuleTaskBuilderTest {
   void shouldSetVersionTag() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .businessRuleTask("task", task -> task.zeebeVersionTag("v1"))
             .done();

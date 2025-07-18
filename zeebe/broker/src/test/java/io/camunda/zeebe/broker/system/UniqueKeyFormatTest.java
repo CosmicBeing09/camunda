@@ -11,7 +11,7 @@ import static io.camunda.zeebe.broker.test.EmbeddedBrokerConfigurator.setPartiti
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.test.broker.protocol.commandapi.CommandApiRule;
@@ -35,7 +35,7 @@ public final class UniqueKeyFormatTest {
     // given
     apiRule
         .partitionClient()
-        .deploy(Bpmn.createExecutableProcess("process").startEvent("foo").endEvent().done());
+        .deploy(BpmnModelApi.createExecutableProcess("process").startEvent("foo").endEvent().done());
 
     // when
     TestUtil.waitUntil(() -> RecordingExporter.deploymentRecords().withPartitionId(2).exists());

@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -46,7 +46,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent("end").done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent("end").done())
         .deploy();
 
     // When
@@ -79,7 +79,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start")
                 .parallelGateway("forking")
                 .manualTask("task1")
@@ -140,7 +140,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start_root")
                 .subProcess(
                     "subprocess",
@@ -198,7 +198,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start_root")
                 .subProcess(
                     "subprocess",
@@ -274,7 +274,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent("start_root")
                 .subProcess(
                     "subprocess_lvl_1",
@@ -358,7 +358,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent("end").done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent("end").done())
         .deploy();
 
     // When
@@ -392,7 +392,7 @@ public class CreateProcessInstanceAnywhereTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .manualTask("task")
                     .endEvent()
@@ -432,7 +432,7 @@ public class CreateProcessInstanceAnywhereTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .subProcess(
                         "subprocess",
@@ -517,7 +517,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -565,7 +565,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -617,7 +617,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "message-event-subprocess",
                     s ->
@@ -703,7 +703,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -803,7 +803,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "message-event-subprocess",
                     s ->
@@ -875,7 +875,7 @@ public class CreateProcessInstanceAnywhereTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .userTask("A")

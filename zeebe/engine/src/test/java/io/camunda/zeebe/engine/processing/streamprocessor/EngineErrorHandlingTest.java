@@ -26,7 +26,7 @@ import io.camunda.zeebe.engine.util.RecordStream;
 import io.camunda.zeebe.engine.util.Records;
 import io.camunda.zeebe.engine.util.TestStreams;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
@@ -476,7 +476,7 @@ public final class EngineErrorHandlingTest {
     final List<Long> processedInstances = new ArrayList<>();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .timerWithDuration("PT1S")
             .endEvent()
@@ -486,7 +486,7 @@ public final class EngineErrorHandlingTest {
         .resources()
         .add()
         .setResourceName("process.bpmn")
-        .setResource(Bpmn.convertToString(process).getBytes());
+        .setResource(BpmnModelApi.convertToString(process).getBytes());
 
     streams.startStreamProcessor(
         STREAM_NAME,

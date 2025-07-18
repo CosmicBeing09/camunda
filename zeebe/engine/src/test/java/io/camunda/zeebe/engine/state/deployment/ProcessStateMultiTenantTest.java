@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.deployment.PersistedProcess.PersistedProces
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
@@ -240,7 +240,7 @@ public class ProcessStateMultiTenantTest {
   private DeploymentRecord createDeploymentRecord(
       final String tenantId, final long processKey, final String processId, final int version) {
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask(
                 "test",
@@ -252,7 +252,7 @@ public class ProcessStateMultiTenantTest {
 
     final DeploymentRecord deploymentRecord = new DeploymentRecord();
     final String resourceName = "process.bpmn";
-    final var resource = wrapString(Bpmn.convertToString(modelInstance));
+    final var resource = wrapString(BpmnModelApi.convertToString(modelInstance));
     final var checksum = wrapString("checksum" + tenantId);
     deploymentRecord
         .setTenantId(tenantId)
@@ -285,7 +285,7 @@ public class ProcessStateMultiTenantTest {
       final String processId,
       final int version,
       final String versionTag) {
-    final var processBuilder = Bpmn.createExecutableProcess(processId);
+    final var processBuilder = BpmnModelApi.createExecutableProcess(processId);
     if (versionTag != null) {
       processBuilder.versionTag(versionTag);
     }
@@ -298,7 +298,7 @@ public class ProcessStateMultiTenantTest {
 
     final ProcessRecord processRecord = new ProcessRecord();
     final String resourceName = "process.bpmn";
-    final var resource = wrapString(Bpmn.convertToString(modelInstance));
+    final var resource = wrapString(BpmnModelApi.convertToString(modelInstance));
     final var checksum = wrapString("checksum" + tenantId);
 
     processRecord

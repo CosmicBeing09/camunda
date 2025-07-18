@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractCatchEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
@@ -31,11 +31,11 @@ public class ZeebeValidationTest extends AbstractZeebeValidationTest {
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process").done(),
+        BpmnModelApi.createExecutableProcess("process").done(),
         singletonList(expect("process", "Must have at least one start event"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent()
             .endEvent()
@@ -44,7 +44,7 @@ public class ZeebeValidationTest extends AbstractZeebeValidationTest {
             expect(IntermediateCatchEvent.class, "Must have exactly one event definition"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("catch", AbstractCatchEventBuilder::compensateEventDefinition)
             .endEvent()
@@ -53,7 +53,7 @@ public class ZeebeValidationTest extends AbstractZeebeValidationTest {
             expect(IntermediateCatchEvent.class, "Event definition must be one of: message, timer"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("msg1")
@@ -81,13 +81,13 @@ public class ZeebeValidationTest extends AbstractZeebeValidationTest {
   }
 
   private static BpmnModelInstance eventSubprocWithNoneStart() {
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess("process");
     processBuilder.startEvent().endEvent();
     return processBuilder.eventSubProcess("subprocess").startEvent("start_event").endEvent().done();
   }
 
   private static BpmnModelInstance eventSubprocWithSignalStart() {
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess("process");
     processBuilder.startEvent().endEvent();
     return processBuilder
         .eventSubProcess("subprocess")

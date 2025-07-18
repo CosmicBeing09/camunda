@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.deployment.model.validation.Exp
 
 import io.camunda.zeebe.engine.util.JobWorkerElementBuilder;
 import io.camunda.zeebe.engine.util.JobWorkerElementBuilderProvider;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ZeebeJobWorkerElementBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskDefinition;
@@ -52,7 +52,7 @@ public class JobWorkerElementValidationTest {
       final JobWorkerElementBuilder elementBuilder,
       final Consumer<ZeebeJobWorkerElementBuilder<?>> taskModifier) {
 
-    final var processBuilder = Bpmn.createExecutableProcess("process").startEvent();
+    final var processBuilder = BpmnModelApi.createExecutableProcess("process").startEvent();
     final var jobWorkerElementBuilder = elementBuilder.build(processBuilder, taskModifier);
     return jobWorkerElementBuilder.done();
   }

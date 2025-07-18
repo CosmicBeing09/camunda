@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.value.EntityType;
@@ -72,7 +72,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent("signal-start")
                 .signal(signalName)
                 .endEvent()
@@ -106,7 +106,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateCatchEvent("signal-catch")
                 .signal(signalName)
@@ -142,7 +142,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .eventBasedGateway()
                 .intermediateCatchEvent("signal-catch-attached")
@@ -183,7 +183,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .eventSubProcess(
                     "signal-sub",
                     sub -> sub.startEvent("signal-start-event-sub").signal(signalName).endEvent())
@@ -221,7 +221,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .userTask()
                 .boundaryEvent("signal-boundary")
@@ -258,7 +258,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateThrowEvent("signal-throw")
                 .signal(signalName)
@@ -296,7 +296,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .endEvent("signal-throw-end")
                 .signal(signalName)
@@ -333,7 +333,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .endEvent("signal-throw-end")
                 .signal(signalName)
@@ -344,7 +344,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(signalCatchingProcess)
+            BpmnModelApi.createExecutableProcess(signalCatchingProcess)
                 .startEvent("signal-start")
                 .signal(signalName)
                 .endEvent()
@@ -390,7 +390,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .endEvent("signal-throw-end")
                 .signal(signalName)
@@ -401,7 +401,7 @@ public class TenantAwareSignalEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(signalCatchingProcess)
+            BpmnModelApi.createExecutableProcess(signalCatchingProcess)
                 .startEvent("signal-start")
                 .signal(signalName)
                 .endEvent()

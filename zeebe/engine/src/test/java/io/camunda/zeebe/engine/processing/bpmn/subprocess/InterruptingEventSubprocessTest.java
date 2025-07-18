@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
@@ -289,7 +289,7 @@ public class InterruptingEventSubprocessTest {
                 .endEvent("sub_end");
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent("proc_start")
             .subProcess("sub_proc", embeddedSubprocess)
             .endEvent("end_proc")
@@ -448,7 +448,7 @@ public class InterruptingEventSubprocessTest {
                 .endEvent();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("sub_proc", embeddedSubprocess)
             .boundaryEvent()
@@ -519,7 +519,7 @@ public class InterruptingEventSubprocessTest {
                 .endEvent();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("sub_proc", embeddedSubprocess)
             .boundaryEvent()
@@ -599,7 +599,7 @@ public class InterruptingEventSubprocessTest {
                 .endEvent();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("sub_proc", embeddedSubprocess)
             .boundaryEvent()
@@ -686,7 +686,7 @@ public class InterruptingEventSubprocessTest {
                 .endEvent();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("sub_proc", embeddedSubprocess)
             .endEvent()
@@ -750,7 +750,7 @@ public class InterruptingEventSubprocessTest {
                 .serviceTask("event_sub_task", t -> t.zeebeJobType("event_sub_task"));
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event_sub_proc", eventSubprocess)
             .startEvent()
             .parallelGateway("fork")
@@ -813,7 +813,7 @@ public class InterruptingEventSubprocessTest {
   // https://github.com/camunda/camunda/issues/6565
   public void shouldEndProcessWithParallelFlow() {
     // given
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     process
         .eventSubProcess("event_sub_proc")
@@ -879,7 +879,7 @@ public class InterruptingEventSubprocessTest {
   @Test
   public void shouldTerminateXorWithIncident() {
     // given
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     process
         .eventSubProcess("event_sub_proc")
@@ -1000,7 +1000,7 @@ public class InterruptingEventSubprocessTest {
 
   private static ProcessBuilder withEventSubprocess(
       final Function<StartEventBuilder, StartEventBuilder> builder) {
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     builder
         .apply(
@@ -1015,7 +1015,7 @@ public class InterruptingEventSubprocessTest {
 
   private static ProcessBuilder withEventSubprocessAndLocalScopeVariable(
       final Function<StartEventBuilder, StartEventBuilder> builder) {
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     builder
         .apply(
@@ -1031,7 +1031,7 @@ public class InterruptingEventSubprocessTest {
 
   private static ProcessBuilder withEventSubprocessTask(
       final Function<StartEventBuilder, StartEventBuilder> builder, final String jobType) {
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     builder
         .apply(

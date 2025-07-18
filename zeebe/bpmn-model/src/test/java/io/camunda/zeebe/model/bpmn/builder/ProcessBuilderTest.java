@@ -31,7 +31,7 @@ import static org.assertj.core.api.Fail.fail;
 import static org.junit.Assert.assertEquals;
 
 import io.camunda.zeebe.model.bpmn.AssociationDirection;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelException;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.GatewayDirection;
@@ -99,7 +99,7 @@ public class ProcessBuilderTest {
 
   @BeforeClass
   public static void getElementTypes() {
-    final Model model = Bpmn.createEmptyModel().getModel();
+    final Model model = BpmnModelApi.createEmptyModel().getModel();
     taskType = model.getType(Task.class);
     gatewayType = model.getType(Gateway.class);
     eventType = model.getType(Event.class);
@@ -109,13 +109,13 @@ public class ProcessBuilderTest {
   @After
   public void validateModel() {
     if (modelInstance != null) {
-      Bpmn.validateModel(modelInstance);
+      BpmnModelApi.validateModel(modelInstance);
     }
   }
 
   @Test
   public void testCreateEmptyProcess() {
-    modelInstance = Bpmn.createProcess().done();
+    modelInstance = BpmnModelApi.createProcess().done();
 
     final Definitions definitions = modelInstance.getDefinitions();
     assertThat(definitions).isNotNull();
@@ -132,27 +132,27 @@ public class ProcessBuilderTest {
   @Test
   public void testGetElement() {
     // Make sure this method is publicly available
-    final Process process = Bpmn.createProcess().getElement();
+    final Process process = BpmnModelApi.createProcess().getElement();
     assertThat(process).isNotNull();
   }
 
   @Test
   public void testCreateProcessWithStartEvent() {
-    modelInstance = Bpmn.createProcess().startEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(1);
   }
 
   @Test
   public void testCreateProcessWithEndEvent() {
-    modelInstance = Bpmn.createProcess().startEvent().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
   }
 
   @Test
   public void testCreateProcessWithServiceTask() {
-    modelInstance = Bpmn.createProcess().startEvent().serviceTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().serviceTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -160,7 +160,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateProcessWithSendTask() {
-    modelInstance = Bpmn.createProcess().startEvent().sendTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().sendTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -168,7 +168,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateProcessWithUserTask() {
-    modelInstance = Bpmn.createProcess().startEvent().userTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().userTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -176,7 +176,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateProcessWithBusinessRuleTask() {
-    modelInstance = Bpmn.createProcess().startEvent().businessRuleTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().businessRuleTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -184,7 +184,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateProcessWithScriptTask() {
-    modelInstance = Bpmn.createProcess().startEvent().scriptTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().scriptTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -192,7 +192,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateProcessWithReceiveTask() {
-    modelInstance = Bpmn.createProcess().startEvent().receiveTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().receiveTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -200,7 +200,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateProcessWithManualTask() {
-    modelInstance = Bpmn.createProcess().startEvent().manualTask().endEvent().done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().manualTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(eventType)).hasSize(2);
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(1);
@@ -209,7 +209,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCreateProcessWithParallelGateway() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .parallelGateway()
             .scriptTask()
@@ -227,7 +227,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCreateProcessWithExclusiveGateway() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask()
             .exclusiveGateway()
@@ -248,7 +248,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCreateProcessWithInclusiveGateway() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask()
             .inclusiveGateway()
@@ -272,7 +272,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCreateProcessWithForkAndJoin() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask()
             .parallelGateway()
@@ -294,7 +294,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCreateProcessWithMultipleParallelTask() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .parallelGateway("fork")
             .userTask()
@@ -319,7 +319,7 @@ public class ProcessBuilderTest {
   @Test
   public void testExtend() {
     modelInstance =
-        Bpmn.createProcess().startEvent().userTask().id("task1").serviceTask().endEvent().done();
+        BpmnModelApi.createProcess().startEvent().userTask().id("task1").serviceTask().endEvent().done();
 
     assertThat(modelInstance.getModelElementsByType(taskType)).hasSize(2);
 
@@ -335,7 +335,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCreateInvoiceProcess() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .executable()
             .startEvent()
             .name("Invoice received")
@@ -372,7 +372,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorDefinitionsForStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent("start")
             .errorEventDefinition("event")
             .error("errorCode")
@@ -387,7 +387,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorDefinitionsForStartEventWithoutEventDefinitionId() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent("start")
             .errorEventDefinition()
             .error("errorCode")
@@ -402,7 +402,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSubProcessBuilder() {
     final BpmnModelInstance modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .subProcess(SUB_PROCESS_ID)
             .embeddedSubProcess()
@@ -425,7 +425,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSubProcessBuilderDetached() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .subProcess(SUB_PROCESS_ID)
             .serviceTask(SERVICE_TASK_ID)
@@ -446,7 +446,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSubProcessBuilderNested() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .subProcess(SUB_PROCESS_ID + 1)
             .embeddedSubProcess()
@@ -484,7 +484,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSubProcessBuilderWrongScope() {
     try {
-      modelInstance = Bpmn.createProcess().startEvent().subProcessDone().endEvent().done();
+      modelInstance = BpmnModelApi.createProcess().startEvent().subProcessDone().endEvent().done();
       fail("Exception expected");
     } catch (final Exception e) {
       assertThat(e).isInstanceOf(BpmnModelException.class);
@@ -494,7 +494,7 @@ public class ProcessBuilderTest {
   @Test
   public void testTransactionBuilder() {
     final BpmnModelInstance modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .transaction(TRANSACTION_ID)
             .method(TransactionMethod.Image)
@@ -519,7 +519,7 @@ public class ProcessBuilderTest {
   @Test
   public void testTransactionBuilderDetached() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .transaction(TRANSACTION_ID)
             .serviceTask(SERVICE_TASK_ID)
@@ -540,7 +540,7 @@ public class ProcessBuilderTest {
   @Test
   public void testScriptText() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .scriptTask("script")
             .scriptFormat("groovy")
@@ -555,7 +555,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testMessageStartEvent() {
-    modelInstance = Bpmn.createProcess().startEvent("start").message("message").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent("start").message("message").done();
 
     assertMessageEventDefinition("start", "message");
   }
@@ -563,7 +563,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMessageStartEventWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent("start")
             .message("message")
             .subProcess()
@@ -585,7 +585,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageCatchEvent() {
     modelInstance =
-        Bpmn.createProcess().startEvent().intermediateCatchEvent("catch").message("message").done();
+        BpmnModelApi.createProcess().startEvent().intermediateCatchEvent("catch").message("message").done();
 
     assertMessageEventDefinition("catch", "message");
   }
@@ -593,7 +593,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageCatchEventWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent("catch1")
             .message("message")
@@ -611,7 +611,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testMessageEndEvent() {
-    modelInstance = Bpmn.createProcess().startEvent().endEvent("end").message("message").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().endEvent("end").message("message").done();
 
     assertMessageEventDefinition("end", "message");
   }
@@ -619,7 +619,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMessageEventDefintionEndEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent("end")
             .messageEventDefinition()
@@ -632,7 +632,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMessageEndEventWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .parallelGateway()
             .endEvent("end1")
@@ -653,7 +653,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMessageEventDefinitionEndEventWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .parallelGateway()
             .endEvent("end1")
@@ -677,7 +677,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageThrowEvent() {
     modelInstance =
-        Bpmn.createProcess().startEvent().intermediateThrowEvent("throw").message("message").done();
+        BpmnModelApi.createProcess().startEvent().intermediateThrowEvent("throw").message("message").done();
 
     assertMessageEventDefinition("throw", "message");
   }
@@ -685,7 +685,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageEventDefintionThrowEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw")
             .messageEventDefinition()
@@ -698,7 +698,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageThrowEventWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw1")
             .message("message")
@@ -716,7 +716,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageEventDefintionThrowEventWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw1")
             .messageEventDefinition()
@@ -738,7 +738,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateMessageThrowEventWithMessageDefinition() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw1")
             .messageEventDefinition()
@@ -754,7 +754,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMessageEventDefinitionWithID() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw1")
             .messageEventDefinition("messageEventDefinition")
@@ -764,7 +764,7 @@ public class ProcessBuilderTest {
     assertThat(event).isNotNull();
 
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw2")
             .messageEventDefinition()
@@ -777,7 +777,7 @@ public class ProcessBuilderTest {
     event = modelInstance.getModelElementById("messageEventDefinition1");
     assertThat(event).isNotNull();
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent("end1")
             .messageEventDefinition("messageEventDefinition")
@@ -787,7 +787,7 @@ public class ProcessBuilderTest {
     assertThat(event).isNotNull();
 
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent("end2")
             .messageEventDefinition()
@@ -801,7 +801,7 @@ public class ProcessBuilderTest {
   @Test
   public void testReceiveTaskMessage() {
     modelInstance =
-        Bpmn.createProcess().startEvent().receiveTask("receive").message("message").done();
+        BpmnModelApi.createProcess().startEvent().receiveTask("receive").message("message").done();
 
     final ReceiveTask receiveTask = modelInstance.getModelElementById("receive");
 
@@ -813,7 +813,7 @@ public class ProcessBuilderTest {
   @Test
   public void testReceiveTaskWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .receiveTask("receive1")
             .message("message")
@@ -834,7 +834,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testSendTaskMessage() {
-    modelInstance = Bpmn.createProcess().startEvent().sendTask("send").message("message").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().sendTask("send").message("message").done();
 
     final SendTask sendTask = modelInstance.getModelElementById("send");
 
@@ -846,7 +846,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSendTaskWithExistingMessage() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .sendTask("send1")
             .message("message")
@@ -867,7 +867,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testSignalStartEvent() {
-    modelInstance = Bpmn.createProcess().startEvent("start").signal("signal").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent("start").signal("signal").done();
 
     assertSignalEventDefinition("start", "signal");
   }
@@ -875,7 +875,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSignalStartEventWithExistingSignal() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent("start")
             .signal("signal")
             .subProcess()
@@ -897,7 +897,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateSignalCatchEvent() {
     modelInstance =
-        Bpmn.createProcess().startEvent().intermediateCatchEvent("catch").signal("signal").done();
+        BpmnModelApi.createProcess().startEvent().intermediateCatchEvent("catch").signal("signal").done();
 
     assertSignalEventDefinition("catch", "signal");
   }
@@ -905,7 +905,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateSignalCatchEventWithExistingSignal() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent("catch1")
             .signal("signal")
@@ -923,7 +923,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testSignalEndEvent() {
-    modelInstance = Bpmn.createProcess().startEvent().endEvent("end").signal("signal").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().endEvent("end").signal("signal").done();
 
     assertSignalEventDefinition("end", "signal");
   }
@@ -931,7 +931,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSignalEndEventWithExistingSignal() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .parallelGateway()
             .endEvent("end1")
@@ -952,7 +952,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateSignalThrowEvent() {
     modelInstance =
-        Bpmn.createProcess().startEvent().intermediateThrowEvent("throw").signal("signal").done();
+        BpmnModelApi.createProcess().startEvent().intermediateThrowEvent("throw").signal("signal").done();
 
     assertSignalEventDefinition("throw", "signal");
   }
@@ -960,7 +960,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateSignalThrowEventWithExistingSignal() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw1")
             .signal("signal")
@@ -979,7 +979,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMessageBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1009,7 +1009,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMultipleBoundaryEvents() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1050,7 +1050,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMultiInstanceLoopCharacteristicsSequential() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .multiInstance()
@@ -1076,7 +1076,7 @@ public class ProcessBuilderTest {
   @Test
   public void testMultiInstanceLoopCharacteristicsParallel() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .multiInstance()
@@ -1097,7 +1097,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testTimerStartEventWithDate() {
-    modelInstance = Bpmn.createProcess().startEvent("start").timerWithDate(TIMER_DATE).done();
+    modelInstance = BpmnModelApi.createProcess().startEvent("start").timerWithDate(TIMER_DATE).done();
 
     assertTimerWithDate("start", TIMER_DATE);
   }
@@ -1105,14 +1105,14 @@ public class ProcessBuilderTest {
   @Test
   public void testTimerStartEventWithDuration() {
     modelInstance =
-        Bpmn.createProcess().startEvent("start").timerWithDuration(TIMER_DURATION).done();
+        BpmnModelApi.createProcess().startEvent("start").timerWithDuration(TIMER_DURATION).done();
 
     assertTimerWithDuration("start", TIMER_DURATION);
   }
 
   @Test
   public void testTimerStartEventWithCycle() {
-    modelInstance = Bpmn.createProcess().startEvent("start").timerWithCycle(TIMER_CYCLE).done();
+    modelInstance = BpmnModelApi.createProcess().startEvent("start").timerWithCycle(TIMER_CYCLE).done();
 
     assertTimerWithCycle("start", TIMER_CYCLE);
   }
@@ -1120,7 +1120,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateTimerCatchEventWithDate() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent("catch")
             .timerWithDate(TIMER_DATE)
@@ -1132,7 +1132,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateTimerCatchEventWithDuration() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent("catch")
             .timerWithDuration(TIMER_DURATION)
@@ -1144,7 +1144,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateTimerCatchEventWithCycle() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent("catch")
             .timerWithCycle(TIMER_CYCLE)
@@ -1156,7 +1156,7 @@ public class ProcessBuilderTest {
   @Test
   public void testTimerBoundaryEventWithDate() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1171,7 +1171,7 @@ public class ProcessBuilderTest {
   @Test
   public void testTimerBoundaryEventWithDuration() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1186,7 +1186,7 @@ public class ProcessBuilderTest {
   @Test
   public void testTimerBoundaryEventWithCycle() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1201,7 +1201,7 @@ public class ProcessBuilderTest {
   @Test
   public void testNotCancelingBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask()
             .boundaryEvent("boundary")
@@ -1215,7 +1215,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCatchAllErrorBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1233,7 +1233,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensationTask() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .boundaryEvent("boundary")
@@ -1267,7 +1267,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensationTaskWithNewAPI() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .boundaryEvent("boundary")
@@ -1298,7 +1298,7 @@ public class ProcessBuilderTest {
   public void testOnlyOneCompensateBoundaryEventAllowed() {
     // given
     final UserTaskBuilder builder =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .boundaryEvent("boundary")
@@ -1320,7 +1320,7 @@ public class ProcessBuilderTest {
   @Test
   public void testInvalidCompensationStartCall() {
     // given
-    final StartEventBuilder builder = Bpmn.createProcess().startEvent();
+    final StartEventBuilder builder = BpmnModelApi.createProcess().startEvent();
 
     // then
     thrown.expect(BpmnModelException.class);
@@ -1335,7 +1335,7 @@ public class ProcessBuilderTest {
   public void testInvalidCompensationDoneCall() {
     // given
     final AbstractFlowNodeBuilder builder =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .boundaryEvent("boundary")
@@ -1353,7 +1353,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1383,7 +1383,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorDefinitionForBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1402,7 +1402,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorDefinitionForBoundaryEventWithoutEventDefinitionId() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1420,7 +1420,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testErrorEndEvent() {
-    modelInstance = Bpmn.createProcess().startEvent().endEvent("end").error("myErrorCode").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().endEvent("end").error("myErrorCode").done();
 
     assertErrorEventDefinition("end", "myErrorCode");
   }
@@ -1428,7 +1428,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorEndEventWithExistingError() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent("end")
@@ -1450,7 +1450,7 @@ public class ProcessBuilderTest {
   @Test
   public void testErrorStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1467,7 +1467,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCatchAllErrorStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1486,7 +1486,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCatchAllEscalationBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent()
@@ -1504,7 +1504,7 @@ public class ProcessBuilderTest {
   @Test
   public void testEscalationBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .subProcess("subProcess")
             .endEvent()
@@ -1534,7 +1534,7 @@ public class ProcessBuilderTest {
   @Test
   public void testEscalationEndEvent() {
     modelInstance =
-        Bpmn.createProcess().startEvent().endEvent("end").escalation("myEscalationCode").done();
+        BpmnModelApi.createProcess().startEvent().endEvent("end").escalation("myEscalationCode").done();
 
     assertEscalationEventDefinition("end", "myEscalationCode");
   }
@@ -1542,7 +1542,7 @@ public class ProcessBuilderTest {
   @Test
   public void testEscalationStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1559,7 +1559,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCatchAllEscalationStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1578,7 +1578,7 @@ public class ProcessBuilderTest {
   @Test
   public void testIntermediateEscalationThrowEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateThrowEvent("throw")
             .escalation("myEscalationCode")
@@ -1591,7 +1591,7 @@ public class ProcessBuilderTest {
   @Test
   public void testEscalationEndEventWithExistingEscalation() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("task")
             .endEvent("end")
@@ -1614,7 +1614,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensationStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1631,7 +1631,7 @@ public class ProcessBuilderTest {
   @Test
   public void testInterruptingStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1651,7 +1651,7 @@ public class ProcessBuilderTest {
   @Test
   public void testNonInterruptingStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .endEvent()
             .subProcess()
@@ -1671,7 +1671,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionCatchStartEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent("start")
             .compensateEventDefinition()
             .waitForCompletion(false)
@@ -1690,7 +1690,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionCatchBoundaryEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("userTask")
             .boundaryEvent("catch")
@@ -1710,7 +1710,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionCatchBoundaryEventWithId() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("userTask")
             .boundaryEvent("catch")
@@ -1728,7 +1728,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionThrowEndEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("userTask")
             .endEvent("end")
@@ -1748,7 +1748,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionThrowIntermediateEvent() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("userTask")
             .intermediateThrowEvent("throw")
@@ -1769,7 +1769,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionThrowIntermediateEventWithId() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("userTask")
             .intermediateCatchEvent("throw")
@@ -1787,7 +1787,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCompensateEventDefintionReferencesNonExistingActivity() {
-    modelInstance = Bpmn.createProcess().startEvent().userTask("userTask").endEvent("end").done();
+    modelInstance = BpmnModelApi.createProcess().startEvent().userTask("userTask").endEvent("end").done();
 
     final UserTask userTask = modelInstance.getModelElementById("userTask");
     final UserTaskBuilder userTaskBuilder = userTask.builder();
@@ -1807,7 +1807,7 @@ public class ProcessBuilderTest {
   @Test
   public void testCompensateEventDefintionReferencesActivityInDifferentScope() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask("userTask")
             .subProcess()
@@ -1830,7 +1830,7 @@ public class ProcessBuilderTest {
   public void testIntermediateConditionalEventDefinition() {
 
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent(CATCH_ID)
             .conditionalEventDefinition(CONDITION_ID)
@@ -1849,7 +1849,7 @@ public class ProcessBuilderTest {
   public void testIntermediateConditionalEventDefinitionShortCut() {
 
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .intermediateCatchEvent(CATCH_ID)
             .condition(TEST_CONDITION)
@@ -1865,7 +1865,7 @@ public class ProcessBuilderTest {
   public void testBoundaryConditionalEventDefinition() {
 
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask(USER_TASK_ID)
             .endEvent()
@@ -1887,7 +1887,7 @@ public class ProcessBuilderTest {
   public void testEventSubProcessConditionalStartEvent() {
 
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .userTask()
             .endEvent()
@@ -1910,26 +1910,26 @@ public class ProcessBuilderTest {
   @Test
   public void testMoveToDoesNotReturnRawBuilders() {
     // just checks that it compiles
-    Bpmn.createProcess()
+    BpmnModelApi.createProcess()
         .startEvent("goto")
         .moveToNode("goto")
         .serviceTask("task", b -> b.name("name"));
 
-    Bpmn.createProcess()
+    BpmnModelApi.createProcess()
         .startEvent()
         .exclusiveGateway()
         .userTask()
         .moveToLastExclusiveGateway()
         .serviceTask("task", b -> b.name("name"));
 
-    Bpmn.createProcess()
+    BpmnModelApi.createProcess()
         .startEvent()
         .parallelGateway()
         .userTask()
         .moveToLastGateway()
         .serviceTask("task", b -> b.name("name"));
 
-    Bpmn.createProcess()
+    BpmnModelApi.createProcess()
         .startEvent()
         .serviceTask("goto")
         .userTask()
@@ -1940,7 +1940,7 @@ public class ProcessBuilderTest {
   /** or else generic types in parameters are not available and things won't compile */
   @Test
   public void testConnectToDoesNotReturnRawBuilder() {
-    Bpmn.createProcess()
+    BpmnModelApi.createProcess()
         .startEvent()
         .serviceTask("goto")
         .connectTo("goto")
@@ -2059,7 +2059,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateEventSubProcess() {
-    final ProcessBuilder process = Bpmn.createProcess();
+    final ProcessBuilder process = BpmnModelApi.createProcess();
     modelInstance = process.startEvent().sendTask().endEvent().done();
 
     final EventSubProcessBuilder eventSubProcess = process.eventSubProcess();
@@ -2082,7 +2082,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateEventSubProcessInSubProcess() {
-    final ProcessBuilder process = Bpmn.createProcess();
+    final ProcessBuilder process = BpmnModelApi.createProcess();
     modelInstance =
         process
             .startEvent()
@@ -2123,7 +2123,7 @@ public class ProcessBuilderTest {
 
   @Test
   public void testCreateEventSubProcessError() {
-    final ProcessBuilder process = Bpmn.createProcess();
+    final ProcessBuilder process = BpmnModelApi.createProcess();
     modelInstance = process.startEvent().sendTask().endEvent().done();
 
     final EventSubProcessBuilder eventSubProcess = process.eventSubProcess();
@@ -2140,7 +2140,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSetIdAsDefaultNameForFlowElements() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .userTask("user")
             .endEvent("end")

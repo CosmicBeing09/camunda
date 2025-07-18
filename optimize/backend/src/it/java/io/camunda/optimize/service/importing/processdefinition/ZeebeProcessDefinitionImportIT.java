@@ -40,7 +40,7 @@ import io.camunda.optimize.dto.optimize.FlowNodeDataDto;
 import io.camunda.optimize.dto.optimize.ProcessDefinitionOptimizeDto;
 import io.camunda.optimize.service.exceptions.OptimizeRuntimeException;
 import io.camunda.optimize.util.ZeebeBpmnModels;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.IOException;
 import java.time.Instant;
@@ -80,7 +80,7 @@ public class ZeebeProcessDefinitionImportIT extends AbstractCCSMIT {
               }
               assertThat(importedDef.getType()).isEqualTo(DefinitionType.PROCESS);
 
-              assertThat(importedDef.getBpmn20Xml()).isEqualTo(Bpmn.convertToString(simpleProcess));
+              assertThat(importedDef.getBpmn20Xml()).isEqualTo(BpmnModelApi.convertToString(simpleProcess));
               assertThat(importedDef.getName()).isEqualTo(processName);
               assertThat(importedDef.getDataSource().getType())
                   .isEqualTo(DataImportSourceType.ZEEBE);
@@ -101,7 +101,7 @@ public class ZeebeProcessDefinitionImportIT extends AbstractCCSMIT {
   public void importZeebeProcess_unnamedProcessUsesProcessIdAsName() {
     // given
     final BpmnModelInstance noNameStartEventProcess =
-        Bpmn.createExecutableProcess().startEvent(START_EVENT).name(START_EVENT).done();
+        BpmnModelApi.createExecutableProcess().startEvent(START_EVENT).name(START_EVENT).done();
     final Process deployedProcess = deployProcessAndStartInstance(noNameStartEventProcess);
     waitUntilNumberOfDefinitionsExported(1);
 
@@ -121,7 +121,7 @@ public class ZeebeProcessDefinitionImportIT extends AbstractCCSMIT {
               assertThat(importedDef.getVersionTag()).isNull();
               assertThat(importedDef.getType()).isEqualTo(DefinitionType.PROCESS);
               assertThat(importedDef.getBpmn20Xml())
-                  .isEqualTo(Bpmn.convertToString(noNameStartEventProcess));
+                  .isEqualTo(BpmnModelApi.convertToString(noNameStartEventProcess));
               assertThat(importedDef.getName()).isEqualTo(deployedProcess.getBpmnProcessId());
               assertThat(importedDef.getDataSource().getType())
                   .isEqualTo(DataImportSourceType.ZEEBE);

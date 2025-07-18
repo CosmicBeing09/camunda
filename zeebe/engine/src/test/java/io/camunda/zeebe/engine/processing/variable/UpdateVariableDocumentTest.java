@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -115,7 +115,7 @@ public final class UpdateVariableDocumentTest {
 
   private BpmnModelInstance newProcess(
       final String processId, final String taskId, final String type) {
-    return Bpmn.createExecutableProcess(processId)
+    return BpmnModelApi.createExecutableProcess(processId)
         .startEvent()
         .serviceTask(taskId, b -> b.zeebeJobType(type))
         .endEvent()

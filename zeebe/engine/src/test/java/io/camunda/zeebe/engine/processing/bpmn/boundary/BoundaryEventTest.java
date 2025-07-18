@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -46,7 +46,7 @@ public final class BoundaryEventTest {
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final String PROCESS_ID = "process";
   private static final BpmnModelInstance MULTIPLE_SEQUENCE_FLOWS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer")
@@ -59,7 +59,7 @@ public final class BoundaryEventTest {
           .endEvent()
           .done();
   private static final BpmnModelInstance NON_INTERRUPTING_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("event")
@@ -142,7 +142,7 @@ public final class BoundaryEventTest {
   public void shouldApplyOutputMappingOnTriggering() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("event")
@@ -177,7 +177,7 @@ public final class BoundaryEventTest {
   public void shouldUseScopeVariablesWhenApplyingOutputMappings() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type").zeebeInputExpression("oof", "baz"))
             .boundaryEvent("timer")
@@ -219,7 +219,7 @@ public final class BoundaryEventTest {
   public void shouldTerminateSubProcessBeforeTriggeringBoundaryEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("sub")
             .embeddedSubProcess()
@@ -318,7 +318,7 @@ public final class BoundaryEventTest {
     // given
     final String processId = "shouldHaveScopeKeyIfBoundaryEvent";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask("task", c -> c.zeebeJobType("type").zeebeInputExpression("bar", "foo"))
             .boundaryEvent(
@@ -355,7 +355,7 @@ public final class BoundaryEventTest {
     // given
     final String processId = "shouldHaveScopeKeyIfBoundaryEvent";
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask("task", c -> c.zeebeJobType("type"))
             .boundaryEvent(
@@ -402,7 +402,7 @@ public final class BoundaryEventTest {
     final var jobType = "waiting";
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType(jobType))
             .endEvent()

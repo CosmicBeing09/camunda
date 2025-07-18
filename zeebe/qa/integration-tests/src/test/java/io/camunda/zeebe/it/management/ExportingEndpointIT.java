@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.qa.util.actuator.ExportingActuator;
 import io.camunda.zeebe.qa.util.actuator.PartitionsActuator;
@@ -54,7 +54,7 @@ final class ExportingEndpointIT {
       client
           .newDeployResourceCommand()
           .addProcessModel(
-              Bpmn.createExecutableProcess("processId").startEvent().endEvent().done(),
+              BpmnModelApi.createExecutableProcess("processId").startEvent().endEvent().done(),
               "process.bpmn")
           .send()
           .join();

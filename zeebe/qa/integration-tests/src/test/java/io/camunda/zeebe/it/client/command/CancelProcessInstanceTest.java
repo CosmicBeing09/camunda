@@ -15,7 +15,7 @@ import io.camunda.client.api.command.ClientStatusException;
 import io.camunda.client.api.command.ProblemException;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration.TestZeebe;
@@ -46,7 +46,7 @@ public final class CancelProcessInstanceTest {
     resourcesHelper = new ZeebeResourcesHelper(client);
     processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .done());

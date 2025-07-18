@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeAssignmentDefinition;
@@ -39,7 +39,7 @@ class UserTaskBuilderTest {
   @Test
   void testUserTaskAssigneeCanBeSet() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", task -> task.zeebeAssignee("user1"))
             .endEvent()
@@ -57,7 +57,7 @@ class UserTaskBuilderTest {
   @Test
   void testUserTaskCandidateGroupsCanBeSet() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", task -> task.zeebeCandidateGroups("role1"))
             .endEvent()
@@ -75,7 +75,7 @@ class UserTaskBuilderTest {
   @Test
   void testUserTaskCandidateUsersCanBeSet() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", task -> task.zeebeCandidateUsers("user1"))
             .endEvent()
@@ -94,7 +94,7 @@ class UserTaskBuilderTest {
   void shouldSetDueDateOnUserTask() {
     final String dueDate = "2023-02-24T14:29:00Z";
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", task -> task.zeebeDueDate(dueDate))
             .endEvent()
@@ -113,7 +113,7 @@ class UserTaskBuilderTest {
   void shouldSetFollowUpDateOnUserTask() {
     final String followUpDate = "2023-02-24T14:29:00Z";
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", task -> task.zeebeFollowUpDate(followUpDate))
             .endEvent()
@@ -133,7 +133,7 @@ class UserTaskBuilderTest {
     final String dueDate = "2023-02-24T14:29:00Z";
     final String followUpDate = "2023-02-24T14:29:00Z";
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "userTask1",
@@ -165,7 +165,7 @@ class UserTaskBuilderTest {
   @Test
   void testUserTaskFormIdNotNull() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1")
             .zeebeUserTaskForm("{}")
@@ -183,7 +183,7 @@ class UserTaskBuilderTest {
   @Test
   void shouldMarkAsZeebeUserTask() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1")
             .zeebeUserTask()
@@ -199,7 +199,7 @@ class UserTaskBuilderTest {
   @Test
   void shouldMarkAsZeebeUserTaskIfUsedMultipleTimes() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1")
             .zeebeUserTask()
@@ -217,7 +217,7 @@ class UserTaskBuilderTest {
   @Test
   void shouldNotMarkAsZeebeUserTaskByDefault() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1")
             .endEvent()
@@ -234,7 +234,7 @@ class UserTaskBuilderTest {
     final String dueDate = "2023-02-24T14:29:00Z";
     final String followUpDate = "2023-02-24T14:29:00Z";
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "userTask1",
@@ -269,7 +269,7 @@ class UserTaskBuilderTest {
   void shouldSetFormBindingType(final ZeebeBindingType bindingType) {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1")
             .zeebeFormBindingType(bindingType)
@@ -290,7 +290,7 @@ class UserTaskBuilderTest {
   void shouldSetFormVersionTag() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask")
             .zeebeFormVersionTag("v1")
@@ -311,7 +311,7 @@ class UserTaskBuilderTest {
   void shouldSetPriorityOnZeebeUserTask() {
     final String priority = "20";
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", task -> task.zeebeUserTask().zeebeTaskPriority(priority))
             .endEvent()
@@ -329,7 +329,7 @@ class UserTaskBuilderTest {
   @Test
   void shouldSetDefaultPriorityOnZeebeUserTask() {
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("userTask1", AbstractUserTaskBuilder::zeebeUserTask)
             .endEvent()

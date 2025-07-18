@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.variable.mapping.VariableValue.
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.EndEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.ZeebeVariablesMappingBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -172,7 +172,7 @@ public final class NoneEndEventOutputMappingTest {
     ENGINE_RULE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .endEvent(
                     "end",

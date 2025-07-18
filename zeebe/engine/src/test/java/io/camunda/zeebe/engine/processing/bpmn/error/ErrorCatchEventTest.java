@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -60,7 +60,7 @@ public final class ErrorCatchEventTest {
     return new Object[][] {
       {
         "boundary event on service task",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(TASK_ELEMENT_ID, t -> t.zeebeJobType(JOB_TYPE))
             .boundaryEvent("error-boundary-event", b -> b.error(ERROR_CODE))
@@ -70,7 +70,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "boundary event on subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -86,7 +86,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "boundary event on multi-instance subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -103,7 +103,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "boundary event on multi-instance service task",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 TASK_ELEMENT_ID,
@@ -117,7 +117,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "error event subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "error-event-subprocess",
                 s ->
@@ -133,7 +133,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "favor boundary event on task over boundary event on subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -150,7 +150,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "favor boundary event on task over error event subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "error-event-subprocess",
                 s -> s.startEvent().error(ERROR_CODE).interrupting(true).endEvent())
@@ -164,7 +164,7 @@ public final class ErrorCatchEventTest {
       },
       {
         "favor error event subprocess over boundary event on subprocess",
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "sub",

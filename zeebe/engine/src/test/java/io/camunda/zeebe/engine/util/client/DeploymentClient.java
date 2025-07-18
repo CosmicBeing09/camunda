@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.util.client;
 import static io.camunda.zeebe.util.buffer.BufferUtil.wrapArray;
 import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
@@ -130,7 +130,7 @@ public final class DeploymentClient {
         .resources()
         .add()
         .setResourceName(wrapString(resourceName))
-        .setResource(wrapString(Bpmn.convertToString(modelInstance)));
+        .setResource(wrapString(BpmnModelApi.convertToString(modelInstance)));
     return this;
   }
 

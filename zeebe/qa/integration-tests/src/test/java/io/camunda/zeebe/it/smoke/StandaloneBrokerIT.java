@@ -13,7 +13,7 @@ import static org.awaitility.Awaitility.await;
 
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.ProcessInstanceResult;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.cluster.TestZeebePort;
@@ -46,7 +46,7 @@ final class StandaloneBrokerIT {
   void smokeTest() {
     // given
     final var processId = Strings.newRandomValidBpmnId();
-    final var process = Bpmn.createExecutableProcess(processId).startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done();
     final var partitionActuatorSpec =
         new RequestSpecBuilder()
             .setPort(broker.mappedPort(TestZeebePort.MONITORING))

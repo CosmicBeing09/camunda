@@ -19,7 +19,7 @@ import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.ex
 import static java.util.Collections.EMPTY_LIST;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.impl.ZeebeConstants;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeBindingType;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeFormDefinition;
@@ -36,7 +36,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
       //////////////////////////////// Job-based user tasks ///////////////////////////////////////
       /////////////////////////////////////////////////////////////////////////////////////////////
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey("")
@@ -48,7 +48,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("")
@@ -60,7 +60,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeExternalFormReference("")
@@ -72,7 +72,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("")
@@ -85,7 +85,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("")
@@ -98,23 +98,9 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
-            .zeebeFormKey("")
-            .zeebeExternalFormReference("")
-            .endEvent()
-            .done(),
-        singletonList(
-            expect(
-                ZeebeFormDefinition.class,
-                "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
-      },
-      {
-        Bpmn.createExecutableProcess("process")
-            .startEvent()
-            .userTask("task")
-            .zeebeFormId("")
             .zeebeFormKey("")
             .zeebeExternalFormReference("")
             .endEvent()
@@ -125,7 +111,21 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
+            .startEvent()
+            .userTask("task")
+            .zeebeFormId("")
+            .zeebeFormKey("")
+            .zeebeExternalFormReference("")
+            .endEvent()
+            .done(),
+        singletonList(
+            expect(
+                ZeebeFormDefinition.class,
+                "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
+      },
+      {
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("form-id")
@@ -138,7 +138,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("form-id")
@@ -148,7 +148,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey("form-key")
@@ -158,7 +158,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("form-id")
@@ -172,7 +172,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId(" ")
@@ -182,7 +182,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("form-id")
@@ -192,7 +192,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId(" ")
@@ -205,7 +205,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("form-id")
@@ -215,7 +215,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey(" ")
@@ -228,7 +228,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey("form-key")
@@ -238,7 +238,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId(" ")
@@ -250,7 +250,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey(" ")
@@ -262,7 +262,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeExternalFormReference(" ")
@@ -274,7 +274,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("  ")
@@ -286,7 +286,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey("  ")
@@ -298,7 +298,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeExternalFormReference("  ")
@@ -310,7 +310,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTaskForm("")
@@ -322,7 +322,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "User task form text content has to be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormId("form-id")
@@ -331,7 +331,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeFormKey("form-key")
@@ -340,7 +340,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeExternalFormReference("reference")
@@ -352,7 +352,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -369,7 +369,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'bindingType' must be one of: deployment, latest, versionTag"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -383,7 +383,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -399,7 +399,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -415,7 +415,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -431,7 +431,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' may only be used if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -450,7 +450,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
       ////////////////////////////////// Native user tasks ////////////////////////////////////////
       /////////////////////////////////////////////////////////////////////////////////////////////
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -463,7 +463,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -476,7 +476,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -489,7 +489,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -503,7 +503,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -517,25 +517,10 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
-            .zeebeFormKey("")
-            .zeebeExternalFormReference("")
-            .endEvent()
-            .done(),
-        singletonList(
-            expect(
-                ZeebeFormDefinition.class,
-                "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
-      },
-      {
-        Bpmn.createExecutableProcess("process")
-            .startEvent()
-            .userTask("task")
-            .zeebeUserTask()
-            .zeebeFormId("")
             .zeebeFormKey("")
             .zeebeExternalFormReference("")
             .endEvent()
@@ -546,7 +531,22 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
+            .startEvent()
+            .userTask("task")
+            .zeebeUserTask()
+            .zeebeFormId("")
+            .zeebeFormKey("")
+            .zeebeExternalFormReference("")
+            .endEvent()
+            .done(),
+        singletonList(
+            expect(
+                ZeebeFormDefinition.class,
+                "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
+      },
+      {
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -557,7 +557,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -571,7 +571,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -582,7 +582,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -597,7 +597,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -610,7 +610,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -623,7 +623,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -636,7 +636,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -649,7 +649,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -662,7 +662,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -675,7 +675,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -691,7 +691,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -701,7 +701,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -714,7 +714,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, externalReference' must be present and not blank for native user tasks"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeUserTask()
@@ -724,7 +724,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -742,7 +742,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'bindingType' must be one of: deployment, latest, versionTag"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -758,7 +758,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -775,7 +775,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -792,7 +792,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' must be present and not empty if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",
@@ -809,7 +809,7 @@ public class ZeebeTaskValidatorFormTest extends AbstractZeebeValidationTest {
                 "Attribute 'versionTag' may only be used if 'bindingType' is 'versionTag'"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "task",

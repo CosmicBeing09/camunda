@@ -13,7 +13,7 @@ import io.camunda.client.api.response.ActivateJobsResponse;
 import io.camunda.client.impl.CamundaObjectMapper;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -53,7 +53,7 @@ public final class MultiInstanceLargeInputCollectionTest {
     // given
     final long processKey =
         CLIENT_RULE.deployProcess(
-            Bpmn.createExecutableProcess("PROCESS")
+            BpmnModelApi.createExecutableProcess("PROCESS")
                 .startEvent()
                 .serviceTask(
                     "task",

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
@@ -60,7 +60,7 @@ public class MessageMultiTenancyTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .message(messageName)
                 .endEvent()
@@ -88,7 +88,7 @@ public class MessageMultiTenancyTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateCatchEvent(
                     "catch",
@@ -135,7 +135,7 @@ public class MessageMultiTenancyTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .message(messageName)
                 .endEvent()
@@ -165,7 +165,7 @@ public class MessageMultiTenancyTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateCatchEvent(
                     "catch",
@@ -214,7 +214,7 @@ public class MessageMultiTenancyTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateCatchEvent(
                     "catch",
@@ -226,7 +226,7 @@ public class MessageMultiTenancyTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .intermediateCatchEvent(
                     "catch",

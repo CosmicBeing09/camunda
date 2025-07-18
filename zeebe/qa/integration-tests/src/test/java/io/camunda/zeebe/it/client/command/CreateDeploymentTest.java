@@ -16,7 +16,7 @@ import io.camunda.client.api.command.DeployResourceCommandStep1;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.api.response.Process;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.record.Record;
@@ -60,7 +60,7 @@ public final class CreateDeploymentTest {
     final String resourceName = processId + ".bpmn";
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("test"))
             .endEvent()
@@ -125,7 +125,7 @@ public final class CreateDeploymentTest {
   public void shouldRejectDeployIfProcessIsInvalid(final boolean useRest) {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process").startEvent().serviceTask("task").done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().serviceTask("task").done();
 
     // when
     final var command = getCommand(client, useRest).addProcessModel(process, "process.bpmn").send();
@@ -141,7 +141,7 @@ public final class CreateDeploymentTest {
   public void shouldRejectDeployIfResourceIsTooLarge(final boolean useRest) {
     // when
     final var modelThatFitsJustWithinMaxMessageSize =
-        Bpmn.createExecutableProcess("PROCESS")
+        BpmnModelApi.createExecutableProcess("PROCESS")
             .startEvent()
             .documentation("x".repeat(1046700))
             .done();
@@ -161,7 +161,7 @@ public final class CreateDeploymentTest {
   public void shouldNotWriteResourcesInformationInRejectedRecords() {
     // when
     final var modelThatFitsJustWithinMaxMessageSize =
-        Bpmn.createExecutableProcess("PROCESS")
+        BpmnModelApi.createExecutableProcess("PROCESS")
             .startEvent()
             .documentation("x".repeat((1046900)))
             .done();

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.client.api.response.ProcessInstanceResult;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.qa.util.testcontainers.ZeebeTestContainerDefaults;
 import io.zeebe.containers.cluster.ZeebeCluster;
@@ -57,7 +57,7 @@ final class ContainerClusterSmokeIT {
   void deployModelAndStartInstance() {
     // given
     final BpmnModelInstance processModel =
-        Bpmn.createExecutableProcess("smoke").startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess("smoke").startEvent().endEvent().done();
     try (final var client = createCamundaClient()) {
       // when
       final DeploymentEvent deploymentEvent =

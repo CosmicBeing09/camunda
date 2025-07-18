@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
@@ -175,7 +175,7 @@ public class JobBatchActivateAuthorizationTest {
           .deployment()
           .withXmlResource(
               "%s.bpmn".formatted(processId),
-              Bpmn.createExecutableProcess(processId)
+              BpmnModelApi.createExecutableProcess(processId)
                   .startEvent()
                   .serviceTask("serviceTask", t -> t.zeebeJobType(JOB_TYPE))
                   .endEvent()

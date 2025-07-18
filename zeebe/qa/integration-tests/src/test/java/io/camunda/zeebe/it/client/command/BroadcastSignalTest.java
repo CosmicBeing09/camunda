@@ -16,7 +16,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1;
 import io.camunda.client.api.response.BroadcastSignalResponse;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -170,6 +170,6 @@ public class BroadcastSignalTest {
 
   private void deployProcess(final String signalName) {
     resourcesHelper.deployProcess(
-        Bpmn.createExecutableProcess().startEvent("start").signal(signalName).endEvent().done());
+        BpmnModelApi.createExecutableProcess().startEvent("start").signal(signalName).endEvent().done());
   }
 }

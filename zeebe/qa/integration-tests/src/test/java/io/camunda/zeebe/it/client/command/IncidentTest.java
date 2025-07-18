@@ -13,7 +13,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.ResolveIncidentCommandStep1;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.value.IncidentRecordValue;
@@ -116,7 +116,7 @@ public final class IncidentTest {
   private long createProcessInstance() {
     final long processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .exclusiveGateway()
                 .sequenceFlowId("to-a")

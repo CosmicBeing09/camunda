@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
@@ -62,14 +62,14 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .serviceTask("B_v1", s -> s.zeebeJobType("B"))
                     .endEvent("end_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .serviceTask("B_v2", s -> s.zeebeJobType("B"))
@@ -153,14 +153,14 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .serviceTask("B_v1", s -> s.zeebeJobType("B"))
                     .endEvent("end_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .serviceTask("B_v2", s -> s.zeebeJobType("B"))
@@ -221,7 +221,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("timer", b -> b.timerWithDuration("PT1H"))
@@ -231,7 +231,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent("end_2_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("timer", b -> b.timerWithDuration("PT1H"))
@@ -319,7 +319,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("timer", b -> b.timerWithDuration("PT1H"))
@@ -329,7 +329,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent("end_2_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("timer", b -> b.timerWithDuration("PT1H"))
@@ -405,7 +405,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -417,7 +417,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent("end_2_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -513,7 +513,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -525,7 +525,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent("end_2_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -609,7 +609,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -621,7 +621,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent("end_2_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -723,7 +723,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("timer", b -> b.timerWithDuration("PT1H"))
@@ -734,7 +734,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent("end_2_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("timer", b -> b.timerWithDuration("PT1H"))
@@ -829,14 +829,14 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .serviceTask("B_v1", s -> s.zeebeJobType("B"))
                     .endEvent("end_v1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .serviceTask("B_v2", s -> s.zeebeJobType("B"))
@@ -921,7 +921,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .eventBasedGateway("A")
                     .intermediateCatchEvent(
@@ -935,7 +935,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .eventBasedGateway("A")
                     .intermediateCatchEvent(
@@ -1058,7 +1058,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .parallelGateway("fork")
                     .serviceTask("task1", b -> b.zeebeJobType("type1"))
@@ -1071,7 +1071,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .parallelGateway("fork")
                     .serviceTask("task1", b -> b.zeebeJobType("type1"))
@@ -1168,7 +1168,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -1183,7 +1183,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -1281,7 +1281,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .userTask("wait", u -> u.zeebeUserTask())
                     .sequenceFlowId("toA")
@@ -1295,7 +1295,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("wait", u -> u.zeebeUserTask())
                     .sequenceFlowId("toA")

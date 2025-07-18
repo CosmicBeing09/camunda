@@ -55,7 +55,7 @@ import io.camunda.zeebe.engine.processing.user.UserUpdateProcessor;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.TestInterPartitionCommandSender.CommandInterceptor;
 import io.camunda.zeebe.engine.util.client.BatchOperationClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.Record;
@@ -823,7 +823,7 @@ public class CommandDistributionIdempotencyTest {
     return ENGINE
         .deployment()
         .withXmlResource(
-            "process.bpmn", Bpmn.createExecutableProcess().startEvent().endEvent().done())
+            "process.bpmn", BpmnModelApi.createExecutableProcess().startEvent().endEvent().done())
         .expectCreated()
         .deploy();
   }
@@ -839,7 +839,7 @@ public class CommandDistributionIdempotencyTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -849,7 +849,7 @@ public class CommandDistributionIdempotencyTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary2")

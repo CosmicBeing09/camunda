@@ -29,7 +29,7 @@ public class GenerateIdTest {
   @Test
   public void shouldNotGenerateIdsOnRead() {
     final BpmnModelInstance modelInstance =
-        Bpmn.readModelFromStream(GenerateIdTest.class.getResourceAsStream("GenerateIdTest.bpmn"));
+        BpmnModelApi.readModelFromStream(GenerateIdTest.class.getResourceAsStream("GenerateIdTest.bpmn"));
     final Definitions definitions = modelInstance.getDefinitions();
     assertThat(definitions.getId()).isNull();
 
@@ -47,7 +47,7 @@ public class GenerateIdTest {
 
   @Test
   public void shouldGenerateIdsOnCreate() {
-    final BpmnModelInstance modelInstance = Bpmn.createEmptyModel();
+    final BpmnModelInstance modelInstance = BpmnModelApi.createEmptyModel();
     final Definitions definitions = modelInstance.newInstance(Definitions.class);
     assertThat(definitions.getId()).isNotNull();
 

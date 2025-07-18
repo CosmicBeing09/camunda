@@ -32,12 +32,12 @@ public class BpmnTest {
 
   @Test
   public void testBpmn() {
-    assertThat(Bpmn.INSTANCE).isNotNull();
+    assertThat(BpmnModelApi.INSTANCE).isNotNull();
   }
 
   @Test
   public void testBpmnWithDefinitions() {
-    final BpmnModelInstance model = Bpmn.createProcess().startEvent().done();
+    final BpmnModelInstance model = BpmnModelApi.createProcess().startEvent().done();
     final Definitions definitions = model.getDefinitions();
     assertThat(definitions.getExporter()).isEqualTo(BPMN_EXPORTER);
     assertThat(definitions.getExporterVersion()).isEqualTo(VersionUtil.getVersion());

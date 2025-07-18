@@ -19,7 +19,7 @@ import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.ex
 import static java.util.Collections.EMPTY_LIST;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.Process;
@@ -40,10 +40,10 @@ public class ZeebeStartEventValidationTest extends AbstractZeebeValidationTest {
         singletonList(expect("subProcess", "Must have exactly one start event"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().signal("signal").endEvent().done(), valid(),
+        BpmnModelApi.createExecutableProcess().startEvent().signal("signal").endEvent().done(), valid(),
       },
       {
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .timerWithCycle("R1/PT2H")
             .signal("signal")
@@ -72,21 +72,21 @@ public class ZeebeStartEventValidationTest extends AbstractZeebeValidationTest {
       {processWithNoneStartEventAndMultipleOtherStartEvents(), valid()},
       // Form Deployment validation
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormKey("").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormKey("").endEvent().done(),
         singletonList(
             expect(
                 ZeebeFormDefinition.class,
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormId("").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormId("").endEvent().done(),
         singletonList(
             expect(
                 ZeebeFormDefinition.class,
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .zeebeFormKey("")
             .zeebeFormId("")
@@ -98,7 +98,7 @@ public class ZeebeStartEventValidationTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .zeebeFormKey("form-key")
             .zeebeFormId("form-id")
@@ -110,52 +110,52 @@ public class ZeebeStartEventValidationTest extends AbstractZeebeValidationTest {
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormKey(" ").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormKey(" ").endEvent().done(),
         singletonList(
             expect(
                 ZeebeFormDefinition.class,
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormId(" ").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormId(" ").endEvent().done(),
         singletonList(
             expect(
                 ZeebeFormDefinition.class,
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormKey("  ").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormKey("  ").endEvent().done(),
         singletonList(
             expect(
                 ZeebeFormDefinition.class,
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormId("  ").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormId("  ").endEvent().done(),
         singletonList(
             expect(
                 ZeebeFormDefinition.class,
                 "Exactly one of the attributes 'formId, formKey' must be present and not blank"))
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormId("form-id").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormId("form-id").endEvent().done(),
         EMPTY_LIST
       },
       {
-        Bpmn.createExecutableProcess().startEvent().zeebeFormKey("form-key").endEvent().done(),
+        BpmnModelApi.createExecutableProcess().startEvent().zeebeFormKey("form-key").endEvent().done(),
         EMPTY_LIST
       },
     };
   }
 
   private static BpmnModelInstance processWithMultipleNoneStartEvents() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess();
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess();
     process.startEvent().endEvent();
     return process.startEvent().endEvent().done();
   }
 
   private static BpmnModelInstance cycleTimerStartEventSubprocess(final boolean interrupting) {
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
     processBuilder.startEvent().serviceTask("task", b -> b.zeebeJobType("type")).endEvent();
     return processBuilder
         .eventSubProcess()
@@ -167,7 +167,7 @@ public class ZeebeStartEventValidationTest extends AbstractZeebeValidationTest {
   }
 
   private static BpmnModelInstance processWithNoneStartEventAndMultipleOtherStartEvents() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess();
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess();
     process.startEvent().endEvent();
     process.startEvent().timerWithCycle("R/PT1H");
     process.startEvent().message("start");

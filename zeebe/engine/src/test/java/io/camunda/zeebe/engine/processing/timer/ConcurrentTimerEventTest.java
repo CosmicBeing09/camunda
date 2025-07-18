@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.timer;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -40,7 +40,7 @@ public final class ConcurrentTimerEventTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .intermediateCatchEvent("timer", e -> e.timerWithDuration("PT10S"))
                 .done())

@@ -29,7 +29,7 @@ import io.camunda.optimize.service.importing.engine.service.zeebe.ZeebeUserTaskI
 import io.camunda.optimize.test.it.extension.IntegrationTestConfigurationUtil;
 import io.camunda.optimize.test.it.extension.ZeebeExtension;
 import io.camunda.optimize.test.it.extension.db.TermsQueryContainer;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -260,7 +260,7 @@ public abstract class AbstractCCSMIT extends AbstractIT {
 
   protected BpmnModelInstance readProcessDiagramAsInstance(final String diagramPath) {
     final InputStream inputStream = AbstractCCSMIT.class.getResourceAsStream(diagramPath);
-    return Bpmn.readModelFromStream(inputStream);
+    return BpmnModelApi.readModelFromStream(inputStream);
   }
 
   protected void setTenantIdForExportedZeebeRecords(final String indexName, final String tenantId) {

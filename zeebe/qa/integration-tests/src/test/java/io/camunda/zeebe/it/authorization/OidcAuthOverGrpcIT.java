@@ -19,7 +19,7 @@ import io.camunda.client.api.search.enums.ResourceType;
 import io.camunda.client.impl.oauth.OAuthCredentialsProviderBuilder;
 import io.camunda.security.configuration.ConfiguredMapping;
 import io.camunda.security.entity.AuthenticationMethod;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration.TestZeebe;
@@ -187,7 +187,7 @@ public class OidcAuthOverGrpcIT {
         defaultMappingClient
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
             .send()
             .join();
@@ -216,7 +216,7 @@ public class OidcAuthOverGrpcIT {
         restrictedClient
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
             .send();
 
@@ -255,7 +255,7 @@ public class OidcAuthOverGrpcIT {
         restrictedClient
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(processId).startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent().done(),
                 "process.bpmn")
             .send()
             .join();

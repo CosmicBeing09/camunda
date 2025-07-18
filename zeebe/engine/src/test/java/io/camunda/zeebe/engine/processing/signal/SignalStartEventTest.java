@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -35,7 +35,7 @@ public class SignalStartEventTest {
   public void shouldBroadcastSignalToStartEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("wf")
+        BpmnModelApi.createExecutableProcess("wf")
             .startEvent("start")
             .signal(SIGNAL_NAME_1)
             .endEvent()
@@ -71,7 +71,7 @@ public class SignalStartEventTest {
   public void shouldCreateNewInstanceWithSignalVariables() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("wf")
+        BpmnModelApi.createExecutableProcess("wf")
             .startEvent("start")
             .signal(SIGNAL_NAME_1)
             .endEvent()
@@ -94,7 +94,7 @@ public class SignalStartEventTest {
   public void shouldApplyOutputMappings() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("wf")
+        BpmnModelApi.createExecutableProcess("wf")
             .startEvent("start")
             .zeebeOutputExpression("x", "y")
             .signal(SIGNAL_NAME_1)
@@ -122,10 +122,10 @@ public class SignalStartEventTest {
   public void shouldCreateInstanceOfLatestVersion() {
     // given
     final var process1 =
-        Bpmn.createExecutableProcess("wf").startEvent("v1").signal(SIGNAL_NAME_1).endEvent().done();
+        BpmnModelApi.createExecutableProcess("wf").startEvent("v1").signal(SIGNAL_NAME_1).endEvent().done();
 
     final var process2 =
-        Bpmn.createExecutableProcess("wf").startEvent("v2").signal(SIGNAL_NAME_1).endEvent().done();
+        BpmnModelApi.createExecutableProcess("wf").startEvent("v2").signal(SIGNAL_NAME_1).endEvent().done();
     engine.deployment().withXmlResource(process1).deploy();
 
     engine.deployment().withXmlResource(process2).deploy();
@@ -145,7 +145,7 @@ public class SignalStartEventTest {
   @Test
   public void shouldCreateNewInstanceWithMultipleStartEvents() {
     // given
-    final var process = Bpmn.createExecutableProcess("wf");
+    final var process = BpmnModelApi.createExecutableProcess("wf");
     process.startEvent().signal(SIGNAL_NAME_1).endEvent("end");
     process.startEvent().signal(SIGNAL_NAME_2).connectTo("end");
 
@@ -166,7 +166,7 @@ public class SignalStartEventTest {
   @Test
   public void shouldTriggerOnlySignalStartEvent() {
     // given
-    final var process = Bpmn.createExecutableProcess("process");
+    final var process = BpmnModelApi.createExecutableProcess("process");
     process.startEvent("none-start").endEvent();
     process.startEvent("message-start").message("test").endEvent();
     process.startEvent("signal-start").signal(SIGNAL_NAME_1).endEvent();
@@ -190,7 +190,7 @@ public class SignalStartEventTest {
   public void shouldCreateMultipleInstances() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("wf")
+        BpmnModelApi.createExecutableProcess("wf")
             .startEvent("start")
             .signal(SIGNAL_NAME_1)
             .endEvent()
@@ -214,14 +214,14 @@ public class SignalStartEventTest {
   public void shouldCreateMultipleInstancesForDifferentResources() {
     // given
     final var process1 =
-        Bpmn.createExecutableProcess("wf_1")
+        BpmnModelApi.createExecutableProcess("wf_1")
             .startEvent("start")
             .signal(SIGNAL_NAME_1)
             .endEvent()
             .done();
 
     final var process2 =
-        Bpmn.createExecutableProcess("wf_2")
+        BpmnModelApi.createExecutableProcess("wf_2")
             .startEvent("start")
             .signal(SIGNAL_NAME_1)
             .endEvent()
@@ -246,7 +246,7 @@ public class SignalStartEventTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("SignalStartEventOnly")
+            BpmnModelApi.createExecutableProcess("SignalStartEventOnly")
                 .startEvent("signal-start")
                 .signal("start")
                 .endEvent()

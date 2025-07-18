@@ -39,7 +39,7 @@ public class ConditionalSequenceFlowTest {
   @Before
   public void parseModel() {
     modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             getClass().getResourceAsStream(getClass().getSimpleName() + ".xml"));
     flow1 = modelInstance.getModelElementById("flow1");
     flow2 = modelInstance.getModelElementById("flow2");

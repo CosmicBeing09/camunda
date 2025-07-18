@@ -46,7 +46,7 @@ import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyProcessState;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyProcessState.LegacyProcessVersionManager;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
@@ -99,7 +99,7 @@ public class MultiTenancyMigrationTest {
     @Test
     void shouldMigrateProcessColumnFamily() {
       // given
-      final var model = Bpmn.createExecutableProcess("processId").startEvent().done();
+      final var model = BpmnModelApi.createExecutableProcess("processId").startEvent().done();
       legacyState.putProcess(
           123,
           new ProcessRecord()
@@ -107,7 +107,7 @@ public class MultiTenancyMigrationTest {
               .setBpmnProcessId("processId")
               .setVersion(1)
               .setResourceName("resourceName")
-              .setResource(wrapString(Bpmn.convertToString(model)))
+              .setResource(wrapString(BpmnModelApi.convertToString(model)))
               .setChecksum(wrapString("checksum")));
 
       // when
@@ -129,7 +129,7 @@ public class MultiTenancyMigrationTest {
     @Test
     void shouldMigrateProcessByIdAndVersionColumnFamily() {
       // given
-      final var model = Bpmn.createExecutableProcess("processId").startEvent().done();
+      final var model = BpmnModelApi.createExecutableProcess("processId").startEvent().done();
       legacyState.putProcess(
           123,
           new ProcessRecord()
@@ -137,7 +137,7 @@ public class MultiTenancyMigrationTest {
               .setBpmnProcessId("processId")
               .setVersion(1)
               .setResourceName("resourceName")
-              .setResource(wrapString(Bpmn.convertToString(model)))
+              .setResource(wrapString(BpmnModelApi.convertToString(model)))
               .setChecksum(wrapString("checksum")));
 
       // when
@@ -160,7 +160,7 @@ public class MultiTenancyMigrationTest {
     @Test
     void shouldMigrateProcessByIdAndVersionColumnFamilyUsingVersionManager() {
       // given
-      final var model = Bpmn.createExecutableProcess("processId").startEvent().done();
+      final var model = BpmnModelApi.createExecutableProcess("processId").startEvent().done();
       legacyState.putProcess(
           123,
           new ProcessRecord()
@@ -168,7 +168,7 @@ public class MultiTenancyMigrationTest {
               .setBpmnProcessId("processId")
               .setVersion(1)
               .setResourceName("resourceName")
-              .setResource(wrapString(Bpmn.convertToString(model)))
+              .setResource(wrapString(BpmnModelApi.convertToString(model)))
               .setChecksum(wrapString("checksum")));
 
       // when
@@ -191,7 +191,7 @@ public class MultiTenancyMigrationTest {
     @Test
     void shouldMigrateDigestByIdColumnFamily() {
       // given
-      final var model = Bpmn.createExecutableProcess("processId").startEvent().done();
+      final var model = BpmnModelApi.createExecutableProcess("processId").startEvent().done();
       legacyState.putProcess(
           123,
           new ProcessRecord()
@@ -199,7 +199,7 @@ public class MultiTenancyMigrationTest {
               .setBpmnProcessId("processId")
               .setVersion(1)
               .setResourceName("resourceName")
-              .setResource(wrapString(Bpmn.convertToString(model)))
+              .setResource(wrapString(BpmnModelApi.convertToString(model)))
               .setChecksum(wrapString("checksum")));
 
       // when
@@ -229,7 +229,7 @@ public class MultiTenancyMigrationTest {
               expected.state(),
               expected.resourceName(),
               expected.tenantId(),
-              Bpmn.convertToString(expected.model()));
+              BpmnModelApi.convertToString(expected.model()));
     }
 
     record PersistedProcess(

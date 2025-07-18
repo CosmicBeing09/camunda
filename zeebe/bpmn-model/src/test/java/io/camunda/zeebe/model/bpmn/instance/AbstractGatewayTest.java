@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.instance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.GatewayDirection;
 import java.io.InputStream;
 import java.util.Collection;
@@ -54,7 +54,7 @@ public abstract class AbstractGatewayTest<G extends Gateway> extends BpmnModelEl
     final InputStream inputStream =
         ReflectUtil.getResourceAsStream("io/camunda/zeebe/model/bpmn/GatewaysTest.xml");
     final Collection<ModelElementInstance> elementInstances =
-        Bpmn.readModelFromStream(inputStream).getModelElementsByType(modelElementType);
+        BpmnModelApi.readModelFromStream(inputStream).getModelElementsByType(modelElementType);
     assertThat(elementInstances).hasSize(1);
     gateway = (G) elementInstances.iterator().next();
     assertThat(gateway.getGatewayDirection()).isEqualTo(GatewayDirection.Mixed);

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractBpmnModelElementBuilder;
 import io.camunda.zeebe.model.bpmn.builder.CallActivityBuilder;
@@ -61,7 +61,7 @@ public final class CallActivityTest {
 
   private static BpmnModelInstance parentProcess(final Consumer<CallActivityBuilder> consumer) {
     final var builder =
-        Bpmn.createExecutableProcess(PROCESS_ID_PARENT)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_PARENT)
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId(PROCESS_ID_CHILD));
 
@@ -73,7 +73,7 @@ public final class CallActivityTest {
   private static BpmnModelInstance childProcess(
       final String jobType, final Consumer<ServiceTaskBuilder> consumer) {
     final var builder =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD)
             .startEvent()
             .serviceTask("child-task", t -> t.zeebeJobType(jobType));
 
@@ -139,9 +139,9 @@ public final class CallActivityTest {
     // given
     final var parentProcess = parentProcess(CallActivityBuilder::done);
     final var childProcessV1 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
     final var childProcessV2 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
     ENGINE
         .deployment()
         .withXmlResource("wf-parent.bpmn", parentProcess)
@@ -167,9 +167,9 @@ public final class CallActivityTest {
     final var parentProcess =
         parentProcess(builder -> builder.zeebeBindingType(ZeebeBindingType.latest));
     final var childProcessV1 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
     final var childProcessV2 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
     ENGINE
         .deployment()
         .withXmlResource("wf-parent.bpmn", parentProcess)
@@ -195,9 +195,9 @@ public final class CallActivityTest {
     final var parentProcess =
         parentProcess(builder -> builder.zeebeBindingType(ZeebeBindingType.deployment));
     final var childProcessV1 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
     final var childProcessV2 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
     final var deployment =
         ENGINE
             .deployment()
@@ -229,25 +229,25 @@ public final class CallActivityTest {
             builder ->
                 builder.zeebeBindingType(ZeebeBindingType.versionTag).zeebeVersionTag("v1.0"));
     final var childProcessV1Old =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD)
             .versionTag("v1.0")
             .startEvent("old")
             .endEvent()
             .done();
     final var childProcessV1New =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD)
             .versionTag("v1.0")
             .startEvent("new")
             .endEvent()
             .done();
     final var childProcessV2 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD)
             .versionTag("v2.0")
             .startEvent()
             .endEvent()
             .done();
     final var childProcessWithoutVersionTag =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent().endEvent().done();
     ENGINE
         .deployment()
         .withXmlResource("wf-parent.bpmn", parentProcess)
@@ -618,9 +618,9 @@ public final class CallActivityTest {
   public void shouldCreateInstanceOfCalledElementWithExpressionAndBindingTypeDeployment() {
     // given
     final var childProcessV1 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v1").endEvent().done();
     final var childProcessV2 =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD).startEvent("v2").endEvent().done();
     final var deployment =
         ENGINE
             .deployment()
@@ -657,7 +657,7 @@ public final class CallActivityTest {
   @Test
   public void shouldCreateInstanceOfCalledElementWithExpressionAndBindingTypeVersionTag() {
     final var childProcess =
-        Bpmn.createExecutableProcess(PROCESS_ID_CHILD)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD)
             .versionTag("v1.0")
             .startEvent()
             .endEvent()
@@ -834,7 +834,7 @@ public final class CallActivityTest {
         .deployment()
         .withXmlResource(
             "wf-root.bpmn",
-            Bpmn.createExecutableProcess("root")
+            BpmnModelApi.createExecutableProcess("root")
                 .startEvent()
                 .callActivity("call", c -> c.zeebeProcessId(PROCESS_ID_PARENT))
                 .done())
@@ -901,7 +901,7 @@ public final class CallActivityTest {
   @Test
   public void shouldCreateInstanceOfCalledElementAtNoneStartEvent() {
     // given
-    final var processBuilder = Bpmn.createExecutableProcess(PROCESS_ID_CHILD);
+    final var processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID_CHILD);
     processBuilder.startEvent("none-start").endEvent();
     processBuilder.startEvent("timer-start").timerWithCycle("R/PT1H").endEvent();
     processBuilder.startEvent("message-start").message("start").endEvent();
@@ -930,7 +930,7 @@ public final class CallActivityTest {
   public void shouldTriggerBoundaryEventOnChildInstanceTermination() {
     // given two processes with call activities that have an interrupting message boundary event
     final var processLevel1 =
-        Bpmn.createExecutableProcess("level1")
+        BpmnModelApi.createExecutableProcess("level1")
             .startEvent()
             .callActivity("call-level2", c -> c.zeebeProcessId("level2"))
             .boundaryEvent()
@@ -939,7 +939,7 @@ public final class CallActivityTest {
             .done();
 
     final var processLevel2 =
-        Bpmn.createExecutableProcess("level2")
+        BpmnModelApi.createExecutableProcess("level2")
             .startEvent()
             .callActivity("call-level3", c -> c.zeebeProcessId("level3"))
             .boundaryEvent()
@@ -948,7 +948,7 @@ public final class CallActivityTest {
             .done();
 
     final var processLevel3 =
-        Bpmn.createExecutableProcess("level3")
+        BpmnModelApi.createExecutableProcess("level3")
             .startEvent()
             .serviceTask("task-level3", t -> t.zeebeJobType("task-level3"))
             .endEvent()
@@ -996,7 +996,7 @@ public final class CallActivityTest {
         .deployment()
         .withXmlResource(
             "wf-root.bpmn",
-            Bpmn.createExecutableProcess(rootProcessId)
+            BpmnModelApi.createExecutableProcess(rootProcessId)
                 .startEvent()
                 .callActivity(callActivity1Id, c -> c.zeebeProcessId(PROCESS_ID_PARENT))
                 .done())
@@ -1093,7 +1093,7 @@ public final class CallActivityTest {
         .deployment()
         .withXmlResource(
             "wf-root.bpmn",
-            Bpmn.createExecutableProcess(rootProcessId)
+            BpmnModelApi.createExecutableProcess(rootProcessId)
                 .startEvent()
                 .callActivity(callActivity1Id, c -> c.zeebeProcessId(PROCESS_ID_PARENT))
                 .done())
@@ -1144,7 +1144,7 @@ public final class CallActivityTest {
         .deployment()
         .withXmlResource(
             "wf-root.bpmn",
-            Bpmn.createExecutableProcess(rootProcessId)
+            BpmnModelApi.createExecutableProcess(rootProcessId)
                 .startEvent()
                 .callActivity(callActivity1Id, c -> c.zeebeProcessId(PROCESS_ID_PARENT))
                 .done())
@@ -1223,7 +1223,7 @@ public final class CallActivityTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("Loop")
+            BpmnModelApi.createExecutableProcess("Loop")
                 .startEvent()
                 .exclusiveGateway("failsafe")
                 .defaultFlow()

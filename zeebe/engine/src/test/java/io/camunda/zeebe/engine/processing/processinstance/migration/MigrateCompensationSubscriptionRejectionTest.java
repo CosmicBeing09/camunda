@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance.migration;
 import static io.camunda.zeebe.engine.processing.processinstance.migration.MigrationTestUtil.extractProcessDefinitionKeyByProcessId;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AbstractThrowEventBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -41,7 +41,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -56,7 +56,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("C", t -> t.zeebeJobType("C"))
                     .boundaryEvent(
@@ -122,7 +122,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -137,7 +137,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("C", t -> t.zeebeJobType("C"))
                     .boundaryEvent("boundary2", b -> b.timerWithDuration("PT10M"))
@@ -196,7 +196,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess("subProcess1")
                     .embeddedSubProcess()
@@ -216,7 +216,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "subProcess2",
@@ -294,7 +294,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "subProcess1",
@@ -322,7 +322,7 @@ public class MigrateCompensationSubscriptionRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess("subProcess2")
                     .embeddedSubProcess()

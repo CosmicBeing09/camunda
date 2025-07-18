@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.PublishMessageClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
@@ -58,7 +58,7 @@ public final class MultiInstanceSubProcessTest {
 
   private static BpmnModelInstance process(final Consumer<StartEventBuilder> subProcessBuilder) {
     final StartEventBuilder process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 SUB_PROCESS_ELEMENT_ID,
@@ -316,7 +316,7 @@ public final class MultiInstanceSubProcessTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -382,7 +382,7 @@ public final class MultiInstanceSubProcessTest {
                 .endEvent();
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("subprocess")
             .multiInstance(

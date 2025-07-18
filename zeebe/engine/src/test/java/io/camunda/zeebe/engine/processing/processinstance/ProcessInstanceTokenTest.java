@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -49,7 +49,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId).startEvent().endEvent("end").done())
+            BpmnModelApi.createExecutableProcess(processId).startEvent().endEvent("end").done())
         .deploy();
 
     // when
@@ -64,7 +64,7 @@ public final class ProcessInstanceTokenTest {
     // given
     ENGINE
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(processId).startEvent("start").done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(processId).startEvent("start").done())
         .deploy();
 
     // when
@@ -80,7 +80,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
                 .done())
@@ -101,7 +101,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task-1", t -> t.zeebeJobType("task-1"))
@@ -128,7 +128,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway("fork")
                 .serviceTask("task-1", t -> t.zeebeJobType("task-1"))
@@ -156,7 +156,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
@@ -186,7 +186,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
@@ -213,7 +213,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task-1", t -> t.zeebeJobType("task-1"))
@@ -246,7 +246,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
@@ -282,7 +282,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
                 .endEvent("end-1")
@@ -311,7 +311,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("task-1", t -> t.zeebeJobType("task-1"))
                 .endEvent("end-1")
@@ -345,7 +345,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
@@ -387,7 +387,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task-1", t -> t.zeebeJobType("task-1"))
@@ -432,7 +432,7 @@ public final class ProcessInstanceTokenTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("task", t -> t.zeebeJobType("task"))

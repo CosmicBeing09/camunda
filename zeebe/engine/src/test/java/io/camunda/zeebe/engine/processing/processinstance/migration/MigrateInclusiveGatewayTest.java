@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -44,7 +44,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("inclusive1")
                     .conditionExpression("= true")
@@ -55,7 +55,7 @@ public class MigrateInclusiveGatewayTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("inclusive2")
                     .conditionExpression("= true")
@@ -130,7 +130,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -144,7 +144,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -215,7 +215,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -234,7 +234,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -316,7 +316,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -341,7 +341,7 @@ public class MigrateInclusiveGatewayTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -432,7 +432,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -446,7 +446,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -510,7 +510,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -524,7 +524,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .parallelGateway("fork")
                     .serviceTask("task1", b -> b.zeebeJobType("type1"))
@@ -591,7 +591,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -605,7 +605,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -671,7 +671,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -685,7 +685,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -751,7 +751,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -765,7 +765,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -830,7 +830,7 @@ public class MigrateInclusiveGatewayTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")
@@ -848,7 +848,7 @@ public class MigrateInclusiveGatewayTest {
                     .connectTo("join1")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .inclusiveGateway("fork")
                     .conditionExpression("= true")

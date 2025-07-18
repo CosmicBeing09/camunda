@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -62,7 +62,7 @@ public class ProcessInstanceModificationModifyAuthorizationTest {
         .deployment()
         .withXmlResource(
             "process.bpmn",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(SERVICE_TASK_ID, t -> t.zeebeJobType(JOB_TYPE))
                 .endEvent()

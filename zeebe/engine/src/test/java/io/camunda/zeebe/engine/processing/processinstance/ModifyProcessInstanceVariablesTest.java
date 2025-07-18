@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -47,7 +47,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("A")
                     .userTask("B")
@@ -81,7 +81,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("A")
                     .userTask("B")
@@ -126,7 +126,7 @@ public class ModifyProcessInstanceVariablesTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .exclusiveGateway()
                 .defaultFlow()
@@ -205,7 +205,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("A")
                     .userTask("B")
@@ -247,7 +247,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("A")
                     .userTask("B")
@@ -296,7 +296,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("A")
                     .subProcess(
@@ -339,7 +339,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .subProcess(
                         "sp",
@@ -402,7 +402,7 @@ public class ModifyProcessInstanceVariablesTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .userTask("A")
                     .subProcess("sp", subprocess)

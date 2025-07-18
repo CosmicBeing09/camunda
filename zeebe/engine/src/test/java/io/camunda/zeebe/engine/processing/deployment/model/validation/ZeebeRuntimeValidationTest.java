@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor.EvaluationContextLookup;
 import io.camunda.zeebe.engine.processing.deployment.model.transformer.ExpressionTransformer;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ConditionExpression;
 import io.camunda.zeebe.model.bpmn.instance.MultiInstanceLoopCharacteristics;
@@ -79,7 +79,7 @@ public final class ZeebeRuntimeValidationTest {
     return new Object[][] {
       {
         // not a valid expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .exclusiveGateway()
             .sequenceFlowId("flow")
@@ -90,7 +90,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // static expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .exclusiveGateway()
             .sequenceFlowId("flow")
@@ -101,7 +101,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // not a valid expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeInputExpression(INVALID_EXPRESSION, "foo"))
             .endEvent()
@@ -110,7 +110,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // empty path expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeInputExpression("foo", ""))
             .endEvent()
@@ -119,7 +119,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // invalid target expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeInputExpression("foo", INVALID_PATH_EXPRESSION))
             .endEvent()
@@ -127,7 +127,7 @@ public final class ZeebeRuntimeValidationTest {
         List.of(expect(ZeebeInput.class, INVALID_PATH_EXPRESSION_MESSAGE))
       },
       { // not a valid expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeOutputExpression(INVALID_EXPRESSION, "foo"))
             .endEvent()
@@ -136,7 +136,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // static expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeOutput(STATIC_EXPRESSION, "bar"))
             .endEvent()
@@ -145,7 +145,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // empty expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeOutput("", "bar"))
             .endEvent()
@@ -154,7 +154,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // invalid target expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeOutputExpression("foo", INVALID_PATH_EXPRESSION))
             .endEvent()
@@ -163,7 +163,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // empty path expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", s -> s.zeebeOutputExpression("foo", ""))
             .endEvent()
@@ -172,7 +172,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // name expression is invalid
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("catch")
             .message(b -> b.name("message").zeebeCorrelationKeyExpression(INVALID_EXPRESSION))
@@ -182,7 +182,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // static expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("catch")
             .message(b -> b.name("message").zeebeCorrelationKey(STATIC_EXPRESSION))
@@ -191,7 +191,7 @@ public final class ZeebeRuntimeValidationTest {
         List.of(expect(ZeebeSubscription.class, STATIC_EXPRESSION_MESSAGE))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .receiveTask("catch")
             .message(b -> b.name("message").zeebeCorrelationKeyExpression(INVALID_EXPRESSION))
@@ -201,7 +201,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // static expression
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .receiveTask("catch")
             .message(b -> b.name("message").zeebeCorrelationKey(STATIC_EXPRESSION))
@@ -211,7 +211,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // input collection expression is not supported
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -221,7 +221,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // input collection expression is static
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task", t -> t.multiInstance(m -> m.zeebeInputCollection(STATIC_EXPRESSION)))
@@ -230,7 +230,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // output element expression is not supported
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -244,7 +244,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // output element  expression is static
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -258,7 +258,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // output element expression is not supported
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -273,7 +273,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         // process id expression is not supported
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessIdExpression(INVALID_EXPRESSION))
             .done(),
@@ -284,7 +284,7 @@ public final class ZeebeRuntimeValidationTest {
          * This must fail validation, because at the time the expression is evaluated,
          * there are no variables defined
          */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .message(messageBuilder -> messageBuilder.nameExpression("variableReference"))
             .done(),
@@ -297,7 +297,7 @@ public final class ZeebeRuntimeValidationTest {
         /* message on start event has expression that evaluates to something other than string
          * This must fail validation, because the message name must be a string
          */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .message(messageBuilder -> messageBuilder.nameExpression("false"))
             .done(),
@@ -308,7 +308,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid variable input mapping */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task", task -> task.zeebeJobType("test").zeebeInputExpression("x", "null"))
@@ -320,7 +320,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid variable output mapping */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task", task -> task.zeebeJobType("test").zeebeOutputExpression("x", "true"))
@@ -332,7 +332,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid assignee expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeAssigneeExpression(INVALID_EXPRESSION))
             .done(),
@@ -340,7 +340,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid candidateGroups expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeCandidateGroupsExpression(INVALID_EXPRESSION))
             .done(),
@@ -348,7 +348,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid candidateUsers expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeCandidateUsersExpression(INVALID_EXPRESSION))
             .done(),
@@ -356,7 +356,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid candidateGroups static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeCandidateGroups("1,,"))
             .done(),
@@ -367,7 +367,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid candidateUsers static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeCandidateUsers("1,,"))
             .done(),
@@ -378,7 +378,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid dueDate expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeDueDateExpression(INVALID_EXPRESSION))
             .done(),
@@ -386,7 +386,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid dueDate static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeDueDate("12345"))
             .done(),
@@ -399,7 +399,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid followUpDate expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeFollowUpDateExpression(INVALID_EXPRESSION))
             .done(),
@@ -407,7 +407,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid followUpDate static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeFollowUpDate("12345"))
             .done(),
@@ -420,7 +420,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* reserved header key */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task")
             .zeebeTaskHeader(RESERVED_TASK_HEADER_KEY, STATIC_EXPRESSION)
@@ -435,7 +435,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid completion condition expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -449,7 +449,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /* invalid priority expression */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeTaskPriorityExpression(INVALID_EXPRESSION))
             .done(),
@@ -457,7 +457,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /*invalid priority static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeTaskPriority("abc"))
             .done(),
@@ -468,7 +468,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /*whitespace priority static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeTaskPriority(" "))
             .done(),
@@ -479,7 +479,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /*out of range priority static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeTaskPriority("120"))
             .done(),
@@ -490,7 +490,7 @@ public final class ZeebeRuntimeValidationTest {
       },
       {
         /*decimal priority static value */
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask("task", b -> b.zeebeTaskPriority("33.3"))
             .done(),
@@ -524,7 +524,7 @@ public final class ZeebeRuntimeValidationTest {
     } else if (modelSource instanceof String) {
       final InputStream modelStream =
           ZeebeRuntimeValidationTest.class.getResourceAsStream((String) modelSource);
-      modelInstance = Bpmn.readModelFromStream(modelStream);
+      modelInstance = BpmnModelApi.readModelFromStream(modelStream);
     } else {
       throw new RuntimeException("Cannot convert parameter to bpmn model");
     }
@@ -535,7 +535,7 @@ public final class ZeebeRuntimeValidationTest {
     // when
     final ValidationResults results = validate(modelInstance);
 
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
 
     // then
     final List<ExpectedValidationResult> unmatchedExpectations = new ArrayList<>(expectedResults);

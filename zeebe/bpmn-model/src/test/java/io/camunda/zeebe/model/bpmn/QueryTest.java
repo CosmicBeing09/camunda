@@ -40,7 +40,7 @@ public class QueryTest {
   @BeforeClass
   public static void createModelInstance() {
     modelInstance =
-        Bpmn.createProcess()
+        BpmnModelApi.createProcess()
             .startEvent()
             .id("start")
             .userTask()
@@ -71,7 +71,7 @@ public class QueryTest {
 
   @AfterClass
   public static void validateModelInstance() {
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
   }
 
   @Test

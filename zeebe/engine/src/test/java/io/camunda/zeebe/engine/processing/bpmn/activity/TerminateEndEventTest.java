@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.activity;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.EndEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
@@ -44,7 +44,7 @@ public final class TerminateEndEventTest {
     ENGINE_RULE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .endEvent("terminate-end", EndEventBuilder::terminate)
                 .done())
@@ -73,7 +73,7 @@ public final class TerminateEndEventTest {
     ENGINE_RULE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .userTask("A")
@@ -121,7 +121,7 @@ public final class TerminateEndEventTest {
                 .endEvent("terminate-end", EndEventBuilder::terminate);
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("process_fork")
             .serviceTask("A", serviceTask -> serviceTask.zeebeJobType("A"))
@@ -214,7 +214,7 @@ public final class TerminateEndEventTest {
                 .endEvent("terminate-end", EndEventBuilder::terminate);
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event_subprocess", eventSubprocessBuilder)
             .startEvent()
             .serviceTask("A", serviceTask -> serviceTask.zeebeJobType("A"))
@@ -316,7 +316,7 @@ public final class TerminateEndEventTest {
                 .endEvent("terminate_end_after_D", EndEventBuilder::terminate);
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("subprocess", subprocessBuilder)
             .multiInstance(
@@ -409,7 +409,7 @@ public final class TerminateEndEventTest {
     final var childProcessId = brokerClassRuleHelper.getBpmnProcessId();
 
     final var childProcess =
-        Bpmn.createExecutableProcess(childProcessId)
+        BpmnModelApi.createExecutableProcess(childProcessId)
             .startEvent()
             .parallelGateway("fork")
             .userTask("A")
@@ -420,7 +420,7 @@ public final class TerminateEndEventTest {
             .done();
 
     final var parentProcess =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity("C", callActivity -> callActivity.zeebeProcessId(childProcessId))
             .sequenceFlowId("to_end_after_C")
@@ -482,7 +482,7 @@ public final class TerminateEndEventTest {
     ENGINE_RULE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .parallelGateway("join")

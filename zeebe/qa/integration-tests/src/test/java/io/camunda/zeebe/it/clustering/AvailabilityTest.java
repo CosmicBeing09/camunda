@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.BrokerInfo;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -34,7 +34,7 @@ public class AvailabilityTest {
 
   private static final String JOBTYPE = "availability-test";
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent()
           .serviceTask(
               "task",

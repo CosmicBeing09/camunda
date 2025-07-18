@@ -19,7 +19,7 @@ import io.camunda.zeebe.gateway.impl.configuration.InterceptorCfg;
 import io.camunda.zeebe.it.queryapi.util.TestAuthorizationClientInterceptor;
 import io.camunda.zeebe.it.queryapi.util.TestAuthorizationListener;
 import io.camunda.zeebe.it.queryapi.util.TestAuthorizationServerInterceptor;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
@@ -43,7 +43,7 @@ import org.junit.jupiter.api.Test;
 @ZeebeIntegration
 final class QueryApiIT {
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("tenantA.process")
+      BpmnModelApi.createExecutableProcess("tenantA.process")
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .endEvent()

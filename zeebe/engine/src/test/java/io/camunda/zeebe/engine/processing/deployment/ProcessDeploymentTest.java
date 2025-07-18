@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.Message;
@@ -54,7 +54,7 @@ public final class ProcessDeploymentTest {
   private BpmnModelInstance process2_V2;
 
   private BpmnModelInstance createProcess(final String processId, final String startEventId) {
-    return Bpmn.createExecutableProcess(processId).startEvent(startEventId).endEvent().done();
+    return BpmnModelApi.createExecutableProcess(processId).startEvent(startEventId).endEvent().done();
   }
 
   @Before
@@ -140,7 +140,7 @@ public final class ProcessDeploymentTest {
   public void shouldCreateDeploymentWithProcessWhichHaveUniqueKeys() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
 
     // when
     final Record<DeploymentRecordValue> deployment =
@@ -182,7 +182,7 @@ public final class ProcessDeploymentTest {
     // given
     final InputStream resourceAsStream =
         getClass().getResourceAsStream("/processes/collaboration.bpmn");
-    final BpmnModelInstance modelInstance = Bpmn.readModelFromStream(resourceAsStream);
+    final BpmnModelInstance modelInstance = BpmnModelApi.readModelFromStream(resourceAsStream);
 
     // when
     final Record<DeploymentRecordValue> deployment =
@@ -237,7 +237,7 @@ public final class ProcessDeploymentTest {
             .deployment()
             .withXmlResource(
                 "process.bpmn",
-                Bpmn.createExecutableProcess(processId).versionTag("v1.0").startEvent().done())
+                BpmnModelApi.createExecutableProcess(processId).versionTag("v1.0").startEvent().done())
             .withXmlResource("process2.bpmn", process2)
             .deploy()
             .getValue();
@@ -283,7 +283,7 @@ public final class ProcessDeploymentTest {
   @Test
   public void shouldCreateDeploymentIfUnusedInvalidMessage() {
     // given
-    final BpmnModelInstance process = Bpmn.createExecutableProcess().startEvent().done();
+    final BpmnModelInstance process = BpmnModelApi.createExecutableProcess().startEvent().done();
     process.getDefinitions().addChildElement(process.newInstance(Message.class));
 
     // when
@@ -297,7 +297,7 @@ public final class ProcessDeploymentTest {
   @Test
   public void shouldCreateDeploymentWithMessageStartEvent() {
     // given
-    final ProcessBuilder processBuilder = Bpmn.createExecutableProcess();
+    final ProcessBuilder processBuilder = BpmnModelApi.createExecutableProcess();
     final BpmnModelInstance process =
         processBuilder.startEvent().message(m -> m.name("startMessage")).endEvent().done();
 
@@ -313,7 +313,7 @@ public final class ProcessDeploymentTest {
   public void shouldCreateDeploymentWithMultipleMessageStartEvent() {
     // given
     final ProcessBuilder processBuilder =
-        Bpmn.createExecutableProcess("processWithMultipleMsgStartEvent");
+        BpmnModelApi.createExecutableProcess("processWithMultipleMsgStartEvent");
     processBuilder.startEvent().message(m -> m.name("startMessage1")).endEvent().done();
     final BpmnModelInstance process =
         processBuilder.startEvent().message(m -> m.name("startMessage2")).endEvent().done();
@@ -330,7 +330,7 @@ public final class ProcessDeploymentTest {
   public void shouldIncrementProcessVersions() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("shouldIncrementProcessVersions")
+        BpmnModelApi.createExecutableProcess("shouldIncrementProcessVersions")
             .startEvent()
             .endEvent()
             .done();
@@ -487,7 +487,7 @@ public final class ProcessDeploymentTest {
   public void shouldDeployProcessModelWithUndefinedTask() {
     // when
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process").startEvent().task().endEvent().done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().task().endEvent().done();
 
     final Record<DeploymentRecordValue> result =
         ENGINE.deployment().withXmlResource(modelInstance).deploy();
@@ -504,7 +504,7 @@ public final class ProcessDeploymentTest {
   public void shouldCreateDeploymentWithMessageStartEventIgnoreExtensionElements() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("processId")
+        BpmnModelApi.createExecutableProcess("processId")
             .startEvent("startEvent")
             .messageEventDefinition()
             .message("messageEvent")

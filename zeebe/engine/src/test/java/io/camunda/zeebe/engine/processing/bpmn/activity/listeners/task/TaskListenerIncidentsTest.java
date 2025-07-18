@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.Protocol;
@@ -450,7 +450,7 @@ public class TaskListenerIncidentsTest {
     // given
     final long processInstanceKey =
         helper.createProcessInstance(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .userTask(
                     "user_task",

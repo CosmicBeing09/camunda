@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractThrowEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.BoundaryEventBuilder;
@@ -59,7 +59,7 @@ public class CompensationEventExecutionTest {
   public void shouldExecuteAProcessWithCompensationIntermediateEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask()
             .intermediateThrowEvent(
@@ -111,7 +111,7 @@ public class CompensationEventExecutionTest {
   public void shouldExecuteAProcessWithCompensationEndEvent() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .userTask()
             .endEvent(
@@ -1103,7 +1103,7 @@ public class CompensationEventExecutionTest {
                     compensation -> compensation.serviceTask("Undo-A").zeebeJobType("Undo-A"));
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .subProcess(
@@ -1166,7 +1166,7 @@ public class CompensationEventExecutionTest {
                     compensation -> compensation.serviceTask("Undo-A").zeebeJobType("Undo-A"));
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .subProcess(
@@ -1248,7 +1248,7 @@ public class CompensationEventExecutionTest {
                 .zeebeOutputExpression("loopCounter", "completed");
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("subprocess", subprocessBuilder)
             .endEvent()
@@ -1307,7 +1307,7 @@ public class CompensationEventExecutionTest {
   public void shouldApplyInputMappingsOfCompensationHandler() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -1365,7 +1365,7 @@ public class CompensationEventExecutionTest {
   public void shouldApplyOutputMappingsOfCompensationHandler() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -1414,7 +1414,7 @@ public class CompensationEventExecutionTest {
   public void shouldPropagateVariablesOfCompensationHandler() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("subprocess")
             .zeebeInputExpression("0", "local")
@@ -1586,7 +1586,7 @@ public class CompensationEventExecutionTest {
   public void shouldTriggerCompensationForActivityOnIntermediateThrowEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .serviceTask(
@@ -1643,7 +1643,7 @@ public class CompensationEventExecutionTest {
   public void shouldTriggerCompensationForActivityOnEndEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .serviceTask(
@@ -1700,7 +1700,7 @@ public class CompensationEventExecutionTest {
   public void shouldTriggerCompensationForActivityTheSameAmountAsExecuted() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .zeebeOutputExpression("0", "iteration")
             .serviceTask(
@@ -1752,7 +1752,7 @@ public class CompensationEventExecutionTest {
   public void shouldNotTriggerCompensationForActivityAgain() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -1802,7 +1802,7 @@ public class CompensationEventExecutionTest {
   public void shouldNotTriggerCompensationForActivityIfActive() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .serviceTask(
@@ -1848,7 +1848,7 @@ public class CompensationEventExecutionTest {
   public void shouldTriggerCompensationForSubprocess() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .subProcess("subprocess")
@@ -1910,7 +1910,7 @@ public class CompensationEventExecutionTest {
   public void shouldTriggerCompensationForMultiInstanceSubprocess() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .subProcess("subprocess")
@@ -1975,7 +1975,7 @@ public class CompensationEventExecutionTest {
   public void shouldNotTriggerCompensationForSubprocessAgain() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess("subprocess")
             .embeddedSubProcess()
@@ -2030,7 +2030,7 @@ public class CompensationEventExecutionTest {
   public void shouldNotTriggerCompensationForSubprocessIfActive() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .subProcess("subprocess")
@@ -2092,7 +2092,7 @@ public class CompensationEventExecutionTest {
                 .endEvent();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -2155,7 +2155,7 @@ public class CompensationEventExecutionTest {
   public void shouldCompensateSubprocess() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -2217,7 +2217,7 @@ public class CompensationEventExecutionTest {
   public void shouldCompensateSubprocessWithInnerCompensationHandler() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -2268,7 +2268,7 @@ public class CompensationEventExecutionTest {
   public void shouldInvokeCallActivityCompensationHandler() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -2285,7 +2285,7 @@ public class CompensationEventExecutionTest {
             .done();
 
     final BpmnModelInstance childProcess =
-        Bpmn.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
 
     ENGINE.deployment().withXmlResource(process).withXmlResource(childProcess).deploy();
 
@@ -2345,7 +2345,7 @@ public class CompensationEventExecutionTest {
   public void shouldCompensateCallActivity() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity(
                 "A",
@@ -2361,7 +2361,7 @@ public class CompensationEventExecutionTest {
             .done();
 
     final BpmnModelInstance childProcess =
-        Bpmn.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
 
     ENGINE.deployment().withXmlResource(process).withXmlResource(childProcess).deploy();
 
@@ -2406,7 +2406,7 @@ public class CompensationEventExecutionTest {
   public void shouldNotTriggerCompensationIfCallActivityIsActive() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .callActivity(
@@ -2429,7 +2429,7 @@ public class CompensationEventExecutionTest {
             .done();
 
     final BpmnModelInstance childProcess =
-        Bpmn.createExecutableProcess(CHILD_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID)
             .startEvent()
             .serviceTask("A", task -> task.zeebeJobType("A"))
             .endEvent()
@@ -2470,7 +2470,7 @@ public class CompensationEventExecutionTest {
   public void shouldNotTriggerCompensationForChildProcess() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity(
                 "A",
@@ -2486,7 +2486,7 @@ public class CompensationEventExecutionTest {
             .done();
 
     final BpmnModelInstance childProcess =
-        Bpmn.createExecutableProcess(CHILD_PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID)
             .startEvent()
             .serviceTask("B", task -> task.zeebeJobType("B"))
             .boundaryEvent()
@@ -2538,7 +2538,7 @@ public class CompensationEventExecutionTest {
                 .zeebeInputCollectionExpression("[1,2,3]");
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -2624,7 +2624,7 @@ public class CompensationEventExecutionTest {
                 .endEvent();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -2795,7 +2795,7 @@ public class CompensationEventExecutionTest {
             eventSubprocess.startEvent().error().endEvent().compensateEventDefinition();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event-subprocess", compensationEventSubprocess)
             .startEvent()
             .serviceTask(
@@ -2884,7 +2884,7 @@ public class CompensationEventExecutionTest {
                 .serviceTask("B", task -> task.zeebeJobType("B"));
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .parallelGateway("fork")
             .subProcess("subprocess", subprocessBuilder)
@@ -2951,7 +2951,7 @@ public class CompensationEventExecutionTest {
                 .compensateEventDefinition();
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event-subprocess", compensationEventSubprocess)
             .startEvent()
             .serviceTask(
@@ -3029,7 +3029,7 @@ public class CompensationEventExecutionTest {
                 .subProcess("subprocess", subprocessBuilder);
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event-subprocess", eventSubprocessBuilder)
             .startEvent()
             .serviceTask(
@@ -3084,7 +3084,7 @@ public class CompensationEventExecutionTest {
             eventSubprocess.startEvent().error().endEvent("compensation-throw-event");
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event-subprocess", compensationEventSubprocess)
             .startEvent()
             .serviceTask(
@@ -3169,7 +3169,7 @@ public class CompensationEventExecutionTest {
                 .serviceTask("D", task -> task.zeebeJobType("D"));
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -3237,7 +3237,7 @@ public class CompensationEventExecutionTest {
                 .endEvent("compensation-throw-event");
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event-subprocess", compensationEventSubprocess)
             .startEvent()
             .serviceTask(
@@ -3294,7 +3294,7 @@ public class CompensationEventExecutionTest {
                 .endEvent("compensation-throw-event");
 
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess("event-subprocess", compensationEventSubprocess)
             .startEvent()
             .serviceTask(
@@ -3338,7 +3338,7 @@ public class CompensationEventExecutionTest {
 
   private BpmnModelInstance createModelFromClasspathResource(final String classpath) {
     final var resourceAsStream = getClass().getResourceAsStream(classpath);
-    return Bpmn.readModelFromStream(resourceAsStream);
+    return BpmnModelApi.readModelFromStream(resourceAsStream);
   }
 
   private void completeJobs(final long processInstanceKey, final String jobType, final int number) {

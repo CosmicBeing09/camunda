@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.Process;
@@ -35,7 +35,7 @@ class ZeebeSignalValidationTest {
   void emptySignalStartEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process").startEvent().signal("").done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().signal("").done();
 
     // when/then
     ProcessValidationUtil.assertThatProcessHasViolations(
@@ -47,7 +47,7 @@ class ZeebeSignalValidationTest {
   void signalStartEventName() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process").startEvent().signal("signalName").done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().signal("signalName").done();
 
     // when/then
     ProcessValidationUtil.assertThatProcessIsValid(process);
@@ -58,7 +58,7 @@ class ZeebeSignalValidationTest {
   void signalStartEventNameExpression() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .signal(s -> s.nameExpression("signal_val"))
             .done();
@@ -72,7 +72,7 @@ class ZeebeSignalValidationTest {
   void signalStartEventWithCustomId() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .signal(s -> s.id("signalId").name("signalName"))
             .done();
@@ -110,7 +110,7 @@ class ZeebeSignalValidationTest {
   void emptyIntermediateCatchSignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("foo")
             .signal("")
@@ -127,7 +127,7 @@ class ZeebeSignalValidationTest {
   void intermediateCatchSignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("foo")
             .signal("signalName")
@@ -143,7 +143,7 @@ class ZeebeSignalValidationTest {
   void emptyIntermediateThrowSignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .signal("")
@@ -160,7 +160,7 @@ class ZeebeSignalValidationTest {
   void intermediateThrowSignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .signal("signalName")
@@ -176,7 +176,7 @@ class ZeebeSignalValidationTest {
   void emptyBoundarySignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("test"))
             .boundaryEvent("boundary-1", b -> b.signal(s -> s.name(null)))
@@ -199,7 +199,7 @@ class ZeebeSignalValidationTest {
   void sameBoundarySignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("test"))
             .boundaryEvent("boundary-1", b -> b.signal(s -> s.name("signalName")))
@@ -223,7 +223,7 @@ class ZeebeSignalValidationTest {
   void differentBoundarySignalEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("test"))
             .boundaryEvent("boundary-1", b -> b.signal(s -> s.name("signalName1")))
@@ -242,7 +242,7 @@ class ZeebeSignalValidationTest {
   void checkReferenceSignal() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .endEvent()
             .addExtensionElement(ZeebeTaskDefinition.class, e -> e.setType("type"))
@@ -259,7 +259,7 @@ class ZeebeSignalValidationTest {
   void differentEventWithSameSignalName() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .signal(m -> m.id("start-signal").name("signalName"))
             .serviceTask("task", t -> t.zeebeJobType("test"))
@@ -288,7 +288,7 @@ class ZeebeSignalValidationTest {
   void emptySignalEndEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process").startEvent().endEvent().signal("").done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().signal("").done();
 
     // when/then
     ProcessValidationUtil.assertThatProcessHasViolations(
@@ -300,14 +300,14 @@ class ZeebeSignalValidationTest {
   void signalEndEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process").startEvent().endEvent().signal("signalName").done();
+        BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().signal("signalName").done();
 
     // when/then
     ProcessValidationUtil.assertThatProcessIsValid(process);
   }
 
   private static BpmnModelInstance getProcessWithMultipleStartEventsWithSameSignal() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess();
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess();
     final String signalName = "signalName";
     process.startEvent("start1").signal(s -> s.id("start-signal").name(signalName)).endEvent();
     process.startEvent("start2").signal(signalName).endEvent();
@@ -315,7 +315,7 @@ class ZeebeSignalValidationTest {
   }
 
   private static BpmnModelInstance getProcessWithMultipleSignalStartEvents() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess();
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess();
     process.startEvent().signal("s1").endEvent();
     process.startEvent().signal("s2").endEvent();
     return process.startEvent().signal("s3").endEvent().done();
@@ -323,7 +323,7 @@ class ZeebeSignalValidationTest {
 
   private static BpmnModelInstance
       getEventSubProcessWithEmbeddedSubProcessWithBoundarySignalEvent() {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess("process");
     builder
         .eventSubProcess("event_sub_proc")
         .startEvent(

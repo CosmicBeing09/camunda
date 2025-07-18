@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.state.instance.TimerInstance;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -37,21 +37,21 @@ import org.junit.Test;
 public final class TimerStartEventTest {
 
   private static final BpmnModelInstance SIMPLE_MODEL =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent("start_1")
           .timerWithCycle("R1/PT1S")
           .endEvent("end_1")
           .done();
 
   private static final BpmnModelInstance REPEATING_MODEL =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent("start_2")
           .timerWithCycle("R/PT1S")
           .endEvent("end_2")
           .done();
 
   private static final BpmnModelInstance THREE_SEC_MODEL =
-      Bpmn.createExecutableProcess("process_3")
+      BpmnModelApi.createExecutableProcess("process_3")
           .startEvent("start_3")
           .timerWithCycle("R2/PT3S")
           .endEvent("end_3")
@@ -63,14 +63,14 @@ public final class TimerStartEventTest {
   private static final BpmnModelInstance MULTI_TIMER_START_MODEL = createMultipleTimerStartModel();
 
   private static final BpmnModelInstance FEEL_DATE_TIME_EXPRESSION_MODEL =
-      Bpmn.createExecutableProcess("process_5")
+      BpmnModelApi.createExecutableProcess("process_5")
           .startEvent("start_5")
           .timerWithDateExpression("date and time(date(\"2178-11-25\"),time(\"T00:00:00@UTC\"))")
           .endEvent("end_5")
           .done();
 
   private static final BpmnModelInstance FEEL_CYCLE_EXPRESSION_MODEL =
-      Bpmn.createExecutableProcess("process_5")
+      BpmnModelApi.createExecutableProcess("process_5")
           .startEvent("start_6")
           .timerWithCycleExpression("cycle(duration(\"PT1S\"))")
           .endEvent("end_6")
@@ -79,14 +79,14 @@ public final class TimerStartEventTest {
   @Rule public final EngineRule engine = EngineRule.singlePartition();
 
   private static BpmnModelInstance createTimerAndMessageStartEventsModel() {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess("process");
     builder.startEvent("none_start").endEvent("none_end");
     builder.startEvent("timer_start").timerWithCycle("R1/PT1S").endEvent("timer_end");
     return builder.startEvent("msg_start").message("msg1").endEvent("msg_end").done();
   }
 
   private static BpmnModelInstance createMultipleTimerStartModel() {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess("process_4");
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess("process_4");
     builder.startEvent("start_4").timerWithCycle("R/PT2S").endEvent("end_4");
     return builder.startEvent("start_4_2").timerWithCycle("R/PT3S").endEvent("end_4_2").done();
   }
@@ -156,14 +156,14 @@ public final class TimerStartEventTest {
   public void shouldNotReCreateTimerOnDuplicateDeployment() {
     // when
     final var firstVersion =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start_5")
             .timerWithDateExpression("now() + duration(\"PT15S\")")
             .endEvent("end_5")
             .done();
 
     final var secondVersion =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start_6")
             .timerWithDateExpression("now() + duration(\"PT15S\")")
             .endEvent("end_5")
@@ -216,14 +216,14 @@ public final class TimerStartEventTest {
   public void shouldNotReTriggerTimerAfterDuplicateDeployment() {
     // when
     final var firstVersion =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start_5")
             .timerWithDateExpression("now() + duration(\"PT15S\")")
             .endEvent("end_5")
             .done();
 
     final var secondVersion =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start_6")
             .timerWithDateExpression("now() + duration(\"PT15S\")")
             .endEvent("end_5")
@@ -557,7 +557,7 @@ public final class TimerStartEventTest {
 
     // when
     final BpmnModelInstance nonTimerModel =
-        Bpmn.createExecutableProcess("process").startEvent("start_4").endEvent("end_4").done();
+        BpmnModelApi.createExecutableProcess("process").startEvent("start_4").endEvent("end_4").done();
     final var notTimerDeployment =
         engine
             .deployment()
@@ -629,7 +629,7 @@ public final class TimerStartEventTest {
 
     // when
     final BpmnModelInstance slowerModel =
-        Bpmn.createExecutableProcess("process_3")
+        BpmnModelApi.createExecutableProcess("process_3")
             .startEvent("start_4")
             .timerWithCycle("R2/PT4S")
             .endEvent("end_4")
@@ -777,7 +777,7 @@ public final class TimerStartEventTest {
     // given
     final Instant triggerTime = Instant.now().plusMillis(2000);
     final BpmnModelInstance model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start_2")
             .timerWithDate(triggerTime.toString())
             .endEvent("end_2")
@@ -821,7 +821,7 @@ public final class TimerStartEventTest {
     // given
     final Instant triggerTime = Instant.now().plusMillis(2000);
     final BpmnModelInstance model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start_2")
             .timerWithDate(triggerTime.toString())
             .endEvent("end_2")
@@ -938,14 +938,14 @@ public final class TimerStartEventTest {
     final long firstDueDate = start.plusSeconds(10).toInstant().toEpochMilli();
     final long secondDueDate = start.plusSeconds(40).toInstant().toEpochMilli();
     final BpmnModelInstance firstModel =
-        Bpmn.createExecutableProcess("process_1")
+        BpmnModelApi.createExecutableProcess("process_1")
             .startEvent("start_1")
             .timerWithCycle(String.format("R1/%s/PT10S", start.plusSeconds(10)))
             .endEvent("end_1")
             .done();
 
     final BpmnModelInstance secondModel =
-        Bpmn.createExecutableProcess("process_2")
+        BpmnModelApi.createExecutableProcess("process_2")
             .startEvent("start_2")
             .timerWithCycle(String.format("R1/%s/PT10S", start.plusSeconds(40)))
             .endEvent("end_2")
@@ -1045,14 +1045,14 @@ public final class TimerStartEventTest {
             .plusSeconds(10);
 
     final BpmnModelInstance firstModel =
-        Bpmn.createExecutableProcess("process_1")
+        BpmnModelApi.createExecutableProcess("process_1")
             .startEvent("start_1")
             .timerWithCycle(String.format("R2/%s/PT10S", start))
             .endEvent("end_1")
             .done();
 
     final BpmnModelInstance secondModel =
-        Bpmn.createExecutableProcess("process_2")
+        BpmnModelApi.createExecutableProcess("process_2")
             .startEvent("start_2")
             .timerWithCycle(String.format("R3/%s/PT10S", start))
             .endEvent("end_2")
@@ -1134,7 +1134,7 @@ public final class TimerStartEventTest {
     final long dueDate = start.toInstant().toEpochMilli();
     final long lastDueDate = dueDate + 10_000L;
     final BpmnModelInstance model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .timerWithCycle(String.format("R2/%s/PT10S", start))
             .endEvent("end")
@@ -1216,7 +1216,7 @@ public final class TimerStartEventTest {
             .toInstant()
             .toEpochMilli();
     final BpmnModelInstance model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .timerWithCycle("0 0 * * * *")
             .endEvent("end")
@@ -1260,7 +1260,7 @@ public final class TimerStartEventTest {
     final ZonedDateTime start =
         ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()).plusMinutes(30);
     final BpmnModelInstance model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .timerWithCycle(String.format("R3/%s/PT10M", start))
             .endEvent("end")

@@ -17,7 +17,7 @@ import io.camunda.zeebe.gateway.impl.configuration.GatewayCfg;
 import io.camunda.zeebe.it.clustering.ClusteringRule;
 import io.camunda.zeebe.it.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.RuleChain;
@@ -48,7 +48,7 @@ public class NetworkCompressionTest {
 
     // when
     clientRule.deployProcess(
-        Bpmn.createExecutableProcess(processId).startEvent("start").endEvent("end").done());
+        BpmnModelApi.createExecutableProcess(processId).startEvent("start").endEvent("end").done());
 
     final ProcessInstanceEvent processInstance =
         clientRule

@@ -17,7 +17,7 @@ import io.camunda.client.api.command.SetVariablesCommandStep1;
 import io.camunda.client.api.response.SetVariablesResponse;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.protocol.record.value.VariableDocumentRecordValue;
@@ -52,7 +52,7 @@ public final class SetVariablesTest {
     resourcesHelper = new ZeebeResourcesHelper(client);
     processDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .done());

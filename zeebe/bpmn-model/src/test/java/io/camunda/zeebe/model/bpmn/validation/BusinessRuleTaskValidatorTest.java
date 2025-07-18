@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.BusinessRuleTaskBuilder;
 import io.camunda.zeebe.model.bpmn.impl.ZeebeConstants;
@@ -178,7 +178,7 @@ class BusinessRuleTaskValidatorTest {
   }
 
   private BpmnModelInstance process(final Consumer<BusinessRuleTaskBuilder> taskBuilder) {
-    return Bpmn.createExecutableProcess("process")
+    return BpmnModelApi.createExecutableProcess("process")
         .startEvent()
         .businessRuleTask("task", taskBuilder)
         .done();

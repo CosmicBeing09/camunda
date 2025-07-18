@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceMigrationIntent;
@@ -64,14 +64,14 @@ public class ProcessInstanceMigrationMigrateAuthorizationTest {
             .deployment()
             .withXmlResource(
                 "process.bpmn",
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .serviceTask(SOURCE_TASK, t -> t.zeebeJobType(JOB_TYPE))
                     .endEvent()
                     .done())
             .withXmlResource(
                 "targetProcess.bpmn",
-                Bpmn.createExecutableProcess(TARGET_PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(TARGET_PROCESS_ID)
                     .startEvent()
                     .serviceTask(TARGET_TASK, t -> t.zeebeJobType(JOB_TYPE))
                     .endEvent()

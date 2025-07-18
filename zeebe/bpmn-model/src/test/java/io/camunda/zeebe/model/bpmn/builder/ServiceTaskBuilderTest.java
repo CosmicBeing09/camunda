@@ -20,7 +20,7 @@ import static io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeExecutionListenerE
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeExecutionListener;
@@ -36,7 +36,7 @@ public class ServiceTaskBuilderTest {
   void shouldSetServiceTaskPropertiesAsExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -59,7 +59,7 @@ public class ServiceTaskBuilderTest {
   void shouldDefineExecutionListenersForServiceTask() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",

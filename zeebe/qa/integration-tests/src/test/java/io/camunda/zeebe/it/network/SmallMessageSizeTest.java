@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
@@ -51,7 +51,7 @@ public class SmallMessageSizeTest {
     jobType = UUID.randomUUID().toString();
     final var processDefinitionKey =
         CLIENT_RULE.deployProcess(
-            Bpmn.createExecutableProcess("PROCESS_" + jobType)
+            BpmnModelApi.createExecutableProcess("PROCESS_" + jobType)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType(jobType))
                 .endEvent()

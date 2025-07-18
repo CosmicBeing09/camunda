@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance.migration;
 import static io.camunda.zeebe.engine.processing.processinstance.migration.MigrationTestUtil.extractProcessDefinitionKeyByProcessId;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -41,14 +41,14 @@ public class MigrateReceiveTaskTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .receiveTask("receive1")
                     .message(m -> m.name("msg1").zeebeCorrelationKeyExpression("key1"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .receiveTask("receive2")
                     .message(m -> m.name("msg2").zeebeCorrelationKeyExpression("key2"))
@@ -128,14 +128,14 @@ public class MigrateReceiveTaskTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .receiveTask("receive1")
                     .message(m -> m.name("msg1").zeebeCorrelationKeyExpression("key1"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .receiveTask("receive2")
                     .message(m -> m.name("msg2").zeebeCorrelationKeyExpression("key2"))

@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -149,7 +149,7 @@ public final class JobThrowErrorTest {
   public void shouldThrowErrorWithVariables() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType(jobType))
             .boundaryEvent("error-boundary-event", b -> b.error(ERROR_CODE))
@@ -202,7 +202,7 @@ public final class JobThrowErrorTest {
   public void shouldThrowErrorWithVariablesAndOutputMapping() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType(jobType))
             .boundaryEvent(
@@ -260,7 +260,7 @@ public final class JobThrowErrorTest {
   public void shouldThrowErrorWithSubProcessVariables() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -319,7 +319,7 @@ public final class JobThrowErrorTest {
   public void shouldThrowErrorWithSubProcessVariablesWithOutputMapping() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -383,7 +383,7 @@ public final class JobThrowErrorTest {
   public void shouldThrowErrorWithVariablesWithEventSubProcess() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "error-event-subprocess",
                 s ->

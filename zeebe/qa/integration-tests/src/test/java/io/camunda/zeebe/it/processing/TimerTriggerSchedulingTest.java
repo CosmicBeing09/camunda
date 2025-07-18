@@ -9,7 +9,7 @@ package io.camunda.zeebe.it.processing;
 
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.test.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
@@ -48,7 +48,7 @@ public class TimerTriggerSchedulingTest {
     // given
     final long processDefinitionKey =
         CLIENT_RULE.deployProcess(
-            Bpmn.createExecutableProcess("PROCESS")
+            BpmnModelApi.createExecutableProcess("PROCESS")
                 .startEvent()
                 .intermediateCatchEvent("timer", t -> t.timerWithDurationExpression("duration"))
                 .endEvent()

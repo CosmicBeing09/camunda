@@ -14,7 +14,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.ClientException;
 import io.camunda.client.api.command.DeployResourceCommandStep1;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration;
 import io.camunda.zeebe.qa.util.junit.ZeebeIntegration.TestZeebe;
@@ -55,7 +55,7 @@ public final class CreateLargeDeploymentTest {
     final var deployLargeProcess =
         getCommand(client, useRest)
             .addProcessModel(
-                Bpmn.createExecutableProcess("PROCESS")
+                BpmnModelApi.createExecutableProcess("PROCESS")
                     .startEvent()
                     .documentation("x".repeat((int) ByteValue.ofMegabytes(MAX_MSG_SIZE_MB)))
                     .done(),

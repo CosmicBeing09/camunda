@@ -20,7 +20,7 @@ import io.camunda.client.api.search.response.UserTask;
 import io.camunda.qa.util.multidb.MultiDbTest;
 import io.camunda.qa.util.multidb.MultiDbTestApplication;
 import io.camunda.zeebe.management.cluster.PlannedOperationsResponse;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractUserTaskBuilder;
 import io.camunda.zeebe.qa.util.actuator.ClusterActuator;
@@ -62,7 +62,7 @@ public class ClusterPurgeMultiDbIT {
     // GIVEN
     final ClusterActuator actuator = ClusterActuator.of(APPLICATION);
     final var processModel =
-        Bpmn.createExecutableProcess("test-process").startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess("test-process").startEvent().endEvent().done();
     final var processDefinitionKey = deployProcessModel(processModel);
 
     // WHEN
@@ -81,7 +81,7 @@ public class ClusterPurgeMultiDbIT {
     // GIVEN
     final ClusterActuator actuator = ClusterActuator.of(APPLICATION);
     final var processModel =
-        Bpmn.createExecutableProcess("test-process")
+        BpmnModelApi.createExecutableProcess("test-process")
             .startEvent()
             .serviceTask("service-task-1")
             .zeebeJobType("test")
@@ -104,7 +104,7 @@ public class ClusterPurgeMultiDbIT {
     // GIVEN
     final ClusterActuator actuator = ClusterActuator.of(APPLICATION);
     final var processModel =
-        Bpmn.createExecutableProcess("test-process")
+        BpmnModelApi.createExecutableProcess("test-process")
             .startEvent()
             .serviceTask("service-task-1")
             .zeebeJobType("test")
@@ -136,7 +136,7 @@ public class ClusterPurgeMultiDbIT {
     // GIVEN
     final ClusterActuator actuator = ClusterActuator.of(APPLICATION);
     final var processModel =
-        Bpmn.createExecutableProcess("test-process")
+        BpmnModelApi.createExecutableProcess("test-process")
             .startEvent()
             .userTask("user-task-1", AbstractUserTaskBuilder::zeebeUserTask)
             .endEvent()
@@ -188,7 +188,7 @@ public class ClusterPurgeMultiDbIT {
     final ClusterActuator actuator = ClusterActuator.of(APPLICATION);
     final var processDefinitionKey1 =
         deployProcessModel(
-            Bpmn.createExecutableProcess("test-process1")
+            BpmnModelApi.createExecutableProcess("test-process1")
                 .startEvent()
                 .userTask()
                 .zeebeUserTask()
@@ -218,7 +218,7 @@ public class ClusterPurgeMultiDbIT {
     assertThatChangesAreApplied(planChangeResponse);
 
     final var processModel =
-        Bpmn.createExecutableProcess("test-process2")
+        BpmnModelApi.createExecutableProcess("test-process2")
             .startEvent()
             .userTask()
             .zeebeUserTask()
@@ -266,7 +266,7 @@ public class ClusterPurgeMultiDbIT {
   void clusterShouldBeReusableAfterPurge() {
     // GIVEN
     final ClusterActuator actuator = ClusterActuator.of(APPLICATION);
-    deployProcessModel(Bpmn.createExecutableProcess("any-process").startEvent().endEvent().done());
+    deployProcessModel(BpmnModelApi.createExecutableProcess("any-process").startEvent().endEvent().done());
 
     // WHEN
     final var planChangeResponse = actuator.purge(false);
@@ -275,7 +275,7 @@ public class ClusterPurgeMultiDbIT {
     assertThatChangesAreApplied(planChangeResponse);
 
     final var processModel =
-        Bpmn.createExecutableProcess("test-process")
+        BpmnModelApi.createExecutableProcess("test-process")
             .startEvent()
             .serviceTask("service-task-1")
             .zeebeJobType("test")

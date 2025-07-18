@@ -16,7 +16,7 @@
 
 package io.camunda.zeebe.model.bpmn.util;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.InputStream;
 import org.camunda.bpm.model.xml.impl.util.IoUtil;
@@ -44,7 +44,7 @@ public class ParseBpmnModelRule extends TestWatcher {
       final InputStream resourceAsStream =
           getClass().getClassLoader().getResourceAsStream(bpmnResourceName);
       try {
-        bpmnModelInstance = Bpmn.readModelFromStream(resourceAsStream);
+        bpmnModelInstance = BpmnModelApi.readModelFromStream(resourceAsStream);
       } finally {
         IoUtil.closeSilently(resourceAsStream);
       }

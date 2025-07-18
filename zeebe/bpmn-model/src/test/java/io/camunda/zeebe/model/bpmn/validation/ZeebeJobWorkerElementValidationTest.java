@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractThrowEventBuilder;
@@ -104,7 +104,7 @@ public class ZeebeJobWorkerElementValidationTest {
       final BpmnElementBuilder elementBuilder,
       final Consumer<ZeebeJobWorkerElementBuilder<?>> elementModifier) {
 
-    final StartEventBuilder processBuilder = Bpmn.createExecutableProcess("process").startEvent();
+    final StartEventBuilder processBuilder = BpmnModelApi.createExecutableProcess("process").startEvent();
     final AbstractFlowNodeBuilder<?, ?> jobWorkerElementBuilder =
         elementBuilder.build(processBuilder).id("task");
 

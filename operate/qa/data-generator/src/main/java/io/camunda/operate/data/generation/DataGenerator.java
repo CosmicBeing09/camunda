@@ -15,7 +15,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.operate.data.generation.DataGeneratorConfig.DataGeneratorThread;
 import io.camunda.operate.property.ImportProperties;
 import io.camunda.operate.qa.util.ZeebeTestUtil;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import jakarta.annotation.PreDestroy;
 import java.time.OffsetDateTime;
@@ -193,7 +193,7 @@ public class DataGenerator {
   }
 
   private BpmnModelInstance createModel(final String bpmnProcessId) {
-    return Bpmn.createExecutableProcess(bpmnProcessId)
+    return BpmnModelApi.createExecutableProcess(bpmnProcessId)
         .startEvent("start")
         .subProcess()
         .embeddedSubProcess()
@@ -217,7 +217,7 @@ public class DataGenerator {
   }
 
   private BpmnModelInstance createCallActivity1Model() {
-    return Bpmn.createExecutableProcess(PARENT_PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PARENT_PROCESS_ID)
         .startEvent("start")
         .callActivity("callActivity1")
         .zeebeProcessId("childProcess")
@@ -225,7 +225,7 @@ public class DataGenerator {
   }
 
   private BpmnModelInstance createCallActivity2Model() {
-    return Bpmn.createExecutableProcess(CHILD_PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID)
         .startEvent("start")
         .callActivity("callActivity2")
         .zeebeProcessId(getRandomBpmnProcessId())

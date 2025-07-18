@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.ActivateJobsResponse;
 import io.camunda.zeebe.gateway.Loggers;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
@@ -53,7 +53,7 @@ final class LongPollingIT {
   void shouldActivateAndCompleteJobsInTime() {
     // given
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("foo"))
             .endEvent()

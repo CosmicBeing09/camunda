@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.TaskListenerBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListener;
@@ -35,7 +35,7 @@ public class ZeebeTaskListenersValidationTest {
   void testTaskListenerTypeNotDefined() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "my_user_task",
@@ -53,7 +53,7 @@ public class ZeebeTaskListenersValidationTest {
   void testEventTypeNotDefined() {
     // given
     final BpmnModelInstance process =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ReflectUtil.getResourceAsStream(
                 "io/camunda/zeebe/model/bpmn/validation/ZeebeTaskListenersValidationTest.testEventTypeNotDefined.bpmn"));
 
@@ -69,7 +69,7 @@ public class ZeebeTaskListenersValidationTest {
   void testEventTypeSupported(final ZeebeTaskListenerEventType supportedEventType) {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .userTask(
                 "user_task",

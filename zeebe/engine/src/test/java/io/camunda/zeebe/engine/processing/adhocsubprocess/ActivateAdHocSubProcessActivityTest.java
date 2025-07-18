@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AdHocSubProcessBuilder;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.record.Record;
@@ -339,7 +339,7 @@ public class ActivateAdHocSubProcessActivityTest {
   private void deployProcess(
       final String processId, final Consumer<AdHocSubProcessBuilder> modifier) {
     final var process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .adHocSubProcess(
                 ActivateAdHocSubProcessActivityTest.AD_HOC_SUB_PROCESS_ELEMENT_ID, modifier)

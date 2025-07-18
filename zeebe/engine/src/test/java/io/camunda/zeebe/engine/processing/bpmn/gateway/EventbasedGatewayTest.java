@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -38,7 +38,7 @@ public final class EventbasedGatewayTest {
 
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final BpmnModelInstance PROCESS_WITH_TIMERS =
-      Bpmn.createExecutableProcess("PROCESS_WITH_TIMERS")
+      BpmnModelApi.createExecutableProcess("PROCESS_WITH_TIMERS")
           .startEvent("start")
           .eventBasedGateway()
           .id("gateway")
@@ -51,7 +51,7 @@ public final class EventbasedGatewayTest {
           .endEvent("end2")
           .done();
   private static final BpmnModelInstance PROCESS_WITH_EQUAL_TIMERS =
-      Bpmn.createExecutableProcess("PROCESS_WITH_EQUAL_TIMERS")
+      BpmnModelApi.createExecutableProcess("PROCESS_WITH_EQUAL_TIMERS")
           .startEvent("start")
           .eventBasedGateway()
           .id("gateway")
@@ -64,7 +64,7 @@ public final class EventbasedGatewayTest {
           .endEvent("end2")
           .done();
   private static final BpmnModelInstance PROCESS_WITH_MESSAGES =
-      Bpmn.createExecutableProcess("PROCESS_WITH_MESSAGES")
+      BpmnModelApi.createExecutableProcess("PROCESS_WITH_MESSAGES")
           .startEvent("start")
           .eventBasedGateway()
           .id("gateway")
@@ -81,7 +81,7 @@ public final class EventbasedGatewayTest {
           .endEvent("end2")
           .done();
   private static final BpmnModelInstance PROCESS_WITH_TIMER_AND_MESSAGE =
-      Bpmn.createExecutableProcess("PROCESS_WITH_TIMER_AND_MESSAGE")
+      BpmnModelApi.createExecutableProcess("PROCESS_WITH_TIMER_AND_MESSAGE")
           .startEvent("start")
           .eventBasedGateway()
           .id("gateway")

@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ExpectedValidationResult;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.ProcessValidationUtil;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AbstractBpmnModelElementBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractGatewayBuilder;
@@ -148,7 +148,7 @@ public class ExecutionListenerGatewayElementsTest {
               .apply(
                   scenario
                       .gatewayBuilderFunction
-                      .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start"))
+                      .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start"))
                       .zeebeStartExecutionListener(START_EL_TYPE + "_1")
                       .zeebeStartExecutionListener(START_EL_TYPE + "_2"))
               .done();
@@ -213,7 +213,7 @@ public class ExecutionListenerGatewayElementsTest {
               .apply(
                   scenario
                       .gatewayBuilderFunction
-                      .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start"))
+                      .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start"))
                       .zeebeStartExecutionListener(START_EL_TYPE)
                       .zeebeExecutionListener(b -> b.end().type(END_EL_TYPE)))
               .done();
@@ -235,7 +235,7 @@ public class ExecutionListenerGatewayElementsTest {
               .apply(
                   scenario
                       .gatewayBuilderFunction
-                      .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start"))
+                      .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start"))
                       .zeebeStartExecutionListener(START_EL_TYPE))
               .done();
 
@@ -268,7 +268,7 @@ public class ExecutionListenerGatewayElementsTest {
               .apply(
                   scenario
                       .gatewayBuilderFunction
-                      .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start"))
+                      .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start"))
                       .zeebeExecutionListener(l -> l.start().typeExpression(invalidExpression)))
               .done();
 
@@ -355,7 +355,7 @@ public class ExecutionListenerGatewayElementsTest {
     public void shouldSetVariableInStartListenerForExclusiveGatewayCondition() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent("start")
               .exclusiveGateway("xor")
               .zeebeStartExecutionListener(START_EL_TYPE)
@@ -419,7 +419,7 @@ public class ExecutionListenerGatewayElementsTest {
     public void shouldSetVariableInStartListenerForMessageEventAfterEventBasedGatewayElement() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent("start")
               .eventBasedGateway("event_gateway")
               .zeebeStartExecutionListener(START_EL_TYPE)
@@ -490,7 +490,7 @@ public class ExecutionListenerGatewayElementsTest {
     public void shouldSetVariableInStartListenerForSequenceFlowConditionAfterInclusiveGateway() {
       // given
       final var modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent("start")
               .inclusiveGateway("fork")
               .zeebeStartExecutionListener(START_EL_TYPE)

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.MultiInstanceLoopCharacteristicsBuilder;
 import io.camunda.zeebe.model.bpmn.builder.zeebe.MessageBuilder;
@@ -98,7 +98,7 @@ public final class MultiInstanceActivityTest {
 
   private BpmnModelInstance process(
       final Consumer<MultiInstanceLoopCharacteristicsBuilder> builder) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .serviceTask(
             ELEMENT_ID,

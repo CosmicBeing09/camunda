@@ -13,7 +13,7 @@ import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.BrokerClassRuleHelper;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -48,9 +48,9 @@ public final class CallActivityTest {
     final String child = Strings.newRandomValidBpmnId();
     final String parent = Strings.newRandomValidBpmnId();
 
-    CLIENT_RULE.deployProcess(Bpmn.createExecutableProcess(child).startEvent("v1").done());
+    CLIENT_RULE.deployProcess(BpmnModelApi.createExecutableProcess(child).startEvent("v1").done());
     CLIENT_RULE.deployProcess(
-        Bpmn.createExecutableProcess(parent)
+        BpmnModelApi.createExecutableProcess(parent)
             .startEvent("v2")
             .scriptTask("script1", c -> c.zeebeExpression("x").zeebeResultVariable("a"))
             .scriptTask("script2", c -> c.zeebeExpression("x").zeebeResultVariable("b"))
@@ -99,9 +99,9 @@ public final class CallActivityTest {
     final String child = Strings.newRandomValidBpmnId();
     final String parent = Strings.newRandomValidBpmnId();
 
-    CLIENT_RULE.deployProcess(Bpmn.createExecutableProcess(child).startEvent("v1").done());
+    CLIENT_RULE.deployProcess(BpmnModelApi.createExecutableProcess(child).startEvent("v1").done());
     CLIENT_RULE.deployProcess(
-        Bpmn.createExecutableProcess(parent)
+        BpmnModelApi.createExecutableProcess(parent)
             .startEvent("v2")
             .scriptTask("script1", c -> c.zeebeExpression("x").zeebeResultVariable("a"))
             .scriptTask("script2", c -> c.zeebeExpression("x").zeebeResultVariable("b"))
@@ -155,7 +155,7 @@ public final class CallActivityTest {
     final String parent = Strings.newRandomValidBpmnId();
 
     CLIENT_RULE.deployProcess(
-        Bpmn.createExecutableProcess(child)
+        BpmnModelApi.createExecutableProcess(child)
             .startEvent("child")
             .scriptTask("script1", c -> c.zeebeExpression("x").zeebeResultVariable("a"))
             .scriptTask("script2", c -> c.zeebeExpression("x").zeebeResultVariable("b"))
@@ -163,7 +163,7 @@ public final class CallActivityTest {
             .scriptTask("script4", c -> c.zeebeExpression("x").zeebeResultVariable("d"))
             .done());
     CLIENT_RULE.deployProcess(
-        Bpmn.createExecutableProcess(parent)
+        BpmnModelApi.createExecutableProcess(parent)
             .startEvent("parent")
             .callActivity("call-activity", c -> c.zeebeProcessId(child))
             .endEvent("end2")

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -72,7 +72,7 @@ public class MigrateProcessInstanceRejectionTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("task"))
                 .endEvent()
@@ -112,13 +112,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .userTask("B")
@@ -163,13 +163,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .userTask("A")
                     .endEvent()
@@ -218,7 +218,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask",
@@ -231,7 +231,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask(
                         "userTask",
@@ -295,7 +295,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -308,7 +308,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("serviceTask2", t -> t.zeebeJobType("A"))
                     .endEvent()
@@ -366,13 +366,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("serviceTask1", t -> t.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -434,13 +434,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("jobType"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("jobType"))
                     .endEvent()
@@ -486,13 +486,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("jobType"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("jobType"))
                     .endEvent()
@@ -538,13 +538,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent("start")
                     .subProcess(
                         "sub",
@@ -599,7 +599,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -612,7 +612,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub",
@@ -683,7 +683,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -700,7 +700,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -773,7 +773,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -790,7 +790,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -855,13 +855,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent("start")
                     .subProcess(
                         "sub1",
@@ -919,13 +919,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .serviceTask("B", t -> t.zeebeJobType("task"))
@@ -970,7 +970,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .boundaryEvent("boundary")
@@ -980,7 +980,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("boundary")
@@ -1037,14 +1037,14 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .userTask("A")
                     .zeebeUserTask()
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .userTask("B")
                     .endEvent()
@@ -1090,13 +1090,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .userTask("A")
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .userTask("B")
                     .zeebeUserTask()
@@ -1146,7 +1146,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -1158,7 +1158,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -1213,13 +1213,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary")
@@ -1274,13 +1274,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary")
@@ -1336,13 +1336,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary")
@@ -1398,7 +1398,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -1412,7 +1412,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -1478,7 +1478,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask1",
@@ -1492,7 +1492,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "serviceTask2",
@@ -1555,7 +1555,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .boundaryEvent("boundary")
@@ -1565,7 +1565,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("boundary")
@@ -1616,7 +1616,7 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process")
+                BpmnModelApi.createExecutableProcess("process")
                     .startEvent()
                     .serviceTask("A", a -> a.zeebeJobType("A"))
                     .boundaryEvent("boundary1")
@@ -1626,7 +1626,7 @@ public class MigrateProcessInstanceRejectionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("boundary2")
@@ -1684,13 +1684,13 @@ public class MigrateProcessInstanceRejectionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess("process1")
+                BpmnModelApi.createExecutableProcess("process1")
                     .startEvent("msg_start")
                     .message("msg")
                     .serviceTask("task1", t -> t.zeebeJobType("task"))
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess("process2")
+                BpmnModelApi.createExecutableProcess("process2")
                     .startEvent("msg_start")
                     .message("msg")
                     .serviceTask("task2", t -> t.zeebeJobType("task"))

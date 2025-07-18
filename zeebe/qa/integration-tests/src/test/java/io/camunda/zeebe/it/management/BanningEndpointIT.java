@@ -8,7 +8,7 @@
 package io.camunda.zeebe.it.management;
 
 import io.atomix.cluster.MemberId;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.qa.util.actuator.BanningActuator;
@@ -44,7 +44,7 @@ public class BanningEndpointIT {
     final var actuator = banningActuator();
     final long processInstanceKey;
     try (final var client = cluster.newClientBuilder().build()) {
-      final var process = Bpmn.createExecutableProcess("processId").startEvent().endEvent().done();
+      final var process = BpmnModelApi.createExecutableProcess("processId").startEvent().endEvent().done();
       client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
 
       final var result =
@@ -67,7 +67,7 @@ public class BanningEndpointIT {
     final var actuator = banningActuator();
     final long processInstanceKey;
     try (final var client = cluster.newClientBuilder().build()) {
-      final var process = Bpmn.createExecutableProcess("processId").startEvent().endEvent().done();
+      final var process = BpmnModelApi.createExecutableProcess("processId").startEvent().endEvent().done();
       client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
 
       final var result =

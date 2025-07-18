@@ -22,7 +22,7 @@ import io.camunda.qa.util.auth.TestUser;
 import io.camunda.qa.util.auth.UserDefinition;
 import io.camunda.qa.util.multidb.MultiDbTest;
 import io.camunda.qa.util.multidb.MultiDbTestApplication;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.qa.util.cluster.TestStandaloneBroker;
 import io.camunda.zeebe.test.util.Strings;
@@ -137,7 +137,7 @@ public class InheritedBasicAuthAuthorizationIT {
                   client
                       .newDeployResourceCommand()
                       .addProcessModel(
-                          Bpmn.createExecutableProcess().startEvent().endEvent().done(),
+                          BpmnModelApi.createExecutableProcess().startEvent().endEvent().done(),
                           "process.bpmn")
                       .send()
                       .join());
@@ -156,7 +156,7 @@ public class InheritedBasicAuthAuthorizationIT {
                   client
                       .newDeployResourceCommand()
                       .addProcessModel(
-                          Bpmn.createExecutableProcess().startEvent().endEvent().done(),
+                          BpmnModelApi.createExecutableProcess().startEvent().endEvent().done(),
                           "process.bpmn")
                       .send()
                       .join())

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
@@ -36,7 +36,7 @@ public final class ActivityTest {
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final String PROCESS_ID = "process";
   private static final BpmnModelInstance WITHOUT_BOUNDARY_EVENTS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask(
               "task",
@@ -47,7 +47,7 @@ public final class ActivityTest {
           .endEvent()
           .done();
   private static final BpmnModelInstance WITH_BOUNDARY_EVENTS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask("task", b -> b.zeebeJobType("type"))
           .boundaryEvent("timer1")
@@ -61,7 +61,7 @@ public final class ActivityTest {
           .endEvent("taskEnd")
           .done();
   private static final BpmnModelInstance WITH_STATIC_INPUT_MAPPING =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .serviceTask(
               "task",
@@ -263,13 +263,13 @@ public final class ActivityTest {
 
   private BpmnModelInstance createModelFromClasspathResource(final String classpath) {
     final var resourceAsStream = getClass().getResourceAsStream(classpath);
-    return Bpmn.readModelFromStream(resourceAsStream);
+    return BpmnModelApi.readModelFromStream(resourceAsStream);
   }
 
   private void createProcessAndAssertIgnoredHeaders(final String testValue) {
     // given
     final BpmnModelInstance model =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent("start")
             .serviceTask("task1", b -> b.zeebeJobType("type1").zeebeTaskHeader("key", testValue))
             .endEvent("end")

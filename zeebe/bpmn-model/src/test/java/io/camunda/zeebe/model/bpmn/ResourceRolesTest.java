@@ -37,7 +37,7 @@ public class ResourceRolesTest {
   @BeforeClass
   public static void parseModel() {
     modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             ResourceRolesTest.class.getResourceAsStream("ResourceRolesTest.bpmn"));
   }
 

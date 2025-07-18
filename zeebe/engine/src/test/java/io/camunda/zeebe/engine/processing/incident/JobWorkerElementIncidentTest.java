@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.JobWorkerElementBuilder;
 import io.camunda.zeebe.engine.util.JobWorkerElementBuilderProvider;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ZeebeJobWorkerElementBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -60,7 +60,7 @@ public class JobWorkerElementIncidentTest {
 
   private BpmnModelInstance process(
       final Consumer<ZeebeJobWorkerElementBuilder<?>> elementModifier) {
-    final var processBuilder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent();
+    final var processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent();
 
     // default job type, can be overridden by elementModifier
     final var jobWorkerElementBuilder =
@@ -398,7 +398,7 @@ public class JobWorkerElementIncidentTest {
         .withXmlResource(
             elementBuilder
                 .build(
-                    Bpmn.createExecutableProcess(PROCESS_ID).startEvent(),
+                    BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent(),
                     element ->
                         element.zeebeJobType("test").zeebeJobTypeExpression("invalid_job_type"))
                 .id("task")

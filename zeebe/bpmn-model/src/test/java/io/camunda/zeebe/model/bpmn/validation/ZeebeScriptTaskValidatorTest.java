@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ScriptTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.ScriptTask;
@@ -92,7 +92,7 @@ class ZeebeScriptTaskValidatorTest {
   }
 
   private BpmnModelInstance process(final Consumer<ScriptTaskBuilder> taskBuilder) {
-    return Bpmn.createExecutableProcess("process")
+    return BpmnModelApi.createExecutableProcess("process")
         .startEvent()
         .scriptTask("task", taskBuilder)
         .done();

@@ -41,7 +41,7 @@ public class ReferenceTest extends BpmnModelTest {
 
   @Before
   public void createModel() {
-    testBpmnModelInstance = Bpmn.createEmptyModel();
+    testBpmnModelInstance = BpmnModelApi.createEmptyModel();
     final Definitions definitions = testBpmnModelInstance.newInstance(Definitions.class);
     testBpmnModelInstance.setDefinitions(definitions);
 

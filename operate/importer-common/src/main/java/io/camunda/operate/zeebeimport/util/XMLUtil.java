@@ -9,7 +9,7 @@ package io.camunda.operate.zeebeimport.util;
 
 import io.camunda.webapps.schema.entities.ProcessEntity;
 import io.camunda.webapps.schema.entities.ProcessFlowNodeEntity;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.FlowNode;
 import java.io.ByteArrayInputStream;
@@ -63,7 +63,7 @@ public class XMLUtil {
       }
       final Set<String> processChildrenIds = handler.getProcessChildrenIds(bpmnProcessId);
       is = new ByteArrayInputStream(byteArray);
-      final BpmnModelInstance modelInstance = Bpmn.readModelFromStream(is);
+      final BpmnModelInstance modelInstance = BpmnModelApi.readModelFromStream(is);
       final Collection<FlowNode> flowNodes = modelInstance.getModelElementsByType(FlowNode.class);
       flowNodes.stream()
           .filter(x -> processChildrenIds.contains(x.getId()))

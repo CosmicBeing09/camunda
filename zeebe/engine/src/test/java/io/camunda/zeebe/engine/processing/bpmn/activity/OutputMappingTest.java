@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.record.Record;
@@ -52,7 +52,7 @@ public class OutputMappingTest {
     return Arrays.asList(
         new Object[][] {
           {
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     "serviceTaskId",
@@ -63,7 +63,7 @@ public class OutputMappingTest {
             handler(key -> ENGINE.job().withType("type").ofInstance(key).complete())
           },
           {
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .intermediateThrowEvent(
                     "intermediateThrowEventId", b -> b.zeebeOutputExpression("foo", "bar"))
@@ -73,7 +73,7 @@ public class OutputMappingTest {
             handler(key -> {})
           },
           {
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("userTaskId", b -> b.zeebeOutputExpression("foo", "bar"))
                 .endEvent()
@@ -84,7 +84,7 @@ public class OutputMappingTest {
                     ENGINE.job().withType(Protocol.USER_TASK_JOB_TYPE).ofInstance(key).complete())
           },
           {
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("nativeUserTaskId", b -> b.zeebeOutputExpression("foo", "bar"))
                 .zeebeUserTask()

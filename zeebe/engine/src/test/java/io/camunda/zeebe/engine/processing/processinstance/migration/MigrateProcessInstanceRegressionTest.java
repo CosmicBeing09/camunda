@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -42,7 +42,7 @@ public class MigrateProcessInstanceRegressionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("task"))
                     .boundaryEvent(
@@ -55,7 +55,7 @@ public class MigrateProcessInstanceRegressionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", t -> t.zeebeJobType("task"))
                     .boundaryEvent(
@@ -115,14 +115,14 @@ public class MigrateProcessInstanceRegressionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .zeebeStartExecutionListener(startELType, "1")
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("taskA"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", t -> t.zeebeJobType("taskB"))
                     .endEvent()

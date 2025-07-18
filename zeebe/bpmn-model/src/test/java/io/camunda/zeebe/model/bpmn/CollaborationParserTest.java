@@ -42,7 +42,7 @@ public class CollaborationParserTest {
   @BeforeClass
   public static void parseModel() {
     modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             CollaborationParserTest.class.getResourceAsStream("CollaborationParserTest.bpmn"));
     collaboration = modelInstance.getModelElementById("collaboration1");
   }
@@ -104,6 +104,6 @@ public class CollaborationParserTest {
 
   @AfterClass
   public static void validateModel() {
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
   }
 }

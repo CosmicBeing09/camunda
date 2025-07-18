@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.instance.zeebe;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.impl.BpmnModelConstants;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstanceTest;
@@ -49,12 +49,12 @@ public class ZeebeVersionTagTest extends BpmnModelElementInstanceTest {
   public void shouldReadVersionTagFromXml() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process").versionTag("v1").startEvent().done();
-    final String modelXml = Bpmn.convertToString(modelInstance);
+        BpmnModelApi.createExecutableProcess("process").versionTag("v1").startEvent().done();
+    final String modelXml = BpmnModelApi.convertToString(modelInstance);
 
     // when
     final Process process =
-        Bpmn.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
+        BpmnModelApi.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
             .getModelElementById("process");
     final ZeebeVersionTag versionTag = process.getSingleExtensionElement(ZeebeVersionTag.class);
 

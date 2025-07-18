@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
@@ -42,7 +42,7 @@ public final class MultiInstanceReceiveTaskTest {
   private static final String OUTPUT_COLLECTION = "results";
 
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .receiveTask(
               ELEMENT_ID,

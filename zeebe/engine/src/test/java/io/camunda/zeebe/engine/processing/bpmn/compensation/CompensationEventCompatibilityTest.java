@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractActivityBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
@@ -157,7 +157,7 @@ public class CompensationEventCompatibilityTest {
   public static void deployResources() {
     // child process for call activity
     final BpmnModelInstance childProcess =
-        Bpmn.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID).startEvent().endEvent().done();
 
     ENGINE
         .deployment()
@@ -169,7 +169,7 @@ public class CompensationEventCompatibilityTest {
   @Test
   public void shouldCompensateActivity() {
     // given
-    final var processBuilder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent();
+    final var processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent();
     // add compensation activity
     final var compensationActivity = scenario.builder.apply(processBuilder);
     // add compensation handler
@@ -222,7 +222,7 @@ public class CompensationEventCompatibilityTest {
   @Test
   public void shouldInvokeCompensationHandler() {
     // given
-    final var processBuilder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent();
+    final var processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent();
     // add compensation activity
     final var compensationActivity = processBuilder.task("compensation-activity");
     // add compensation handler

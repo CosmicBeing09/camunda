@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.JobClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -48,7 +48,7 @@ public final class JobFailIncidentTest {
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final String JOB_TYPE = "test";
   private static final BpmnModelInstance PROCESS_INPUT_MAPPING =
-      Bpmn.createExecutableProcess("process")
+      BpmnModelApi.createExecutableProcess("process")
           .startEvent()
           .serviceTask(
               "failingTask", t -> t.zeebeJobType(JOB_TYPE).zeebeInputExpression("foo", "foo"))

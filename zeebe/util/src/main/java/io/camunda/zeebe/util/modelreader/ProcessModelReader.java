@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.util.modelreader;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.Query;
 import io.camunda.zeebe.model.bpmn.instance.BaseElement;
 import io.camunda.zeebe.model.bpmn.instance.CallActivity;
@@ -43,7 +43,7 @@ public final class ProcessModelReader {
       final byte[] byteArray, final String bpmnProcessId) {
     try {
       final var is = new ByteArrayInputStream(byteArray);
-      final var bpmnModelInstance = Bpmn.readModelFromStream(is);
+      final var bpmnModelInstance = BpmnModelApi.readModelFromStream(is);
       final var processModelInstance = bpmnModelInstance.getModelElementById(bpmnProcessId);
       if (processModelInstance instanceof final Process process) {
         return Optional.of(new ProcessModelReader(process));

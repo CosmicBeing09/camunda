@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -42,21 +42,21 @@ public final class CancelProcessInstanceTest {
 
   @ClassRule public static final EngineRule ENGINE = EngineRule.singlePartition();
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess("PROCESS")
+      BpmnModelApi.createExecutableProcess("PROCESS")
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test").zeebeJobRetries("5"))
           .endEvent()
           .done();
 
   private static final BpmnModelInstance PROCESS_USER_TASK =
-      Bpmn.createExecutableProcess("PROCESS_USER_TASK")
+      BpmnModelApi.createExecutableProcess("PROCESS_USER_TASK")
           .startEvent()
           .userTask("task")
           .zeebeUserTask()
           .endEvent()
           .done();
   private static final BpmnModelInstance SUB_PROCESS_PROCESS =
-      Bpmn.createExecutableProcess("SUB_PROCESS_PROCESS")
+      BpmnModelApi.createExecutableProcess("SUB_PROCESS_PROCESS")
           .startEvent()
           .subProcess("subProcess")
           .embeddedSubProcess()
@@ -70,7 +70,7 @@ public final class CancelProcessInstanceTest {
 
   static {
     final AbstractFlowNodeBuilder<?, ?> builder =
-        Bpmn.createExecutableProcess("FORK_PROCESS")
+        BpmnModelApi.createExecutableProcess("FORK_PROCESS")
             .startEvent("start")
             .parallelGateway("fork")
             .serviceTask("task1", b -> b.zeebeJobType("type1"))
@@ -274,7 +274,7 @@ public final class CancelProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("shouldCancelIntermediateCatchEvent")
+            BpmnModelApi.createExecutableProcess("shouldCancelIntermediateCatchEvent")
                 .startEvent()
                 .intermediateCatchEvent("catch-event")
                 .message(b -> b.name("msg").zeebeCorrelationKeyExpression("id"))
@@ -419,7 +419,7 @@ public final class CancelProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("shouldRejectCancelCompletedProcessInstance")
+            BpmnModelApi.createExecutableProcess("shouldRejectCancelCompletedProcessInstance")
                 .startEvent()
                 .endEvent()
                 .done())

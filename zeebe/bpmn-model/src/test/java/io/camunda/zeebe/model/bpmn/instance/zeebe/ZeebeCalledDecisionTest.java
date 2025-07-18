@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.instance.zeebe;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.impl.BpmnModelConstants;
 import io.camunda.zeebe.model.bpmn.instance.BpmnModelElementInstanceTest;
@@ -55,15 +55,15 @@ public class ZeebeCalledDecisionTest extends BpmnModelElementInstanceTest {
   public void shouldReadValidBindingTypeFromXml() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .businessRuleTask("task", task -> task.zeebeBindingType(ZeebeBindingType.deployment))
             .done();
-    final String modelXml = Bpmn.convertToString(modelInstance);
+    final String modelXml = BpmnModelApi.convertToString(modelInstance);
 
     // when
     final BusinessRuleTask businessRuleTask =
-        Bpmn.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
+        BpmnModelApi.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
             .getModelElementById("task");
     final ZeebeCalledDecision calledDecision =
         businessRuleTask.getSingleExtensionElement(ZeebeCalledDecision.class);
@@ -76,17 +76,17 @@ public class ZeebeCalledDecisionTest extends BpmnModelElementInstanceTest {
   public void shouldThrowExceptionForInvalidBindingTypeInXml() {
     // given
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess()
+        BpmnModelApi.createExecutableProcess()
             .startEvent()
             .businessRuleTask("task", task -> task.zeebeBindingType(ZeebeBindingType.deployment))
             .done();
     final String modelXml =
-        Bpmn.convertToString(modelInstance)
+        BpmnModelApi.convertToString(modelInstance)
             .replace("bindingType=\"deployment\"", "bindingType=\"foo\"");
 
     // when
     final BusinessRuleTask businessRuleTask =
-        Bpmn.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
+        BpmnModelApi.readModelFromStream(new ByteArrayInputStream(modelXml.getBytes()))
             .getModelElementById("task");
     final ZeebeCalledDecision calledDecision =
         businessRuleTask.getSingleExtensionElement(ZeebeCalledDecision.class);

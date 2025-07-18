@@ -52,7 +52,7 @@ import io.camunda.webapps.schema.entities.flownode.FlowNodeInstanceEntity;
 import io.camunda.webapps.schema.entities.flownode.FlowNodeState;
 import io.camunda.webapps.schema.entities.flownode.FlowNodeType;
 import io.camunda.webapps.schema.entities.operation.OperationType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.IOException;
 import java.time.Duration;
@@ -262,7 +262,7 @@ public class OperateTester {
   public OperateTester createAndDeploySimpleProcess(
       final String processId, final String activityId) {
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .serviceTask(activityId)
             .zeebeJobType(activityId)

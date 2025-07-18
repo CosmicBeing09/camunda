@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.builder;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.ExtensionElements;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeScript;
@@ -31,7 +31,7 @@ public class ScriptTaskBuilderTest {
   void shouldSetExpression() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .scriptTask("task", task -> task.zeebeExpression("true"))
             .done();
@@ -50,7 +50,7 @@ public class ScriptTaskBuilderTest {
   void shouldSetResultVariable() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .scriptTask("task", task -> task.zeebeResultVariable("result"))
             .done();
@@ -69,7 +69,7 @@ public class ScriptTaskBuilderTest {
   void shouldSetExpressionAndResultVariable() {
     // when
     final BpmnModelInstance instance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .scriptTask(
                 "task", task -> task.zeebeExpression("expression").zeebeResultVariable("result"))

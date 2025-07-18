@@ -17,7 +17,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -70,12 +70,12 @@ public class ExecutionListenerMultiInstanceActivitiesTest {
 
   private static void createChildProcess() {
     final var childProcess =
-        Bpmn.createExecutableProcess(SUB_PROCESS_ID).startEvent().manualTask().endEvent().done();
+        BpmnModelApi.createExecutableProcess(SUB_PROCESS_ID).startEvent().manualTask().endEvent().done();
     ENGINE.deployment().withXmlResource("child.xml", childProcess).deploy();
   }
 
   private BpmnModelInstance buildMainProcessModel(boolean sequential) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .serviceTask(
             "service_task",

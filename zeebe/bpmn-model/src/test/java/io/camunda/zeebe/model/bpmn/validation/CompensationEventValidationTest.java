@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.instance.CompensateEventDefinition;
@@ -38,7 +38,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess().startEvent(),
+            BpmnModelApi.createExecutableProcess().startEvent(),
             elementBuilder,
             compensationEventDefinition -> {});
 
@@ -53,7 +53,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess().startEvent(),
+            BpmnModelApi.createExecutableProcess().startEvent(),
             elementBuilder,
             compensationEventDefinition ->
                 compensationEventDefinition.setAttributeValue("activityRef", "non-existing"));
@@ -74,7 +74,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess()
+            BpmnModelApi.createExecutableProcess()
                 .startEvent()
                 .userTask(
                     "task",
@@ -97,7 +97,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess()
+            BpmnModelApi.createExecutableProcess()
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -117,7 +117,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess().startEvent().userTask("task"),
+            BpmnModelApi.createExecutableProcess().startEvent().userTask("task"),
             elementBuilder,
             compensationEventDefinition ->
                 compensationEventDefinition.setAttributeValue("activityRef", "task"));
@@ -137,7 +137,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess()
+            BpmnModelApi.createExecutableProcess()
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -167,7 +167,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .userTask(
                     "task",
@@ -194,7 +194,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .endEvent()
                 .moveToProcess("process")
@@ -223,7 +223,7 @@ class CompensationEventValidationTest {
     // given
     final BpmnModelInstance process =
         processWithCompensationThrowEvent(
-            Bpmn.createExecutableProcess("process")
+            BpmnModelApi.createExecutableProcess("process")
                 .startEvent()
                 .subProcess(
                     "subprocess",

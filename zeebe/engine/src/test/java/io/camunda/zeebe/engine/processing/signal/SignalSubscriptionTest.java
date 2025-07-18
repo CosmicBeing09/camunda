@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -163,7 +163,7 @@ public final class SignalSubscriptionTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final var process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .serviceTask("task", s -> s.zeebeJobType("test"))
             .boundaryEvent("catch", b -> b.signal("signal"))
@@ -190,7 +190,7 @@ public final class SignalSubscriptionTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final var process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .intermediateCatchEvent("catch", b -> b.signal("signal"))
             .endEvent()
@@ -216,7 +216,7 @@ public final class SignalSubscriptionTest {
     // given
     final String processId = Strings.newRandomValidBpmnId();
     final var process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .eventSubProcess("sub", e -> e.startEvent("catch", s -> s.signal("signal")).endEvent())
             .startEvent()
             .endEvent()
@@ -238,7 +238,7 @@ public final class SignalSubscriptionTest {
   }
 
   private static BpmnModelInstance createProcessWithOneSignalStartEvent(final String processId) {
-    return Bpmn.createExecutableProcess(processId)
+    return BpmnModelApi.createExecutableProcess(processId)
         .startEvent(EVENT_ID1)
         .signal(s -> s.name(SIGNAL_NAME1).id("startSignalId"))
         .endEvent()
@@ -246,7 +246,7 @@ public final class SignalSubscriptionTest {
   }
 
   private static BpmnModelInstance createProcessWithTwoSignalStartEvent(final String processId) {
-    final ProcessBuilder process = Bpmn.createExecutableProcess(processId);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(processId);
     process.startEvent(EVENT_ID1).signal(s -> s.name(SIGNAL_NAME1).id("startSignalId1")).endEvent();
     process.startEvent(EVENT_ID2).signal(s -> s.name(SIGNAL_NAME2).id("startSignalId2")).endEvent();
     return process.done();

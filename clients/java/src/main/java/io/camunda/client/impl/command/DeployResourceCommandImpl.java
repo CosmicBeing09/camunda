@@ -37,7 +37,7 @@ import io.camunda.zeebe.gateway.protocol.GatewayGrpc.GatewayStub;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.DeployResourceRequest;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.DeployResourceResponse;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.Resource;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.grpc.stub.StreamObserver;
 import java.io.ByteArrayOutputStream;
@@ -204,7 +204,7 @@ public final class DeployResourceCommandImpl
     ensureNotNull("process model", processDefinition);
 
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, processDefinition);
+    BpmnModelApi.writeModelToStream(outStream, processDefinition);
     return addResourceBytes(outStream.toByteArray(), resourceName);
   }
 

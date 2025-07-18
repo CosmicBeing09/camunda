@@ -267,12 +267,12 @@ import org.camunda.bpm.model.xml.impl.util.IoUtil;
  *
  * @author Daniel Meyer
  */
-public class Bpmn {
+public class BpmnModelApi {
 
-  public static final Bpmn INSTANCE = new BpmnImpl();
+  public static final BpmnModelApi INSTANCE = new BpmnImpl();
 
   /** the parser used by the Bpmn implementation. */
-  private final BpmnParser bpmnParser = new BpmnParser();
+  private final BpmnParser parser = new BpmnParser();
 
   private final ModelBuilder bpmnModelBuilder;
 
@@ -280,7 +280,7 @@ public class Bpmn {
   private Model bpmnModel;
 
   /** Register known types of the BPMN model */
-  protected Bpmn() {
+  protected BpmnModelApi() {
     bpmnModelBuilder = ModelBuilder.createInstance("BPMN Model");
     doRegisterTypes(bpmnModelBuilder);
     bpmnModel = bpmnModelBuilder.build();
@@ -410,7 +410,7 @@ public class Bpmn {
   }
 
   protected BpmnModelInstance doReadModelFromInputStream(final InputStream is) {
-    return bpmnParser.parseModelFromStream(is);
+    return parser.parseModelFromStream(is);
   }
 
   protected void doWriteModelToFile(final File file, final BpmnModelInstance modelInstance) {
@@ -441,11 +441,11 @@ public class Bpmn {
   }
 
   protected void doValidateModel(final BpmnModelInstance modelInstance) {
-    bpmnParser.validateModel(modelInstance.getDocument());
+    parser.validateModel(modelInstance.getDocument());
   }
 
   protected BpmnModelInstance doCreateEmptyModel() {
-    return bpmnParser.getEmptyModel();
+    return parser.getEmptyModel();
   }
 
   protected void doRegisterTypes(final ModelBuilder bpmnModelBuilder) {

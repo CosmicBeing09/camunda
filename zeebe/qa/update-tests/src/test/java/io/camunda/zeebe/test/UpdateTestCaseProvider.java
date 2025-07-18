@@ -10,7 +10,7 @@ package io.camunda.zeebe.test;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.api.response.ActivateJobsResponse;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.test.UpdateTestCase.TestCaseBuilder;
 import io.camunda.zeebe.util.collection.Tuple;
@@ -55,7 +55,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
         scenario()
             .name("message event sub-process")
             .deployProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .eventSubProcess(
                         "event-subprocess",
                         eventSubProcess ->
@@ -145,7 +145,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
         scenario()
             .name("parallel gateway")
             .deployProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .parallelGateway("fork")
                     .serviceTask(TASK, t -> t.zeebeJobType(TASK))
@@ -162,7 +162,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
         scenario()
             .name("exclusive gateway")
             .deployProcess(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .exclusiveGateway()
                     .sequenceFlowId("s1")
@@ -181,7 +181,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
             .done(),
         scenario()
             .name("Uses correct process version after upgrade")
-            .deployProcess(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+            .deployProcess(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
             .createInstance() // We need to create an instance as the test runners expect this
             .beforeUpgrade(
                 state ->
@@ -189,7 +189,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
                         .client()
                         .newDeployResourceCommand()
                         .addProcessModel(
-                            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done(),
+                            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done(),
                             "process.bpmn")
                         .send()
                         .join()
@@ -212,7 +212,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance jobProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .serviceTask(TASK, t -> t.zeebeJobType(TASK))
         .endEvent()
@@ -236,7 +236,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance messageProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .intermediateCatchEvent(
             "catch", b -> b.message(m -> m.name(MESSAGE).zeebeCorrelationKeyExpression("key")))
@@ -260,7 +260,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance msgStartProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .message(b -> b.zeebeCorrelationKeyExpression("key").name(MESSAGE))
         .endEvent()
@@ -268,7 +268,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance timerProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .timerWithCycle("R/PT1S")
         .endEvent()
@@ -276,7 +276,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance incidentProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .exclusiveGateway("gateway")
         .sequenceFlowId("to-a")
@@ -302,7 +302,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance parentProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .callActivity("c", b -> b.zeebeProcessId(CHILD_PROCESS_ID))
         .endEvent()
@@ -310,7 +310,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance childProcess() {
-    return Bpmn.createExecutableProcess(CHILD_PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(CHILD_PROCESS_ID)
         .startEvent()
         .serviceTask(TASK, b -> b.zeebeJobType(TASK))
         .endEvent()
@@ -398,7 +398,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
             .client()
             .newDeployResourceCommand()
             .addProcessModel(
-                Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done(),
+                BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done(),
                 "process.bpmn")
             .send()
             .join();
@@ -406,7 +406,7 @@ public class UpdateTestCaseProvider implements ArgumentsProvider {
   }
 
   private BpmnModelInstance compensationProcess() {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .serviceTask(
             "A",

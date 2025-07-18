@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -75,7 +75,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
@@ -108,7 +108,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -142,7 +142,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask(
                     "task",
@@ -188,7 +188,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .intermediateCatchEvent("timer", e -> e.timerWithDuration("PT0S"))
                 .endEvent()
@@ -214,7 +214,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .intermediateCatchEvent(
                     "message",
@@ -261,7 +261,7 @@ public final class ProcessExecutionCleanStateTest {
         engineRule
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .message(m -> m.name("message").zeebeCorrelationKeyExpression("key"))
                     .zeebeOutputExpression("x", "y")
@@ -301,7 +301,7 @@ public final class ProcessExecutionCleanStateTest {
     // deploy new process without message start event to close the open subscription
     engineRule
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
         .deploy();
 
     RecordingExporter.messageStartEventSubscriptionRecords(
@@ -319,7 +319,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .boundaryEvent("error", b -> b.error("ERROR"))
@@ -353,7 +353,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
@@ -401,7 +401,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .exclusiveGateway()
                 .sequenceFlowId("s1")
@@ -433,7 +433,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .endEvent()
@@ -461,7 +461,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .eventBasedGateway()
                 .intermediateCatchEvent("timer", e -> e.timerWithDuration("PT0S"))
@@ -497,7 +497,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-subprocess",
                     subprocess ->
@@ -528,9 +528,9 @@ public final class ProcessExecutionCleanStateTest {
   @Test
   public void testProcessWithCallActivity() {
     // given
-    final var childProcess = Bpmn.createExecutableProcess("child").startEvent().endEvent().done();
+    final var childProcess = BpmnModelApi.createExecutableProcess("child").startEvent().endEvent().done();
     final var parentProcess =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity("call", c -> c.zeebeProcessId("child"))
             .endEvent()
@@ -560,7 +560,7 @@ public final class ProcessExecutionCleanStateTest {
     // given
     engineRule
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
         .deploy();
 
     // when
@@ -587,7 +587,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
@@ -620,7 +620,7 @@ public final class ProcessExecutionCleanStateTest {
         engineRule
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .timerWithCycle("R/PT10S")
                     .endEvent()
@@ -634,7 +634,7 @@ public final class ProcessExecutionCleanStateTest {
     // deploy new process without timer start event to delete the timer
     engineRule
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
         .deploy();
 
     RecordingExporter.timerRecords(TimerIntent.CANCELED)
@@ -652,7 +652,7 @@ public final class ProcessExecutionCleanStateTest {
         engineRule
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .message(m -> m.name("msg").zeebeCorrelationKey("=123"))
                     .endEvent()
@@ -666,7 +666,7 @@ public final class ProcessExecutionCleanStateTest {
     // deploy new process without msg start event to delete the subscription and event scope
     engineRule
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
         .deploy();
 
     RecordingExporter.messageStartEventSubscriptionRecords(
@@ -685,7 +685,7 @@ public final class ProcessExecutionCleanStateTest {
         engineRule
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .timerWithDate("=now() + duration(\"PT15S\")")
                     .endEvent()
@@ -719,7 +719,7 @@ public final class ProcessExecutionCleanStateTest {
         engineRule
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .timerWithCycle("R/PT10S")
                     .endEvent()
@@ -733,7 +733,7 @@ public final class ProcessExecutionCleanStateTest {
         engineRule
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(PROCESS_ID)
+                BpmnModelApi.createExecutableProcess(PROCESS_ID)
                     .startEvent()
                     .timerWithCycle("R/PT5S")
                     .endEvent()
@@ -747,7 +747,7 @@ public final class ProcessExecutionCleanStateTest {
     // deploy new process without timer start event to delete the timer
     engineRule
         .deployment()
-        .withXmlResource(Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
+        .withXmlResource(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done())
         .deploy();
 
     RecordingExporter.timerRecords(TimerIntent.CANCELED)
@@ -768,7 +768,7 @@ public final class ProcessExecutionCleanStateTest {
     engineRule
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .endEvent()
@@ -800,7 +800,7 @@ public final class ProcessExecutionCleanStateTest {
   public void testProcessWithCompensationEventTriggered() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",
@@ -836,7 +836,7 @@ public final class ProcessExecutionCleanStateTest {
   public void testProcessWithCompensationEventNotTriggered() {
     // given
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask(
                 "A",

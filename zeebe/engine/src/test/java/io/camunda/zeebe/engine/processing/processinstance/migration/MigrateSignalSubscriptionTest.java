@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -44,7 +44,7 @@ public class MigrateSignalSubscriptionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -54,7 +54,7 @@ public class MigrateSignalSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary2")
@@ -132,7 +132,7 @@ public class MigrateSignalSubscriptionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -146,7 +146,7 @@ public class MigrateSignalSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary3")
@@ -251,7 +251,7 @@ public class MigrateSignalSubscriptionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -265,7 +265,7 @@ public class MigrateSignalSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary3")
@@ -357,7 +357,7 @@ public class MigrateSignalSubscriptionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -367,7 +367,7 @@ public class MigrateSignalSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary2")
@@ -458,7 +458,7 @@ public class MigrateSignalSubscriptionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -468,7 +468,7 @@ public class MigrateSignalSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary2")
@@ -552,7 +552,7 @@ public class MigrateSignalSubscriptionTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary1")
@@ -562,7 +562,7 @@ public class MigrateSignalSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary2")

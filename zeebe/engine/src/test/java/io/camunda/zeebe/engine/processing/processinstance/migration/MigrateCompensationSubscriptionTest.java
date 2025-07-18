@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AbstractThrowEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.BoundaryEventBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -48,7 +48,7 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -63,7 +63,7 @@ public class MigrateCompensationSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("C", t -> t.zeebeJobType("C"))
                     .boundaryEvent(
@@ -138,7 +138,7 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess("subProcess1")
                     .embeddedSubProcess()
@@ -158,7 +158,7 @@ public class MigrateCompensationSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess("subProcess2")
                     .embeddedSubProcess()
@@ -246,7 +246,7 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -261,7 +261,7 @@ public class MigrateCompensationSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("C", t -> t.zeebeJobType("C"))
                     .boundaryEvent(
@@ -366,7 +366,7 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask(
                         "A",
@@ -384,7 +384,7 @@ public class MigrateCompensationSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask(
                         "C",
@@ -471,7 +471,7 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -486,7 +486,7 @@ public class MigrateCompensationSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("C", t -> t.zeebeJobType("C"))
                     .endEvent()
@@ -542,13 +542,13 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("B", t -> t.zeebeJobType("B"))
                     .boundaryEvent(
@@ -621,7 +621,7 @@ public class MigrateCompensationSubscriptionTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -636,7 +636,7 @@ public class MigrateCompensationSubscriptionTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .serviceTask("C", t -> t.zeebeJobType("C"))
                     .boundaryEvent(

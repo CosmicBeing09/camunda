@@ -22,7 +22,7 @@ import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
 import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import java.net.URI;
 import java.net.http.HttpRequest;
@@ -71,7 +71,7 @@ public abstract class UserTaskMigrationHelper {
   protected static long deployProcess(
       final CamundaClient client, final UnaryOperator<UserTaskBuilder> builder) {
     final var process =
-        Bpmn.createExecutableProcess("task-process")
+        BpmnModelApi.createExecutableProcess("task-process")
             .startEvent()
             .name("start")
             .userTask("user-task", builder::apply)

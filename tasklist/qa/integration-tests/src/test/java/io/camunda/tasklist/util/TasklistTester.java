@@ -30,7 +30,7 @@ import io.camunda.tasklist.webapp.security.TasklistURIs;
 import io.camunda.tasklist.webapp.security.oauth.IdentityJwt2AuthenticationTokenConverter;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskState;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.protocol.Protocol;
@@ -157,7 +157,7 @@ public class TasklistTester {
       final String flowNodeBpmnId,
       final Consumer<UserTaskBuilder>... taskModifiers) {
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .userTask(
                 flowNodeBpmnId,
@@ -192,7 +192,7 @@ public class TasklistTester {
   public TasklistTester createAndDeploySimpleProcess(
       final String processId, final String flowNodeBpmnId, final String tenantId) {
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent("start")
             .userTask(flowNodeBpmnId)
             .endEvent()

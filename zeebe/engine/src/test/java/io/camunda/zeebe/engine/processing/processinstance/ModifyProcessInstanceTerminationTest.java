@@ -12,7 +12,7 @@ import static org.assertj.core.groups.Tuple.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
@@ -54,7 +54,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -83,7 +83,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .zeebeUserTask()
@@ -113,7 +113,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
@@ -154,7 +154,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -189,7 +189,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobTypeExpression("A")) // invalid expression
                 .endEvent()
@@ -222,7 +222,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .boundaryEvent("timer", t -> t.timerWithDuration("PT1H").endEvent())
@@ -269,7 +269,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("gateway")
                 .serviceTask("A", a -> a.zeebeJobType("A"))
@@ -319,7 +319,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().userTask("A").endEvent().done())
         .deploy();
 
     final var processInstanceKey = ENGINE.processInstance().ofBpmnProcessId(PROCESS_ID).create();
@@ -344,7 +344,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -410,7 +410,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess("subprocess-lvl-1", subprocessLvl1Builder)
                 .endEvent()
@@ -441,7 +441,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -483,7 +483,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -548,7 +548,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .userTask("A")
@@ -617,7 +617,7 @@ public class ModifyProcessInstanceTerminationTest {
     final var correlationKey = CLASS_RULE_HELPER.getCorrelationValue();
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .eventSubProcess(
                 "event-subprocess",
                 eventSubprocess ->
@@ -713,7 +713,7 @@ public class ModifyProcessInstanceTerminationTest {
                 .endEvent();
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .subProcess(
                 "subprocess",
@@ -797,14 +797,14 @@ public class ModifyProcessInstanceTerminationTest {
     // given
     final String callActivityProcessId = "callActivityProcess";
     final var callActivityProcess =
-        Bpmn.createExecutableProcess(callActivityProcessId)
+        BpmnModelApi.createExecutableProcess(callActivityProcessId)
             .startEvent()
             .userTask("A")
             .endEvent()
             .done();
 
     final var process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity(
                 "callActivity", callActivity -> callActivity.zeebeProcessId(callActivityProcessId))
@@ -868,7 +868,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "A",
@@ -945,7 +945,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "A",
@@ -1011,7 +1011,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "A",
@@ -1107,7 +1107,7 @@ public class ModifyProcessInstanceTerminationTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess("eventSubProcess", eventSubProcess)
                 .startEvent()
                 .userTask("A")

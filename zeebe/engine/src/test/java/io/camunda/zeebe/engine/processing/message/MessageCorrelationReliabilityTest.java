@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.message;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.SubscriptionUtil;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -41,7 +41,7 @@ public final class MessageCorrelationReliabilityTest {
 
     final var messageName = "message-" + UUID.randomUUID();
     final var process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("receive-message")
             .message(m -> m.name(messageName).zeebeCorrelationKeyExpression("key"))

@@ -13,7 +13,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.response.ActivatedJob;
 import io.camunda.client.api.response.StreamJobsResponse;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -67,7 +67,7 @@ final class StreamJobsTest {
     final var jobs = new ArrayList<ActivatedJob>();
     final var uniqueId = Strings.newRandomValidBpmnId();
     final var process =
-        Bpmn.createExecutableProcess(uniqueId)
+        BpmnModelApi.createExecutableProcess(uniqueId)
             .startEvent()
             .serviceTask("task01", b -> b.zeebeJobType(uniqueId))
             .serviceTask("task02", b -> b.zeebeJobType(uniqueId))
@@ -129,7 +129,7 @@ final class StreamJobsTest {
     final var streamedJobs = new ArrayList<ActivatedJob>();
     final var uniqueId = Strings.newRandomValidBpmnId();
     final var process =
-        Bpmn.createExecutableProcess(uniqueId)
+        BpmnModelApi.createExecutableProcess(uniqueId)
             .startEvent()
             .serviceTask("task01", b -> b.zeebeJobType(uniqueId))
             .endEvent()
@@ -264,7 +264,7 @@ final class StreamJobsTest {
     private final CountDownLatch latch = new CountDownLatch(1);
     private final List<ActivatedJob> jobs = new CopyOnWriteArrayList<>();
     private final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(uniqueId)
+        BpmnModelApi.createExecutableProcess(uniqueId)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType(uniqueId))
             .endEvent()

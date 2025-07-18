@@ -33,7 +33,7 @@ import io.camunda.client.impl.response.ProcessImpl;
 import io.camunda.client.util.ClientTest;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.DeployResourceRequest;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.Resource;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -163,10 +163,10 @@ public final class DeployResourceTest extends ClientTest {
     // given
     final String filename = "test.bpmn";
     final BpmnModelInstance processModel =
-        Bpmn.createExecutableProcess(BPMN_1_PROCESS_ID).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(BPMN_1_PROCESS_ID).startEvent().endEvent().done();
 
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, processModel);
+    BpmnModelApi.writeModelToStream(outStream, processModel);
     final byte[] expectedBytes = outStream.toByteArray();
 
     // when

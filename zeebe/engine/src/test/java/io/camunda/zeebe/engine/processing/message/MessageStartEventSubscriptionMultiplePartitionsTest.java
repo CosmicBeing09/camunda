@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
@@ -52,7 +52,7 @@ public final class MessageStartEventSubscriptionMultiplePartitionsTest {
   }
 
   private static BpmnModelInstance createProcessWithOneMessageStartEvent() {
-    return Bpmn.createExecutableProcess("processId")
+    return BpmnModelApi.createExecutableProcess("processId")
         .startEvent(EVENT_ID1)
         .message(m -> m.name(MESSAGE_NAME1).id("startmsgId"))
         .endEvent()

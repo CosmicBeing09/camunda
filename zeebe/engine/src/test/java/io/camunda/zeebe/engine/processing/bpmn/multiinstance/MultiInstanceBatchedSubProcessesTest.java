@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.bpmn.multiinstance;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.test.util.record.RecordingExporter;
@@ -41,7 +41,7 @@ public class MultiInstanceBatchedSubProcessesTest {
   private static final String PROCESS_ID = "process";
   private static final String SUB_PROCESS_START = "sub-process-start";
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID) // Generates 2 Commands (CREATE, Activate Process)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID) // Generates 2 Commands (CREATE, Activate Process)
           .startEvent() // Generates 2 Commands ( ACTIVATE, COMPLETE START_EVENT)
           .zeebeOutputExpression("= [1,2]", "inputCollection")
           .subProcess(

@@ -15,7 +15,7 @@ import static org.assertj.core.data.MapEntry.entry;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.ProcessInstanceClient.ProcessInstanceCreationClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractEndEventBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractUserTaskBuilder;
@@ -53,7 +53,7 @@ public final class MessageCorrelationMultiplePartitionsTest {
   private static final String PROCESS_ID = "process";
 
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent("receive-message")
           .message(m -> m.name("message").zeebeCorrelationKeyExpression("key"))
@@ -297,7 +297,7 @@ public final class MessageCorrelationMultiplePartitionsTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .eventSubProcess(
                     "subprocess",
                     s ->

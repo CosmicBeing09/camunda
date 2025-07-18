@@ -8,7 +8,7 @@
 package io.camunda.zeebe.it.clustering.network;
 
 import io.camunda.client.CamundaClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.Protocol;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
@@ -28,7 +28,7 @@ final class DeploymentDistributionTestCase implements AsymmetricNetworkPartition
 
   @Override
   public CompletableFuture<?> when(final CamundaClient client) {
-    final var process = Bpmn.createExecutableProcess("process").startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done();
     client.newDeployResourceCommand().addProcessModel(process, "process.bpmn").send().join();
     return null;
   }

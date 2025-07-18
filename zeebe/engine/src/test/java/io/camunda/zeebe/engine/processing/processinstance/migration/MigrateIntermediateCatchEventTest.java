@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance.migration;
 import static io.camunda.zeebe.engine.processing.processinstance.migration.MigrationTestUtil.extractProcessDefinitionKeyByProcessId;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -45,7 +45,7 @@ public class MigrateIntermediateCatchEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .intermediateCatchEvent(
                         "catch1",
@@ -53,7 +53,7 @@ public class MigrateIntermediateCatchEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .intermediateCatchEvent(
                         "catch2",
@@ -120,7 +120,7 @@ public class MigrateIntermediateCatchEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .intermediateCatchEvent(
                         "catch1",
@@ -128,7 +128,7 @@ public class MigrateIntermediateCatchEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .intermediateCatchEvent(
                         "catch2",
@@ -211,13 +211,13 @@ public class MigrateIntermediateCatchEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .intermediateCatchEvent("catch1", c -> c.timerWithDuration("PT5M"))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .intermediateCatchEvent("catch2", c -> c.timerWithDuration("PT10M"))
                     .endEvent()
@@ -281,13 +281,13 @@ public class MigrateIntermediateCatchEventTest {
         engine
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .intermediateCatchEvent("catch1", c -> c.signal(signalName))
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .intermediateCatchEvent("catch2", c -> c.signal(signalName))
                     .endEvent("target_process_signal_end")

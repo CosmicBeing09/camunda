@@ -22,7 +22,7 @@ import static io.camunda.zeebe.model.bpmn.BpmnTestConstants.USER_TASK_ID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.bpmndi.BpmnEdge;
@@ -39,14 +39,14 @@ public class DiGeneratorForSequenceFlowsTest {
   @After
   public void validateModel() throws IOException {
     if (instance != null) {
-      Bpmn.validateModel(instance);
+      BpmnModelApi.validateModel(instance);
     }
   }
 
   @Test
   public void shouldGenerateEdgeForSequenceFlow() {
 
-    final ProcessBuilder builder = Bpmn.createExecutableProcess();
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess();
 
     instance =
         builder
@@ -64,7 +64,7 @@ public class DiGeneratorForSequenceFlowsTest {
   @Test
   public void shouldGenerateEdgesForSequenceFlowsUsingGateway() {
 
-    final ProcessBuilder builder = Bpmn.createExecutableProcess();
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess();
 
     instance =
         builder
@@ -89,7 +89,7 @@ public class DiGeneratorForSequenceFlowsTest {
   @Test
   public void shouldGenerateEdgesWhenUsingMoveToActivity() {
 
-    final ProcessBuilder builder = Bpmn.createExecutableProcess();
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess();
 
     instance =
         builder
@@ -117,7 +117,7 @@ public class DiGeneratorForSequenceFlowsTest {
   @Test
   public void shouldGenerateEdgesWhenUsingMoveToNode() {
 
-    final ProcessBuilder builder = Bpmn.createExecutableProcess();
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess();
 
     instance =
         builder
@@ -145,7 +145,7 @@ public class DiGeneratorForSequenceFlowsTest {
   @Test
   public void shouldGenerateEdgesWhenUsingConnectTo() {
 
-    final ProcessBuilder builder = Bpmn.createExecutableProcess();
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess();
 
     instance =
         builder

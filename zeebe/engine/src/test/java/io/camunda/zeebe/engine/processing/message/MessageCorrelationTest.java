@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.PublishMessageClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -43,7 +43,7 @@ public final class MessageCorrelationTest {
   private static final String PROCESS_ID = "process";
 
   private static final BpmnModelInstance RECEIVE_TASK_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .receiveTask("receive-message")
           .message(m -> m.name("message").zeebeCorrelationKeyExpression("key"))
@@ -51,7 +51,7 @@ public final class MessageCorrelationTest {
           .done();
 
   private static final BpmnModelInstance SINGLE_MESSAGE_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent("receive-message")
           .message(m -> m.name("message").zeebeCorrelationKeyExpression("key"))
@@ -59,7 +59,7 @@ public final class MessageCorrelationTest {
           .done();
 
   private static final BpmnModelInstance SINGLE_MESSAGE_PROCESS_WITH_FEEL_EXPRESSION_MESSAGE_NAME =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent("receive-message")
           .message(m -> m.nameExpression("\"message\"").zeebeCorrelationKeyExpression("key"))
@@ -67,7 +67,7 @@ public final class MessageCorrelationTest {
           .done();
 
   private static final BpmnModelInstance TWO_MESSAGES_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .intermediateCatchEvent("message1")
           .message(m -> m.name("ping").zeebeCorrelationKeyExpression("key"))
@@ -76,7 +76,7 @@ public final class MessageCorrelationTest {
           .done();
 
   private static final BpmnModelInstance BOUNDARY_EVENTS_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent()
           .receiveTask("task")
           .message(m -> m.name("taskMsg").zeebeCorrelationKeyExpression("key"))
@@ -92,7 +92,7 @@ public final class MessageCorrelationTest {
           .done();
 
   private static final BpmnModelInstance MSG_START_AND_INTERMEDIATE_CATCH_PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("msgStart")
           .message("message")
           .endEvent()
@@ -366,7 +366,7 @@ public final class MessageCorrelationTest {
         .withXmlResource("wf-1.bpmn", SINGLE_MESSAGE_PROCESS)
         .withXmlResource(
             "wf-2.bpmn",
-            Bpmn.createExecutableProcess("process-2")
+            BpmnModelApi.createExecutableProcess("process-2")
                 .startEvent()
                 .intermediateCatchEvent(
                     "catch",
@@ -457,7 +457,7 @@ public final class MessageCorrelationTest {
         .deployment()
         .withXmlResource(
             "wf_v2.bpmn",
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .intermediateCatchEvent(
                     "catch",
@@ -571,7 +571,7 @@ public final class MessageCorrelationTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway()
                 .intermediateCatchEvent("message1")
@@ -803,7 +803,7 @@ public final class MessageCorrelationTest {
   public void shouldCorrelateToNonInterruptingBoundaryEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("type"))
             .boundaryEvent("msg1")
@@ -849,7 +849,7 @@ public final class MessageCorrelationTest {
   public void shouldCorrelateOnlyOnceToNonInterruptingBoundaryEvent() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .serviceTask("task", b -> b.zeebeJobType("test"))
             .boundaryEvent("message")
@@ -909,7 +909,7 @@ public final class MessageCorrelationTest {
     engine.message().withName("b").withCorrelationKey("123").publish();
 
     final BpmnModelInstance twoMessages =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .eventBasedGateway("split")
             .intermediateCatchEvent(
@@ -958,7 +958,7 @@ public final class MessageCorrelationTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess("wf")
+            BpmnModelApi.createExecutableProcess("wf")
                 .startEvent()
                 .serviceTask("task", t -> t.zeebeJobType("test"))
                 .intermediateCatchEvent(

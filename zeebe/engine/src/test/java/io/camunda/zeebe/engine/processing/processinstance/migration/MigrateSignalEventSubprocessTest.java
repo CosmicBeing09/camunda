@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceMigrationIntent;
@@ -45,7 +45,7 @@ public class MigrateSignalEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -58,7 +58,7 @@ public class MigrateSignalEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub2",
                         s ->
@@ -139,7 +139,7 @@ public class MigrateSignalEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -153,7 +153,7 @@ public class MigrateSignalEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub2",
                         s ->
@@ -225,7 +225,7 @@ public class MigrateSignalEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -238,7 +238,7 @@ public class MigrateSignalEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub2",
                         s ->
@@ -319,7 +319,7 @@ public class MigrateSignalEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub",
                         s ->
@@ -332,7 +332,7 @@ public class MigrateSignalEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .userTask("userTask2")
                     .endEvent("end")
@@ -393,13 +393,13 @@ public class MigrateSignalEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .userTask("userTask1")
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -494,7 +494,7 @@ public class MigrateSignalEventSubprocessTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .eventSubProcess(
                         "sub1",
                         s ->
@@ -507,7 +507,7 @@ public class MigrateSignalEventSubprocessTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .eventSubProcess(
                         "sub2",
                         s ->

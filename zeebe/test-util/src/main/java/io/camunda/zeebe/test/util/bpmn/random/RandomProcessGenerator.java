@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.test.util.bpmn.random;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.BaseElement;
 import io.camunda.zeebe.model.bpmn.instance.Process;
@@ -87,7 +87,7 @@ public final class RandomProcessGenerator {
 
       bpmnModelInstances.stream()
           .map(modelInstance -> new Tuple<>(createFile(modelInstance, index), modelInstance))
-          .forEach(tuple -> Bpmn.writeModelToFile(tuple.getLeft(), tuple.getRight()));
+          .forEach(tuple -> BpmnModelApi.writeModelToFile(tuple.getLeft(), tuple.getRight()));
 
       for (int p = 0; p < 5; p++) {
         final ExecutionPath path = builder.findRandomExecutionPath(random.nextLong());

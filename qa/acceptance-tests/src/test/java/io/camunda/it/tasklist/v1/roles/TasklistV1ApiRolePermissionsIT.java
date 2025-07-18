@@ -28,7 +28,7 @@ import io.camunda.qa.util.cluster.TestCamundaApplication;
 import io.camunda.qa.util.multidb.CamundaMultiDBExtension;
 import io.camunda.qa.util.multidb.MultiDbTest;
 import io.camunda.qa.util.multidb.MultiDbTestApplication;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.test.util.Strings;
 import java.io.IOException;
 import java.net.URI;
@@ -105,7 +105,7 @@ public class TasklistV1ApiRolePermissionsIT {
     adminClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask()
                 .zeebeUserTask()

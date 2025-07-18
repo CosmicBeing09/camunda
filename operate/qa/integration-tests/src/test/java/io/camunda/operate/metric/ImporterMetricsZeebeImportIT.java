@@ -21,7 +21,7 @@ import io.camunda.operate.webapp.zeebe.operation.ResolveIncidentHandler;
 import io.camunda.operate.webapp.zeebe.operation.UpdateVariableHandler;
 import io.camunda.webapps.schema.entities.operation.OperationState;
 import io.camunda.webapps.schema.entities.operation.OperationType;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import java.util.HashMap;
 import org.junit.Before;
@@ -130,7 +130,7 @@ public class ImporterMetricsZeebeImportIT extends OperateZeebeAbstractIT {
     // given
     final String bpmnProcessId = "startEndProcess";
     final BpmnModelInstance startEndProcess =
-        Bpmn.createExecutableProcess(bpmnProcessId).startEvent().endEvent().done();
+        BpmnModelApi.createExecutableProcess(bpmnProcessId).startEvent().endEvent().done();
 
     tester
         .deployProcess(startEndProcess, "startEndProcess.bpmn")

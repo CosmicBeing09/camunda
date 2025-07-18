@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
@@ -72,7 +72,7 @@ public class StartEventFormTest {
 
   private void deployProcess(final String formId) {
     final BpmnModelInstance processWithFormId =
-        Bpmn.createExecutableProcess(PROCESS_ID).startEvent().zeebeFormId(formId).endEvent().done();
+        BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().zeebeFormId(formId).endEvent().done();
 
     ENGINE.deployment().withXmlResource(processWithFormId).deploy();
   }

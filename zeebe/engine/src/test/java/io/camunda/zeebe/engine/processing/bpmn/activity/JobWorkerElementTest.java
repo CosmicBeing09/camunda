@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.JobWorkerElementBuilder;
 import io.camunda.zeebe.engine.util.JobWorkerElementBuilderProvider;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ZeebeJobWorkerElementBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -67,7 +67,7 @@ public final class JobWorkerElementTest {
 
   private BpmnModelInstance process(
       final Consumer<ZeebeJobWorkerElementBuilder<?>> elementModifier) {
-    final var processBuilder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent();
+    final var processBuilder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent();
 
     final var jobWorkerElementBuilder = elementBuilder.build(processBuilder, elementModifier);
     return jobWorkerElementBuilder.id("task").done();

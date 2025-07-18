@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.instance.IntermediateThrowEvent;
@@ -38,7 +38,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
     return new Object[][] {
       // validate message catch events
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("foo")
             .message("")
@@ -48,7 +48,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect(Message.class, "Must have exactly one zeebe:subscription extension element"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("foo")
             .message("foo")
@@ -57,7 +57,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect(Message.class, "Must have exactly one zeebe:subscription extension element"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("foo")
             .message(m -> m.name("foo").zeebeCorrelationKeyExpression(""))
@@ -68,7 +68,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
                 "Attribute 'correlationKey' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateCatchEvent("foo")
             .messageEventDefinition()
@@ -77,17 +77,17 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
       },
       // validate receive tasks
       {
-        Bpmn.createExecutableProcess("process").startEvent().receiveTask("foo").done(),
+        BpmnModelApi.createExecutableProcess("process").startEvent().receiveTask("foo").done(),
         singletonList(expect(ReceiveTask.class, "Must reference a message"))
       },
       {
-        Bpmn.createExecutableProcess("process").startEvent().receiveTask("foo").message("").done(),
+        BpmnModelApi.createExecutableProcess("process").startEvent().receiveTask("foo").message("").done(),
         Arrays.asList(
             expect(Message.class, "Name must be present and not empty"),
             expect(Message.class, "Must have exactly one zeebe:subscription extension element"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .receiveTask("foo")
             .message(m -> m.name("foo").zeebeCorrelationKeyExpression(""))
@@ -98,7 +98,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
                 "Attribute 'correlationKey' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .receiveTask("foo")
             .message(m -> m.name("foo"))
@@ -107,7 +107,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect(Message.class, "Must have exactly one zeebe:subscription extension element"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .subProcess("subProcess")
             .embeddedSubProcess()
@@ -120,7 +120,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
         singletonList(expect("subProcess", "Start events in subprocesses must be of type none"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .receiveTask("task")
             .message(m -> m.name("message").zeebeCorrelationKeyExpression("correlationKey"))
@@ -136,7 +136,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect("start-message", "A message cannot be referred by more than one start event"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("test"))
             .boundaryEvent(
@@ -154,7 +154,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect(Message.class, "Name must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .receiveTask("task")
             .message(m -> m.name("message").zeebeCorrelationKeyExpression("correlationKey"))
@@ -165,7 +165,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
         singletonList(expect(Message.class, "Name must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .message(m -> m.name("message"))
             .endEvent()
@@ -184,7 +184,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
       },
       // validate message throw events
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .message("")
@@ -196,7 +196,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect(Message.class, "Name must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .message(b -> b.zeebeCorrelationKey("correlationKey"))
@@ -204,7 +204,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
         Arrays.asList(expect(IntermediateThrowEvent.class, "Must reference a message"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .message(b -> b.name("").zeebeCorrelationKey("correlationKey"))
@@ -212,7 +212,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
         Arrays.asList(expect(Message.class, "Name must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .message(b -> b.name("messageName").zeebeCorrelationKey(""))
@@ -223,7 +223,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
                 "Attribute 'correlationKey' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .zeebeJobType("")
@@ -232,7 +232,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             expect(ZeebeTaskDefinition.class, "Attribute 'type' must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .intermediateThrowEvent("foo")
             .zeebeJobType("test")
@@ -248,7 +248,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
 
   private static BpmnModelInstance
       getEventSubProcessWithEmbeddedSubProcessWithBoundaryEventWithoutCorrelationKey() {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess("process");
     builder
         .eventSubProcess("event_sub_proc")
         .startEvent("event_sub_start", s -> s.timerWithDuration("PT1S"))
@@ -266,7 +266,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
   }
 
   private static BpmnModelInstance getProcessWithMultipleStartEventsWithSameMessage() {
-    final ProcessBuilder process = Bpmn.createExecutableProcess();
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess();
     final String messageName = "messageName";
     process.startEvent("start1").message(m -> m.id("start-message").name(messageName)).endEvent();
     process.startEvent("start2").message(messageName).endEvent();
@@ -274,7 +274,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
   }
 
   private static BpmnModelInstance getMessageEventSubProcessWithNoCorrelationKey() {
-    final ProcessBuilder builder = Bpmn.createExecutableProcess("process");
+    final ProcessBuilder builder = BpmnModelApi.createExecutableProcess("process");
     builder
         .eventSubProcess("subprocess")
         .startEvent("substart")

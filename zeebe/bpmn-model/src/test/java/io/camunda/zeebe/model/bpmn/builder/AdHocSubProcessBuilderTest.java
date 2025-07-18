@@ -17,7 +17,7 @@ package io.camunda.zeebe.model.bpmn.builder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.instance.AdHocSubProcess;
 import io.camunda.zeebe.model.bpmn.instance.CompletionCondition;
@@ -35,7 +35,7 @@ class AdHocSubProcessBuilderTest {
   void shouldAddElementsToAdHocSubProcess() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .adHocSubProcess(
                 "ad-hoc",
@@ -61,7 +61,7 @@ class AdHocSubProcessBuilderTest {
   void shouldSetActiveElementsCollection() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .adHocSubProcess(
                 "ad-hoc",
@@ -89,7 +89,7 @@ class AdHocSubProcessBuilderTest {
   void shouldSetCompletionCondition() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .adHocSubProcess(
                 "ad-hoc",
@@ -116,7 +116,7 @@ class AdHocSubProcessBuilderTest {
   void shouldSetCancelRemainingInstances(final boolean cancelRemainingInstances) {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .adHocSubProcess(
                 "ad-hoc",
@@ -139,7 +139,7 @@ class AdHocSubProcessBuilderTest {
   void cancelRemainingInstancesShouldDefaultToTrue() {
     // given
     final BpmnModelInstance process =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .adHocSubProcess(
                 "ad-hoc",

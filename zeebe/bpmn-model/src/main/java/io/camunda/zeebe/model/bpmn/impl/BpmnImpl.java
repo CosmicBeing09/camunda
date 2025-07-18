@@ -15,12 +15,12 @@
  */
 package io.camunda.zeebe.model.bpmn.impl;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnTypeHierarchy;
 import java.util.List;
 import org.camunda.bpm.model.xml.type.ModelElementType;
 
-public class BpmnImpl extends Bpmn {
+public class BpmnImpl extends BpmnModelApi {
 
   private final BpmnTypeHierarchy typeHierarchy = new BpmnTypeHierarchy();
 

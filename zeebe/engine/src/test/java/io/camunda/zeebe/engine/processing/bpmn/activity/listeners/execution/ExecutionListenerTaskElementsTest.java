@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.oneOf;
 import static org.junit.Assume.assumeThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractTaskBuilder;
@@ -1150,7 +1150,7 @@ public class ExecutionListenerTaskElementsTest {
       final var taskBuilder =
           scenario
               .taskConfigurer
-              .apply(Bpmn.createExecutableProcess(PROCESS_ID).startEvent())
+              .apply(BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent())
               .id(scenario.elementType.name());
 
       consumer.accept(taskBuilder);
@@ -1201,7 +1201,7 @@ public class ExecutionListenerTaskElementsTest {
     public void shouldCreateIncidentForMissingCorrelationKeyOnMessageBoundaryWithServiceTask() {
       // given
       final BpmnModelInstance modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .serviceTask(
                   "task",
@@ -1269,7 +1269,7 @@ public class ExecutionListenerTaskElementsTest {
     public void shouldCreateIncidentWhenServiceTaskWithExecutionListenersFailed() {
       // given
       final BpmnModelInstance modelInstance =
-          Bpmn.createExecutableProcess("process")
+          BpmnModelApi.createExecutableProcess("process")
               .startEvent("start")
               .serviceTask(
                   "task",
@@ -1343,7 +1343,7 @@ public class ExecutionListenerTaskElementsTest {
     public void shouldRecreateELJobAfterResolvingServiceTaskJobExpressionIncident() {
       // given
       final BpmnModelInstance modelInstance =
-          Bpmn.createExecutableProcess("process")
+          BpmnModelApi.createExecutableProcess("process")
               .startEvent("start")
               .serviceTask(
                   "task",
@@ -1396,7 +1396,7 @@ public class ExecutionListenerTaskElementsTest {
     public void shouldCompleteExecutionListenerJobWithVariablesMerging() {
       // given
       final BpmnModelInstance modelInstance =
-          Bpmn.createExecutableProcess(PROCESS_ID)
+          BpmnModelApi.createExecutableProcess(PROCESS_ID)
               .startEvent()
               .zeebeOutput("=\"aValue\"", "startEventVar")
               .serviceTask(

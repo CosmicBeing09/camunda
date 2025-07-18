@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -38,7 +38,7 @@ public class ProcessEngineMetricsTest {
         .deployment()
         .withXmlClasspathResource(DMN_RESOURCE)
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .businessRuleTask(
                     TASK_ID,
@@ -75,7 +75,7 @@ public class ProcessEngineMetricsTest {
         .deployment()
         .withXmlClasspathResource(DMN_RESOURCE)
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .businessRuleTask(
                     TASK_ID,
@@ -118,7 +118,7 @@ public class ProcessEngineMetricsTest {
         .deployment()
         .withXmlClasspathResource(DMN_RESOURCE)
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .businessRuleTask(
                     TASK_ID,
@@ -145,7 +145,7 @@ public class ProcessEngineMetricsTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start").endEvent("end").done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start").endEvent("end").done())
         .deploy();
 
     // when
@@ -163,7 +163,7 @@ public class ProcessEngineMetricsTest {
     engine
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start").endEvent("end").done())
+            BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("start").endEvent("end").done())
         .deploy();
 
     // when

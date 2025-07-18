@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.variable;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.VariableIntent;
@@ -32,7 +32,7 @@ public final class ProcessInstanceVariableTypeTest {
   @ClassRule public static final EngineRule ENGINE_RULE = EngineRule.singlePartition();
   private static final String PROCESS_ID = "process";
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
+      BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent().endEvent().done();
 
   @Rule
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =

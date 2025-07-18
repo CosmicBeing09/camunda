@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.migration.Migra
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -45,7 +45,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary")
@@ -55,7 +55,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .endEvent()
@@ -110,13 +110,13 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary")
@@ -178,7 +178,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .userTask("A")
                     .boundaryEvent("boundary")
@@ -188,7 +188,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .userTask("B")
                     .boundaryEvent("boundary")
@@ -245,7 +245,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -261,7 +261,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -337,7 +337,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent()
                     .subProcess(
                         "sub1",
@@ -349,7 +349,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent()
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent()
                     .subProcess(
                         "sub2",
@@ -427,7 +427,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("boundary")
@@ -437,7 +437,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .serviceTask("B", t -> t.zeebeJobType("B"))
@@ -486,7 +486,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("boundary")
@@ -496,7 +496,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .serviceTask("B", t -> t.zeebeJobType("B"))
@@ -551,7 +551,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(processId)
+                BpmnModelApi.createExecutableProcess(processId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -569,7 +569,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -627,7 +627,7 @@ public class MigrateBoundaryEventTest {
         ENGINE
             .deployment()
             .withXmlResource(
-                Bpmn.createExecutableProcess(sourceProcessId)
+                BpmnModelApi.createExecutableProcess(sourceProcessId)
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent(
@@ -639,7 +639,7 @@ public class MigrateBoundaryEventTest {
                     .endEvent("end")
                     .done())
             .withXmlResource(
-                Bpmn.createExecutableProcess(targetProcessId)
+                BpmnModelApi.createExecutableProcess(targetProcessId)
                     .startEvent("start")
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .boundaryEvent("boundary", b -> b.timerWithDuration("PT1M").endEvent())

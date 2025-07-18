@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 import io.camunda.zeebe.broker.system.monitoring.DiskSpaceUsageListener;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
@@ -88,7 +88,7 @@ public class DiskSpaceRecoveryTest {
   public void shouldProcessTimersWhenDiskSpaceAvailableAgain() throws InterruptedException {
     // given
     final BpmnModelInstance timerProcess =
-        Bpmn.createExecutableProcess("TimerProcess")
+        BpmnModelApi.createExecutableProcess("TimerProcess")
             .startEvent("start")
             .intermediateCatchEvent("timer", c -> c.timerWithDuration("PT100S"))
             .endEvent("end")
@@ -136,7 +136,7 @@ public class DiskSpaceRecoveryTest {
   public void shouldTimeoutActivatedJobsWhenDiskSpaceAvailableAgain() throws InterruptedException {
     // given
     final BpmnModelInstance timerProcess =
-        Bpmn.createExecutableProcess("TimerProcess")
+        BpmnModelApi.createExecutableProcess("TimerProcess")
             .startEvent("start")
             .serviceTask("test", s -> s.zeebeJobType("timeout"))
             .endEvent("end")

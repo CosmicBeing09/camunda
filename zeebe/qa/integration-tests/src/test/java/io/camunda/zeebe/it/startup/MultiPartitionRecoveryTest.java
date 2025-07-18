@@ -11,7 +11,7 @@ import io.camunda.client.api.response.DeploymentEvent;
 import io.camunda.zeebe.broker.TestLoggers;
 import io.camunda.zeebe.it.clustering.ClusteringRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import java.util.List;
@@ -37,7 +37,7 @@ public final class MultiPartitionRecoveryTest {
   private static final String PROCESS_ID = "process";
 
   private static final BpmnModelInstance PROCESS =
-      Bpmn.createExecutableProcess(PROCESS_ID)
+      BpmnModelApi.createExecutableProcess(PROCESS_ID)
           .startEvent("start")
           .serviceTask("task", t -> t.zeebeJobType("foo"))
           .endEvent("end")

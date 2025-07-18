@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.instance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.TransactionMethod;
 import java.io.ByteArrayInputStream;
@@ -64,7 +64,7 @@ public class TransactionTest extends BpmnModelElementInstanceTest {
     final InputStream inputStream =
         ReflectUtil.getResourceAsStream("io/camunda/zeebe/model/bpmn/TransactionTest.xml");
     final Transaction transaction =
-        Bpmn.readModelFromStream(inputStream).getModelElementById("transaction");
+        BpmnModelApi.readModelFromStream(inputStream).getModelElementById("transaction");
 
     assertThat(transaction).isNotNull();
     assertThat(transaction.getMethod()).isEqualTo(TransactionMethod.Image);
@@ -75,7 +75,7 @@ public class TransactionTest extends BpmnModelElementInstanceTest {
   public void shouldWriteTransaction()
       throws ParserConfigurationException, SAXException, IOException {
     // given a model
-    final BpmnModelInstance newModel = Bpmn.createProcess("process").done();
+    final BpmnModelInstance newModel = BpmnModelApi.createProcess("process").done();
 
     final Process process = newModel.getModelElementById("process");
 
@@ -86,7 +86,7 @@ public class TransactionTest extends BpmnModelElementInstanceTest {
 
     // that is written to a stream
     final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-    Bpmn.writeModelToStream(outStream, newModel);
+    BpmnModelApi.writeModelToStream(outStream, newModel);
 
     // when reading from that stream
     final ByteArrayInputStream inStream = new ByteArrayInputStream(outStream.toByteArray());

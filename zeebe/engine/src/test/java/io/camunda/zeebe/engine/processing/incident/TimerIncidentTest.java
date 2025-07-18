@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.incident.IncidentHelper.assertI
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -47,7 +47,7 @@ public final class TimerIncidentTest {
   @Rule public final BrokerClassRuleHelper helper = new BrokerClassRuleHelper();
 
   private static BpmnModelInstance createProcess(final String expression) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .intermediateCatchEvent(ELEMENT_ID, b -> b.timerWithDurationExpression(expression))
         .endEvent()
@@ -55,7 +55,7 @@ public final class TimerIncidentTest {
   }
 
   private static BpmnModelInstance createProcessWithCycle(final String expression) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .serviceTask(
             ELEMENT_ID,
@@ -74,7 +74,7 @@ public final class TimerIncidentTest {
   }
 
   private static BpmnModelInstance createProcessWithTimeDate(final String expression) {
-    return Bpmn.createExecutableProcess(PROCESS_ID)
+    return BpmnModelApi.createExecutableProcess(PROCESS_ID)
         .startEvent()
         .serviceTask(
             ELEMENT_ID,

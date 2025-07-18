@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.client.CamundaClient;
 import io.camunda.zeebe.broker.Broker;
 import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -66,7 +66,7 @@ public final class EmbeddedGatewayWithOneCpuThreadIT {
   @Test
   public void shouldDeployProcess() throws InterruptedException {
     // given
-    final var process = Bpmn.createExecutableProcess().startEvent().endEvent().done();
+    final var process = BpmnModelApi.createExecutableProcess().startEvent().endEvent().done();
 
     // when
     final var result = client.newDeployCommand().addProcessModel(process, "foo.bpmn").send().join();

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatNoException;
 import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.MigrateProcessInstanceCommandStep1;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -54,7 +54,7 @@ public class MigrateProcessInstanceTest {
     final String processId = "process-" + testInfo.getTestMethod().get().getName();
     final long definitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -78,7 +78,7 @@ public class MigrateProcessInstanceTest {
     // deploy a new version of the process
     final long targetProcessDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("B", a -> a.zeebeJobType("B"))
                 .endEvent("end")
@@ -165,7 +165,7 @@ public class MigrateProcessInstanceTest {
     final String processId = "process-" + testInfo.getTestMethod().get().getName();
     final long definitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -189,7 +189,7 @@ public class MigrateProcessInstanceTest {
     // deploy a new version of the process
     final long targetProcessDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .userTask("U")
                 .serviceTask("B", a -> a.zeebeJobType("B"))
@@ -276,7 +276,7 @@ public class MigrateProcessInstanceTest {
     final String processId = "process-" + testInfo.getTestMethod().get().getName();
     final long definitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -300,7 +300,7 @@ public class MigrateProcessInstanceTest {
     final String targetProcessId = processId + "1";
     final long targetProcessDefinitionKey =
         resourcesHelper.deployProcess(
-            Bpmn.createExecutableProcess(targetProcessId)
+            BpmnModelApi.createExecutableProcess(targetProcessId)
                 .startEvent()
                 .serviceTask("B", a -> a.zeebeJobType("B"))
                 .endEvent("end")

@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.EventSubProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.SubProcessBuilder;
 import io.camunda.zeebe.protocol.record.Record;
@@ -55,7 +55,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .endEvent()
@@ -86,7 +86,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .serviceTask("B", b -> b.zeebeJobType("B"))
@@ -114,7 +114,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .parallelGateway()
@@ -152,7 +152,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .serviceTask("B", b -> b.zeebeJobType("B"))
@@ -187,7 +187,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -227,7 +227,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -274,7 +274,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "subprocess",
@@ -316,7 +316,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-subprocess",
                     s ->
@@ -383,7 +383,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-subprocess-1",
                     s ->
@@ -480,7 +480,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .subProcess("subprocess", subprocessBuilder)
@@ -574,7 +574,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .subProcess("subprocess-1", subprocessBuilder1)
@@ -636,7 +636,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway()
                 .userTask("A")
@@ -687,7 +687,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "sp",
@@ -758,7 +758,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess("event-subprocess", eventSubProcess)
                 .startEvent()
                 .userTask("B")
@@ -823,7 +823,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-sub",
                     sub ->
@@ -886,7 +886,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess("sub")
                 .embeddedSubProcess()
@@ -943,7 +943,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-sub",
                     sub ->
@@ -1006,7 +1006,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .eventSubProcess(
                     "event-sub",
                     sub ->
@@ -1127,7 +1127,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .parallelGateway("fork")
                 .serviceTask("A", a -> a.zeebeJobType("A"))
@@ -1168,7 +1168,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .inclusiveGateway("fork")
                 .conditionExpression("true")
@@ -1211,7 +1211,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .inclusiveGateway("fork")
                 .conditionExpression("true")
@@ -1269,9 +1269,9 @@ public class ModifyProcessInstanceTest {
 
   @Test
   public void verifyCallActivityWithIncidentInOutputMappingCanBeTerminated() {
-    final var child = Bpmn.createExecutableProcess("child").startEvent().endEvent().done();
+    final var child = BpmnModelApi.createExecutableProcess("child").startEvent().endEvent().done();
     final var parent =
-        Bpmn.createExecutableProcess(PROCESS_ID)
+        BpmnModelApi.createExecutableProcess(PROCESS_ID)
             .startEvent()
             .callActivity("callActivity", c -> c.zeebeProcessId("child"))
             .zeebeOutputExpression("assert(x, x != null)", "y")
@@ -1322,7 +1322,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .userTask("A")
                 .userTask("B")
@@ -1359,7 +1359,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .subProcess(
                     "SubProcess",
@@ -1430,7 +1430,7 @@ public class ModifyProcessInstanceTest {
     ENGINE
         .deployment()
         .withXmlResource(
-            Bpmn.createExecutableProcess(PROCESS_ID)
+            BpmnModelApi.createExecutableProcess(PROCESS_ID)
                 .startEvent()
                 .serviceTask("A", a -> a.zeebeJobType("A"))
                 .serviceTask("B", b -> b.zeebeJobType("B"))

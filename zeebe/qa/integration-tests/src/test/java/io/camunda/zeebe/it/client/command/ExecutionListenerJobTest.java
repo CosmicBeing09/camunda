@@ -17,7 +17,7 @@ import io.camunda.zeebe.broker.test.EmbeddedBrokerRule;
 import io.camunda.zeebe.it.util.GrpcClientRule;
 import io.camunda.zeebe.it.util.RecordingJobHandler;
 import io.camunda.zeebe.it.util.ZeebeAssertHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -46,7 +46,7 @@ public class ExecutionListenerJobTest {
 
     // create model with 1 start EL for service task
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -83,7 +83,7 @@ public class ExecutionListenerJobTest {
 
     // create model with 2 start ELs
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask(
                 "task",
@@ -137,7 +137,7 @@ public class ExecutionListenerJobTest {
 
     // create process model with `start` and `end` ELs
     final BpmnModelInstance modelInstance =
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .zeebeStartExecutionListener(processStartElJobType)
             .zeebeEndExecutionListener(processEndElJobType)
             .startEvent("start")

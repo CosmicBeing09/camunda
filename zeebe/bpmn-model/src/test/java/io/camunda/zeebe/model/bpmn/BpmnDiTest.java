@@ -76,7 +76,7 @@ public class BpmnDiTest {
   @Before
   public void parseModel() {
     modelInstance =
-        Bpmn.readModelFromStream(
+        BpmnModelApi.readModelFromStream(
             getClass().getResourceAsStream(getClass().getSimpleName() + ".xml"));
     collaboration = modelInstance.getModelElementById(COLLABORATION_ID);
     participant = modelInstance.getModelElementById(PARTICIPANT_ID + 1);
@@ -197,7 +197,7 @@ public class BpmnDiTest {
   @Test
   public void shouldCreateValidBpmnDi() {
     modelInstance =
-        Bpmn.createProcess("process")
+        BpmnModelApi.createProcess("process")
             .startEvent("start")
             .sequenceFlowId("flow")
             .endEvent("end")
@@ -272,6 +272,6 @@ public class BpmnDiTest {
 
   @After
   public void validateModel() {
-    Bpmn.validateModel(modelInstance);
+    BpmnModelApi.validateModel(modelInstance);
   }
 }

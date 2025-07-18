@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.incident;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.ProcessBuilder;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
@@ -248,7 +248,7 @@ public class EventSubProcessIncidentTest {
 
   private static ProcessBuilder withEventSubprocessAndInputMapping(
       final Function<StartEventBuilder, StartEventBuilder> builder) {
-    final ProcessBuilder process = Bpmn.createExecutableProcess(PROCESS_ID);
+    final ProcessBuilder process = BpmnModelApi.createExecutableProcess(PROCESS_ID);
 
     builder
         .apply(

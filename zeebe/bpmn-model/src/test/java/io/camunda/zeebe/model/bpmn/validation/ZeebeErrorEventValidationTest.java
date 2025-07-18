@@ -18,7 +18,7 @@ package io.camunda.zeebe.model.bpmn.validation;
 import static io.camunda.zeebe.model.bpmn.validation.ExpectedValidationResult.expect;
 import static java.util.Collections.singletonList;
 
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AbstractBoundaryEventBuilder;
 import io.camunda.zeebe.model.bpmn.instance.BoundaryEvent;
 import io.camunda.zeebe.model.bpmn.instance.ErrorEventDefinition;
@@ -33,7 +33,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
   public static Object[][] parameters() {
     return new Object[][] {
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .boundaryEvent("catch", b -> b.error("= error"))
@@ -45,7 +45,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "The errorCode of the error catch event is not allowed to be an expression"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .boundaryEvent("catch", b -> b.error("ERROR").cancelActivity(false))
@@ -55,7 +55,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
             expect(BoundaryEvent.class, "Non-Interrupting event of this type is not allowed"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .boundaryEvent("catch-1", b -> b.error("ERROR").endEvent())
@@ -68,7 +68,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "Multiple error catch events with the same error code 'ERROR' are not supported on the same scope."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .subProcess("sub", s -> s.embeddedSubProcess().startEvent().endEvent())
             .boundaryEvent("catch-1", b -> b.error("ERROR").endEvent())
@@ -81,7 +81,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "Multiple error catch events with the same error code 'ERROR' are not supported on the same scope."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "sub", s -> s.startEvent().interrupting(false).error("ERROR").endEvent())
             .startEvent()
@@ -91,7 +91,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
             expect(SubProcess.class, "Non-Interrupting event of this type is not allowed"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess("sub", s -> s.startEvent().error("=  error").endEvent())
             .startEvent()
             .endEvent()
@@ -102,7 +102,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "The errorCode of the error catch event is not allowed to be an expression"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "sub-1", s -> s.startEvent().interrupting(true).error("ERROR").endEvent())
             .eventSubProcess(
@@ -116,7 +116,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "Multiple error catch events with the same error code 'ERROR' are not supported on the same scope."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .subProcess(
                 "sub",
@@ -138,21 +138,21 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "Multiple error catch events with the same error code 'ERROR' are not supported on the same scope."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .endEvent("error", e -> e.error(""))
             .done(),
         singletonList(expect(ErrorEventDefinition.class, "ErrorCode must be present and not empty"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .endEvent("error", e -> e.errorEventDefinition())
             .done(),
         singletonList(expect(ErrorEventDefinition.class, "Must reference an error"))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .boundaryEvent("catch-1", AbstractBoundaryEventBuilder::error)
@@ -167,7 +167,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "The same scope can not contain more than one error catch event without error code. An error catch event without error code catches all errors."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .boundaryEvent("catch-1", AbstractBoundaryEventBuilder::errorEventDefinition)
@@ -182,7 +182,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "The same scope can not contain more than one error catch event without error code. An error catch event without error code catches all errors."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess("sub-1", s -> s.startEvent().interrupting(true).error().endEvent())
             .eventSubProcess("sub-2", s -> s.startEvent().interrupting(true).error().endEvent())
             .startEvent()
@@ -194,7 +194,7 @@ public class ZeebeErrorEventValidationTest extends AbstractZeebeValidationTest {
                 "The same scope can not contain more than one error catch event without error code. An error catch event without error code catches all errors."))
       },
       {
-        Bpmn.createExecutableProcess("process")
+        BpmnModelApi.createExecutableProcess("process")
             .eventSubProcess(
                 "sub-1",
                 s ->

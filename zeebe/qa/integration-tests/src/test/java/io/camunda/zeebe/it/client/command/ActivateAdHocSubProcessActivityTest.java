@@ -15,7 +15,7 @@ import io.camunda.client.CamundaClient;
 import io.camunda.client.api.command.ProblemException;
 import io.camunda.client.api.response.ProcessInstanceEvent;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.builder.AdHocSubProcessBuilder;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.record.Record;
@@ -288,7 +288,7 @@ public class ActivateAdHocSubProcessActivityTest {
     processId = "process-" + testInfo.getTestMethod().get().getName();
 
     resourcesHelper.deployProcess(
-        Bpmn.createExecutableProcess(processId)
+        BpmnModelApi.createExecutableProcess(processId)
             .startEvent()
             .adHocSubProcess(AD_HOC_SUB_PROCESS_ELEMENT_ID, modifier)
             .endEvent()

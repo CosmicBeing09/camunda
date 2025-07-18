@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verify;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.client.DeploymentClient;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -59,12 +59,12 @@ public final class SuccessfulDeploymentTest {
         new Object[] {"orphan error definition", deploy("/processes/orphan-error-definition.bpmn")},
         new Object[] {
           "none start event",
-          deploy(Bpmn.createExecutableProcess("process").startEvent().endEvent().done())
+          deploy(BpmnModelApi.createExecutableProcess("process").startEvent().endEvent().done())
         },
         new Object[] {
           "timer start event",
           deploy(
-              Bpmn.createExecutableProcess("process")
+              BpmnModelApi.createExecutableProcess("process")
                   .startEvent()
                   .timerWithCycle("R/PT10S")
                   .endEvent()
@@ -73,7 +73,7 @@ public final class SuccessfulDeploymentTest {
         new Object[] {
           "message start event",
           deploy(
-              Bpmn.createExecutableProcess("process")
+              BpmnModelApi.createExecutableProcess("process")
                   .startEvent()
                   .message("start")
                   .endEvent()

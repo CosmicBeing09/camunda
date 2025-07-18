@@ -18,7 +18,7 @@ import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.response.UserTask;
 import io.camunda.client.api.search.response.Variable;
 import io.camunda.qa.util.multidb.MultiDbTest;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -1352,7 +1352,7 @@ class UserTaskSearchTest {
     camundaClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .userTask(userTaskName)
                 .zeebeUserTask()
@@ -1384,7 +1384,7 @@ class UserTaskSearchTest {
     camundaClient
         .newDeployResourceCommand()
         .addProcessModel(
-            Bpmn.createExecutableProcess(processId)
+            BpmnModelApi.createExecutableProcess(processId)
                 .startEvent()
                 .userTask(userTaskName)
                 .zeebeTaskPriority(priority)
@@ -1406,7 +1406,7 @@ class UserTaskSearchTest {
 
     camundaClient
         .newDeployResourceCommand()
-        .addProcessModel(Bpmn.readModelFromStream(process), resourceName)
+        .addProcessModel(BpmnModelApi.readModelFromStream(process), resourceName)
         .send()
         .join();
   }

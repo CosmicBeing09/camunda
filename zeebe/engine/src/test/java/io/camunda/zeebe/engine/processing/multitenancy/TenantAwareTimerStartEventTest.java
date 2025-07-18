@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.tuple;
 
 import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
-import io.camunda.zeebe.model.bpmn.Bpmn;
+import io.camunda.zeebe.model.bpmn.BpmnModelApi;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.StartEventBuilder;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -56,7 +56,7 @@ public class TenantAwareTimerStartEventTest {
 
   private static BpmnModelInstance processWithTimerStartEvent(
       final Consumer<StartEventBuilder> consumer) {
-    final var builder = Bpmn.createExecutableProcess(PROCESS_ID).startEvent("startEvent");
+    final var builder = BpmnModelApi.createExecutableProcess(PROCESS_ID).startEvent("startEvent");
     consumer.accept(builder);
     return builder.endEvent().done();
   }
