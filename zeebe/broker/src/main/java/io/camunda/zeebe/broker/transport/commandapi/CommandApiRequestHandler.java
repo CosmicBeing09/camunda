@@ -99,7 +99,7 @@ final class CommandApiRequestHandler
     final var metadata = reader.metadata();
 
     metadata.requestId(requestId);
-    metadata.requestStreamId(partitionId);
+    metadata.requestPartitionId(partitionId);
     metadata.recordType(RecordType.COMMAND);
     metadata.intent(intent);
     metadata.valueType(valueType);

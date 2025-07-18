@@ -62,7 +62,7 @@ public final class RecordToWrite implements LogAppendEntry {
   }
 
   public static RecordToWrite userCommand() {
-    final RecordMetadata recordMetadata = new RecordMetadata().requestId(100).requestStreamId(10);
+    final RecordMetadata recordMetadata = new RecordMetadata().requestId(100).requestPartitionId(10);
     return new RecordToWrite(recordMetadata.recordType(RecordType.COMMAND));
   }
 

@@ -453,7 +453,7 @@ public final class TestStreams {
     }
 
     public FluentLogWriter requestStreamId(final int requestStreamId) {
-      metadata.requestStreamId(requestStreamId);
+      metadata.requestPartitionId(requestStreamId);
       return this;
     }
 
