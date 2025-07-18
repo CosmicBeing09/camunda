@@ -56,15 +56,15 @@ public interface TestData {
     return Files.readString(filePath);
   }
 
-  static ImportPositionEntity completedImportPosition(final int partition) {
-    return importPosition(true, partition);
+  static ImportPositionEntity createCompletedImportPosition(final int partition) {
+    return createImportPositionEntity(true, partition);
   }
 
   static ImportPositionEntity notCompletedImportPosition(final int partition) {
-    return importPosition(false, partition);
+    return createImportPositionEntity(false, partition);
   }
 
-  private static ImportPositionEntity importPosition(final boolean completed, final int partition) {
+  private static ImportPositionEntity createImportPositionEntity(final boolean completed, final int partition) {
     return new ImportPositionEntity()
         .setId(partition + "-" + ProcessIndex.INDEX_NAME)
         .setPartitionId(partition)

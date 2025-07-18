@@ -51,7 +51,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     final ProcessEntity entityNotToBeMigrated = TestData.processEntityWithPublicFormId(2L);
     writeProcessToIndex(entityToBeMigrated);
     writeProcessToIndex(entityNotToBeMigrated);
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     awaitRecordsArePresent(ProcessEntity.class, processEntityIndex.getFullQualifiedName(), 2);
 
     // when
@@ -111,7 +111,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     writeProcessToIndex(TestData.processEntityWithPublicFormId(1L));
     writeProcessToIndex(TestData.processEntityWithoutForm(2L));
     writeProcessToIndex(TestData.processEntityWithPublicFormKey(3L));
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     awaitRecordsArePresent(ProcessEntity.class, processEntityIndex.getFullQualifiedName(), 3);
     // when
     runMigration();
@@ -160,7 +160,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     for (int i = 1; i <= 20; i++) {
       writeProcessToIndex(TestData.processEntityWithPublicFormId((long) i));
     }
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     awaitRecordsArePresent(ProcessEntity.class, processEntityIndex.getFullQualifiedName(), 20);
 
     // when
@@ -187,7 +187,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     for (int i = 1; i <= 9; i++) {
       writeProcessToIndex(TestData.processEntityWithPublicFormId((long) i));
     }
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     awaitRecordsArePresent(ProcessEntity.class, processEntityIndex.getFullQualifiedName(), 9);
     writeProcessorStepToIndex("5");
     // when
@@ -240,7 +240,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     properties.setBatchSize(1);
     final ProcessEntity entityToBeMigrated = TestData.processEntityWithPublicFormId(1L);
     final ProcessEntity entityNotToBeMigrated = TestData.processEntityWithPublicFormId(2L);
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     writeProcessorStepToIndex("2");
     writeProcessToIndex(entityToBeMigrated);
     writeProcessToIndex(entityNotToBeMigrated);
@@ -272,7 +272,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     properties.getRetry().setMinRetryDelay(Duration.ofSeconds(1));
     properties.getRetry().setMaxRetryDelay(Duration.ofSeconds(1));
     properties.setBatchSize(4);
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
     scheduler.schedule(
@@ -308,7 +308,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     this.isElasticsearch = isElasticsearch;
     properties.setImporterFinishedTimeout(Duration.ofSeconds(5));
     writeImportPositionToIndex(
-        TestData.completedImportPosition(1), TestData.notCompletedImportPosition(2));
+        TestData.createCompletedImportPosition(1), TestData.notCompletedImportPosition(2));
     elasticsearchClient.indices().refresh();
     awaitRecordsArePresent(
         ImportPositionEntity.class, positionIndex.getFullQualifiedName(), 2);
@@ -322,7 +322,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
         .start();
 
     assertThat(latch.getCount()).isEqualTo(1);
-    writeImportPositionToIndex(TestData.completedImportPosition(2));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(2));
     latch.await();
     assertThat(latch.getCount()).isEqualTo(0);
 
@@ -345,7 +345,7 @@ public class ProcessMigrationIntegrationTest extends AbstractProcessMigrationInt
     properties.setImporterFinishedTimeout(Duration.ofSeconds(5));
     writeProcessToIndex(TestData.processEntityWithPublicFormKey(1L));
     writeProcessToIndex(TestData.processEntityWithPublicFormKey(2L));
-    writeImportPositionToIndex(TestData.completedImportPosition(1));
+    writeImportPositionToIndex(TestData.createCompletedImportPosition(1));
     refreshIndices();
     awaitRecordsArePresent(
         ImportPositionEntity.class, positionIndex.getFullQualifiedName(), 1);
