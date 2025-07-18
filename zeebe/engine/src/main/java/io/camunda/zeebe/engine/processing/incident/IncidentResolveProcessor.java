@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
@@ -57,7 +57,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   private final IncidentState incidentState;
   private final ElementInstanceState elementInstanceState;
   private final TaskState userTaskState;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final JobState jobState;
   private final AuthorizationCheckBehavior authCheckBehavior;
@@ -104,7 +104,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -130,7 +130,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
       final RejectionType rejectionType) {
 
     rejectionWriter.appendRejection(command, rejectionType, errorMessage);
-    responseWriter.writeRejectionOnCommand(command, rejectionType, errorMessage);
+    responseWriter.rejectCommandAsync(command, rejectionType, errorMessage);
   }
 
   private void attemptToContinueProcessProcessing(

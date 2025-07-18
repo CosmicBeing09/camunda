@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecord
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.value.clock.ClockRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -34,7 +34,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   private final ControllableStreamClock clock;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
 
   public ClockProcessor(
@@ -62,7 +62,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -74,7 +74,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
           "Expected pin time to be not negative but it was %d".formatted(clockRecord.getTime());
 
       rejectionWriter.appendRejection(command, RejectionType.INVALID_ARGUMENT, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           command, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       return;
     }

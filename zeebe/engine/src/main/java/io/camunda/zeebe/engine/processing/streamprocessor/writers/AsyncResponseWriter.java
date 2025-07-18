@@ -14,9 +14,9 @@ import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 
-public interface TypedResponseWriter {
+public interface AsyncResponseWriter {
 
-  void writeRejectionOnCommand(TypedRecord<?> command, RejectionType type, String reason);
+  void rejectCommandAsync(TypedRecord<?> command, RejectionType type, String reason);
 
   void writeRejection(
       final TypedRecord<?> command,

@@ -9,9 +9,9 @@ package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -27,7 +27,7 @@ public class JobUpdateProcessor implements TypedRecordProcessor<JobRecord> {
 
   private final JobUpdateBehaviour jobUpdateBehaviour;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final StateWriter stateWriter;
 
   public JobUpdateProcessor(final JobUpdateBehaviour jobUpdateBehaviour, final Writers writers) {
@@ -69,7 +69,7 @@ public class JobUpdateProcessor implements TypedRecordProcessor<JobRecord> {
             },
             rejection -> {
               rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+              responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
             });
   }
 
@@ -88,6 +88,6 @@ public class JobUpdateProcessor implements TypedRecordProcessor<JobRecord> {
   private void handleRejection(final List<String> errors, final TypedRecord<JobRecord> command) {
     final String errorMessage = String.join(", ", errors);
     rejectionWriter.appendRejection(command, RejectionType.INVALID_ARGUMENT, errorMessage);
-    responseWriter.writeRejectionOnCommand(command, RejectionType.INVALID_ARGUMENT, errorMessage);
+    responseWriter.rejectCommandAsync(command, RejectionType.INVALID_ARGUMENT, errorMessage);
   }
 }
