@@ -24,7 +24,7 @@ public record IncidentDbModel(
     ErrorType errorType,
     String errorMessage,
     Integer errorMessageHash,
-    OffsetDateTime creationDate,
+    OffsetDateTime timestamp,
     IncidentState state,
     String treePath,
     String tenantId,
@@ -49,7 +49,7 @@ public record IncidentDbModel(
                 .errorType(errorType)
                 .errorMessage(errorMessage)
                 .errorMessageHash(errorMessageHash)
-                .creationDate(creationDate)
+                .creationDate(timestamp)
                 .state(state)
                 .treePath(treePath)
                 .tenantId(tenantId)
@@ -70,7 +70,7 @@ public record IncidentDbModel(
     private ErrorType errorType;
     private String errorMessage;
     private Integer errorMessageHash;
-    private OffsetDateTime creationDate;
+    private OffsetDateTime timestamp;
     private IncidentState state;
     private String treePath;
     private String tenantId;
@@ -128,7 +128,7 @@ public record IncidentDbModel(
     }
 
     public Builder creationDate(final OffsetDateTime creationDate) {
-      this.creationDate = creationDate;
+      timestamp = creationDate;
       return this;
     }
 
@@ -170,7 +170,7 @@ public record IncidentDbModel(
           errorType,
           errorMessage,
           errorMessageHash,
-          creationDate,
+          timestamp,
           state,
           treePath,
           tenantId,

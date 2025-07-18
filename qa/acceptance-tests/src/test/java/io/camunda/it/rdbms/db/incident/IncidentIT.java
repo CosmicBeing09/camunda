@@ -160,8 +160,8 @@ public class IncidentIT {
                                     .tenantIds(original.tenantId())
                                     .creationTimeFilter(
                                         new DateValueFilter(
-                                            original.creationDate().minusSeconds(1),
-                                            original.creationDate().plusSeconds(1))))
+                                            original.timestamp().minusSeconds(1),
+                                            original.timestamp().plusSeconds(1))))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(5))));
 
@@ -219,7 +219,7 @@ public class IncidentIT {
     assertThat(instance.incidentKey()).isEqualTo(original.incidentKey());
     assertThat(instance.processDefinitionId()).isEqualTo(original.processDefinitionId());
     assertThat(instance.creationTime())
-        .isCloseTo(original.creationDate(), new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
+        .isCloseTo(original.timestamp(), new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
   }
 
   @TestTemplate
