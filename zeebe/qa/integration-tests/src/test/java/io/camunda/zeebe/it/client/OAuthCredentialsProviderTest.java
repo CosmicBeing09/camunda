@@ -68,7 +68,7 @@ final class OAuthCredentialsProviderTest {
   void shouldFetchValidOAuthToken(@TempDir final Path cacheDir) throws IOException {
     // given
     final var credentialsProvider =
-        CredentialsProvider.newCredentialsProviderBuilder()
+        CredentialsProvider.newOAuthCredentialsProviderBuilder()
             .audience("zeebe")
             .clientId("zeebe")
             .clientSecret("secret")

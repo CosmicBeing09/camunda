@@ -161,7 +161,7 @@ public class GatewayAuthenticationNoneIT {
     try (final var client =
         createCamundaClientBuilder()
             .credentialsProvider(
-                CredentialsProvider.newCredentialsProviderBuilder()
+                CredentialsProvider.newOAuthCredentialsProviderBuilder()
                     .clientId(ZEEBE_CLIENT_ID)
                     .clientSecret(ZEEBE_CLIENT_SECRET)
                     .audience(ZEEBE_CLIENT_AUDIENCE)
