@@ -109,7 +109,7 @@ public final class CamundaClientBuilderImpl
   private Duration defaultRequestTimeout = Duration.ofSeconds(10);
   private Duration defaultRequestTimeoutOffset = Duration.ofSeconds(1);
   private boolean usePlaintextConnection = false;
-  private String certificatePath;
+  private String caCertificatePath;
   private CredentialsProvider credentialsProvider;
   private Duration keepAlive = Duration.ofSeconds(45);
   private JsonMapper jsonMapper = new CamundaObjectMapper();
@@ -194,7 +194,7 @@ public final class CamundaClientBuilderImpl
 
   @Override
   public String getCaCertificatePath() {
-    return certificatePath;
+    return caCertificatePath;
   }
 
   @Override
@@ -453,8 +453,8 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder numJobWorkerExecutionThreads(final int numSubscriptionThreads) {
-    numJobWorkerExecutionThreads = numSubscriptionThreads;
+  public CamundaClientBuilder numJobWorkerExecutionThreads(final int numJobWorkerExecutionThreads) {
+    this.numJobWorkerExecutionThreads = numJobWorkerExecutionThreads;
     return this;
   }
 
@@ -511,7 +511,7 @@ public final class CamundaClientBuilderImpl
 
   @Override
   public CamundaClientBuilder caCertificatePath(final String certificatePath) {
-    this.certificatePath = certificatePath;
+    caCertificatePath = certificatePath;
     return this;
   }
 

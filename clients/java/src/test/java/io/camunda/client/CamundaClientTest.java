@@ -233,16 +233,16 @@ public final class CamundaClientTest {
     // given
     Environment.system().put(envName, "true");
 
-    final CamundaClientBuilderImpl builder1 = new CamundaClientBuilderImpl();
-    final CamundaClientBuilderImpl builder2 = new CamundaClientBuilderImpl();
-    builder1.applyEnvironmentVariableOverrides(false);
-    builder2.applyEnvironmentVariableOverrides(true);
+    final CamundaClientBuilderImpl builderWithoutEnvOverride = new CamundaClientBuilderImpl();
+    final CamundaClientBuilderImpl builderWithEnvOverride = new CamundaClientBuilderImpl();
+    builderWithoutEnvOverride.applyEnvironmentVariableOverrides(false);
+    builderWithEnvOverride.applyEnvironmentVariableOverrides(true);
 
     // when
-    builder1.build();
-    builder2.build();
-    assertThat(builder1.getDefaultJobWorkerStreamEnabled()).isFalse();
-    assertThat(builder2.getDefaultJobWorkerStreamEnabled()).isTrue();
+    builderWithoutEnvOverride.build();
+    builderWithEnvOverride.build();
+    assertThat(builderWithoutEnvOverride.getDefaultJobWorkerStreamEnabled()).isFalse();
+    assertThat(builderWithEnvOverride.getDefaultJobWorkerStreamEnabled()).isTrue();
   }
 
   @ParameterizedTest
