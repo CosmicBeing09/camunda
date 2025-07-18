@@ -51,9 +51,9 @@ public class DbUserTaskState implements MutableUserTaskState {
   private final ColumnFamily<DbLong, UserTaskIntermediateStateValue>
       userTasksIntermediateStatesColumnFamily;
 
-  private final UserTaskTransitionTriggerRequestMetadata userTaskTransitionTriggerRequestMetadata =
-      new UserTaskTransitionTriggerRequestMetadata();
-  private final ColumnFamily<DbLong, UserTaskTransitionTriggerRequestMetadata>
+  private final UserTaskTransitionTriggerRequest userTaskTransitionTriggerRequestMetadata =
+      new UserTaskTransitionTriggerRequest();
+  private final ColumnFamily<DbLong, UserTaskTransitionTriggerRequest>
       userTasksTransitionTriggerRequestMetadataColumnFamily;
 
   private final DbString initialAssignee = new DbString();
@@ -165,8 +165,8 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
-  public void storeRecordRequestMetadata(
-      final long key, final UserTaskTransitionTriggerRequestMetadata recordRequestMetadata) {
+  public void storeTransitionTriggerRequest(
+      final long key, final UserTaskTransitionTriggerRequest recordRequestMetadata) {
     userTaskKey.wrapLong(key);
     userTasksTransitionTriggerRequestMetadataColumnFamily.insert(
         userTaskKey, recordRequestMetadata);
@@ -227,17 +227,17 @@ public class DbUserTaskState implements MutableUserTaskState {
   }
 
   @Override
-  public Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequestMetadata(
-      final long key) {
-    userTaskKey.wrapLong(key);
-    return Optional.ofNullable(
-        userTasksTransitionTriggerRequestMetadataColumnFamily.get(userTaskKey));
-  }
-
-  @Override
   public Optional<String> findInitialAssignee(final long key) {
     userTaskKey.wrapLong(key);
     final var initialAssignee = userTasksInitialAssigneeColumnFamily.get(userTaskKey);
     return initialAssignee == null ? Optional.empty() : Optional.of(initialAssignee.toString());
+  }
+
+  @Override
+  public Optional<UserTaskTransitionTriggerRequest> findRecordRequestMetadata(
+      final long key) {
+    userTaskKey.wrapLong(key);
+    return Optional.ofNullable(
+        userTasksTransitionTriggerRequestMetadataColumnFamily.get(userTaskKey));
   }
 }
