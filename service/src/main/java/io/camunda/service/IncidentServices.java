@@ -63,7 +63,7 @@ public class IncidentServices
     final var result =
         incidentSearchClient
             .withSecurityContext(securityContextProvider.provideSecurityContext(authentication))
-            .searchIncidents(incidentSearchQuery(q -> q.filter(f -> f.incidentKeys(key))));
+            .searchIncidents(incidentSearchQuery(q -> q.filter(f -> f.incidentKeyOperations(key))));
     final var incidentEntity = getSingleResultOrThrow(result, key, "Incident");
     final var authorization = Authorization.of(a -> a.processDefinition().readProcessInstance());
     if (!securityContextProvider.isAuthorized(

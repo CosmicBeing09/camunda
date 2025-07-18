@@ -136,7 +136,7 @@ class DocumentAuthorizationQueryStrategyTest {
             originalRequest, securityContext, ProcessDefinitionQuery.class);
 
     // then
-    assertThat(result.query().queryOption()).isInstanceOf(SearchMatchNoneQuery.class);
+    assertThat(result.query().queryOperations()).isInstanceOf(SearchMatchNoneQuery.class);
   }
 
   @Test

@@ -36,7 +36,7 @@ public class AuthorizationQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,

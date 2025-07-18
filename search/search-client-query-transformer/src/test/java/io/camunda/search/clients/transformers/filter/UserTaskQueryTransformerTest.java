@@ -38,7 +38,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final SearchQueryOption queryVariant = searchRequest.queryOption();
+    final SearchQueryOption queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
@@ -47,7 +47,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
               assertThat(boolQuery.must())
                   .anySatisfy(
                       query ->
-                          assertThat(query.queryOption())
+                          assertThat(query.queryOperations())
                               .isInstanceOfSatisfying(
                                   SearchExistsQuery.class,
                                   (existsQuery) -> {
@@ -60,7 +60,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(1).queryOption())
+              assertThat(t.must().get(1).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -79,13 +79,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -104,12 +104,12 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -128,12 +128,12 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -152,14 +152,14 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
-    searchRequest.queryOption();
+    searchRequest.queryOperations();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -178,13 +178,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -203,13 +203,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -228,13 +228,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -253,13 +253,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -278,13 +278,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -303,13 +303,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             (t) -> {
-              assertThat(t.must().get(0).queryOption())
+              assertThat(t.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       (term) -> {
@@ -336,7 +336,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperations();
 
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
@@ -345,26 +345,26 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
               assertThat(outerBoolQuery.must()).isNotEmpty();
 
               final SearchQuery outerMustQuery = outerBoolQuery.must().get(0);
-              assertThat(outerMustQuery.queryOption()).isInstanceOf(SearchHasParentQuery.class);
+              assertThat(outerMustQuery.queryOperations()).isInstanceOf(SearchHasParentQuery.class);
 
               // Drill down into the nested SearchBoolQuery
               final SearchHasParentQuery nestedHasParentQuery =
-                  (SearchHasParentQuery) outerMustQuery.queryOption();
+                  (SearchHasParentQuery) outerMustQuery.queryOperations();
               assertThat(nestedHasParentQuery.parentType())
                   .isEqualTo(TaskJoinRelationshipType.PROCESS.getType());
 
               // Drill down into the nested SearchHasChildQuery of the hasParentQuery
               final SearchHasChildQuery childQuery =
-                  (SearchHasChildQuery) nestedHasParentQuery.query().queryOption();
+                  (SearchHasChildQuery) nestedHasParentQuery.query().queryOperations();
               assertThat(childQuery.type())
                   .isEqualTo(TaskJoinRelationshipType.PROCESS_VARIABLE.getType());
 
               // Drill down into the nested SearchBoolQuery of the hasChildQuery
               final SearchBoolQuery innerBoolQuery =
-                  (SearchBoolQuery) childQuery.query().queryOption();
+                  (SearchBoolQuery) childQuery.query().queryOperations();
               assertThat(innerBoolQuery.must()).hasSize(2);
 
-              assertThat(innerBoolQuery.must().get(0).queryOption())
+              assertThat(innerBoolQuery.must().get(0).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       termQuery -> {
@@ -372,7 +372,7 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
                         assertThat(termQuery.value().value()).isEqualTo("test");
                       });
 
-              assertThat(innerBoolQuery.must().get(1).queryOption())
+              assertThat(innerBoolQuery.must().get(1).queryOperations())
                   .isInstanceOfSatisfying(
                       SearchTermQuery.class,
                       termQuery -> {

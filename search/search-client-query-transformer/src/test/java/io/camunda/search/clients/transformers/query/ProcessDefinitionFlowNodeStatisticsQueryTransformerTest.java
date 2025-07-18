@@ -124,7 +124,7 @@ public class ProcessDefinitionFlowNodeStatisticsQueryTransformerTest {
               assertSubAggregations(incidentsFilter.aggregations());
             });
 
-    final var queryVariant = searchRequest.query().queryOption();
+    final var queryVariant = searchRequest.query().queryOperations();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     final var boolQuery = (SearchBoolQuery) queryVariant;
     assertThat(boolQuery.filter()).isEmpty();
