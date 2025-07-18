@@ -94,7 +94,7 @@ public final class VariableDocumentUpdateProcessor
                 record,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
-                scope.getValue().getTenantId())
+                scope.getValue().getTenantIdentifier())
             .addResourceId(scope.getValue().getBpmnProcessId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {
@@ -111,7 +111,7 @@ public final class VariableDocumentUpdateProcessor
       return;
     }
 
-    final String tenantId = scope.getValue().getTenantId();
+    final String tenantId = scope.getValue().getTenantIdentifier();
 
     if (isCamundaUserTask(scope)) {
       final long userTaskKey = scope.getUserTaskKey();
@@ -156,7 +156,7 @@ public final class VariableDocumentUpdateProcessor
                 userTaskRecord.getProcessDefinitionKey(),
                 userTaskRecord.getProcessInstanceKey(),
                 userTaskRecord.getBpmnProcessIdBuffer(),
-                userTaskRecord.getTenantId(),
+                userTaskRecord.getTenantIdentifier(),
                 value.getVariablesBuffer());
         case PROPAGATE ->
             variableBehavior.mergeDocument(
@@ -164,7 +164,7 @@ public final class VariableDocumentUpdateProcessor
                 userTaskRecord.getProcessDefinitionKey(),
                 userTaskRecord.getProcessInstanceKey(),
                 userTaskRecord.getBpmnProcessIdBuffer(),
-                userTaskRecord.getTenantId(),
+                userTaskRecord.getTenantIdentifier(),
                 value.getVariablesBuffer());
         default ->
             throw new IllegalStateException(

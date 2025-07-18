@@ -39,7 +39,7 @@ public class ResourceDeletionRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return BufferUtil.bufferAsString(tenantIdProp.getValue());
   }
 

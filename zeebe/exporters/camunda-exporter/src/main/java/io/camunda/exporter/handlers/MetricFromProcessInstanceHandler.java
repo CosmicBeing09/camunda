@@ -66,7 +66,7 @@ public class MetricFromProcessInstanceHandler
     final String processInstanceKey = String.valueOf(recordValue.getProcessInstanceKey());
     final OffsetDateTime timestamp =
         OffsetDateTime.ofInstant(Instant.ofEpochMilli(record.getTimestamp()), ZoneOffset.UTC);
-    final String tenantId = tenantOrDefault(recordValue.getTenantId());
+    final String tenantId = tenantOrDefault(recordValue.getTenantIdentifier());
     entity
         .setEvent(EVENT_PROCESS_INSTANCE_STARTED)
         .setValue(processInstanceKey)

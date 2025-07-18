@@ -557,7 +557,7 @@ public final class ProcessDeploymentTest {
         ENGINE.deployment().withXmlResource(process).withTenantId(tenant).deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     assertThat(
             RecordingExporter.processRecords()
                 .withIntent(ProcessIntent.CREATED)
@@ -568,7 +568,7 @@ public final class ProcessDeploymentTest {
             ProcessMetadataValue::getBpmnProcessId,
             ProcessMetadataValue::getVersion,
             ProcessMetadataValue::getProcessDefinitionKey,
-            TenantOwned::getTenantId)
+            TenantOwned::getTenantIdentifier)
         .describedAs("Process is created for correct tenant")
         .containsExactly(
             tuple(
@@ -593,14 +593,14 @@ public final class ProcessDeploymentTest {
             .deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     assertThat(RecordingExporter.processRecords().withIntent(ProcessIntent.CREATED).limit(2))
         .extracting(Record::getValue)
         .extracting(
             ProcessMetadataValue::getBpmnProcessId,
             ProcessMetadataValue::getVersion,
             ProcessMetadataValue::getProcessDefinitionKey,
-            TenantOwned::getTenantId)
+            TenantOwned::getTenantIdentifier)
         .describedAs("Processes are created for correct tenant")
         .containsExactly(
             tuple(
@@ -635,8 +635,8 @@ public final class ProcessDeploymentTest {
         .describedAs("Creates 2 different process definitions")
         .isNotEqualTo(
             deployment2.getValue().getProcessesMetadata().get(0).getProcessDefinitionKey());
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
-    assertThat(deployment2.getValue().getTenantId()).isEqualTo(tenant2);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
+    assertThat(deployment2.getValue().getTenantIdentifier()).isEqualTo(tenant2);
     assertThat(
             RecordingExporter.processRecords()
                 .withIntent(ProcessIntent.CREATED)
@@ -647,7 +647,7 @@ public final class ProcessDeploymentTest {
             ProcessMetadataValue::getBpmnProcessId,
             ProcessMetadataValue::getVersion,
             ProcessMetadataValue::getProcessDefinitionKey,
-            TenantOwned::getTenantId)
+            TenantOwned::getTenantIdentifier)
         .describedAs("Processes are created for correct tenants")
         .containsExactly(
             tuple(

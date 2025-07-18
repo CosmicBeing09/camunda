@@ -23,12 +23,12 @@ public class DbTenantAwareKeyTest {
 
   @BeforeEach
   void beforeEach() {
-    TENANT_KEY.wrapString(TENANT_ID);
+    TENANT_KEY.wrapStringValue(TENANT_ID);
   }
 
   @AfterEach
   void afterEach() {
-    TENANT_KEY.wrapString("");
+    TENANT_KEY.wrapStringValue("");
   }
 
   @Test
@@ -36,7 +36,7 @@ public class DbTenantAwareKeyTest {
     // given
     final var wrappedKey = new DbString();
     final var value = "foo";
-    wrappedKey.wrapString(value);
+    wrappedKey.wrapStringValue(value);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.PREFIX);
 
     // when
@@ -64,7 +64,7 @@ public class DbTenantAwareKeyTest {
     // given
     final var wrappedKey = new DbString();
     final var value = "foo";
-    wrappedKey.wrapString(value);
+    wrappedKey.wrapStringValue(value);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.PREFIX);
 
     // when
@@ -87,7 +87,7 @@ public class DbTenantAwareKeyTest {
     // given
     final var wrappedKey = new DbString();
     final var value = "foo";
-    wrappedKey.wrapString(value);
+    wrappedKey.wrapStringValue(value);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.SUFFIX);
 
     // when
@@ -124,7 +124,7 @@ public class DbTenantAwareKeyTest {
     // given
     final var wrappedKey = new DbString();
     final var value = "foo";
-    wrappedKey.wrapString(value);
+    wrappedKey.wrapStringValue(value);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.SUFFIX);
 
     // when
@@ -245,7 +245,7 @@ public class DbTenantAwareKeyTest {
     final var wrappedKey = new DbCompositeKey<>(stringKey, longKey);
     final var stringValue = "foo";
     final var longValue = 123L;
-    stringKey.wrapString(stringValue);
+    stringKey.wrapStringValue(stringValue);
     longKey.wrapLong(longValue);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.PREFIX);
 
@@ -283,7 +283,7 @@ public class DbTenantAwareKeyTest {
     final var wrappedKey = new DbCompositeKey<>(stringKey, longKey);
     final var stringValue = "foo";
     final var longValue = 123L;
-    stringKey.wrapString(stringValue);
+    stringKey.wrapStringValue(stringValue);
     longKey.wrapLong(longValue);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.PREFIX);
 
@@ -313,7 +313,7 @@ public class DbTenantAwareKeyTest {
     final var wrappedKey = new DbCompositeKey<>(stringKey, longKey);
     final var stringValue = "foo";
     final var longValue = 123L;
-    stringKey.wrapString(stringValue);
+    stringKey.wrapStringValue(stringValue);
     longKey.wrapLong(longValue);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.SUFFIX);
 
@@ -351,7 +351,7 @@ public class DbTenantAwareKeyTest {
     final var wrappedKey = new DbCompositeKey<>(stringKey, longKey);
     final var stringValue = "foo";
     final var longValue = 123L;
-    stringKey.wrapString(stringValue);
+    stringKey.wrapStringValue(stringValue);
     longKey.wrapLong(longValue);
     final var tenantAwareKey = new DbTenantAwareKey<>(TENANT_KEY, wrappedKey, PlacementType.SUFFIX);
 

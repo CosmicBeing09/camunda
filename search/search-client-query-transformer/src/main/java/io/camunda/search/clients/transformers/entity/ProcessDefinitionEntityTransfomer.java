@@ -24,7 +24,7 @@ public class ProcessDefinitionEntityTransfomer
         value.getResourceName(),
         value.getVersion(),
         value.getVersionTag(),
-        value.getTenantId(),
+        value.getTenantIdentifier(),
         value.getFormId());
   }
 }

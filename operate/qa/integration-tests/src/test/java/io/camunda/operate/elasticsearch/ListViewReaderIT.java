@@ -483,7 +483,7 @@ public class ListViewReaderIT extends OperateSearchAbstractIT {
       final ListViewProcessInstanceDto actual, final ProcessInstanceForListViewEntity expected) {
     assertThat(actual.getProcessName()).isEqualTo(expected.getProcessName());
     assertThat(actual.getBpmnProcessId()).isEqualTo(expected.getBpmnProcessId());
-    assertThat(actual.getTenantId()).isEqualTo(expected.getTenantId());
+    assertThat(actual.getTenantId()).isEqualTo(expected.getTenantIdentifier());
     assertThat(actual.getId()).isEqualTo(expected.getId());
     assertThat(actual.getProcessId()).isEqualTo(String.valueOf(expected.getProcessDefinitionKey()));
   }

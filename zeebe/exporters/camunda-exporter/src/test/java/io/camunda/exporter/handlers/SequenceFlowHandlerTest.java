@@ -144,7 +144,7 @@ public class SequenceFlowHandlerTest {
         .isEqualTo(processInstanceRecordValue.getBpmnProcessId());
     assertThat(sequenceFlowEntity.getActivityId())
         .isEqualTo(processInstanceRecordValue.getElementId());
-    assertThat(sequenceFlowEntity.getTenantId())
-        .isEqualTo(processInstanceRecordValue.getTenantId());
+    assertThat(sequenceFlowEntity.getTenantIdentifier())
+        .isEqualTo(processInstanceRecordValue.getTenantIdentifier());
   }
 }

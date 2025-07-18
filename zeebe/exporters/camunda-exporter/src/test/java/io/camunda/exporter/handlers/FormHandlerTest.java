@@ -138,7 +138,7 @@ public class FormHandlerTest {
     assertThat(formEntity.getFormId()).isEqualTo(formValue.getFormId());
     assertThat(formEntity.getSchema())
         .isEqualTo(new String(formValue.getResource(), StandardCharsets.UTF_8));
-    assertThat(formEntity.getTenantId()).isEqualTo(formValue.getTenantId());
+    assertThat(formEntity.getTenantIdentifier()).isEqualTo(formValue.getTenantIdentifier());
     assertThat(formEntity.getIsDeleted()).isFalse();
     assertThat(formEntity.getEmbedded()).isFalse();
     assertThat(formEntity.getProcessDefinitionId()).isNull();
@@ -170,7 +170,7 @@ public class FormHandlerTest {
     assertThat(formEntity.getFormId()).isEqualTo(formValue.getFormId());
     assertThat(formEntity.getSchema())
         .isEqualTo(new String(formValue.getResource(), StandardCharsets.UTF_8));
-    assertThat(formEntity.getTenantId()).isEqualTo(formValue.getTenantId());
+    assertThat(formEntity.getTenantIdentifier()).isEqualTo(formValue.getTenantIdentifier());
     assertThat(formEntity.getEmbedded()).isFalse();
     assertThat(formEntity.getProcessDefinitionId()).isNull();
   }

@@ -48,7 +48,7 @@ public class ProcessGroupDto {
               final ProcessGroupDto groupDto = new ProcessGroupDto();
               final ProcessEntity process0 = group.get(0);
               groupDto.setBpmnProcessId(process0.getBpmnProcessId());
-              groupDto.setTenantId(process0.getTenantId());
+              groupDto.setTenantId(process0.getTenantIdentifier());
               groupDto.setName(process0.getName());
               groupDto.setPermissions(
                   (!permissionsService.permissionsEnabled())

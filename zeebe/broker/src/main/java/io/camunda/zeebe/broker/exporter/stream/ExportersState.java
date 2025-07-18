@@ -41,7 +41,7 @@ public final class ExportersState {
 
   public void setExporterState(
       final String exporterId, final long position, final DirectBuffer metadata) {
-    this.exporterId.wrapString(exporterId);
+    this.exporterId.wrapStringValue(exporterId);
 
     final var exporterStateEntry =
         findExporterStateEntry(exporterId).orElse(new ExporterStateEntry());
@@ -57,7 +57,7 @@ public final class ExportersState {
       final long position,
       final DirectBuffer metadata,
       final long metadataVersion) {
-    this.exporterId.wrapString(exporterId);
+    this.exporterId.wrapStringValue(exporterId);
     final var exporterStateEntry = new ExporterStateEntry();
     exporterStateEntry.setPosition(position).setMetadataVersion(metadataVersion);
     if (metadata != null) {
@@ -85,7 +85,7 @@ public final class ExportersState {
   }
 
   private Optional<ExporterStateEntry> findExporterStateEntry(final String exporterId) {
-    this.exporterId.wrapString(exporterId);
+    this.exporterId.wrapStringValue(exporterId);
     return Optional.ofNullable(exporterPositionColumnFamily.get(this.exporterId));
   }
 
@@ -104,7 +104,7 @@ public final class ExportersState {
   }
 
   public void removeExporterState(final String exporterId) {
-    this.exporterId.wrapString(exporterId);
+    this.exporterId.wrapStringValue(exporterId);
     exporterPositionColumnFamily.deleteIfExists(this.exporterId);
   }
 

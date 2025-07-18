@@ -213,7 +213,7 @@ public class MigrateEventBasedGatewayTest {
         .describedAs("Expect that the other data is unchanged")
         .hasMessageName(processMessageSubscriptionA.getValue().getMessageName())
         .hasCorrelationKey(processMessageSubscriptionA.getValue().getCorrelationKey())
-        .hasTenantId(processMessageSubscriptionA.getValue().getTenantId())
+        .hasTenantId(processMessageSubscriptionA.getValue().getTenantIdentifier())
         .hasProcessInstanceKey(processMessageSubscriptionA.getValue().getProcessInstanceKey())
         .hasElementInstanceKey(processMessageSubscriptionA.getValue().getElementInstanceKey())
         .hasMessageKey(processMessageSubscriptionA.getValue().getMessageKey())
@@ -228,7 +228,7 @@ public class MigrateEventBasedGatewayTest {
         .describedAs("Expect that the other data is unchanged")
         .hasProcessInstanceKey(messageSubscriptionA.getValue().getProcessInstanceKey())
         .hasElementInstanceKey(messageSubscriptionA.getValue().getElementInstanceKey())
-        .hasTenantId(messageSubscriptionA.getValue().getTenantId())
+        .hasTenantId(messageSubscriptionA.getValue().getTenantIdentifier())
         .hasMessageName(messageSubscriptionA.getValue().getMessageName())
         .hasCorrelationKey(messageSubscriptionA.getValue().getCorrelationKey())
         .hasMessageKey(messageSubscriptionA.getValue().getMessageKey())
@@ -350,7 +350,7 @@ public class MigrateEventBasedGatewayTest {
         .describedAs("Expect that the other data is unchanged")
         .hasDueDate(timerRecordA.getValue().getDueDate())
         .hasRepetitions(timerRecordA.getValue().getRepetitions())
-        .hasTenantId(timerRecordA.getValue().getTenantId())
+        .hasTenantId(timerRecordA.getValue().getTenantIdentifier())
         .hasProcessInstanceKey(timerRecordA.getValue().getProcessInstanceKey())
         .hasElementInstanceKey(timerRecordA.getValue().getElementInstanceKey());
 

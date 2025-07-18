@@ -36,7 +36,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
   public void migrateMessageStartEventSubscriptionForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.wrapStringValue(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     /*
     - `DEPRECATED_MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY` -> `MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY`
@@ -47,7 +47,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
         from.getSubscriptionsColumnFamily(),
         (key, value) -> {
           value.getRecord().setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          to.messageName.wrapBuffer(key.first().getBuffer());
+          to.messageName.wrapBufferValue(key.first().getBuffer());
           to.processDefinitionKey.wrapLong(key.second().getValue());
           to.subscriptionsColumnFamily.insert(to.messageNameAndProcessDefinitionKey, value);
         });
@@ -60,7 +60,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
         from.getSubscriptionsOfProcessDefinitionKeyColumnFamily(),
         (key, value) -> {
           to.processDefinitionKey.wrapLong(key.first().getValue());
-          to.messageName.wrapBuffer(key.second().getBuffer());
+          to.messageName.wrapBufferValue(key.second().getBuffer());
           to.subscriptionsOfProcessDefinitionKeyColumnFamily.insert(
               to.processDefinitionKeyAndMessageName, DbNil.INSTANCE);
         });

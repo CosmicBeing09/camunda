@@ -159,8 +159,8 @@ public class ListViewFlowNodeFromJobHandlerTest {
         .isEqualTo(jobRecord.getValue().getElementId());
     assertThat(flowNodeInstanceForListViewEntity.getProcessInstanceKey())
         .isEqualTo(jobRecord.getValue().getProcessInstanceKey());
-    assertThat(flowNodeInstanceForListViewEntity.getTenantId())
-        .isEqualTo(jobRecord.getValue().getTenantId());
+    assertThat(flowNodeInstanceForListViewEntity.getTenantIdentifier())
+        .isEqualTo(jobRecord.getValue().getTenantIdentifier());
     assertThat(flowNodeInstanceForListViewEntity.isJobFailedWithRetriesLeft()).isEqualTo(false);
     assertThat(flowNodeInstanceForListViewEntity.getJoinRelation())
         .isEqualTo(

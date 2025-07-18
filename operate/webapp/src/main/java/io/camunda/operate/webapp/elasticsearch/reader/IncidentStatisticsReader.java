@@ -233,7 +233,7 @@ public class IncidentStatisticsReader extends AbstractReader
     for (final List<ProcessEntity> processes : processGroups.values()) {
       final IncidentsByProcessGroupStatisticsDto stat = new IncidentsByProcessGroupStatisticsDto();
       stat.setBpmnProcessId(processes.get(0).getBpmnProcessId());
-      stat.setTenantId(processes.get(0).getTenantId());
+      stat.setTenantId(processes.get(0).getTenantIdentifier());
 
       // accumulate stat for process group
       long activeInstancesCount = 0;
@@ -257,7 +257,7 @@ public class IncidentStatisticsReader extends AbstractReader
         }
         statForProcess.setName(processEntity.getName());
         statForProcess.setBpmnProcessId(processEntity.getBpmnProcessId());
-        statForProcess.setTenantId(processEntity.getTenantId());
+        statForProcess.setTenantId(processEntity.getTenantIdentifier());
         statForProcess.setVersion(processEntity.getVersion());
         stat.getProcesses().add(statForProcess);
 
@@ -317,7 +317,7 @@ public class IncidentStatisticsReader extends AbstractReader
         final ProcessEntity process = processes.get(processDefinitionKey);
         statisticForProcess.setName(process.getName());
         statisticForProcess.setBpmnProcessId(process.getBpmnProcessId());
-        statisticForProcess.setTenantId(process.getTenantId());
+        statisticForProcess.setTenantId(process.getTenantIdentifier());
         statisticForProcess.setVersion(process.getVersion());
         processStatistics.getProcesses().add(statisticForProcess);
       }

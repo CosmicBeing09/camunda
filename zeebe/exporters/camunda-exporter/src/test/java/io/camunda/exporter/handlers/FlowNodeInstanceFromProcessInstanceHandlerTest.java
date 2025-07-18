@@ -282,8 +282,8 @@ public class FlowNodeInstanceFromProcessInstanceHandlerTest {
         .isEqualTo(processInstanceRecordValue.getProcessDefinitionKey());
     assertThat(flowNodeInstanceEntity.getBpmnProcessId())
         .isEqualTo(processInstanceRecordValue.getBpmnProcessId());
-    assertThat(flowNodeInstanceEntity.getTenantId())
-        .isEqualTo(processInstanceRecordValue.getTenantId());
+    assertThat(flowNodeInstanceEntity.getTenantIdentifier())
+        .isEqualTo(processInstanceRecordValue.getTenantIdentifier());
     assertThat(flowNodeInstanceEntity.getTreePath()).isEqualTo("333/444/555/666");
     assertThat(flowNodeInstanceEntity.getLevel()).isEqualTo(3);
     assertThat(flowNodeInstanceEntity.getState()).isEqualTo(FlowNodeState.ACTIVE);

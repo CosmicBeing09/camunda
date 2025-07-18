@@ -236,7 +236,7 @@ public class DecisionEvaluationHandlerTest {
 
     assertThat(decisionInstanceEntity.getPosition()).isEqualTo(decisionRecord.getPosition());
     assertThat(decisionInstanceEntity.getPartitionId()).isEqualTo(decisionRecord.getPartitionId());
-    assertThat(decisionInstanceEntity.getTenantId()).isEqualTo(decisionRecordValue.getTenantId());
+    assertThat(decisionInstanceEntity.getTenantIdentifier()).isEqualTo(decisionRecordValue.getTenantIdentifier());
   }
 
   @Test

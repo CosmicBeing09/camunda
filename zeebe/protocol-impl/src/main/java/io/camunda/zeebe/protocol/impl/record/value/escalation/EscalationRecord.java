@@ -78,7 +78,7 @@ public class EscalationRecord extends UnifiedRecordValue implements EscalationRe
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     // todo(#13774): replace dummy implementation
     return TenantOwned.DEFAULT_TENANT_IDENTIFIER;
   }

@@ -123,7 +123,7 @@ public final class VariableRecord extends UnifiedRecordValue implements Variable
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

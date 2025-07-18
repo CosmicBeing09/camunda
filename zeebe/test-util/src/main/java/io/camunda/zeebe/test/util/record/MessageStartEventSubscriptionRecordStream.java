@@ -44,6 +44,6 @@ public final class MessageStartEventSubscriptionRecordStream
   }
 
   public MessageStartEventSubscriptionRecordStream withTenantId(final String tenantId) {
-    return valueFilter(v -> tenantId.equals(v.getTenantId()));
+    return valueFilter(v -> tenantId.equals(v.getTenantIdentifier()));
   }
 }

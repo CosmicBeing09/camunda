@@ -73,7 +73,7 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
     elementInstanceKeyProp.setValue(record.getElementInstanceKey());
     jobKeyProp.setValue(record.getJobKey());
     variableScopeKeyProp.setValue(record.getVariableScopeKey());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
     setElementInstancePath(record.getElementInstancePath());
     setProcessDefinitionPath(record.getProcessDefinitionPath());
     setCallingElementPath(record.getCallingElementPath());
@@ -238,7 +238,7 @@ public final class IncidentRecord extends UnifiedRecordValue implements Incident
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return BufferUtil.bufferAsString(tenantIdProp.getValue());
   }
 

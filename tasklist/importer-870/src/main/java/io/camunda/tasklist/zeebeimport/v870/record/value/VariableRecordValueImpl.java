@@ -77,7 +77,7 @@ public class VariableRecordValueImpl extends RecordValueImpl implements Variable
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

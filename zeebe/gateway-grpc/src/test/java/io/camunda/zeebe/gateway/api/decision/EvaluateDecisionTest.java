@@ -52,7 +52,7 @@ public class EvaluateDecisionTest extends GatewayTest {
     assertThat(record.getDecisionId()).isEqualTo(evaluationRecord.getDecisionId());
     assertThat(record.getDecisionKey()).isEqualTo(evaluationRecord.getDecisionKey());
     MsgPackUtil.assertEqualityExcluding(record.getVariablesBuffer(), variables);
-    assertThat(record.getTenantId()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    assertThat(record.getTenantIdentifier()).isEqualTo(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
   }
 
   @Test
@@ -107,7 +107,7 @@ public class EvaluateDecisionTest extends GatewayTest {
     assertThat(intermediateResultResponse.getDecisionOutput())
         .isEqualTo(expectedIntermediateDecisionResult.getDecisionOutput());
     assertThat(intermediateResultResponse.getTenantId())
-        .isEqualTo(expectedIntermediateDecisionResult.getTenantId());
+        .isEqualTo(expectedIntermediateDecisionResult.getTenantIdentifier());
 
     // assert EvaluatedInputRecord mapping
     assertThat(intermediateResultResponse.getEvaluatedInputsCount()).isOne();

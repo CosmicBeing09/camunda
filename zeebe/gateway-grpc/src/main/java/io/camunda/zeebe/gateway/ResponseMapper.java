@@ -78,7 +78,7 @@ public final class ResponseMapper {
                     .setBpmnProcessId(bufferAsString(process.getBpmnProcessIdBuffer()))
                     .setVersion(process.getVersion())
                     .setProcessDefinitionKey(process.getKey())
-                    .setTenantId(process.getTenantId())
+                    .setTenantId(process.getTenantIdentifier())
                     .setResourceName(bufferAsString(process.getResourceNameBuffer())));
 
     return responseBuilder.build();
@@ -87,7 +87,7 @@ public final class ResponseMapper {
   public static DeployResourceResponse toDeployResourceResponse(
       final long key, final DeploymentRecord brokerResponse) {
     final var responseBuilder =
-        DeployResourceResponse.newBuilder().setKey(key).setTenantId(brokerResponse.getTenantId());
+        DeployResourceResponse.newBuilder().setKey(key).setTenantId(brokerResponse.getTenantIdentifier());
 
     brokerResponse.processesMetadata().stream()
         .map(
@@ -97,7 +97,7 @@ public final class ResponseMapper {
                     .setVersion(process.getVersion())
                     .setProcessDefinitionKey(process.getKey())
                     .setResourceName(process.getResourceName())
-                    .setTenantId(process.getTenantId())
+                    .setTenantId(process.getTenantIdentifier())
                     .build())
         .forEach(process -> responseBuilder.addDeploymentsBuilder().setProcess(process));
 
@@ -111,7 +111,7 @@ public final class ResponseMapper {
                     .setDecisionKey(decision.getDecisionKey())
                     .setDmnDecisionRequirementsId(decision.getDecisionRequirementsId())
                     .setDecisionRequirementsKey(decision.getDecisionRequirementsKey())
-                    .setTenantId(decision.getTenantId())
+                    .setTenantId(decision.getTenantIdentifier())
                     .build())
         .forEach(decision -> responseBuilder.addDeploymentsBuilder().setDecision(decision));
 
@@ -124,7 +124,7 @@ public final class ResponseMapper {
                     .setVersion(drg.getDecisionRequirementsVersion())
                     .setDecisionRequirementsKey(drg.getDecisionRequirementsKey())
                     .setResourceName(drg.getResourceName())
-                    .setTenantId(drg.getTenantId())
+                    .setTenantId(drg.getTenantIdentifier())
                     .build())
         .forEach(drg -> responseBuilder.addDeploymentsBuilder().setDecisionRequirements(drg));
 
@@ -136,7 +136,7 @@ public final class ResponseMapper {
                     .setVersion(form.getVersion())
                     .setFormKey(form.getFormKey())
                     .setResourceName(form.getResourceName())
-                    .setTenantId(form.getTenantId())
+                    .setTenantId(form.getTenantIdentifier())
                     .build())
         .forEach(form -> responseBuilder.addDeploymentsBuilder().setForm(form));
 
@@ -147,7 +147,7 @@ public final class ResponseMapper {
       final long key, final MessageRecord brokerResponse) {
     return PublishMessageResponse.newBuilder()
         .setKey(key)
-        .setTenantId(brokerResponse.getTenantId())
+        .setTenantId(brokerResponse.getTenantIdentifier())
         .build();
   }
 
@@ -181,7 +181,7 @@ public final class ResponseMapper {
         .setProcessDefinitionKey(brokerResponse.getProcessDefinitionKey())
         .setBpmnProcessId(bufferAsString(brokerResponse.getBpmnProcessIdBuffer()))
         .setVersion(brokerResponse.getVersion())
-        .setTenantId(brokerResponse.getTenantId())
+        .setTenantId(brokerResponse.getTenantIdentifier())
         .setProcessInstanceKey(brokerResponse.getProcessInstanceKey())
         .build();
   }
@@ -192,7 +192,7 @@ public final class ResponseMapper {
         .setProcessDefinitionKey(brokerResponse.getProcessDefinitionKey())
         .setBpmnProcessId(bufferAsString(brokerResponse.getBpmnProcessIdBuffer()))
         .setVersion(brokerResponse.getVersion())
-        .setTenantId(brokerResponse.getTenantId())
+        .setTenantId(brokerResponse.getTenantIdentifier())
         .setProcessInstanceKey(brokerResponse.getProcessInstanceKey())
         .setVariables(bufferAsJson(brokerResponse.getVariablesBuffer()))
         .build();
@@ -210,7 +210,7 @@ public final class ResponseMapper {
             .setDecisionVersion(brokerResponse.getDecisionVersion())
             .setDecisionRequirementsId(brokerResponse.getDecisionRequirementsId())
             .setDecisionRequirementsKey(brokerResponse.getDecisionRequirementsKey())
-            .setTenantId(brokerResponse.getTenantId());
+            .setTenantId(brokerResponse.getTenantIdentifier());
 
     for (final EvaluatedDecisionValue intermediateDecision :
         brokerResponse.getEvaluatedDecisions()) {
@@ -222,7 +222,7 @@ public final class ResponseMapper {
               .setDecisionVersion(intermediateDecision.getDecisionVersion())
               .setDecisionType(intermediateDecision.getDecisionType())
               .setDecisionOutput(intermediateDecision.getDecisionOutput())
-              .setTenantId(intermediateDecision.getTenantId());
+              .setTenantId(intermediateDecision.getTenantIdentifier());
 
       intermediateDecision.getEvaluatedInputs().stream()
           .map(
@@ -364,7 +364,7 @@ public final class ResponseMapper {
         .setRetries(job.getRetries())
         .setDeadline(job.getDeadline())
         .setVariables(bufferAsJson(job.getVariablesBuffer()))
-        .setTenantId(job.getTenantId())
+        .setTenantId(job.getTenantIdentifier())
         .build();
   }
 
@@ -392,7 +392,7 @@ public final class ResponseMapper {
       final long key, final SignalRecord brokerResponse) {
     return BroadcastSignalResponse.newBuilder()
         .setKey(key)
-        .setTenantId(brokerResponse.getTenantId())
+        .setTenantId(brokerResponse.getTenantIdentifier())
         .build();
   }
 

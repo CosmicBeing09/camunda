@@ -313,7 +313,7 @@ public class UserTaskJobBasedHandlerTest {
     // then
     assertThat(taskEntity.getId()).isEqualTo(String.valueOf(recordKey));
     assertThat(taskEntity.getKey()).isEqualTo(jobRecord.getKey());
-    assertThat(taskEntity.getTenantId()).isEqualTo(jobRecordValue.getTenantId());
+    assertThat(taskEntity.getTenantIdentifier()).isEqualTo(jobRecordValue.getTenantIdentifier());
     assertThat(taskEntity.getPartitionId()).isEqualTo(jobRecord.getPartitionId());
     assertThat(taskEntity.getPosition()).isEqualTo(jobRecord.getPosition());
     assertThat(taskEntity.getProcessInstanceId()).isEqualTo(String.valueOf(processInstanceKey));

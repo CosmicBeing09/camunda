@@ -92,7 +92,7 @@ public class TenantAwareTimerStartEventTest {
     assertThat(
             RecordingExporter.timerRecords(TimerIntent.TRIGGERED)
                 .withProcessDefinitionKey(processDefinitionKey))
-        .extracting(r -> r.getValue().getTenantId(), Record::getIntent)
+        .extracting(r -> r.getValue().getTenantIdentifier(), Record::getIntent)
         .containsSequence(tuple(TENANT, TimerIntent.TRIGGERED));
   }
 
@@ -131,7 +131,7 @@ public class TenantAwareTimerStartEventTest {
                 .withElementType(BpmnElementType.START_EVENT)
                 .withEventType(BpmnEventType.TIMER)
                 .limit("startEvent", ProcessInstanceIntent.ELEMENT_COMPLETED))
-        .extracting(r -> r.getValue().getTenantId(), Record::getIntent)
+        .extracting(r -> r.getValue().getTenantIdentifier(), Record::getIntent)
         .containsSequence(
             tuple(TENANT, ProcessInstanceIntent.ELEMENT_ACTIVATING),
             tuple(TENANT, ProcessInstanceIntent.ELEMENT_ACTIVATED),

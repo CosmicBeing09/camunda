@@ -104,6 +104,6 @@ public final class MessageSubscriptionCreateProcessor
         subscriptionRecord.getElementInstanceKey(),
         subscriptionRecord.getMessageNameBuffer(),
         subscriptionRecord.isInterrupting(),
-        subscriptionRecord.getTenantId());
+        subscriptionRecord.getTenantIdentifier());
   }
 }

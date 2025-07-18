@@ -61,7 +61,7 @@ public final class JobStateTest {
     assertThat(jobState.exists(key)).isTrue();
     assertJobState(key, State.ACTIVATABLE);
     assertJobRecordIsEqualTo(jobState.getJob(key), jobRecord);
-    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantId());
+    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantIdentifier());
     refuteListedAsTimedOut(key, jobRecord.getDeadline() + 1);
     refuteListedAsBackOff(key, jobRecord.getRecurringTime() + 1);
   }
@@ -148,7 +148,7 @@ public final class JobStateTest {
     assertThat(jobState.exists(key)).isTrue();
     assertJobState(key, State.ACTIVATABLE);
     assertJobRecordIsEqualTo(jobState.getJob(key), jobRecord);
-    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantId());
+    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantIdentifier());
     refuteListedAsTimedOut(key, jobRecord.getDeadline() + 1);
     refuteListedAsBackOff(key, jobRecord.getRecurringTime() + 1 + 1);
   }
@@ -389,7 +389,7 @@ public final class JobStateTest {
     assertThat(jobState.exists(key)).isTrue();
     assertJobState(key, State.ACTIVATABLE);
     assertJobRecordIsEqualTo(jobState.getJob(key), jobRecord);
-    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantId());
+    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantIdentifier());
     refuteListedAsTimedOut(key, jobRecord.getDeadline() + 1);
     refuteListedAsBackOff(key, jobRecord.getRecurringTime() + 1 + 1);
   }
@@ -521,7 +521,7 @@ public final class JobStateTest {
     assertThat(jobState.exists(key)).isTrue();
     assertJobState(key, State.ACTIVATABLE);
     assertJobRecordIsEqualTo(jobState.getJob(key), jobRecord);
-    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantId());
+    assertListedAsActivatable(key, jobRecord.getTypeBuffer(), jobRecord.getTenantIdentifier());
     refuteListedAsTimedOut(key, jobRecord.getDeadline() + 1);
     refuteListedAsBackOff(key, jobRecord.getRecurringTime() + 1 + 1);
   }

@@ -37,9 +37,9 @@ final class ZeebeRocksDbTest {
         dbFactory.createDb(Files.createDirectory(tempDir.resolve("db")).toFile());
 
     final DbString key = new DbString();
-    key.wrapString("foo");
+    key.wrapStringValue("foo");
     final DbString value = new DbString();
-    value.wrapString("bar");
+    value.wrapStringValue("bar");
     final ColumnFamily<DbString, DbString> columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
     columnFamily.insert(key, value);
@@ -60,9 +60,9 @@ final class ZeebeRocksDbTest {
     ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
 
     final DbString key = new DbString();
-    key.wrapString("foo");
+    key.wrapStringValue("foo");
     final DbString value = new DbString();
-    value.wrapString("bar");
+    value.wrapStringValue("bar");
     ColumnFamily<DbString, DbString> columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
     columnFamily.insert(key, value);
@@ -87,16 +87,16 @@ final class ZeebeRocksDbTest {
         dbFactory.createDb(Files.createDirectory(tempDir.resolve("db")).toFile());
 
     final DbString key = new DbString();
-    key.wrapString("foo");
+    key.wrapStringValue("foo");
     final DbString value = new DbString();
-    value.wrapString("bar");
+    value.wrapStringValue("bar");
     ColumnFamily<DbString, DbString> columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
     columnFamily.insert(key, value);
 
     final var snapshotDir = tempDir.resolve("snapshot").toFile();
     db.createSnapshot(snapshotDir);
-    value.wrapString("otherString");
+    value.wrapStringValue("otherString");
     columnFamily.update(key, value);
 
     // when

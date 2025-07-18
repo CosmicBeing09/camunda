@@ -45,6 +45,6 @@ public final class ProcessMessageSubscriptionRecordStream
   }
 
   public ProcessMessageSubscriptionRecordStream withTenantId(final String tenantId) {
-    return valueFilter(v -> tenantId.equals(v.getTenantId()));
+    return valueFilter(v -> tenantId.equals(v.getTenantIdentifier()));
   }
 }

@@ -66,7 +66,7 @@ public class ProcessHandler implements ExportHandler<ProcessEntity, Process> {
         .setKey(process.getProcessDefinitionKey())
         .setBpmnProcessId(process.getBpmnProcessId())
         .setVersion(process.getVersion())
-        .setTenantId(ExporterUtil.tenantOrDefault(process.getTenantId()));
+        .setTenantId(ExporterUtil.tenantOrDefault(process.getTenantIdentifier()));
     final byte[] byteArray = process.getResource();
 
     final String bpmn = new String(byteArray, StandardCharsets.UTF_8);

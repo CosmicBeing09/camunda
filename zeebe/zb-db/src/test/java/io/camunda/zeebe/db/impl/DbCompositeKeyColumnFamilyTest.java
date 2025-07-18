@@ -49,13 +49,13 @@ public final class DbCompositeKeyColumnFamilyTest {
   @Test
   public void shouldUpsertValue() {
     // given
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     secondKey.wrapLong(2);
-    value.wrapString("baring");
+    value.wrapStringValue("baring");
 
     // when
     columnFamily.upsert(compositeKey, value);
-    value.wrapString("yes");
+    value.wrapStringValue("yes");
 
     // then
     final DbString zbLong = columnFamily.get(compositeKey);
@@ -226,7 +226,7 @@ public final class DbCompositeKeyColumnFamilyTest {
   public void shouldUseWhileTrueWithStartAt() {
     // given
     final var firstKey = new DbString();
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final var secondKey = new DbLong();
     secondKey.wrapLong(13);
     final var startAt = new DbCompositeKey<>(firstKey, secondKey);
@@ -276,7 +276,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("might", 37426, "be good");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
     final List<String> values = new ArrayList<>();
@@ -313,7 +313,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("might", 37426, "be good");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final List<String> values = new ArrayList<>();
     final List<String> seenStringKeys = new ArrayList<>();
     final List<Long> seenLongKeys = new ArrayList<>();
@@ -323,7 +323,7 @@ public final class DbCompositeKeyColumnFamilyTest {
           seenStringKeys.add(key.first().toString());
           seenLongKeys.add(key.second().getValue());
 
-          key.first().wrapString("hello");
+          key.first().wrapStringValue("hello");
           final DbString zbString = columnFamily.get(key);
           if (zbString != null) {
             values.add(zbString.toString());
@@ -350,7 +350,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("might", 37426, "be good");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
     final List<String> values = new ArrayList<>();
@@ -385,7 +385,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("might", 37426, "be good");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     columnFamily.whileEqualPrefix(
         firstKey,
         (key, value) -> {
@@ -423,7 +423,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("baz", 5, "fifth");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
     final List<String> values = new ArrayList<>();
@@ -457,7 +457,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("baz", 5, "fifth");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     secondKey.wrapLong(3L);
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
@@ -491,7 +491,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("baz", 5, "fifth");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     secondKey.wrapLong(3L);
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
@@ -525,7 +525,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("foo", 4, "fourth");
 
     // when
-    firstKey.wrapString("baz");
+    firstKey.wrapStringValue("baz");
     secondKey.wrapLong(1L);
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
@@ -584,7 +584,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("might", 37426, "be good");
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final long count = columnFamily.countEqualPrefix(firstKey);
 
     // then
@@ -601,12 +601,12 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("another", 923113, "string");
     upsertKeyValuePair("might", 37426, "be good");
 
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     secondKey.wrapLong(14L);
     columnFamily.deleteExisting(compositeKey);
 
     // when
-    firstKey.wrapString("foo");
+    firstKey.wrapStringValue("foo");
     final long count = columnFamily.countEqualPrefix(firstKey);
 
     // then
@@ -614,10 +614,10 @@ public final class DbCompositeKeyColumnFamilyTest {
   }
 
   private void upsertKeyValuePair(final String firstKey, final long secondKey, final String value) {
-    this.firstKey.wrapString(firstKey);
+    this.firstKey.wrapStringValue(firstKey);
     this.secondKey.wrapLong(secondKey);
 
-    this.value.wrapString(value);
+    this.value.wrapStringValue(value);
     columnFamily.upsert(compositeKey, this.value);
   }
 }

@@ -272,7 +272,7 @@ public final class ProcessInstanceMigrationPreconditions {
 
     final boolean activeProcessInstanceExistsForTarget =
         messageState.existActiveProcessInstance(
-            processInstance.getValue().getTenantId(),
+            processInstance.getValue().getTenantIdentifier(),
             targetProcessDefinition.getBpmnProcessId(),
             correlationKey);
 

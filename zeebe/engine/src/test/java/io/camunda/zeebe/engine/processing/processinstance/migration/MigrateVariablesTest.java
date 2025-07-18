@@ -109,7 +109,7 @@ public class MigrateVariablesTest {
         .hasName(variable.getName())
         .hasProcessInstanceKey(variable.getProcessInstanceKey())
         .hasScopeKey(variable.getScopeKey())
-        .hasTenantId(variable.getTenantId());
+        .hasTenantId(variable.getTenantIdentifier());
     assertThat(
             RecordingExporter.variableRecords(VariableIntent.MIGRATED)
                 .withProcessInstanceKey(processInstanceKey)
@@ -125,7 +125,7 @@ public class MigrateVariablesTest {
         .hasName(variable2.getName())
         .hasProcessInstanceKey(variable2.getProcessInstanceKey())
         .hasScopeKey(variable2.getScopeKey())
-        .hasTenantId(variable2.getTenantId());
+        .hasTenantId(variable2.getTenantIdentifier());
   }
 
   @Test
@@ -205,7 +205,7 @@ public class MigrateVariablesTest {
         .hasName(variable.getName())
         .hasProcessInstanceKey(variable.getProcessInstanceKey())
         .hasScopeKey(variable.getScopeKey())
-        .hasTenantId(variable.getTenantId());
+        .hasTenantId(variable.getTenantIdentifier());
     assertThat(
             RecordingExporter.variableRecords(VariableIntent.MIGRATED)
                 .withProcessInstanceKey(processInstanceKey)
@@ -221,6 +221,6 @@ public class MigrateVariablesTest {
         .hasName(variable2.getName())
         .hasProcessInstanceKey(variable2.getProcessInstanceKey())
         .hasScopeKey(variable2.getScopeKey())
-        .hasTenantId(variable2.getTenantId());
+        .hasTenantId(variable2.getTenantIdentifier());
   }
 }

@@ -93,7 +93,7 @@ final class ProcessInstanceElementActivatingV1Applier
       final var gateway =
           processState.getFlowElement(
               value.getProcessDefinitionKey(),
-              value.getTenantId(),
+              value.getTenantIdentifier(),
               value.getElementIdBuffer(),
               ExecutableFlowNode.class);
       // before a parallel or inclusive gateway is activated, all incoming sequence flows of the
@@ -146,7 +146,7 @@ final class ProcessInstanceElementActivatingV1Applier
     processState
         .getFlowElement(
             value.getProcessDefinitionKey(),
-            value.getTenantId(),
+            value.getTenantIdentifier(),
             value.getElementIdBuffer(),
             ExecutableFlowNode.class)
         .getIncoming()
@@ -192,7 +192,7 @@ final class ProcessInstanceElementActivatingV1Applier
     final var executableCatchEventElement =
         processState.getFlowElement(
             value.getProcessDefinitionKey(),
-            value.getTenantId(),
+            value.getTenantIdentifier(),
             value.getElementIdBuffer(),
             ExecutableCatchEventElement.class);
 
@@ -217,7 +217,7 @@ final class ProcessInstanceElementActivatingV1Applier
     final var executableFlowNode =
         processState.getFlowElement(
             value.getProcessDefinitionKey(),
-            value.getTenantId(),
+            value.getTenantIdentifier(),
             value.getElementIdBuffer(),
             ExecutableFlowNode.class);
     final var size = executableFlowNode.getIncoming().size();
@@ -253,7 +253,7 @@ final class ProcessInstanceElementActivatingV1Applier
       final ProcessInstanceRecord value) {
     return processState.getFlowElement(
         value.getProcessDefinitionKey(),
-        value.getTenantId(),
+        value.getTenantIdentifier(),
         value.getElementIdBuffer(),
         ExecutableFlowElementContainer.class);
   }
@@ -290,7 +290,7 @@ final class ProcessInstanceElementActivatingV1Applier
     final var flowElement =
         processState.getFlowElement(
             elementRecord.getProcessDefinitionKey(),
-            elementRecord.getTenantId(),
+            elementRecord.getTenantIdentifier(),
             elementRecord.getElementIdBuffer(),
             flowElementClass);
 

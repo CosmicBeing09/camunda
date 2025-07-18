@@ -101,7 +101,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
     bpmnEventTypeProp.setValue(record.getBpmnEventType());
     parentProcessInstanceKeyProp.setValue(record.getParentProcessInstanceKey());
     parentElementInstanceKeyProp.setValue(record.getParentElementInstanceKey());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
   }
 
   @JsonIgnore
@@ -303,7 +303,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

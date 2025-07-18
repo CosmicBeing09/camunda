@@ -327,7 +327,7 @@ public final class CatchEventBehavior {
         context.getTenantId());
 
     final String subscriptionMessageName = subscription.getMessageName();
-    final String tenantId = subscription.getTenantId();
+    final String tenantId = subscription.getTenantIdentifier();
     final var lastSentTime = clock.millis();
 
     // update transient state in a side-effect to ensure that these changes only take effect after
@@ -458,7 +458,7 @@ public final class CatchEventBehavior {
         .setRepetitions(timer.getRepetitions())
         .setTargetElementId(timer.getHandlerNodeId())
         .setProcessDefinitionKey(timer.getProcessDefinitionKey())
-        .setTenantId(timer.getTenantId());
+        .setTenantId(timer.getTenantIdentifier());
 
     stateWriter.appendFollowUpEvent(timer.getKey(), TimerIntent.CANCELED, timerRecord);
   }
@@ -482,7 +482,7 @@ public final class CatchEventBehavior {
     final int subscriptionPartitionId = subscription.getRecord().getSubscriptionPartitionId();
     final long processInstanceKey = subscription.getRecord().getProcessInstanceKey();
     final long elementInstanceKey = subscription.getRecord().getElementInstanceKey();
-    final String tenantId = subscription.getRecord().getTenantId();
+    final String tenantId = subscription.getRecord().getTenantIdentifier();
 
     stateWriter.appendFollowUpEvent(
         subscription.getKey(), ProcessMessageSubscriptionIntent.DELETING, subscription.getRecord());
@@ -492,7 +492,7 @@ public final class CatchEventBehavior {
         processInstanceKey,
         elementInstanceKey,
         messageName,
-        subscription.getRecord().getTenantId());
+        subscription.getRecord().getTenantIdentifier());
     final var lastSentTime = clock.millis();
 
     // update transient state in a side-effect to ensure that these changes only take effect after

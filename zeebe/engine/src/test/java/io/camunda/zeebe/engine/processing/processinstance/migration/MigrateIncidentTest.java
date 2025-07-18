@@ -97,7 +97,7 @@ public class MigrateIncidentTest {
         .hasElementInstanceKey(incident.getValue().getElementInstanceKey())
         .hasJobKey(incident.getValue().getJobKey())
         .hasVariableScopeKey(incident.getValue().getVariableScopeKey())
-        .hasTenantId(incident.getValue().getTenantId())
+        .hasTenantId(incident.getValue().getTenantIdentifier())
         .describedAs("Expect that the process definition path is updated")
         .hasOnlyProcessDefinitionPath(targetProcessDefinitionKey);
 
@@ -189,7 +189,7 @@ public class MigrateIncidentTest {
         .hasElementInstanceKey(incident.getValue().getElementInstanceKey())
         .hasJobKey(incident.getValue().getJobKey())
         .hasVariableScopeKey(incident.getValue().getVariableScopeKey())
-        .hasTenantId(incident.getValue().getTenantId())
+        .hasTenantId(incident.getValue().getTenantIdentifier())
         .describedAs("Expect that the process definition path is updated")
         .hasOnlyProcessDefinitionPath(targetProcessDefinitionKey);
 

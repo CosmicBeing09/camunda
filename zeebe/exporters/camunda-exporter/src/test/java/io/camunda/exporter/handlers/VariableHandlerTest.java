@@ -157,7 +157,7 @@ public class VariableHandlerTest {
     assertThat(variableEntity.getKey()).isEqualTo(variableRecord.getKey());
     assertThat(variableEntity.getName()).isEqualTo(variableRecordValue.getName());
     assertThat(variableEntity.getScopeKey()).isEqualTo(variableRecordValue.getScopeKey());
-    assertThat(variableEntity.getTenantId()).isEqualTo(variableRecordValue.getTenantId());
+    assertThat(variableEntity.getTenantIdentifier()).isEqualTo(variableRecordValue.getTenantIdentifier());
     assertThat(variableEntity.getProcessDefinitionKey())
         .isEqualTo(variableRecordValue.getProcessDefinitionKey());
     assertThat(variableEntity.getProcessInstanceKey())

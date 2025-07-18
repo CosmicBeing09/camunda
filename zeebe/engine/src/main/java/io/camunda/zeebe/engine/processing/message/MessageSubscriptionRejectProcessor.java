@@ -78,7 +78,7 @@ public final class MessageSubscriptionRejectProcessor
 
     final var foundSubscription = new AtomicBoolean(false);
     subscriptionState.visitSubscriptions(
-        subscriptionRecord.getTenantId(),
+        subscriptionRecord.getTenantIdentifier(),
         subscriptionRecord.getMessageNameBuffer(),
         subscriptionRecord.getCorrelationKeyBuffer(),
         subscription -> {
@@ -117,7 +117,7 @@ public final class MessageSubscriptionRejectProcessor
         subscription.getMessageKey(),
         subscription.getVariablesBuffer(),
         subscription.getCorrelationKeyBuffer(),
-        subscription.getTenantId());
+        subscription.getTenantIdentifier());
   }
 
   private void writeNotCorrelatedResponse(final TypedRecord<MessageSubscriptionRecord> record) {
@@ -132,7 +132,7 @@ public final class MessageSubscriptionRejectProcessor
               .setName(messageSubscription.getMessageName())
               .setCorrelationKey(messageSubscription.getCorrelationKey())
               .setVariables(messageSubscription.getVariablesBuffer())
-              .setTenantId(messageSubscription.getTenantId())
+              .setTenantId(messageSubscription.getTenantIdentifier())
               .setMessageKey(messageKey);
 
       stateWriter.appendFollowUpEvent(

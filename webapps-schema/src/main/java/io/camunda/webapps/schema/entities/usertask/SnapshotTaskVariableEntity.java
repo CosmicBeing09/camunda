@@ -43,7 +43,7 @@ public class SnapshotTaskVariableEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

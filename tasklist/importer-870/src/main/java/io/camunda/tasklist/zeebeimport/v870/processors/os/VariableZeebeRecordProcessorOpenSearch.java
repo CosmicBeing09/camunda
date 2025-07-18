@@ -88,7 +88,7 @@ public class VariableZeebeRecordProcessorOpenSearch {
             .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
             .setBpmnProcessId(recordValue.getBpmnProcessId())
             .setName(recordValue.getName())
-            .setTenantId(recordValue.getTenantId())
+            .setTenantId(recordValue.getTenantIdentifier())
             .setPosition(record.getPosition());
 
     final var variableSizeThreshold = tasklistProperties.getImporter().getVariableSizeThreshold();

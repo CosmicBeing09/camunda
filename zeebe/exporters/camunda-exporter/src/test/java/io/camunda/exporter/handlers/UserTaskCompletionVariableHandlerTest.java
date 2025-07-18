@@ -163,7 +163,7 @@ public class UserTaskCompletionVariableHandlerTest {
     assertThat(variableEntity.getId()).isEqualTo(scopeKey + "-" + "var1");
     assertThat(variableEntity.getKey()).isEqualTo(taskRecord.getKey());
     assertThat(variableEntity.getName()).isEqualTo("var1");
-    assertThat(variableEntity.getTenantId()).isEqualTo(taskRecord.getValue().getTenantId());
+    assertThat(variableEntity.getTenantIdentifier()).isEqualTo(taskRecord.getValue().getTenantIdentifier());
     assertThat(variableEntity.getValue()).isEqualTo("\"val1\"");
     assertThat(variableEntity.getProcessInstanceKey())
         .isEqualTo(taskRecord.getValue().getProcessInstanceKey());

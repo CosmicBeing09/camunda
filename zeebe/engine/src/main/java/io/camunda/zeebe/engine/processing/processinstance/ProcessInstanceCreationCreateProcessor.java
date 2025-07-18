@@ -144,7 +144,7 @@ public final class ProcessInstanceCreationCreateProcessor
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.CREATE_PROCESS_INSTANCE,
-                command.getValue().getTenantId())
+                command.getValue().getTenantIdentifier())
             .addResourceId(processId);
 
     final var isAuthorized = authCheckBehavior.isAuthorized(request);
@@ -373,12 +373,12 @@ public final class ProcessInstanceCreationCreateProcessor
 
     if (bpmnProcessId.capacity() > 0) {
       if (record.getVersion() >= 0) {
-        return getProcess(bpmnProcessId, record.getVersion(), record.getTenantId());
+        return getProcess(bpmnProcessId, record.getVersion(), record.getTenantIdentifier());
       } else {
-        return getProcess(bpmnProcessId, record.getTenantId());
+        return getProcess(bpmnProcessId, record.getTenantIdentifier());
       }
     } else if (record.getProcessDefinitionKey() >= 0) {
-      return getProcess(record.getProcessDefinitionKey(), record.getTenantId());
+      return getProcess(record.getProcessDefinitionKey(), record.getTenantIdentifier());
     } else {
       return Either.left(
           new Rejection(RejectionType.INVALID_ARGUMENT, ERROR_MESSAGE_NO_IDENTIFIER_SPECIFIED));

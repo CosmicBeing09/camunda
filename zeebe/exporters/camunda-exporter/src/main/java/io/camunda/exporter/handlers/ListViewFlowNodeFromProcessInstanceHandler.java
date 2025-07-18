@@ -91,7 +91,7 @@ public class ListViewFlowNodeFromProcessInstanceHandler
     entity.setPosition(record.getPosition());
     entity.setActivityId(recordValue.getElementId());
     entity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
-    entity.setTenantId(tenantOrDefault(recordValue.getTenantId()));
+    entity.setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     if (PI_AND_AI_FINISH_STATES.contains(intent)) {
       if (intent.equals(ELEMENT_TERMINATED)) {

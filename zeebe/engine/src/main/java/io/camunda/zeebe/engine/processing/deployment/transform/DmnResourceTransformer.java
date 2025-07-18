@@ -122,7 +122,7 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
                       .setResourceName(drg.getResourceName())
                       .setChecksum(drg.getChecksumBuffer())
                       .setResource(resource.getResourceBuffer())
-                      .setTenantId(drg.getTenantId()));
+                      .setTenantId(drg.getTenantIdentifier()));
 
               deployment.decisionsMetadata().stream()
                   .filter(
@@ -153,7 +153,7 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
                                 .setVersionTag(decision.getVersionTag())
                                 .setDecisionRequirementsId(decision.getDecisionRequirementsId())
                                 .setDecisionRequirementsKey(decision.getDecisionRequirementsKey())
-                                .setTenantId(decision.getTenantId())
+                                .setTenantId(decision.getTenantIdentifier())
                                 .setDeploymentKey(decision.getDeploymentKey()));
                       });
             });
@@ -243,11 +243,11 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
         .setNamespace(parsedDrg.getNamespace())
         .setResourceName(resource.getResourceName())
         .setChecksum(checksum)
-        .setTenantId(deploymentEvent.getTenantId());
+        .setTenantId(deploymentEvent.getTenantIdentifier());
 
     decisionState
         .findLatestDecisionRequirementsByTenantAndId(
-            deploymentEvent.getTenantId(), wrapString(parsedDrg.getId()))
+            deploymentEvent.getTenantIdentifier(), wrapString(parsedDrg.getId()))
         .ifPresentOrElse(
             latestDrg -> {
               final int latestVersion = latestDrg.getDecisionRequirementsVersion();
@@ -284,13 +284,13 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
                   .setDecisionName(decision.getName())
                   .setDecisionRequirementsId(parsedDrg.getId())
                   .setDecisionRequirementsKey(drgRecord.getDecisionRequirementsKey())
-                  .setTenantId(drgRecord.getTenantId());
+                  .setTenantId(drgRecord.getTenantIdentifier());
               getOptionalVersionTag(parsedDrg, decision.getId())
                   .ifPresent(decisionRecord::setVersionTag);
 
               decisionState
                   .findLatestDecisionByIdAndTenant(
-                      wrapString(decision.getId()), drgRecord.getTenantId())
+                      wrapString(decision.getId()), drgRecord.getTenantIdentifier())
                   .ifPresentOrElse(
                       latestDecision -> {
                         final var latestVersion = latestDecision.getVersion();

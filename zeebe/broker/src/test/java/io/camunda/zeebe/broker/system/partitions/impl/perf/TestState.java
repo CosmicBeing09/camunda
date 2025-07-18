@@ -102,7 +102,7 @@ final class TestState {
     final var buffer = new byte[KEY_VALUE_SIZE];
     final var data = new DbString();
     ThreadLocalRandom.current().nextBytes(buffer);
-    data.wrapBuffer(new UnsafeBuffer(buffer));
+    data.wrapBufferValue(new UnsafeBuffer(buffer));
 
     return data;
   }

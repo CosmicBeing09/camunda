@@ -20,11 +20,11 @@ public final class DbString implements DbKey, DbValue {
 
   private final DirectBuffer bytes = new UnsafeBuffer(0, 0);
 
-  public void wrapString(final String string) {
+  public void wrapStringValue(final String string) {
     bytes.wrap(string.getBytes());
   }
 
-  public void wrapBuffer(final DirectBuffer buffer) {
+  public void wrapBufferValue(final DirectBuffer buffer) {
     bytes.wrap(buffer);
   }
 

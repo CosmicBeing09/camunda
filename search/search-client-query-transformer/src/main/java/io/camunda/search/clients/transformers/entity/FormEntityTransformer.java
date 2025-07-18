@@ -17,7 +17,7 @@ public class FormEntityTransformer
   public FormEntity apply(final io.camunda.webapps.schema.entities.form.FormEntity value) {
     return new FormEntity(
         value.getKey(),
-        value.getTenantId(),
+        value.getTenantIdentifier(),
         value.getFormId(),
         value.getSchema(),
         value.getVersion());

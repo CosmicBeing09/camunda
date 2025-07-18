@@ -147,7 +147,7 @@ final class EventFromIncidentHandlerTest {
     assertThat(entity.getFlowNodeInstanceKey()).isEqualTo(elementInstanceKey);
     assertThat(entity.getFlowNodeId()).isEqualTo(elementId);
     assertThat(entity.getBpmnProcessId()).isEqualTo(bpmnProcessId);
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
     assertThat(entity.getMetadata().getIncidentErrorMessage()).isEqualTo(errorMessage);
     assertThat(entity.getPositionIncident()).isEqualTo(position);
     assertThat(entity.getDateTime())

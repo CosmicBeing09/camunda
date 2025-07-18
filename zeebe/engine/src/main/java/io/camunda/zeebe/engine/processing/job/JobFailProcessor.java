@@ -153,7 +153,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
           value.getProcessDefinitionKey(),
           value.getProcessInstanceKey(),
           value.getBpmnProcessIdBuffer(),
-          value.getTenantId(),
+          value.getTenantIdentifier(),
           variables);
     }
   }
@@ -183,7 +183,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
         .setElementInstanceKey(value.getElementInstanceKey())
         .setJobKey(key)
         .setVariableScopeKey(value.getElementInstanceKey())
-        .setTenantId(value.getTenantId())
+        .setTenantId(value.getTenantIdentifier())
         .setElementInstancePath(treePathProperties.elementInstancePath())
         .setProcessDefinitionPath(treePathProperties.processDefinitionPath())
         .setCallingElementPath(treePathProperties.callingElementPath());
@@ -206,7 +206,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
-                job.getTenantId())
+                job.getTenantIdentifier())
             .addResourceId(job.getBpmnProcessId());
     return authCheckBehavior.isAuthorized(request).map(unused -> job);
   }

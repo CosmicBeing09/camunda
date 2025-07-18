@@ -104,7 +104,7 @@ public class FlowNodeInstanceFromProcessInstanceHandler
     entity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
     entity.setProcessDefinitionKey(processDefinitionKey);
     entity.setBpmnProcessId(recordValue.getBpmnProcessId());
-    entity.setTenantId(tenantOrDefault(recordValue.getTenantId()));
+    entity.setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
     entity.setScopeKey(recordValue.getFlowScopeKey());
 
     if (intent.equals(ELEMENT_ACTIVATING)
