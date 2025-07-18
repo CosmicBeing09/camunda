@@ -37,9 +37,9 @@ public class AuthorizationIT {
 
   @TestTemplate
   public void shouldSaveAndFindByKey(final CamundaRdbmsTestApplication testApplication) {
-    final RdbmsService rdbmsService = testApplication.getRdbmsService();
-    final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final AuthorizationReader authorizationReader = rdbmsService.getAuthorizationReader();
+    final RdbmsService service = testApplication.getRdbmsService();
+    final RdbmsWriter rdbmsWriter = service.createWriter(PARTITION_ID);
+    final AuthorizationReader authorizationReader = service.getAuthorizationReader();
 
     final var authorization = AuthorizationFixtures.createRandomized(b -> b);
     createAndSaveAuthorization(rdbmsWriter, authorization);
@@ -55,9 +55,9 @@ public class AuthorizationIT {
 
   @TestTemplate
   public void shouldSaveAndUpdate(final CamundaRdbmsTestApplication testApplication) {
-    final RdbmsService rdbmsService = testApplication.getRdbmsService();
-    final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final AuthorizationReader authorizationReader = rdbmsService.getAuthorizationReader();
+    final RdbmsService service = testApplication.getRdbmsService();
+    final RdbmsWriter rdbmsWriter = service.createWriter(PARTITION_ID);
+    final AuthorizationReader authorizationReader = service.getAuthorizationReader();
 
     final var authorization = AuthorizationFixtures.createRandomized(b -> b.resourceId("foo"));
     createAndSaveAuthorization(rdbmsWriter, authorization);
