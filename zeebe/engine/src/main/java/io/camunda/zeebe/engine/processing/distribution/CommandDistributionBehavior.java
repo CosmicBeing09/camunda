@@ -148,7 +148,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
    *     for command distribution. Don't reuse the key to distribute another command. Don't reuse
    *     the key to distribute another command until the previous command distribution has been
    *     completed.
-   * @param queue the queue to distribute the command to or null if the distribution can be
+   * @param queueId the queue to distribute the command to or null if the distribution can be
    *     unordered.
    * @param valueType the type of the command to distribute
    * @param intent the intent of the command to distribute
@@ -156,7 +156,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
    * @param partitions the partitions to distribute the command to
    */
   private <T extends UnifiedRecordValue> void distributeCommand(
-      final String queue,
+      final String queueId,
       final long distributionKey,
       final ValueType valueType,
       final Intent intent,
@@ -171,7 +171,7 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
 
     final var distributionRecord =
         commandDistributionStarted
-            .setQueueId(queue)
+            .setQueueId(queueId)
             .setPartitionId(currentPartitionId)
             .setValueType(valueType)
             .setIntent(intent)
@@ -217,12 +217,12 @@ public final class CommandDistributionBehavior implements StreamProcessorLifecyc
   }
 
   private void enqueueDistribution(
-      final String queue, final int partition, final long distributionKey) {
+      final String queueId, final int partition, final long distributionKey) {
     commandDistributionEnqueued.reset();
     stateWriter.appendFollowUpEvent(
         distributionKey,
         CommandDistributionIntent.ENQUEUED,
-        commandDistributionEnqueued.setQueueId(queue).setPartitionId(partition));
+        commandDistributionEnqueued.setQueueId(queueId).setPartitionId(partition));
   }
 
   /**
