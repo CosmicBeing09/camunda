@@ -27,7 +27,7 @@ public class UserTaskAssignedV2ApplierTest {
   private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
-  private UserTaskAssignedV2Applier userTaskAssignedV2Applier;
+  private TaskAssignedV2Applier userTaskAssignedV2Applier;
 
   /** Used for state assertions. */
   private MutableTaskState userTaskState;
@@ -37,7 +37,7 @@ public class UserTaskAssignedV2ApplierTest {
 
   @BeforeEach
   public void setup() {
-    userTaskAssignedV2Applier = new UserTaskAssignedV2Applier(processingState);
+    userTaskAssignedV2Applier = new TaskAssignedV2Applier(processingState);
     userTaskState = processingState.getUserTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }

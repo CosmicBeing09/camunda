@@ -17,14 +17,14 @@ import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
 
-public final class UserTaskAssignedV2Applier
+public final class TaskAssignedV2Applier
     implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
 
-  private final MutableTaskState userTaskState;
+  private final MutableTaskState taskState;
   private final MutableElementInstanceState elementInstanceState;
 
-  public UserTaskAssignedV2Applier(final MutableAsyncProcessingContext processingState) {
-    userTaskState = processingState.getUserTaskState();
+  public TaskAssignedV2Applier(final MutableAsyncProcessingContext processingState) {
+    taskState = processingState.getUserTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 
@@ -32,13 +32,13 @@ public final class UserTaskAssignedV2Applier
   public void applyState(final long key, final UserTaskRecord value) {
     final var userTaskRecord = new UserTaskRecord();
     userTaskRecord.wrapWithoutVariables(value);
-    userTaskState.update(userTaskRecord.setChangedAttributes(List.of()).setAction(""));
-    userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
+    taskState.update(userTaskRecord.setChangedAttributes(List.of()).setAction(""));
+    taskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
 
     // Clear operational data related to the current assign(claim) transition
-    userTaskState.deleteIntermediateState(key);
-    userTaskState.deleteRecordRequestMetadata(key);
-    userTaskState.deleteInitialAssignee(key);
+    taskState.deleteIntermediateState(key);
+    taskState.deleteRecordRequestMetadata(key);
+    taskState.deleteInitialAssignee(key);
 
     final var elementInstance = elementInstanceState.getInstance(value.getElementInstanceKey());
     if (elementInstance != null) {
