@@ -42,12 +42,12 @@ public class IncidentIT {
   public void shouldSaveAndFindIncidentByKey(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final IncidentReader processInstanceReader = rdbmsService.getIncidentReader();
+    final IncidentReader incidentReader = rdbmsService.getIncidentReader();
 
     final var original = IncidentFixtures.createRandomized(b -> b);
     createAndSaveIncident(rdbmsWriter, original);
 
-    final var instance = processInstanceReader.findOne(original.incidentKey()).orElse(null);
+    final var instance = incidentReader.findOne(original.incidentKey()).orElse(null);
 
     compareIncident(instance, original);
   }
@@ -56,14 +56,14 @@ public class IncidentIT {
   public void shouldSaveAndResolveIncident(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final IncidentReader processInstanceReader = rdbmsService.getIncidentReader();
+    final IncidentReader incidentReader = rdbmsService.getIncidentReader();
 
     final var original = IncidentFixtures.createRandomized(b -> b);
     createAndSaveIncident(rdbmsWriter, original);
     rdbmsWriter.getIncidentWriter().resolve(original.incidentKey());
     rdbmsWriter.flush();
 
-    final var instance = processInstanceReader.findOne(original.incidentKey()).orElse(null);
+    final var instance = incidentReader.findOne(original.incidentKey()).orElse(null);
 
     assertThat(instance).isNotNull();
     assertThat(instance.state()).isEqualTo(IncidentEntity.IncidentState.RESOLVED);
