@@ -22,7 +22,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 public interface Intent {
-  Collection<Class<? extends Intent>> INTENT_CLASSES =
+  Collection<Class<? extends Intent>> INTENT_ENUM_TYPES =
       Arrays.asList(
           DeploymentIntent.class,
           EscalationIntent.class,
@@ -73,7 +73,7 @@ public interface Intent {
           BatchOperationChunkIntent.class,
           BatchOperationExecutionIntent.class,
           AdHocSubProcessActivityActivationIntent.class);
-  short NULL_VAL = 255;
+  short INTENT_VALUE_UNKNOWN = 255;
   Intent UNKNOWN = UnknownIntent.UNKNOWN;
 
   short value();
@@ -311,7 +311,7 @@ public interface Intent {
   }
 
   static int maxCardinality() {
-    return INTENT_CLASSES.stream()
+    return INTENT_ENUM_TYPES.stream()
         .mapToInt(clazz -> clazz.getEnumConstants().length)
         .max()
         .getAsInt();
@@ -322,7 +322,7 @@ public interface Intent {
 
     @Override
     public short value() {
-      return NULL_VAL;
+      return INTENT_VALUE_UNKNOWN;
     }
 
     @Override

@@ -34,7 +34,7 @@ public class IntentConsistencyTest {
   void listOfIntentClassesIsComplete() {
     // given
     final Collection<String> expectedIntentClasses =
-        Intent.INTENT_CLASSES.stream().map(Class::getName).collect(Collectors.toSet());
+        Intent.INTENT_ENUM_TYPES.stream().map(Class::getName).collect(Collectors.toSet());
 
     // when + then
     final SoftAssertions softly = new SoftAssertions();

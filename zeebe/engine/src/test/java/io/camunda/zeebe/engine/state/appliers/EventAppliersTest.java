@@ -163,7 +163,7 @@ public class EventAppliersTest {
   void shouldRegisterApplierForAllIntents() {
     // given
     final var events =
-        Intent.INTENT_CLASSES.stream()
+        Intent.INTENT_ENUM_TYPES.stream()
             .flatMap(c -> Arrays.stream(c.getEnumConstants()))
             .filter(Intent::isEvent)
             // CheckpointIntent is not handled by the engine
@@ -240,7 +240,7 @@ public class EventAppliersTest {
   void shouldOnlyRegisterAppliersForEvents() {
     // given
     final var intents =
-        Intent.INTENT_CLASSES.stream()
+        Intent.INTENT_ENUM_TYPES.stream()
             .flatMap(c -> Arrays.stream(c.getEnumConstants()))
             // CheckpointIntent is not handled by the engine
             .filter(intent -> !(intent instanceof CheckpointIntent));

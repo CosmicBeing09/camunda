@@ -39,7 +39,7 @@ public final class CommandResponseWriterImpl implements CommandResponseWriter, B
   private BufferWriter valueWriter;
   private RecordType recordType = RecordType.NULL_VAL;
   private ValueType valueType = ValueType.NULL_VAL;
-  private short intent = Intent.NULL_VAL;
+  private short intent = Intent.INTENT_VALUE_UNKNOWN;
   private RejectionType rejectionType = RejectionType.NULL_VAL;
 
   public CommandResponseWriterImpl(final ServerOutput output) {
@@ -158,7 +158,7 @@ public final class CommandResponseWriterImpl implements CommandResponseWriter, B
     key = keyNullValue();
     valueWriter = null;
     recordType = RecordType.NULL_VAL;
-    intent = Intent.NULL_VAL;
+    intent = Intent.INTENT_VALUE_UNKNOWN;
     valueType = ValueType.NULL_VAL;
     rejectionType = RejectionType.NULL_VAL;
     rejectionReason.wrap(0, 0);
