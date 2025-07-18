@@ -19,16 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.github.tomakehurst.wiremock.http.RequestMethod;
 import com.github.tomakehurst.wiremock.verification.LoggedRequest;
-import io.camunda.client.protocol.rest.*;
 import io.camunda.client.util.ClientRestTest;
 import io.camunda.client.util.RestGatewayService;
-import java.util.*;
 import org.junit.jupiter.api.Test;
 
 public class QueryBatchOperationTest extends ClientRestTest {
 
   @Test
-  public void shouldGetBatchOperationByKey() {
+  public void shouldGetBatchOperationById() {
     // when
     client.newBatchOperationGetRequest(123L).send().join();
 

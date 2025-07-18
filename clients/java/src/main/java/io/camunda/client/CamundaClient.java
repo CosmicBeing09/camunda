@@ -2121,7 +2121,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
   CreateBatchOperationCommandStep1 newCreateBatchOperationCommand();
 
   /**
-   * Request to get a single batch operation by batch operation key.
+   * Request to get a single batch operation by batch operation id.
    *
    * <pre>
    * camundaClient
@@ -2129,10 +2129,10 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *  .send();
    * </pre>
    *
-   * @param batchOperationKey the key which identifies the corresponding batch operation
+   * @param batchOperationId the id which identifies the corresponding batch operation
    * @return a builder for the request
    */
-  BatchOperationGetRequest newBatchOperationGetRequest(Long batchOperationKey);
+  BatchOperationGetRequest newBatchOperationGetRequest(Long batchOperationId);
 
   /**
    * Executes a search request to query batch operations.
