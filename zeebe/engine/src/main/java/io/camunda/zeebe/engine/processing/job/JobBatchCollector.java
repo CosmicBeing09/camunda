@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.job;
 
-import static io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.WILDCARD_PERMISSION;
+import static io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ALL_RESOURCES_WILDCARD;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
@@ -156,7 +156,7 @@ final class JobBatchCollector {
 
   private boolean isAuthorizedForJob(
       final JobRecord jobRecord, final Set<String> authorizedProcessIds) {
-    return authorizedProcessIds.contains(WILDCARD_PERMISSION)
+    return authorizedProcessIds.contains(ALL_RESOURCES_WILDCARD)
         || authorizedProcessIds.contains(jobRecord.getBpmnProcessId());
   }
 

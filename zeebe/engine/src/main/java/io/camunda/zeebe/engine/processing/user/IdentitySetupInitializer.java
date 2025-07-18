@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.user;
 
-import static io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.WILDCARD_PERMISSION;
+import static io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ALL_RESOURCES_WILDCARD;
 
 import io.camunda.security.configuration.InitializationConfiguration;
 import io.camunda.security.configuration.SecurityConfiguration;
@@ -152,7 +152,7 @@ public final class IdentitySetupInitializer implements StreamProcessorLifecycleA
               .setOwnerType(AuthorizationOwnerType.ROLE)
               .setOwnerId(adminRoleId)
               .setResourceType(resourceType)
-              .setResourceId(WILDCARD_PERMISSION)
+              .setResourceId(ALL_RESOURCES_WILDCARD)
               .setPermissionTypes(resourceType.getSupportedPermissionTypes()));
     }
     setupRecord.addTenantMember(
@@ -170,7 +170,7 @@ public final class IdentitySetupInitializer implements StreamProcessorLifecycleA
             .setOwnerType(AuthorizationOwnerType.ROLE)
             .setOwnerId(connectorsRoleId)
             .setResourceType(AuthorizationResourceType.PROCESS_DEFINITION)
-            .setResourceId(WILDCARD_PERMISSION)
+            .setResourceId(ALL_RESOURCES_WILDCARD)
             .setPermissionTypes(
                 Set.of(
                     PermissionType.READ_PROCESS_DEFINITION,
@@ -180,7 +180,7 @@ public final class IdentitySetupInitializer implements StreamProcessorLifecycleA
             .setOwnerType(AuthorizationOwnerType.ROLE)
             .setOwnerId(connectorsRoleId)
             .setResourceType(AuthorizationResourceType.MESSAGE)
-            .setResourceId(WILDCARD_PERMISSION)
+            .setResourceId(ALL_RESOURCES_WILDCARD)
             .setPermissionTypes(Set.of(PermissionType.CREATE)));
     setupRecord.addTenantMember(
         new TenantRecord()
@@ -197,13 +197,13 @@ public final class IdentitySetupInitializer implements StreamProcessorLifecycleA
             new AuthorizationRecord()
                 .setOwnerId(rpaRoleId)
                 .setResourceType(AuthorizationResourceType.RESOURCE)
-                .setResourceId(WILDCARD_PERMISSION)
+                .setResourceId(ALL_RESOURCES_WILDCARD)
                 .setPermissionTypes(Set.of(PermissionType.READ)))
         .addAuthorization(
             new AuthorizationRecord()
                 .setOwnerId(rpaRoleId)
                 .setResourceType(AuthorizationResourceType.PROCESS_DEFINITION)
-                .setResourceId(WILDCARD_PERMISSION)
+                .setResourceId(ALL_RESOURCES_WILDCARD)
                 .setPermissionTypes(Set.of(PermissionType.UPDATE_PROCESS_INSTANCE)))
         .addTenantMember(
             new TenantRecord()

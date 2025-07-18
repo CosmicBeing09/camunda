@@ -46,7 +46,7 @@ public final class AuthorizationCheckBehavior {
       "Expected to %s with key '%s', but no %s was found";
   public static final String NOT_FOUND_FOR_TENANT_ERROR_MESSAGE =
       "Expected to perform operation '%s' on resource '%s', but no resource was found for tenant '%s'";
-  public static final String WILDCARD_PERMISSION = "*";
+  public static final String ALL_RESOURCES_WILDCARD = "*";
   private final AuthorizationState authorizationState;
   private final MappingState mappingState;
   private final MembershipState membershipState;
@@ -86,7 +86,7 @@ public final class AuthorizationCheckBehavior {
       return Either.right(null);
     }
 
-    if (isAuthorizedAnonymousUser(request.getCommand())) {
+    if (isAnonymousUserAuthorized(request.getCommand())) {
       return Either.right(null);
     }
 
@@ -172,7 +172,7 @@ public final class AuthorizationCheckBehavior {
    * requests and commands anonymously. This is helpful especially if the gateway, for example,
    * already checks authorizations and tenancy.
    */
-  private boolean isAuthorizedAnonymousUser(final TypedRecord<?> command) {
+  private boolean isAnonymousUserAuthorized(final TypedRecord<?> command) {
     final var authorizationClaims = command.getAuthorizations();
     final var authorizedAnonymousUserClaim =
         authorizationClaims.get(Authorization.AUTHORIZED_ANONYMOUS_USER);
@@ -227,8 +227,8 @@ public final class AuthorizationCheckBehavior {
   }
 
   public Set<String> getAllAuthorizedResourceIdentifiers(final AuthorizationRequest request) {
-    if (!authorizationsEnabled || isAuthorizedAnonymousUser(request.getCommand())) {
-      return Set.of(WILDCARD_PERMISSION);
+    if (!authorizationsEnabled || isAnonymousUserAuthorized(request.getCommand())) {
+      return Set.of(ALL_RESOURCES_WILDCARD);
     }
 
     final var authorizedResourceIds = new HashSet<String>();
@@ -353,7 +353,7 @@ public final class AuthorizationCheckBehavior {
   }
 
   public AuthorizedTenants getAuthorizedTenantIds(final TypedRecord<?> command) {
-    if (isAuthorizedAnonymousUser(command)) {
+    if (isAnonymousUserAuthorized(command)) {
       return AuthorizedTenants.ANONYMOUS;
     }
 
@@ -418,7 +418,7 @@ public final class AuthorizationCheckBehavior {
       this.resourceType = resourceType;
       this.permissionType = permissionType;
       resourceIds = new HashSet<>();
-      resourceIds.add(WILDCARD_PERMISSION);
+      resourceIds.add(ALL_RESOURCES_WILDCARD);
       this.tenantId = tenantId;
       this.isNewResource = isNewResource;
       this.isTenantOwnedResource = isTenantOwnedResource;
@@ -483,7 +483,7 @@ public final class AuthorizationCheckBehavior {
 
     public String getForbiddenErrorMessage() {
       final var resourceIdsContainsOnlyWildcard =
-          resourceIds.size() == 1 && resourceIds.contains(WILDCARD_PERMISSION);
+          resourceIds.size() == 1 && resourceIds.contains(ALL_RESOURCES_WILDCARD);
       return resourceIdsContainsOnlyWildcard
           ? FORBIDDEN_ERROR_MESSAGE.formatted(permissionType, resourceType)
           : FORBIDDEN_ERROR_MESSAGE_WITH_RESOURCE.formatted(
