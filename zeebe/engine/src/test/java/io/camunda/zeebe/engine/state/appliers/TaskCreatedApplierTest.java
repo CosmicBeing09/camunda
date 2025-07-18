@@ -25,12 +25,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
-public class UserTaskCreatedV2ApplierTest {
+public class TaskCreatedApplierTest {
   /** Injected by {@link ProcessingStateExtension} */
   private MutableProcessingState processingState;
 
   /** The class under test. */
-  private UserTaskCreatedV2Applier userTaskCreatedV2Applier;
+  private TaskCreatedApplier userTaskCreatedV2Applier;
 
   /** Used for state assertions. */
   private MutableUserTaskState userTaskState;
@@ -40,7 +40,7 @@ public class UserTaskCreatedV2ApplierTest {
 
   @BeforeEach
   public void setup() {
-    userTaskCreatedV2Applier = new UserTaskCreatedV2Applier(processingState);
+    userTaskCreatedV2Applier = new TaskCreatedApplier(processingState);
     userTaskState = processingState.getUserTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
