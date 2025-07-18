@@ -49,16 +49,16 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
   private final EnumProperty<ValueType> triggerTypeProperty =
       new EnumProperty<>("triggerType", ValueType.class);
   private final StringProperty intentProperty = new StringProperty("intent");
-  private final LongProperty requestIdProperty = new LongProperty("requestId", -1);
-  private final IntegerProperty requestStreamIdProperty =
+  private final LongProperty sourceRecordKeyProperty = new LongProperty("requestId", -1);
+  private final IntegerProperty sourcePartitionIdProperty =
       new IntegerProperty("requestStreamId", -1);
 
   public UserTaskTransitionTriggerRequestMetadata() {
     super(4);
     declareProperty(triggerTypeProperty)
         .declareProperty(intentProperty)
-        .declareProperty(requestIdProperty)
-        .declareProperty(requestStreamIdProperty);
+        .declareProperty(sourceRecordKeyProperty)
+        .declareProperty(sourcePartitionIdProperty);
   }
 
   /**
@@ -108,7 +108,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The request ID.
    */
   public long getRequestId() {
-    return requestIdProperty.getValue();
+    return sourceRecordKeyProperty.getValue();
   }
 
   /**
@@ -118,7 +118,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setRequestId(final long requestId) {
-    requestIdProperty.setValue(requestId);
+    sourceRecordKeyProperty.setValue(requestId);
     return this;
   }
 
@@ -128,7 +128,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The request stream ID.
    */
   public int getRequestStreamId() {
-    return requestStreamIdProperty.getValue();
+    return sourcePartitionIdProperty.getValue();
   }
 
   /**
@@ -138,7 +138,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setRequestStreamId(final int requestStreamId) {
-    requestStreamIdProperty.setValue(requestStreamId);
+    sourcePartitionIdProperty.setValue(requestStreamId);
     return this;
   }
 }

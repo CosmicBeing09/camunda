@@ -78,7 +78,7 @@ public final class CommandDistributionRecord extends UnifiedRecordValue
   private final StringProperty queueIdProperty = new StringProperty("queueId", "");
   private final EnumProperty<ValueType> valueTypeProperty =
       new EnumProperty<>("valueType", ValueType.class, ValueType.NULL_VAL);
-  private final IntegerProperty intentProperty = new IntegerProperty("intent", Intent.NULL_VAL);
+  private final IntegerProperty intentProperty = new IntegerProperty("intent", Intent.INTENT_VALUE_UNKNOWN);
   private final ObjectProperty<UnifiedRecordValue> commandValueProperty =
       new ObjectProperty<>("commandValue", new UnifiedRecordValue(10));
   private final MsgPackWriter commandValueWriter = new MsgPackWriter();

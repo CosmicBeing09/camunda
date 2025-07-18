@@ -25,7 +25,7 @@ import java.util.List;
 
 public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
 
-  private static final String DEFAULT_ACTION = "claim";
+  private static final String DEFAULT_USER_TASK_ACTION = "claim";
 
   private static final String INVALID_USER_TASK_ASSIGNEE_MESSAGE =
       "Expected to claim user task with key '%d', but it has already been assigned";
@@ -33,7 +33,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
       "Expected to claim user task with key '%d', but provided assignee is empty";
 
   private final UserTaskState userTaskState;
-  private final StateWriter stateWriter;
+  private final StateWriter eventWriter;
   private final TypedResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
@@ -42,7 +42,7 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
     userTaskState = state.getUserTaskState();
-    stateWriter = writers.state();
+    eventWriter = writers.state();
     responseWriter = writers.response();
     preconditionChecker =
         new UserTaskCommandPreconditionChecker(
@@ -69,9 +69,9 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
       userTaskRecord.setAssignee(newAssignee);
       userTaskRecord.setAssigneeChanged();
     }
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_USER_TASK_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord);
+    eventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord);
   }
 
   @Override
@@ -80,15 +80,15 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
     final long userTaskKey = command.getKey();
 
     userTaskRecord.setAssignee(command.getValue().getAssignee());
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_USER_TASK_ACTION));
 
     if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      eventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
       responseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
     } else {
       final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      eventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
 
       recordRequestMetadata.ifPresent(
           metadata ->

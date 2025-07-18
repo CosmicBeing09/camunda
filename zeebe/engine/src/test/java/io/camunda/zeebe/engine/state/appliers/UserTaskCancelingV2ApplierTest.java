@@ -34,10 +34,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class UserTaskCancelingV2ApplierTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableProcessingState mutableProcessingState;
 
   /** The class under test. */
-  private UserTaskCancelingV2Applier userTaskCancelingApplier;
+  private UserTaskCancelingV2Applier cancelingV2Applier;
 
   /** Used for state assertions. */
   private MutableUserTaskState userTaskState;
@@ -47,9 +47,9 @@ public class UserTaskCancelingV2ApplierTest {
 
   @BeforeEach
   public void setup() {
-    userTaskCancelingApplier = new UserTaskCancelingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    cancelingV2Applier = new UserTaskCancelingV2Applier(mutableProcessingState);
+    userTaskState = mutableProcessingState.getUserTaskState();
+    testSetup = new AppliersTestSetupHelper(mutableProcessingState);
   }
 
   @Test
@@ -74,7 +74,7 @@ public class UserTaskCancelingV2ApplierTest {
         .isEmpty();
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    cancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -117,7 +117,7 @@ public class UserTaskCancelingV2ApplierTest {
         userTaskRecord.copy().setVariables(variablesBuffer).setVariablesChanged());
 
     // preconditions
-    assertThat(processingState.getVariableState().findVariableDocumentState(elementInstanceKey))
+    assertThat(mutableProcessingState.getVariableState().findVariableDocumentState(elementInstanceKey))
         .describedAs("Expected variable document state to exist before user task cancellation")
         .isPresent();
     assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
@@ -133,7 +133,7 @@ public class UserTaskCancelingV2ApplierTest {
                     .isEqualTo(LifecycleState.UPDATING));
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    cancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -143,7 +143,7 @@ public class UserTaskCancelingV2ApplierTest {
         .describedAs("Expected new intermediate state to be related to 'cancel' transition")
         .extracting(UserTaskIntermediateStateValue::getLifecycleState)
         .isEqualTo(LifecycleState.CANCELING);
-    assertThat(processingState.getVariableState().findVariableDocumentState(elementInstanceKey))
+    assertThat(mutableProcessingState.getVariableState().findVariableDocumentState(elementInstanceKey))
         .describedAs("Expected variable document state to be removed on canceling")
         .isEmpty();
   }
@@ -192,7 +192,7 @@ public class UserTaskCancelingV2ApplierTest {
             metadata -> assertThat(metadata.getIntent()).isEqualTo(UserTaskIntent.CLAIMING));
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    cancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -232,7 +232,7 @@ public class UserTaskCancelingV2ApplierTest {
         .isEqualTo(Optional.of(initialAssignee));
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    cancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.findInitialAssignee(userTaskKey))

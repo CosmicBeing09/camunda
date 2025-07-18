@@ -17,8 +17,8 @@ import org.agrona.MutableDirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
 public final class BufferUtil {
-  public static final int NO_WRAP = 1;
-  private static final int DEFAULT_WRAP = 16; // bytes
+  public static final int HEX_NO_WRAP = 1;
+  private static final int HEX_DEFAULT_WRAP = 16; // bytes
 
   private static final char[] HEX_CODE = "0123456789ABCDEF".toCharArray();
 
@@ -123,7 +123,7 @@ public final class BufferUtil {
   }
 
   public static String bufferAsHexString(final DirectBuffer buffer) {
-    return bufferAsHexString(buffer, DEFAULT_WRAP);
+    return bufferAsHexString(buffer, HEX_DEFAULT_WRAP);
   }
 
   private static String bufferAsHexString(final DirectBuffer buffer, final int wrap) {
@@ -139,7 +139,7 @@ public final class BufferUtil {
   }
 
   public static String bytesAsHexString(final byte[] bytes) {
-    return bytesAsHexString(bytes, DEFAULT_WRAP);
+    return bytesAsHexString(bytes, HEX_DEFAULT_WRAP);
   }
 
   public static String bytesAsHexString(final byte[] bytes, final int wrap) {

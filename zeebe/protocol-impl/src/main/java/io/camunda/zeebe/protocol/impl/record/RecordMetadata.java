@@ -45,7 +45,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   private ValueType valueType = ValueType.NULL_VAL;
   private Intent intent = null;
   private long requestId;
-  private short intentValue = Intent.NULL_VAL;
+  private short intentValue = Intent.INTENT_VALUE_UNKNOWN;
   private int requestStreamId;
   private final AuthInfo authorization = new AuthInfo();
   private RejectionType rejectionType;
@@ -288,7 +288,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
     requestStreamId = RecordMetadataEncoder.requestStreamIdNullValue();
     protocolVersion = Protocol.PROTOCOL_VERSION;
     valueType = ValueType.NULL_VAL;
-    intentValue = Intent.NULL_VAL;
+    intentValue = Intent.INTENT_VALUE_UNKNOWN;
     intent = null;
     rejectionType = RejectionType.NULL_VAL;
     rejectionReason.wrap(0, 0);
