@@ -41,7 +41,7 @@ public class DbUsageMetricStateTest {
   }
 
   @Test
-  public void shouldCreateRollingBucket() {
+  public void shouldCreateActiveBucket() {
     // given
     final var eventTime = InstantSource.system().millis();
     when(mockClock.millis()).thenReturn(eventTime);
@@ -50,7 +50,7 @@ public class DbUsageMetricStateTest {
     state.recordRPIMetric(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
-    final var actual = state.getRollingBucket();
+    final var actual = state.getActiveBucket();
     assertThat(actual.getFromTime()).isEqualTo(eventTime);
     assertThat(actual.getToTime()).isEqualTo(eventTime + 1000);
     assertThat(actual.getTenantRPIMap())
@@ -72,7 +72,7 @@ public class DbUsageMetricStateTest {
     state.recordRPIMetric("tenant2");
 
     // then
-    final var actual = state.getRollingBucket();
+    final var actual = state.getActiveBucket();
     assertThat(actual.getFromTime()).isEqualTo(eventTime);
     assertThat(actual.getToTime()).isEqualTo(eventTime + 1000);
     assertThat(actual.getTenantRPIMap())
@@ -81,12 +81,12 @@ public class DbUsageMetricStateTest {
   }
 
   @Test
-  public void shouldDeleteRollingBucket() {
+  public void shouldDeleteCurrentBucket() {
     // given
     final var eventTime = InstantSource.system().millis();
     when(mockClock.millis()).thenReturn(eventTime);
     state.recordRPIMetric(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    final var bucket = state.getRollingBucket();
+    final var bucket = state.getActiveBucket();
     assertThat(bucket.getTenantRPIMap())
         .containsExactlyInAnyOrderEntriesOf(Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, 1L));
 
@@ -94,7 +94,7 @@ public class DbUsageMetricStateTest {
     state.deleteCurrentBucket();
 
     // then
-    final var actual = state.getRollingBucket();
+    final var actual = state.getActiveBucket();
     assertThat(actual).isNull();
   }
 }
