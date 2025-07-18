@@ -67,7 +67,7 @@ public class ProcessDefinitionIT {
             b -> b.processDefinitionId("test-process-unique"));
     createAndSaveProcessDefinition(rdbmsWriter, processDefinition);
 
-    final var searchResult =
+    final var result =
         processDefinitionReader.search(
             new ProcessDefinitionQuery(
                 new ProcessDefinitionFilter.Builder()
@@ -76,11 +76,11 @@ public class ProcessDefinitionIT {
                 ProcessDefinitionSort.of(b -> b),
                 SearchQueryPage.of(b -> b.from(0).size(10))));
 
-    assertThat(searchResult).isNotNull();
-    assertThat(searchResult.total()).isEqualTo(1);
-    assertThat(searchResult.items()).hasSize(1);
+    assertThat(result).isNotNull();
+    assertThat(result.total()).isEqualTo(1);
+    assertThat(result.items()).hasSize(1);
 
-    final var instance = searchResult.items().getFirst();
+    final var instance = result.items().getFirst();
 
     assertThat(instance.processDefinitionKey()).isEqualTo(processDefinition.processDefinitionKey());
     assertThat(instance.processDefinitionId()).isEqualTo(processDefinition.processDefinitionId());
@@ -203,7 +203,7 @@ public class ProcessDefinitionIT {
                 b ->
                     b.filter(f -> f.versionTags("search-after-123456"))
                         .sort(sort)
-                        .page(p -> p.size(5).after(firstPage.searchAfterCursor()))));
+                        .page(p -> p.size(5).after(firstPage.afterCursor()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(5);
