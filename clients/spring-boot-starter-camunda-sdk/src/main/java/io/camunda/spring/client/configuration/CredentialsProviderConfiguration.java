@@ -40,7 +40,7 @@ public class CredentialsProviderConfiguration {
   @ConditionalOnMissingBean
   public CredentialsProvider camundaClientCredentialsProvider(
       final CamundaClientProperties camundaClientProperties) {
-    final var authMethod = camundaClientProperties.getAuth().getMethod();
+    final var authMethod = camundaClientProperties.getAuth().getAuthenticationMethod();
 
     return authMethod == null
         ? new NoopCredentialsProvider()

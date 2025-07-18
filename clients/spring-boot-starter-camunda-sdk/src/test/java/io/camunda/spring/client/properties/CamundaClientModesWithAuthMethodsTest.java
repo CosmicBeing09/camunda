@@ -38,7 +38,7 @@ public class CamundaClientModesWithAuthMethodsTest {
       assertThat(properties.getMode()).isEqualTo(ClientMode.selfManaged);
       assertThat(properties.getGrpcAddress().toString()).isEqualTo("http://localhost:26500");
       assertThat(properties.getRestAddress().toString()).isEqualTo("http://localhost:8088");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.none);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.none);
     }
   }
 
@@ -54,7 +54,7 @@ public class CamundaClientModesWithAuthMethodsTest {
       assertThat(properties.getMode()).isEqualTo(ClientMode.selfManaged);
       assertThat(properties.getGrpcAddress().toString()).isEqualTo("http://localhost:26500");
       assertThat(properties.getRestAddress().toString()).isEqualTo("http://localhost:8088");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.none);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.none);
     }
   }
 
@@ -70,7 +70,7 @@ public class CamundaClientModesWithAuthMethodsTest {
       assertThat(properties.getMode()).isEqualTo(ClientMode.selfManaged);
       assertThat(properties.getGrpcAddress().toString()).isEqualTo("http://localhost:26500");
       assertThat(properties.getRestAddress().toString()).isEqualTo("http://localhost:8088");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.basic);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.basic);
       assertThat(properties.getAuth().getUsername()).isEqualTo("basic");
       assertThat(properties.getAuth().getPassword()).isEqualTo("demo");
     }
@@ -88,7 +88,7 @@ public class CamundaClientModesWithAuthMethodsTest {
       assertThat(properties.getMode()).isEqualTo(ClientMode.selfManaged);
       assertThat(properties.getGrpcAddress().toString()).isEqualTo("http://localhost:26500");
       assertThat(properties.getRestAddress().toString()).isEqualTo("http://localhost:8088");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.basic);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.basic);
       assertThat(properties.getAuth().getUsername()).isEqualTo("demo");
       assertThat(properties.getAuth().getPassword()).isEqualTo("demo");
     }
@@ -106,7 +106,7 @@ public class CamundaClientModesWithAuthMethodsTest {
       assertThat(properties.getMode()).isEqualTo(ClientMode.selfManaged);
       assertThat(properties.getGrpcAddress().toString()).isEqualTo("http://localhost:26500");
       assertThat(properties.getRestAddress().toString()).isEqualTo("http://localhost:8088");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(
               URI.create(
@@ -128,7 +128,7 @@ public class CamundaClientModesWithAuthMethodsTest {
       assertThat(properties.getMode()).isEqualTo(ClientMode.selfManaged);
       assertThat(properties.getGrpcAddress().toString()).isEqualTo("http://localhost:26500");
       assertThat(properties.getRestAddress().toString()).isEqualTo("http://localhost:8088");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(
               URI.create(
@@ -155,7 +155,7 @@ public class CamundaClientModesWithAuthMethodsTest {
           .isEqualTo("https://my-cluster-id.bru-2.zeebe.camunda.io:443");
       assertThat(properties.getRestAddress().toString())
           .isEqualTo("https://bru-2.zeebe.camunda.io:443/my-cluster-id");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(URI.create("https://login.cloud.camunda.io/oauth/token"));
       assertThat(properties.getAuth().getAudience()).isEqualTo("zeebe.camunda.io");
@@ -179,7 +179,7 @@ public class CamundaClientModesWithAuthMethodsTest {
           .isEqualTo("https://my-cluster-id.bru-2.zeebe.camunda.io:443");
       assertThat(properties.getRestAddress().toString())
           .isEqualTo("https://bru-2.zeebe.camunda.io:443/my-cluster-id");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(URI.create("https://login.cloud.camunda.io/oauth/token"));
       assertThat(properties.getAuth().getAudience()).isEqualTo("zeebe.camunda.io");
@@ -204,7 +204,7 @@ public class CamundaClientModesWithAuthMethodsTest {
           .isEqualTo("https://my-cluster-id.bru-2.zeebe.camunda.io:443");
       assertThat(properties.getRestAddress().toString())
           .isEqualTo("https://bru-2.zeebe.camunda.io:443/my-cluster-id");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(URI.create("https://login.cloud.camunda.io/oauth/token"));
       assertThat(properties.getAuth().getAudience()).isEqualTo("zeebe.camunda.io");
@@ -229,7 +229,7 @@ public class CamundaClientModesWithAuthMethodsTest {
           .isEqualTo("https://my-cluster-id.bru-2.zeebe.camunda.io:443");
       assertThat(properties.getRestAddress().toString())
           .isEqualTo("https://bru-2.zeebe.camunda.io:443/my-cluster-id");
-      assertThat(properties.getAuth().getMethod()).isEqualTo(AuthMethod.oidc);
+      assertThat(properties.getAuth().getAuthenticationMethod()).isEqualTo(AuthMethod.oidc);
       assertThat(properties.getAuth().getTokenUrl())
           .isEqualTo(URI.create("https://login.cloud.camunda.io/oauth/token"));
       assertThat(properties.getAuth().getAudience()).isEqualTo("zeebe.camunda.io");
