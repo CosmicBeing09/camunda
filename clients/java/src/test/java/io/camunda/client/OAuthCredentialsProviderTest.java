@@ -420,29 +420,29 @@ public final class OAuthCredentialsProviderTest {
   }
 
   private void mockCredentials(final String token, final String scope) {
-    final HashMap<String, String> map = new HashMap<>();
-    map.put("client_secret", SECRET);
-    map.put("client_id", CLIENT_ID);
-    map.put("audience", AUDIENCE);
-    map.put("grant_type", "client_credentials");
+    final HashMap<String, String> credentialParamsMap = new HashMap<>();
+    credentialParamsMap.put("client_secret", SECRET);
+    credentialParamsMap.put("client_id", CLIENT_ID);
+    credentialParamsMap.put("audience", AUDIENCE);
+    credentialParamsMap.put("grant_type", "client_credentials");
     if (scope != null) {
-      map.put("scope", scope);
+      credentialParamsMap.put("scope", scope);
     }
 
     final String encodedBody =
-        map.entrySet().stream()
+        credentialParamsMap.entrySet().stream()
             .map(e -> encode(e.getKey()) + "=" + encode(e.getValue()))
             .collect(Collectors.joining("&"));
 
-    map.put("access_token", token);
-    map.put("token_type", TOKEN_TYPE);
-    map.put(
+    credentialParamsMap.put("access_token", token);
+    credentialParamsMap.put("token_type", TOKEN_TYPE);
+    credentialParamsMap.put(
         "expires_in",
         String.valueOf(
             EXPIRY.getLong(ChronoField.INSTANT_SECONDS) - Instant.now().getEpochSecond()));
 
     try {
-      final String body = jsonMapper.writeValueAsString(map);
+      final String body = jsonMapper.writeValueAsString(credentialParamsMap);
       currentWiremockRuntimeInfo
           .getWireMock()
           .register(
