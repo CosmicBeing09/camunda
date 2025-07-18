@@ -537,10 +537,10 @@ class UserTaskSearchTest {
 
     // Assert First and Last Sort Value matches the first and last item
     // We need to make use of toString, such the test work with ES/OS
-    final List<String> firstSortValues =
-        result.page().firstSortValues().stream().map(Object::toString).toList();
-    String creationDateMillis = convertDateIfNeeded(firstSortValues.getFirst());
-    String userTaskKey = firstSortValues.getLast();
+    final List<String> searchBeforeCursorValues =
+        result.page().searchBeforeCursor().stream().map(Object::toString).toList();
+    String creationDateMillis = convertDateIfNeeded(searchBeforeCursorValues.getFirst());
+    String userTaskKey = searchBeforeCursorValues.getLast();
 
     assertThat(creationDateMillis)
         .isEqualTo(
@@ -548,10 +548,10 @@ class UserTaskSearchTest {
                 OffsetDateTime.parse(firstItem.getCreationDate()).toInstant().toEpochMilli()));
     assertThat(userTaskKey).isEqualTo(Long.toString(firstItem.getUserTaskKey()));
 
-    final List<String> lastSortValues =
-        result.page().lastSortValues().stream().map(Object::toString).toList();
-    creationDateMillis = convertDateIfNeeded(lastSortValues.getFirst());
-    userTaskKey = lastSortValues.getLast();
+    final List<String> searchAfterCursorValues =
+        result.page().searchAfterCursor().stream().map(Object::toString).toList();
+    creationDateMillis = convertDateIfNeeded(searchAfterCursorValues.getFirst());
+    userTaskKey = searchAfterCursorValues.getLast();
 
     assertThat(creationDateMillis)
         .isEqualTo(

@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.MappingFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
 import io.camunda.client.api.search.request.MappingsByRoleSearchRequest;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.Mapping;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.MappingSort;
@@ -54,8 +54,8 @@ public class MappingsByRoleSearchRequestImpl
     this.httpClient = httpClient;
     this.jsonMapper = jsonMapper;
     this.roleId = roleId;
-    this.httpRequestConfig = httpClient.newRequestConfig();
-    this.request = new MappingSearchQueryRequest();
+    httpRequestConfig = httpClient.newRequestConfig();
+    request = new MappingSearchQueryRequest();
   }
 
   @Override
@@ -103,13 +103,13 @@ public class MappingsByRoleSearchRequestImpl
   }
 
   @Override
-  public MappingsByRoleSearchRequest page(final SearchRequestPage value) {
+  public MappingsByRoleSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public MappingsByRoleSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public MappingsByRoleSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

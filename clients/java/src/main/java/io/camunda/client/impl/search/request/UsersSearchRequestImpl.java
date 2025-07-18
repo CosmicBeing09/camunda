@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.fetch.UsersSearchRequest;
 import io.camunda.client.api.search.filter.UserFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.response.User;
 import io.camunda.client.api.search.sort.UserSort;
@@ -97,13 +97,13 @@ public class UsersSearchRequestImpl
   }
 
   @Override
-  public UsersSearchRequest page(final SearchRequestPage value) {
+  public UsersSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public UsersSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public UsersSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

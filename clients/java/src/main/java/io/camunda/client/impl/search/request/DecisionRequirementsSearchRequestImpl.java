@@ -23,7 +23,7 @@ import io.camunda.client.api.search.filter.DecisionRequirementsFilter;
 import io.camunda.client.api.search.request.DecisionRequirementsSearchRequest;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
 import io.camunda.client.api.search.request.SearchRequestBuilders;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.DecisionRequirements;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.DecisionRequirementsSort;
@@ -100,14 +100,14 @@ public class DecisionRequirementsSearchRequestImpl
   }
 
   @Override
-  public DecisionRequirementsSearchRequest page(final SearchRequestPage value) {
+  public DecisionRequirementsSearchRequest page(final PaginationRequest value) {
     final SearchRequestPageImpl page = (SearchRequestPageImpl) value;
     request.setPage(page.getSearchRequestProperty());
     return this;
   }
 
   @Override
-  public DecisionRequirementsSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public DecisionRequirementsSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

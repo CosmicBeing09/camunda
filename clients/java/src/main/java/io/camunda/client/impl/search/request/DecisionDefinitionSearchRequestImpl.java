@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.DecisionDefinitionFilter;
 import io.camunda.client.api.search.request.DecisionDefinitionSearchRequest;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.DecisionDefinition;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.DecisionDefinitionSort;
@@ -80,13 +80,13 @@ public class DecisionDefinitionSearchRequestImpl
   }
 
   @Override
-  public DecisionDefinitionSearchRequest page(final SearchRequestPage value) {
+  public DecisionDefinitionSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public DecisionDefinitionSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public DecisionDefinitionSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

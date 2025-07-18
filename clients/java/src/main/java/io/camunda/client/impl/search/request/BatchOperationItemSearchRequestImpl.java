@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.BatchOperationItemFilter;
 import io.camunda.client.api.search.request.BatchOperationItemSearchRequest;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.BatchOperationItems.BatchOperationItem;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.BatchOperationItemSort;
@@ -80,13 +80,13 @@ public class BatchOperationItemSearchRequestImpl
   }
 
   @Override
-  public BatchOperationItemSearchRequest page(final SearchRequestPage value) {
+  public BatchOperationItemSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public BatchOperationItemSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public BatchOperationItemSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

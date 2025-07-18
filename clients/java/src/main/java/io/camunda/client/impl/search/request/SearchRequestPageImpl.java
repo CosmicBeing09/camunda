@@ -15,13 +15,13 @@
  */
 package io.camunda.client.impl.search.request;
 
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.protocol.rest.SearchQueryPageRequest;
 import java.util.List;
 
 public class SearchRequestPageImpl
     extends TypedSearchRequestPropertyProvider<SearchQueryPageRequest>
-    implements SearchRequestPage {
+    implements PaginationRequest {
 
   private final SearchQueryPageRequest page;
 
@@ -30,25 +30,25 @@ public class SearchRequestPageImpl
   }
 
   @Override
-  public SearchRequestPage from(final Integer value) {
+  public PaginationRequest from(final Integer value) {
     page.setFrom(value);
     return this;
   }
 
   @Override
-  public SearchRequestPage limit(final Integer value) {
+  public PaginationRequest limit(final Integer value) {
     page.setLimit(value);
     return this;
   }
 
   @Override
-  public SearchRequestPage searchBefore(final List<Object> values) {
+  public PaginationRequest searchBefore(final List<Object> values) {
     page.setSearchBefore(values);
     return this;
   }
 
   @Override
-  public SearchRequestPage searchAfter(final List<Object> values) {
+  public PaginationRequest searchAfter(final List<Object> values) {
     page.setSearchAfter(values);
     return this;
   }

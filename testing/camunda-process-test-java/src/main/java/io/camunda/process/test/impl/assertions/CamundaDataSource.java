@@ -22,7 +22,7 @@ import io.camunda.client.api.search.filter.IncidentFilter;
 import io.camunda.client.api.search.filter.ProcessInstanceFilter;
 import io.camunda.client.api.search.filter.UserTaskFilter;
 import io.camunda.client.api.search.filter.VariableFilter;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.DecisionInstance;
 import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.api.search.response.Incident;
@@ -34,7 +34,7 @@ import java.util.function.Consumer;
 
 public class CamundaDataSource {
 
-  private static final Consumer<SearchRequestPage> DEFAULT_PAGE_REQUEST = page -> page.limit(100);
+  private static final Consumer<PaginationRequest> DEFAULT_PAGE_REQUEST = page -> page.limit(100);
 
   private final CamundaClient client;
 

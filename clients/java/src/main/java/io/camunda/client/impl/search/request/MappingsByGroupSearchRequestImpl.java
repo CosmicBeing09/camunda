@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.fetch.MappingsByGroupSearchRequest;
 import io.camunda.client.api.search.filter.MappingFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.Mapping;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.MappingSort;
@@ -103,13 +103,13 @@ public class MappingsByGroupSearchRequestImpl
   }
 
   @Override
-  public MappingsByGroupSearchRequest page(final SearchRequestPage value) {
+  public MappingsByGroupSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public MappingsByGroupSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public MappingsByGroupSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

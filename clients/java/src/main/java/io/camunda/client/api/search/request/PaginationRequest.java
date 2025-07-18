@@ -13,18 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.camunda.client.api.search.response;
+package io.camunda.client.api.search.request;
 
 import java.util.List;
 
-public interface SearchResponsePage {
+public interface PaginationRequest {
 
-  /** Total number of items that matches the query */
-  Long totalItems();
+  /** Start the page from. */
+  PaginationRequest from(final Integer value);
 
-  /** The sort values of the first item in the returned page. */
-  List<Object> searchBeforeCursor();
+  /** Limit the the number of returned entities. */
+  PaginationRequest limit(final Integer value);
 
-  /** The sort values of the last item in the returned page. */
-  List<Object> searchAfterCursor();
+  /** Get previous page before the set of values. */
+  PaginationRequest searchBefore(final List<Object> values);
+
+  /** Get next page after the set of values. */
+  PaginationRequest searchAfter(final List<Object> values);
 }

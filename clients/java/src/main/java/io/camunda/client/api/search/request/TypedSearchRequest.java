@@ -62,7 +62,7 @@ public interface TypedSearchRequest<
    * @param value the next page
    * @return the builder for the search request
    */
-  SELF page(final SearchRequestPage value);
+  SELF page(final PaginationRequest value);
 
   /**
    * Provides a fluent builder to support pagination.
@@ -70,7 +70,7 @@ public interface TypedSearchRequest<
    * @param fn consumer to support pagination
    * @return the builder for the search request
    */
-  SELF page(final Consumer<SearchRequestPage> fn);
+  SELF page(final Consumer<PaginationRequest> fn);
 
   public static interface SearchRequestFilter {}
 
