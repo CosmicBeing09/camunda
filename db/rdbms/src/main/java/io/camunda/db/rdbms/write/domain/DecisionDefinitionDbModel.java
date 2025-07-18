@@ -10,9 +10,9 @@ package io.camunda.db.rdbms.write.domain;
 import io.camunda.util.ObjectBuilder;
 
 public record DecisionDefinitionDbModel(
-    Long decisionDefinitionKey,
+    Long key,
     String name,
-    String decisionDefinitionId,
+    String id,
     String tenantId,
     int version,
     String decisionRequirementsId,

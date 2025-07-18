@@ -14,7 +14,7 @@ import java.util.function.Function;
 public record UsageMetricsSort(List<FieldSorting> orderings) implements SortOption {
 
   @Override
-  public List<FieldSorting> getFieldSortings() {
+  public List<FieldSorting> getOrders() {
     return orderings;
   }
 

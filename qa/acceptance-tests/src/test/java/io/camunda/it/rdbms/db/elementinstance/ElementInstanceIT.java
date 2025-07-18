@@ -47,7 +47,7 @@ public class ElementInstanceIT {
 
     final var elementInstance = createAndSaveElementInstance(rdbmsWriter);
 
-    final var actual = reader.findOne(elementInstance.flowNodeInstanceKey()).orElseThrow();
+    final var actual = reader.findOne(elementInstance.key()).orElseThrow();
     compareElementInstance(actual, elementInstance);
   }
 
@@ -55,23 +55,23 @@ public class ElementInstanceIT {
   public void shouldSaveLogAndResolveIncident(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final FlowNodeInstanceReader elementInstanceReader = rdbmsService.getFlowNodeInstanceReader();
+    final FlowNodeInstanceReader reader = rdbmsService.getFlowNodeInstanceReader();
 
     final FlowNodeInstanceDbModel original = createAndSaveElementInstance(rdbmsWriter, b -> b);
-    rdbmsWriter.getFlowNodeInstanceWriter().createIncident(original.flowNodeInstanceKey(), 42L);
+    rdbmsWriter.getFlowNodeInstanceWriter().createIncident(original.key(), 42L);
     rdbmsWriter.flush();
 
-    final var instance = elementInstanceReader.findOne(original.flowNodeInstanceKey()).orElse(null);
+    final var instance = reader.findOne(original.key()).orElse(null);
 
     assertThat(instance).isNotNull();
     assertThat(instance.hasIncident()).isTrue();
     assertThat(instance.incidentKey()).isEqualTo(42L);
 
-    rdbmsWriter.getFlowNodeInstanceWriter().resolveIncident(original.flowNodeInstanceKey());
+    rdbmsWriter.getFlowNodeInstanceWriter().resolveIncident(original.key());
     rdbmsWriter.flush();
 
     final var resolvedInstance =
-        elementInstanceReader.findOne(original.flowNodeInstanceKey()).orElse(null);
+        reader.findOne(original.key()).orElse(null);
 
     assertThat(resolvedInstance).isNotNull();
     assertThat(resolvedInstance.hasIncident()).isFalse();
@@ -165,7 +165,7 @@ public class ElementInstanceIT {
         reader.search(
             new FlowNodeInstanceQuery(
                 new FlowNodeInstanceFilter.Builder()
-                    .flowNodeInstanceKeys(instance.flowNodeInstanceKey())
+                    .flowNodeInstanceKeys(instance.key())
                     .processInstanceKeys(instance.processInstanceKey())
                     .processDefinitionIds(instance.processDefinitionId())
                     .processDefinitionKeys(instance.processDefinitionKey())
@@ -182,7 +182,7 @@ public class ElementInstanceIT {
     assertThat(searchResult.total()).isEqualTo(1);
     assertThat(searchResult.items()).hasSize(1);
     assertThat(searchResult.items().getFirst().flowNodeInstanceKey())
-        .isEqualTo(instance.flowNodeInstanceKey());
+        .isEqualTo(instance.key());
   }
 
   private static void compareElementInstance(
@@ -201,7 +201,7 @@ public class ElementInstanceIT {
             "key")
         .isEqualTo(expected);
 
-    assertThat(actual.flowNodeInstanceKey()).isEqualTo(expected.flowNodeInstanceKey());
+    assertThat(actual.flowNodeInstanceKey()).isEqualTo(expected.key());
     assertThat(actual.processDefinitionId()).isEqualTo(expected.processDefinitionId());
     assertThat(actual.startDate())
         .isCloseTo(expected.startDate(), new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
@@ -214,7 +214,7 @@ public class ElementInstanceIT {
       final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final FlowNodeInstanceReader elementInstanceReader = rdbmsService.getFlowNodeInstanceReader();
+    final FlowNodeInstanceReader reader = rdbmsService.getFlowNodeInstanceReader();
 
     final var processDefinition =
         ProcessDefinitionFixtures.createAndSaveProcessDefinition(rdbmsWriter, b -> b);
@@ -226,14 +226,14 @@ public class ElementInstanceIT {
     final var sort =
         FlowNodeInstanceSort.of(s -> s.type().asc().tenantId().asc().startDate().desc());
     final var searchResult =
-        elementInstanceReader.search(
+        reader.search(
             FlowNodeInstanceQuery.of(
                 b ->
                     b.filter(f -> f.processDefinitionIds(processDefinition.processDefinitionId()))
                         .sort(sort)));
 
     final var firstPage =
-        elementInstanceReader.search(
+        reader.search(
             FlowNodeInstanceQuery.of(
                 b ->
                     b.filter(f -> f.processDefinitionIds(processDefinition.processDefinitionId()))
@@ -241,12 +241,12 @@ public class ElementInstanceIT {
                         .page(p -> p.size(15))));
 
     final var nextPage =
-        elementInstanceReader.search(
+        reader.search(
             FlowNodeInstanceQuery.of(
                 b ->
                     b.filter(f -> f.processDefinitionIds(processDefinition.processDefinitionId()))
                         .sort(sort)
-                        .page(p -> p.size(5).searchAfter(firstPage.searchAfterCursor()))));
+                        .page(p -> p.size(5).after(firstPage.afterCursor()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(5);
@@ -296,6 +296,6 @@ public class ElementInstanceIT {
     assertThat(searchResult.total()).isEqualTo(2);
     assertThat(searchResult.items()).hasSize(2);
     assertThat(searchResult.items().stream().map(FlowNodeInstanceEntity::flowNodeInstanceKey))
-        .containsExactlyInAnyOrder(item1.flowNodeInstanceKey(), item3.flowNodeInstanceKey());
+        .containsExactlyInAnyOrder(item1.key(), item3.key());
   }
 }

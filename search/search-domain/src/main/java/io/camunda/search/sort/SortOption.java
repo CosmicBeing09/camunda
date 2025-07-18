@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface SortOption {
 
-  public List<FieldSorting> getFieldSortings();
+  public List<FieldSorting> getOrders();
 
   public abstract static class AbstractBuilder<T> {
 

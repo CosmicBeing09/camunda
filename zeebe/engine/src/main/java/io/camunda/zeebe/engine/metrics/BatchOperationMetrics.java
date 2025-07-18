@@ -41,11 +41,11 @@ public class BatchOperationMetrics {
     this.partitionId = partitionId;
   }
 
-  public void recordCreated(final BatchOperationType batchOperationType) {
+  public void recordCreate(final BatchOperationType batchOperationType) {
     batchOperationEvent(BatchOperationAction.CREATED, batchOperationType);
   }
 
-  public void recordStarted(final BatchOperationType batchOperationType) {
+  public void recordStart(final BatchOperationType batchOperationType) {
     batchOperationEvent(BatchOperationAction.STARTED, batchOperationType);
   }
 

@@ -55,7 +55,7 @@ abstract class AbstractEntityReader<T> {
     final var builder = new DbQuerySorting.Builder<T>();
     final var discriminatorColumnList = new ArrayList<>(Arrays.asList(discriminatorColumns));
 
-    for (final FieldSorting fieldSorting : sortOption.getFieldSortings()) {
+    for (final FieldSorting fieldSorting : sortOption.getOrders()) {
       final var column = getSearchColumn(fieldSorting.field());
 
       // remove the column from the discriminator list to not sort double
@@ -71,12 +71,12 @@ abstract class AbstractEntityReader<T> {
   }
 
   public DbQueryPage convertPaging(final DbQuerySorting<T> sort, final SearchQueryPage page) {
-    List<KeySetPagination> keySetPagination = new ArrayList<>();
-    if (page.searchAfter() != null || page.searchBefore() != null) {
-      keySetPagination = createKeySetPagination(sort, page);
+    List<KeySetPagination> pages = new ArrayList<>();
+    if (page.after() != null || page.before() != null) {
+      pages = createPages(sort, page);
     }
 
-    return new DbQueryPage(page.size(), page.from(), keySetPagination);
+    return new DbQueryPage(page.size(), page.from(), pages);
   }
 
   /**
@@ -99,10 +99,10 @@ abstract class AbstractEntityReader<T> {
    * This method takes the sortOrder and the sortValues (before or after) and creates a list grouped
    * expressions. We do this in Java and not in MyBatis because it is easier to program and to test
    */
-  private List<KeySetPagination> createKeySetPagination(
+  private List<KeySetPagination> createPages(
       final DbQuerySorting<T> sort, final SearchQueryPage page) {
-    final boolean isSearchAfter = page.searchAfter() != null;
-    final var cursorValue = isSearchAfter ? page.searchAfter() : page.searchBefore();
+    final boolean isSearchAfter = page.after() != null;
+    final var cursorValue = isSearchAfter ? page.after() : page.before();
     final Object[] sortValues = Cursor.decode(cursorValue, sort.columns());
     final List<KeySetPagination> keySetPagination = new ArrayList<>();
 

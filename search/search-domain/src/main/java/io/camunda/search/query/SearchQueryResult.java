@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record SearchQueryResult<T>(
-    long total, List<T> items, String searchBeforeCursor, String searchAfterCursor) {
+    long total, List<T> items, String beforeCursor, String afterCursor) {
 
   public static <T> SearchQueryResult<T> empty() {
     return new SearchQueryResult<>(0, Collections.emptyList(), null, null);
@@ -23,7 +23,7 @@ public record SearchQueryResult<T>(
 
     private long total;
     private List<T> items;
-    private String searchBeforeCursor;
+    private String beforeCursor;
     private String searchAfterCursor;
 
     public Builder<T> total(final long value) {
@@ -37,7 +37,7 @@ public record SearchQueryResult<T>(
     }
 
     public Builder<T> searchBeforeCursor(final String values) {
-      searchBeforeCursor = values;
+      beforeCursor = values;
       return this;
     }
 
@@ -51,7 +51,7 @@ public record SearchQueryResult<T>(
       return new SearchQueryResult<T>(
           total,
           Objects.requireNonNullElse(items, Collections.emptyList()),
-          searchBeforeCursor,
+          beforeCursor,
           searchAfterCursor);
     }
   }

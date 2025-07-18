@@ -13,8 +13,8 @@ import java.util.function.Function;
 
 public class TenantDbModel implements DbModel<TenantDbModel> {
 
-  private Long tenantKey;
-  private String tenantId;
+  private Long key;
+  private String id;
   private String name;
   private String description;
   private List<TenantMemberDbModel> members;
@@ -27,8 +27,8 @@ public class TenantDbModel implements DbModel<TenantDbModel> {
       final String name,
       final String description,
       final List<TenantMemberDbModel> members) {
-    this.tenantKey = tenantKey;
-    this.tenantId = tenantId;
+    key = tenantKey;
+    id = tenantId;
     this.name = name;
     this.description = description;
     this.members = members;
@@ -40,27 +40,27 @@ public class TenantDbModel implements DbModel<TenantDbModel> {
     return builderFunction
         .apply(
             new Builder()
-                .tenantKey(tenantKey)
-                .tenantId(tenantId)
+                .tenantKey(key)
+                .tenantId(id)
                 .name(name)
                 .description(description))
         .build();
   }
 
   public Long tenantKey() {
-    return tenantKey;
+    return key;
   }
 
   public void tenantKey(final Long tenantKey) {
-    this.tenantKey = tenantKey;
+    key = tenantKey;
   }
 
   public String tenantId() {
-    return tenantId;
+    return id;
   }
 
   public void tenantId(final String tenantId) {
-    this.tenantId = tenantId;
+    id = tenantId;
   }
 
   public String name() {

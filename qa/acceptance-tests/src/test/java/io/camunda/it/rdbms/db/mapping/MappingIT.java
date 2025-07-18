@@ -83,7 +83,7 @@ public class MappingIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimName(randomizedMapping.claimName()).build(),
                     MappingSort.of(b -> b),
@@ -111,7 +111,7 @@ public class MappingIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimValue(randomizedMapping.claimValue()).build(),
                     MappingSort.of(b -> b),
@@ -137,7 +137,7 @@ public class MappingIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimName(claimName).build(),
                     MappingSort.of(b -> b),
@@ -161,7 +161,7 @@ public class MappingIT {
     createAndSaveMapping(rdbmsWriter, randomizedMapping);
 
     final var searchResult =
-        mappingReader.search(
+        mappingReader.find(
             new MappingQuery(
                 new MappingFilter.Builder()
                     .mappingKey(randomizedMapping.mappingKey())

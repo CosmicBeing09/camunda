@@ -37,12 +37,12 @@ public class AuthorizationIT {
 
   @TestTemplate
   public void shouldSaveAndFindByKey(final CamundaRdbmsTestApplication testApplication) {
-    final RdbmsService rdbmsService = testApplication.getRdbmsService();
-    final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final AuthorizationReader authorizationReader = rdbmsService.getAuthorizationReader();
+    final RdbmsService svc = testApplication.getRdbmsService();
+    final RdbmsWriter writer = svc.createWriter(PARTITION_ID);
+    final AuthorizationReader authorizationReader = svc.getAuthorizationReader();
 
     final var authorization = AuthorizationFixtures.createRandomized(b -> b);
-    createAndSaveAuthorization(rdbmsWriter, authorization);
+    createAndSaveAuthorization(writer, authorization);
 
     final var instance =
         authorizationReader
@@ -205,7 +205,7 @@ public class AuthorizationIT {
                 b ->
                     b.filter(f -> f.ownerType("ITEST"))
                         .sort(sort)
-                        .page(p -> p.searchAfter(firstPage.searchAfterCursor()))));
+                        .page(p -> p.after(firstPage.afterCursor()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(5);

@@ -42,7 +42,7 @@ public class MappingSortIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimName(claimName).build(),
                     MappingSort.of(b -> b.claimName().asc()),
@@ -64,7 +64,7 @@ public class MappingSortIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimName(claimName).build(),
                     MappingSort.of(b -> b.claimName().desc()),
@@ -86,7 +86,7 @@ public class MappingSortIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimName(claimName).build(),
                     MappingSort.of(b -> b.claimName().asc()),
@@ -109,7 +109,7 @@ public class MappingSortIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().claimName(claimName).build(),
                     MappingSort.of(b -> b.claimName().desc()),
@@ -131,7 +131,7 @@ public class MappingSortIT {
     final var searchResult =
         rdbmsService
             .getMappingReader()
-            .search(
+            .find(
                 new MappingQuery(
                     new MappingFilter.Builder().name(name).build(),
                     MappingSort.of(b -> b.name().desc()),

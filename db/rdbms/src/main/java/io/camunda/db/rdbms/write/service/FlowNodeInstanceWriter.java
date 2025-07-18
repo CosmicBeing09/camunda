@@ -13,7 +13,7 @@ import io.camunda.db.rdbms.sql.FlowNodeInstanceMapper.UpdateIncidentDto;
 import io.camunda.db.rdbms.sql.HistoryCleanupMapper;
 import io.camunda.db.rdbms.sql.HistoryCleanupMapper.CleanupHistoryDto;
 import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel;
-import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel.FlowNodeInstanceDbModelBuilder;
+import io.camunda.db.rdbms.write.domain.FlowNodeInstanceDbModel.Builder;
 import io.camunda.db.rdbms.write.queue.ContextType;
 import io.camunda.db.rdbms.write.queue.ExecutionQueue;
 import io.camunda.db.rdbms.write.queue.QueueItem;
@@ -39,7 +39,7 @@ public class FlowNodeInstanceWriter {
         new QueueItem(
             ContextType.FLOW_NODE,
             WriteStatementType.INSERT,
-            flowNode.flowNodeInstanceKey(),
+            flowNode.key(),
             "io.camunda.db.rdbms.sql.FlowNodeInstanceMapper.insert",
             flowNode));
   }
@@ -49,7 +49,7 @@ public class FlowNodeInstanceWriter {
         new QueueItem(
             ContextType.FLOW_NODE,
             WriteStatementType.UPDATE,
-            flowNode.flowNodeInstanceKey(),
+            flowNode.key(),
             "io.camunda.db.rdbms.sql.FlowNodeInstanceMapper.update",
             flowNode));
   }
@@ -140,7 +140,7 @@ public class FlowNodeInstanceWriter {
 
   private boolean mergeToQueue(
       final long key,
-      final Function<FlowNodeInstanceDbModelBuilder, FlowNodeInstanceDbModelBuilder>
+      final Function<Builder, Builder>
           mergeFunction) {
     return executionQueue.tryMergeWithExistingQueueItem(
         new UpsertMerger<>(

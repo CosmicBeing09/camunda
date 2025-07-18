@@ -70,8 +70,8 @@ public class DecisionInstanceSpecificFilterIT {
         b ->
             b.state(DecisionInstanceState.UNSPECIFIED)
                 .decisionType(DecisionDefinitionType.UNSPECIFIED)
-                .decisionDefinitionKey(decisionDefinition.decisionDefinitionKey())
-                .decisionDefinitionId(decisionDefinition.decisionDefinitionId()));
+                .decisionDefinitionKey(decisionDefinition.key())
+                .decisionDefinitionId(decisionDefinition.id()));
   }
 
   @ParameterizedTest
@@ -98,8 +98,8 @@ public class DecisionInstanceSpecificFilterIT {
                     .processDefinitionKey(124L)
                     .state(DecisionInstanceState.EVALUATED)
                     .decisionType(DecisionDefinitionType.DECISION_TABLE)
-                    .decisionDefinitionKey(decisionDefinition.decisionDefinitionKey())
-                    .decisionDefinitionId(decisionDefinition.decisionDefinitionId())
+                    .decisionDefinitionKey(decisionDefinition.key())
+                    .decisionDefinitionId(decisionDefinition.id())
                     .evaluationFailure("failure-42")
                     .result("result-42")));
 

@@ -14,7 +14,7 @@ import java.time.OffsetDateTime;
 import java.util.function.Function;
 
 public record FlowNodeInstanceDbModel(
-    Long flowNodeInstanceKey,
+    Long key,
     Long processInstanceKey,
     Long processDefinitionKey,
     String processDefinitionId,
@@ -38,8 +38,8 @@ public record FlowNodeInstanceDbModel(
           builderFunction) {
     return builderFunction
         .apply(
-            new FlowNodeInstanceDbModelBuilder()
-                .flowNodeInstanceKey(flowNodeInstanceKey)
+            new Builder()
+                .flowNodeInstanceKey(key)
                 .processInstanceKey(processInstanceKey())
                 .processDefinitionKey(processDefinitionKey)
                 .processDefinitionId(processDefinitionId)
@@ -58,7 +58,7 @@ public record FlowNodeInstanceDbModel(
         .build();
   }
 
-  public static class FlowNodeInstanceDbModelBuilder
+  public static class Builder
       implements ObjectBuilder<FlowNodeInstanceDbModel> {
 
     private Long flowNodeInstanceKey;
@@ -79,60 +79,60 @@ public record FlowNodeInstanceDbModel(
     private OffsetDateTime historyCleanupDate;
 
     // Public constructor to initialize the builder
-    public FlowNodeInstanceDbModelBuilder() {}
+    public Builder() {}
 
     // Builder methods for each field
-    public FlowNodeInstanceDbModelBuilder flowNodeInstanceKey(final Long key) {
+    public Builder flowNodeInstanceKey(final Long key) {
       flowNodeInstanceKey = key;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder processInstanceKey(final Long processInstanceKey) {
+    public Builder processInstanceKey(final Long processInstanceKey) {
       this.processInstanceKey = processInstanceKey;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder processDefinitionKey(final Long processDefinitionKey) {
+    public Builder processDefinitionKey(final Long processDefinitionKey) {
       this.processDefinitionKey = processDefinitionKey;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder startDate(final OffsetDateTime startDate) {
+    public Builder startDate(final OffsetDateTime startDate) {
       this.startDate = startDate;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder endDate(final OffsetDateTime endDate) {
+    public Builder endDate(final OffsetDateTime endDate) {
       this.endDate = endDate;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder flowNodeId(final String flowNodeId) {
+    public Builder flowNodeId(final String flowNodeId) {
       this.flowNodeId = flowNodeId;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder flowNodeName(final String flowNodeName) {
+    public Builder flowNodeName(final String flowNodeName) {
       this.flowNodeName = flowNodeName;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder treePath(final String treePath) {
+    public Builder treePath(final String treePath) {
       this.treePath = treePath;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder type(final FlowNodeType type) {
+    public Builder type(final FlowNodeType type) {
       this.type = type;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder state(final FlowNodeState state) {
+    public Builder state(final FlowNodeState state) {
       this.state = state;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder incidentKey(final Long incidentKey) {
+    public Builder incidentKey(final Long incidentKey) {
       this.incidentKey = incidentKey;
       return this;
     }
@@ -141,28 +141,28 @@ public record FlowNodeInstanceDbModel(
       return numSubprocessIncidents;
     }
 
-    public FlowNodeInstanceDbModelBuilder numSubprocessIncidents(
+    public Builder numSubprocessIncidents(
         final Long numSubprocessIncidents) {
       this.numSubprocessIncidents = numSubprocessIncidents;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder processDefinitionId(final String bpmnProcessId) {
+    public Builder processDefinitionId(final String bpmnProcessId) {
       processDefinitionId = bpmnProcessId;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder tenantId(final String tenantId) {
+    public Builder tenantId(final String tenantId) {
       this.tenantId = tenantId;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder partitionId(final int partitionId) {
+    public Builder partitionId(final int partitionId) {
       this.partitionId = partitionId;
       return this;
     }
 
-    public FlowNodeInstanceDbModelBuilder historyCleanupDate(final OffsetDateTime value) {
+    public Builder historyCleanupDate(final OffsetDateTime value) {
       historyCleanupDate = value;
       return this;
     }

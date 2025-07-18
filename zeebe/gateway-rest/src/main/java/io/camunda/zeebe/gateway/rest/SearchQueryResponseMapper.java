@@ -408,8 +408,8 @@ public final class SearchQueryResponseMapper {
 
     return new SearchQueryPageResponse()
         .totalItems(result.total())
-        .searchBeforeCursor(result.searchBeforeCursor())
-        .searchAfterCursor(result.searchAfterCursor());
+        .searchBeforeCursor(result.beforeCursor())
+        .searchAfterCursor(result.afterCursor());
   }
 
   private static List<ProcessDefinitionResult> toProcessDefinitions(
