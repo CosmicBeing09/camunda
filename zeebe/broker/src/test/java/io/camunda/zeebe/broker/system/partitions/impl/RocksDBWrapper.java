@@ -27,13 +27,13 @@ public final class RocksDBWrapper {
   }
 
   public int getInt(final String key) {
-    this.key.wrapString(key);
+    this.key.recordStringContent(key);
     final DbLong zbLong = defaultColumnFamily.get(this.key);
     return zbLong != null ? (int) zbLong.getValue() : -1;
   }
 
   public void putInt(final String key, final int value) {
-    this.key.wrapString(key);
+    this.key.recordStringContent(key);
     this.value.recordValue(value);
     defaultColumnFamily.upsert(this.key, this.value);
   }

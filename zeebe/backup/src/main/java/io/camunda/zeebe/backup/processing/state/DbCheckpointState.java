@@ -23,7 +23,7 @@ public final class DbCheckpointState implements CheckpointState {
   public DbCheckpointState(
       final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     checkpointInfoKey = new DbString();
-    checkpointInfoKey.wrapString(CHECKPOINT_KEY);
+    checkpointInfoKey.recordStringContent(CHECKPOINT_KEY);
     checkpointColumnFamily =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.DEFAULT, transactionContext, checkpointInfoKey, checkpointInfo);

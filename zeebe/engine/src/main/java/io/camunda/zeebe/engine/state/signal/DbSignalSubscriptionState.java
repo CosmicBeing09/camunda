@@ -102,8 +102,8 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
       final DirectBuffer signalName,
       final String tenantId,
       final SignalSubscriptionVisitor visitor) {
-    tenantIdKey.wrapString(tenantId);
-    this.signalName.wrapBuffer(signalName);
+    tenantIdKey.recordStringContent(tenantId);
+    this.signalName.recordBufferContent(signalName);
     signalNameAndSubscriptionKeyColumnFamily.whileEqualPrefix(
         tenantAwareSignalName,
         (key, value) -> {
@@ -129,8 +129,8 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
     subscriptionKeyAndSignalNameColumnFamily.whileEqualPrefix(
         subscriptionKey,
         (key, value) -> {
-          signalName.wrapBuffer(key.second().wrappedKey().getBuffer());
-          tenantIdKey.wrapBuffer(key.second().tenantKey().getBuffer());
+          signalName.recordBufferContent(key.second().wrappedKey().getBuffer());
+          tenantIdKey.recordBufferContent(key.second().tenantKey().getBuffer());
           final var subscription =
               signalNameAndSubscriptionKeyColumnFamily.get(tenantAwareSignalNameAndSubscriptionKey);
 
@@ -148,7 +148,7 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
   private void wrapSubscriptionKeys(
       final long key, final DirectBuffer signalName, final String tenantId) {
     subscriptionKey.recordValue(key);
-    this.signalName.wrapBuffer(signalName);
-    tenantIdKey.wrapString(tenantId);
+    this.signalName.recordBufferContent(signalName);
+    tenantIdKey.recordStringContent(tenantId);
   }
 }

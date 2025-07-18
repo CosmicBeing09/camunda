@@ -32,7 +32,7 @@ public class DbRoleState implements MutableRoleState {
 
   @Override
   public void create(final RoleRecord roleRecord) {
-    roleId.wrapString(roleRecord.getRoleId());
+    roleId.recordStringContent(roleRecord.getRoleId());
     persistedRole.from(roleRecord);
     roleColumnFamily.insert(roleId, persistedRole);
   }
@@ -40,7 +40,7 @@ public class DbRoleState implements MutableRoleState {
   @Override
   public void update(final RoleRecord roleRecord) {
     // retrieve record from the state
-    roleId.wrapString(roleRecord.getRoleId());
+    roleId.recordStringContent(roleRecord.getRoleId());
     final var persistedRole = roleColumnFamily.get(roleId);
     persistedRole.from(roleRecord);
     roleColumnFamily.update(roleId, persistedRole);
@@ -48,13 +48,13 @@ public class DbRoleState implements MutableRoleState {
 
   @Override
   public void delete(final RoleRecord roleRecord) {
-    roleId.wrapString(roleRecord.getRoleId());
+    roleId.recordStringContent(roleRecord.getRoleId());
     roleColumnFamily.deleteExisting(roleId);
   }
 
   @Override
   public Optional<PersistedRole> getRole(final String roleId) {
-    this.roleId.wrapString(roleId);
+    this.roleId.recordStringContent(roleId);
     final var persistedRole = roleColumnFamily.get(this.roleId);
     return Optional.ofNullable(persistedRole);
   }

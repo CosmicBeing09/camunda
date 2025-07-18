@@ -161,7 +161,7 @@ final class ForeignKeyCheckerTest {
 
     final var cf1Key = new DbCompositeKey<>(new DbLong(), new DbString());
     cf1Key.first().recordValue(1);
-    cf1Key.second().wrapString("suffix");
+    cf1Key.second().recordStringContent("suffix");
     final var cf1 =
         db.createColumnFamily(
             TestColumnFamilies.TEST_COLUMN_FAMILY, txContext, cf1Key, DbNil.INSTANCE);
@@ -192,7 +192,7 @@ final class ForeignKeyCheckerTest {
 
     final var cf1Key = new DbCompositeKey<>(new DbLong(), new DbString());
     cf1Key.first().recordValue(1);
-    cf1Key.second().wrapString("suffix");
+    cf1Key.second().recordStringContent("suffix");
     final var cf1 =
         db.createColumnFamily(
             TestColumnFamilies.TEST_COLUMN_FAMILY, txContext, cf1Key, DbNil.INSTANCE);

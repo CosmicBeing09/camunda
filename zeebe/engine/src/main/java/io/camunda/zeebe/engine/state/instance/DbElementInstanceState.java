@@ -241,8 +241,8 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       final DirectBuffer gatewayElementId,
       final DirectBuffer sequenceFlowElementId) {
     this.flowScopeKey.recordValue(flowScopeKey);
-    this.gatewayElementId.wrapBuffer(gatewayElementId);
-    this.sequenceFlowElementId.wrapBuffer(sequenceFlowElementId);
+    this.gatewayElementId.recordBufferContent(gatewayElementId);
+    this.sequenceFlowElementId.recordBufferContent(sequenceFlowElementId);
 
     final var number = numberOfTakenSequenceFlowsColumnFamily.get(numberOfTakenSequenceFlowsKey);
 
@@ -260,7 +260,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   public void decrementNumberOfTakenSequenceFlows(
       final long flowScopeKey, final DirectBuffer gatewayElementId) {
     this.flowScopeKey.recordValue(flowScopeKey);
-    this.gatewayElementId.wrapBuffer(gatewayElementId);
+    this.gatewayElementId.recordBufferContent(gatewayElementId);
 
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(
         flowScopeKeyAndElementId,
@@ -281,8 +281,8 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       final DirectBuffer gatewayElementId,
       final DirectBuffer sequenceFlowElementId) {
     this.flowScopeKey.recordValue(flowScopeKey);
-    this.gatewayElementId.wrapBuffer(gatewayElementId);
-    this.sequenceFlowElementId.wrapBuffer(sequenceFlowElementId);
+    this.gatewayElementId.recordBufferContent(gatewayElementId);
+    this.sequenceFlowElementId.recordBufferContent(sequenceFlowElementId);
 
     final var number = numberOfTakenSequenceFlowsColumnFamily.get(numberOfTakenSequenceFlowsKey);
 
@@ -387,7 +387,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   public int getNumberOfTakenSequenceFlows(
       final long flowScopeKey, final DirectBuffer gatewayElementId) {
     this.flowScopeKey.recordValue(flowScopeKey);
-    this.gatewayElementId.wrapBuffer(gatewayElementId);
+    this.gatewayElementId.recordBufferContent(gatewayElementId);
 
     final var count = new MutableInteger(0);
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(
@@ -417,7 +417,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
   public Set<DirectBuffer> getTakenSequenceFlows(
       final long flowScopeKey, final DirectBuffer gatewayElementId) {
     this.flowScopeKey.recordValue(flowScopeKey);
-    this.gatewayElementId.wrapBuffer(gatewayElementId);
+    this.gatewayElementId.recordBufferContent(gatewayElementId);
 
     final Set<DirectBuffer> takenSequenceFlows = new LinkedHashSet<>();
     numberOfTakenSequenceFlowsColumnFamily.whileEqualPrefix(

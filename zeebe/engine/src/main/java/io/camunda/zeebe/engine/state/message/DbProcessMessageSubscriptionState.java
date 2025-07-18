@@ -225,7 +225,7 @@ public final class DbProcessMessageSubscriptionState
   private void wrapSubscriptionKeys(
       final long elementInstanceKey, final DirectBuffer messageName, final String tenantId) {
     this.elementInstanceKey.recordValue(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
-    tenantIdKey.wrapString(tenantId);
+    this.messageName.recordBufferContent(messageName);
+    tenantIdKey.recordStringContent(tenantId);
   }
 }

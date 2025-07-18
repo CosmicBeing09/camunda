@@ -60,9 +60,9 @@ public class DbMappingState implements MutableMappingState {
     final var claimName = mappingRecord.getClaimName();
     final var value = mappingRecord.getClaimValue();
 
-    this.mappingId.wrapString(mappingId);
-    this.claimName.wrapString(claimName);
-    claimValue.wrapString(value);
+    this.mappingId.recordStringContent(mappingId);
+    this.claimName.recordStringContent(claimName);
+    claimValue.recordStringContent(value);
     persistedMapping.setClaimName(claimName);
     persistedMapping.setClaimValue(value);
     persistedMapping.setName(name);
@@ -75,21 +75,21 @@ public class DbMappingState implements MutableMappingState {
 
   @Override
   public void update(final MappingRecord mappingRecord) {
-    mappingId.wrapString(mappingRecord.getMappingId());
+    mappingId.recordStringContent(mappingRecord.getMappingId());
     get(mappingRecord.getMappingId())
         .ifPresentOrElse(
             persistedMapping -> {
               // remove old record from mapping by claim
-              claimName.wrapString(persistedMapping.getClaimName());
-              claimValue.wrapString(persistedMapping.getClaimValue());
+              claimName.recordStringContent(persistedMapping.getClaimName());
+              claimValue.recordStringContent(persistedMapping.getClaimValue());
               mappingColumnFamily.deleteExisting(claim);
 
               persistedMapping.setName(mappingRecord.getName());
               persistedMapping.setClaimName(mappingRecord.getClaimName());
               persistedMapping.setClaimValue(mappingRecord.getClaimValue());
 
-              claimName.wrapString(persistedMapping.getClaimName());
-              claimValue.wrapString(persistedMapping.getClaimValue());
+              claimName.recordStringContent(persistedMapping.getClaimName());
+              claimValue.recordStringContent(persistedMapping.getClaimValue());
               mappingColumnFamily.insert(claim, persistedMapping);
               claimByIdColumnFamily.update(mappingId, fkClaim);
             },
@@ -106,9 +106,9 @@ public class DbMappingState implements MutableMappingState {
     get(id)
         .ifPresentOrElse(
             persistedMapping -> {
-              mappingId.wrapString(persistedMapping.getMappingId());
-              claimName.wrapString(persistedMapping.getClaimName());
-              claimValue.wrapString(persistedMapping.getClaimValue());
+              mappingId.recordStringContent(persistedMapping.getMappingId());
+              claimName.recordStringContent(persistedMapping.getClaimName());
+              claimValue.recordStringContent(persistedMapping.getClaimValue());
               mappingColumnFamily.deleteExisting(claim);
               claimByIdColumnFamily.deleteExisting(mappingId);
             },
@@ -122,7 +122,7 @@ public class DbMappingState implements MutableMappingState {
 
   @Override
   public Optional<PersistedMapping> get(final String id) {
-    mappingId.wrapString(id);
+    mappingId.recordStringContent(id);
     final var fk = claimByIdColumnFamily.get(mappingId);
     if (fk != null) {
       return Optional.of(mappingColumnFamily.get(fk.inner()));
@@ -132,8 +132,8 @@ public class DbMappingState implements MutableMappingState {
 
   @Override
   public Optional<PersistedMapping> get(final String claimName, final String claimValue) {
-    this.claimName.wrapString(claimName);
-    this.claimValue.wrapString(claimValue);
+    this.claimName.recordStringContent(claimName);
+    this.claimValue.recordStringContent(claimValue);
     final var persistedMapping = mappingColumnFamily.get(claim);
 
     if (persistedMapping == null) {

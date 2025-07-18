@@ -74,8 +74,8 @@ public final class DbMessageStartEventSubscriptionState
   public void put(final long key, final MessageStartEventSubscriptionRecord subscription) {
     messageStartEventSubscription.setKey(key).setRecord(subscription);
 
-    tenantIdKey.wrapString(subscription.getTenantId());
-    messageName.wrapBuffer(subscription.getMessageNameBuffer());
+    tenantIdKey.recordStringContent(subscription.getTenantId());
+    messageName.recordBufferContent(subscription.getMessageNameBuffer());
     processDefinitionKey.recordValue(subscription.getProcessDefinitionKey());
     subscriptionsColumnFamily.upsert(
         messageNameAndProcessDefinitionKey, messageStartEventSubscription);
@@ -86,9 +86,9 @@ public final class DbMessageStartEventSubscriptionState
   @Override
   public void remove(
       final long processDefinitionKey, final DirectBuffer messageName, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.recordStringContent(tenantId);
     this.processDefinitionKey.recordValue(processDefinitionKey);
-    this.messageName.wrapBuffer(messageName);
+    this.messageName.recordBufferContent(messageName);
 
     subscriptionsColumnFamily.deleteExisting(messageNameAndProcessDefinitionKey);
     subscriptionsOfProcessDefinitionKeyColumnFamily.deleteExisting(
@@ -97,8 +97,8 @@ public final class DbMessageStartEventSubscriptionState
 
   @Override
   public boolean exists(final MessageStartEventSubscriptionRecord subscription) {
-    tenantIdKey.wrapString(subscription.getTenantId());
-    messageName.wrapBuffer(subscription.getMessageNameBuffer());
+    tenantIdKey.recordStringContent(subscription.getTenantId());
+    messageName.recordBufferContent(subscription.getMessageNameBuffer());
     processDefinitionKey.recordValue(subscription.getProcessDefinitionKey());
 
     return subscriptionsColumnFamily.exists(messageNameAndProcessDefinitionKey);
@@ -110,8 +110,8 @@ public final class DbMessageStartEventSubscriptionState
       final DirectBuffer messageName,
       final MessageStartEventSubscriptionVisitor visitor) {
 
-    tenantIdKey.wrapString(tenantId);
-    this.messageName.wrapBuffer(messageName);
+    tenantIdKey.recordStringContent(tenantId);
+    this.messageName.recordBufferContent(messageName);
     subscriptionsColumnFamily.whileEqualPrefix(
         tenantAwareMessageName,
         (key, value) -> {
@@ -127,7 +127,7 @@ public final class DbMessageStartEventSubscriptionState
     subscriptionsOfProcessDefinitionKeyColumnFamily.whileEqualPrefix(
         this.processDefinitionKey,
         (key, value) -> {
-          tenantIdKey.wrapBuffer(key.second().tenantKey().getBuffer());
+          tenantIdKey.recordBufferContent(key.second().tenantKey().getBuffer());
           final var subscription =
               subscriptionsColumnFamily.get(messageNameAndProcessDefinitionKey);
 

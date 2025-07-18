@@ -95,7 +95,7 @@ public final class DbDeploymentState implements MutableDeploymentState {
 
   @Override
   public void markAllDeploymentsAsStored() {
-    deploymentsRecreatedKey.wrapString(DEPLOYMENTS_RECREATED_KEY);
+    deploymentsRecreatedKey.recordStringContent(DEPLOYMENTS_RECREATED_KEY);
     deploymentsRecreatedColumnFamily.insert(deploymentsRecreatedKey, DbNil.INSTANCE);
   }
 
@@ -123,7 +123,7 @@ public final class DbDeploymentState implements MutableDeploymentState {
 
   @Override
   public boolean hasStoredAllDeployments() {
-    deploymentsRecreatedKey.wrapString(DEPLOYMENTS_RECREATED_KEY);
+    deploymentsRecreatedKey.recordStringContent(DEPLOYMENTS_RECREATED_KEY);
     return deploymentsRecreatedColumnFamily.exists(deploymentsRecreatedKey);
   }
 

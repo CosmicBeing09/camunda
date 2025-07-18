@@ -92,7 +92,7 @@ public class LegacyJobState {
   private void makeJobActivatable(final DirectBuffer type, final long key) {
     EnsureUtil.ensureNotNullOrEmpty("type", type);
 
-    jobTypeKey.wrapBuffer(type);
+    jobTypeKey.recordBufferContent(type);
 
     jobKey.recordValue(key);
     // Need to upsert here because jobs can be marked as failed (and thus made activatable)

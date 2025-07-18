@@ -31,7 +31,7 @@ public class DbClockState implements MutableClockState {
   @Override
   public MutableClockState pinAt(final long epochMillis) {
     value.pinAt(epochMillis);
-    key.wrapString(KEY);
+    key.recordStringContent(KEY);
     columnFamily.upsert(key, value);
     return this;
   }
@@ -39,7 +39,7 @@ public class DbClockState implements MutableClockState {
   @Override
   public MutableClockState offsetBy(final long offsetMillis) {
     value.offsetBy(offsetMillis);
-    key.wrapString(KEY);
+    key.recordStringContent(KEY);
     columnFamily.upsert(key, value);
     return this;
   }
@@ -47,14 +47,14 @@ public class DbClockState implements MutableClockState {
   @Override
   public MutableClockState reset() {
     value.reset();
-    key.wrapString(KEY);
+    key.recordStringContent(KEY);
     columnFamily.upsert(key, value);
     return this;
   }
 
   @Override
   public Modification getModification() {
-    key.wrapString(KEY);
+    key.recordStringContent(KEY);
     final var modification = columnFamily.get(key);
 
     if (modification == null) {

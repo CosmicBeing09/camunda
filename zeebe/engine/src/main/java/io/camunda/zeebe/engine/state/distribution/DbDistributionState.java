@@ -156,7 +156,7 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public void enqueueCommandDistribution(
       final String queue, final long distributionKey, final int partition) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     this.distributionKey.recordValue(distributionKey);
     partitionKey.wrapInt(partition);
     queuedCommandDistributionColumnFamily.insert(queuedDistributionKey, DbNil.INSTANCE);
@@ -165,7 +165,7 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public void removeQueuedDistribution(
       final String queue, final int partition, final long distributionKey) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     partitionKey.wrapInt(partition);
     this.distributionKey.recordValue(distributionKey);
     queuedCommandDistributionColumnFamily.deleteExisting(queuedDistributionKey);
@@ -174,7 +174,7 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public void addContinuationCommand(
       final long continuationKey, final CommandDistributionRecord record) {
-    queueId.wrapString(record.getQueueId());
+    queueId.recordStringContent(record.getQueueId());
     this.continuationKey.recordValue(continuationKey);
 
     continuationCommandColumnFamily.insert(
@@ -183,7 +183,7 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public void removeContinuationCommand(final long continuationKey, final String queue) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     this.continuationKey.recordValue(continuationKey);
 
     continuationCommandColumnFamily.deleteExisting(continuationByQueueKey);
@@ -326,7 +326,7 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public Optional<Long> getNextQueuedDistributionKey(final String queue, final int partition) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     partitionKey.wrapInt(partition);
     final var nextDistributionKey = new MutableReference<Long>(null);
     queuedCommandDistributionColumnFamily.whileEqualPrefix(
@@ -348,7 +348,7 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public boolean hasQueuedDistributions(final String queue) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     final var hasQueuedDistributions = new MutableBoolean();
     queuedCommandDistributionColumnFamily.whileEqualPrefix(
         queueId,
@@ -362,7 +362,7 @@ public class DbDistributionState implements MutableDistributionState {
   @Override
   public void forEachContinuationCommand(
       final String queue, final ContinuationCommandVisitor consumer) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     continuationCommandColumnFamily.whileEqualPrefix(
         queueId,
         (key, value) -> {
@@ -374,7 +374,7 @@ public class DbDistributionState implements MutableDistributionState {
 
   @Override
   public CommandDistributionRecord getContinuationRecord(final String queue, final long key) {
-    queueId.wrapString(queue);
+    queueId.recordStringContent(queue);
     continuationKey.recordValue(key);
 
     final var persistedCommandDistribution =

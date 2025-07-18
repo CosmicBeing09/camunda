@@ -194,6 +194,6 @@ public final class LegacyDbProcessMessageSubscriptionState {
 
   private void wrapSubscriptionKeys(final long elementInstanceKey, final DirectBuffer messageName) {
     this.elementInstanceKey.recordValue(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
+    this.messageName.recordBufferContent(messageName);
   }
 }

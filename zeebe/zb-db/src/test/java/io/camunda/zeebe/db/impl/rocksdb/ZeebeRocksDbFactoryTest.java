@@ -140,8 +140,8 @@ final class ZeebeRocksDbFactoryTest {
     final var factory = DefaultZeebeDbFactory.<DefaultColumnFamily>getDefaultFactory();
     final var key = new DbString();
     final var value = new DbString();
-    key.wrapString("foo");
-    value.wrapString("bar");
+    key.recordStringContent("foo");
+    value.recordStringContent("bar");
 
     try (final var db = factory.createDb(path)) {
       final var column =
@@ -189,8 +189,8 @@ final class ZeebeRocksDbFactoryTest {
     final var factory = DefaultZeebeDbFactory.<DefaultColumnFamily>getDefaultFactory();
     final var key = new DbString();
     final var value = new DbString();
-    key.wrapString("foo");
-    value.wrapString("bar");
+    key.recordStringContent("foo");
+    value.recordStringContent("bar");
 
     try (final var db = factory.createDb(dbPath)) {
       final var column =

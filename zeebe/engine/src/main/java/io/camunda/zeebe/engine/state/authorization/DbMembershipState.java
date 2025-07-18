@@ -114,7 +114,7 @@ public final class DbMembershipState implements MutableMembershipState {
 
     public void setAll(final EntityType entityType, final String entityId) {
       first().setValue(entityType);
-      second().wrapString(entityId);
+      second().recordStringContent(entityId);
     }
 
     public String id() {
@@ -139,7 +139,7 @@ public final class DbMembershipState implements MutableMembershipState {
 
     void setAll(final RelationType relationType, final String relationId) {
       first().setValue(relationType);
-      second().wrapString(relationId);
+      second().recordStringContent(relationId);
     }
 
     public String id() {

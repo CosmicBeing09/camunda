@@ -124,7 +124,7 @@ public class DbVariableState implements MutableVariableState {
 
     this.scopeKey.recordValue(scopeKey);
     variableNameView.wrap(name, nameOffset, nameLength);
-    variableName.wrapBuffer(variableNameView);
+    variableName.recordBufferContent(variableNameView);
 
     variablesColumnFamily.upsert(scopeKeyVariableNameKey, newVariable);
   }
@@ -348,7 +348,7 @@ public class DbVariableState implements MutableVariableState {
       final long scopeKey, final DirectBuffer name, final int nameOffset, final int nameLength) {
     this.scopeKey.recordValue(scopeKey);
     variableNameView.wrap(name, nameOffset, nameLength);
-    variableName.wrapBuffer(variableNameView);
+    variableName.recordBufferContent(variableNameView);
 
     return variablesColumnFamily.get(scopeKeyVariableNameKey);
   }
