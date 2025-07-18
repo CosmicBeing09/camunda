@@ -8,11 +8,11 @@
 package io.camunda.zeebe.engine.state.migration.to_1_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.state.migration.TemporaryVariables;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import org.agrona.DirectBuffer;
 
 public class LegacyDbTemporaryVariablesState {
@@ -22,12 +22,12 @@ public class LegacyDbTemporaryVariablesState {
   private final ColumnFamily<DbLong, TemporaryVariables> temporaryVariableColumnFamily;
 
   public LegacyDbTemporaryVariablesState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     temporaryVariablesKeyInstance = new DbLong();
     temporaryVariables = new TemporaryVariables();
     temporaryVariableColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.TEMPORARY_VARIABLE_STORE,
+            ColumnFamilies.TEMPORARY_VARIABLE_STORE,
             transactionContext,
             temporaryVariablesKeyInstance,
             temporaryVariables);

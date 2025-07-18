@@ -9,9 +9,9 @@ package io.camunda.zeebe.engine.processing.bpmn.container;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContainerProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
@@ -26,10 +26,10 @@ public final class EventSubProcessProcessor
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
   private final BpmnVariableMappingBehavior variableMappingBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
 
   public EventSubProcessProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     stateBehavior = bpmnBehaviors.stateBehavior();
     this.stateTransitionBehavior = stateTransitionBehavior;

@@ -8,14 +8,14 @@
 package io.camunda.zeebe.engine.state.routing;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbInt;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -35,13 +35,13 @@ public final class DbRoutingState implements MutableRoutingState {
   private final PersistedRoutingInfo desiredRoutingInfo = new PersistedRoutingInfo();
 
   public DbRoutingState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     columnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ROUTING, transactionContext, key, new PersistedRoutingInfo());
+            ColumnFamilies.ROUTING, transactionContext, key, new PersistedRoutingInfo());
     bootstrappedAtColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.BOOTSTRAPPED_AT, transactionContext, partitionIdKey, new DbLong());
+            ColumnFamilies.BOOTSTRAPPED_AT, transactionContext, partitionIdKey, new DbLong());
   }
 
   @Override

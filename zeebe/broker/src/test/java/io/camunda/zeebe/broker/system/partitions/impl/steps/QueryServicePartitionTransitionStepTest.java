@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 
 import io.atomix.raft.RaftServer.Role;
 import io.camunda.zeebe.broker.system.partitions.TestPartitionTransitionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.QueryService;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +25,7 @@ class QueryServicePartitionTransitionStepTest {
 
   TestPartitionTransitionContext transitionContext = new TestPartitionTransitionContext();
 
-  private final ZeebeDb zeebeDb = mock(ZeebeDb.class);
+  private final GenericDb zeebeDb = mock(GenericDb.class);
   private final QueryService queryServiceFromPrevRole = mock(QueryService.class);
 
   private QueryServicePartitionTransitionStep step;

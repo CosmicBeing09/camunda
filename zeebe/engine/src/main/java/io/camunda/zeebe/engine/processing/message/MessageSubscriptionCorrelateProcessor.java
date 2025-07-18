@@ -10,9 +10,9 @@ package io.camunda.zeebe.engine.processing.message;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.MessageCorrelationState;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
@@ -48,7 +48,7 @@ public final class MessageSubscriptionCorrelateProcessor
   private final MessageCorrelator messageCorrelator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
 
   public MessageSubscriptionCorrelateProcessor(
       final int partitionId,

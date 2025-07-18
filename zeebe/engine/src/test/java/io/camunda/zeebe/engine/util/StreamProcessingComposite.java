@@ -11,7 +11,7 @@ import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessorContext;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessorFactory;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.TestStreams.FluentLogWriter;
 import io.camunda.zeebe.engine.util.client.CommandWriter;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
@@ -44,7 +44,7 @@ public class StreamProcessingComposite implements CommandWriter {
   private final TestStreams streams;
   private final int partitionId;
   private final ZeebeDbFactory<?> zeebeDbFactory;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private final WriteActor writeActor = new WriteActor();
 
   public StreamProcessingComposite(
@@ -151,11 +151,11 @@ public class StreamProcessingComposite implements CommandWriter {
     return streams.getMeterRegistry(getLogName(partitionId));
   }
 
-  public MutableProcessingState getProcessingState() {
+  public MutableAsyncProcessingContext getProcessingState() {
     return processingState;
   }
 
-  public MutableProcessingState getProcessingState(final String streamName) {
+  public MutableAsyncProcessingContext getProcessingState(final String streamName) {
     return streams.getProcessingState(streamName);
   }
 

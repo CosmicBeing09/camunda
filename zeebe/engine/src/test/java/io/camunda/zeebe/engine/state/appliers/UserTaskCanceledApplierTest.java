@@ -10,10 +10,10 @@ package io.camunda.zeebe.engine.state.appliers;
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
 import org.assertj.core.api.Assertions;
@@ -24,13 +24,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskCanceledApplierTest {
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
   private UserTaskCanceledApplier userTaskCanceledApplier;
 
   /** Used for state assertions. */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;
@@ -38,7 +38,7 @@ public class UserTaskCanceledApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCanceledApplier = new UserTaskCanceledApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 
@@ -49,7 +49,7 @@ public class UserTaskCanceledApplierTest {
 
     // Initial state of the User Task
     final var initialState =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("initial_user"));
 
@@ -59,7 +59,7 @@ public class UserTaskCanceledApplierTest {
 
     // Simulate an update event with a change
     final var updateAttempt =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("update_user"))
             .setCandidateUsersChanged();
@@ -98,7 +98,7 @@ public class UserTaskCanceledApplierTest {
     final var userTaskKey = 1;
 
     // Initial state of the User Task
-    final var initialState = new UserTaskRecord().setUserTaskKey(userTaskKey);
+    final var initialState = new TaskRecord().setUserTaskKey(userTaskKey);
 
     // Apply initial task creation
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);

@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.deployment.model.element;
 
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.model.bpmn.util.time.Timer;
 import io.camunda.zeebe.util.Either;
@@ -45,7 +45,7 @@ public interface ExecutableCatchEvent extends ExecutableFlowElement {
     return true;
   }
 
-  BiFunction<ExpressionProcessor, Long, Either<Failure, Timer>> getTimerFactory();
+  BiFunction<ExpressionEvaluator, Long, Either<Failure, Timer>> getTimerFactory();
 
   ExecutableError getError();
 

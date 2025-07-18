@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEventElement;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
@@ -20,14 +20,14 @@ import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.EventTrigger;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
 
 public final class BpmnVariableMappingBehavior {
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
   private final VariableState variablesState;
   private final ElementInstanceState elementInstanceState;
   private final VariableBehavior variableBehavior;
@@ -36,7 +36,7 @@ public final class BpmnVariableMappingBehavior {
   private final EventTriggerBehavior eventTriggerBehavior;
 
   public BpmnVariableMappingBehavior(
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final ProcessingState processingState,
       final VariableBehavior variableBehavior,
       final EventTriggerBehavior eventTriggerBehavior) {
@@ -90,7 +90,7 @@ public final class BpmnVariableMappingBehavior {
    */
   public Either<Failure, Void> applyOutputMappings(
       final BpmnElementContext context, final ExecutableFlowNode element) {
-    final ProcessInstanceRecord record = context.getRecordValue();
+    final WorkflowInstanceRecord record = context.getRecordValue();
     final long elementInstanceKey = context.getElementInstanceKey();
     final long processDefinitionKey = record.getProcessDefinitionKey();
     final long processInstanceKey = record.getProcessInstanceKey();

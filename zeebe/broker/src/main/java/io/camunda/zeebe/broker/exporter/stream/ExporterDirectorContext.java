@@ -10,7 +10,7 @@ package io.camunda.zeebe.broker.exporter.stream;
 import io.camunda.zeebe.broker.exporter.repo.ExporterDescriptor;
 import io.camunda.zeebe.broker.exporter.stream.ExporterDirector.ExporterInitializationInfo;
 import io.camunda.zeebe.broker.system.partitions.PartitionMessagingService;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.logstreams.log.LogStream;
 import io.camunda.zeebe.stream.api.EventFilter;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -26,7 +26,7 @@ public final class ExporterDirectorContext {
   private String name;
   private LogStream logStream;
   private Map<ExporterDescriptor, ExporterInitializationInfo> descriptors;
-  private ZeebeDb zeebeDb;
+  private GenericDb zeebeDb;
   private PartitionMessagingService partitionMessagingService;
   private ExporterMode exporterMode = ExporterMode.ACTIVE; // per default we export records
   private Duration distributionInterval = DEFAULT_DISTRIBUTION_INTERVAL;
@@ -50,7 +50,7 @@ public final class ExporterDirectorContext {
     return descriptors;
   }
 
-  public ZeebeDb getZeebeDb() {
+  public GenericDb getZeebeDb() {
     return zeebeDb;
   }
 
@@ -99,7 +99,7 @@ public final class ExporterDirectorContext {
     return this;
   }
 
-  public ExporterDirectorContext zeebeDb(final ZeebeDb zeebeDb) {
+  public ExporterDirectorContext zeebeDb(final GenericDb zeebeDb) {
     this.zeebeDb = zeebeDb;
     return this;
   }

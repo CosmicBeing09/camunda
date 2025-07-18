@@ -8,7 +8,7 @@
 package io.camunda.zeebe.backup.processing;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.stream.api.scheduling.ProcessingScheduleService;
 
 /**
@@ -16,4 +16,4 @@ import io.camunda.zeebe.stream.api.scheduling.ProcessingScheduleService;
  * defined by the StreamProcessor. *
  */
 public record Context(
-    ZeebeDb zeebeDb, TransactionContext transactionContext, ProcessingScheduleService executor) {}
+    GenericDb zeebeDb, TransactionContext transactionContext, ProcessingScheduleService executor) {}

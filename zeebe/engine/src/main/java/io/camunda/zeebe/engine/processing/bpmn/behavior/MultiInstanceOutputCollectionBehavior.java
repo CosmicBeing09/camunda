@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMultiInstanceBody;
 import io.camunda.zeebe.msgpack.spec.MsgPackReader;
@@ -32,10 +32,10 @@ public final class MultiInstanceOutputCollectionBehavior {
   private final DirectBuffer updatedOutputCollectionBuffer = new UnsafeBuffer(0, 0);
 
   private final BpmnStateBehavior stateBehavior;
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
 
   MultiInstanceOutputCollectionBehavior(
-      final BpmnStateBehavior stateBehavior, final ExpressionProcessor expressionProcessor) {
+      final BpmnStateBehavior stateBehavior, final ExpressionEvaluator expressionProcessor) {
     this.stateBehavior = stateBehavior;
     this.expressionProcessor = expressionProcessor;
   }

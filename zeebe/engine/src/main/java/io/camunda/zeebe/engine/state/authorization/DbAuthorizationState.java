@@ -8,13 +8,13 @@
 package io.camunda.zeebe.engine.state.authorization;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableAuthorizationState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
@@ -48,7 +48,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
       authorizationKeysByOwnerColumnFamily;
 
   public DbAuthorizationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     ownerType = new DbString();
     ownerId = new DbString();
     resourceType = new DbString();
@@ -56,7 +56,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     ownerTypeOwnerIdAndResourceType = new DbCompositeKey<>(ownerTypeAndOwnerId, resourceType);
     permissionsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PERMISSIONS,
+            ColumnFamilies.PERMISSIONS,
             transactionContext,
             ownerTypeOwnerIdAndResourceType,
             new Permissions());
@@ -64,14 +64,14 @@ public class DbAuthorizationState implements MutableAuthorizationState {
     authorizationKey = new DbLong();
     authorizationByAuthorizationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.AUTHORIZATIONS,
+            ColumnFamilies.AUTHORIZATIONS,
             transactionContext,
             authorizationKey,
             new PersistedAuthorization());
 
     authorizationKeysByOwnerColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.AUTHORIZATION_KEYS_BY_OWNER,
+            ColumnFamilies.AUTHORIZATION_KEYS_BY_OWNER,
             transactionContext,
             ownerTypeAndOwnerId,
             new AuthorizationKeys());

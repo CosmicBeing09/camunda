@@ -19,11 +19,11 @@ import io.camunda.zeebe.broker.system.partitions.TestPartitionTransitionContext;
 import io.camunda.zeebe.db.AccessMetricsConfiguration;
 import io.camunda.zeebe.db.AccessMetricsConfiguration.Kind;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
 import io.camunda.zeebe.engine.state.migration.DbMigrationState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import java.nio.file.Path;
 import org.junit.jupiter.api.AutoClose;
@@ -36,13 +36,14 @@ public class MigrationTransitionStepTest {
 
   @TempDir Path tempDir;
   ZeebeRocksDbFactory<?> factory =
-      new ZeebeRocksDbFactory<ZbColumnFamilies>(
+      new ZeebeRocksDbFactory<ColumnFamilies>(
           new RocksDbConfiguration(),
           new ConsistencyChecksSettings(),
           new AccessMetricsConfiguration(Kind.NONE, 1),
           SimpleMeterRegistry::new);
 
-  @AutoClose ZeebeDb zeebeDb;
+  @AutoClose
+  GenericDb zeebeDb;
   TestPartitionTransitionContext context;
   DbMigrationState migrationState;
 

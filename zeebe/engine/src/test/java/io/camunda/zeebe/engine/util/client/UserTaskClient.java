@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.util.client;
 
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -42,7 +42,7 @@ public final class UserTaskClient {
               .withSourceRecordPosition(position)
               .getFirst();
 
-  private final UserTaskRecord userTaskRecord;
+  private final TaskRecord userTaskRecord;
   private final CommandWriter writer;
   private long processInstanceKey;
   private long userTaskKey = DEFAULT_KEY;
@@ -52,7 +52,7 @@ public final class UserTaskClient {
 
   public UserTaskClient(final CommandWriter writer) {
     this.writer = writer;
-    userTaskRecord = new UserTaskRecord();
+    userTaskRecord = new TaskRecord();
   }
 
   public UserTaskClient ofInstance(final long processInstanceKey) {
@@ -114,7 +114,7 @@ public final class UserTaskClient {
   }
 
   /**
-   * Adds a custom attribute to the {@code changedAttributes} list of the {@link UserTaskRecord}.
+   * Adds a custom attribute to the {@code changedAttributes} list of the {@link TaskRecord}.
    *
    * <p><strong>Intended use:</strong> This method is primarily intended for testing scenarios where
    * an unknown attribute is provided in the {@code changedAttributes} list. It allows simulating
@@ -136,11 +136,11 @@ public final class UserTaskClient {
   public UserTaskClient withAllAttributesChanged() {
     userTaskRecord.setChangedAttributes(
         List.of(
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.PRIORITY));
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.PRIORITY));
     return this;
   }
 
@@ -289,7 +289,7 @@ public final class UserTaskClient {
    * values.
    *
    * <p>This method uses the attributes set through the {@code with<AttributeName>()} methods to
-   * construct the {@link UserTaskRecord} with the appropriate changed attributes. Only explicitly
+   * construct the {@link TaskRecord} with the appropriate changed attributes. Only explicitly
    * set attributes will be included in the {@code changedAttributes} list, ensuring precise control
    * over which properties are updated.
    *

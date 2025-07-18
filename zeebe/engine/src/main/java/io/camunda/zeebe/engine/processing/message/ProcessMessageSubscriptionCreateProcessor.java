@@ -15,8 +15,8 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejection
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
@@ -35,7 +35,7 @@ public final class ProcessMessageSubscriptionCreateProcessor
           + "but it is already %s";
 
   private final ProcessMessageSubscriptionState subscriptionState;
-  private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
+  private final TransientSubscriptionState transientProcessMessageSubscriptionState;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final SideEffectWriter sideEffectWriter;
@@ -43,7 +43,7 @@ public final class ProcessMessageSubscriptionCreateProcessor
   public ProcessMessageSubscriptionCreateProcessor(
       final ProcessMessageSubscriptionState subscriptionState,
       final Writers writers,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
+      final TransientSubscriptionState transientProcessMessageSubscriptionState) {
     this.subscriptionState = subscriptionState;
     this.transientProcessMessageSubscriptionState = transientProcessMessageSubscriptionState;
     stateWriter = writers.state();

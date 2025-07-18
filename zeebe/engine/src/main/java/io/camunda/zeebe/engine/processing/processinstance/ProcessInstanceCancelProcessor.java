@@ -10,14 +10,14 @@ package io.camunda.zeebe.engine.processing.processinstance;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
@@ -26,7 +26,7 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import java.util.Optional;
 
 public final class ProcessInstanceCancelProcessor
-    implements TypedRecordProcessor<ProcessInstanceRecord> {
+    implements TypedRecordProcessor<WorkflowInstanceRecord> {
 
   private static final String MESSAGE_PREFIX =
       "Expected to cancel a process instance with key '%d', but ";
@@ -39,7 +39,7 @@ public final class ProcessInstanceCancelProcessor
           + "it is created by a parent process instance. Cancel the root process instance '%d' instead.";
 
   private final ElementInstanceState elementInstanceState;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
@@ -56,14 +56,14 @@ public final class ProcessInstanceCancelProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceRecord> command) {
+  public void processRecord(final TypedRecord<WorkflowInstanceRecord> command) {
     final var elementInstance = elementInstanceState.getInstance(command.getKey());
 
     if (!validateCommand(command, elementInstance)) {
       return;
     }
 
-    final ProcessInstanceRecord value = elementInstance.getValue();
+    final WorkflowInstanceRecord value = elementInstance.getValue();
 
     commandWriter.appendFollowUpCommand(
         command.getKey(), ProcessInstanceIntent.TERMINATE_ELEMENT, value);
@@ -72,7 +72,7 @@ public final class ProcessInstanceCancelProcessor
   }
 
   private boolean validateCommand(
-      final TypedRecord<ProcessInstanceRecord> command, final ElementInstance elementInstance) {
+      final TypedRecord<WorkflowInstanceRecord> command, final ElementInstance elementInstance) {
 
     if (elementInstance == null
         || !elementInstance.canTerminate()
@@ -81,7 +81,7 @@ public final class ProcessInstanceCancelProcessor
           command,
           RejectionType.NOT_FOUND,
           String.format(PROCESS_NOT_FOUND_MESSAGE, command.getKey()));
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           command,
           RejectionType.NOT_FOUND,
           String.format(PROCESS_NOT_FOUND_MESSAGE, command.getKey()));
@@ -106,7 +106,7 @@ public final class ProcessInstanceCancelProcessor
                   "such process")
               : rejection.reason();
       rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
+      responseWriter.rejectCommandAsync(command, rejection.type(), errorMessage);
       return false;
     }
 
@@ -119,7 +119,7 @@ public final class ProcessInstanceCancelProcessor
           command,
           RejectionType.INVALID_STATE,
           String.format(PROCESS_NOT_ROOT_MESSAGE, command.getKey(), rootProcessInstanceKey));
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           command,
           RejectionType.INVALID_STATE,
           String.format(PROCESS_NOT_ROOT_MESSAGE, command.getKey(), rootProcessInstanceKey));

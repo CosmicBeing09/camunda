@@ -7,14 +7,14 @@
  */
 package io.camunda.zeebe.engine.util;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
 import java.time.InstantSource;
 import org.junit.rules.ExternalResource;
@@ -24,8 +24,8 @@ public final class ProcessingStateRule extends ExternalResource {
 
   private final TemporaryFolder tempFolder = new TemporaryFolder();
   private final int partition;
-  private ZeebeDb<ZbColumnFamilies> db;
-  private MutableProcessingState processingState;
+  private GenericDb<ColumnFamilies> db;
+  private MutableAsyncProcessingContext processingState;
 
   public ProcessingStateRule() {
     this(Protocol.DEPLOYMENT_PARTITION);
@@ -48,8 +48,8 @@ public final class ProcessingStateRule extends ExternalResource {
             db,
             context,
             keyGenerator,
-            new TransientPendingSubscriptionState(),
-            new TransientPendingSubscriptionState(),
+            new TransientSubscriptionState(),
+            new TransientSubscriptionState(),
             new EngineConfiguration(),
             InstantSource.system());
   }
@@ -64,11 +64,11 @@ public final class ProcessingStateRule extends ExternalResource {
     tempFolder.delete();
   }
 
-  public MutableProcessingState getProcessingState() {
+  public MutableAsyncProcessingContext getProcessingState() {
     return processingState;
   }
 
-  public ZeebeDb<ZbColumnFamilies> createNewDb() {
+  public GenericDb<ColumnFamilies> createNewDb() {
     try {
 
       return DefaultZeebeDbFactory.defaultFactory().createDb(tempFolder.newFolder());

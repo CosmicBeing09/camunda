@@ -12,7 +12,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -21,7 +21,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.mutable.MutableResourceState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ResourceRecord;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -69,18 +69,18 @@ public class DbResourceState implements MutableResourceState {
       resourcesByTenantIdAndIdCache;
 
   public DbResourceState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final EngineConfiguration config) {
     tenantIdKey = new DbString();
     dbResourceKey = new DbLong();
     tenantAwareResourceKey =
         new DbTenantAwareKey<>(tenantIdKey, dbResourceKey, PlacementType.PREFIX);
-    fkResourceKey = new DbForeignKey<>(tenantAwareResourceKey, ZbColumnFamilies.RESOURCES);
+    fkResourceKey = new DbForeignKey<>(tenantAwareResourceKey, ColumnFamilies.RESOURCES);
     dbPersistedResource = new PersistedResource();
     resourcesByKey =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RESOURCES,
+            ColumnFamilies.RESOURCES,
             transactionContext,
             tenantAwareResourceKey,
             dbPersistedResource);
@@ -92,7 +92,7 @@ public class DbResourceState implements MutableResourceState {
         new DbTenantAwareKey<>(tenantIdKey, idAndVersionKey, PlacementType.PREFIX);
     resourceByIdAndVersionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RESOURCE_BY_ID_AND_VERSION,
+            ColumnFamilies.RESOURCE_BY_ID_AND_VERSION,
             transactionContext,
             tenantAwareIdAndVersionKey,
             fkResourceKey);
@@ -103,7 +103,7 @@ public class DbResourceState implements MutableResourceState {
             tenantIdKey, new DbCompositeKey<>(dbResourceId, dbDeploymentKey), PlacementType.PREFIX);
     resourceKeyByResourceIdAndDeploymentKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RESOURCE_KEY_BY_RESOURCE_ID_AND_DEPLOYMENT_KEY,
+            ColumnFamilies.RESOURCE_KEY_BY_RESOURCE_ID_AND_DEPLOYMENT_KEY,
             transactionContext,
             tenantAwareResourceIdAndDeploymentKey,
             fkResourceKey);
@@ -114,14 +114,14 @@ public class DbResourceState implements MutableResourceState {
             tenantIdKey, new DbCompositeKey<>(dbResourceId, dbVersionTag), PlacementType.PREFIX);
     resourceKeyByResourceIdAndVersionTagColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RESOURCE_KEY_BY_RESOURCE_ID_AND_VERSION_TAG,
+            ColumnFamilies.RESOURCE_KEY_BY_RESOURCE_ID_AND_VERSION_TAG,
             transactionContext,
             tenantAwareResourceIdAndVersionTagKey,
             fkResourceKey);
 
     versionManager =
         new VersionManager(
-            DEFAULT_VERSION_VALUE, zeebeDb, ZbColumnFamilies.RESOURCE_VERSION, transactionContext);
+            DEFAULT_VERSION_VALUE, zeebeDb, ColumnFamilies.RESOURCE_VERSION, transactionContext);
 
     resourcesByTenantIdAndIdCache =
         CacheBuilder.newBuilder()

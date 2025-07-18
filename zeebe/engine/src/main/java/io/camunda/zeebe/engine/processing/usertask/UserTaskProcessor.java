@@ -11,38 +11,38 @@ import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.processing.deployment.model.element.TaskListener;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.incident.RetryTypedRecord;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandProcessor;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.instance.AsyncTransitionTriggerMetadata;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.Optional;
 
 @ExcludeAuthorizationCheck
-public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
+public class UserTaskProcessor implements TypedRecordProcessor<TaskRecord> {
 
   private static final String USER_TASK_COMPLETION_REJECTION =
       "Completion of the User Task with key '%d' was denied by Task Listener. Reason to deny: '%s'";
@@ -58,21 +58,21 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   private final UserTaskCommandProcessors commandProcessors;
   private final ProcessState processState;
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final ElementInstanceState elementInstanceState;
   private final VariableState variableState;
 
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
 
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final StateWriter stateWriter;
 
   public UserTaskProcessor(
       final ProcessingState state,
-      final MutableUserTaskState userTaskState,
-      final KeyGenerator keyGenerator,
-      final BpmnBehaviors bpmnBehaviors,
+      final MutableTaskState userTaskState,
+      final IdGenerator keyGenerator,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
     commandProcessors =
@@ -91,7 +91,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   @Override
-  public void processRecord(final TypedRecord<UserTaskRecord> command) {
+  public void processRecord(final TypedRecord<TaskRecord> command) {
     final UserTaskIntent intent = (UserTaskIntent) command.getIntent();
     switch (intent) {
       case CREATE, ASSIGN, CLAIM, UPDATE, COMPLETE, CANCEL ->
@@ -102,7 +102,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     }
   }
 
-  private void processCompleteTaskListener(final TypedRecord<UserTaskRecord> command) {
+  private void processCompleteTaskListener(final TypedRecord<TaskRecord> command) {
     final var lifecycleState = userTaskState.getLifecycleState(command.getKey());
     final var listenerEventType = mapLifecycleStateToEventType(lifecycleState);
     // we need to copy the intermediate user task record as we have read it from the state, and we
@@ -135,9 +135,9 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void finalizeCommand(
-      final TypedRecord<UserTaskRecord> command,
+      final TypedRecord<TaskRecord> command,
       final LifecycleState lifecycleState,
-      final UserTaskRecord userTaskRecord) {
+      final TaskRecord userTaskRecord) {
     final var currentUserTask = userTaskState.getUserTask(command.getKey());
     userTaskRecord.setDiffAsChangedAttributes(currentUserTask);
 
@@ -145,7 +145,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     commandProcessor.onFinalizeCommand(command, userTaskRecord);
   }
 
-  private void processDenyTaskListener(final TypedRecord<UserTaskRecord> command) {
+  private void processDenyTaskListener(final TypedRecord<TaskRecord> command) {
     final var lifecycleState = userTaskState.getLifecycleState(command.getKey());
     final var persistedRecord = userTaskState.getUserTask(command.getKey());
 
@@ -164,7 +164,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void processOperationCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskIntent intent) {
+      final TypedRecord<TaskRecord> command, final UserTaskIntent intent) {
     final var commandProcessor = commandProcessors.getCommandProcessor(intent);
 
     if (isRetriedCommand(command)) {
@@ -176,7 +176,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
           .validateCommand(command)
           // Create a modifiable copy of the persisted user task record, as `onCommand` may
           // apply the changed attributes from the command on top of persisted instance.
-          .map(UserTaskRecord::copy)
+          .map(TaskRecord::copy)
           .thenDo(persistedRecord -> commandProcessor.onCommand(command, persistedRecord))
           .ifRightOrLeft(
               persistedRecord ->
@@ -188,8 +188,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   private void finalizeCommandOrCreateTaskListenerJob(
       final UserTaskCommandProcessor processor,
-      final TypedRecord<UserTaskRecord> command,
-      final UserTaskRecord persistedRecord,
+      final TypedRecord<TaskRecord> command,
+      final TaskRecord persistedRecord,
       final UserTaskIntent intent) {
 
     final var userTaskElement = getUserTaskElement(persistedRecord);
@@ -220,17 +220,17 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     }
   }
 
-  private boolean isRetriedCommand(final TypedRecord<UserTaskRecord> command) {
-    return command instanceof RetryTypedRecord<UserTaskRecord>;
+  private boolean isRetriedCommand(final TypedRecord<TaskRecord> command) {
+    return command instanceof RetryTypedRecord<TaskRecord>;
   }
 
-  private void storeUserTaskRecordRequestMetadata(final TypedRecord<UserTaskRecord> command) {
+  private void storeUserTaskRecordRequestMetadata(final TypedRecord<TaskRecord> command) {
     if (!command.hasRequestMetadata()) {
       return;
     }
 
     final var metadata =
-        new UserTaskTransitionTriggerRequestMetadata()
+        new AsyncTransitionTriggerMetadata()
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(command.getRequestId())
@@ -239,9 +239,9 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void handleCommandRejection(
-      final TypedRecord<UserTaskRecord> command, final Rejection rejection) {
+      final TypedRecord<TaskRecord> command, final Rejection rejection) {
     rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-    responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+    responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
   }
 
   private Optional<TaskListener> findNextTaskListener(
@@ -254,8 +254,8 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   private void writeRejectionForCommand(
-      final TypedRecord<UserTaskRecord> command,
-      final UserTaskRecord persistedRecord,
+      final TypedRecord<TaskRecord> command,
+      final TaskRecord persistedRecord,
       final UserTaskIntent intent) {
 
     persistedRecord.setDeniedReason(command.getValue().getDeniedReason());
@@ -314,7 +314,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
         });
   }
 
-  private ExecutableUserTask getUserTaskElement(final UserTaskRecord userTaskRecord) {
+  private ExecutableUserTask getUserTaskElement(final TaskRecord userTaskRecord) {
     return processState.getFlowElement(
         userTaskRecord.getProcessDefinitionKey(),
         userTaskRecord.getTenantId(),
@@ -388,7 +388,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
     return commandProcessors.getCommandProcessor(userTaskIntent);
   }
 
-  private ElementInstance getUserTaskElementInstance(final UserTaskRecord userTaskRecord) {
+  private ElementInstance getUserTaskElementInstance(final TaskRecord userTaskRecord) {
     final var elementInstanceKey = userTaskRecord.getElementInstanceKey();
     return elementInstanceState.getInstance(elementInstanceKey);
   }

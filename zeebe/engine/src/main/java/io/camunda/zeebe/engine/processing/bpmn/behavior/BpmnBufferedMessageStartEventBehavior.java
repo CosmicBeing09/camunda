@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.bpmn.behavior;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.InstantSource;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
@@ -28,12 +28,12 @@ public final class BpmnBufferedMessageStartEventBehavior {
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
 
-  private final EventHandle eventHandle;
+  private final EventHandler eventHandle;
   private final InstantSource clock;
 
   public BpmnBufferedMessageStartEventBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final EventTriggerBehavior eventTriggerBehavior,
       final BpmnStateBehavior stateBehavior,
       final Writers writers,
@@ -44,7 +44,7 @@ public final class BpmnBufferedMessageStartEventBehavior {
     this.clock = clock;
 
     eventHandle =
-        new EventHandle(
+        new EventHandler(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

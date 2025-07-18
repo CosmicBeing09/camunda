@@ -8,12 +8,12 @@
 package io.camunda.zeebe.broker.logstreams.state;
 
 import io.camunda.zeebe.broker.exporter.stream.ExportersState;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 
 public final class StatePositionSupplier {
   private StatePositionSupplier() {}
 
-  public static long getHighestExportedPosition(final ZeebeDb zeebeDb) {
+  public static long getHighestExportedPosition(final GenericDb zeebeDb) {
     final var exporterState = new ExportersState(zeebeDb, zeebeDb.createContext());
     if (exporterState.hasExporters()) {
       return exporterState.getLowestPosition();

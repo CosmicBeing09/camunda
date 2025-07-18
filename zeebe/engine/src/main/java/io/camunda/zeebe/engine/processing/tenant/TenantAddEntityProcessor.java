@@ -12,9 +12,9 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.authorization.DbMembershipState.RelationType;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 
 public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor<TenantRecord> {
@@ -44,17 +44,17 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   private final GroupState groupState;
   private final RoleState roleState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final MembershipState membershipState;
 
   public TenantAddEntityProcessor(
       final ProcessingState state,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     tenantState = state.getTenantState();
@@ -192,7 +192,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
       final String errorMessage) {
     rejectionWriter.appendRejection(command, type, errorMessage);
     if (command.hasRequestMetadata()) {
-      responseWriter.writeRejectionOnCommand(command, type, errorMessage);
+      responseWriter.rejectCommandAsync(command, type, errorMessage);
     }
   }
 

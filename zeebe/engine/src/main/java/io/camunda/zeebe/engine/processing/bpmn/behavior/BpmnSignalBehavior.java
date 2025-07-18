@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.EnsureUtil.ensureNotNull;
 import static io.camunda.zeebe.util.EnsureUtil.ensureNotNullOrEmpty;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSignal;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import org.agrona.DirectBuffer;
 
@@ -28,16 +28,16 @@ public final class BpmnSignalBehavior {
 
   private final SignalRecord signalRecord =
       new SignalRecord().setVariables(DocumentValue.EMPTY_DOCUMENT);
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final VariableState variableState;
   private final TypedCommandWriter commandWriter;
-  private final ExpressionProcessor expressionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
 
   public BpmnSignalBehavior(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final VariableState variableState,
       final Writers writers,
-      final ExpressionProcessor expressionBehavior) {
+      final ExpressionEvaluator expressionBehavior) {
     this.keyGenerator = keyGenerator;
     this.expressionBehavior = expressionBehavior;
     this.variableState = variableState;

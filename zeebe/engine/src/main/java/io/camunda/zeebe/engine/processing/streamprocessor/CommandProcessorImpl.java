@@ -12,13 +12,13 @@ import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor.Comma
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 /**
  * Decorates a command processor with simple accept and reject logic.
@@ -37,7 +37,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
 
   private final CommandProcessor<T> wrappedProcessor;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedCommandWriter commandWriter;
@@ -50,11 +50,11 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
 
   private RejectionType rejectionType;
   private String rejectionReason;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
 
   public CommandProcessorImpl(
       final CommandProcessor<T> commandProcessor,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers) {
     wrappedProcessor = commandProcessor;
     this.keyGenerator = keyGenerator;
@@ -82,7 +82,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
     } else {
       rejectionWriter.appendRejection(command, rejectionType, rejectionReason);
       if (respond) {
-        responseWriter.writeRejectionOnCommand(command, rejectionType, rejectionReason);
+        responseWriter.rejectCommandAsync(command, rejectionType, rejectionReason);
       }
     }
   }

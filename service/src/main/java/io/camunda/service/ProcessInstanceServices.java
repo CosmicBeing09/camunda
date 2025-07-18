@@ -49,7 +49,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationActivateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationTerminateInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceResultRecord;
 import io.camunda.zeebe.protocol.record.value.BatchOperationType;
 import java.util.List;
@@ -203,7 +203,7 @@ public final class ProcessInstanceServices
     return sendBrokerRequest(brokerRequest);
   }
 
-  public CompletableFuture<ProcessInstanceRecord> cancelProcessInstance(
+  public CompletableFuture<WorkflowInstanceRecord> cancelProcessInstance(
       final ProcessInstanceCancelRequest request) {
     final var brokerRequest =
         new BrokerCancelProcessInstanceRequest()

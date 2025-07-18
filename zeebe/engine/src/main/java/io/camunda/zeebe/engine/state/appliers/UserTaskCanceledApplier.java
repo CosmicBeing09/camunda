@@ -8,33 +8,33 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
 public final class UserTaskCanceledApplier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, TaskRecord> {
 
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final MutableElementInstanceState elementInstanceState;
 
-  public UserTaskCanceledApplier(final MutableProcessingState processingState) {
-    userTaskState = processingState.getUserTaskState();
+  public UserTaskCanceledApplier(final MutableAsyncProcessingContext processingState) {
+    userTaskState = processingState.getTaskState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final TaskRecord value) {
     userTaskState.deleteIntermediateStateIfExists(key);
     userTaskState.deleteRecordRequestMetadata(key);
     userTaskState.delete(key);
     resetCancelingTaskListenerIndex(value);
   }
 
-  private void resetCancelingTaskListenerIndex(final UserTaskRecord record) {
+  private void resetCancelingTaskListenerIndex(final TaskRecord record) {
     final long userTaskInstanceKey = record.getElementInstanceKey();
     final var userTaskInstance = elementInstanceState.getInstance(userTaskInstanceKey);
 

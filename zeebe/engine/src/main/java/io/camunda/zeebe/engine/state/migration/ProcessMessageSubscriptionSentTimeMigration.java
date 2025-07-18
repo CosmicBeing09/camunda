@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.migration;
 
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 /**
  * Migrates pending process message subscriptions by adding them to {@code
@@ -23,7 +23,7 @@ public class ProcessMessageSubscriptionSentTimeMigration implements MigrationTas
 
   @Override
   public boolean needsToRun(final MigrationTaskContext context) {
-    return !context.processingState().isEmpty(ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME);
+    return !context.processingState().isEmpty(ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME);
   }
 
   @Override

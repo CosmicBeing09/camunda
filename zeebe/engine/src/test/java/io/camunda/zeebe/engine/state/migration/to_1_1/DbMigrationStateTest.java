@@ -11,14 +11,14 @@ import static io.camunda.zeebe.engine.state.migration.to_1_1.TestUtilities.creat
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.message.MessageSubscription;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -33,9 +33,9 @@ public class DbMigrationStateTest {
 
   private static final long TEST_SENT_TIME = 1000L;
 
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private TransactionContext transactionContext;
 
@@ -67,7 +67,7 @@ public class DbMigrationStateTest {
 
     // the sent time column family is empty
     assertThat(
-            zeebeDb.isEmpty(ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
+            zeebeDb.isEmpty(ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
         .describedAs("Column family MESSAGE_SUBSCRIPTION_BY_SENT_TIME is empty")
         .isTrue();
 
@@ -159,7 +159,7 @@ public class DbMigrationStateTest {
     // then
     // the sent time column family is empty
     assertThat(
-            zeebeDb.isEmpty(ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
+            zeebeDb.isEmpty(ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME, transactionContext))
         .describedAs("Column family PROCESS_SUBSCRIPTION_BY_SENT_TIME is empty")
         .isTrue();
 

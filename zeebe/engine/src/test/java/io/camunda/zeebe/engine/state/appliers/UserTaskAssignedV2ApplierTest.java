@@ -9,11 +9,11 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.Optional;
 import java.util.Random;
@@ -24,21 +24,21 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskAssignedV2ApplierTest {
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
-  private UserTaskAssignedV2Applier userTaskAssignedV2Applier;
+  private TaskAssignedV2Applier userTaskAssignedV2Applier;
 
   /** Used for state assertions. */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;
 
   @BeforeEach
   public void setup() {
-    userTaskAssignedV2Applier = new UserTaskAssignedV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskAssignedV2Applier = new TaskAssignedV2Applier(processingState);
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 
@@ -50,14 +50,14 @@ public class UserTaskAssignedV2ApplierTest {
     final String assignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee(assignee)
             .setElementInstanceKey(elementInstanceKey);
 
     // assignee is present in the creating event
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
-    final UserTaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
+    final TaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
     // but we clear the assignee for created event
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
@@ -79,7 +79,7 @@ public class UserTaskAssignedV2ApplierTest {
     final String initialAssignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee(initialAssignee)
             .setElementInstanceKey(elementInstanceKey);
@@ -87,7 +87,7 @@ public class UserTaskAssignedV2ApplierTest {
     // assignee is present in the creating event
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
     // but we clear the assignee for created event
-    final UserTaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
+    final TaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
 

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.group;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableGroupState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.group.GroupRecord;
 import io.camunda.zeebe.test.util.Strings;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class GroupStateTest {
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableGroupState groupState;
 
   @BeforeEach

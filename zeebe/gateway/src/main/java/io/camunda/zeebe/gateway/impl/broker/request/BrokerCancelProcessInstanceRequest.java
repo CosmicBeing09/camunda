@@ -8,15 +8,15 @@
 package io.camunda.zeebe.gateway.impl.broker.request;
 
 import io.camunda.zeebe.broker.client.api.dto.BrokerExecuteCommand;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import org.agrona.DirectBuffer;
 
 public class BrokerCancelProcessInstanceRequest
-    extends BrokerExecuteCommand<ProcessInstanceRecord> {
+    extends BrokerExecuteCommand<WorkflowInstanceRecord> {
 
-  private final ProcessInstanceRecord requestDto = new ProcessInstanceRecord();
+  private final WorkflowInstanceRecord requestDto = new WorkflowInstanceRecord();
 
   public BrokerCancelProcessInstanceRequest() {
     super(ValueType.PROCESS_INSTANCE, ProcessInstanceIntent.CANCEL);
@@ -28,13 +28,13 @@ public class BrokerCancelProcessInstanceRequest
   }
 
   @Override
-  public ProcessInstanceRecord getRequestWriter() {
+  public WorkflowInstanceRecord getRequestWriter() {
     return requestDto;
   }
 
   @Override
-  protected ProcessInstanceRecord toResponseDto(final DirectBuffer buffer) {
-    final ProcessInstanceRecord responseDto = new ProcessInstanceRecord();
+  protected WorkflowInstanceRecord toResponseDto(final DirectBuffer buffer) {
+    final WorkflowInstanceRecord responseDto = new WorkflowInstanceRecord();
     responseDto.wrap(buffer);
     return responseDto;
   }

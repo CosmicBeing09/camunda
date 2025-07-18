@@ -24,7 +24,7 @@ public interface ZeebeDbFactory<ColumnFamilyNames extends Enum<? extends EnumVal
    * @param pathName the path where the database should be created
    * @return the created zeebe database
    */
-  ZeebeDb<ColumnFamilyNames> createDb(File pathName);
+  GenericDb<ColumnFamilyNames> createDb(File pathName);
 
   /**
    * Opens an existing DB in read-only mode for the sole purpose of creating snapshots from it.
@@ -36,5 +36,5 @@ public interface ZeebeDbFactory<ColumnFamilyNames extends Enum<? extends EnumVal
    * @param path the path to the existing database
    * @return a snapshot-able DB
    */
-  ZeebeDb<ColumnFamilyNames> openSnapshotOnlyDb(final File path);
+  GenericDb<ColumnFamilyNames> openSnapshotOnlyDb(final File path);
 }

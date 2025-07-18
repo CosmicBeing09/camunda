@@ -8,14 +8,13 @@
 package io.camunda.zeebe.engine.processing.bpmn.behavior;
 
 import io.camunda.zeebe.el.ExpressionLanguageFactory;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.ProcessInstanceStateTransitionGuard;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
-import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
@@ -24,15 +23,15 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.timer.DueDateTimerChecker;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.processing.variable.VariableStateEvaluationContextLookup;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import java.time.InstantSource;
 
-public final class BpmnBehaviorsImpl implements BpmnBehaviors {
+public final class BpmnBehaviorsImpl implements ProcessBehaviors {
 
-  private final ExpressionProcessor expressionBehavior;
-  private final BpmnDecisionBehavior bpmnDecisionBehavior;
+  private final ExpressionEvaluator expressionBehavior;
+  private final DecisionBehavior bpmnDecisionBehavior;
   private final BpmnVariableMappingBehavior variableMappingBehavior;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final BpmnEventSubscriptionBehavior eventSubscriptionBehavior;
@@ -41,32 +40,32 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   private final ProcessInstanceStateTransitionGuard stateTransitionGuard;
   private final BpmnProcessResultSenderBehavior processResultSenderBehavior;
   private final BpmnBufferedMessageStartEventBehavior bufferedMessageStartEventBehavior;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
   private final MultiInstanceOutputCollectionBehavior multiInstanceOutputCollectionBehavior;
   private final CatchEventBehavior catchEventBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableBehavior variableBehavior;
   private final ElementActivationBehavior elementActivationBehavior;
-  private final BpmnJobActivationBehavior jobActivationBehavior;
+  private final JobActivationBehavior jobActivationBehavior;
   private final BpmnSignalBehavior signalBehavior;
   private final BpmnUserTaskBehavior userTaskBehavior;
   private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
   private final JobUpdateBehaviour jobUpdateBehaviour;
 
   public BpmnBehaviorsImpl(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
-      final JobProcessingMetrics jobMetrics,
-      final DecisionBehavior decisionBehavior,
+      final ProcessingMetrics jobMetrics,
+      final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final DueDateTimerChecker timerChecker,
       final JobStreamer jobStreamer,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
+      final TransientSubscriptionState transientProcessMessageSubscriptionState) {
     expressionBehavior =
-        new ExpressionProcessor(
+        new ExpressionEvaluator(
             ExpressionLanguageFactory.createExpressionLanguage(new ZeebeFeelEngineClock(clock)),
             new VariableStateEvaluationContextLookup(processingState.getVariableState()));
 
@@ -98,7 +97,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
             stateBehavior);
 
     bpmnDecisionBehavior =
-        new BpmnDecisionBehavior(
+        new DecisionBehavior(
             decisionBehavior,
             processingState,
             eventTriggerBehavior,
@@ -142,7 +141,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
             clock);
 
     jobActivationBehavior =
-        new BpmnJobActivationBehavior(
+        new JobActivationBehavior(
             jobStreamer,
             processingState,
             writers,
@@ -175,11 +174,11 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
             expressionBehavior,
             stateBehavior,
             processingState.getFormState(),
-            processingState.getUserTaskState(),
+            processingState.getTaskState(),
             clock);
 
     jobBehavior =
-        new BpmnJobBehavior(
+        new AsyncProcessingBehavior(
             processingState.getKeyGenerator(),
             processingState.getJobState(),
             writers,
@@ -200,12 +199,12 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   }
 
   @Override
-  public ExpressionProcessor expressionBehavior() {
+  public ExpressionEvaluator expressionBehavior() {
     return expressionBehavior;
   }
 
   @Override
-  public BpmnDecisionBehavior bpmnDecisionBehavior() {
+  public DecisionBehavior bpmnDecisionBehavior() {
     return bpmnDecisionBehavior;
   }
 
@@ -250,7 +249,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   }
 
   @Override
-  public BpmnJobBehavior jobBehavior() {
+  public AsyncProcessingBehavior jobBehavior() {
     return jobBehavior;
   }
 
@@ -285,7 +284,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   }
 
   @Override
-  public BpmnJobActivationBehavior jobActivationBehavior() {
+  public JobActivationBehavior jobActivationBehavior() {
     return jobActivationBehavior;
   }
 

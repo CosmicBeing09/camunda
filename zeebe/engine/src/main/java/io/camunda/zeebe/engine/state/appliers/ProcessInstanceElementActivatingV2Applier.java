@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.instance.EventTrigger;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import java.util.Collections;
@@ -32,7 +32,7 @@ import java.util.stream.IntStream;
 
 /** Applies state changes for `ProcessInstance:Element_Activating` */
 final class ProcessInstanceElementActivatingV2Applier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
   private final ProcessState processState;
@@ -48,7 +48,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   @Override
-  public void applyState(final long elementInstanceKey, final ProcessInstanceRecord value) {
+  public void applyState(final long elementInstanceKey, final WorkflowInstanceRecord value) {
 
     createEventScope(elementInstanceKey, value);
     final var numberOfTakenSequenceFlows =
@@ -87,7 +87,7 @@ final class ProcessInstanceElementActivatingV2Applier
     manageMultiInstance(elementInstanceKey, flowScopeInstance, flowScopeElementType);
   }
 
-  private void cleanupSequenceFlowsTaken(final ProcessInstanceRecord value) {
+  private void cleanupSequenceFlowsTaken(final WorkflowInstanceRecord value) {
     if (value.getBpmnElementType() == BpmnElementType.PARALLEL_GATEWAY
         || value.getBpmnElementType() == BpmnElementType.INCLUSIVE_GATEWAY) {
 
@@ -123,7 +123,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private void applyRootProcessState(
-      final ElementInstance elementInstance, final ProcessInstanceRecord value) {
+      final ElementInstance elementInstance, final WorkflowInstanceRecord value) {
     final var parentElementInstance =
         elementInstanceState.getInstance(value.getParentElementInstanceKey());
     if (parentElementInstance != null) {
@@ -144,7 +144,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private void decrementActiveSequenceFlow(
-      final ProcessInstanceRecord value,
+      final WorkflowInstanceRecord value,
       final ElementInstance flowScopeInstance,
       final BpmnElementType flowScopeElementType,
       final BpmnElementType currentElementType,
@@ -191,7 +191,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private void decrementIntermediateCatchEventSequenceFlow(
-      final ProcessInstanceRecord value, final ElementInstance flowScopeInstance) {
+      final WorkflowInstanceRecord value, final ElementInstance flowScopeInstance) {
     // If we are an intermediate catch event and our previous element is an event based gateway,
     // then we don't want to decrement the active flow, since based on the BPMN spec we DON'T take
     // the sequence flow.
@@ -217,7 +217,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private void decrementParallelGatewaySequenceFlow(
-      final ProcessInstanceRecord value, final ElementInstance flowScopeInstance) {
+      final WorkflowInstanceRecord value, final ElementInstance flowScopeInstance) {
     // Parallel gateways can have more than one incoming sequence flow, we need to decrement the
     // active sequence flows based on the incoming count.
 
@@ -243,7 +243,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private void decrementEventSubProcessSequenceFlow(
-      final ProcessInstanceRecord value, final ElementInstance flowScopeInstance) {
+      final WorkflowInstanceRecord value, final ElementInstance flowScopeInstance) {
     // For interrupting event sub processes we need to reset the active sequence flows, because
     // we might have interrupted multiple sequence flows.
     // For non interrupting we do nothing, since we had no incoming sequence flow.
@@ -257,7 +257,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private ExecutableFlowElementContainer getExecutableFlowElementContainer(
-      final ProcessInstanceRecord value) {
+      final WorkflowInstanceRecord value) {
     return processState.getFlowElement(
         value.getProcessDefinitionKey(),
         value.getTenantId(),
@@ -284,7 +284,7 @@ final class ProcessInstanceElementActivatingV2Applier
   }
 
   private void createEventScope(
-      final long elementInstanceKey, final ProcessInstanceRecord elementRecord) {
+      final long elementInstanceKey, final WorkflowInstanceRecord elementRecord) {
     Class<? extends ExecutableFlowNode> flowElementClass = ExecutableFlowNode.class;
 
     // in the case of the multi instance body, it shares the same element ID as that of its

@@ -16,24 +16,24 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceBatchRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 @ExcludeAuthorizationCheck
 public final class ProcessInstanceBatchActivateProcessor
     implements TypedRecordProcessor<ProcessInstanceBatchRecord> {
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
 
   public ProcessInstanceBatchActivateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ElementInstanceState elementInstanceState,
       final ProcessState processState) {
     commandWriter = writers.command();
@@ -56,7 +56,7 @@ public final class ProcessInstanceBatchActivateProcessor
   }
 
   private void writeActivateChildCommand(final ProcessInstanceBatchRecord record) {
-    final ProcessInstanceRecord childInstanceRecord = createChildInstanceRecord(record);
+    final WorkflowInstanceRecord childInstanceRecord = createChildInstanceRecord(record);
 
     commandWriter.appendFollowUpCommand(
         keyGenerator.nextKey(), ProcessInstanceIntent.ACTIVATE_ELEMENT, childInstanceRecord);
@@ -88,7 +88,7 @@ public final class ProcessInstanceBatchActivateProcessor
         keyGenerator.nextKey(), ProcessInstanceBatchIntent.ACTIVATE, nextBatchRecord);
   }
 
-  private ProcessInstanceRecord createChildInstanceRecord(
+  private WorkflowInstanceRecord createChildInstanceRecord(
       final ProcessInstanceBatchRecord recordValue) {
     final var parentElementInstance =
         elementInstanceState.getInstance(recordValue.getBatchElementInstanceKey());
@@ -103,7 +103,7 @@ public final class ProcessInstanceBatchActivateProcessor
         processDefinition.getElementById(parentElementInstance.getValue().getElementId());
     final var childElement = ((ExecutableMultiInstanceBody) parentElement).getInnerActivity();
 
-    final var childInstanceRecord = new ProcessInstanceRecord();
+    final var childInstanceRecord = new WorkflowInstanceRecord();
     childInstanceRecord.wrap(parentElementInstance.getValue());
     childInstanceRecord
         .setFlowScopeKey(parentElementInstance.getKey())

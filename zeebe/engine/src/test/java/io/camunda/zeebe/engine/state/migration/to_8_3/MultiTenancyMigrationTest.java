@@ -14,8 +14,8 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
@@ -44,11 +44,11 @@ import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyMessageSubscr
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyProcessState;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyProcessState.LegacyProcessVersionManager;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
@@ -81,8 +81,8 @@ public class MultiTenancyMigrationTest {
 
     final MultiTenancyProcessStateMigration sut = new MultiTenancyProcessStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacyProcessState legacyState;
@@ -247,8 +247,8 @@ public class MultiTenancyMigrationTest {
 
     final MultiTenancyDecisionStateMigration sut = new MultiTenancyDecisionStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacyDecisionState legacyState;
@@ -527,8 +527,8 @@ public class MultiTenancyMigrationTest {
 
     final MultiTenancyMessageStateMigration sut = new MultiTenancyMessageStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacyMessageState legacyState;
@@ -597,8 +597,8 @@ public class MultiTenancyMigrationTest {
     final MultiTenancyMessageStartEventSubscriptionStateMigration sut =
         new MultiTenancyMessageStartEventSubscriptionStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacyMessageStartEventSubscriptionState legacyState;
@@ -706,8 +706,8 @@ public class MultiTenancyMigrationTest {
     final MultiTenancyMessageSubscriptionStateMigration sut =
         new MultiTenancyMessageSubscriptionStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacyMessageSubscriptionState legacyState;
@@ -784,8 +784,8 @@ public class MultiTenancyMigrationTest {
     final MultiTenancyProcessMessageSubscriptionStateMigration sut =
         new MultiTenancyProcessMessageSubscriptionStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyProcessMessageSubscriptionState legacyState;
     private DbProcessMessageSubscriptionState state;
@@ -861,8 +861,8 @@ public class MultiTenancyMigrationTest {
 
     final MultiTenancyJobStateMigration sut = new MultiTenancyJobStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacyJobState legacyState;
@@ -951,8 +951,8 @@ public class MultiTenancyMigrationTest {
   class ProcessVersionMigrationTest {
     final MultiTenancyProcessStateMigration sut = new MultiTenancyProcessStateMigration();
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyProcessVersionManager legacyState;
     private DbString processIdKey;
@@ -969,7 +969,7 @@ public class MultiTenancyMigrationTest {
       tenantAwareProcessId = new DbTenantAwareKey<>(tenantKey, processIdKey, PlacementType.PREFIX);
       processVersionColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.PROCESS_VERSION,
+              ColumnFamilies.PROCESS_VERSION,
               transactionContext,
               tenantAwareProcessId,
               new VersionInfo());

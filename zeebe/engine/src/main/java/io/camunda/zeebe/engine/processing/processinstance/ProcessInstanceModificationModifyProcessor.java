@@ -10,9 +10,9 @@ package io.camunda.zeebe.engine.processing.processinstance;
 import static java.util.function.Predicate.not;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
@@ -28,7 +28,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -38,7 +38,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationActivateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationVariableInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent;
@@ -139,10 +139,10 @@ public final class ProcessInstanceModificationModifyProcessor
   private static final Either<Rejection, Object> VALID = Either.right(null);
 
   private final StateWriter stateWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
   private final TypedRejectionWriter rejectionWriter;
   private final CatchEventBehavior catchEventBehavior;
@@ -155,7 +155,7 @@ public final class ProcessInstanceModificationModifyProcessor
       final Writers writers,
       final ElementInstanceState elementInstanceState,
       final ProcessState processState,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final AuthorizationCheckBehavior authCheckBehavior) {
     stateWriter = writers.state();
     responseWriter = writers.response();
@@ -184,7 +184,7 @@ public final class ProcessInstanceModificationModifyProcessor
 
     if (processInstance == null) {
       final String reason = String.format(ERROR_MESSAGE_PROCESS_INSTANCE_NOT_FOUND, eventKey);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, reason);
+      responseWriter.rejectCommandAsync(command, RejectionType.NOT_FOUND, reason);
       rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, reason);
       return;
     }
@@ -206,7 +206,7 @@ public final class ProcessInstanceModificationModifyProcessor
                   processInstance.getValue().getProcessInstanceKey(),
                   "such process instance")
               : rejection.reason();
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
+      responseWriter.rejectCommandAsync(command, rejection.type(), errorMessage);
       rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
       return;
     }
@@ -219,7 +219,7 @@ public final class ProcessInstanceModificationModifyProcessor
     final var validationResult = validateCommand(command, process);
     if (validationResult.isLeft()) {
       final var rejection = validationResult.getLeft();
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
       return;
     }
@@ -288,7 +288,7 @@ public final class ProcessInstanceModificationModifyProcessor
     if (error instanceof final EventSubscriptionException exception) {
       rejectionWriter.appendRejection(
           typedCommand, RejectionType.INVALID_ARGUMENT, exception.getMessage());
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           typedCommand, RejectionType.INVALID_ARGUMENT, exception.getMessage());
       return ProcessingError.EXPECTED_ERROR;
 
@@ -298,7 +298,7 @@ public final class ProcessInstanceModificationModifyProcessor
               exception.getBpmnProcessId(), exception.getFlowScopeId());
       rejectionWriter.appendRejection(
           typedCommand, RejectionType.INVALID_ARGUMENT, rejectionReason);
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           typedCommand, RejectionType.INVALID_ARGUMENT, rejectionReason);
       return ProcessingError.EXPECTED_ERROR;
 
@@ -306,13 +306,13 @@ public final class ProcessInstanceModificationModifyProcessor
       final var message =
           ERROR_COMMAND_TOO_LARGE.formatted(typedCommand.getValue().getProcessInstanceKey());
       rejectionWriter.appendRejection(typedCommand, RejectionType.INVALID_ARGUMENT, message);
-      responseWriter.writeRejectionOnCommand(typedCommand, RejectionType.INVALID_ARGUMENT, message);
+      responseWriter.rejectCommandAsync(typedCommand, RejectionType.INVALID_ARGUMENT, message);
       return ProcessingError.EXPECTED_ERROR;
 
     } else if (error instanceof final TerminatedChildProcessException exception) {
       rejectionWriter.appendRejection(
           typedCommand, RejectionType.INVALID_ARGUMENT, exception.getMessage());
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           typedCommand, RejectionType.INVALID_ARGUMENT, exception.getMessage());
       return ProcessingError.EXPECTED_ERROR;
 
@@ -321,7 +321,7 @@ public final class ProcessInstanceModificationModifyProcessor
           ERROR_MESSAGE_ATTEMPTED_TO_ACTIVATE_MULTI_INSTANCE.formatted(
               exception.getBpmnProcessId(), exception.getMultiInstanceId());
       rejectionWriter.appendRejection(typedCommand, RejectionType.INVALID_ARGUMENT, message);
-      responseWriter.writeRejectionOnCommand(typedCommand, RejectionType.INVALID_ARGUMENT, message);
+      responseWriter.rejectCommandAsync(typedCommand, RejectionType.INVALID_ARGUMENT, message);
       return ProcessingError.EXPECTED_ERROR;
     }
 
@@ -526,7 +526,7 @@ public final class ProcessInstanceModificationModifyProcessor
                       ancestorInstances
                           .get(instruction.getAncestorScopeKey())
                           .map(ElementInstance::getValue)
-                          .map(ProcessInstanceRecord::getElementId)
+                          .map(WorkflowInstanceRecord::getElementId)
                           .orElse(null);
                   return new InstructionDetails(
                       instruction.getAncestorScopeKey(), ancestorId, instruction.getElementId());

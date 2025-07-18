@@ -9,11 +9,11 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
@@ -25,13 +25,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class UserTaskUpdateDeniedApplierTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
   private UserTaskUpdateDeniedApplier userTaskUpdateDeniedApplier;
 
   /** Used for state */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;
@@ -39,7 +39,7 @@ public class UserTaskUpdateDeniedApplierTest {
   @BeforeEach
   public void setup() {
     userTaskUpdateDeniedApplier = new UserTaskUpdateDeniedApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 
@@ -52,7 +52,7 @@ public class UserTaskUpdateDeniedApplierTest {
 
     // Initial state of the User Task before an update attempt
     final var initialState =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("initial_user"))
             .setCandidateGroupsList(List.of("initial_group"))
@@ -66,7 +66,7 @@ public class UserTaskUpdateDeniedApplierTest {
 
     // Simulate an update event with changes
     final var updateAttempt =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("update_user"))
             .setDueDate("update_due_date")

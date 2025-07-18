@@ -11,16 +11,16 @@ import static io.camunda.zeebe.util.EnsureUtil.ensureNotNull;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventPublicationBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnSignalBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableEndEvent;
 import io.camunda.zeebe.util.Either;
@@ -38,18 +38,18 @@ public final class EndEventProcessor implements BpmnElementProcessor<ExecutableE
           new SignalEndEventBehavior(),
           new CompensationBehaviour());
 
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
   private final BpmnVariableMappingBehavior variableMappingBehavior;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
   private final BpmnSignalBehavior signalBehavior;
   private final BpmnStateBehavior stateBehavior;
   private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
 
   public EndEventProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     expressionProcessor = bpmnBehaviors.expressionBehavior();
     eventPublicationBehavior = bpmnBehaviors.eventPublicationBehavior();

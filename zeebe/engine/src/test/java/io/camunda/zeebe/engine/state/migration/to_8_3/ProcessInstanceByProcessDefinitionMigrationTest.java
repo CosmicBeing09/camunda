@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.migration.to_8_3;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbForeignKey.MatchType;
@@ -19,10 +19,10 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.ColumnFamilies;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
@@ -47,12 +47,12 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
     private final DbForeignKey<DbLong> parentKey;
 
     public LegacyElementInstanceState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       elementInstanceKey = new DbLong();
       elementInstance = new ElementInstance();
       elementInstanceColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+              ColumnFamilies.ELEMENT_INSTANCE_KEY,
               transactionContext,
               elementInstanceKey,
               elementInstance);
@@ -60,16 +60,16 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       parentKey =
           new DbForeignKey<>(
               new DbLong(),
-              ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+              ColumnFamilies.ELEMENT_INSTANCE_KEY,
               MatchType.Full,
               (k) -> k.getValue() == -1);
       parentChildKey =
           new DbCompositeKey<>(
               parentKey,
-              new DbForeignKey<>(elementInstanceKey, ZbColumnFamilies.ELEMENT_INSTANCE_KEY));
+              new DbForeignKey<>(elementInstanceKey, ColumnFamilies.ELEMENT_INSTANCE_KEY));
       parentChildColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
+              ColumnFamilies.ELEMENT_INSTANCE_PARENT_CHILD,
               transactionContext,
               parentChildKey,
               DbNil.INSTANCE);
@@ -86,8 +86,8 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   class ProcessInstanceKeyByProcessDefinitionKeyTest {
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyElementInstanceState legacyState;
     private DbLong elementInstanceKey;
@@ -107,7 +107,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       elementInstance = new ElementInstance();
       elementInstanceColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.ELEMENT_INSTANCE_KEY,
+              ColumnFamilies.ELEMENT_INSTANCE_KEY,
               transactionContext,
               elementInstanceKey,
               elementInstance);
@@ -116,7 +116,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
           new DbCompositeKey<>(processDefinitionKey, elementInstanceKey);
       processInstanceKeyByProcessDefinitionKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
+              ColumnFamilies.PROCESS_INSTANCE_KEY_BY_DEFINITION_KEY,
               transactionContext,
               processInstanceKeyByProcessDefinitionKey,
               DbNil.INSTANCE);
@@ -241,7 +241,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
               : createElementInstance(
                   elementInstanceKey + 1, processDefinitionKey, BpmnElementType.PROCESS);
       final var value =
-          new ProcessInstanceRecord()
+          new WorkflowInstanceRecord()
               .setProcessDefinitionKey(processDefinitionKey)
               .setBpmnElementType(elementType);
       return new ElementInstance(

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.bpmn;
 
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
@@ -18,7 +18,7 @@ import org.agrona.DirectBuffer;
 public final class BpmnElementContextImpl implements BpmnElementContext {
 
   private long elementInstanceKey;
-  private ProcessInstanceRecord recordValue;
+  private WorkflowInstanceRecord recordValue;
   private ProcessInstanceIntent intent;
 
   @Override
@@ -72,7 +72,7 @@ public final class BpmnElementContextImpl implements BpmnElementContext {
   }
 
   @Override
-  public ProcessInstanceRecord getRecordValue() {
+  public WorkflowInstanceRecord getRecordValue() {
     return recordValue;
   }
 
@@ -94,7 +94,7 @@ public final class BpmnElementContextImpl implements BpmnElementContext {
   @Override
   public BpmnElementContext copy(
       final long elementInstanceKey,
-      final ProcessInstanceRecord recordValue,
+      final WorkflowInstanceRecord recordValue,
       final ProcessInstanceIntent intent) {
 
     final var copy = new BpmnElementContextImpl();
@@ -104,7 +104,7 @@ public final class BpmnElementContextImpl implements BpmnElementContext {
 
   public void init(
       final long elementInstanceKey,
-      final ProcessInstanceRecord recordValue,
+      final WorkflowInstanceRecord recordValue,
       final ProcessInstanceIntent intent) {
     this.elementInstanceKey = elementInstanceKey;
     this.recordValue = recordValue;

@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.JobActivationBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -30,13 +30,13 @@ public class JobRecurProcessor implements TypedRecordProcessor<JobRecord> {
   private final JobState jobState;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final BpmnJobActivationBehavior jobActivationBehavior;
+  private final JobActivationBehavior jobActivationBehavior;
   private final InstantSource clock;
 
   public JobRecurProcessor(
       final ProcessingState processingState,
       final Writers writers,
-      final BpmnJobActivationBehavior jobActivationBehavior,
+      final JobActivationBehavior jobActivationBehavior,
       final InstantSource clock) {
     jobState = processingState.getJobState();
     stateWriter = writers.state();

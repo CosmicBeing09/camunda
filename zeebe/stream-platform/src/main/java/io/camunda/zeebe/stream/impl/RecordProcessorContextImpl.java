@@ -7,14 +7,14 @@
  */
 package io.camunda.zeebe.stream.impl;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
 import io.camunda.zeebe.stream.api.RecordProcessorContext;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
 import io.camunda.zeebe.stream.api.scheduling.ProcessingScheduleService;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.stream.api.state.KeyGeneratorControls;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.util.ArrayList;
@@ -25,18 +25,18 @@ public final class RecordProcessorContextImpl implements RecordProcessorContext 
 
   private final int partitionId;
   private final ProcessingScheduleService scheduleService;
-  private final ZeebeDb zeebeDb;
+  private final GenericDb zeebeDb;
   private final TransactionContext transactionContext;
   private final List<StreamProcessorLifecycleAware> lifecycleListeners = new ArrayList<>();
   private final InterPartitionCommandSender partitionCommandSender;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ControllableStreamClock clock;
   private final MeterRegistry meterRegistry;
 
   public RecordProcessorContextImpl(
       final int partitionId,
       final ProcessingScheduleService scheduleService,
-      final ZeebeDb zeebeDb,
+      final GenericDb zeebeDb,
       final TransactionContext transactionContext,
       final InterPartitionCommandSender partitionCommandSender,
       final KeyGeneratorControls keyGeneratorControls,
@@ -63,7 +63,7 @@ public final class RecordProcessorContextImpl implements RecordProcessorContext 
   }
 
   @Override
-  public ZeebeDb getZeebeDb() {
+  public GenericDb getZeebeDb() {
     return zeebeDb;
   }
 
@@ -88,7 +88,7 @@ public final class RecordProcessorContextImpl implements RecordProcessorContext 
   }
 
   @Override
-  public KeyGenerator getKeyGenerator() {
+  public IdGenerator getKeyGenerator() {
     return keyGenerator;
   }
 

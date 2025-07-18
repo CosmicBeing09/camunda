@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.ProcessEngineMetrics;
 import io.camunda.zeebe.engine.processing.adhocsubprocess.AdHocSubProcessActivityActivateProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnStreamProcessor;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.message.PendingProcessMessageSubscriptionChecker;
@@ -35,13 +35,13 @@ import io.camunda.zeebe.engine.processing.timer.TimerTriggerProcessor;
 import io.camunda.zeebe.engine.processing.variable.VariableDocumentUpdateProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.AdHocSubProcessActivityActivationIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
@@ -52,28 +52,28 @@ import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.InstantSource;
 import java.util.Arrays;
 import java.util.function.Supplier;
 
 public final class BpmnProcessors {
 
-  public static TypedRecordProcessor<ProcessInstanceRecord> addBpmnStreamProcessor(
-      final MutableProcessingState processingState,
+  public static TypedRecordProcessor<WorkflowInstanceRecord> addBpmnStreamProcessor(
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskState,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final TypedRecordProcessors typedRecordProcessors,
       final SubscriptionCommandSender subscriptionCommandSender,
       final DueDateTimerChecker timerChecker,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final InstantSource clock,
       final EngineConfiguration config,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final ProcessEngineMetrics processEngineMetrics) {
     final MutableProcessMessageSubscriptionState subscriptionState =
         processingState.getProcessMessageSubscriptionState();
@@ -105,7 +105,7 @@ public final class BpmnProcessors {
         processingState,
         keyGenerator,
         writers,
-        processingState.getUserTaskState(),
+        processingState.getTaskState(),
         authCheckBehavior);
     addProcessInstanceCreationStreamProcessors(
         typedRecordProcessors,
@@ -161,12 +161,12 @@ public final class BpmnProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final MutableProcessMessageSubscriptionState subscriptionState,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final BpmnBehaviors bpmnBehaviors,
-      final MutableProcessingState processingState,
+      final ProcessBehaviors bpmnBehaviors,
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskState,
       final Writers writers,
       final InstantSource clock,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
+      final TransientSubscriptionState transientProcessMessageSubscriptionState) {
     typedRecordProcessors
         .onCommand(
             ValueType.PROCESS_MESSAGE_SUBSCRIPTION,
@@ -200,8 +200,8 @@ public final class BpmnProcessors {
   private static void addTimerStreamProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final DueDateTimerChecker timerChecker,
-      final MutableProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final MutableAsyncProcessingContext processingState,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers) {
     typedRecordProcessors
         .onCommand(
@@ -218,11 +218,11 @@ public final class BpmnProcessors {
 
   private static void addVariableDocumentStreamProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
-      final MutableUserTaskState userTaskState,
+      final MutableTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
     typedRecordProcessors.onCommand(
         ValueType.VARIABLE_DOCUMENT,
@@ -238,15 +238,15 @@ public final class BpmnProcessors {
 
   private static void addProcessInstanceCreationStreamProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,
       final EngineConfiguration config,
       final AuthorizationCheckBehavior authCheckBehavior) {
     final MutableElementInstanceState elementInstanceState =
         processingState.getElementInstanceState();
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final IdGenerator keyGenerator = processingState.getKeyGenerator();
 
     final ProcessInstanceCreationCreateProcessor createProcessor =
         new ProcessInstanceCreationCreateProcessor(
@@ -270,7 +270,7 @@ public final class BpmnProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
       final Writers writers,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final AuthorizationCheckBehavior authCheckBehavior) {
     final ProcessInstanceModificationModifyProcessor modificationProcessor =
         new ProcessInstanceModificationModifyProcessor(
@@ -289,12 +289,12 @@ public final class BpmnProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessingState processingState,
       final Writers writers,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.PROCESS_INSTANCE_MIGRATION,
         ProcessInstanceMigrationIntent.MIGRATE,
@@ -311,7 +311,7 @@ public final class BpmnProcessors {
 
   private static void addProcessInstanceBatchStreamProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers) {
     typedRecordProcessors
         .onCommand(
@@ -333,10 +333,10 @@ public final class BpmnProcessors {
 
   private static void addAdHocSubProcessActivityStreamProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,
         AdHocSubProcessActivityActivationIntent.ACTIVATE,

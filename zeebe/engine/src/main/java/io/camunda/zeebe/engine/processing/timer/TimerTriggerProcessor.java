@@ -8,10 +8,10 @@
 package io.camunda.zeebe.engine.processing.timer;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCatchEvent;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejection
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTimerInstanceState;
 import io.camunda.zeebe.model.bpmn.util.time.Interval;
 import io.camunda.zeebe.model.bpmn.util.time.RepeatingInterval;
@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.Instant;
@@ -51,16 +51,16 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
   private final ProcessState processState;
   private final ElementInstanceState elementInstanceState;
   private final MutableTimerInstanceState timerInstanceState;
-  private final ExpressionProcessor expressionProcessor;
-  private final KeyGenerator keyGenerator;
+  private final ExpressionEvaluator expressionProcessor;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
-  private final EventHandle eventHandle;
+  private final EventHandler eventHandle;
 
   public TimerTriggerProcessor(
-      final MutableProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final MutableAsyncProcessingContext processingState,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers) {
     catchEventBehavior = bpmnBehaviors.catchEventBehavior();
     expressionProcessor = bpmnBehaviors.expressionBehavior();
@@ -72,7 +72,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
     timerInstanceState = processingState.getTimerState();
     keyGenerator = processingState.getKeyGenerator();
     eventHandle =
-        new EventHandle(
+        new EventHandler(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

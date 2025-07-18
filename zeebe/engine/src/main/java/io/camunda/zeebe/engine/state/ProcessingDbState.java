@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.state;
 
 import io.camunda.zeebe.db.DbKey;
 import io.camunda.zeebe.db.DbValue;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.authorization.DbAuthorizationState;
 import io.camunda.zeebe.engine.state.authorization.DbMappingState;
@@ -32,16 +32,17 @@ import io.camunda.zeebe.engine.state.instance.DbElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.DbEventScopeInstanceState;
 import io.camunda.zeebe.engine.state.instance.DbIncidentState;
 import io.camunda.zeebe.engine.state.instance.DbJobState;
+import io.camunda.zeebe.engine.state.instance.DbTaskState;
 import io.camunda.zeebe.engine.state.instance.DbTimerInstanceState;
-import io.camunda.zeebe.engine.state.instance.DbUserTaskState;
 import io.camunda.zeebe.engine.state.message.DbMessageCorrelationState;
 import io.camunda.zeebe.engine.state.message.DbMessageStartEventSubscriptionState;
 import io.camunda.zeebe.engine.state.message.DbMessageState;
 import io.camunda.zeebe.engine.state.message.DbMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.DbProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.metrics.DbUsageMetricState;
 import io.camunda.zeebe.engine.state.migration.DbMigrationState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableAuthorizationState;
 import io.camunda.zeebe.engine.state.mutable.MutableBannedInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableBatchOperationState;
@@ -65,16 +66,15 @@ import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableMigrationState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableResourceState;
 import io.camunda.zeebe.engine.state.mutable.MutableRoleState;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.engine.state.mutable.MutableSignalSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableTenantState;
 import io.camunda.zeebe.engine.state.mutable.MutableTimerInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableUsageMetricState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.engine.state.processing.DbBannedInstanceState;
 import io.camunda.zeebe.engine.state.routing.DbRoutingState;
@@ -82,16 +82,16 @@ import io.camunda.zeebe.engine.state.signal.DbSignalSubscriptionState;
 import io.camunda.zeebe.engine.state.tenant.DbTenantState;
 import io.camunda.zeebe.engine.state.user.DbUserState;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.InstantSource;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class ProcessingDbState implements MutableProcessingState {
-  private final ZeebeDb<ZbColumnFamilies> zeebeDb;
-  private final KeyGenerator keyGenerator;
+public class ProcessingDbState implements MutableAsyncProcessingContext {
+  private final GenericDb<ColumnFamilies> zeebeDb;
+  private final IdGenerator keyGenerator;
   private final MutableProcessState processState;
   private final MutableTimerInstanceState timerInstanceState;
   private final MutableElementInstanceState elementInstanceState;
@@ -112,7 +112,7 @@ public class ProcessingDbState implements MutableProcessingState {
   private final MutableResourceState resourceState;
   private final MutableSignalSubscriptionState signalSubscriptionState;
   private final MutableDistributionState distributionState;
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final MutableCompensationSubscriptionState compensationSubscriptionState;
   private final MutableUserState userState;
   private final MutableClockState clockState;
@@ -125,16 +125,16 @@ public class ProcessingDbState implements MutableProcessingState {
   private final MutableBatchOperationState batchOperationState;
   private final MutableMembershipState membershipState;
   private final MutableUsageMetricState usageMetricState;
-  private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
+  private final TransientSubscriptionState transientProcessMessageSubscriptionState;
   private final int partitionId;
 
   public ProcessingDbState(
       final int partitionId,
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
-      final KeyGenerator keyGenerator,
-      final TransientPendingSubscriptionState transientMessageSubscriptionState,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final IdGenerator keyGenerator,
+      final TransientSubscriptionState transientMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final EngineConfiguration config,
       final InstantSource clock) {
     this.partitionId = partitionId;
@@ -167,7 +167,7 @@ public class ProcessingDbState implements MutableProcessingState {
     signalSubscriptionState = new DbSignalSubscriptionState(zeebeDb, transactionContext);
     distributionState = new DbDistributionState(zeebeDb, transactionContext);
     mutableMigrationState = new DbMigrationState(zeebeDb, transactionContext);
-    userTaskState = new DbUserTaskState(zeebeDb, transactionContext);
+    userTaskState = new DbTaskState(zeebeDb, transactionContext);
     compensationSubscriptionState =
         new DbCompensationSubscriptionState(zeebeDb, transactionContext);
     userState = new DbUserState(zeebeDb, transactionContext);
@@ -193,7 +193,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableDeploymentState getDeploymentState() {
+  public MutableDeploymentState getDeploymentContext() {
     return deploymentState;
   }
 
@@ -293,7 +293,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableUserTaskState getUserTaskState() {
+  public MutableTaskState getUserTaskState() {
     return userTaskState;
   }
 
@@ -358,7 +358,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public KeyGenerator getKeyGenerator() {
+  public IdGenerator getKeyGenerator() {
     return keyGenerator;
   }
 
@@ -373,7 +373,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public TransientPendingSubscriptionState getTransientPendingSubscriptionState() {
+  public TransientSubscriptionState getTransientPendingSubscriptionState() {
     return transientProcessMessageSubscriptionState;
   }
 
@@ -383,7 +383,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public boolean isEmpty(final ZbColumnFamilies column) {
+  public boolean isEmpty(final ColumnFamilies column) {
     final var newContext = zeebeDb.createContext();
     return zeebeDb.isEmpty(column, newContext);
   }
@@ -401,7 +401,7 @@ public class ProcessingDbState implements MutableProcessingState {
    * @param <ValueType> the value type of the column family
    */
   public <KeyType extends DbKey, ValueType extends DbValue> void forEach(
-      final ZbColumnFamilies columnFamily,
+      final ColumnFamilies columnFamily,
       final KeyType keyInstance,
       final ValueType valueInstance,
       final BiConsumer<KeyType, ValueType> visitor) {

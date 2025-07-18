@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.deployment;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -20,7 +20,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.mutable.MutableFormState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Optional;
@@ -73,17 +73,17 @@ public class DbFormState implements MutableFormState {
   private final Cache<TenantIdAndFormId, PersistedForm> formsByTenantIdAndIdCache;
 
   public DbFormState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final EngineConfiguration config) {
     tenantIdKey = new DbString();
     dbFormKey = new DbLong();
     tenantAwareFormKey = new DbTenantAwareKey<>(tenantIdKey, dbFormKey, PlacementType.PREFIX);
-    fkFormKey = new DbForeignKey<>(tenantAwareFormKey, ZbColumnFamilies.FORMS);
+    fkFormKey = new DbForeignKey<>(tenantAwareFormKey, ColumnFamilies.FORMS);
     dbPersistedForm = new PersistedForm();
     formsByKey =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.FORMS, transactionContext, tenantAwareFormKey, dbPersistedForm);
+            ColumnFamilies.FORMS, transactionContext, tenantAwareFormKey, dbPersistedForm);
 
     dbFormId = new DbString();
     formVersion = new DbLong();
@@ -92,7 +92,7 @@ public class DbFormState implements MutableFormState {
         new DbTenantAwareKey<>(tenantIdKey, idAndVersionKey, PlacementType.PREFIX);
     formByIdAndVersionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.FORM_BY_ID_AND_VERSION,
+            ColumnFamilies.FORM_BY_ID_AND_VERSION,
             transactionContext,
             tenantAwareIdAndVersionKey,
             dbPersistedForm);
@@ -103,7 +103,7 @@ public class DbFormState implements MutableFormState {
             tenantIdKey, new DbCompositeKey<>(dbFormId, dbDeploymentKey), PlacementType.PREFIX);
     formKeyByFormIdAndDeploymentKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.FORM_KEY_BY_FORM_ID_AND_DEPLOYMENT_KEY,
+            ColumnFamilies.FORM_KEY_BY_FORM_ID_AND_DEPLOYMENT_KEY,
             transactionContext,
             tenantAwareFormIdAndDeploymentKey,
             fkFormKey);
@@ -114,14 +114,14 @@ public class DbFormState implements MutableFormState {
             tenantIdKey, new DbCompositeKey<>(dbFormId, dbVersionTag), PlacementType.PREFIX);
     formKeyByFormIdAndVersionTagColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.FORM_KEY_BY_FORM_ID_AND_VERSION_TAG,
+            ColumnFamilies.FORM_KEY_BY_FORM_ID_AND_VERSION_TAG,
             transactionContext,
             tenantAwareFormIdAndVersionTagKey,
             fkFormKey);
 
     versionManager =
         new VersionManager(
-            DEFAULT_VERSION_VALUE, zeebeDb, ZbColumnFamilies.FORM_VERSION, transactionContext);
+            DEFAULT_VERSION_VALUE, zeebeDb, ColumnFamilies.FORM_VERSION, transactionContext);
 
     formsByTenantIdAndIdCache =
         CacheBuilder.newBuilder().maximumSize(config.getFormCacheCapacity()).build();

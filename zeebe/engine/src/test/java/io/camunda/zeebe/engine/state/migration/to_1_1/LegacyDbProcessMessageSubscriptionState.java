@@ -8,13 +8,13 @@
 package io.camunda.zeebe.engine.state.migration.to_1_1;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import java.util.function.Consumer;
 import org.agrona.DirectBuffer;
@@ -38,7 +38,7 @@ public final class LegacyDbProcessMessageSubscriptionState {
       sentTimeColumnFamily;
 
   public LegacyDbProcessMessageSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     this.transactionContext = transactionContext;
     elementInstanceKey = new DbLong();
     messageName = new DbString();
@@ -47,7 +47,7 @@ public final class LegacyDbProcessMessageSubscriptionState {
 
     subscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_PROCESS_SUBSCRIPTION_BY_KEY,
+            ColumnFamilies.DEPRECATED_PROCESS_SUBSCRIPTION_BY_KEY,
             transactionContext,
             elementKeyAndMessageName,
             processMessageSubscription);
@@ -56,7 +56,7 @@ public final class LegacyDbProcessMessageSubscriptionState {
     sentTimeCompositeKey = new DbCompositeKey<>(sentTime, elementKeyAndMessageName);
     sentTimeColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME,
+            ColumnFamilies.PROCESS_SUBSCRIPTION_BY_SENT_TIME,
             transactionContext,
             sentTimeCompositeKey,
             DbNil.INSTANCE);

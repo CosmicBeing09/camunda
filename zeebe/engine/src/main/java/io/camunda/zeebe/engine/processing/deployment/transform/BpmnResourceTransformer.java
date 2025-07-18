@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.deployment.transform;
 import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
 import io.camunda.zeebe.engine.processing.deployment.model.BpmnFactory;
@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
@@ -43,7 +43,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
 
   private final BpmnTransformer bpmnTransformer;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
 
@@ -52,11 +52,11 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
   private final boolean enableStraightThroughProcessingLoopDetector;
 
   public BpmnResourceTransformer(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ProcessState processState,
-      final ExpressionProcessor expressionProcessor,
+      final ExpressionEvaluator expressionProcessor,
       final boolean enableStraightThroughProcessingLoopDetector,
       final EngineConfiguration config,
       final InstantSource clock) {

@@ -33,7 +33,7 @@ import org.agrona.DirectBuffer;
 public final class BpmnStateBehavior {
 
   private final ElementInstanceState elementInstanceState;
-  private final VariableState variablesState;
+  private final VariableState variableState;
   private final JobState jobState;
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
@@ -44,7 +44,7 @@ public final class BpmnStateBehavior {
 
     processState = processingState.getProcessState();
     elementInstanceState = processingState.getElementInstanceState();
-    variablesState = processingState.getVariableState();
+    variableState = processingState.getVariableState();
     jobState = processingState.getJobState();
   }
 
@@ -196,7 +196,7 @@ public final class BpmnStateBehavior {
 
   public DirectBuffer getLocalVariable(
       final BpmnElementContext context, final DirectBuffer variableName) {
-    return variablesState.getVariableLocal(context.getElementInstanceKey(), variableName);
+    return variableState.getVariableLocal(context.getElementInstanceKey(), variableName);
   }
 
   public void setLocalVariable(
@@ -230,7 +230,7 @@ public final class BpmnStateBehavior {
     final var targetScope = context.getFlowScopeKey();
 
     final var variablesAsDocument =
-        variablesState.getVariablesAsDocument(sourceScope, List.of(variableName));
+        variableState.getVariablesAsDocument(sourceScope, List.of(variableName));
 
     variableBehavior.mergeDocument(
         targetScope,
@@ -245,7 +245,7 @@ public final class BpmnStateBehavior {
       final long sourceScopeKey,
       final long targetProcessInstanceKey,
       final DeployedProcess targetProcess) {
-    final var variables = variablesState.getVariablesAsDocument(sourceScopeKey);
+    final var variables = variableState.getVariablesAsDocument(sourceScopeKey);
     copyVariablesToProcessInstance(targetProcessInstanceKey, targetProcess, variables);
   }
 
@@ -253,7 +253,7 @@ public final class BpmnStateBehavior {
       final long sourceScopeKey,
       final long targetProcessInstanceKey,
       final DeployedProcess targetProcess) {
-    final var variables = variablesState.getVariablesLocalAsDocument(sourceScopeKey);
+    final var variables = variableState.getVariablesLocalAsDocument(sourceScopeKey);
     copyVariablesToProcessInstance(targetProcessInstanceKey, targetProcess, variables);
   }
 

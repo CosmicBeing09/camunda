@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.migration.to_8_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.message.MessageStartEventSubscription;
 import io.camunda.zeebe.engine.state.migration.MemoryBoundedColumnIteration;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyMessageStartEventSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbMessageStartEventSubscriptionMigrationState {
@@ -28,7 +28,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
   private final DbMessageStartEventSubscriptionState to;
 
   public DbMessageStartEventSubscriptionMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacyMessageStartEventSubscriptionState(zeebeDb, transactionContext);
     to = new DbMessageStartEventSubscriptionState(zeebeDb, transactionContext);
   }
@@ -90,7 +90,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
         subscriptionsOfProcessDefinitionKeyColumnFamily;
 
     public DbMessageStartEventSubscriptionState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       tenantIdKey = new DbString();
       messageName = new DbString();
       tenantAwareMessageName =
@@ -100,7 +100,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
           new DbCompositeKey<>(tenantAwareMessageName, processDefinitionKey);
       subscriptionsColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY,
+              ColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY,
               transactionContext,
               messageNameAndProcessDefinitionKey,
               messageStartEventSubscription);
@@ -109,7 +109,7 @@ public class DbMessageStartEventSubscriptionMigrationState {
           new DbCompositeKey<>(processDefinitionKey, tenantAwareMessageName);
       subscriptionsOfProcessDefinitionKeyColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_KEY_AND_NAME,
+              ColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_KEY_AND_NAME,
               transactionContext,
               processDefinitionKeyAndMessageName,
               DbNil.INSTANCE);

@@ -12,10 +12,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,7 +26,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class ProcessInstanceElementMigratedApplierTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private MutableElementInstanceState elementInstanceState;
   private ProcessState processState;
@@ -44,7 +44,7 @@ public class ProcessInstanceElementMigratedApplierTest {
   void shouldUpdateProcessDefinitionData() {
     // given
     final var processInstance =
-        new ProcessInstanceRecord()
+        new WorkflowInstanceRecord()
             .setProcessDefinitionKey(1L)
             .setBpmnProcessId("process")
             .setVersion(1)
@@ -58,7 +58,7 @@ public class ProcessInstanceElementMigratedApplierTest {
             processInstance));
 
     // when
-    final var migratedProcessInstance = new ProcessInstanceRecord();
+    final var migratedProcessInstance = new WorkflowInstanceRecord();
     migratedProcessInstance.wrap(processInstance);
     migratedProcessInstance
         .setProcessDefinitionKey(3L)
@@ -101,7 +101,7 @@ public class ProcessInstanceElementMigratedApplierTest {
     // given
     final long serviceTaskKey = 3L;
     final var serviceTask =
-        new ProcessInstanceRecord()
+        new WorkflowInstanceRecord()
             .setProcessDefinitionKey(1L)
             .setBpmnProcessId("process")
             .setVersion(1)
@@ -112,7 +112,7 @@ public class ProcessInstanceElementMigratedApplierTest {
         new ElementInstance(serviceTaskKey, ProcessInstanceIntent.ELEMENT_ACTIVATED, serviceTask));
 
     // when
-    final var migratedServiceTask = new ProcessInstanceRecord();
+    final var migratedServiceTask = new WorkflowInstanceRecord();
     migratedServiceTask.wrap(serviceTask);
     migratedServiceTask
         .setProcessDefinitionKey(4L)

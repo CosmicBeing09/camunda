@@ -8,15 +8,15 @@
 package io.camunda.zeebe.engine.state.batchoperation;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.batchoperation.PersistedBatchOperation.BatchOperationStatus;
 import io.camunda.zeebe.engine.state.mutable.MutableBatchOperationState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
 import java.util.List;
 import java.util.Optional;
@@ -42,26 +42,26 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   private final ColumnFamily<DbLong, DbNil> pendingBatchOperationColumnFamily;
 
   public DbBatchOperationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
-    fkBatchKey = new DbForeignKey<>(batchKey, ZbColumnFamilies.BATCH_OPERATION);
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+    fkBatchKey = new DbForeignKey<>(batchKey, ColumnFamilies.BATCH_OPERATION);
     chunkKey = new DbLong();
     fkBatchKeyAndChunkKey = new DbCompositeKey<>(fkBatchKey, chunkKey);
 
     batchOperationColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.BATCH_OPERATION,
+            ColumnFamilies.BATCH_OPERATION,
             transactionContext,
             batchKey,
             new PersistedBatchOperation());
     batchOperationChunksColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.BATCH_OPERATION_CHUNKS,
+            ColumnFamilies.BATCH_OPERATION_CHUNKS,
             transactionContext,
             fkBatchKeyAndChunkKey,
             new PersistedBatchOperationChunk());
     pendingBatchOperationColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PENDING_BATCH_OPERATION, transactionContext, batchKey, DbNil.INSTANCE);
+            ColumnFamilies.PENDING_BATCH_OPERATION, transactionContext, batchKey, DbNil.INSTANCE);
   }
 
   @Override

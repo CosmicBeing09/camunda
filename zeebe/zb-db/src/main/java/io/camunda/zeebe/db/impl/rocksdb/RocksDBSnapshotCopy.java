@@ -12,8 +12,8 @@ import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.RawTransactionalColumnFamily;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.ZeebeTransaction;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.ZeebeTransactionDb;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.ColumnFamilyScope;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import java.nio.file.Path;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 public class RocksDBSnapshotCopy implements SnapshotCopy {
 
   private static final Logger LOG = LoggerFactory.getLogger(RocksDBSnapshotCopy.class);
-  private final ZeebeDbFactory<ZbColumnFamilies> factory;
+  private final ZeebeDbFactory<ColumnFamilies> factory;
 
-  public RocksDBSnapshotCopy(final ZeebeDbFactory<ZbColumnFamilies> factory) {
+  public RocksDBSnapshotCopy(final ZeebeDbFactory<ColumnFamilies> factory) {
     this.factory = factory;
   }
 
@@ -33,9 +33,9 @@ public class RocksDBSnapshotCopy implements SnapshotCopy {
   public void withContexts(
       final Path fromPath, final Path toDBPath, final CopyContextConsumer consumer) {
     try (final var toDB =
-        (ZeebeTransactionDb<ZbColumnFamilies>) factory.createDb(toDBPath.toFile())) {
+        (ZeebeTransactionDb<ColumnFamilies>) factory.createDb(toDBPath.toFile())) {
       try (final var fromDB =
-          (ZeebeTransactionDb<ZbColumnFamilies>) factory.createDb(fromPath.toFile())) {
+          (ZeebeTransactionDb<ColumnFamilies>) factory.createDb(fromPath.toFile())) {
         final var fromCtx = fromDB.createContext();
         final var toCtx = toDB.createContext();
         consumer.accept(fromDB, fromCtx, toDB, toCtx);
@@ -55,7 +55,7 @@ public class RocksDBSnapshotCopy implements SnapshotCopy {
       toCtx.runInTransaction(
           () -> {
             final var toTransaction = (ZeebeTransaction) toCtx.getCurrentTransaction();
-            for (final var cf : ZbColumnFamilies.values()) {
+            for (final var cf : ColumnFamilies.values()) {
               if (abort.get()) {
                 break;
               }

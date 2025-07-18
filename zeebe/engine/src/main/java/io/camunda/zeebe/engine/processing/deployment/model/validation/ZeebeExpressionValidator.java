@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.el.ExpressionLanguage;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.deployment.model.transformer.ExpressionTransformer;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,12 +110,12 @@ public final class ZeebeExpressionValidator<T extends ModelElementInstance>
   }
 
   public static boolean isValidDateTime(
-      final Expression staticExp, final ExpressionProcessor expressionProcessor) {
+      final Expression staticExp, final ExpressionEvaluator expressionProcessor) {
     return expressionProcessor.evaluateDateTimeExpression(staticExp, NO_VARIABLE_SCOPE).isRight();
   }
 
   public static boolean isValidInt(
-      final Expression staticExp, final ExpressionProcessor expressionProcessor) {
+      final Expression staticExp, final ExpressionEvaluator expressionProcessor) {
     return expressionProcessor.evaluateIntegerExpression(staticExp, NO_VARIABLE_SCOPE).isRight();
   }
 

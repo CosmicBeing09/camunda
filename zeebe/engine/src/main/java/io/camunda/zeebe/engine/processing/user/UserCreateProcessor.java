@@ -11,10 +11,10 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -28,7 +28,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.Set;
 
 public class UserCreateProcessor implements DistributedTypedRecordProcessor<UserRecord> {
@@ -36,16 +36,16 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   private static final String USER_ALREADY_EXISTS_ERROR_MESSAGE =
       "Expected to create user with username '%s', but a user with this username already exists";
   private final UserState userState;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final CommandDistributionBehavior distributionBehavior;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final TypedCommandWriter commandWriter;
 
   public UserCreateProcessor(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingState state,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
@@ -68,7 +68,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -78,7 +78,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
       rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.rejectCommandAsync(command, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 

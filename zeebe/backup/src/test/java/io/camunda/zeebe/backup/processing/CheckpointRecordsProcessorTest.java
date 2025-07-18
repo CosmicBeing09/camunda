@@ -23,7 +23,7 @@ import io.camunda.zeebe.backup.processing.state.DbCheckpointState;
 import io.camunda.zeebe.db.AccessMetricsConfiguration;
 import io.camunda.zeebe.db.AccessMetricsConfiguration.Kind;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
 import io.camunda.zeebe.protocol.impl.record.value.management.CheckpointRecord;
@@ -53,7 +53,7 @@ final class CheckpointRecordsProcessorTest {
   private ProcessingResultBuilder resultBuilder;
   // Used for verifying state in the tests
   private CheckpointState state;
-  private ZeebeDb zeebedb;
+  private GenericDb zeebedb;
 
   @BeforeEach
   void setup() {
@@ -74,7 +74,7 @@ final class CheckpointRecordsProcessorTest {
   }
 
   private RecordProcessorContextImpl createContext(
-      final ProcessingScheduleService executor, final ZeebeDb zeebeDb) {
+      final ProcessingScheduleService executor, final GenericDb zeebeDb) {
     final var context = zeebeDb.createContext();
     return new RecordProcessorContextImpl(
         1,

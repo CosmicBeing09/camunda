@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstance
 import static io.camunda.zeebe.engine.state.immutable.IncidentState.MISSING_INCIDENT;
 
 import io.camunda.zeebe.engine.Loggers;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSequenceFlow;
@@ -19,9 +19,9 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
@@ -31,13 +31,13 @@ import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.msgpack.spec.MsgPackHelper;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -52,7 +52,7 @@ import io.camunda.zeebe.protocol.record.value.BpmnEventType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.ProcessInstanceMigrationRecordValue.ProcessInstanceMigrationMappingInstructionValue;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -72,29 +72,29 @@ public class ProcessInstanceMigrationMigrateProcessor
   private final VariableRecord variableRecord = new VariableRecord().setValue(NIL_VALUE);
 
   private final StateWriter stateWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
   private final JobState jobState;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final VariableState variableState;
   private final IncidentState incidentState;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final MessageState messageState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final ProcessInstanceMigrationCatchEventBehaviour migrationCatchEventBehaviour;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
 
   public ProcessInstanceMigrationMigrateProcessor(
       final Writers writers,
       final ProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -150,7 +150,7 @@ public class ProcessInstanceMigrationMigrateProcessor
                   "such process instance")
               : rejection.reason();
       rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
+      responseWriter.rejectCommandAsync(command, rejection.type(), errorMessage);
       return;
     }
 
@@ -196,13 +196,13 @@ public class ProcessInstanceMigrationMigrateProcessor
 
     if (error instanceof final ProcessInstanceMigrationPreconditionFailedException e) {
       rejectionWriter.appendRejection(command, e.getRejectionType(), e.getMessage());
-      responseWriter.writeRejectionOnCommand(command, e.getRejectionType(), e.getMessage());
+      responseWriter.rejectCommandAsync(command, e.getRejectionType(), e.getMessage());
       return ProcessingError.EXPECTED_ERROR;
 
     } else if (error instanceof final SafetyCheckFailedException e) {
       LOG.error(e.getMessage(), e);
       rejectionWriter.appendRejection(command, RejectionType.PROCESSING_ERROR, e.getMessage());
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           command, RejectionType.PROCESSING_ERROR, e.getMessage());
       return ProcessingError.EXPECTED_ERROR;
     }
@@ -325,7 +325,7 @@ public class ProcessInstanceMigrationMigrateProcessor
 
     sequenceFlows.forEach(
         sequenceFlow -> {
-          final var sequenceFlowRecord = new ProcessInstanceRecord();
+          final var sequenceFlowRecord = new WorkflowInstanceRecord();
           sequenceFlowRecord.copyFrom(elementInstanceRecord);
           sequenceFlowRecord
               .setElementId(sequenceFlow.getId())
@@ -528,7 +528,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       final long incidentKey,
       final DeployedProcess targetProcessDefinition,
       final String targetElementId,
-      final ProcessInstanceRecord elementInstanceRecord) {
+      final WorkflowInstanceRecord elementInstanceRecord) {
     final var incidentRecord = incidentState.getIncidentRecord(incidentKey);
     if (incidentRecord == null) {
       throw new SafetyCheckFailedException(

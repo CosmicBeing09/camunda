@@ -1,0 +1,42 @@
+/*
+ * Copyright Camunda Services GmbH and/or licensed to Camunda Services GmbH under
+ * one or more contributor license agreements. See the NOTICE file distributed
+ * with this work for additional information regarding copyright ownership.
+ * Licensed under the Camunda License 1.0. You may not use this file
+ * except in compliance with the Camunda License 1.0.
+ */
+package io.camunda.zeebe.engine.state.mutable;
+
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.instance.AsyncTransitionTriggerMetadata;
+import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
+import java.util.function.Consumer;
+
+public interface MutableTaskState extends TaskState {
+
+  void create(final TaskRecord userTask);
+
+  void update(final TaskRecord userTask);
+
+  void updateUserTaskLifecycleState(final long userTaskKey, final LifecycleState newLifecycleState);
+
+  void delete(final long userTaskKey);
+
+  void storeIntermediateState(final TaskRecord userTask, final LifecycleState lifecycleState);
+
+  void updateIntermediateState(long key, Consumer<UserTaskIntermediateStateValue> updater);
+
+  void deleteIntermediateState(final long userTaskKey);
+
+  void deleteIntermediateStateIfExists(final long userTaskKey);
+
+  void storeRecordRequestMetadata(
+      final long userTaskKey, final AsyncTransitionTriggerMetadata recordRequestMetadata);
+
+  void deleteRecordRequestMetadata(final long userTaskKey);
+
+  void storeInitialAssignee(final long userTaskKey, String assignee);
+
+  void deleteInitialAssignee(final long userTaskKey);
+}

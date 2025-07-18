@@ -15,16 +15,16 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.instance.DbElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.EventTrigger;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.migration.TemporaryVariableMigration;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.ColumnFamilies;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
@@ -48,10 +48,10 @@ public class TemporaryVariableMigrationTest {
     @Test
     public void noMigrationNeededWhenColumnIsEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE)).thenReturn(true);
+      when(mockProcessingState.isEmpty(ColumnFamilies.TEMPORARY_VARIABLE_STORE)).thenReturn(true);
       final var actual =
           sutMigration.needsToRun(
               new MigrationTaskContextImpl(new ClusterContextImpl(1), mockProcessingState));
@@ -63,10 +63,10 @@ public class TemporaryVariableMigrationTest {
     @Test
     public void migrationNeededWhenColumnIsNotEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
-      when(mockProcessingState.isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE))
+      when(mockProcessingState.isEmpty(ColumnFamilies.TEMPORARY_VARIABLE_STORE))
           .thenReturn(false);
       final var actual =
           sutMigration.needsToRun(
@@ -79,7 +79,7 @@ public class TemporaryVariableMigrationTest {
     @Test
     public void migrationCallsMethodInMigrationState() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class, RETURNS_DEEP_STUBS);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class, RETURNS_DEEP_STUBS);
 
       // when
       sutMigration.runMigration(
@@ -99,8 +99,8 @@ public class TemporaryVariableMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   public class BlackboxTest {
 
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private GenericDb<ColumnFamilies> zeebeDb;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDbTemporaryVariablesState legacyTemporaryVariablesState;
     private DbVariableState variableState;
@@ -156,7 +156,7 @@ public class TemporaryVariableMigrationTest {
     public void eventSubProcessGetsMigratedCorrectly() {
       // given
       final long flowScopeKey = 200L;
-      final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+      final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
       processInstanceRecord.setBpmnElementType(BpmnElementType.EVENT_SUB_PROCESS);
       processInstanceRecord.setFlowScopeKey(flowScopeKey);
       elementInstanceState.newInstance(

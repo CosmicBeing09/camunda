@@ -20,10 +20,10 @@ import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.immutable.VariableState.Variable;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import java.util.Arrays;
@@ -52,7 +52,7 @@ public final class VariableStateTest {
 
   @BeforeClass
   public static void setUp() {
-    final MutableProcessingState processingState = ZEEBE_STATE_RULE.getProcessingState();
+    final MutableAsyncProcessingContext processingState = ZEEBE_STATE_RULE.getProcessingState();
     elementInstanceState = processingState.getElementInstanceState();
     variableState = processingState.getVariableState();
   }
@@ -469,23 +469,23 @@ public final class VariableStateTest {
   private void declareScope(final long parentKey, final long key) {
     final ElementInstance parent = elementInstanceState.getInstance(parentKey);
 
-    final TypedRecord<ProcessInstanceRecord> record = mockTypedRecord(key, parentKey);
+    final TypedRecord<WorkflowInstanceRecord> record = mockTypedRecord(key, parentKey);
     elementInstanceState.newInstance(
         parent, key, record.getValue(), ProcessInstanceIntent.ELEMENT_ACTIVATING);
   }
 
-  private TypedRecord<ProcessInstanceRecord> mockTypedRecord(final long key, final long parentKey) {
-    final ProcessInstanceRecord processInstanceRecord = createProcessInstanceRecord(parentKey);
+  private TypedRecord<WorkflowInstanceRecord> mockTypedRecord(final long key, final long parentKey) {
+    final WorkflowInstanceRecord processInstanceRecord = createProcessInstanceRecord(parentKey);
 
-    final TypedRecord<ProcessInstanceRecord> typedRecord = mock(TypedRecord.class);
+    final TypedRecord<WorkflowInstanceRecord> typedRecord = mock(TypedRecord.class);
     when(typedRecord.getKey()).thenReturn(key);
     when(typedRecord.getValue()).thenReturn(processInstanceRecord);
 
     return typedRecord;
   }
 
-  private ProcessInstanceRecord createProcessInstanceRecord(final long parentKey) {
-    final ProcessInstanceRecord processInstanceRecord = new ProcessInstanceRecord();
+  private WorkflowInstanceRecord createProcessInstanceRecord(final long parentKey) {
+    final WorkflowInstanceRecord processInstanceRecord = new WorkflowInstanceRecord();
 
     if (parentKey >= 0) {
       processInstanceRecord.setFlowScopeKey(parentKey);

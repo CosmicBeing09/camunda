@@ -9,13 +9,13 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.instance.AsyncTransitionTriggerMetadata;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -34,13 +34,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class UserTaskCancelingV2ApplierTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
   private UserTaskCancelingV2Applier userTaskCancelingApplier;
 
   /** Used for state assertions. */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;
@@ -48,7 +48,7 @@ public class UserTaskCancelingV2ApplierTest {
   @BeforeEach
   public void setup() {
     userTaskCancelingApplier = new UserTaskCancelingV2Applier(processingState);
-    userTaskState = processingState.getUserTaskState();
+    userTaskState = processingState.getTaskState();
     testSetup = new AppliersTestSetupHelper(processingState);
   }
 
@@ -59,7 +59,7 @@ public class UserTaskCancelingV2ApplierTest {
     final long elementInstanceKey = new Random().nextLong();
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new TaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate user task creation
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
@@ -96,7 +96,7 @@ public class UserTaskCancelingV2ApplierTest {
     final var variablesBuffer = MsgPackUtil.asMsgPack(Map.of("status", "approved"));
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new TaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     final var variableDocumentRecord =
         new VariableDocumentRecord()
@@ -155,7 +155,7 @@ public class UserTaskCancelingV2ApplierTest {
     final long elementInstanceKey = new Random().nextLong();
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new TaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate user task creation
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
@@ -167,7 +167,7 @@ public class UserTaskCancelingV2ApplierTest {
     // persist request metadata
     userTaskState.storeRecordRequestMetadata(
         userTaskKey,
-        new UserTaskTransitionTriggerRequestMetadata()
+        new AsyncTransitionTriggerMetadata()
             .setIntent(UserTaskIntent.CLAIMING)
             .setTriggerType(ValueType.USER_TASK)
             .setRequestId(new Random().nextLong())
@@ -215,7 +215,7 @@ public class UserTaskCancelingV2ApplierTest {
     final String initialAssignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new TaskRecord()
             .setUserTaskKey(userTaskKey)
             .setAssignee(initialAssignee)
             .setElementInstanceKey(elementInstanceKey);
@@ -224,7 +224,7 @@ public class UserTaskCancelingV2ApplierTest {
     // assignee is present in the creating event
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
     // but we clear the assignee for created event
-    final UserTaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
+    final TaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
 
     assertThat(userTaskState.findInitialAssignee(userTaskKey))

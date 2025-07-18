@@ -11,9 +11,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.assertj.core.groups.Tuple.tuple;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.test.util.AutoCloseableRule;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.io.File;
@@ -39,7 +39,7 @@ public final class ExportersStateTest {
   public final RuleChain chain = RuleChain.outerRule(temporaryFolder).around(autoCloseableRule);
 
   private ExportersState state;
-  private ZeebeDb<ZbColumnFamilies> db;
+  private GenericDb<ColumnFamilies> db;
 
   @Before
   public void setup() throws Exception {

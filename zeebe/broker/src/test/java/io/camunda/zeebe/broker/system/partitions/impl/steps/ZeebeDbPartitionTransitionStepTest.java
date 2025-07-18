@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import io.atomix.raft.RaftServer.Role;
 import io.camunda.zeebe.broker.system.partitions.StateController;
 import io.camunda.zeebe.broker.system.partitions.TestPartitionTransitionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.scheduler.testing.TestActorFuture;
 import java.io.IOException;
 import java.util.stream.Stream;
@@ -31,8 +31,8 @@ class ZeebeDbPartitionTransitionStepTest {
   TestPartitionTransitionContext transitionContext = new TestPartitionTransitionContext();
 
   private final StateController stateController = mock(StateController.class);
-  private final ZeebeDb zeebeDb = mock(ZeebeDb.class);
-  private final ZeebeDb zeebeDbFromPrevRole = mock(ZeebeDb.class);
+  private final GenericDb zeebeDb = mock(GenericDb.class);
+  private final GenericDb zeebeDbFromPrevRole = mock(GenericDb.class);
 
   private ZeebeDbPartitionTransitionStep step;
 

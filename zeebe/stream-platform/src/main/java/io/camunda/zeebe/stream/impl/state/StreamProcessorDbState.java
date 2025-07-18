@@ -7,15 +7,15 @@
  */
 package io.camunda.zeebe.stream.impl.state;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 
 public class StreamProcessorDbState {
 
   private final DbLastProcessedPositionState lastProcessedPositionState;
 
   public StreamProcessorDbState(
-      final ZeebeDb zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb zeebeDb, final TransactionContext transactionContext) {
     lastProcessedPositionState = new DbLastProcessedPositionState(zeebeDb, transactionContext);
   }
 

@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 import io.camunda.zeebe.broker.system.partitions.AtomixRecordEntrySupplier;
 import io.camunda.zeebe.broker.system.partitions.NoEntryAtSnapshotPosition;
 import io.camunda.zeebe.broker.system.partitions.StateController;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbException;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.logstreams.impl.Loggers;
@@ -40,12 +40,12 @@ public class StateControllerImpl implements StateController {
 
   private final Path runtimeDirectory;
   private final ZeebeDbFactory zeebeDbFactory;
-  private final ToLongFunction<ZeebeDb> exporterPositionSupplier;
+  private final ToLongFunction<GenericDb> exporterPositionSupplier;
   private final AtomixRecordEntrySupplier entrySupplier;
   private final ConstructableSnapshotStore constructableSnapshotStore;
   private final ConcurrencyControl concurrencyControl;
 
-  private ZeebeDb db;
+  private GenericDb db;
   private ScheduledTimer metricsExportTimer;
 
   public StateControllerImpl(
@@ -53,7 +53,7 @@ public class StateControllerImpl implements StateController {
       final ConstructableSnapshotStore constructableSnapshotStore,
       final Path runtimeDirectory,
       final AtomixRecordEntrySupplier entrySupplier,
-      final ToLongFunction<ZeebeDb> exporterPositionSupplier,
+      final ToLongFunction<GenericDb> exporterPositionSupplier,
       final ConcurrencyControl concurrencyControl) {
     this.constructableSnapshotStore = requireNonNull(constructableSnapshotStore);
     this.runtimeDirectory = requireNonNull(runtimeDirectory);
@@ -74,8 +74,8 @@ public class StateControllerImpl implements StateController {
   }
 
   @Override
-  public ActorFuture<ZeebeDb> recover() {
-    final ActorFuture<ZeebeDb> future = concurrencyControl.createFuture();
+  public ActorFuture<GenericDb> recover() {
+    final ActorFuture<GenericDb> future = concurrencyControl.createFuture();
     concurrencyControl.run(() -> recoverInternal(future));
     return future;
   }
@@ -119,7 +119,7 @@ public class StateControllerImpl implements StateController {
     }
   }
 
-  private void recoverInternal(final ActorFuture<ZeebeDb> future) {
+  private void recoverInternal(final ActorFuture<GenericDb> future) {
     try {
       FileUtil.deleteFolderIfExists(runtimeDirectory);
     } catch (final IOException e) {
@@ -135,7 +135,7 @@ public class StateControllerImpl implements StateController {
   }
 
   private void recoverFromSnapshot(
-      final ActorFuture<ZeebeDb> future, final PersistedSnapshot snapshot) {
+      final ActorFuture<GenericDb> future, final PersistedSnapshot snapshot) {
     LOG.debug("Recovering state from available snapshot: {}", snapshot);
 
     try (final var db = zeebeDbFactory.openSnapshotOnlyDb(snapshot.getPath().toFile())) {
@@ -225,7 +225,7 @@ public class StateControllerImpl implements StateController {
   }
 
   @SuppressWarnings("rawtypes")
-  private void openDb(final ActorFuture<ZeebeDb> future) {
+  private void openDb(final ActorFuture<GenericDb> future) {
     try {
       if (db == null) {
         db = zeebeDbFactory.createDb(runtimeDirectory.toFile());

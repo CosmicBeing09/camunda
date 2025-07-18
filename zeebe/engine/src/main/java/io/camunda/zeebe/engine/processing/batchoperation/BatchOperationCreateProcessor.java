@@ -14,17 +14,17 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,20 +37,20 @@ public final class BatchOperationCreateProcessor
   private static final String EMPTY_JSON_OBJECT = "{}";
   private static final String MESSAGE_GIVEN_FILTER_IS_EMPTY = "Given filter is empty";
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final RoutingInfo routingInfo;
+  private final PartitionRouting routingInfo;
 
   public BatchOperationCreateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
     stateWriter = writers.state();
     rejectionWriter = writers.rejection();
     responseWriter = writers.response();
@@ -65,7 +65,7 @@ public final class BatchOperationCreateProcessor
     if (isEmptyOrNullFilter(command)) {
       rejectionWriter.appendRejection(
           command, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           command, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
@@ -74,7 +74,7 @@ public final class BatchOperationCreateProcessor
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -85,7 +85,7 @@ public final class BatchOperationCreateProcessor
     final var recordWithKey = new BatchOperationCreationRecord();
     recordWithKey.wrap(recordValue);
     recordWithKey.setBatchOperationKey(key);
-    recordWithKey.setPartitionIds(routingInfo.partitions());
+    recordWithKey.setPartitionIds(routingInfo.getCurrentPartitionIds());
 
     stateWriter.appendFollowUpEvent(key, BatchOperationIntent.CREATED, recordWithKey);
     responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey, command);

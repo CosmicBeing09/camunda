@@ -10,15 +10,15 @@ package io.camunda.zeebe.engine.util;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
 import io.camunda.zeebe.util.ReflectUtil;
 import java.io.IOException;
@@ -96,7 +96,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
 
     ReflectionUtils.findFields(
             testClass,
-            field -> ReflectionUtils.isNotStatic(field) && field.getType() == ZeebeDb.class,
+            field -> ReflectionUtils.isNotStatic(field) && field.getType() == GenericDb.class,
             HierarchyTraversalMode.TOP_DOWN)
         .forEach(
             field -> {
@@ -127,7 +127,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
             testClass,
             field ->
                 ReflectionUtils.isNotStatic(field)
-                    && field.getType().isAssignableFrom(MutableProcessingState.class),
+                    && field.getType().isAssignableFrom(MutableAsyncProcessingContext.class),
             HierarchyTraversalMode.TOP_DOWN)
         .forEach(
             field -> {
@@ -147,9 +147,9 @@ public class ProcessingStateExtension implements BeforeEachCallback {
   private static final class ProcessingStateExtensionState implements CloseableResource {
 
     private Path tempFolder;
-    private ZeebeDb<ZbColumnFamilies> zeebeDb;
+    private GenericDb<ColumnFamilies> zeebeDb;
     private TransactionContext transactionContext;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
 
     private ProcessingStateExtensionState() {
 
@@ -166,8 +166,8 @@ public class ProcessingStateExtension implements BeforeEachCallback {
                 zeebeDb,
                 transactionContext,
                 keyGenerator,
-                new TransientPendingSubscriptionState(),
-                new TransientPendingSubscriptionState(),
+                new TransientSubscriptionState(),
+                new TransientSubscriptionState(),
                 new EngineConfiguration(),
                 InstantSource.system());
       } catch (final Exception e) {
@@ -236,11 +236,11 @@ public class ProcessingStateExtension implements BeforeEachCallback {
       return failures;
     }
 
-    private ZeebeDb<ZbColumnFamilies> getZeebeDb() {
+    private GenericDb<ColumnFamilies> getZeebeDb() {
       return zeebeDb;
     }
 
-    private MutableProcessingState getProcessingState() {
+    private MutableAsyncProcessingContext getProcessingState() {
       return processingState;
     }
 

@@ -12,7 +12,7 @@ import static java.util.Map.entry;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.Loggers;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.BpmnDeploymentBindingValidator;
@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.InstantSource;
@@ -46,8 +46,8 @@ public final class DeploymentTransformer {
   public DeploymentTransformer(
       final StateWriter stateWriter,
       final ProcessingState processingState,
-      final ExpressionProcessor expressionProcessor,
-      final KeyGenerator keyGenerator,
+      final ExpressionEvaluator expressionProcessor,
+      final IdGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final EngineConfiguration config,
       final InstantSource clock) {

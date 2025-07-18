@@ -9,14 +9,14 @@ package io.camunda.zeebe.engine.state.migration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 public class DbMigrationStateTest {
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Test
   void shouldHaveNoVersionUntilWritten() {

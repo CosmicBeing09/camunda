@@ -8,16 +8,16 @@
 package io.camunda.zeebe.engine.state.variable;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
+import io.camunda.zeebe.engine.state.instance.AsyncDocumentState;
 import io.camunda.zeebe.engine.state.instance.ParentScopeKey;
-import io.camunda.zeebe.engine.state.instance.VariableDocumentState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayList;
@@ -55,9 +55,9 @@ public class DbVariableState implements MutableVariableState {
   // (scope key) => (variable document state)
   // we need two separate wrapper to not interfere with get and put
   // see https://github.com/zeebe-io/zeebe/issues/1914
-  private final VariableDocumentState variableDocumentStateToRead = new VariableDocumentState();
-  private final VariableDocumentState variableDocumentStateToWrite = new VariableDocumentState();
-  private final ColumnFamily<DbLong, VariableDocumentState>
+  private final AsyncDocumentState variableDocumentStateToRead = new AsyncDocumentState();
+  private final AsyncDocumentState variableDocumentStateToWrite = new AsyncDocumentState();
+  private final ColumnFamily<DbLong, AsyncDocumentState>
       variableDocumentStateByScopeKeyColumnFamily;
 
   private final VariableInstance newVariable = new VariableInstance();
@@ -68,11 +68,11 @@ public class DbVariableState implements MutableVariableState {
   private final ObjectHashSet<DirectBuffer> variablesToCollect = new ObjectHashSet<>();
 
   public DbVariableState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     childKey = new DbLong();
     childParentColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ELEMENT_INSTANCE_CHILD_PARENT,
+            ColumnFamilies.ELEMENT_INSTANCE_CHILD_PARENT,
             transactionContext,
             childKey,
             parentKey);
@@ -82,14 +82,14 @@ public class DbVariableState implements MutableVariableState {
     scopeKeyVariableNameKey = new DbCompositeKey<>(scopeKey, variableName);
     variablesColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.VARIABLES,
+            ColumnFamilies.VARIABLES,
             transactionContext,
             scopeKeyVariableNameKey,
             new VariableInstance());
 
     variableDocumentStateByScopeKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.VARIABLE_DOCUMENT_STATE_BY_SCOPE_KEY,
+            ColumnFamilies.VARIABLE_DOCUMENT_STATE_BY_SCOPE_KEY,
             transactionContext,
             scopeKey,
             variableDocumentStateToRead);
@@ -155,6 +155,19 @@ public class DbVariableState implements MutableVariableState {
         dbString -> true,
         (dbString, variable1) -> variablesColumnFamily.deleteExisting(scopeKeyVariableNameKey),
         () -> false);
+  }
+
+  @Override
+  public void storeVariableDocumentState(final long key, final VariableDocumentRecord record) {
+    scopeKey.wrapLong(record.getScopeKey());
+    variableDocumentStateToWrite.setKey(key).setRecord(record);
+    variableDocumentStateByScopeKeyColumnFamily.insert(scopeKey, variableDocumentStateToWrite);
+  }
+
+  @Override
+  public void removeVariableDocumentState(final long scopeKey) {
+    this.scopeKey.wrapLong(scopeKey);
+    variableDocumentStateByScopeKeyColumnFamily.deleteIfExists(this.scopeKey);
   }
 
   @Override
@@ -326,20 +339,7 @@ public class DbVariableState implements MutableVariableState {
   }
 
   @Override
-  public void storeVariableDocumentState(final long key, final VariableDocumentRecord record) {
-    scopeKey.wrapLong(record.getScopeKey());
-    variableDocumentStateToWrite.setKey(key).setRecord(record);
-    variableDocumentStateByScopeKeyColumnFamily.insert(scopeKey, variableDocumentStateToWrite);
-  }
-
-  @Override
-  public void removeVariableDocumentState(final long scopeKey) {
-    this.scopeKey.wrapLong(scopeKey);
-    variableDocumentStateByScopeKeyColumnFamily.deleteIfExists(this.scopeKey);
-  }
-
-  @Override
-  public Optional<VariableDocumentState> findVariableDocumentState(final long scopeKey) {
+  public Optional<AsyncDocumentState> findVariableDocumentState(final long scopeKey) {
     this.scopeKey.wrapLong(scopeKey);
     return Optional.ofNullable(variableDocumentStateByScopeKeyColumnFamily.get(this.scopeKey));
   }

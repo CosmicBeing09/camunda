@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.processing.message;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowElement;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
@@ -23,11 +23,11 @@ import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -48,7 +48,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
           + "but it is already closing";
 
   private final ProcessMessageSubscriptionState subscriptionState;
-  private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
+  private final TransientSubscriptionState transientProcessMessageSubscriptionState;
   private final SubscriptionCommandSender subscriptionCommandSender;
   private final ProcessState processState;
   private final ElementInstanceState elementInstanceState;
@@ -56,15 +56,15 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   private final TypedRejectionWriter rejectionWriter;
   private final SideEffectWriter sideEffectWriter;
 
-  private final EventHandle eventHandle;
+  private final EventHandler eventHandle;
 
   public ProcessMessageSubscriptionCorrelateProcessor(
       final ProcessMessageSubscriptionState subscriptionState,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final MutableProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final MutableAsyncProcessingContext processingState,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
+      final TransientSubscriptionState transientProcessMessageSubscriptionState) {
     this.subscriptionState = subscriptionState;
     this.transientProcessMessageSubscriptionState = transientProcessMessageSubscriptionState;
     this.subscriptionCommandSender = subscriptionCommandSender;
@@ -74,7 +74,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
     rejectionWriter = writers.rejection();
     sideEffectWriter = writers.sideEffect();
     eventHandle =
-        new EventHandle(
+        new EventHandler(
             processingState.getKeyGenerator(),
             processingState.getEventScopeInstanceState(),
             writers,
@@ -164,7 +164,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   }
 
   private ExecutableFlowElement getCatchEvent(
-      final ProcessInstanceRecord elementRecord, final DirectBuffer elementId) {
+      final WorkflowInstanceRecord elementRecord, final DirectBuffer elementId) {
     return processState.getFlowElement(
         elementRecord.getProcessDefinitionKey(),
         elementRecord.getTenantId(),

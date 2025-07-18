@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.EngineConfiguration.DEFAULT_MAX_ERROR_MESS
 import static io.camunda.zeebe.util.StringUtil.limitString;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventPublicationBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -36,7 +36,7 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
@@ -60,17 +60,17 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
   private final CatchEventAnalyzer stateAnalyzer;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
-  private final JobProcessingMetrics jobMetrics;
+  private final ProcessingMetrics jobMetrics;
   private final ProcessState processState;
 
   public JobThrowErrorProcessor(
       final ProcessingState state,
       final BpmnEventPublicationBehavior eventPublicationBehavior,
-      final KeyGenerator keyGenerator,
-      final JobProcessingMetrics jobMetrics,
+      final IdGenerator keyGenerator,
+      final ProcessingMetrics jobMetrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;
     jobState = state.getJobState();

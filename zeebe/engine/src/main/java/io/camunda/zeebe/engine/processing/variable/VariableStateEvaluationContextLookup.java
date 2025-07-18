@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.variable;
 import static io.camunda.zeebe.util.EnsureUtil.ensureGreaterThan;
 
 import io.camunda.zeebe.el.EvaluationContext;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor.EvaluationContextLookup;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator.EvaluationContextLookup;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 

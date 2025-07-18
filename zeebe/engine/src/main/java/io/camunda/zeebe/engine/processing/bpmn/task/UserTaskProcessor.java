@@ -9,11 +9,11 @@ package io.camunda.zeebe.engine.processing.bpmn.task;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnProcessingException;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior;
@@ -21,9 +21,9 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior.Use
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.Collections;
 import java.util.Optional;
@@ -38,10 +38,10 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
   private final BpmnUserTaskBehavior userTaskBehavior;
   private final BpmnStateBehavior stateBehavior;
   private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
 
   public UserTaskProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     super(bpmnBehaviors, stateTransitionBehavior);
     eventSubscriptionBehavior = bpmnBehaviors.eventSubscriptionBehavior();
@@ -128,7 +128,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
     incidentBehavior.resolveIncidents(context);
 
     final var elementInstance = stateBehavior.getElementInstance(context);
-    final Optional<UserTaskRecord> cancelingUserTask =
+    final Optional<TaskRecord> cancelingUserTask =
         userTaskBehavior.userTaskCanceling(elementInstance);
     if (cancelingUserTask.isPresent()) {
       final var cancelingListeners = element.getTaskListeners(ZeebeTaskListenerEventType.canceling);
@@ -199,7 +199,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
   private void assignUserTask(
       final ExecutableUserTask element,
       final BpmnElementContext context,
-      final UserTaskRecord userTaskRecord,
+      final TaskRecord userTaskRecord,
       final String assignee) {
     userTaskBehavior.userTaskAssigning(userTaskRecord, assignee);
     element.getTaskListeners(ZeebeTaskListenerEventType.assigning).stream()
@@ -212,7 +212,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
   }
 
   private record UserTaskCreationResult(
-      UserTaskProperties props, UserTaskRecord task, LifecycleState lifecycleState) {
+      UserTaskProperties props, TaskRecord task, LifecycleState lifecycleState) {
 
     public String getAssigneeProp() {
       return props.getAssignee();

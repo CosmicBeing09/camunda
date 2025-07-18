@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.deployment.model.validation;
 
 import io.camunda.zeebe.el.Expression;
 import io.camunda.zeebe.el.ExpressionLanguage;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.timer.CronTimer;
 import io.camunda.zeebe.model.bpmn.instance.CatchEvent;
@@ -29,10 +29,10 @@ public class TimerCatchEventExpressionValidator implements ModelElementValidator
   private static final long NO_VARIABLE_SCOPE = -1L;
 
   private final ExpressionLanguage expressionLanguage;
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
 
   public TimerCatchEventExpressionValidator(
-      final ExpressionLanguage expressionLanguage, final ExpressionProcessor expressionProcessor) {
+      final ExpressionLanguage expressionLanguage, final ExpressionEvaluator expressionProcessor) {
     this.expressionLanguage = expressionLanguage;
     this.expressionProcessor = expressionProcessor;
   }

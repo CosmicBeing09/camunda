@@ -11,7 +11,7 @@ import io.atomix.raft.RaftServer.Role;
 import io.camunda.zeebe.broker.system.partitions.PartitionTransitionContext;
 import io.camunda.zeebe.broker.system.partitions.PartitionTransitionStep;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
 import io.camunda.zeebe.engine.state.migration.DbMigratorImpl;
 import io.camunda.zeebe.scheduler.future.ActorFuture;
 import io.camunda.zeebe.scheduler.future.CompletableActorFuture;
@@ -35,8 +35,8 @@ public class MigrationTransitionStep implements PartitionTransitionStep {
     }
 
     // migration
-    final var transientMessageSubscriptionState = new TransientPendingSubscriptionState();
-    final var transientProcessMessageSubscriptionState = new TransientPendingSubscriptionState();
+    final var transientMessageSubscriptionState = new TransientSubscriptionState();
+    final var transientProcessMessageSubscriptionState = new TransientSubscriptionState();
     final var zeebeDb = context.getZeebeDb();
     final var zeebeDbContext = zeebeDb.createContext();
     final var processingState =

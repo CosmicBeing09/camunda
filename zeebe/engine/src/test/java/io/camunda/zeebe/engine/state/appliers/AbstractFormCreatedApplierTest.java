@@ -15,11 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.deployment.PersistedForm;
 import io.camunda.zeebe.engine.state.mutable.MutableFormState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,11 +30,11 @@ abstract class AbstractFormCreatedApplierTest {
 
   static final String TENANT_1 = "tenant1";
   static final String TENANT_2 = "tenant2";
-  KeyGenerator keyGenerator;
+  IdGenerator keyGenerator;
   MutableFormState formState;
   TypedEventApplier<FormIntent, FormRecord> formCreatedApplier;
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @BeforeEach
   void setup() {

@@ -24,12 +24,12 @@ import io.camunda.zeebe.engine.state.immutable.CompensationSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.CompensationSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +45,7 @@ public class BpmnCompensationSubscriptionBehaviour {
   private static final Predicate<CompensationSubscription> TRIGGER_ALL_SUBSCRIPTIONS =
       subscription -> true;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final CompensationSubscriptionState compensationSubscriptionState;
   private final ProcessState processState;
@@ -53,7 +53,7 @@ public class BpmnCompensationSubscriptionBehaviour {
   private final BpmnStateBehavior stateBehavior;
 
   public BpmnCompensationSubscriptionBehaviour(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingState processingState,
       final Writers writers,
       final BpmnStateBehavior stateBehavior) {
@@ -238,7 +238,7 @@ public class BpmnCompensationSubscriptionBehaviour {
     // activate the compensation handler
     final var compensationHandler = boundaryEvent.getCompensation().getCompensationHandler();
 
-    final ProcessInstanceRecord compensationHandlerRecord = new ProcessInstanceRecord();
+    final WorkflowInstanceRecord compensationHandlerRecord = new WorkflowInstanceRecord();
     compensationHandlerRecord.wrap(context.getRecordValue());
     compensationHandlerRecord
         .setElementId(compensationHandler.getId())
@@ -284,7 +284,7 @@ public class BpmnCompensationSubscriptionBehaviour {
 
     final long boundaryEventKey = keyGenerator.nextKey();
 
-    final ProcessInstanceRecord boundaryEventRecord = new ProcessInstanceRecord();
+    final WorkflowInstanceRecord boundaryEventRecord = new WorkflowInstanceRecord();
     boundaryEventRecord.wrap(context.getRecordValue());
     boundaryEventRecord
         .setElementId(boundaryEvent.getId())

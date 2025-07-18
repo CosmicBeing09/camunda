@@ -27,9 +27,9 @@ import io.camunda.zeebe.engine.state.immutable.SignalSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.TimerInstanceState;
 import io.camunda.zeebe.engine.state.instance.TimerInstance;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
 import io.camunda.zeebe.model.bpmn.util.time.Timer;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
@@ -39,7 +39,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
@@ -49,9 +49,9 @@ import org.agrona.DirectBuffer;
 
 public final class CatchEventBehavior {
 
-  private final ExpressionProcessor expressionProcessor;
+  private final ExpressionEvaluator expressionProcessor;
   private final SubscriptionCommandSender subscriptionCommandSender;
-  private final RoutingInfo routingInfo;
+  private final PartitionRouting routingInfo;
   private final StateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
 
@@ -64,22 +64,22 @@ public final class CatchEventBehavior {
       new ProcessMessageSubscriptionRecord();
   private final TimerRecord timerRecord = new TimerRecord();
   private final DueDateTimerChecker timerChecker;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final SignalSubscriptionRecord signalSubscription = new SignalSubscriptionRecord();
   private final InstantSource clock;
-  private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
+  private final TransientSubscriptionState transientProcessMessageSubscriptionState;
 
   public CatchEventBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
-      final ExpressionProcessor expressionProcessor,
+      final IdGenerator keyGenerator,
+      final ExpressionEvaluator expressionProcessor,
       final SubscriptionCommandSender subscriptionCommandSender,
       final StateWriter stateWriter,
       final SideEffectWriter sideEffectWriter,
       final DueDateTimerChecker timerChecker,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final InstantSource clock,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
+      final TransientSubscriptionState transientProcessMessageSubscriptionState) {
     this.expressionProcessor = expressionProcessor;
     this.subscriptionCommandSender = subscriptionCommandSender;
     this.stateWriter = stateWriter;
@@ -205,7 +205,7 @@ public final class CatchEventBehavior {
   }
 
   private Either<Failure, EvalResult> evalExpressions(
-      final ExpressionProcessor ep,
+      final ExpressionEvaluator ep,
       final ExecutableCatchEvent event,
       final BpmnElementContext context) {
     return Either.<Failure, OngoingEvaluation>right(new OngoingEvaluation(ep, event, context))
@@ -548,7 +548,7 @@ public final class CatchEventBehavior {
    * expressions for a message, and to capture intermediate results of the evaluation
    */
   private static class OngoingEvaluation {
-    private final ExpressionProcessor expressionProcessor;
+    private final ExpressionEvaluator expressionProcessor;
     private final ExecutableCatchEvent event;
     private final BpmnElementContext context;
     private DirectBuffer messageName;
@@ -557,7 +557,7 @@ public final class CatchEventBehavior {
     private DirectBuffer signalName;
 
     public OngoingEvaluation(
-        final ExpressionProcessor expressionProcessor,
+        final ExpressionEvaluator expressionProcessor,
         final ExecutableCatchEvent event,
         final BpmnElementContext context) {
       this.expressionProcessor = expressionProcessor;
@@ -565,7 +565,7 @@ public final class CatchEventBehavior {
       this.context = context;
     }
 
-    private ExpressionProcessor expressionProcessor() {
+    private ExpressionEvaluator expressionProcessor() {
       return expressionProcessor;
     }
 

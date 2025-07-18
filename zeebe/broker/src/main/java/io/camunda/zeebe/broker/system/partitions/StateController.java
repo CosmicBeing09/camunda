@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.broker.system.partitions;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.scheduler.future.ActorFuture;
 import io.camunda.zeebe.snapshots.TransientSnapshot;
 
@@ -27,7 +27,7 @@ public interface StateController extends AutoCloseable {
    *
    * @return ZeebeDb the database which is recovered from the snapshot.
    */
-  ActorFuture<ZeebeDb> recover();
+  ActorFuture<GenericDb> recover();
 
   /**
    * Close db if it was opened by {@link StateController#recover()}

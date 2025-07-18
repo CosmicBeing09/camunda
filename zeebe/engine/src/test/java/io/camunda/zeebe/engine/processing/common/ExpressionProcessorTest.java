@@ -13,7 +13,7 @@ import io.camunda.zeebe.el.EvaluationContext;
 import io.camunda.zeebe.el.ExpressionLanguage;
 import io.camunda.zeebe.el.ExpressionLanguageFactory;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor.EvaluationContextLookup;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator.EvaluationContextLookup;
 import io.camunda.zeebe.util.Either;
 import java.time.InstantSource;
 import java.util.List;
@@ -41,7 +41,7 @@ class ExpressionProcessorTest {
     @ParameterizedTest
     @MethodSource("arrayOfStringsExpressions")
     void testSuccessfulEvaluations(final String expression, final List<String> expected) {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression(expression);
       assertThat(processor.evaluateArrayOfStringsExpression(parsedExpression, -1L))
           .isRight()
@@ -52,7 +52,7 @@ class ExpressionProcessorTest {
     @ParameterizedTest
     @MethodSource("notArrayOfStringsExpressions")
     void testFailingEvaluations(final String expression, final String message) {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression(expression);
       assertThat(processor.evaluateArrayOfStringsExpression(parsedExpression, -1L))
           .isLeft()
@@ -97,7 +97,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testStringExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateStringExpression(parsedExpression, -1L))
           .isLeft()
@@ -111,7 +111,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testLongExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateLongExpression(parsedExpression, -1L))
           .isLeft()
@@ -125,7 +125,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testBooleanExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateBooleanExpression(parsedExpression, -1L))
           .isLeft()
@@ -139,7 +139,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testIntervalExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateIntervalExpression(parsedExpression, -1L))
           .isLeft()
@@ -153,7 +153,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testDateTimeExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateDateTimeExpression(parsedExpression, -1L))
           .isLeft()
@@ -167,7 +167,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testArrayExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateArrayExpression(parsedExpression, -1L))
           .isLeft()
@@ -181,7 +181,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testStringArrayExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=[x]");
       assertThat(processor.evaluateArrayOfStringsExpression(parsedExpression, -1L))
           .isLeft()
@@ -196,7 +196,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testMessageCorrelationKeyExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateMessageCorrelationKeyExpression(parsedExpression, -1L))
           .isLeft()
@@ -211,7 +211,7 @@ class ExpressionProcessorTest {
 
     @Test
     void testVariableMappingExpression() {
-      final var processor = new ExpressionProcessor(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
+      final var processor = new ExpressionEvaluator(EXPRESSION_LANGUAGE, DEFAULT_CONTEXT_LOOKUP);
       final var parsedExpression = EXPRESSION_LANGUAGE.parseExpression("=x");
       assertThat(processor.evaluateVariableMappingExpression(parsedExpression, -1L))
           .isLeft()

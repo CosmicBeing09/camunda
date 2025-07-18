@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.distribution;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -18,7 +18,7 @@ import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.mutable.MutableDistributionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
 import java.util.Optional;
 import org.agrona.collections.MutableBoolean;
@@ -63,13 +63,13 @@ public class DbDistributionState implements MutableDistributionState {
   private final DbCompositeKey<DbString, DbLong> continuationByQueueKey;
 
   public DbDistributionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     distributionKey = new DbLong();
     final DbForeignKey<DbLong> fkDistribution =
-        new DbForeignKey<>(distributionKey, ZbColumnFamilies.COMMAND_DISTRIBUTION_RECORD);
+        new DbForeignKey<>(distributionKey, ColumnFamilies.COMMAND_DISTRIBUTION_RECORD);
     commandDistributionRecordColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.COMMAND_DISTRIBUTION_RECORD,
+            ColumnFamilies.COMMAND_DISTRIBUTION_RECORD,
             transactionContext,
             distributionKey,
             new PersistedCommandDistribution());
@@ -78,14 +78,14 @@ public class DbDistributionState implements MutableDistributionState {
     distributionPartitionKey = new DbCompositeKey<>(fkDistribution, partitionKey);
     pendingDistributionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PENDING_DISTRIBUTION,
+            ColumnFamilies.PENDING_DISTRIBUTION,
             transactionContext,
             distributionPartitionKey,
             DbNil.INSTANCE);
 
     retriableDistributionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RETRIABLE_DISTRIBUTION,
+            ColumnFamilies.RETRIABLE_DISTRIBUTION,
             transactionContext,
             distributionPartitionKey,
             DbNil.INSTANCE);
@@ -96,7 +96,7 @@ public class DbDistributionState implements MutableDistributionState {
         new DbCompositeKey<>(queueId, new DbCompositeKey<>(partitionKey, fkDistribution));
     queuedCommandDistributionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.QUEUED_DISTRIBUTION,
+            ColumnFamilies.QUEUED_DISTRIBUTION,
             transactionContext,
             queuedDistributionKey,
             DbNil.INSTANCE);
@@ -105,7 +105,7 @@ public class DbDistributionState implements MutableDistributionState {
     continuationByQueueKey = new DbCompositeKey<>(queueId, continuationKey);
     continuationCommandColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DISTRIBUTION_CONTINUATION,
+            ColumnFamilies.DISTRIBUTION_CONTINUATION,
             transactionContext,
             continuationByQueueKey,
             new PersistedCommandDistribution());

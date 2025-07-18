@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.EventApplier;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.processing.DbBannedInstanceState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
@@ -54,7 +54,7 @@ public class Engine implements RecordProcessor {
 
   private EventApplier eventApplier;
   private RecordProcessorMap recordProcessorMap;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private final ErrorRecord errorRecord = new ErrorRecord();
 
@@ -208,12 +208,12 @@ public class Engine implements RecordProcessor {
       writers.rejection().appendRejection(record, RejectionType.EXCEEDED_BATCH_RECORD_SIZE, "");
       writers
           .response()
-          .writeRejectionOnCommand(record, RejectionType.EXCEEDED_BATCH_RECORD_SIZE, "");
+          .rejectCommandAsync(record, RejectionType.EXCEEDED_BATCH_RECORD_SIZE, "");
     } else {
       writers.rejection().appendRejection(record, RejectionType.PROCESSING_ERROR, errorMessage);
       writers
           .response()
-          .writeRejectionOnCommand(record, RejectionType.PROCESSING_ERROR, errorMessage);
+          .rejectCommandAsync(record, RejectionType.PROCESSING_ERROR, errorMessage);
     }
     errorRecord.initErrorRecord(processingException, record.getPosition());
 

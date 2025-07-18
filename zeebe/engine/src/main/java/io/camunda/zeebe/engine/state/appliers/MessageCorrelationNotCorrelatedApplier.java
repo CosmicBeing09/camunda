@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageCorrelationState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageCorrelationRecord;
 import io.camunda.zeebe.protocol.record.intent.MessageCorrelationIntent;
 
@@ -18,7 +18,7 @@ class MessageCorrelationNotCorrelatedApplier
 
   private final MutableMessageCorrelationState messageCorrelationState;
 
-  public MessageCorrelationNotCorrelatedApplier(final MutableProcessingState state) {
+  public MessageCorrelationNotCorrelatedApplier(final MutableAsyncProcessingContext state) {
     messageCorrelationState = state.getMessageCorrelationState();
   }
 

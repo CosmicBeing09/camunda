@@ -29,11 +29,11 @@ import io.camunda.zeebe.engine.state.immutable.ProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.instance.TimerInstance;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -76,7 +76,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
   private final DistributionState distributionState;
   private final StateWriter stateWriter;
   private final int currentPartitionId;
-  private final RoutingInfo routingInfo;
+  private final PartitionRouting routingInfo;
 
   public ProcessInstanceMigrationCatchEventBehaviour(
       final ProcessMessageSubscriptionState processMessageSubscriptionState,
@@ -87,7 +87,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
       final DistributionState distributionState,
       final StateWriter stateWriter,
       final int currentPartitionId,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
     this.processMessageSubscriptionState = processMessageSubscriptionState;
     this.catchEventBehavior = catchEventBehavior;
     this.compensationSubscriptionBehaviour = compensationSubscriptionBehaviour;
@@ -110,7 +110,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
       final DeployedProcess targetProcessDefinition,
       final DeployedProcess sourceProcessDefinition,
       final Map<String, String> sourceElementIdToTargetElementId,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final String targetElementId,
       final long processInstanceKey,
       final String elementId) {
@@ -301,7 +301,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
   private Map<String, Boolean> subscribeToAllCatchEvents(
       final ElementInstance elementInstance,
       final Map<String, String> sourceElementIdToTargetElementId,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final String targetElementId,
       final long processInstanceKey,
       final String elementId,

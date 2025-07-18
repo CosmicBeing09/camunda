@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -21,7 +21,7 @@ import org.agrona.DirectBuffer;
 
 /** Applies state changes for `ProcessInstance:Element_Migrated` */
 final class ProcessInstanceElementMigratedV2Applier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
   private final ProcessState processState;
@@ -37,7 +37,7 @@ final class ProcessInstanceElementMigratedV2Applier
   }
 
   @Override
-  public void applyState(final long elementInstanceKey, final ProcessInstanceRecord value) {
+  public void applyState(final long elementInstanceKey, final WorkflowInstanceRecord value) {
     if (value.getBpmnElementType() == BpmnElementType.PROCESS) {
       migrateCorrelatedMessageStartEvent(elementInstanceKey, value);
     }
@@ -65,7 +65,7 @@ final class ProcessInstanceElementMigratedV2Applier
   }
 
   private void migrateCorrelatedMessageStartEvent(
-      final long elementInstanceKey, final ProcessInstanceRecord value) {
+      final long elementInstanceKey, final WorkflowInstanceRecord value) {
 
     final var instance = elementInstanceState.getInstance(elementInstanceKey).getValue();
     final DirectBuffer previousBpmnProcessId = instance.getBpmnProcessIdBuffer();

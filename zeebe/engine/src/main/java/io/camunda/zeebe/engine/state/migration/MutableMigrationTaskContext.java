@@ -7,9 +7,9 @@
  */
 package io.camunda.zeebe.engine.state.migration;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 
 public interface MutableMigrationTaskContext extends MigrationTaskContext {
   @Override
-  MutableProcessingState processingState();
+  MutableAsyncProcessingContext processingState();
 }

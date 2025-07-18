@@ -17,20 +17,20 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
 import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
@@ -48,9 +48,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class CommandDistributionScalingTest {
   /* Injected from {@link ProcessingStateExtension} */
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
   private MutableRoutingState routingState;
-  private MutableProcessingState state;
+  private MutableAsyncProcessingContext state;
   private TransactionContext transactionContext;
 
   private DistributionState distributionState;
@@ -87,7 +87,7 @@ public class CommandDistributionScalingTest {
             distributionState,
             writers,
             1,
-            RoutingInfo.dynamic(state.getRoutingState(), RoutingInfo.forStaticPartitions(2)),
+            PartitionRouting.dynamic(state.getRoutingState(), PartitionRouting.forStaticPartitions(2)),
             mockInterpartitionCommandSender,
             mock(DistributionMetrics.class));
   }

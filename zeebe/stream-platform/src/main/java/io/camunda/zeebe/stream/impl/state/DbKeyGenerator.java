@@ -8,9 +8,9 @@
 package io.camunda.zeebe.stream.impl.state;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.api.state.KeyGeneratorControls;
 import io.camunda.zeebe.util.VisibleForTesting;
 
@@ -30,10 +30,10 @@ public final class DbKeyGenerator implements KeyGeneratorControls {
    * @param partitionId the partition to determine the key start value
    */
   public DbKeyGenerator(
-      final int partitionId, final ZeebeDb zeebeDb, final TransactionContext transactionContext) {
+      final int partitionId, final GenericDb zeebeDb, final TransactionContext transactionContext) {
     keyStartValue = Protocol.encodePartitionId(partitionId, INITIAL_VALUE);
     nextValueManager =
-        new NextValueManager(keyStartValue, zeebeDb, transactionContext, ZbColumnFamilies.KEY);
+        new NextValueManager(keyStartValue, zeebeDb, transactionContext, ColumnFamilies.KEY);
   }
 
   @Override

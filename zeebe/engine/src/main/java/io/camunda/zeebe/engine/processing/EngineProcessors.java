@@ -13,12 +13,12 @@ import io.camunda.search.clients.SearchClientsProxy;
 import io.camunda.zeebe.dmn.DecisionEngineFactory;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.metrics.ProcessEngineMetrics;
 import io.camunda.zeebe.engine.processing.batchoperation.BatchOperationSetupProcessors;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.JobActivationBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorsImpl;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
 import io.camunda.zeebe.engine.processing.clock.ClockProcessors;
 import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.deployment.DeploymentCreateProcessor;
@@ -41,7 +41,7 @@ import io.camunda.zeebe.engine.processing.identity.IdentitySetupProcessors;
 import io.camunda.zeebe.engine.processing.identity.MappingProcessors;
 import io.camunda.zeebe.engine.processing.identity.RoleProcessors;
 import io.camunda.zeebe.engine.processing.incident.IncidentEventProcessors;
-import io.camunda.zeebe.engine.processing.job.JobEventProcessors;
+import io.camunda.zeebe.engine.processing.job.JobProcessorsRegistry;
 import io.camunda.zeebe.engine.processing.message.MessageEventProcessors;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.resource.ResourceDeletionDeleteProcessor;
@@ -59,11 +59,11 @@ import io.camunda.zeebe.engine.processing.user.UserProcessors;
 import io.camunda.zeebe.engine.processing.usertask.UserTaskProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
@@ -74,7 +74,7 @@ import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.InstantSource;
 import java.util.function.Supplier;
@@ -95,8 +95,8 @@ public final class EngineProcessors {
     final var processingState = typedRecordProcessorContext.getProcessingState();
     final var keyGenerator = processingState.getKeyGenerator();
     final var routingInfo =
-        RoutingInfo.dynamic(
-            processingState.getRoutingState(), RoutingInfo.forStaticPartitions(partitionsCount));
+        PartitionRouting.dynamic(
+            processingState.getRoutingState(), PartitionRouting.forStaticPartitions(partitionsCount));
     final var scheduledTaskStateFactory =
         typedRecordProcessorContext.getScheduledTaskStateFactory();
     final var writers = typedRecordProcessorContext.getWriters();
@@ -113,7 +113,7 @@ public final class EngineProcessors {
         new DueDateTimerChecker(
             scheduledTaskStateFactory.get().getTimerState(), featureFlags, clock);
 
-    final var jobMetrics = new JobProcessingMetrics(typedRecordProcessorContext.getMeterRegistry());
+    final var jobMetrics = new ProcessingMetrics(typedRecordProcessorContext.getMeterRegistry());
     final var processEngineMetrics =
         new ProcessEngineMetrics(typedRecordProcessorContext.getMeterRegistry());
     final var distributionMetrics =
@@ -180,7 +180,7 @@ public final class EngineProcessors {
         clock,
         authCheckBehavior);
 
-    final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor =
+    final TypedRecordProcessor<WorkflowInstanceRecord> bpmnStreamProcessor =
         addProcessProcessors(
             processingState,
             scheduledTaskStateFactory,
@@ -201,7 +201,7 @@ public final class EngineProcessors {
     addDecisionProcessors(
         typedRecordProcessors, decisionBehavior, writers, processingState, authCheckBehavior);
 
-    JobEventProcessors.addJobProcessors(
+    JobProcessorsRegistry.addJobProcessors(
         typedRecordProcessors,
         processingState,
         scheduledTaskStateFactory,
@@ -326,14 +326,14 @@ public final class EngineProcessors {
     return typedRecordProcessors;
   }
 
-  private static TypedRecordProcessor<UserTaskRecord> createUserTaskProcessor(
-      final MutableProcessingState processingState,
+  private static TypedRecordProcessor<TaskRecord> createUserTaskProcessor(
+      final MutableAsyncProcessingContext processingState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
     return new UserTaskProcessor(
         processingState,
-        processingState.getUserTaskState(),
+        processingState.getTaskState(),
         processingState.getKeyGenerator(),
         bpmnBehaviors,
         writers,
@@ -341,17 +341,17 @@ public final class EngineProcessors {
   }
 
   private static BpmnBehaviorsImpl createBehaviors(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final DueDateTimerChecker timerChecker,
       final JobStreamer jobStreamer,
-      final JobProcessingMetrics jobMetrics,
+      final ProcessingMetrics jobMetrics,
       final DecisionBehavior decisionBehavior,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {
+      final TransientSubscriptionState transientProcessMessageSubscriptionState) {
     return new BpmnBehaviorsImpl(
         processingState,
         writers,
@@ -366,8 +366,8 @@ public final class EngineProcessors {
         transientProcessMessageSubscriptionState);
   }
 
-  private static TypedRecordProcessor<ProcessInstanceRecord> addProcessProcessors(
-      final MutableProcessingState processingState,
+  private static TypedRecordProcessor<WorkflowInstanceRecord> addProcessProcessors(
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final TypedRecordProcessors typedRecordProcessors,
@@ -376,11 +376,11 @@ public final class EngineProcessors {
       final DueDateTimerChecker timerChecker,
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
-      final RoutingInfo routingInfo,
+      final PartitionRouting routingInfo,
       final InstantSource clock,
       final EngineConfiguration config,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final ProcessEngineMetrics processEngineMetrics) {
     return BpmnProcessors.addBpmnStreamProcessor(
         processingState,
@@ -407,13 +407,13 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final DeploymentDistributionCommandSender deploymentDistributionCommandSender,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior distributionBehavior,
       final EngineConfiguration config,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
 
     // on deployment partition CREATE Command is received and processed
     // it will cause a distribution to other partitions
@@ -448,7 +448,7 @@ public final class EngineProcessors {
 
     // completes the deployment distribution
     final var completeDeploymentDistributionProcessor =
-        new DeploymentDistributionCompleteProcessor(processingState.getDeploymentState(), writers);
+        new DeploymentDistributionCompleteProcessor(processingState.getDeploymentContext(), writers);
     typedRecordProcessors.onCommand(
         ValueType.DEPLOYMENT_DISTRIBUTION,
         DeploymentDistributionIntent.COMPLETE,
@@ -460,16 +460,16 @@ public final class EngineProcessors {
         new DeploymentReconstructProcessor(keyGenerator, processingState, writers));
 
     typedRecordProcessors.withListener(
-        new DeploymentReconstructionStarter(processingState.getDeploymentState()));
+        new DeploymentReconstructionStarter(processingState.getDeploymentContext()));
   }
 
   private static void addIncidentProcessors(
       final ProcessingState processingState,
-      final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
+      final TypedRecordProcessor<WorkflowInstanceRecord> bpmnStreamProcessor,
+      final TypedRecordProcessor<TaskRecord> userTaskProcessor,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
-      final BpmnJobActivationBehavior jobActivationBehavior,
+      final JobActivationBehavior jobActivationBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     IncidentEventProcessors.addProcessors(
         typedRecordProcessors,
@@ -484,7 +484,7 @@ public final class EngineProcessors {
   private static void addMessageProcessors(
       final BpmnBehaviorsImpl bpmnBehaviors,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskStateFactory,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
@@ -511,7 +511,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final DecisionBehavior decisionBehavior,
       final Writers writers,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
     final DecisionEvaluationEvaluteProcessor decisionEvaluationEvaluteProcessor =
@@ -526,9 +526,9 @@ public final class EngineProcessors {
   private static void addResourceDeletionProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final AuthorizationCheckBehavior authCheckBehavior) {
     final var resourceDeletionProcessor =
         new ResourceDeletionDeleteProcessor(
@@ -557,7 +557,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     final var signalBroadcastProcessor =
@@ -575,7 +575,7 @@ public final class EngineProcessors {
 
   private static void addUserTaskProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor) {
+      final TypedRecordProcessor<TaskRecord> userTaskProcessor) {
 
     UserTaskIntent.commands()
         .forEach(
@@ -589,7 +589,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final ProcessingState processingState,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
 
     // periodically retries command distribution
     typedRecordProcessors.withListener(

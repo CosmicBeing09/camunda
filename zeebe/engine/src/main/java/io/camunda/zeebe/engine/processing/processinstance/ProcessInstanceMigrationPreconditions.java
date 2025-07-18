@@ -26,7 +26,7 @@ import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.instance.EventTrigger;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
@@ -369,7 +369,7 @@ public final class ProcessInstanceMigrationPreconditions {
    */
   public static void requireNoEventSubprocessInSource(
       final DeployedProcess sourceProcessDefinition,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final EnumSet<BpmnEventType> allowedEventTypes) {
     requireNoEventSubprocess(
         sourceProcessDefinition,
@@ -391,7 +391,7 @@ public final class ProcessInstanceMigrationPreconditions {
   public static void requireNoEventSubprocessInTarget(
       final DeployedProcess targetProcessDefinition,
       final String targetElementId,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final EnumSet<BpmnEventType> allowedEventTypes) {
     requireNoEventSubprocess(
         targetProcessDefinition,
@@ -403,7 +403,7 @@ public final class ProcessInstanceMigrationPreconditions {
 
   private static void requireNoEventSubprocess(
       final DeployedProcess sourceProcessDefinition,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final String elementId,
       final EnumSet<BpmnEventType> allowedEventTypes,
       final String errorTemplate) {
@@ -444,7 +444,7 @@ public final class ProcessInstanceMigrationPreconditions {
    * @param processInstanceKey process instance key to be logged
    */
   public static void requireSupportedElementType(
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final long processInstanceKey,
       final DeployedProcess sourceProcessDefinition) {
     final var bpmnElementType = elementInstanceRecord.getBpmnElementType();
@@ -521,7 +521,7 @@ public final class ProcessInstanceMigrationPreconditions {
       final String targetElementId,
       final ElementInstance elementInstance,
       final long processInstanceKey) {
-    final ProcessInstanceRecord elementInstanceRecord = elementInstance.getValue();
+    final WorkflowInstanceRecord elementInstanceRecord = elementInstance.getValue();
     BpmnElementType targetElementType =
         targetProcessDefinition.getProcess().getElementById(targetElementId).getElementType();
 
@@ -573,7 +573,7 @@ public final class ProcessInstanceMigrationPreconditions {
       final String targetElementId,
       final ElementInstance elementInstance,
       final long processInstanceKey) {
-    final ProcessInstanceRecord elementInstanceRecord = elementInstance.getValue();
+    final WorkflowInstanceRecord elementInstanceRecord = elementInstance.getValue();
     if (elementInstanceRecord.getBpmnElementType() != BpmnElementType.USER_TASK) {
       return;
     }
@@ -623,7 +623,7 @@ public final class ProcessInstanceMigrationPreconditions {
    */
   public static void requireUnchangedFlowScope(
       final ElementInstanceState elementInstanceState,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final DeployedProcess targetProcessDefinition,
       final String targetElementId) {
     final ElementInstance sourceFlowScopeElement =
@@ -677,7 +677,7 @@ public final class ProcessInstanceMigrationPreconditions {
    */
   public static void requireNoBoundaryEventInSource(
       final DeployedProcess sourceProcessDefinition,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final EnumSet<BpmnEventType> allowedEventTypes) {
     requireNoBoundaryEvent(
         sourceProcessDefinition,
@@ -699,7 +699,7 @@ public final class ProcessInstanceMigrationPreconditions {
   public static void requireNoBoundaryEventInTarget(
       final DeployedProcess targetProcessDefinition,
       final String targetElementId,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final EnumSet<BpmnEventType> allowedEventTypes) {
     requireNoBoundaryEvent(
         targetProcessDefinition,
@@ -711,7 +711,7 @@ public final class ProcessInstanceMigrationPreconditions {
 
   private static void requireNoBoundaryEvent(
       final DeployedProcess sourceProcessDefinition,
-      final ProcessInstanceRecord elementInstanceRecord,
+      final WorkflowInstanceRecord elementInstanceRecord,
       final String elementId,
       final EnumSet<BpmnEventType> allowedEventTypes,
       final String errorTemplate) {

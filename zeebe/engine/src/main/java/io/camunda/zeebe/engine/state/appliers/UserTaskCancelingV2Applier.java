@@ -8,29 +8,29 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
 public final class UserTaskCancelingV2Applier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, TaskRecord> {
 
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final MutableVariableState variableState;
   private final MutableElementInstanceState elementInstanceState;
 
-  public UserTaskCancelingV2Applier(final MutableProcessingState processingState) {
-    userTaskState = processingState.getUserTaskState();
+  public UserTaskCancelingV2Applier(final MutableAsyncProcessingContext processingState) {
+    userTaskState = processingState.getTaskState();
     variableState = processingState.getVariableState();
     elementInstanceState = processingState.getElementInstanceState();
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final TaskRecord value) {
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CANCELING);
 
     // Clean up data that may have been persisted by a previous transition
@@ -44,7 +44,7 @@ public final class UserTaskCancelingV2Applier
     userTaskState.deleteInitialAssignee(key);
   }
 
-  private void resetTaskListenerIndices(final UserTaskRecord record) {
+  private void resetTaskListenerIndices(final TaskRecord record) {
     final long userTaskInstanceKey = record.getElementInstanceKey();
     final var userTaskInstance = elementInstanceState.getInstance(userTaskInstanceKey);
 

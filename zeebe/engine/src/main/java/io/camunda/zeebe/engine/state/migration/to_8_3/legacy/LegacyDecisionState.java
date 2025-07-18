@@ -12,7 +12,7 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -26,7 +26,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.deployment.DeployedDrg;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecisionRequirements;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -78,16 +78,16 @@ public final class LegacyDecisionState {
   private final LoadingCache<Long, DeployedDrg> drgCache;
 
   public LegacyDecisionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final EngineConfiguration config) {
     dbDecisionKey = new DbLong();
-    fkDecision = new DbForeignKey<>(dbDecisionKey, ZbColumnFamilies.DEPRECATED_DMN_DECISIONS);
+    fkDecision = new DbForeignKey<>(dbDecisionKey, ColumnFamilies.DEPRECATED_DMN_DECISIONS);
 
     dbPersistedDecision = new PersistedDecision();
     decisionsByKey =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISIONS,
+            ColumnFamilies.DEPRECATED_DMN_DECISIONS,
             transactionContext,
             dbDecisionKey,
             dbPersistedDecision);
@@ -95,7 +95,7 @@ public final class LegacyDecisionState {
     dbDecisionId = new DbString();
     latestDecisionKeysByDecisionId =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_LATEST_DECISION_BY_ID,
+            ColumnFamilies.DEPRECATED_DMN_LATEST_DECISION_BY_ID,
             transactionContext,
             dbDecisionId,
             fkDecision);
@@ -103,11 +103,11 @@ public final class LegacyDecisionState {
     dbDecisionRequirementsKey = new DbLong();
     fkDecisionRequirements =
         new DbForeignKey<>(
-            dbDecisionRequirementsKey, ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
+            dbDecisionRequirementsKey, ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS);
     dbPersistedDecisionRequirements = new PersistedDecisionRequirements();
     decisionRequirementsByKey =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS,
+            ColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS,
             transactionContext,
             dbDecisionRequirementsKey,
             dbPersistedDecisionRequirements);
@@ -115,7 +115,7 @@ public final class LegacyDecisionState {
     dbDecisionRequirementsId = new DbString();
     latestDecisionRequirementsKeysById =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_LATEST_DECISION_REQUIREMENTS_BY_ID,
+            ColumnFamilies.DEPRECATED_DMN_LATEST_DECISION_REQUIREMENTS_BY_ID,
             transactionContext,
             dbDecisionRequirementsId,
             fkDecisionRequirements);
@@ -124,7 +124,7 @@ public final class LegacyDecisionState {
         new DbCompositeKey<>(fkDecisionRequirements, fkDecision);
     decisionKeyByDecisionRequirementsKey =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_REQUIREMENTS_KEY,
+            ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_REQUIREMENTS_KEY,
             transactionContext,
             dbDecisionRequirementsKeyAndDecisionKey,
             DbNil.INSTANCE);
@@ -133,7 +133,7 @@ public final class LegacyDecisionState {
     decisionIdAndVersion = new DbCompositeKey<>(dbDecisionId, dbDecisionVersion);
     decisionKeyByDecisionIdAndVersion =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
+            ColumnFamilies.DEPRECATED_DMN_DECISION_KEY_BY_DECISION_ID_AND_VERSION,
             transactionContext,
             decisionIdAndVersion,
             fkDecision);
@@ -143,7 +143,7 @@ public final class LegacyDecisionState {
         new DbCompositeKey<>(dbDecisionRequirementsId, dbDecisionRequirementsVersion);
     decisionRequirementsKeyByIdAndVersion =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies
+            ColumnFamilies
                 .DEPRECATED_DMN_DECISION_REQUIREMENTS_KEY_BY_DECISION_REQUIREMENT_ID_AND_VERSION,
             transactionContext,
             decisionRequirementsIdAndVersion,

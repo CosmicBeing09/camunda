@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.engine.state.EventApplier.NoSuchEventApplier;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
@@ -170,7 +170,7 @@ public class EventAppliersTest {
             .filter(intent -> !(intent instanceof CheckpointIntent));
 
     // when
-    eventAppliers.registerEventAppliers(mock(MutableProcessingState.class));
+    eventAppliers.registerEventAppliers(mock(MutableAsyncProcessingContext.class));
 
     // then
     assertThat(events)
@@ -246,7 +246,7 @@ public class EventAppliersTest {
             .filter(intent -> !(intent instanceof CheckpointIntent));
 
     // when
-    eventAppliers.registerEventAppliers(mock(MutableProcessingState.class));
+    eventAppliers.registerEventAppliers(mock(MutableAsyncProcessingContext.class));
 
     // then
     assertThat(intents)

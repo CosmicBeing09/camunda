@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbForeignKey.MatchType;
@@ -26,7 +26,7 @@ import io.camunda.zeebe.engine.state.deployment.Digest;
 import io.camunda.zeebe.engine.state.deployment.PersistedProcess;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessMetadata;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
@@ -80,7 +80,7 @@ public final class LegacyProcessState {
   private final LegacyProcessVersionManager versionManager;
 
   public LegacyProcessState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final InstantSource clock) {
     transformer = BpmnFactory.createTransformer(clock);
@@ -88,7 +88,7 @@ public final class LegacyProcessState {
     persistedProcess = new PersistedProcess();
     processColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_PROCESS_CACHE,
+            ColumnFamilies.DEPRECATED_PROCESS_CACHE,
             transactionContext,
             processDefinitionKey,
             persistedProcess);
@@ -98,7 +98,7 @@ public final class LegacyProcessState {
     idAndVersionKey = new DbCompositeKey<>(processId, processVersion);
     processByIdAndVersionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_PROCESS_CACHE_BY_ID_AND_VERSION,
+            ColumnFamilies.DEPRECATED_PROCESS_CACHE_BY_ID_AND_VERSION,
             transactionContext,
             idAndVersionKey,
             persistedProcess);
@@ -106,11 +106,11 @@ public final class LegacyProcessState {
     fkProcessId =
         new DbForeignKey<>(
             processId,
-            ZbColumnFamilies.DEPRECATED_PROCESS_CACHE_BY_ID_AND_VERSION,
+            ColumnFamilies.DEPRECATED_PROCESS_CACHE_BY_ID_AND_VERSION,
             MatchType.Prefix);
     digestByIdColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_PROCESS_CACHE_DIGEST_BY_ID,
+            ColumnFamilies.DEPRECATED_PROCESS_CACHE_DIGEST_BY_ID,
             transactionContext,
             fkProcessId,
             digest);
@@ -377,14 +377,14 @@ public final class LegacyProcessState {
 
     public LegacyProcessVersionManager(
         final long initialValue,
-        final ZeebeDb<ZbColumnFamilies> zeebeDb,
+        final GenericDb<ColumnFamilies> zeebeDb,
         final TransactionContext transactionContext) {
       this.initialValue = initialValue;
 
       processIdKey = new DbString();
       nextValueColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.DEPRECATED_PROCESS_VERSION,
+              ColumnFamilies.DEPRECATED_PROCESS_VERSION,
               transactionContext,
               processIdKey,
               nextVersion);

@@ -19,20 +19,20 @@ import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationChunkIntent;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationExecutionIntent;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.BatchOperationType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public final class BatchOperationSetupProcessors {
 
   public static void addBatchOperationProcessors(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,
@@ -42,7 +42,7 @@ public final class BatchOperationSetupProcessors {
       final ProcessingState processingState,
       final EngineConfiguration engineConfiguration,
       final int partitionId,
-      final RoutingInfo routingInfo) {
+      final PartitionRouting routingInfo) {
     final var batchExecutionHandlers =
         Map.of(
             BatchOperationType.CANCEL_PROCESS_INSTANCE,

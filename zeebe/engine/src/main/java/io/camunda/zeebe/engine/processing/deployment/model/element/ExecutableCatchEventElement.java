@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.deployment.model.element;
 
-import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
+import io.camunda.zeebe.engine.processing.common.ExpressionEvaluator;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.model.bpmn.util.time.Timer;
 import io.camunda.zeebe.util.Either;
@@ -27,7 +27,7 @@ public class ExecutableCatchEventElement extends ExecutableFlowNode
   private ExecutableSignal signal;
   private ExecutableCompensation compensation;
   private boolean interrupting;
-  private BiFunction<ExpressionProcessor, Long, Either<Failure, Timer>> timerFactory;
+  private BiFunction<ExpressionEvaluator, Long, Either<Failure, Timer>> timerFactory;
 
   private boolean isConnectedToEventBasedGateway;
 
@@ -84,12 +84,12 @@ public class ExecutableCatchEventElement extends ExecutableFlowNode
   }
 
   @Override
-  public BiFunction<ExpressionProcessor, Long, Either<Failure, Timer>> getTimerFactory() {
+  public BiFunction<ExpressionEvaluator, Long, Either<Failure, Timer>> getTimerFactory() {
     return timerFactory;
   }
 
   public void setTimerFactory(
-      final BiFunction<ExpressionProcessor, Long, Either<Failure, Timer>> timerFactory) {
+      final BiFunction<ExpressionEvaluator, Long, Either<Failure, Timer>> timerFactory) {
     this.timerFactory = timerFactory;
   }
 

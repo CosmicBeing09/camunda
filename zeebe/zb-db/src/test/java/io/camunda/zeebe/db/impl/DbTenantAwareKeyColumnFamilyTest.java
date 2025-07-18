@@ -10,7 +10,7 @@ package io.camunda.zeebe.db.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import java.io.File;
@@ -24,7 +24,7 @@ public final class DbTenantAwareKeyColumnFamilyTest {
   @TempDir public File temporaryFolder;
   private final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
       DefaultZeebeDbFactory.getDefaultFactory();
-  private ZeebeDb<DefaultColumnFamily> zeebeDb;
+  private GenericDb<DefaultColumnFamily> zeebeDb;
   private ColumnFamily<DbTenantAwareKey<DbLong>, DbString> columnFamily;
   private ColumnFamily<DbTenantAwareKey<DbCompositeKey<DbLong, DbLong>>, DbString>
       compositeColumnFamily;

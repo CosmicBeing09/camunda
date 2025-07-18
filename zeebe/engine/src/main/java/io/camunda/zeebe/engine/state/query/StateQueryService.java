@@ -7,18 +7,18 @@
  */
 package io.camunda.zeebe.engine.state.query;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.QueryService;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import java.time.InstantSource;
 import java.util.Optional;
@@ -28,10 +28,10 @@ public final class StateQueryService implements QueryService {
 
   private volatile boolean isClosed;
   private ProcessingState state;
-  private final ZeebeDb<ZbColumnFamilies> zeebeDb;
+  private final GenericDb<ColumnFamilies> zeebeDb;
   private final InstantSource clock;
 
-  public StateQueryService(final ZeebeDb<ZbColumnFamilies> zeebeDb, final InstantSource clock) {
+  public StateQueryService(final GenericDb<ColumnFamilies> zeebeDb, final InstantSource clock) {
     this.zeebeDb = zeebeDb;
     this.clock = clock;
   }
@@ -58,7 +58,7 @@ public final class StateQueryService implements QueryService {
 
     return Optional.ofNullable(state.getElementInstanceState().getInstance(key))
         .map(ElementInstance::getValue)
-        .map(ProcessInstanceRecord::getBpmnProcessIdBuffer);
+        .map(WorkflowInstanceRecord::getBpmnProcessIdBuffer);
   }
 
   @Override
@@ -84,8 +84,8 @@ public final class StateQueryService implements QueryService {
               () -> {
                 throw new UnsupportedOperationException("Not allowed to generate a new key");
               },
-              new TransientPendingSubscriptionState(),
-              new TransientPendingSubscriptionState(),
+              new TransientSubscriptionState(),
+              new TransientSubscriptionState(),
               new EngineConfiguration(),
               clock);
     }

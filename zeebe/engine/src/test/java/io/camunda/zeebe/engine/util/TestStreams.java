@@ -14,14 +14,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import io.camunda.security.configuration.SecurityConfiguration;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.engine.Engine;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessorFactory;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.processing.DbBannedInstanceState;
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamReader;
@@ -256,7 +256,7 @@ public final class TestStreams {
     final var snapshot = storage.getParent().resolve(SNAPSHOT_FOLDER);
 
     final AtomicReference<StreamClock> streamClockRef = new AtomicReference<>();
-    final AtomicReference<MutableProcessingState> processingStateRef = new AtomicReference<>();
+    final AtomicReference<MutableAsyncProcessingContext> processingStateRef = new AtomicReference<>();
     final var recoveredLatch = new CountDownLatch(1);
     final var recoveredAwaiter =
         new StreamProcessorLifecycleAware() {
@@ -272,7 +272,7 @@ public final class TestStreams {
           return factory.createProcessors(ctx).withListener(recoveredAwaiter);
         };
 
-    final ZeebeDb<?> zeebeDb;
+    final GenericDb<?> zeebeDb;
     if (snapshotWasTaken) {
       zeebeDb = zeebeDbFactory.createDb(snapshot.toFile());
     } else {
@@ -342,7 +342,7 @@ public final class TestStreams {
   }
 
   public void banInstanceInNewTransaction(final String streamName, final long processInstanceKey) {
-    final ZeebeDb zeebeDbLocal = streamContextMap.get(streamName).zeebeDb;
+    final GenericDb zeebeDbLocal = streamContextMap.get(streamName).zeebeDb;
     final TransactionContext context = zeebeDbLocal.createContext();
     new DbBannedInstanceState(zeebeDbLocal, context).banProcessInstance(processInstanceKey);
   }
@@ -389,7 +389,7 @@ public final class TestStreams {
     this.maxCommandsInBatch = maxCommandsInBatch;
   }
 
-  public MutableProcessingState getProcessingState(final String streamName) {
+  public MutableAsyncProcessingContext getProcessingState(final String streamName) {
     return Optional.ofNullable(streamContextMap.get(streamName))
         .map(c -> c.processingState)
         .orElseThrow(
@@ -516,22 +516,22 @@ public final class TestStreams {
   }
 
   private static final class ProcessorContext implements AutoCloseable {
-    private final ZeebeDb zeebeDb;
+    private final GenericDb zeebeDb;
     private final StreamProcessor streamProcessor;
     private final Path runtimePath;
     private final Path snapshotPath;
     private final StreamClock streamClock;
-    private final MutableProcessingState processingState;
+    private final MutableAsyncProcessingContext processingState;
     private final MeterRegistry meterRegistry;
     private boolean closed = false;
 
     private ProcessorContext(
         final StreamProcessor streamProcessor,
-        final ZeebeDb zeebeDb,
+        final GenericDb zeebeDb,
         final Path runtimePath,
         final Path snapshotPath,
         final StreamClock streamClock,
-        final MutableProcessingState processingState,
+        final MutableAsyncProcessingContext processingState,
         final MeterRegistry meterRegistry) {
       this.streamProcessor = streamProcessor;
       this.zeebeDb = zeebeDb;
@@ -544,11 +544,11 @@ public final class TestStreams {
 
     public static ProcessorContext createStreamContext(
         final StreamProcessor streamProcessor,
-        final ZeebeDb zeebeDb,
+        final GenericDb zeebeDb,
         final Path runtimePath,
         final Path snapshotPath,
         final StreamClock streamClock,
-        final MutableProcessingState processingState,
+        final MutableAsyncProcessingContext processingState,
         final MeterRegistry meterRegistry) {
       return new ProcessorContext(
           streamProcessor,

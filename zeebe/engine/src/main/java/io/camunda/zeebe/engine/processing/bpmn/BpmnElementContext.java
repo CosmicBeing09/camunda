@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.bpmn;
 
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
@@ -42,7 +42,7 @@ public interface BpmnElementContext {
    *
    * @return the value of the record that is currently processed
    */
-  ProcessInstanceRecord getRecordValue();
+  WorkflowInstanceRecord getRecordValue();
 
   ProcessInstanceIntent getIntent();
 
@@ -51,5 +51,5 @@ public interface BpmnElementContext {
   BpmnEventType getBpmnEventType();
 
   BpmnElementContext copy(
-      long elementInstanceKey, ProcessInstanceRecord recordValue, ProcessInstanceIntent intent);
+      long elementInstanceKey, WorkflowInstanceRecord recordValue, ProcessInstanceIntent intent);
 }

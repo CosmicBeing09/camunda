@@ -12,7 +12,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 
 import io.camunda.zeebe.engine.metrics.ProcessEngineMetrics;
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventSubscriptionException;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowElement;
@@ -25,7 +25,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor.ProcessingError;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -33,7 +33,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.msgpack.property.ArrayProperty;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationStartInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceCreationIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -41,7 +41,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Arrays;
 import java.util.Set;
@@ -71,15 +71,15 @@ public final class ProcessInstanceCreationCreateProcessor
           BpmnElementType.BOUNDARY_EVENT,
           BpmnElementType.UNSPECIFIED);
 
-  private final ProcessInstanceRecord newProcessInstance = new ProcessInstanceRecord();
+  private final WorkflowInstanceRecord newProcessInstance = new WorkflowInstanceRecord();
 
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
 
   private final ProcessEngineMetrics metrics;
 
@@ -88,9 +88,9 @@ public final class ProcessInstanceCreationCreateProcessor
 
   public ProcessInstanceCreationCreateProcessor(
       final ProcessState processState,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.processState = processState;
@@ -128,7 +128,7 @@ public final class ProcessInstanceCreationCreateProcessor
       // This exception is only thrown for ProcessInstanceCreationRecord with start instructions
       rejectionWriter.appendRejection(
           typedCommand, RejectionType.INVALID_ARGUMENT, exception.getMessage());
-      responseWriter.writeRejectionOnCommand(
+      responseWriter.rejectCommandAsync(
           typedCommand, RejectionType.INVALID_ARGUMENT, exception.getMessage());
       return ProcessingError.EXPECTED_ERROR;
     }
@@ -353,7 +353,7 @@ public final class ProcessInstanceCreationCreateProcessor
         record.getVariablesBuffer());
   }
 
-  private ProcessInstanceRecord initProcessInstanceRecord(
+  private WorkflowInstanceRecord initProcessInstanceRecord(
       final DeployedProcess process, final long processInstanceKey) {
     newProcessInstance.reset();
     newProcessInstance.setBpmnProcessId(process.getBpmnProcessId());
@@ -430,7 +430,7 @@ public final class ProcessInstanceCreationCreateProcessor
   private void activateElementsForStartInstructions(
       final ArrayProperty<ProcessInstanceCreationStartInstruction> startInstructions,
       final DeployedProcess process,
-      final ProcessInstanceRecord processInstance) {
+      final WorkflowInstanceRecord processInstance) {
 
     startInstructions.forEach(
         instruction -> {

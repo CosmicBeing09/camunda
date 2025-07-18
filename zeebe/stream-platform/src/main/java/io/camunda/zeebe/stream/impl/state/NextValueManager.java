@@ -9,9 +9,9 @@ package io.camunda.zeebe.stream.impl.state;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbString;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import org.agrona.DirectBuffer;
 
 public final class NextValueManager {
@@ -24,9 +24,9 @@ public final class NextValueManager {
 
   public NextValueManager(
       final long initialValue,
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
-      final ZbColumnFamilies columnFamily) {
+      final ColumnFamilies columnFamily) {
     this.initialValue = initialValue;
 
     nextValueKey = new DbString();

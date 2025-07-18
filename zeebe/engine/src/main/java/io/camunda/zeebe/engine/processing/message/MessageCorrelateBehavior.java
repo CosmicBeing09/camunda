@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.message;
 
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.state.immutable.MessageStartEventSubscriptionState;
@@ -21,14 +21,14 @@ public final class MessageCorrelateBehavior {
   private final MessageStartEventSubscriptionState startEventSubscriptionState;
   private final MessageSubscriptionState messageSubscriptionState;
   private final MessageState messageState;
-  private final EventHandle eventHandle;
+  private final EventHandler eventHandle;
   private final StateWriter stateWriter;
   private final SubscriptionCommandSender commandSender;
 
   public MessageCorrelateBehavior(
       final MessageStartEventSubscriptionState startEventSubscriptionState,
       final MessageState messageState,
-      final EventHandle eventHandle,
+      final EventHandler eventHandle,
       final StateWriter stateWriter,
       final MessageSubscriptionState messageSubscriptionState,
       final SubscriptionCommandSender commandSender) {

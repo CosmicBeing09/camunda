@@ -8,13 +8,13 @@
 package io.camunda.zeebe.engine.state.migration.to_1_1;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import org.agrona.DirectBuffer;
@@ -46,7 +46,7 @@ final class LegacyDbMessageSubscriptionState {
       messageNameAndCorrelationKeyColumnFamily;
 
   LegacyDbMessageSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     this.transactionContext = transactionContext;
 
     elementInstanceKey = new DbLong();
@@ -55,7 +55,7 @@ final class LegacyDbMessageSubscriptionState {
     elementKeyAndMessageName = new DbCompositeKey<>(elementInstanceKey, messageName);
     subscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
+            ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_KEY,
             transactionContext,
             elementKeyAndMessageName,
             messageSubscription);
@@ -64,7 +64,7 @@ final class LegacyDbMessageSubscriptionState {
     sentTimeCompositeKey = new DbCompositeKey<>(sentTime, elementKeyAndMessageName);
     sentTimeColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME,
+            ColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME,
             transactionContext,
             sentTimeCompositeKey,
             DbNil.INSTANCE);
@@ -75,7 +75,7 @@ final class LegacyDbMessageSubscriptionState {
         new DbCompositeKey<>(nameAndCorrelationKey, elementInstanceKey);
     messageNameAndCorrelationKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPRECATED_MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
+            ColumnFamilies.DEPRECATED_MESSAGE_SUBSCRIPTION_BY_NAME_AND_CORRELATION_KEY,
             transactionContext,
             nameCorrelationAndElementInstanceKey,
             DbNil.INSTANCE);

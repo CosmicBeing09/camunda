@@ -8,14 +8,14 @@
 package io.camunda.zeebe.gateway.impl.broker.request;
 
 import io.camunda.zeebe.broker.client.api.dto.BrokerExecuteCommand;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import org.agrona.DirectBuffer;
 
-public class BrokerUserTaskAssignmentRequest extends BrokerExecuteCommand<UserTaskRecord> {
+public class BrokerUserTaskAssignmentRequest extends BrokerExecuteCommand<TaskRecord> {
 
-  private final UserTaskRecord requestDto = new UserTaskRecord();
+  private final TaskRecord requestDto = new TaskRecord();
 
   public BrokerUserTaskAssignmentRequest(
       final long key, final String assignee, final String action, final UserTaskIntent intent) {
@@ -25,13 +25,13 @@ public class BrokerUserTaskAssignmentRequest extends BrokerExecuteCommand<UserTa
   }
 
   @Override
-  public UserTaskRecord getRequestWriter() {
+  public TaskRecord getRequestWriter() {
     return requestDto;
   }
 
   @Override
-  protected UserTaskRecord toResponseDto(final DirectBuffer buffer) {
-    final var responseDto = new UserTaskRecord();
+  protected TaskRecord toResponseDto(final DirectBuffer buffer) {
+    final var responseDto = new TaskRecord();
     responseDto.wrap(buffer);
     return responseDto;
   }

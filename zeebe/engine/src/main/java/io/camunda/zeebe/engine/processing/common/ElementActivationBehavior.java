@@ -17,10 +17,10 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWr
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
@@ -37,7 +37,7 @@ public final class ElementActivationBehavior {
 
   public static final long NO_ANCESTOR_SCOPE_KEY = -1L;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
   private final BpmnStateBehavior stateBehavior;
@@ -46,7 +46,7 @@ public final class ElementActivationBehavior {
   private final ElementInstanceState elementInstanceState;
 
   public ElementActivationBehavior(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
       final CatchEventBehavior catchEventBehavior,
       final ElementInstanceState elementInstanceState,
@@ -67,7 +67,7 @@ public final class ElementActivationBehavior {
    * starting a process instance at a different place than the start event.
    *
    * <p>If there are multiple flow scope instances, then you should use {@link
-   * #activateElement(ProcessInstanceRecord, AbstractFlowElement, long, BiConsumer)} to select a
+   * #activateElement(WorkflowInstanceRecord, AbstractFlowElement, long, BiConsumer)} to select a
    * specific ancestor.
    *
    * @param processInstanceRecord the record of the process instance
@@ -75,7 +75,7 @@ public final class ElementActivationBehavior {
    * @return The key of the activated element instance and the keys of all it's flow scopes
    */
   public ActivatedElementKeys activateElement(
-      final ProcessInstanceRecord processInstanceRecord,
+      final WorkflowInstanceRecord processInstanceRecord,
       final AbstractFlowElement elementToActivate) {
     return activateElement(
         processInstanceRecord, elementToActivate, NO_ANCESTOR_SCOPE_KEY, (empty, function) -> {});
@@ -99,7 +99,7 @@ public final class ElementActivationBehavior {
    * @return The key of the activated element instance and the keys of all it's flow scopes
    */
   public ActivatedElementKeys activateElement(
-      final ProcessInstanceRecord processInstanceRecord,
+      final WorkflowInstanceRecord processInstanceRecord,
       final AbstractFlowElement elementToActivate,
       final long ancestorScopeKey,
       final BiConsumer<DirectBuffer, Long> createVariablesCallback) {
@@ -168,7 +168,7 @@ public final class ElementActivationBehavior {
    *     for activation
    */
   private long activateAncestralSubprocesses(
-      final ProcessInstanceRecord processInstanceRecord,
+      final WorkflowInstanceRecord processInstanceRecord,
       final long flowScopeKey,
       final Deque<ExecutableFlowElement> subprocesses,
       final long ancestorScopeKey,
@@ -219,7 +219,7 @@ public final class ElementActivationBehavior {
 
   /**
    * This method tries to find the instance of the subprocess that should be used as the flow scope
-   * of the next recursion of {@link #activateAncestralSubprocesses(ProcessInstanceRecord, long,
+   * of the next recursion of {@link #activateAncestralSubprocesses(WorkflowInstanceRecord, long,
    * Deque, long, BiConsumer, ActivatedElementKeys)}.
    *
    * <p>This method works by looking up element instances of the specific subprocess, and then
@@ -344,7 +344,7 @@ public final class ElementActivationBehavior {
   }
 
   private long activateFlowScope(
-      final ProcessInstanceRecord processInstanceRecord,
+      final WorkflowInstanceRecord processInstanceRecord,
       final long flowScopeKey,
       final ExecutableFlowElement flowScope,
       final BiConsumer<DirectBuffer, Long> createVariablesCallback) {
@@ -371,7 +371,7 @@ public final class ElementActivationBehavior {
   }
 
   private void activateFlowScopeByEvents(
-      final ProcessInstanceRecord processInstanceRecord,
+      final WorkflowInstanceRecord processInstanceRecord,
       final ExecutableFlowElement element,
       final long elementInstanceKey,
       final long flowScopeKey,
@@ -397,7 +397,7 @@ public final class ElementActivationBehavior {
   }
 
   private long activateElementByCommand(
-      final ProcessInstanceRecord processInstanceRecord,
+      final WorkflowInstanceRecord processInstanceRecord,
       final AbstractFlowElement elementToActivate,
       final long flowScopeKey) {
 
@@ -410,12 +410,12 @@ public final class ElementActivationBehavior {
     return elementInstanceKey;
   }
 
-  private ProcessInstanceRecord createElementRecord(
-      final ProcessInstanceRecord processInstanceRecord,
+  private WorkflowInstanceRecord createElementRecord(
+      final WorkflowInstanceRecord processInstanceRecord,
       final ExecutableFlowElement elementToActivate,
       final long flowScopeKey) {
 
-    final var elementInstanceRecord = new ProcessInstanceRecord();
+    final var elementInstanceRecord = new WorkflowInstanceRecord();
     // take the properties from the process instance
     elementInstanceRecord.wrap(processInstanceRecord);
     // override the properties for the specific element
@@ -437,7 +437,7 @@ public final class ElementActivationBehavior {
    */
   private void createEventSubscriptions(
       final ExecutableFlowElement element,
-      final ProcessInstanceRecord elementRecord,
+      final WorkflowInstanceRecord elementRecord,
       final long elementInstanceKey) {
 
     if (element instanceof final ExecutableCatchEventSupplier catchEventSupplier) {

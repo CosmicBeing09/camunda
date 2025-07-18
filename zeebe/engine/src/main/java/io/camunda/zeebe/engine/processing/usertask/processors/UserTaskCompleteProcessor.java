@@ -8,18 +8,18 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -32,16 +32,16 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
   private static final String DEFAULT_ACTION = "complete";
 
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState userTaskState;
-  private final EventHandle eventHandle;
+  private final TaskState userTaskState;
+  private final EventHandler eventHandle;
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
   public UserTaskCompleteProcessor(
       final ProcessingState state,
-      final EventHandle eventHandle,
+      final EventHandler eventHandle,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
     elementInstanceState = state.getElementInstanceState();
@@ -59,14 +59,14 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, TaskRecord> validateCommand(
+      final TypedRecord<TaskRecord> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
     userTaskRecord.setVariables(command.getValue().getVariablesBuffer());
@@ -77,7 +77,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<TaskRecord> command, final TaskRecord userTaskRecord) {
     final long userTaskKey = command.getKey();
 
     if (command.hasRequestMetadata()) {
@@ -114,7 +114,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
     }
   }
 
-  private void completeElementInstance(final UserTaskRecord userTaskRecord) {
+  private void completeElementInstance(final TaskRecord userTaskRecord) {
     final var userTaskElementInstanceKey = userTaskRecord.getElementInstanceKey();
 
     final ElementInstance userTaskElementInstance =

@@ -17,7 +17,7 @@ import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.JobResult;
 import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.StringList;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.test.util.JsonUtil;
@@ -243,12 +243,12 @@ public final class CompleteJobTest extends GatewayTest {
 
     final List<String> expectedCorrectedAttributes =
         List.of(
-            UserTaskRecord.ASSIGNEE,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.PRIORITY);
+            TaskRecord.ASSIGNEE,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.PRIORITY);
 
     verifyJobResultCorrections(
         expectedCorrections, expectedCorrectedAttributes, brokerRequestValue);
@@ -288,10 +288,10 @@ public final class CompleteJobTest extends GatewayTest {
 
     final List<String> expectedCorrectedAttributes =
         List.of(
-            UserTaskRecord.ASSIGNEE,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.PRIORITY);
+            TaskRecord.ASSIGNEE,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.PRIORITY);
 
     final JobResultCorrections expectedCorrections =
         new JobResultCorrections()
@@ -338,7 +338,7 @@ public final class CompleteJobTest extends GatewayTest {
 
     final JobRecord brokerRequestValue = brokerRequest.getRequestWriter();
 
-    final List<String> expectedCorrectedAttributes = List.of(UserTaskRecord.ASSIGNEE);
+    final List<String> expectedCorrectedAttributes = List.of(TaskRecord.ASSIGNEE);
 
     final JobResultCorrections expectedCorrections =
         new JobResultCorrections()

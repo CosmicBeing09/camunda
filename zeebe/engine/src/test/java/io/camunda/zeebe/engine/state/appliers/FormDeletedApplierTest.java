@@ -13,11 +13,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.deployment.PersistedForm;
 import io.camunda.zeebe.engine.state.mutable.MutableFormState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.test.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,9 +34,9 @@ public class FormDeletedApplierTest {
     MutableFormState formState;
     TypedEventApplier<FormIntent, FormRecord> formCreatedApplier;
     FormDeletedApplier formDeletedApplier;
-    KeyGenerator keyGenerator;
+    IdGenerator keyGenerator;
 
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
 
     @BeforeEach
     public void setup() {

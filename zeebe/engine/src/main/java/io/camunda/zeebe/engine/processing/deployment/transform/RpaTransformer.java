@@ -19,7 +19,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ResourceMetadataRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ResourceRecord;
 import io.camunda.zeebe.protocol.record.intent.ResourceIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import java.io.IOException;
 import java.util.Optional;
@@ -30,13 +30,13 @@ public class RpaTransformer implements DeploymentResourceTransformer {
   private static final int INITIAL_VERSION = 1;
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final ResourceState resourceState;
 
   public RpaTransformer(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ResourceState resourceState) {

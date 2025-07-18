@@ -8,7 +8,7 @@
 package io.camunda.zeebe.stream.impl;
 
 import io.camunda.zeebe.db.ZeebeDbFactory;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.scheduler.ActorScheduler;
 import io.camunda.zeebe.scheduler.clock.ActorClock;
 import io.camunda.zeebe.scheduler.clock.ControlledActorClock;
@@ -31,13 +31,13 @@ import org.junit.platform.commons.util.ReflectionUtils.HierarchyTraversalMode;
 public class StreamPlatformExtension implements BeforeEachCallback {
 
   private static final String FIELD_STATE = "state";
-  final ZeebeDbFactory<ZbColumnFamilies> dbFactory;
+  final ZeebeDbFactory<ColumnFamilies> dbFactory;
 
   public StreamPlatformExtension() {
     this(DefaultZeebeDbFactory.defaultFactory());
   }
 
-  public StreamPlatformExtension(final ZeebeDbFactory<ZbColumnFamilies> dbFactory) {
+  public StreamPlatformExtension(final ZeebeDbFactory<ColumnFamilies> dbFactory) {
     this.dbFactory = dbFactory;
   }
 
@@ -100,7 +100,7 @@ public class StreamPlatformExtension implements BeforeEachCallback {
     private StreamPlatform streamPlatform;
     private final ArrayList<AutoCloseable> closables;
 
-    public StreamProcessorTestContext(final ZeebeDbFactory<ZbColumnFamilies> dbFactory) {
+    public StreamProcessorTestContext(final ZeebeDbFactory<ColumnFamilies> dbFactory) {
       closables = new ArrayList<AutoCloseable>();
       // actor scheduler
       final var builder =

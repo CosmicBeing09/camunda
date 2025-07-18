@@ -47,7 +47,7 @@ final class JobBatchCollector {
   private final ObjectHashSet<DirectBuffer> variableNames = new ObjectHashSet<>();
 
   private final JobState jobState;
-  private final JobVariablesCollector jobVariablesCollector;
+  private final WorkflowVariablesCollector jobVariablesCollector;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final Predicate<Integer> canWriteEventOfLength;
 
@@ -63,7 +63,7 @@ final class JobBatchCollector {
       final AuthorizationCheckBehavior authCheckBehavior) {
     jobState = state.getJobState();
     this.canWriteEventOfLength = canWriteEventOfLength;
-    jobVariablesCollector = new JobVariablesCollector(state);
+    jobVariablesCollector = new WorkflowVariablesCollector(state);
     this.authCheckBehavior = authCheckBehavior;
   }
 

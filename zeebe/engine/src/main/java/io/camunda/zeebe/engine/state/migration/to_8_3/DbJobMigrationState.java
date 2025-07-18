@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.migration.MemoryBoundedColumnIteration;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyJobState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbJobMigrationState {
@@ -28,7 +28,7 @@ public class DbJobMigrationState {
   private final DbJobState to;
 
   public DbJobMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacyJobState(zeebeDb, transactionContext);
     to = new DbJobState(zeebeDb, transactionContext);
   }
@@ -67,10 +67,10 @@ public class DbJobMigrationState {
         activatableColumnFamily;
 
     public DbJobState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
       jobKey = new DbLong();
-      fkJob = new DbForeignKey<>(jobKey, ZbColumnFamilies.JOBS);
+      fkJob = new DbForeignKey<>(jobKey, ColumnFamilies.JOBS);
 
       jobTypeKey = new DbString();
       tenantIdKey = new DbString();
@@ -78,7 +78,7 @@ public class DbJobMigrationState {
       tenantAwareTypeJobKey = new DbTenantAwareKey<>(tenantIdKey, typeJobKey, PlacementType.SUFFIX);
       activatableColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.JOB_ACTIVATABLE,
+              ColumnFamilies.JOB_ACTIVATABLE,
               transactionContext,
               tenantAwareTypeJobKey,
               DbNil.INSTANCE);

@@ -7,20 +7,20 @@
  */
 package io.camunda.zeebe.engine.processing.usertask;
 
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
+import io.camunda.zeebe.engine.processing.usertask.processors.TaskCreateProcessor;
+import io.camunda.zeebe.engine.processing.usertask.processors.TaskUpdateProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskAssignProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCancelProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskClaimProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCommandProcessor;
 import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCompleteProcessor;
-import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskCreateProcessor;
-import io.camunda.zeebe.engine.processing.usertask.processors.UserTaskUpdateProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
@@ -32,12 +32,12 @@ public final class UserTaskCommandProcessors {
 
   public UserTaskCommandProcessors(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
-      final BpmnBehaviors bpmnBehaviors,
+      final IdGenerator keyGenerator,
+      final ProcessBehaviors bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    final EventHandle eventHandle =
-        new EventHandle(
+    final EventHandler eventHandle =
+        new EventHandler(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,
@@ -49,7 +49,7 @@ public final class UserTaskCommandProcessors {
         new EnumMap<>(
             Map.of(
                 UserTaskIntent.CREATE,
-                new UserTaskCreateProcessor(
+                new TaskCreateProcessor(
                     processingState,
                     writers,
                     authCheckBehavior,
@@ -60,7 +60,7 @@ public final class UserTaskCommandProcessors {
                 UserTaskIntent.CLAIM,
                 new UserTaskClaimProcessor(processingState, writers, authCheckBehavior),
                 UserTaskIntent.UPDATE,
-                new UserTaskUpdateProcessor(
+                new TaskUpdateProcessor(
                     processingState, writers, bpmnBehaviors.variableBehavior(), authCheckBehavior),
                 UserTaskIntent.COMPLETE,
                 new UserTaskCompleteProcessor(

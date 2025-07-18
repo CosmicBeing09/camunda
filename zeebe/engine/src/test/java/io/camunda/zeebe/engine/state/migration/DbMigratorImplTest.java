@@ -19,7 +19,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +31,14 @@ import org.mockito.Mockito;
 public class DbMigratorImplTest {
 
   private static final String CURRENT_VERSION = "8.8.0";
-  private MutableProcessingState mockProcessingState;
+  private MutableAsyncProcessingContext mockProcessingState;
   private MigrationTaskContextImpl context;
   private final ArrayList<MigrationTask> migrations = new ArrayList<>();
   private DbMigratorImpl sut;
 
   @BeforeEach
   public void setup() {
-    mockProcessingState = mock(MutableProcessingState.class, Answers.RETURNS_DEEP_STUBS);
+    mockProcessingState = mock(MutableAsyncProcessingContext.class, Answers.RETURNS_DEEP_STUBS);
     when(mockProcessingState.getMigrationState().getMigratedByVersion()).thenReturn("8.7.0");
     context = new MigrationTaskContextImpl(new ClusterContextImpl(1), mockProcessingState);
     migrations.clear();

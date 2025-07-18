@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.message;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
@@ -17,7 +17,7 @@ import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageStartEventSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
 import org.agrona.DirectBuffer;
 
@@ -46,7 +46,7 @@ public final class DbMessageStartEventSubscriptionState
       subscriptionsOfProcessDefinitionKeyColumnFamily;
 
   public DbMessageStartEventSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     tenantIdKey = new DbString();
     messageName = new DbString();
     tenantAwareMessageName = new DbTenantAwareKey<>(tenantIdKey, messageName, PlacementType.PREFIX);
@@ -55,7 +55,7 @@ public final class DbMessageStartEventSubscriptionState
         new DbCompositeKey<>(tenantAwareMessageName, processDefinitionKey);
     subscriptionsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY,
+            ColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_NAME_AND_KEY,
             transactionContext,
             messageNameAndProcessDefinitionKey,
             messageStartEventSubscription);
@@ -64,7 +64,7 @@ public final class DbMessageStartEventSubscriptionState
         new DbCompositeKey<>(processDefinitionKey, tenantAwareMessageName);
     subscriptionsOfProcessDefinitionKeyColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_KEY_AND_NAME,
+            ColumnFamilies.MESSAGE_START_EVENT_SUBSCRIPTION_BY_KEY_AND_NAME,
             transactionContext,
             processDefinitionKeyAndMessageName,
             DbNil.INSTANCE);

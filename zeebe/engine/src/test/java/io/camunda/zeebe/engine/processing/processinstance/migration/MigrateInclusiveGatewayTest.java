@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
@@ -386,8 +386,8 @@ public class MigrateInclusiveGatewayTest {
             RecordingExporter.records()
                 .skipUntil(
                     r ->
-                        r.getValue() instanceof ProcessInstanceRecord
-                            && ((ProcessInstanceRecord) r.getValue()).getElementId().equals("task1")
+                        r.getValue() instanceof WorkflowInstanceRecord
+                            && ((WorkflowInstanceRecord) r.getValue()).getElementId().equals("task1")
                             && r.getIntent() == ProcessInstanceIntent.ELEMENT_COMPLETED)
                 .processInstanceRecords()
                 .withIntent(ProcessInstanceIntent.SEQUENCE_FLOW_TAKEN)

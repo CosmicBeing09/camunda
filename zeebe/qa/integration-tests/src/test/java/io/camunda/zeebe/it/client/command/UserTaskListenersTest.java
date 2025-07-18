@@ -26,7 +26,7 @@ import io.camunda.zeebe.it.util.ZeebeAssertHelper;
 import io.camunda.zeebe.it.util.ZeebeResourcesHelper;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -175,7 +175,7 @@ public class UserTaskListenersTest {
           assertThat(userTask.getCandidateUsersList()).containsExactly("frodo", "samwise");
           assertThat(userTask.getPriority()).isEqualTo(88);
           assertThat(userTask.getChangedAttributes())
-              .containsExactly(UserTaskRecord.CANDIDATE_USERS, UserTaskRecord.PRIORITY);
+              .containsExactly(TaskRecord.CANDIDATE_USERS, TaskRecord.PRIORITY);
           assertThat(userTask.getAction()).isEqualTo(action);
         });
   }
@@ -666,12 +666,12 @@ public class UserTaskListenersTest {
                     .setPriority(99))
             .setCorrectedAttributes(
                 Arrays.asList(
-                    UserTaskRecord.ASSIGNEE,
-                    UserTaskRecord.DUE_DATE,
-                    UserTaskRecord.FOLLOW_UP_DATE,
-                    UserTaskRecord.CANDIDATE_USERS,
-                    UserTaskRecord.CANDIDATE_GROUPS,
-                    UserTaskRecord.PRIORITY));
+                    TaskRecord.ASSIGNEE,
+                    TaskRecord.DUE_DATE,
+                    TaskRecord.FOLLOW_UP_DATE,
+                    TaskRecord.CANDIDATE_USERS,
+                    TaskRecord.CANDIDATE_GROUPS,
+                    TaskRecord.PRIORITY));
 
     // TL job should be successfully completed with expected JobResult
     ZeebeAssertHelper.assertJobCompleted(
@@ -771,11 +771,11 @@ public class UserTaskListenersTest {
           assertThat(userTask.getChangedAttributes())
               .describedAs("Changed attributes should reflect only actual modifications")
               .containsExactly(
-                  UserTaskRecord.ASSIGNEE,
-                  UserTaskRecord.CANDIDATE_GROUPS,
-                  UserTaskRecord.CANDIDATE_USERS,
-                  UserTaskRecord.DUE_DATE,
-                  UserTaskRecord.FOLLOW_UP_DATE);
+                  TaskRecord.ASSIGNEE,
+                  TaskRecord.CANDIDATE_GROUPS,
+                  TaskRecord.CANDIDATE_USERS,
+                  TaskRecord.DUE_DATE,
+                  TaskRecord.FOLLOW_UP_DATE);
 
           // Verify unchanged attribute
           assertThat(userTask.getPriority())
@@ -823,12 +823,12 @@ public class UserTaskListenersTest {
                     .setPriority(80))
             .setCorrectedAttributes(
                 Arrays.asList(
-                    UserTaskRecord.ASSIGNEE,
-                    UserTaskRecord.DUE_DATE,
-                    UserTaskRecord.FOLLOW_UP_DATE,
-                    UserTaskRecord.CANDIDATE_USERS,
-                    UserTaskRecord.CANDIDATE_GROUPS,
-                    UserTaskRecord.PRIORITY));
+                    TaskRecord.ASSIGNEE,
+                    TaskRecord.DUE_DATE,
+                    TaskRecord.FOLLOW_UP_DATE,
+                    TaskRecord.CANDIDATE_USERS,
+                    TaskRecord.CANDIDATE_GROUPS,
+                    TaskRecord.PRIORITY));
 
     // TL job should be successfully completed with the result "denied" set correctly and
     // corrections as expected
@@ -886,10 +886,10 @@ public class UserTaskListenersTest {
                     .setPriority(80))
             .setCorrectedAttributes(
                 Arrays.asList(
-                    UserTaskRecord.ASSIGNEE,
-                    UserTaskRecord.FOLLOW_UP_DATE,
-                    UserTaskRecord.CANDIDATE_USERS,
-                    UserTaskRecord.PRIORITY));
+                    TaskRecord.ASSIGNEE,
+                    TaskRecord.FOLLOW_UP_DATE,
+                    TaskRecord.CANDIDATE_USERS,
+                    TaskRecord.PRIORITY));
 
     // TL job should be successfully completed with the result "denied" set correctly and
     // corrections as expected
@@ -963,7 +963,7 @@ public class UserTaskListenersTest {
           assertThat(userTask.getPriority()).isEqualTo(3);
           assertThat(userTask.getChangedAttributes())
               .describedAs("Only corrected attributes should be reported as changed")
-              .containsExactly(UserTaskRecord.ASSIGNEE, UserTaskRecord.PRIORITY);
+              .containsExactly(TaskRecord.ASSIGNEE, TaskRecord.PRIORITY);
         });
   }
 

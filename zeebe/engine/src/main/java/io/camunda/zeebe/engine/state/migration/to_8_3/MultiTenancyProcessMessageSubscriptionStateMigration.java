@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.migration.MigrationTask;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContext;
 import io.camunda.zeebe.engine.state.migration.MutableMigrationTaskContext;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 public final class MultiTenancyProcessMessageSubscriptionStateMigration implements MigrationTask {
 
@@ -33,6 +33,6 @@ public final class MultiTenancyProcessMessageSubscriptionStateMigration implemen
 
   private static boolean hasOpenProcessMessageSubscriptionsInDeprecatedCFs(
       final ProcessingState processingState) {
-    return !processingState.isEmpty(ZbColumnFamilies.DEPRECATED_PROCESS_SUBSCRIPTION_BY_KEY);
+    return !processingState.isEmpty(ColumnFamilies.DEPRECATED_PROCESS_SUBSCRIPTION_BY_KEY);
   }
 }

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_6;
 import io.camunda.zeebe.engine.state.migration.MigrationTask;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContext;
 import io.camunda.zeebe.engine.state.migration.MutableMigrationTaskContext;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 
 public final class OrderedCommandDistributionMigration implements MigrationTask {
 
@@ -29,9 +29,9 @@ public final class OrderedCommandDistributionMigration implements MigrationTask 
      * migration twice we also check that the queued distribution column family is empty, and the
      * retriable distribution column family is empty.
      */
-    return !processingState.isEmpty(ZbColumnFamilies.PENDING_DISTRIBUTION)
-        && processingState.isEmpty(ZbColumnFamilies.QUEUED_DISTRIBUTION)
-        && processingState.isEmpty(ZbColumnFamilies.RETRIABLE_DISTRIBUTION);
+    return !processingState.isEmpty(ColumnFamilies.PENDING_DISTRIBUTION)
+        && processingState.isEmpty(ColumnFamilies.QUEUED_DISTRIBUTION)
+        && processingState.isEmpty(ColumnFamilies.RETRIABLE_DISTRIBUTION);
   }
 
   @Override

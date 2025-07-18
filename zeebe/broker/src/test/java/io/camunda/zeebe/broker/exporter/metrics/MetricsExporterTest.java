@@ -13,7 +13,7 @@ import io.camunda.zeebe.exporter.test.ExporterTestContext;
 import io.camunda.zeebe.exporter.test.ExporterTestController;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.ImmutableRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -111,22 +111,22 @@ class MetricsExporterTest {
     exporter.configure(new ExporterTestContext());
 
     exporter.export(
-        ImmutableRecord.<ProcessInstanceRecord>builder()
+        ImmutableRecord.<WorkflowInstanceRecord>builder()
             .withRecordType(RecordType.EVENT)
             .withValueType(ValueType.PROCESS_INSTANCE)
             .withIntent(ProcessInstanceIntent.ELEMENT_ACTIVATING)
             .withTimestamp(1651505728460L)
             .withKey(Protocol.encodePartitionId(1, 1))
-            .withValue(new ProcessInstanceRecord().setBpmnElementType(BpmnElementType.PROCESS))
+            .withValue(new WorkflowInstanceRecord().setBpmnElementType(BpmnElementType.PROCESS))
             .build());
     exporter.export(
-        ImmutableRecord.<ProcessInstanceRecord>builder()
+        ImmutableRecord.<WorkflowInstanceRecord>builder()
             .withRecordType(RecordType.EVENT)
             .withValueType(ValueType.PROCESS_INSTANCE)
             .withIntent(ProcessInstanceIntent.ELEMENT_ACTIVATING)
             .withTimestamp(1651505728460L)
             .withKey(Protocol.encodePartitionId(1, 2))
-            .withValue(new ProcessInstanceRecord().setBpmnElementType(BpmnElementType.PROCESS))
+            .withValue(new WorkflowInstanceRecord().setBpmnElementType(BpmnElementType.PROCESS))
             .build());
 
     // when

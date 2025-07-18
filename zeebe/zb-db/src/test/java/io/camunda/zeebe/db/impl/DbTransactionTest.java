@@ -11,8 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.ZeebeDbTransaction;
 import io.camunda.zeebe.protocol.ColumnFamilyScope;
@@ -49,7 +49,7 @@ public final class DbTransactionTest {
   @Before
   public void setup() throws Exception {
     final File pathName = temporaryFolder.newFolder();
-    final ZeebeDb<ColumnFamilies> zeebeDb = dbFactory.createDb(pathName);
+    final GenericDb<ColumnFamilies> zeebeDb = dbFactory.createDb(pathName);
     transactionContext = zeebeDb.createContext();
 
     oneKey = new DbLong();

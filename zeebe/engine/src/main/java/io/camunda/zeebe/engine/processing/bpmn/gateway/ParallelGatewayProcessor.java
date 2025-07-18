@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.processing.bpmn.gateway;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
@@ -20,10 +20,10 @@ import io.camunda.zeebe.util.buffer.BufferUtil;
 public final class ParallelGatewayProcessor implements BpmnElementProcessor<ExecutableFlowNode> {
 
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
 
   public ParallelGatewayProcessor(
-      final BpmnBehaviors behaviors, final BpmnStateTransitionBehavior stateTransitionBehavior) {
+      final ProcessBehaviors behaviors, final BpmnStateTransitionBehavior stateTransitionBehavior) {
     this.stateTransitionBehavior = stateTransitionBehavior;
     jobBehavior = behaviors.jobBehavior();
   }

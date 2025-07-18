@@ -16,7 +16,7 @@ import static org.mockito.Mockito.when;
 import io.camunda.zeebe.engine.state.immutable.FormState.FormIdentifier;
 import io.camunda.zeebe.engine.state.immutable.FormState.PersistedFormVisitor;
 import io.camunda.zeebe.engine.state.mutable.MutableFormState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
@@ -30,7 +30,7 @@ import org.mockito.Mockito;
 public class FormStateTest {
 
   private final String tenantId = "<default>";
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableFormState formState;
 
   @BeforeEach

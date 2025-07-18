@@ -8,11 +8,11 @@
 package io.camunda.zeebe.engine.processing.processinstance;
 
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -21,7 +21,7 @@ public final class ProcessInstanceCommandContext {
 
   private final MutableElementInstanceState elementInstanceState;
 
-  private TypedRecord<ProcessInstanceRecord> record;
+  private TypedRecord<WorkflowInstanceRecord> record;
   private ElementInstance elementInstance;
   private final Writers writers;
 
@@ -35,11 +35,11 @@ public final class ProcessInstanceCommandContext {
     return (ProcessInstanceIntent) record.getIntent();
   }
 
-  public TypedRecord<ProcessInstanceRecord> getRecord() {
+  public TypedRecord<WorkflowInstanceRecord> getRecord() {
     return record;
   }
 
-  public void setRecord(final TypedRecord<ProcessInstanceRecord> record) {
+  public void setRecord(final TypedRecord<WorkflowInstanceRecord> record) {
     this.record = record;
   }
 
@@ -51,7 +51,7 @@ public final class ProcessInstanceCommandContext {
     this.elementInstance = elementInstance;
   }
 
-  public TypedResponseWriter getResponseWriter() {
+  public AsyncResponseWriter getResponseWriter() {
     return writers.response();
   }
 
@@ -61,7 +61,7 @@ public final class ProcessInstanceCommandContext {
 
   public void reject(final RejectionType rejectionType, final String reason) {
     writers.rejection().appendRejection(record, rejectionType, reason);
-    writers.response().writeRejectionOnCommand(record, rejectionType, reason);
+    writers.response().rejectCommandAsync(record, rejectionType, reason);
   }
 
   public TypedCommandWriter getCommandWriter() {

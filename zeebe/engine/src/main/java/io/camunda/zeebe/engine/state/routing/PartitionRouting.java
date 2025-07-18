@@ -1,0 +1,132 @@
+/*
+ * Copyright Camunda Services GmbH and/or licensed to Camunda Services GmbH under
+ * one or more contributor license agreements. See the NOTICE file distributed
+ * with this work for additional information regarding copyright ownership.
+ * Licensed under the Camunda License 1.0. You may not use this file
+ * except in compliance with the Camunda License 1.0.
+ */
+package io.camunda.zeebe.engine.state.routing;
+
+import io.camunda.zeebe.engine.state.immutable.RoutingState;
+import io.camunda.zeebe.engine.state.immutable.RoutingState.MessageCorrelation.HashMod;
+import io.camunda.zeebe.protocol.Protocol;
+import io.camunda.zeebe.protocol.impl.SubscriptionUtil;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import org.agrona.DirectBuffer;
+
+/**
+ * Utility class that holds the current routing information. To be uses everywhere the number of
+ * partitions or message correlation strategy is needed.
+ *
+ * <p>The information always reflects the current persisted routing info from {@link
+ * DbRoutingState}.
+ */
+public interface PartitionRouting {
+  /** Returns the current set of partitions. */
+  Set<Integer> getCurrentPartitionIds();
+
+  /** Returns the desired set of partitions. */
+  Set<Integer> desiredPartitions();
+
+  /** Returns the current partition id for the given correlation key. */
+  int partitionForCorrelationKey(final DirectBuffer correlationKey);
+
+  /** Returns whether a partition is being scaled up at that point in time. */
+  boolean isPartitionScaling(final int partitionId);
+
+  /**
+   * Creates a {@link PartitionRouting} instance for static partitions. This is used when the partitions
+   * are fixed and known at startup. Only relevant for testing.
+   */
+  static PartitionRouting forStaticPartitions(final int partitionCount) {
+    final var partitions =
+        IntStream.rangeClosed(Protocol.START_PARTITION_ID, partitionCount)
+            .boxed()
+            .collect(Collectors.toSet());
+    return new StaticRoutingInfo(partitions, partitionCount);
+  }
+
+  static PartitionRouting dynamic(final RoutingState routingState, final PartitionRouting fallback) {
+    return new DynamicRoutingInfo(routingState, fallback);
+  }
+
+  class StaticRoutingInfo implements PartitionRouting {
+    private final Set<Integer> otherPartitions;
+    private final int partitionCount;
+
+    public StaticRoutingInfo(final Set<Integer> otherPartitions, final int partitionCount) {
+      this.otherPartitions = otherPartitions;
+      this.partitionCount = partitionCount;
+    }
+
+    @Override
+    public Set<Integer> getCurrentPartitionIds() {
+      return otherPartitions;
+    }
+
+    @Override
+    public Set<Integer> desiredPartitions() {
+      return getCurrentPartitionIds();
+    }
+
+    @Override
+    public int partitionForCorrelationKey(final DirectBuffer correlationKey) {
+      return SubscriptionUtil.getSubscriptionPartitionId(correlationKey, partitionCount);
+    }
+
+    @Override
+    public boolean isPartitionScaling(final int partitionId) {
+      return false;
+    }
+  }
+
+  /**
+   * Naive implementation that always looks up the routing information from the {@link
+   * RoutingState}. Later on, we might want to cache this information.
+   */
+  class DynamicRoutingInfo implements PartitionRouting {
+    private final RoutingState routingState;
+    private final PartitionRouting fallback;
+
+    public DynamicRoutingInfo(final RoutingState routingState, final PartitionRouting fallback) {
+      this.routingState = routingState;
+      this.fallback = fallback;
+    }
+
+    @Override
+    public Set<Integer> getCurrentPartitionIds() {
+      if (!routingState.isInitialized()) {
+        return fallback.getCurrentPartitionIds();
+      }
+      return routingState.currentPartitions();
+    }
+
+    @Override
+    public Set<Integer> desiredPartitions() {
+      if (!routingState.isInitialized()) {
+        return fallback.getCurrentPartitionIds();
+      }
+      return routingState.desiredPartitions();
+    }
+
+    @Override
+    public int partitionForCorrelationKey(final DirectBuffer correlationKey) {
+      if (!routingState.isInitialized()) {
+        return fallback.partitionForCorrelationKey(correlationKey);
+      }
+
+      switch (routingState.messageCorrelation()) {
+        case HashMod(final var partitionCount) -> {
+          return SubscriptionUtil.getSubscriptionPartitionId(correlationKey, partitionCount);
+        }
+      }
+    }
+
+    @Override
+    public boolean isPartitionScaling(final int partitionId) {
+      return !getCurrentPartitionIds().contains(partitionId) && desiredPartitions().contains(partitionId);
+    }
+  }
+}

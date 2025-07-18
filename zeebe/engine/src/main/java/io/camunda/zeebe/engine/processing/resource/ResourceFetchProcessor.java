@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedResource;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceRecord> {
 
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final StateWriter stateWriter;
   private final ResourceState resourceState;
@@ -153,7 +153,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
       final RejectionType rejectionType,
       final String reason) {
     rejectionWriter.appendRejection(command, rejectionType, reason);
-    responseWriter.writeRejectionOnCommand(command, rejectionType, reason);
+    responseWriter.rejectCommandAsync(command, rejectionType, reason);
     return ProcessingError.EXPECTED_ERROR;
   }
 

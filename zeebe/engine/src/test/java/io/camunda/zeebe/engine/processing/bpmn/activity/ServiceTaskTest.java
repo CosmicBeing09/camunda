@@ -13,8 +13,8 @@ import static org.assertj.core.api.Assertions.tuple;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior.LinkedResourceProps;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior.LinkedResourceProps;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
@@ -315,7 +315,7 @@ public class ServiceTaskTest {
         .containsExactly(
             ErrorType.RESOURCE_NOT_FOUND,
             String.format(
-                BpmnJobBehavior.FIND_RESOURCE_BY_ID_AND_VERSION_TAG_FAILED_MESSAGE, "2", "1v"));
+                AsyncProcessingBehavior.FIND_RESOURCE_BY_ID_AND_VERSION_TAG_FAILED_MESSAGE, "2", "1v"));
   }
 
   @Test
@@ -352,7 +352,7 @@ public class ServiceTaskTest {
     assertThat(incidentRecordValue.getErrorMessage())
         .isEqualTo(
             String.format(
-                BpmnJobBehavior.FIND_RESOURCE_BY_ID_IN_SAME_DEPLOYMENT_FAILED_MESSAGE,
+                AsyncProcessingBehavior.FIND_RESOURCE_BY_ID_IN_SAME_DEPLOYMENT_FAILED_MESSAGE,
                 "2",
                 deployment.getKey()));
   }
@@ -391,7 +391,7 @@ public class ServiceTaskTest {
         .describedAs("Expect that incident is raised when linked resource is not found")
         .containsExactly(
             ErrorType.RESOURCE_NOT_FOUND,
-            String.format(BpmnJobBehavior.FIND_LATEST_RESOURCE_BY_ID_FAILED_MESSAGE, "2"));
+            String.format(AsyncProcessingBehavior.FIND_LATEST_RESOURCE_BY_ID_FAILED_MESSAGE, "2"));
   }
 
   @Test

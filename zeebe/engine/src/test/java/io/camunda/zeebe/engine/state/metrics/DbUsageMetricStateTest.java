@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.metrics;
 
 import static org.assertj.core.api.Assertions.*;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableUsageMetricState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -23,7 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 public class DbUsageMetricStateTest {
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableUsageMetricState state;
 
   @BeforeEach

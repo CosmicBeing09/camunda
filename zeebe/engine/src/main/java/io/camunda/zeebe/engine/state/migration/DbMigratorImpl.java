@@ -25,7 +25,7 @@ import io.camunda.zeebe.engine.state.migration.to_8_4.MultiTenancySignalSubscrip
 import io.camunda.zeebe.engine.state.migration.to_8_5.ColumnFamilyPrefixCorrectionMigration;
 import io.camunda.zeebe.engine.state.migration.to_8_6.OrderedCommandDistributionMigration;
 import io.camunda.zeebe.engine.state.migration.to_8_7.IdempotentCommandDistributionMigration;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.stream.api.ClusterContext;
 import io.camunda.zeebe.util.VersionUtil;
 import io.camunda.zeebe.util.VisibleForTesting;
@@ -75,7 +75,7 @@ public class DbMigratorImpl implements DbMigrator {
   public DbMigratorImpl(
       final boolean versionCheckRestrictionEnabled,
       final ClusterContext clusterContext,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final String version) {
     this(
         versionCheckRestrictionEnabled,

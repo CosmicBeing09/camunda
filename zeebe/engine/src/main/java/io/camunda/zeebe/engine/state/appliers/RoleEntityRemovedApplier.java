@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.appliers;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.authorization.DbMembershipState.RelationType;
 import io.camunda.zeebe.engine.state.mutable.MutableMembershipState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.RoleRecord;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 
@@ -18,7 +18,7 @@ public class RoleEntityRemovedApplier implements TypedEventApplier<RoleIntent, R
 
   private final MutableMembershipState membershipState;
 
-  public RoleEntityRemovedApplier(final MutableProcessingState state) {
+  public RoleEntityRemovedApplier(final MutableAsyncProcessingContext state) {
     membershipState = state.getMembershipState();
   }
 

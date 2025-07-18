@@ -15,11 +15,11 @@ import static org.mockito.Mockito.verify;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableDistributionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo.StaticRoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting.StaticRoutingInfo;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
 import io.camunda.zeebe.protocol.Protocol;
@@ -40,7 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class CommandRedistributorTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private MutableRoutingState routingState;
   @Mock private DistributionMetrics mockDistributionMetrics;
@@ -61,8 +61,8 @@ public class CommandRedistributorTest {
     final Writers writers =
         new Writers(() -> fakeProcessingResultBuilder, mock(EventAppliers.class));
 
-    final RoutingInfo routingInfo =
-        RoutingInfo.dynamic(routingState, new StaticRoutingInfo(Set.of(1, 2), 2));
+    final PartitionRouting routingInfo =
+        PartitionRouting.dynamic(routingState, new StaticRoutingInfo(Set.of(1, 2), 2));
 
     final CommandDistributionBehavior behavior =
         new CommandDistributionBehavior(

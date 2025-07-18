@@ -10,16 +10,16 @@ package io.camunda.zeebe.engine.processing.message;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.message.MessageCorrelateBehavior.MessageData;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.MessageStartEventSubscriptionState;
@@ -34,7 +34,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -45,18 +45,18 @@ public final class MessageCorrelationCorrelateProcessor
       "Expected to find subscription for message with name '%s' and correlation key '%s', but none was found.";
 
   private final MessageCorrelateBehavior correlateBehavior;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
-  private final TypedResponseWriter responseWriter;
+  private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
 
   public MessageCorrelationCorrelateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final ProcessState processState,
-      final BpmnBehaviors bpmnBehaviors,
+      final ProcessBehaviors bpmnBehaviors,
       final MessageStartEventSubscriptionState startEventSubscriptionState,
       final MessageState messageState,
       final MessageSubscriptionState messageSubscriptionState,
@@ -68,7 +68,7 @@ public final class MessageCorrelationCorrelateProcessor
     this.keyGenerator = keyGenerator;
     this.authCheckBehavior = authCheckBehavior;
     final var eventHandle =
-        new EventHandle(
+        new EventHandler(
             keyGenerator,
             eventScopeInstanceState,
             writers,
@@ -94,7 +94,7 @@ public final class MessageCorrelationCorrelateProcessor
           "Expected to correlate message for tenant '%s', but user is not assigned to this tenant."
               .formatted(messageCorrelationRecord.getTenantId());
       rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
+      responseWriter.rejectCommandAsync(command, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -127,7 +127,7 @@ public final class MessageCorrelationCorrelateProcessor
     if (authorizationRejectionOptional.isPresent()) {
       final var rejection = authorizationRejectionOptional.get();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -136,7 +136,7 @@ public final class MessageCorrelationCorrelateProcessor
           SUBSCRIPTION_NOT_FOUND.formatted(
               command.getValue().getName(), command.getValue().getCorrelationKey());
       rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.rejectCommandAsync(command, RejectionType.NOT_FOUND, errorMessage);
     } else {
       correlatingSubscriptions
           .getFirstMessageStartEventSubscription()

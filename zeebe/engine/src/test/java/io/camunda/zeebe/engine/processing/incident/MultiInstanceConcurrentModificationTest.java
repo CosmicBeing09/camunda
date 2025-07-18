@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
 import io.camunda.zeebe.engine.util.Records;
 import io.camunda.zeebe.model.bpmn.Bpmn;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -117,14 +117,14 @@ public class MultiInstanceConcurrentModificationTest {
     RecordingExporter.reset();
 
     // when
-    final ProcessInstanceRecord sequenceFlow =
+    final WorkflowInstanceRecord sequenceFlow =
         Records.processInstance(processInstanceKey, "multi-task")
             .setBpmnElementType(BpmnElementType.SEQUENCE_FLOW)
             .setElementId("from-task-to-multi-instance")
             .setFlowScopeKey(processInstanceKey)
             .setProcessDefinitionKey(
                 deployment.getValue().getProcessesMetadata().get(0).getProcessDefinitionKey());
-    final ProcessInstanceRecord multiInstanceBody =
+    final WorkflowInstanceRecord multiInstanceBody =
         Records.processInstance(processInstanceKey, "multi-task")
             .setBpmnElementType(BpmnElementType.MULTI_INSTANCE_BODY)
             .setElementId("multi-instance")

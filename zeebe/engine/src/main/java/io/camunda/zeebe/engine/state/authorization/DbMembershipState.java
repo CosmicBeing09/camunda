@@ -9,13 +9,13 @@ package io.camunda.zeebe.engine.state.authorization;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbEnumValue;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableMembershipState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +29,17 @@ public final class DbMembershipState implements MutableMembershipState {
   private final ColumnFamily<RelationKeyAndEntityKey, DbNil> entitiesByRelation;
 
   public DbMembershipState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     relationsByEntity =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RELATIONS_BY_ENTITY,
+            ColumnFamilies.RELATIONS_BY_ENTITY,
             transactionContext,
             entityKeyAndRelationKey,
             DbNil.INSTANCE);
 
     entitiesByRelation =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.ENTITIES_BY_RELATION,
+            ColumnFamilies.ENTITIES_BY_RELATION,
             transactionContext,
             relationKeyAndEntityKey,
             DbNil.INSTANCE);

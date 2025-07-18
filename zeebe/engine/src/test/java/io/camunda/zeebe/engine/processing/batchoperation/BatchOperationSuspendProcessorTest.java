@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.batchoperation.PersistedBatchOperation;
 import io.camunda.zeebe.engine.state.batchoperation.PersistedBatchOperation.BatchOperationStatus;
@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationLifecycleManagementRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,9 +34,9 @@ class BatchOperationSuspendProcessorTest {
   private StateWriter stateWriter;
   private TypedCommandWriter commandWriter;
   private TypedRejectionWriter rejectionWriter;
-  private TypedResponseWriter responseWriter;
+  private AsyncResponseWriter responseWriter;
   private BatchOperationSuspendProcessor processor;
-  private KeyGenerator keyGenerator;
+  private IdGenerator keyGenerator;
   private BatchOperationState batchOperationState;
 
   @BeforeEach
@@ -44,8 +44,8 @@ class BatchOperationSuspendProcessorTest {
     stateWriter = mock(StateWriter.class);
     commandWriter = mock(TypedCommandWriter.class);
     rejectionWriter = mock(TypedRejectionWriter.class);
-    responseWriter = mock(TypedResponseWriter.class);
-    keyGenerator = mock(KeyGenerator.class);
+    responseWriter = mock(AsyncResponseWriter.class);
+    keyGenerator = mock(IdGenerator.class);
 
     final var writers = mock(Writers.class);
     when(writers.state()).thenReturn(stateWriter);

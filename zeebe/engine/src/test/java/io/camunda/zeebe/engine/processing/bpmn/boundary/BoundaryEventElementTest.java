@@ -16,7 +16,7 @@ import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.AbstractActivityBuilder;
 import io.camunda.zeebe.model.bpmn.builder.AbstractFlowNodeBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
@@ -93,7 +93,7 @@ public final class BoundaryEventElementTest {
     // when trigger the boundary event and cancel the process instance concurrently
     ENGINE.writeRecords(
         RecordToWrite.command()
-            .processInstance(ProcessInstanceIntent.CANCEL, new ProcessInstanceRecord())
+            .processInstance(ProcessInstanceIntent.CANCEL, new WorkflowInstanceRecord())
             .key(processInstanceKey),
         RecordToWrite.command()
             .timer(TimerIntent.TRIGGER, timerCreated.getValue())

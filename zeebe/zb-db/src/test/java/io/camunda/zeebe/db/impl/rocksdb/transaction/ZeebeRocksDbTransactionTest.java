@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbException;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.ZeebeDbTransaction;
@@ -40,7 +40,7 @@ public final class ZeebeRocksDbTransactionTest {
   @Before
   public void setup() throws Exception {
     final File pathName = temporaryFolder.newFolder();
-    final ZeebeDb<DefaultColumnFamily> zeebeDb = dbFactory.createDb(pathName);
+    final GenericDb<DefaultColumnFamily> zeebeDb = dbFactory.createDb(pathName);
     transactionContext = zeebeDb.createContext();
   }
 

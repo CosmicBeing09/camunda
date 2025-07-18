@@ -9,9 +9,9 @@ package io.camunda.zeebe.broker.exporter.stream;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbString;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import org.agrona.DirectBuffer;
@@ -28,11 +28,11 @@ public final class ExportersState {
   private final ColumnFamily<DbString, ExporterStateEntry> exporterPositionColumnFamily;
 
   public ExportersState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     exporterId = new DbString();
     exporterPositionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.EXPORTER, transactionContext, exporterId, new ExporterStateEntry());
+            ColumnFamilies.EXPORTER, transactionContext, exporterId, new ExporterStateEntry());
   }
 
   public void setPosition(final String exporterId, final long position) {

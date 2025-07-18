@@ -12,8 +12,8 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatNoException;
 
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +32,7 @@ public final class EventScopeInstanceStateTest {
       Collections.emptySet();
   private static final Collection<DirectBuffer> NO_BOUNDARY_ELEMENT_IDS = Collections.emptySet();
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private MutableEventScopeInstanceState state;
 

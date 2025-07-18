@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.metrics.DistributionMetrics;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
-import io.camunda.zeebe.engine.state.routing.RoutingInfo;
+import io.camunda.zeebe.engine.state.routing.PartitionRouting;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
 import io.camunda.zeebe.protocol.Protocol;
@@ -89,7 +89,7 @@ class CommandDistributionBehaviorTest {
             mockDistributionState,
             writers,
             1,
-            RoutingInfo.forStaticPartitions(1),
+            PartitionRouting.forStaticPartitions(1),
             mockInterpartitionCommandSender,
             mockDistributionMetrics);
 
@@ -112,7 +112,7 @@ class CommandDistributionBehaviorTest {
             mockDistributionState,
             writers,
             1,
-            RoutingInfo.forStaticPartitions(3),
+            PartitionRouting.forStaticPartitions(3),
             mockInterpartitionCommandSender,
             mockDistributionMetrics);
 
@@ -149,7 +149,7 @@ class CommandDistributionBehaviorTest {
             mockDistributionState,
             writers,
             2,
-            RoutingInfo.forStaticPartitions(4),
+            PartitionRouting.forStaticPartitions(4),
             mockInterpartitionCommandSender,
             mockDistributionMetrics);
 
@@ -186,7 +186,7 @@ class CommandDistributionBehaviorTest {
             mockDistributionState,
             writers,
             1,
-            RoutingInfo.forStaticPartitions(3),
+            PartitionRouting.forStaticPartitions(3),
             mockInterpartitionCommandSender,
             mockDistributionMetrics);
 
@@ -221,7 +221,7 @@ class CommandDistributionBehaviorTest {
             mockDistributionState,
             writers,
             1,
-            RoutingInfo.forStaticPartitions(3),
+            PartitionRouting.forStaticPartitions(3),
             mockInterpartitionCommandSender,
             mockDistributionMetrics);
 
@@ -269,7 +269,7 @@ class CommandDistributionBehaviorTest {
               mockDistributionState,
               writers,
               1,
-              RoutingInfo.forStaticPartitions(2),
+              PartitionRouting.forStaticPartitions(2),
               mockInterpartitionCommandSender,
               mockDistributionMetrics);
     }

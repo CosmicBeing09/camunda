@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.deployment;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbInt;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -17,7 +17,7 @@ import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.mutable.MutableDeploymentState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -43,14 +43,14 @@ public final class DbDeploymentState implements MutableDeploymentState {
   private final ColumnFamily<DbString, DbNil> deploymentsRecreatedColumnFamily;
 
   public DbDeploymentState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     deploymentKey = new DbLong();
     partitionKey = new DbInt();
     deploymentPartitionKey = new DbCompositeKey<>(deploymentKey, partitionKey);
     pendingDeploymentColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PENDING_DEPLOYMENT,
+            ColumnFamilies.PENDING_DEPLOYMENT,
             transactionContext,
             deploymentPartitionKey,
             DbNil.INSTANCE);
@@ -58,12 +58,12 @@ public final class DbDeploymentState implements MutableDeploymentState {
     deploymentRaw = new DeploymentRaw();
     deploymentRawColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEPLOYMENT_RAW, transactionContext, deploymentKey, deploymentRaw);
+            ColumnFamilies.DEPLOYMENT_RAW, transactionContext, deploymentKey, deploymentRaw);
 
     deploymentsRecreatedKey = new DbString();
     deploymentsRecreatedColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.DEFAULT, transactionContext, deploymentsRecreatedKey, DbNil.INSTANCE);
+            ColumnFamilies.DEFAULT, transactionContext, deploymentsRecreatedKey, DbNil.INSTANCE);
   }
 
   @Override

@@ -12,7 +12,7 @@ import static io.camunda.zeebe.engine.util.StreamProcessingComposite.getLogName;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessorFactory;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.StreamProcessingComposite.StreamProcessorTestFactory;
 import io.camunda.zeebe.engine.util.TestStreams.FluentLogWriter;
 import io.camunda.zeebe.engine.util.client.CommandWriter;
@@ -193,11 +193,11 @@ public final class StreamProcessorRule implements TestRule, CommandWriter {
     return clock;
   }
 
-  public MutableProcessingState getProcessingState() {
+  public MutableAsyncProcessingContext getProcessingState() {
     return streamProcessingComposite.getProcessingState();
   }
 
-  public MutableProcessingState getProcessingState(final int partitionId) {
+  public MutableAsyncProcessingContext getProcessingState(final int partitionId) {
     return streamProcessingComposite.getProcessingState(getLogName(partitionId));
   }
 

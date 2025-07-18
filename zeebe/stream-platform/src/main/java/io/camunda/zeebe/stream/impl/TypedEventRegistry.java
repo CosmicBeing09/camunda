@@ -47,7 +47,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceCreationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceResultRecord;
 import io.camunda.zeebe.protocol.impl.record.value.resource.ResourceDeletionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
@@ -56,7 +56,7 @@ import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionReco
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -75,7 +75,7 @@ public final class TypedEventRegistry {
         new EnumMap<>(ValueType.class);
     registry.put(ValueType.DEPLOYMENT, DeploymentRecord.class);
     registry.put(ValueType.JOB, JobRecord.class);
-    registry.put(ValueType.PROCESS_INSTANCE, ProcessInstanceRecord.class);
+    registry.put(ValueType.PROCESS_INSTANCE, WorkflowInstanceRecord.class);
     registry.put(ValueType.INCIDENT, IncidentRecord.class);
     registry.put(ValueType.MESSAGE, MessageRecord.class);
     registry.put(ValueType.MESSAGE_BATCH, MessageBatchRecord.class);
@@ -111,7 +111,7 @@ public final class TypedEventRegistry {
     registry.put(ValueType.PROCESS_INSTANCE_BATCH, ProcessInstanceBatchRecord.class);
     registry.put(ValueType.FORM, FormRecord.class);
     registry.put(ValueType.RESOURCE, ResourceRecord.class);
-    registry.put(ValueType.USER_TASK, UserTaskRecord.class);
+    registry.put(ValueType.USER_TASK, TaskRecord.class);
     registry.put(ValueType.COMPENSATION_SUBSCRIPTION, CompensationSubscriptionRecord.class);
     registry.put(ValueType.MESSAGE_CORRELATION, MessageCorrelationRecord.class);
     registry.put(ValueType.USER, UserRecord.class);

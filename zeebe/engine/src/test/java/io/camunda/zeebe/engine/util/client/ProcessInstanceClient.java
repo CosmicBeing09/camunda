@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationTerminateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationVariableInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.intent.ErrorIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceCreationIntent;
@@ -332,7 +332,7 @@ public final class ProcessInstanceClient {
           partition,
           processInstanceKey,
           ProcessInstanceIntent.CANCEL,
-          new ProcessInstanceRecord().setProcessInstanceKey(processInstanceKey),
+          new WorkflowInstanceRecord().setProcessInstanceKey(processInstanceKey),
           authorizedTenants);
     }
 
@@ -350,7 +350,7 @@ public final class ProcessInstanceClient {
           processInstanceKey,
           ProcessInstanceIntent.CANCEL,
           username,
-          new ProcessInstanceRecord().setProcessInstanceKey(processInstanceKey),
+          new WorkflowInstanceRecord().setProcessInstanceKey(processInstanceKey),
           authorizedTenants);
     }
 

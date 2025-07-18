@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 
@@ -17,7 +17,7 @@ public class JobRecurredApplier implements TypedEventApplier<JobIntent, JobRecor
 
   private final MutableJobState jobState;
 
-  JobRecurredApplier(final MutableProcessingState processingState) {
+  JobRecurredApplier(final MutableAsyncProcessingContext processingState) {
     jobState = processingState.getJobState();
   }
 

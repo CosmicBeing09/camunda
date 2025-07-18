@@ -8,20 +8,20 @@
 package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.metrics.EngineMetricsDoc.JobAction;
-import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
+import io.camunda.zeebe.engine.metrics.ProcessingMetrics;
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -83,28 +83,28 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
 
   private static final Set<String> CORRECTABLE_PROPERTIES =
       Set.of(
-          UserTaskRecord.ASSIGNEE,
-          UserTaskRecord.CANDIDATE_GROUPS,
-          UserTaskRecord.CANDIDATE_USERS,
-          UserTaskRecord.DUE_DATE,
-          UserTaskRecord.FOLLOW_UP_DATE,
-          UserTaskRecord.PRIORITY);
+          TaskRecord.ASSIGNEE,
+          TaskRecord.CANDIDATE_GROUPS,
+          TaskRecord.CANDIDATE_USERS,
+          TaskRecord.DUE_DATE,
+          TaskRecord.FOLLOW_UP_DATE,
+          TaskRecord.PRIORITY);
   private static final Set<JobListenerEventType> LISTENER_EVENT_TYPES_THAT_SUPPORT_DENY =
       EnumSet.of(
           JobListenerEventType.ASSIGNING,
           JobListenerEventType.UPDATING,
           JobListenerEventType.COMPLETING);
 
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
-  private final JobProcessingMetrics jobMetrics;
-  private final EventHandle eventHandle;
+  private final ProcessingMetrics jobMetrics;
+  private final EventHandler eventHandle;
 
   public JobCompleteProcessor(
       final ProcessingState state,
-      final JobProcessingMetrics jobMetrics,
-      final EventHandle eventHandle,
+      final ProcessingMetrics jobMetrics,
+      final EventHandler eventHandle,
       final AuthorizationCheckBehavior authCheckBehavior) {
     userTaskState = state.getUserTaskState();
     elementInstanceState = state.getElementInstanceState();
@@ -279,7 +279,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
 
     final var correctedAttributes = command.getValue().getResult().getCorrectedAttributes();
 
-    if (correctedAttributes.contains(UserTaskRecord.ASSIGNEE)) {
+    if (correctedAttributes.contains(TaskRecord.ASSIGNEE)) {
       final var uerTaskKey = getUserTaskKey(job);
       final var initialAssignee = userTaskState.findInitialAssignee(uerTaskKey);
 

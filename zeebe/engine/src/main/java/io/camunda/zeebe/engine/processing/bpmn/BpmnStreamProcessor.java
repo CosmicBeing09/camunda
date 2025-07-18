@@ -12,9 +12,9 @@ import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.metrics.ProcessEngineMetrics;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor.TransitionOutcome;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.AsyncProcessingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.ProcessBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
@@ -28,8 +28,8 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.state.immutable.EventScopeInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
@@ -45,7 +45,7 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 
 @ExcludeAuthorizationCheck
-public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessInstanceRecord> {
+public final class BpmnStreamProcessor implements TypedRecordProcessor<WorkflowInstanceRecord> {
 
   private static final Logger LOGGER = Loggers.PROCESS_PROCESSOR_LOGGER;
 
@@ -58,14 +58,14 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
   private final TypedRejectionWriter rejectionWriter;
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnStateBehavior stateBehavior;
-  private final BpmnJobBehavior jobBehavior;
+  private final AsyncProcessingBehavior jobBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableBehavior variableBehavior;
   private final EventScopeInstanceState eventScopeInstanceState;
 
   public BpmnStreamProcessor(
-      final BpmnBehaviors bpmnBehaviors,
-      final MutableProcessingState processingState,
+      final ProcessBehaviors bpmnBehaviors,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final ProcessEngineMetrics processEngineMetrics,
       final EngineConfiguration config) {
@@ -95,7 +95,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceRecord> record) {
+  public void processRecord(final TypedRecord<WorkflowInstanceRecord> record) {
 
     // initialize
     final var intent = (ProcessInstanceIntent) record.getIntent();
@@ -121,7 +121,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
 
   @Override
   public ProcessingError tryHandleError(
-      final TypedRecord<ProcessInstanceRecord> command, final Throwable error) {
+      final TypedRecord<WorkflowInstanceRecord> command, final Throwable error) {
     if (error instanceof ExceededBatchRecordSizeException) {
       context.init(
           command.getKey(), command.getValue(), (ProcessInstanceIntent) command.getIntent());
@@ -335,7 +335,7 @@ public final class BpmnStreamProcessor implements TypedRecordProcessor<ProcessIn
   }
 
   private ExecutableFlowElement getElement(
-      final ProcessInstanceRecord recordValue,
+      final WorkflowInstanceRecord recordValue,
       final BpmnElementProcessor<ExecutableFlowElement> processor) {
 
     return processState.getFlowElement(

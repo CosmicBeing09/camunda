@@ -13,12 +13,12 @@ import io.camunda.zeebe.db.ConsistencyChecksSettings;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 
 public final class DefaultZeebeDbFactory {
 
-  public static ZeebeDbFactory<ZbColumnFamilies> defaultFactory() {
+  public static ZeebeDbFactory<ColumnFamilies> defaultFactory() {
     // enable consistency checks for tests
     final var consistencyChecks = new ConsistencyChecksSettings(true, true);
     return new ZeebeRocksDbFactory<>(

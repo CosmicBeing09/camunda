@@ -11,13 +11,13 @@ import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 
 /** Applies state changes for `ProcessInstance:Element_Terminated` */
 final class ProcessInstanceElementTerminatedApplier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
   private final MutableEventScopeInstanceState eventScopeInstanceState;
@@ -33,7 +33,7 @@ final class ProcessInstanceElementTerminatedApplier
   }
 
   @Override
-  public void applyState(final long key, final ProcessInstanceRecord value) {
+  public void applyState(final long key, final WorkflowInstanceRecord value) {
 
     bufferedStartMessageEventStateApplier.removeMessageLock(value);
 

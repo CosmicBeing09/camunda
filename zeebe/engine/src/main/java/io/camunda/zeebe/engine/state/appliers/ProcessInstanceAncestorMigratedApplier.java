@@ -9,11 +9,11 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 
 final class ProcessInstanceAncestorMigratedApplier
-    implements TypedEventApplier<ProcessInstanceIntent, ProcessInstanceRecord> {
+    implements TypedEventApplier<ProcessInstanceIntent, WorkflowInstanceRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
 
@@ -23,7 +23,7 @@ final class ProcessInstanceAncestorMigratedApplier
   }
 
   @Override
-  public void applyState(final long elementInstanceKey, final ProcessInstanceRecord value) {
+  public void applyState(final long elementInstanceKey, final WorkflowInstanceRecord value) {
     elementInstanceState.updateInstance(
         elementInstanceKey,
         elementInstance -> {

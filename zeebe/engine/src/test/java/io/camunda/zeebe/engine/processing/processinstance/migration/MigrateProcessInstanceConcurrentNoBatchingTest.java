@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
 import io.camunda.zeebe.model.bpmn.Bpmn;
@@ -21,7 +21,7 @@ import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationMappingInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceMigrationRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -977,7 +977,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     // this requires us to pause processing to avoid concurrent database transaction modification
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
-        ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
+        ((MutableAsyncProcessingContext) ENGINE.getProcessingState()).getKeyGenerator();
     final var intermediateCatchEventKey = keyGenerator.nextKey();
 
     // we need to stop the engine to ensure events are applied after writing the records directly
@@ -997,7 +997,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
             .key(intermediateCatchEventKey)
             .processInstance(
                 ProcessInstanceIntent.ELEMENT_ACTIVATING,
-                new ProcessInstanceRecord()
+                new WorkflowInstanceRecord()
                     .setProcessDefinitionKey(eventBasedGateway.getValue().getProcessDefinitionKey())
                     .setBpmnProcessId(processId)
                     .setElementId("MSG_1")
@@ -1009,7 +1009,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
             .key(intermediateCatchEventKey)
             .processInstance(
                 ProcessInstanceIntent.ELEMENT_ACTIVATED,
-                new ProcessInstanceRecord()
+                new WorkflowInstanceRecord()
                     .setProcessDefinitionKey(eventBasedGateway.getValue().getProcessDefinitionKey())
                     .setBpmnProcessId(processId)
                     .setElementId("MSG_1")
@@ -1329,7 +1329,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     // this requires us to pause processing to avoid concurrent database transaction modification
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
-        ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
+        ((MutableAsyncProcessingContext) ENGINE.getProcessingState()).getKeyGenerator();
     final var sequenceFlowKey = keyGenerator.nextKey();
     final var multiInstanceBodyKey = keyGenerator.nextKey();
 
@@ -1337,12 +1337,12 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.stop();
 
     // when
-    final var sequenceFlowRecord = new ProcessInstanceRecord();
-    sequenceFlowRecord.copyFrom((ProcessInstanceRecord) userTask.getValue());
+    final var sequenceFlowRecord = new WorkflowInstanceRecord();
+    sequenceFlowRecord.copyFrom((WorkflowInstanceRecord) userTask.getValue());
     sequenceFlowRecord.setElementId("toA").setBpmnElementType(BpmnElementType.SEQUENCE_FLOW);
 
-    final var multiInstanceRecord = new ProcessInstanceRecord();
-    multiInstanceRecord.copyFrom((ProcessInstanceRecord) userTask.getValue());
+    final var multiInstanceRecord = new WorkflowInstanceRecord();
+    multiInstanceRecord.copyFrom((WorkflowInstanceRecord) userTask.getValue());
     multiInstanceRecord.setBpmnElementType(BpmnElementType.MULTI_INSTANCE_BODY).setElementId("A");
 
     ENGINE.writeRecords(

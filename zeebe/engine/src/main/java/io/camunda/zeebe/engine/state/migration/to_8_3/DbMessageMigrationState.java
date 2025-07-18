@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.migration.to_8_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.state.migration.MemoryBoundedColumnIteration;
 import io.camunda.zeebe.engine.state.migration.to_8_3.legacy.LegacyMessageState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 
 public class DbMessageMigrationState {
@@ -28,7 +28,7 @@ public class DbMessageMigrationState {
   private final DbMessageState to;
 
   public DbMessageMigrationState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     // Hardcoded partition id as this is only relevant for metrics. It doesn't have any impact on
     // the migration.
     final int partitionId = -1;
@@ -83,9 +83,9 @@ public class DbMessageMigrationState {
         nameCorrelationMessageColumnFamily;
 
     public DbMessageState(
-        final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       messageKey = new DbLong();
-      fkMessage = new DbForeignKey<>(messageKey, ZbColumnFamilies.MESSAGE_KEY);
+      fkMessage = new DbForeignKey<>(messageKey, ColumnFamilies.MESSAGE_KEY);
 
       tenantIdKey = new DbString();
       messageName = new DbString();
@@ -96,7 +96,7 @@ public class DbMessageMigrationState {
       nameCorrelationMessageKey = new DbCompositeKey<>(nameAndCorrelationKey, fkMessage);
       nameCorrelationMessageColumnFamily =
           zeebeDb.createColumnFamily(
-              ZbColumnFamilies.MESSAGES,
+              ColumnFamilies.MESSAGES,
               transactionContext,
               nameCorrelationMessageKey,
               DbNil.INSTANCE);

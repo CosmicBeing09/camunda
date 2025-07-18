@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.state.compensation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableCompensationSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.compensation.CompensationSubscriptionRecord;
 import java.util.List;
@@ -33,7 +33,7 @@ public class CompensationSubscriptionStateTest {
   private static final long COMPENSATION_HANDLER_INSTANCE_KEY = 6L;
 
   private MutableCompensationSubscriptionState state;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @BeforeEach
   public void setUp() {

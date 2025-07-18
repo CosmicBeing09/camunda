@@ -7,26 +7,26 @@
  */
 package io.camunda.zeebe.engine.processing.incident;
 
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.JobActivationBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.AsyncResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
 import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
-import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.processinstance.WorkflowInstanceRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -49,25 +49,25 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   private static final String UNEXPECTED_LIFECYCLE_STATE_CONVERSION_MSG =
       "Unexpected user task lifecycle state: '%s' encountered during conversion to failed user task command.";
 
-  private final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor;
-  private final TypedRecordProcessor<UserTaskRecord> userTaskProcessor;
+  private final TypedRecordProcessor<WorkflowInstanceRecord> bpmnStreamProcessor;
+  private final TypedRecordProcessor<TaskRecord> userTaskProcessor;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
   private final IncidentState incidentState;
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState userTaskState;
-  private final TypedResponseWriter responseWriter;
-  private final BpmnJobActivationBehavior jobActivationBehavior;
+  private final TaskState userTaskState;
+  private final AsyncResponseWriter responseWriter;
+  private final JobActivationBehavior jobActivationBehavior;
   private final JobState jobState;
   private final AuthorizationCheckBehavior authCheckBehavior;
 
   public IncidentResolveProcessor(
       final ProcessingState processingState,
-      final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
+      final TypedRecordProcessor<WorkflowInstanceRecord> bpmnStreamProcessor,
+      final TypedRecordProcessor<TaskRecord> userTaskProcessor,
       final Writers writers,
-      final BpmnJobActivationBehavior jobActivationBehavior,
+      final JobActivationBehavior jobActivationBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.bpmnStreamProcessor = bpmnStreamProcessor;
     this.userTaskProcessor = userTaskProcessor;
@@ -104,7 +104,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      responseWriter.rejectCommandAsync(command, rejection.type(), rejection.reason());
       return;
     }
 
@@ -130,7 +130,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
       final RejectionType rejectionType) {
 
     rejectionWriter.appendRejection(command, rejectionType, errorMessage);
-    responseWriter.writeRejectionOnCommand(command, rejectionType, errorMessage);
+    responseWriter.rejectCommandAsync(command, rejectionType, errorMessage);
   }
 
   private void attemptToContinueProcessProcessing(
@@ -154,10 +154,10 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   }
 
   private void processFailedCommand(final TypedRecord<? extends UnifiedRecordValue> failedCommand) {
-    if (failedCommand.getValue() instanceof ProcessInstanceRecord) {
-      bpmnStreamProcessor.processRecord((TypedRecord<ProcessInstanceRecord>) failedCommand);
-    } else if (failedCommand.getValue() instanceof UserTaskRecord) {
-      userTaskProcessor.processRecord((TypedRecord<UserTaskRecord>) failedCommand);
+    if (failedCommand.getValue() instanceof WorkflowInstanceRecord) {
+      bpmnStreamProcessor.processRecord((TypedRecord<WorkflowInstanceRecord>) failedCommand);
+    } else if (failedCommand.getValue() instanceof TaskRecord) {
+      userTaskProcessor.processRecord((TypedRecord<TaskRecord>) failedCommand);
     } else {
       throw new IllegalStateException(
           "Failed to process command due to unsupported record type: '%s'."
@@ -213,7 +213,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     return getFailedUserTaskCommandIntent(intermediateState.getLifecycleState())
         .map(
             intent -> {
-              final var userTaskRecord = new UserTaskRecord();
+              final var userTaskRecord = new TaskRecord();
               userTaskRecord.wrap(intermediateState.getRecord());
               return new RetryTypedRecord<>(userTaskKey, intent, userTaskRecord);
             });
@@ -225,7 +225,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     return getFailedProcessInstanceCommandIntent(elementInstance)
         .map(
             intent -> {
-              final var record = new ProcessInstanceRecord();
+              final var record = new WorkflowInstanceRecord();
               record.wrap(elementInstance.getValue());
               return new RetryTypedRecord<>(elementInstance.getKey(), intent, record);
             });

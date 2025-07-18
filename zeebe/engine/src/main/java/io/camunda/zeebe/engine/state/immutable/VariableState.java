@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.immutable;
 
-import io.camunda.zeebe.engine.state.instance.VariableDocumentState;
+import io.camunda.zeebe.engine.state.instance.AsyncDocumentState;
 import io.camunda.zeebe.engine.state.variable.VariableInstance;
 import java.util.Collection;
 import java.util.List;
@@ -53,7 +53,7 @@ public interface VariableState {
   long getParentScopeKey(long childScopeKey);
 
   /**
-   * Attempts to retrieve the persisted {@link VariableDocumentState} for the given scope key.
+   * Attempts to retrieve the persisted {@link AsyncDocumentState} for the given scope key.
    *
    * <p>This method provides access to the variable document key and its associated variable
    * document record within the specified scope. It's particularly useful in scenarios where the
@@ -61,9 +61,9 @@ public interface VariableState {
    * user task update transition triggered by a {@code VariableDocumentIntent#UPDATE} command.
    *
    * @param scopeKey the scope key for which to retrieve the variable document
-   * @return an {@link Optional} containing the {@link VariableDocumentState} if found
+   * @return an {@link Optional} containing the {@link AsyncDocumentState} if found
    */
-  Optional<VariableDocumentState> findVariableDocumentState(long scopeKey);
+  Optional<AsyncDocumentState> findVariableDocumentState(long scopeKey);
 
   /** Data wrapper for a variable. */
   record Variable(long key, long scopeKey, DirectBuffer name, DirectBuffer value) {}

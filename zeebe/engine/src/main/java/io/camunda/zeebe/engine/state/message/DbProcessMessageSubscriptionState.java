@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.message;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -17,9 +17,9 @@ import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
 import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.state.immutable.PendingProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
+import io.camunda.zeebe.engine.state.message.TransientSubscriptionState.PendingSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
@@ -47,13 +47,13 @@ public final class DbProcessMessageSubscriptionState
           DbCompositeKey<DbLong, DbTenantAwareKey<DbString>>, ProcessMessageSubscription>
       subscriptionColumnFamily;
 
-  private final TransientPendingSubscriptionState transientState;
+  private final TransientSubscriptionState transientState;
   private final InstantSource clock;
 
   public DbProcessMessageSubscriptionState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
-      final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
+      final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final InstantSource clock) {
     this.clock = clock;
     elementInstanceKey = new DbLong();
@@ -66,7 +66,7 @@ public final class DbProcessMessageSubscriptionState
 
     subscriptionColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.PROCESS_SUBSCRIPTION_BY_KEY,
+            ColumnFamilies.PROCESS_SUBSCRIPTION_BY_KEY,
             transactionContext,
             elementKeyAndMessageName,
             processMessageSubscription);

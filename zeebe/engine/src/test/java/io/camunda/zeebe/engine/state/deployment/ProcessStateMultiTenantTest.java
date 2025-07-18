@@ -12,13 +12,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.deployment.PersistedProcess.PersistedProcessState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.test.util.Strings;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import org.junit.Before;
@@ -32,8 +32,8 @@ public class ProcessStateMultiTenantTest {
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableProcessState processState;
-  private MutableProcessingState processingState;
-  private KeyGenerator keyGenerator;
+  private MutableAsyncProcessingContext processingState;
+  private IdGenerator keyGenerator;
 
   @Before
   public void setUp() {

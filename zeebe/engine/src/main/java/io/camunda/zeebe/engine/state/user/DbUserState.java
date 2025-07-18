@@ -9,13 +9,13 @@ package io.camunda.zeebe.engine.state.user;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.immutable.UserState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserState;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
 import java.util.Optional;
 
@@ -30,16 +30,16 @@ public class DbUserState implements UserState, MutableUserState {
   private final ColumnFamily<DbString, PersistedUser> usersColumnFamily;
 
   public DbUserState(
-      final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     username = new DbString();
     userKey = new DbLong();
-    fkUsername = new DbForeignKey<>(username, ZbColumnFamilies.USERS);
+    fkUsername = new DbForeignKey<>(username, ColumnFamilies.USERS);
     userKeyByUsernameColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USERNAME_BY_USER_KEY, transactionContext, userKey, fkUsername);
+            ColumnFamilies.USERNAME_BY_USER_KEY, transactionContext, userKey, fkUsername);
     usersColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USERS, transactionContext, username, new PersistedUser());
+            ColumnFamilies.USERS, transactionContext, username, new PersistedUser());
   }
 
   @Override

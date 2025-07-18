@@ -10,17 +10,17 @@ package io.camunda.zeebe.engine.state.migration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.instance.JobRecordValue;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.ZbColumnFamilies;
+import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import java.util.ArrayList;
@@ -33,8 +33,8 @@ public class JobBackoffCleanupMigrationTest {
 
   final JobBackoffCleanupMigration jobBackoffCleanupMigration = new JobBackoffCleanupMigration();
 
-  private ZeebeDb<ZbColumnFamilies> zeebeDb;
-  private MutableProcessingState processingState;
+  private GenericDb<ColumnFamilies> zeebeDb;
+  private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
 
   private final JobRecordValue jobRecordToRead = new JobRecordValue();
@@ -48,16 +48,16 @@ public class JobBackoffCleanupMigrationTest {
   @BeforeEach
   public void setup() {
     jobKey = new DbLong();
-    final DbForeignKey<DbLong> fkJob = new DbForeignKey<>(jobKey, ZbColumnFamilies.JOBS);
+    final DbForeignKey<DbLong> fkJob = new DbForeignKey<>(jobKey, ColumnFamilies.JOBS);
     jobsColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
+            ColumnFamilies.JOBS, transactionContext, jobKey, jobRecordToRead);
 
     backoffKey = new DbLong();
     backoffJobKey = new DbCompositeKey<>(backoffKey, fkJob);
     backoffColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
+            ColumnFamilies.JOB_BACKOFF, transactionContext, backoffJobKey, DbNil.INSTANCE);
 
     jobKey.wrapLong(1);
   }

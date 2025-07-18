@@ -11,12 +11,12 @@ import static io.camunda.zeebe.engine.processing.variable.mapping.VariableValue.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.TaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -54,7 +54,7 @@ public final class CamundaUserTaskTest {
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =
       new RecordingExporterTestWatcher();
 
-  private UserTaskState userTaskState;
+  private TaskState userTaskState;
 
   private static BpmnModelInstance process() {
     return process(b -> {});
@@ -831,11 +831,11 @@ public final class CamundaUserTaskTest {
         .hasFollowUpDate("")
         .hasPriority(50)
         .hasChangedAttributes(
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.PRIORITY);
+            TaskRecord.CANDIDATE_GROUPS,
+            TaskRecord.CANDIDATE_USERS,
+            TaskRecord.DUE_DATE,
+            TaskRecord.FOLLOW_UP_DATE,
+            TaskRecord.PRIORITY);
 
     Assertions.assertThat(userTaskState.getUserTask(createdUserTask.getUserTaskKey()))
         .hasNoCandidateGroupsList()
@@ -1065,8 +1065,8 @@ public final class CamundaUserTaskTest {
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
-            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
-            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
+            Tuple.tuple(UserTaskIntent.UPDATING, List.of(TaskRecord.VARIABLES)),
+            Tuple.tuple(UserTaskIntent.UPDATED, List.of(TaskRecord.VARIABLES)));
   }
 
   @Test
@@ -1119,7 +1119,7 @@ public final class CamundaUserTaskTest {
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
-            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
-            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
+            Tuple.tuple(UserTaskIntent.UPDATING, List.of(TaskRecord.VARIABLES)),
+            Tuple.tuple(UserTaskIntent.UPDATED, List.of(TaskRecord.VARIABLES)));
   }
 }
