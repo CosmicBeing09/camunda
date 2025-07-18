@@ -56,8 +56,8 @@ class CommandDistributionBehaviorTest {
 
   private DistributionState mockDistributionState;
   private DistributionMetrics mockDistributionMetrics;
-  private FakeProcessingResultBuilder<CommandDistributionRecord> fakeProcessingResultBuilder;
-  private InterPartitionCommandSender mockInterpartitionCommandSender;
+  private FakeProcessingResultBuilder<CommandDistributionRecord> processingResultBuilder;
+  private InterPartitionCommandSender mockInterPartitionCommandSender;
   private Writers writers;
 
   private long key;
@@ -69,9 +69,9 @@ class CommandDistributionBehaviorTest {
   void setUp() {
     mockDistributionMetrics = mock(DistributionMetrics.class);
     mockDistributionState = mock(DistributionState.class);
-    fakeProcessingResultBuilder = new FakeProcessingResultBuilder<>();
-    mockInterpartitionCommandSender = mock(InterPartitionCommandSender.class);
-    writers = new Writers(() -> fakeProcessingResultBuilder, mock(EventAppliers.class));
+    processingResultBuilder = new FakeProcessingResultBuilder<>();
+    mockInterPartitionCommandSender = mock(InterPartitionCommandSender.class);
+    writers = new Writers(() -> processingResultBuilder, mock(EventAppliers.class));
 
     key = Protocol.encodePartitionId(1, 100);
     valueType = ValueType.DEPLOYMENT;
@@ -90,18 +90,18 @@ class CommandDistributionBehaviorTest {
             writers,
             1,
             RoutingInfo.forStaticPartitions(1),
-            mockInterpartitionCommandSender,
+            mockInterPartitionCommandSender,
             mockDistributionMetrics);
 
     // when distributing to all partitions
     behavior.withKey(key).unordered().distribute(command);
 
     // then no command distribution is started
-    Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords()).isEmpty();
+    Assertions.assertThat(processingResultBuilder.getFollowupRecords()).isEmpty();
 
     // then no command is sent to other partitions
-    fakeProcessingResultBuilder.flushPostCommitTasks();
-    verifyNoInteractions(mockInterpartitionCommandSender);
+    processingResultBuilder.flushPostCommitTasks();
+    verifyNoInteractions(mockInterPartitionCommandSender);
   }
 
   @Test
@@ -113,14 +113,14 @@ class CommandDistributionBehaviorTest {
             writers,
             1,
             RoutingInfo.forStaticPartitions(3),
-            mockInterpartitionCommandSender,
+            mockInterPartitionCommandSender,
             mockDistributionMetrics);
 
     // when distributing to all partitions
     behavior.withKey(key).unordered().distribute(command);
 
     // then command distribution is started on partition 1 and distributing to all other partitions
-    Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+    Assertions.assertThat(processingResultBuilder.getFollowupRecords())
         .extracting(
             Record::getKey,
             Record::getIntent,
@@ -133,12 +133,12 @@ class CommandDistributionBehaviorTest {
             tuple(key, CommandDistributionIntent.DISTRIBUTING, 3, intent));
 
     // then command is sent to all other partitions
-    fakeProcessingResultBuilder.flushPostCommitTasks();
-    verify(mockInterpartitionCommandSender)
+    processingResultBuilder.flushPostCommitTasks();
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(2), eq(valueType), eq(intent), eq(key), any());
-    verify(mockInterpartitionCommandSender)
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(3), eq(valueType), eq(intent), eq(key), any());
-    verifyNoMoreInteractions(mockInterpartitionCommandSender);
+    verifyNoMoreInteractions(mockInterPartitionCommandSender);
   }
 
   @Test
@@ -150,14 +150,14 @@ class CommandDistributionBehaviorTest {
             writers,
             2,
             RoutingInfo.forStaticPartitions(4),
-            mockInterpartitionCommandSender,
+            mockInterPartitionCommandSender,
             mockDistributionMetrics);
 
     // when distributing to partitions 1 and 3
     behavior.withKey(key).unordered().forPartitions(Set.of(1, 3)).distribute(command);
 
     // then command distribution is started on partition 2 and distributing to all other partitions
-    Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+    Assertions.assertThat(processingResultBuilder.getFollowupRecords())
         .extracting(
             Record::getKey,
             Record::getIntent,
@@ -170,12 +170,12 @@ class CommandDistributionBehaviorTest {
             tuple(key, CommandDistributionIntent.DISTRIBUTING, 3, intent));
 
     // then command is sent to partitions 1 and 3
-    fakeProcessingResultBuilder.flushPostCommitTasks();
-    verify(mockInterpartitionCommandSender)
+    processingResultBuilder.flushPostCommitTasks();
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(1), eq(valueType), eq(intent), eq(key), any());
-    verify(mockInterpartitionCommandSender)
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(3), eq(valueType), eq(intent), eq(key), any());
-    verifyNoMoreInteractions(mockInterpartitionCommandSender);
+    verifyNoMoreInteractions(mockInterPartitionCommandSender);
   }
 
   @Test
@@ -187,7 +187,7 @@ class CommandDistributionBehaviorTest {
             writers,
             1,
             RoutingInfo.forStaticPartitions(3),
-            mockInterpartitionCommandSender,
+            mockInterPartitionCommandSender,
             mockDistributionMetrics);
 
     // when distributing first command in queue to all partitions
@@ -195,7 +195,7 @@ class CommandDistributionBehaviorTest {
 
     // then command distribution is started on partition 1, distribution is enqueued and triggered
     // immediately for partitions 2 and 3
-    Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+    Assertions.assertThat(processingResultBuilder.getFollowupRecords())
         .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
         .containsExactly(
             tuple(key, CommandDistributionIntent.STARTED, 1),
@@ -205,12 +205,12 @@ class CommandDistributionBehaviorTest {
             tuple(key, CommandDistributionIntent.DISTRIBUTING, 3));
 
     // then command is sent immediately to partitions 2 and 3
-    fakeProcessingResultBuilder.flushPostCommitTasks();
-    verify(mockInterpartitionCommandSender)
+    processingResultBuilder.flushPostCommitTasks();
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(2), eq(valueType), eq(intent), eq(key), any());
-    verify(mockInterpartitionCommandSender)
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(3), eq(valueType), eq(intent), eq(key), any());
-    verifyNoMoreInteractions(mockInterpartitionCommandSender);
+    verifyNoMoreInteractions(mockInterPartitionCommandSender);
   }
 
   @Test
@@ -222,7 +222,7 @@ class CommandDistributionBehaviorTest {
             writers,
             1,
             RoutingInfo.forStaticPartitions(3),
-            mockInterpartitionCommandSender,
+            mockInterPartitionCommandSender,
             mockDistributionMetrics);
 
     final var firstKey = Protocol.encodePartitionId(1, 100);
@@ -237,7 +237,7 @@ class CommandDistributionBehaviorTest {
     behavior.withKey(secondKey).inQueue("test-queue").distribute(command);
 
     // then first distribution is triggered immediately and second distribution is enqueued
-    Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+    Assertions.assertThat(processingResultBuilder.getFollowupRecords())
         .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
         .containsExactly(
             tuple(firstKey, CommandDistributionIntent.STARTED, 1),
@@ -250,12 +250,12 @@ class CommandDistributionBehaviorTest {
             tuple(secondKey, CommandDistributionIntent.ENQUEUED, 3));
 
     // then first distribution is sent out immediately, second distribution isn't
-    fakeProcessingResultBuilder.flushPostCommitTasks();
-    verify(mockInterpartitionCommandSender)
+    processingResultBuilder.flushPostCommitTasks();
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(2), eq(valueType), eq(intent), eq(firstKey), any());
-    verify(mockInterpartitionCommandSender)
+    verify(mockInterPartitionCommandSender)
         .sendCommand(eq(3), eq(valueType), eq(intent), eq(firstKey), any());
-    verifyNoMoreInteractions(mockInterpartitionCommandSender);
+    verifyNoMoreInteractions(mockInterPartitionCommandSender);
   }
 
   @Nested
@@ -270,7 +270,7 @@ class CommandDistributionBehaviorTest {
               writers,
               1,
               RoutingInfo.forStaticPartitions(2),
-              mockInterpartitionCommandSender,
+              mockInterPartitionCommandSender,
               mockDistributionMetrics);
     }
 
@@ -282,7 +282,7 @@ class CommandDistributionBehaviorTest {
 
       behavior.onAcknowledgeDistribution(123L, record);
 
-      Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+      Assertions.assertThat(processingResultBuilder.getFollowupRecords())
           .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
           .containsExactly(
               tuple(123L, CommandDistributionIntent.ACKNOWLEDGED, 2),
@@ -297,7 +297,7 @@ class CommandDistributionBehaviorTest {
 
       behavior.onAcknowledgeDistribution(123L, record);
 
-      Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+      Assertions.assertThat(processingResultBuilder.getFollowupRecords())
           .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
           .containsExactly(tuple(123L, CommandDistributionIntent.ACKNOWLEDGED, 2));
     }
@@ -316,7 +316,7 @@ class CommandDistributionBehaviorTest {
 
       behavior.onAcknowledgeDistribution(123L, record);
 
-      Assertions.assertThat(fakeProcessingResultBuilder.getFollowupRecords())
+      Assertions.assertThat(processingResultBuilder.getFollowupRecords())
           .extracting(Record::getKey, Record::getIntent, r -> r.getValue().getPartitionId())
           .containsExactly(
               tuple(123L, CommandDistributionIntent.ACKNOWLEDGED, 2),
