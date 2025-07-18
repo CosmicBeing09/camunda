@@ -28,10 +28,10 @@ public class FlowNodeInstanceReader extends AbstractEntityReader<FlowNodeInstanc
     this.flowNodeInstanceMapper = flowNodeInstanceMapper;
   }
 
-  public Optional<FlowNodeInstanceEntity> findOne(final long key) {
-    final var result =
-        search(FlowNodeInstanceQuery.of(b -> b.filter(f -> f.flowNodeInstanceKeys(key))));
-    return Optional.ofNullable(result.items()).flatMap(it -> it.stream().findFirst());
+  public Optional<FlowNodeInstanceEntity> findOne(final long instanceKey) {
+    final var searchResult =
+        search(FlowNodeInstanceQuery.of(b -> b.filter(f -> f.flowNodeInstanceKeys(instanceKey))));
+    return Optional.ofNullable(searchResult.items()).flatMap(it -> it.stream().findFirst());
   }
 
   public SearchQueryResult<FlowNodeInstanceEntity> search(final FlowNodeInstanceQuery query) {
