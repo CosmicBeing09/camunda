@@ -23,7 +23,7 @@ public class FormCreatedV2ApplierTest extends AbstractFormCreatedApplierTest {
     // given
     final var formKey = keyGenerator.nextKey();
     final var deploymentKey = keyGenerator.nextKey();
-    final var formId = Strings.newRandomValidBpmnId();
+    final var formId = Strings.randomBpmnId();
     final var version = 1;
     final var versionTag = "v1.0";
     final var tenant1Form =

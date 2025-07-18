@@ -147,7 +147,7 @@ public class MultiTenancyIT {
   @BeforeEach
   void setup() {
     RecordingExporter.reset();
-    processId = Strings.newRandomValidBpmnId();
+    processId = Strings.randomBpmnId();
     process =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -155,7 +155,7 @@ public class MultiTenancyIT {
             .endEvent()
             .done();
 
-    migratedProcessId = Strings.newRandomValidBpmnId();
+    migratedProcessId = Strings.randomBpmnId();
     migratedProcess =
         Bpmn.createExecutableProcess(migratedProcessId)
             .startEvent()

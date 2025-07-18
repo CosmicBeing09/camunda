@@ -54,7 +54,7 @@ public class ResourceDeletionAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToDeleteProcessDefinitionWithDefaultUser() {
     // given
-    final var processDefinitionKey = deployProcessDefinition(Strings.newRandomValidBpmnId());
+    final var processDefinitionKey = deployProcessDefinition(Strings.randomBpmnId());
 
     // when
     engine
@@ -73,7 +73,7 @@ public class ResourceDeletionAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToDeleteProcessDefinitionWithPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var processDefinitionKey = deployProcessDefinition(processId);
     final var user = createUser();
     addPermissionsToUser(
@@ -93,7 +93,7 @@ public class ResourceDeletionAuthorizationTest {
   @Test
   public void shouldBeUnauthorizedToDeleteProcessDefinitionWithoutPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var processDefinitionKey = deployProcessDefinition(processId);
     final var user = createUser();
 

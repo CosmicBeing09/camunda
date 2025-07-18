@@ -32,7 +32,7 @@ import org.junit.rules.TestWatcher;
 
 public class IncidentResolveAuthorizationTest {
 
-  public static final String PROCESS_ID = Strings.newRandomValidBpmnId();
+  public static final String PROCESS_ID = Strings.randomBpmnId();
   private static final ConfiguredUser DEFAULT_USER =
       new ConfiguredUser(
           UUID.randomUUID().toString(),

@@ -220,7 +220,7 @@ public final class JobBasedUserTaskTest {
   @Test
   public void shouldCreateJobWithFormKeyHeader() {
     // given
-    final String formKey = Strings.newRandomValidBpmnId();
+    final String formKey = Strings.randomBpmnId();
 
     ENGINE
         .deployment()
@@ -251,7 +251,7 @@ public final class JobBasedUserTaskTest {
   @Test
   public void shouldCreateJobWithFormKeyHeaderAndCustomHeaders() {
     // given
-    final String formKey = Strings.newRandomValidBpmnId();
+    final String formKey = Strings.randomBpmnId();
 
     ENGINE
         .deployment()

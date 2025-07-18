@@ -33,9 +33,9 @@ public class IncidentIT {
   private static CamundaClient client;
   private static final String CALL_ACTIVITY_ID = "child";
   private static final String TASK_ID = "task";
-  private final String parentProcessId = Strings.newRandomValidBpmnId();
-  private final String childProcessId = Strings.newRandomValidBpmnId();
-  private final String jobType = Strings.newRandomValidBpmnId();
+  private final String parentProcessId = Strings.randomBpmnId();
+  private final String childProcessId = Strings.randomBpmnId();
+  private final String jobType = Strings.randomBpmnId();
 
   @Test
   void shouldExportIncident() {

@@ -78,7 +78,7 @@ public class ActivatableJobsPushTest {
 
   @Before
   public void setUp() {
-    jobType = Strings.newRandomValidBpmnId();
+    jobType = Strings.randomBpmnId();
     worker = BufferUtil.wrapString("test");
     variables = Map.of("a", "valA", "b", "valB", "c", "valC");
     timeout = 30_000L;

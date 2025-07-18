@@ -90,7 +90,7 @@ public final class FailJobTest {
 
   @Before
   public void setup() {
-    jobType = Strings.newRandomValidBpmnId();
+    jobType = Strings.randomBpmnId();
   }
 
   @Test

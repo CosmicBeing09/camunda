@@ -41,7 +41,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldSplitOnExclusiveGateway() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -88,7 +88,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldJoinOnExclusiveGateway() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -135,7 +135,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldSetSourceRecordPositionCorrectOnJoinXor() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -208,7 +208,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void testProcessInstanceStatesWithExclusiveGateway() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -256,7 +256,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldSplitIfDefaultFlowIsDeclaredFirst() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -289,7 +289,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldEndScopeIfGatewayHasNoOutgoingFlows() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId).startEvent().exclusiveGateway("xor").done();
 
@@ -322,7 +322,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldResolveIncidentsWhenTerminating() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     ENGINE
         .deployment()
         .withXmlResource(
@@ -369,7 +369,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldCreateDeploymentExclusiveGatewayWithDefaultFlow() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     // when
     final BpmnModelInstance processDefinition1 =
         Bpmn.createExecutableProcess(processId)
@@ -420,7 +420,7 @@ public final class ExclusiveGatewayTest {
   @Test
   public void shouldNotEvaluateConditionOfDefaultFlow() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final BpmnModelInstance processDefinition =
         Bpmn.createExecutableProcess(processId)
             .startEvent()

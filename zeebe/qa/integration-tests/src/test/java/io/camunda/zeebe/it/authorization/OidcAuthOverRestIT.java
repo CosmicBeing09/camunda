@@ -180,7 +180,7 @@ public class OidcAuthOverRestIT {
   @Test
   void shouldBeAuthorizedWithDefaultMapping() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     final var deploymentEvent =
@@ -199,7 +199,7 @@ public class OidcAuthOverRestIT {
   @Test
   void shouldBeUnauthorizedWithMappingWithoutPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var claimName = UUID.randomUUID().toString();
     final var claimValue = UUID.randomUUID().toString();
     defaultMappingClient
@@ -231,7 +231,7 @@ public class OidcAuthOverRestIT {
   @Test
   void shouldBeAuthorizedWithMappingThatIsGrantedPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     defaultMappingClient
         .newCreateMappingCommand()
         .mappingId(RESTRICTED_USER_ID)

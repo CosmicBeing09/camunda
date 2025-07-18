@@ -54,7 +54,7 @@ public class DeploymentCreateAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToDeployWithDefaultUser() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when
     engine
@@ -74,7 +74,7 @@ public class DeploymentCreateAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToDeployWithPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var user = createUser();
     addPermissionsToUser(user, AuthorizationResourceType.RESOURCE, PermissionType.CREATE);
 
@@ -96,7 +96,7 @@ public class DeploymentCreateAuthorizationTest {
   @Test
   public void shouldBeUnAuthorizedToDeployWithPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
     final var user = createUser();
 
     // when

@@ -771,7 +771,7 @@ final class AuthorizationCheckBehaviorTest {
     final var user =
         new UserRecord()
             .setUserKey(userKey)
-            .setUsername(Strings.newRandomValidUsername())
+            .setUsername(Strings.randomUsername())
             .setName(UUID.randomUUID().toString())
             .setEmail(UUID.randomUUID().toString())
             .setPassword(UUID.randomUUID().toString());
@@ -811,7 +811,7 @@ final class AuthorizationCheckBehaviorTest {
     final var mapping =
         new MappingRecord()
             .setMappingId(UUID.randomUUID().toString())
-            .setName(Strings.newRandomValidUsername())
+            .setName(Strings.randomUsername())
             .setClaimName(claimName)
             .setClaimValue(claimValue);
     mappingCreatedApplier.applyState(random.nextLong(), mapping);

@@ -45,7 +45,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldOpenSignalSubscriptionOnDeployment() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     engine.deployment().withXmlResource(createProcessWithOneSignalStartEvent(processId)).deploy();
@@ -63,7 +63,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldOpenSubscriptionsForAllSignalStartEvents() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
 
     // when
     engine.deployment().withXmlResource(createProcessWithTwoSignalStartEvent(processId)).deploy();
@@ -87,7 +87,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldDeleteSubscriptionForOldVersions() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     engine.deployment().withXmlResource(createProcessWithOneSignalStartEvent(processId)).deploy();
 
     // when
@@ -118,7 +118,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldDeleteSubscriptionsForAllSignalStartEvents() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     engine.deployment().withXmlResource(createProcessWithTwoSignalStartEvent(processId)).deploy();
 
     final var processDefinitionKey = RecordingExporter.processRecords().getFirst().getKey();
@@ -161,7 +161,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldOpenSubscriptionWithBoundaryEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final var process =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -188,7 +188,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldOpenSubscriptionWithIntermediateCatchEvent() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final var process =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -214,7 +214,7 @@ public final class SignalSubscriptionTest {
   @Test
   public void shouldOpenSubscriptionWithSignalEventSubProcess() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final var process =
         Bpmn.createExecutableProcess(processId)
             .eventSubProcess("sub", e -> e.startEvent("catch", s -> s.signal("signal")).endEvent())

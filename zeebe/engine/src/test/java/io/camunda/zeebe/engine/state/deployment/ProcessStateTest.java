@@ -770,7 +770,7 @@ public final class ProcessStateTest {
   @Test
   public void shouldDeleteLatestProcess() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final var processRecord = creatingProcessRecord(processingState, processId, 1, "v1.0");
     final var processDefinitionKey = processRecord.getProcessDefinitionKey();
     processState.putProcess(processDefinitionKey, processRecord);
@@ -810,7 +810,7 @@ public final class ProcessStateTest {
   @Test
   public void shouldDeleteOldProcess() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final var oldProcess =
         creatingProcessRecord(processingState, processId, 1, "v1.0")
             .setChecksum(wrapString("oldChecksum"));
@@ -1012,7 +1012,7 @@ public final class ProcessStateTest {
   @Test
   public void shouldAddProcessAfterOnlyVersionIsDeleted() {
     // given
-    final String processId = Strings.newRandomValidBpmnId();
+    final String processId = Strings.randomBpmnId();
     final var oldProcessRecord = creatingProcessRecord(processingState, processId, 1);
     final var oldProcessDefinitionKey = oldProcessRecord.getProcessDefinitionKey();
     final var newProcessRecord = creatingProcessRecord(processingState, processId, 2);

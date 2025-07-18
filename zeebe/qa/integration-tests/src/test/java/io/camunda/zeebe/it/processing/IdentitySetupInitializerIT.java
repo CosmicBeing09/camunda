@@ -55,7 +55,7 @@ final class IdentitySetupInitializerIT {
   @ValueSource(booleans = {true, false})
   void shouldInitializeIdentity(final boolean enableAuthorizations) {
     // given a broker with authorization enabled or disabled
-    final var username = Strings.newRandomValidUsername();
+    final var username = Strings.randomUsername();
     final var name = UUID.randomUUID().toString();
     final var password = UUID.randomUUID().toString();
     final var email = UUID.randomUUID().toString();

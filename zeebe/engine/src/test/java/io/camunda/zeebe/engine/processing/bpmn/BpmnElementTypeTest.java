@@ -446,10 +446,10 @@ public final class BpmnElementTypeTest {
     private final String name;
     private final BpmnElementType elementType;
 
-    private final String processId = Strings.newRandomValidBpmnId();
-    private final String elementId = Strings.newRandomValidBpmnId();
-    private final String taskType = Strings.newRandomValidBpmnId();
-    private final String messageName = Strings.newRandomValidBpmnId();
+    private final String processId = Strings.randomBpmnId();
+    private final String elementId = Strings.randomBpmnId();
+    private final String taskType = Strings.randomBpmnId();
+    private final String messageName = Strings.randomBpmnId();
 
     BpmnElementTypeScenario(final String name, final BpmnElementType elementType) {
       this.name = name;

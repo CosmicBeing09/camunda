@@ -67,7 +67,7 @@ public final class ActivateJobsTest {
 
   @Before
   public void setup() {
-    taskType = Strings.newRandomValidBpmnId();
+    taskType = Strings.randomBpmnId();
   }
 
   @Test
@@ -220,7 +220,7 @@ public final class ActivateJobsTest {
   @Test
   public void shouldReturnEmptyBatchIfNoJobsAvailable() {
     // when
-    final List<Long> jobEvents = activateJobs(Strings.newRandomValidBpmnId(), 3);
+    final List<Long> jobEvents = activateJobs(Strings.randomBpmnId(), 3);
 
     // then
     assertThat(jobEvents).isEmpty();
@@ -269,8 +269,8 @@ public final class ActivateJobsTest {
     // given
     final int jobAmount = 10;
     final String jobType = taskType;
-    final String jobType2 = Strings.newRandomValidBpmnId();
-    final String jobType3 = Strings.newRandomValidBpmnId();
+    final String jobType2 = Strings.randomBpmnId();
+    final String jobType3 = Strings.randomBpmnId();
 
     AbstractFlowNodeBuilder<?, ?> builder =
         Bpmn.createExecutableProcess(PROCESS_ID).startEvent("start");

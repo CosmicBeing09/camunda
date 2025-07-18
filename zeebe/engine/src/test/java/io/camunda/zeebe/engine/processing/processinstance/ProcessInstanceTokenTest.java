@@ -40,7 +40,7 @@ public final class ProcessInstanceTokenTest {
 
   @Before
   public void setUp() {
-    processId = Strings.newRandomValidBpmnId();
+    processId = Strings.randomBpmnId();
   }
 
   @Test

@@ -14,11 +14,11 @@ public final class Strings {
   /**
    * @return a prefixed random UUID which can be used as a valid ID for a BPMN element
    */
-  public static String newRandomValidBpmnId() {
+  public static String randomBpmnId() {
     return "id-" + UUID.randomUUID().toString();
   }
 
-  public static String newRandomValidUsername() {
+  public static String randomUsername() {
     return "user" + UUID.randomUUID().toString().replace("-", "");
   }
 

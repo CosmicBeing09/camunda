@@ -465,12 +465,12 @@ public class BpmnEventTypeTest {
     private final String name;
     private final BpmnElementType elementType;
     private final BpmnEventType eventType;
-    private final String processId = Strings.newRandomValidBpmnId();
-    private final String elementId = Strings.newRandomValidBpmnId();
-    private final String messageName = Strings.newRandomValidBpmnId();
-    private final String jobType = Strings.newRandomValidBpmnId();
-    private final String errorCode = Strings.newRandomValidBpmnId();
-    private final String escalationCode = Strings.newRandomValidBpmnId();
+    private final String processId = Strings.randomBpmnId();
+    private final String elementId = Strings.randomBpmnId();
+    private final String messageName = Strings.randomBpmnId();
+    private final String jobType = Strings.randomBpmnId();
+    private final String errorCode = Strings.randomBpmnId();
+    private final String escalationCode = Strings.randomBpmnId();
 
     BpmnEventTypeScenario(
         final String name, final BpmnElementType elementType, final BpmnEventType eventType) {

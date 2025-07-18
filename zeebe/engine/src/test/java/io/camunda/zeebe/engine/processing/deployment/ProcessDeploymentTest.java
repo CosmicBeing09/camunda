@@ -59,8 +59,8 @@ public final class ProcessDeploymentTest {
 
   @Before
   public void init() {
-    processId = Strings.newRandomValidBpmnId();
-    processId2 = Strings.newRandomValidBpmnId();
+    processId = Strings.randomBpmnId();
+    processId2 = Strings.randomBpmnId();
     process = createProcess(processId, "v1");
     process2 = createProcess(processId2, "v1");
     process_V2 = createProcess(processId, "v2");

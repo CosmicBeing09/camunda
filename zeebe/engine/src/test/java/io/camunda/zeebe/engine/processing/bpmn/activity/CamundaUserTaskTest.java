@@ -244,7 +244,7 @@ public final class CamundaUserTaskTest {
   @Test
   public void shouldNotPickUpEmbeddedFormForUserTask() {
     // given
-    final String formKey = Strings.newRandomValidBpmnId();
+    final String formKey = Strings.randomBpmnId();
 
     ENGINE
         .deployment()
@@ -266,7 +266,7 @@ public final class CamundaUserTaskTest {
   @Test
   public void shouldNotPickUpEmbeddedFormWithJsonForUserTask() {
     // given
-    final String formKey = Strings.newRandomValidBpmnId();
+    final String formKey = Strings.randomBpmnId();
 
     ENGINE
         .deployment()

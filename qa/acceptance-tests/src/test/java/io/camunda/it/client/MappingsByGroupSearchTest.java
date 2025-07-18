@@ -25,9 +25,9 @@ public class MappingsByGroupSearchTest {
 
   private static CamundaClient camundaClient;
 
-  private static final String MAPPING_ID_1 = "a" + Strings.newRandomValidUsername();
-  private static final String MAPPING_ID_2 = "b" + Strings.newRandomValidUsername();
-  private static final String MAPPING_ID_3 = "c" + Strings.newRandomValidUsername();
+  private static final String MAPPING_ID_1 = "a" + Strings.randomUsername();
+  private static final String MAPPING_ID_2 = "b" + Strings.randomUsername();
+  private static final String MAPPING_ID_3 = "c" + Strings.randomUsername();
   private static final String GROUP_ID = Strings.newRandomValidIdentityId();
 
   @BeforeAll

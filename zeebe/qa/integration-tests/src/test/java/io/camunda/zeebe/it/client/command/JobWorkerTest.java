@@ -54,7 +54,7 @@ final class JobWorkerTest {
   private static TestStandaloneBroker zeebe;
 
   private static GrpcClientRule client;
-  private final String jobType = Strings.newRandomValidBpmnId();
+  private final String jobType = Strings.randomBpmnId();
 
   @SuppressWarnings("unused")
   static void initTestStandaloneBroker() {
@@ -315,7 +315,7 @@ final class JobWorkerTest {
 
   @Nested
   final class SlowWorkerTest {
-    private final String uniqueId = Strings.newRandomValidBpmnId();
+    private final String uniqueId = Strings.randomBpmnId();
     private final CountDownLatch latch = new CountDownLatch(1);
     private final BpmnModelInstance process =
         Bpmn.createExecutableProcess(uniqueId)

@@ -26,9 +26,9 @@ public class UsersByGroupSearchTest {
 
   private static CamundaClient camundaClient;
 
-  private static final String USER_USERNAME_1 = Strings.newRandomValidUsername();
-  private static final String USER_USERNAME_2 = Strings.newRandomValidUsername();
-  private static final String USER_USERNAME_3 = Strings.newRandomValidUsername();
+  private static final String USER_USERNAME_1 = Strings.randomUsername();
+  private static final String USER_USERNAME_2 = Strings.randomUsername();
+  private static final String USER_USERNAME_3 = Strings.randomUsername();
   private static final String GROUP_ID = Strings.newRandomValidIdentityId();
 
   @BeforeAll

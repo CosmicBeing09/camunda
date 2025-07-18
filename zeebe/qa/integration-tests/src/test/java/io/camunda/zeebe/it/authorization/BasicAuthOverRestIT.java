@@ -64,7 +64,7 @@ final class BasicAuthOverRestIT {
   @Test
   void shouldBeAuthorizedWithDefaultUser() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
+    final var processId = Strings.randomBpmnId();
 
     // when then
     final var deploymentEvent =
@@ -81,8 +81,8 @@ final class BasicAuthOverRestIT {
   @Test
   void shouldBeAuthorizedWithUserThatIsGrantedPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
-    final var username = Strings.newRandomValidUsername();
+    final var processId = Strings.randomBpmnId();
+    final var username = Strings.randomUsername();
     final var password = "password";
     authUtil.createUserWithPermissions(
         username,
@@ -108,8 +108,8 @@ final class BasicAuthOverRestIT {
   @Test
   void shouldBeUnauthorizedWithUserThatIsNotGrantedPermissions() {
     // given
-    final var processId = Strings.newRandomValidBpmnId();
-    final var username = Strings.newRandomValidUsername();
+    final var processId = Strings.randomBpmnId();
+    final var username = Strings.randomUsername();
     final var password = "password";
     authUtil.createUser(username, password);
 

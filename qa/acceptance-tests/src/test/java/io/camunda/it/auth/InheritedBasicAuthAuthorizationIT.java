@@ -44,7 +44,7 @@ public class InheritedBasicAuthAuthorizationIT {
 
   @UserDefinition
   private static final TestUser USER_THROUGH_AUTHORIZED_GROUP =
-      new TestUser(Strings.newRandomValidUsername(), "password", List.of());
+      new TestUser(Strings.randomUsername(), "password", List.of());
 
   @UserDefinition
   private static final TestUser USER_THROUGH_UNAUTHORIZED_GROUP =
@@ -52,7 +52,7 @@ public class InheritedBasicAuthAuthorizationIT {
 
   @UserDefinition
   private static final TestUser USER_THROUGH_AUTHORIZED_ROLE =
-      new TestUser(Strings.newRandomValidUsername(), "password", List.of());
+      new TestUser(Strings.randomUsername(), "password", List.of());
 
   @UserDefinition
   private static final TestUser USER_THROUGH_UNAUTHORIZED_ROLE =
@@ -60,11 +60,11 @@ public class InheritedBasicAuthAuthorizationIT {
 
   @UserDefinition
   private static final TestUser USER_THROUGH_GROUP_THROUGH_AUTHORIZED_ROLE =
-      new TestUser(Strings.newRandomValidUsername(), "password", List.of());
+      new TestUser(Strings.randomUsername(), "password", List.of());
 
   @UserDefinition
   private static final TestUser USER_THROUGH_GROUP_THROUGH_UNAUTHORIZED_ROLE =
-      new TestUser(Strings.newRandomValidUsername(), "password", List.of());
+      new TestUser(Strings.randomUsername(), "password", List.of());
 
   @GroupDefinition
   private static final TestGroup UNAUTHORIZED_GROUP =

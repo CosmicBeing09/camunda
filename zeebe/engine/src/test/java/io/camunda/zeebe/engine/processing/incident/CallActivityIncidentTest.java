@@ -54,8 +54,8 @@ public final class CallActivityIncidentTest {
 
   @Before
   public void init() {
-    parentProcessId = Strings.newRandomValidBpmnId();
-    childProcessId = Strings.newRandomValidBpmnId();
+    parentProcessId = Strings.randomBpmnId();
+    childProcessId = Strings.randomBpmnId();
     ENGINE
         .deployment()
         .withXmlResource(
@@ -89,7 +89,7 @@ public final class CallActivityIncidentTest {
   @Test
   public void shouldCreateIncidentIfProcessIsNotDeployedInSameDeploymentForBindingTypeDeployment() {
     // given
-    final var childProcessId = Strings.newRandomValidBpmnId();
+    final var childProcessId = Strings.randomBpmnId();
     final var childProcess = Bpmn.createExecutableProcess(childProcessId).startEvent().done();
     ENGINE.deployment().withXmlResource("wf-child.bpmn", childProcess).deploy();
     final var parentProcess =
@@ -134,7 +134,7 @@ public final class CallActivityIncidentTest {
   @Test
   public void shouldCreateIncidentIfProcessWithVersionTagIsNotDeployedForBindingTypeVersionTag() {
     // given
-    final var childProcessId = Strings.newRandomValidBpmnId();
+    final var childProcessId = Strings.randomBpmnId();
     final var childProcess = Bpmn.createExecutableProcess(childProcessId).startEvent().done();
     ENGINE.deployment().withXmlResource("wf-child.bpmn", childProcess).deploy();
     final var parentProcess =

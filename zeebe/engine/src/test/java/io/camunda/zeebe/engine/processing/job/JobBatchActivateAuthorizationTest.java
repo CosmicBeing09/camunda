@@ -56,8 +56,8 @@ public class JobBatchActivateAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToActivateAllJobsWithDefaultUser() {
     // given
-    final var processId1 = Strings.newRandomValidBpmnId();
-    final var processId2 = Strings.newRandomValidBpmnId();
+    final var processId1 = Strings.randomBpmnId();
+    final var processId2 = Strings.randomBpmnId();
     createJobs(processId1, processId2);
 
     // when
@@ -78,8 +78,8 @@ public class JobBatchActivateAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToActivateMultipleJobsWithUser() {
     // given
-    final var processId1 = Strings.newRandomValidBpmnId();
-    final var processId2 = Strings.newRandomValidBpmnId();
+    final var processId1 = Strings.randomBpmnId();
+    final var processId2 = Strings.randomBpmnId();
     createJobs(processId1, processId2);
     final var user = createUser();
     addPermissionsToUser(
@@ -103,8 +103,8 @@ public class JobBatchActivateAuthorizationTest {
   @Test
   public void shouldBeAuthorizedToActivateSingleJobWithUser() {
     // given
-    final var processId1 = Strings.newRandomValidBpmnId();
-    final var processId2 = Strings.newRandomValidBpmnId();
+    final var processId1 = Strings.randomBpmnId();
+    final var processId2 = Strings.randomBpmnId();
     createJobs(processId1, processId2);
     final var user = createUser();
     addPermissionsToUser(
@@ -127,8 +127,8 @@ public class JobBatchActivateAuthorizationTest {
   @Test
   public void shouldNotActivateJobsWithUnauthorizedUser() {
     // given
-    final var processId1 = Strings.newRandomValidBpmnId();
-    final var processId2 = Strings.newRandomValidBpmnId();
+    final var processId1 = Strings.randomBpmnId();
+    final var processId2 = Strings.randomBpmnId();
     createJobs(processId1, processId2);
     final var user = createUser();
 
