@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.bpmn.behavior;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -28,7 +28,7 @@ public final class BpmnBufferedMessageStartEventBehavior {
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
 
-  private final EventHandle eventHandle;
+  private final EventHandler eventHandle;
   private final InstantSource clock;
 
   public BpmnBufferedMessageStartEventBehavior(
@@ -44,7 +44,7 @@ public final class BpmnBufferedMessageStartEventBehavior {
     this.clock = clock;
 
     eventHandle =
-        new EventHandle(
+        new EventHandler(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.message;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
@@ -69,7 +69,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
     rejectionWriter = writers.rejection();
     this.authCheckBehavior = authCheckBehavior;
     final var eventHandle =
-        new EventHandle(
+        new EventHandler(
             keyGenerator,
             eventScopeInstanceState,
             writers,

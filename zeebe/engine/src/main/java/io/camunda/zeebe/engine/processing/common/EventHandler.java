@@ -29,11 +29,11 @@ import io.camunda.zeebe.stream.api.state.KeyGenerator;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
-public final class EventHandle {
+public final class EventHandler {
 
   private static final DirectBuffer NO_VARIABLES = new UnsafeBuffer();
 
-  private final ProcessInstanceRecord recordForPICreation = new ProcessInstanceRecord();
+  private final ProcessInstanceRecord processInstanceCreationRecord = new ProcessInstanceRecord();
   private final MessageStartEventSubscriptionRecord startEventSubscriptionRecord =
       new MessageStartEventSubscriptionRecord();
 
@@ -46,7 +46,7 @@ public final class EventHandle {
   private final EventTriggerBehavior eventTriggerBehavior;
   private final BpmnStateBehavior stateBehavior;
 
-  public EventHandle(
+  public EventHandler(
       final KeyGenerator keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final Writers writers,
@@ -235,7 +235,7 @@ public final class EventHandle {
 
     final var process = processState.getProcessByKeyAndTenant(processDefinitionKey, tenantId);
 
-    recordForPICreation
+    processInstanceCreationRecord
         .setBpmnProcessId(process.getBpmnProcessId())
         .setProcessDefinitionKey(process.getKey())
         .setVersion(process.getVersion())
@@ -245,6 +245,6 @@ public final class EventHandle {
         .setTenantId(tenantId);
 
     commandWriter.appendFollowUpCommand(
-        processInstanceKey, ProcessInstanceIntent.ACTIVATE_ELEMENT, recordForPICreation);
+        processInstanceKey, ProcessInstanceIntent.ACTIVATE_ELEMENT, processInstanceCreationRecord);
   }
 }

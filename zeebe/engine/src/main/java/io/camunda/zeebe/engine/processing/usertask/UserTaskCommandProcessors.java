@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.usertask;
 
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.common.EventHandle;
+import io.camunda.zeebe.engine.processing.common.EventHandler;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.usertask.processors.TaskUpdateProcessor;
@@ -36,8 +36,8 @@ public final class UserTaskCommandProcessors {
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    final EventHandle eventHandle =
-        new EventHandle(
+    final EventHandler eventHandle =
+        new EventHandler(
             keyGenerator,
             processingState.getEventScopeInstanceState(),
             writers,
