@@ -8,20 +8,20 @@
 package io.camunda.zeebe.stream.impl;
 
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 
 public final class ProcessingException extends RuntimeException {
 
   public ProcessingException(
       final String message,
       final LoggedEvent event,
-      final RecordMetadata metadata,
+      final RecordRequest metadata,
       final Throwable cause) {
     super(formatMessage(message, event, metadata), cause);
   }
 
   private static String formatMessage(
-      final String message, final LoggedEvent event, final RecordMetadata metadata) {
+      final String message, final LoggedEvent event, final RecordRequest metadata) {
     return String.format("%s [%s %s]", message, formatEvent(event), formatMetadata(metadata));
   }
 
@@ -32,7 +32,7 @@ public final class ProcessingException extends RuntimeException {
     return event.toString();
   }
 
-  private static String formatMetadata(final RecordMetadata metadata) {
+  private static String formatMetadata(final RecordRequest metadata) {
     if (metadata == null) {
       return "RecordMetadata{null}";
     }

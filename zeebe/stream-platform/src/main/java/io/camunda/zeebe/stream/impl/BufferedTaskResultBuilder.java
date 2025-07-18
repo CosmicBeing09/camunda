@@ -9,7 +9,7 @@ package io.camunda.zeebe.stream.impl;
 
 import static io.camunda.zeebe.protocol.record.RecordMetadataDecoder.operationReferenceNullValue;
 
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -61,7 +61,7 @@ public final class BufferedTaskResultBuilder implements TaskResultBuilder {
     }
 
     final var metadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.COMMAND)
             .intent(intent)
             .rejectionType(RejectionType.NULL_VAL)

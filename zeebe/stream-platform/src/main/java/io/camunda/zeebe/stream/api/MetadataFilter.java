@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.stream.api;
 
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.stream.impl.StreamProcessor;
 import java.util.Objects;
 
@@ -22,7 +22,7 @@ public interface MetadataFilter {
    * @return true to mark the event for processing; false to skip it
    * @throws RuntimeException to signal that processing cannot continue
    */
-  boolean applies(RecordMetadata metadata);
+  boolean applies(RecordRequest metadata);
 
   default MetadataFilter and(final MetadataFilter other) {
     Objects.requireNonNull(other);

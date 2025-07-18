@@ -20,7 +20,7 @@ import io.camunda.zeebe.logstreams.log.WriteContext;
 import io.camunda.zeebe.logstreams.util.LogStreamReaderRule;
 import io.camunda.zeebe.logstreams.util.LogStreamRule;
 import io.camunda.zeebe.logstreams.util.TestEntry;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.util.ByteValue;
 import java.util.List;
@@ -446,9 +446,9 @@ public final class LogStreamReaderTest {
 
     // then
     assertThatCode(() -> event.readValue(new UnifiedRecordValue(1))).doesNotThrowAnyException();
-    assertThatCode(() -> event.readMetadata(new RecordMetadata())).doesNotThrowAnyException();
+    assertThatCode(() -> event.readMetadata(new RecordRequest())).doesNotThrowAnyException();
     assertThatCode(() -> nextEvent.readValue(new UnifiedRecordValue(1))).doesNotThrowAnyException();
-    assertThatCode(() -> nextEvent.readMetadata(new RecordMetadata())).doesNotThrowAnyException();
+    assertThatCode(() -> nextEvent.readMetadata(new RecordRequest())).doesNotThrowAnyException();
   }
 
   private long writeEvents(final int eventCount) {

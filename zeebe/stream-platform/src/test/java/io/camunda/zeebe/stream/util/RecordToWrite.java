@@ -8,7 +8,7 @@
 package io.camunda.zeebe.stream.util;
 
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -40,39 +40,39 @@ public final class RecordToWrite implements LogAppendEntry {
 
   private static final long DEFAULT_KEY = 1;
 
-  private final RecordMetadata recordMetadata;
+  private final RecordRequest recordMetadata;
   private UnifiedRecordValue unifiedRecordValue;
 
   private long key = DEFAULT_KEY;
   private int sourceIndex = -1;
 
-  private RecordToWrite(final RecordMetadata recordMetadata) {
+  private RecordToWrite(final RecordRequest recordMetadata) {
     this.recordMetadata = recordMetadata;
   }
 
   public static RecordToWrite command() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
     return new RecordToWrite(recordMetadata.recordType(RecordType.COMMAND));
   }
 
   public static RecordToWrite command(final long operationReference) {
     final var recordMetadata =
-        new RecordMetadata().recordType(RecordType.COMMAND).operationReference(operationReference);
+        new RecordRequest().recordType(RecordType.COMMAND).operationReference(operationReference);
     return new RecordToWrite(recordMetadata);
   }
 
   public static RecordToWrite userCommand() {
-    final RecordMetadata recordMetadata = new RecordMetadata().requestId(100).requestStreamId(10);
+    final RecordRequest recordMetadata = new RecordRequest().requestId(100).requestStreamId(10);
     return new RecordToWrite(recordMetadata.recordType(RecordType.COMMAND));
   }
 
   public static RecordToWrite event() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
     return new RecordToWrite(recordMetadata.recordType(RecordType.EVENT));
   }
 
   public static RecordToWrite rejection() {
-    final RecordMetadata recordMetadata = new RecordMetadata();
+    final RecordRequest recordMetadata = new RecordRequest();
     return new RecordToWrite(recordMetadata.recordType(RecordType.COMMAND_REJECTION));
   }
 
@@ -189,7 +189,7 @@ public final class RecordToWrite implements LogAppendEntry {
   }
 
   @Override
-  public RecordMetadata recordMetadata() {
+  public RecordRequest recordMetadata() {
     return recordMetadata;
   }
 

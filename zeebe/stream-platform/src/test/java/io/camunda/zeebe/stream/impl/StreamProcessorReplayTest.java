@@ -19,7 +19,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ErrorIntent;
@@ -353,7 +353,7 @@ final class StreamProcessorReplayTest {
             invocationOnMock -> {
               // writing error event on failure
               final var builder = (ProcessingResultBuilder) invocationOnMock.getArgument(2);
-              final RecordMetadata recordMetadata = new RecordMetadata();
+              final RecordRequest recordMetadata = new RecordRequest();
               recordMetadata
                   .valueType(ValueType.ERROR)
                   .intent(ErrorIntent.CREATED)

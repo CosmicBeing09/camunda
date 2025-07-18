@@ -10,7 +10,7 @@ package io.camunda.zeebe.stream.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -29,8 +29,8 @@ class RecordBatchTest {
   private static final RejectionType REJECTION_TYPE = RejectionType.ALREADY_EXISTS;
   private static final String REJECTION_REASON = "broken somehow";
   private static final ValueType VALUE_TYPE = ValueType.PROCESS_INSTANCE;
-  private static final RecordMetadata RECORD_METADATA =
-      new RecordMetadata()
+  private static final RecordRequest RECORD_METADATA =
+      new RecordRequest()
           .recordType(RECORD_TYPE)
           .intent(INTENT)
           .rejectionType(REJECTION_TYPE)
@@ -54,23 +54,23 @@ class RecordBatchTest {
     assertThat(recordBatch).map(LogAppendEntry::sourceIndex).containsOnly(-1);
     assertThat(recordBatch)
         .map(RecordBatchEntry::recordMetadata)
-        .map(RecordMetadata::getIntent)
+        .map(RecordRequest::getIntent)
         .containsOnly(INTENT);
     assertThat(recordBatch)
         .map(RecordBatchEntry::recordMetadata)
-        .map(RecordMetadata::getRecordType)
+        .map(RecordRequest::getRecordType)
         .containsOnly(RECORD_TYPE);
     assertThat(recordBatch)
         .map(RecordBatchEntry::recordMetadata)
-        .map(RecordMetadata::getRejectionType)
+        .map(RecordRequest::getRejectionType)
         .containsOnly(REJECTION_TYPE);
     assertThat(recordBatch)
         .map(RecordBatchEntry::recordMetadata)
-        .map(RecordMetadata::getValueType)
+        .map(RecordRequest::getValueType)
         .containsOnly(VALUE_TYPE);
     assertThat(recordBatch)
         .map(RecordBatchEntry::recordMetadata)
-        .map(RecordMetadata::getRejectionReason)
+        .map(RecordRequest::getRejectionReason)
         .containsOnly(REJECTION_REASON);
     assertThat(recordBatch).map(RecordBatchEntry::recordValue).containsOnly(processInstanceRecord);
   }

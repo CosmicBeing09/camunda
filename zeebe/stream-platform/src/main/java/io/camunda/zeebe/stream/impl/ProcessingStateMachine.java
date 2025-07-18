@@ -15,7 +15,7 @@ import io.camunda.zeebe.logstreams.log.LogStreamReader;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -116,13 +116,13 @@ public final class ProcessingStateMachine {
       "Expected to process command '{} {}' successfully on stream processor, but caught unexpected exception. Failed to handle the exception gracefully.";
   private final EventFilter processingFilter;
   private final EventFilter isEventOrRejection =
-      new MetadataEventFilter(
+      new RequestEventFilter(
           recordMetadata -> {
             final var recordType = recordMetadata.getRecordType();
             return recordType == RecordType.EVENT || recordType == RecordType.COMMAND_REJECTION;
           });
   private final MutableLastProcessedPositionState lastProcessedPositionState;
-  private final RecordMetadata metadata = new RecordMetadata();
+  private final RecordRequest request = new RecordRequest();
   private final ActorControl actor;
   private final LogStreamReader logStreamReader;
   private final TransactionContext transactionContext;
@@ -187,7 +187,7 @@ public final class ProcessingStateMachine {
     streamProcessorListener = context.getStreamProcessorListener();
     processingMetrics = new ProcessingMetrics(context.getMeterRegistry());
     processingFilter =
-        new MetadataEventFilter(
+        new RequestEventFilter(
                 recordMetadata -> recordMetadata.getRecordType() == RecordType.COMMAND)
             .and(record -> !record.shouldSkipProcessing())
             .and(context.processingFilter());
@@ -255,8 +255,8 @@ public final class ProcessingStateMachine {
 
     currentProcessingResult = EmptyProcessingResult.INSTANCE;
 
-    metadata.reset();
-    loggedEvent.readMetadata(metadata);
+    request.reset();
+    loggedEvent.readMetadata(request);
 
     try {
       // Here we need to get the current time, since we want to calculate
@@ -265,10 +265,10 @@ public final class ProcessingStateMachine {
       processingMetrics.processingLatency(loggedEvent.getTimestamp(), clock.millis());
       processingTimer =
           processingMetrics.startProcessingDurationTimer(
-              metadata.getValueType(), metadata.getIntent());
+              request.getValueType(), request.getIntent());
 
-      final var value = recordValues.readRecordValue(loggedEvent, metadata.getValueType());
-      typedCommand.wrap(loggedEvent, metadata, value);
+      final var value = recordValues.readRecordValue(loggedEvent, request.getValueType());
+      typedCommand.wrap(loggedEvent, request, value);
 
       zeebeDbTransaction = transactionContext.getCurrentTransaction();
       try (final var timer = processingMetrics.startBatchProcessingDurationTimer()) {
@@ -283,11 +283,11 @@ public final class ProcessingStateMachine {
       LOG.error(
           ERROR_MESSAGE_PROCESSING_FAILED_RETRY_PROCESSING,
           loggedEvent,
-          metadata,
+          request,
           recoverableException);
       actor.schedule(PROCESSING_RETRY_DELAY, () -> processCommand(currentRecord));
     } catch (final UnrecoverableException unrecoverableException) {
-      LOG.error(ERROR_MESSAGE_PROCESSING_FAILED_UNRECOVERABLE, loggedEvent, metadata);
+      LOG.error(ERROR_MESSAGE_PROCESSING_FAILED_UNRECOVERABLE, loggedEvent, request);
       throw unrecoverableException;
     } catch (final ExceededBatchRecordSizeException exceededBatchRecordSizeException) {
       if (processedCommandsCount > 0) {
@@ -441,7 +441,7 @@ public final class ProcessingStateMachine {
         retryFuture,
         (bool, throwable) -> {
           if (throwable != null) {
-            LOG.error(ERROR_MESSAGE_ROLLBACK_ABORTED, currentRecord, metadata, throwable);
+            LOG.error(ERROR_MESSAGE_ROLLBACK_ABORTED, currentRecord, request, throwable);
           }
           try {
             if (tryExitOutOfErrorLoop(error)) {
@@ -459,11 +459,11 @@ public final class ProcessingStateMachine {
       // If in error loop and the processing record is a user command
       if (errorHandlingPhase == ErrorHandlingPhase.USER_COMMAND_PROCESSING_ERROR_FAILED) {
         // First try to reject with proper error message
-        LOG.debug(ERROR_MESSAGE_HANDLING_PROCESSING_ERROR_FAILED, currentRecord, metadata, error);
+        LOG.debug(ERROR_MESSAGE_HANDLING_PROCESSING_ERROR_FAILED, currentRecord, request, error);
         tryRejectingIfUserCommand(error.getMessage());
         return true;
       } else if (errorHandlingPhase == ErrorHandlingPhase.USER_COMMAND_REJECT_FAILED) {
-        LOG.warn(ERROR_MESSAGE_HANDLING_PROCESSING_ERROR_FAILED, currentRecord, metadata, error);
+        LOG.warn(ERROR_MESSAGE_HANDLING_PROCESSING_ERROR_FAILED, currentRecord, request, error);
         // try to reject with a generic error message
         tryRejectingIfUserCommand(
             String.format(
@@ -476,7 +476,7 @@ public final class ProcessingStateMachine {
       LOG.error(
           "Expected to write rejection for command '{} {}', but failed with unexpected error.",
           currentRecord,
-          metadata,
+          request,
           e);
       pendingResponses.clear();
       pendingWrites.clear();
@@ -509,7 +509,7 @@ public final class ProcessingStateMachine {
             LOG.error(
                 "Failed to process command '{} {}' retries. Entering endless error loop.",
                 currentRecord,
-                metadata);
+                request);
             yield ErrorHandlingPhase.ENDLESS_ERROR_LOOP;
           }
           case ENDLESS_ERROR_LOOP -> ErrorHandlingPhase.ENDLESS_ERROR_LOOP;
@@ -527,11 +527,11 @@ public final class ProcessingStateMachine {
         new CommandRejectionException(rejectionReason), currentRecord.getPosition());
 
     final var recordMetadata =
-        new RecordMetadata()
+        new RecordRequest()
             .recordType(RecordType.EVENT)
             .valueType(ValueType.ERROR)
             .intent(ErrorIntent.CREATED)
-            .recordVersion(RecordMetadata.DEFAULT_RECORD_VERSION)
+            .recordVersion(RecordRequest.DEFAULT_RECORD_VERSION)
             .rejectionType(RejectionType.NULL_VAL)
             .rejectionReason("")
             .operationReference(typedCommand.getOperationReference());
@@ -613,7 +613,7 @@ public final class ProcessingStateMachine {
         writeFuture,
         (bool, t) -> {
           if (t != null) {
-            LOG.error(ERROR_MESSAGE_WRITE_RECORD_ABORTED, currentRecord, metadata, t);
+            LOG.error(ERROR_MESSAGE_WRITE_RECORD_ABORTED, currentRecord, request, t);
             onError(
                 t,
                 () -> {
@@ -653,7 +653,7 @@ public final class ProcessingStateMachine {
             // This will bubble up to `StreamProcessor#onFailure` and result in a dead partition.
             throw new UncommittedStateException(throwable);
           } else {
-            scheduledCommandCache.remove(metadata.getIntent(), currentRecord.getKey());
+            scheduledCommandCache.remove(request.getIntent(), currentRecord.getKey());
             executeSideEffects();
           }
         });
@@ -691,7 +691,7 @@ public final class ProcessingStateMachine {
         (bool, throwable) -> {
           if (throwable != null) {
             LOG.error(
-                ERROR_MESSAGE_EXECUTE_SIDE_EFFECT_ABORTED, currentRecord, metadata, throwable);
+                ERROR_MESSAGE_EXECUTE_SIDE_EFFECT_ABORTED, currentRecord, request, throwable);
           }
 
           notifyProcessedListener(typedCommand);
@@ -723,7 +723,7 @@ public final class ProcessingStateMachine {
     try {
       streamProcessorListener.onSkipped(skippedRecord);
     } catch (final Exception e) {
-      LOG.error(NOTIFY_SKIPPED_LISTENER_ERROR_MESSAGE, skippedRecord, metadata, e);
+      LOG.error(NOTIFY_SKIPPED_LISTENER_ERROR_MESSAGE, skippedRecord, request, e);
     }
   }
 

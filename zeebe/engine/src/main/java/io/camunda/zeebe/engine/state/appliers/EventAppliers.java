@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.state.EventApplier.NoSuchEventApplier.NoApplierFo
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.intent.AdHocSubProcessActivityActivationIntent;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
@@ -632,7 +632,7 @@ public final class EventAppliers implements EventApplier {
   }
 
   private <I extends Intent> void register(final I intent, final TypedEventApplier<I, ?> applier) {
-    register(intent, RecordMetadata.DEFAULT_RECORD_VERSION, applier);
+    register(intent, RecordRequest.DEFAULT_RECORD_VERSION, applier);
   }
 
   <I extends Intent> void register(

@@ -28,7 +28,7 @@ import io.camunda.zeebe.engine.util.TestStreams;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
@@ -316,7 +316,7 @@ public final class EngineErrorHandlingTest {
     // then
     assertThat(processor.getProcessCount()).isEqualTo(1);
 
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.valueType(ValueType.PROCESS_INSTANCE);
     final MockTypedRecord<ProcessInstanceRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.processInstance(1));
@@ -372,7 +372,7 @@ public final class EngineErrorHandlingTest {
     latch.await(2000, TimeUnit.MILLISECONDS);
 
     // then
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.valueType(ValueType.PROCESS_INSTANCE);
     final MockTypedRecord<ProcessInstanceRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.processInstance(1));
@@ -460,7 +460,7 @@ public final class EngineErrorHandlingTest {
         .until(o -> o.size() == 2);
 
     // then
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.valueType(ValueType.PROCESS_INSTANCE);
     final MockTypedRecord<ProcessInstanceRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.processInstance(1));
@@ -535,7 +535,7 @@ public final class EngineErrorHandlingTest {
     waitForRecordWhichSatisfies(e -> Records.isEvent(e, ValueType.TIMER, TimerIntent.CREATED));
 
     // then
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.valueType(ValueType.TIMER);
     final MockTypedRecord<TimerRecord> mockTypedRecord =
         new MockTypedRecord<>(0, metadata, Records.timer(TimerInstance.NO_ELEMENT_INSTANCE));

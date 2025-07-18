@@ -23,7 +23,7 @@ import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.LogStreamWriter.WriteFailure;
 import io.camunda.zeebe.logstreams.log.WriteContext;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.management.CheckpointRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -192,7 +192,7 @@ final class InterPartitionCommandCheckpointTest {
 
   private boolean matchesMetadata(
       final LogAppendEntry entry, final ValueType valueType, final Intent intent) {
-    final var metadata = (RecordMetadata) entry.recordMetadata();
+    final var metadata = (RecordRequest) entry.recordMetadata();
     return metadata.getValueType() == valueType && metadata.getIntent() == intent;
   }
 

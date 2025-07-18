@@ -8,7 +8,7 @@
 package io.camunda.zeebe.stream.impl.records;
 
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.stream.api.records.ExceededBatchRecordSizeException;
 import io.camunda.zeebe.stream.api.records.ImmutableRecordBatch;
 import io.camunda.zeebe.stream.api.records.MutableRecordBatch;
@@ -39,7 +39,7 @@ public final class RecordBatch implements MutableRecordBatch {
   @Override
   public Either<RuntimeException, Void> appendRecord(
       final long key,
-      final RecordMetadata metadata,
+      final RecordRequest metadata,
       final int sourceIndex,
       final BufferWriter valueWriter) {
     final var recordBatchEntry =

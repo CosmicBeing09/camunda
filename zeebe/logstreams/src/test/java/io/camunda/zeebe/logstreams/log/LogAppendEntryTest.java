@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.logstreams.log;
 
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ public class LogAppendEntryTest {
   @Test
   public void shouldWrapValues() {
     // given
-    final var recordMetadata = new RecordMetadata();
+    final var recordMetadata = new RecordRequest();
     final var unifiedRecordValue = new UnifiedRecordValue(0);
 
     // when
@@ -31,7 +31,7 @@ public class LogAppendEntryTest {
   @Test
   public void shouldNotBeProcessedPerDefault() {
     // given
-    final var recordMetadata = new RecordMetadata();
+    final var recordMetadata = new RecordRequest();
     final var unifiedRecordValue = new UnifiedRecordValue(0);
 
     // when
@@ -46,7 +46,7 @@ public class LogAppendEntryTest {
   @Test
   public void shouldMarkEntryAsProcessed() {
     // given
-    final var recordMetadata = new RecordMetadata();
+    final var recordMetadata = new RecordRequest();
     final var unifiedRecordValue = new UnifiedRecordValue(0);
     final var logAppendEntry = LogAppendEntry.of(recordMetadata, unifiedRecordValue);
 

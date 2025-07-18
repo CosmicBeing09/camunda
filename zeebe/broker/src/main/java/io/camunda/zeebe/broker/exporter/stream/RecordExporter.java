@@ -8,7 +8,7 @@
 package io.camunda.zeebe.broker.exporter.stream;
 
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.stream.impl.records.RecordValues;
@@ -19,7 +19,7 @@ import java.util.List;
 class RecordExporter {
 
   private final RecordValues recordValues = new RecordValues();
-  private final RecordMetadata rawMetadata = new RecordMetadata();
+  private final RecordRequest rawMetadata = new RecordRequest();
   private final List<ExporterContainer> containers;
   private final TypedRecordImpl typedEvent;
   private final ExporterMetrics exporterMetrics;
