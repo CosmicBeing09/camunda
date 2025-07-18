@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.protocol.record.intent.GroupIntent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
@@ -103,7 +103,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
     }
     final long key = keyGenerator.nextKey();
     deleteMapping(persistedMappingOptional.get(), key);
-    responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record, command);
+    responseWriter.writeEventOnCommand(key, MappingAction.DELETED, record, command);
 
     commandDistributionBehavior
         .withKey(key)
@@ -169,7 +169,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
               .setEntityType(EntityType.MAPPING));
     }
     stateWriter.appendFollowUpEvent(
-        key, MappingIntent.DELETED, new MappingRecord().setMappingId(mapping.getMappingId()));
+        key, MappingAction.DELETED, new MappingRecord().setMappingId(mapping.getMappingId()));
   }
 
   private void deleteAuthorizations(final String mappingId) {

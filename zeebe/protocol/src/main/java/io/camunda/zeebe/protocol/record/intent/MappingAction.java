@@ -17,7 +17,7 @@ package io.camunda.zeebe.protocol.record.intent;
 
 import java.util.Arrays;
 
-public enum MappingIntent implements Intent {
+public enum MappingAction implements Intent {
   CREATE(0),
   CREATED(1),
   DELETE(2),
@@ -27,7 +27,7 @@ public enum MappingIntent implements Intent {
 
   private final short value;
 
-  MappingIntent(final int value) {
+  MappingAction(final int value) {
     this.value = (short) value;
   }
 
@@ -50,7 +50,7 @@ public enum MappingIntent implements Intent {
 
   public static Intent from(final short value) {
     return Arrays.stream(values())
-        .filter(m -> m.getIntentValue() == value)
+        .filter(m -> m.value() == value)
         .findFirst()
         .map(Intent.class::cast)
         .orElse(Intent.UNKNOWN);

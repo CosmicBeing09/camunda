@@ -13,7 +13,7 @@ import io.camunda.security.configuration.ConfiguredUser;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
@@ -67,7 +67,7 @@ public class MappingCreateAuthorizationTest {
 
     // then
     assertThat(
-            RecordingExporter.mappingRecords(MappingIntent.CREATED)
+            RecordingExporter.mappingRecords(MappingAction.CREATED)
                 .withMappingId(mappingId)
                 .withClaimName(claimName)
                 .withClaimValue(claimValue)
@@ -94,7 +94,7 @@ public class MappingCreateAuthorizationTest {
 
     // then
     assertThat(
-            RecordingExporter.mappingRecords(MappingIntent.CREATED)
+            RecordingExporter.mappingRecords(MappingAction.CREATED)
                 .withMappingId(mappingId)
                 .withClaimName(claimName)
                 .withClaimValue(claimValue)

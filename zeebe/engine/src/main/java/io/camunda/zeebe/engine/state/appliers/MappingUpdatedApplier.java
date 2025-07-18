@@ -10,9 +10,9 @@ package io.camunda.zeebe.engine.state.appliers;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableMappingState;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 
-public class MappingUpdatedApplier implements TypedEventApplier<MappingIntent, MappingRecord> {
+public class MappingUpdatedApplier implements TypedEventApplier<MappingAction, MappingRecord> {
 
   private final MutableMappingState mappingState;
 

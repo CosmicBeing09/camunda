@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
 
 public class MappingProcessors {
@@ -25,7 +25,7 @@ public class MappingProcessors {
       final CommandDistributionBehavior commandDistributionBehavior) {
     typedRecordProcessors.onCommand(
         ValueType.MAPPING,
-        MappingIntent.CREATE,
+        MappingAction.CREATE,
         new MappingCreateProcessor(
             processingState.getMappingState(),
             authCheckBehavior,
@@ -34,7 +34,7 @@ public class MappingProcessors {
             commandDistributionBehavior));
     typedRecordProcessors.onCommand(
         ValueType.MAPPING,
-        MappingIntent.DELETE,
+        MappingAction.DELETE,
         new MappingDeleteProcessor(
             processingState,
             authCheckBehavior,
@@ -43,7 +43,7 @@ public class MappingProcessors {
             commandDistributionBehavior));
     typedRecordProcessors.onCommand(
         ValueType.MAPPING,
-        MappingIntent.UPDATE,
+        MappingAction.UPDATE,
         new MappingUpdateProcessor(
             processingState.getMappingState(),
             authCheckBehavior,

@@ -17,7 +17,7 @@ import io.camunda.exporter.store.BatchRequest;
 import io.camunda.webapps.schema.entities.usermanagement.MappingEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.ImmutableMappingRecordValue;
 import io.camunda.zeebe.protocol.record.value.MappingRecordValue;
 import io.camunda.zeebe.test.broker.protocol.ProtocolFactory;
@@ -44,10 +44,10 @@ public class MappingCreatedUpdatedHandlerTest {
 
   @ParameterizedTest
   @EnumSource(
-      value = MappingIntent.class,
+      value = MappingAction.class,
       names = {"CREATED", "UPDATED"},
       mode = Mode.INCLUDE)
-  void shouldHandleRecord(final MappingIntent intent) {
+  void shouldHandleRecord(final MappingAction intent) {
     // given
     final Record<MappingRecordValue> mappingRecord =
         factory.generateRecordWithIntent(ValueType.MAPPING, intent);
@@ -58,10 +58,10 @@ public class MappingCreatedUpdatedHandlerTest {
 
   @ParameterizedTest
   @EnumSource(
-      value = MappingIntent.class,
+      value = MappingAction.class,
       names = {"CREATED", "UPDATED"},
       mode = Mode.INCLUDE)
-  void shouldGenerateIds(final MappingIntent intent) {
+  void shouldGenerateIds(final MappingAction intent) {
     // given
     final Record<MappingRecordValue> mappingRecord =
         factory.generateRecordWithIntent(ValueType.MAPPING, intent);
@@ -98,7 +98,7 @@ public class MappingCreatedUpdatedHandlerTest {
     final Record<MappingRecordValue> mappingRecord =
         factory.generateRecord(
             ValueType.MAPPING,
-            r -> r.withIntent(MappingIntent.UPDATED).withValue(mappingRecordValue));
+            r -> r.withIntent(MappingAction.UPDATED).withValue(mappingRecordValue));
 
     // when
     final MappingEntity mappingEntity =

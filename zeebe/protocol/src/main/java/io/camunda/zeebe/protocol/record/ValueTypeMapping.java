@@ -37,7 +37,7 @@ import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.intent.MessageBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageCorrelationIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
@@ -277,7 +277,7 @@ public final class ValueTypeMapping {
         ValueType.REDISTRIBUTION,
         new Mapping<>(RedistributionRecordValue.class, RedistributionIntent.class));
     mapping.put(ValueType.GROUP, new Mapping<>(GroupRecordValue.class, GroupIntent.class));
-    mapping.put(ValueType.MAPPING, new Mapping<>(MappingRecordValue.class, MappingIntent.class));
+    mapping.put(ValueType.MAPPING, new Mapping<>(MappingRecordValue.class, MappingAction.class));
     mapping.put(
         ValueType.IDENTITY_SETUP,
         new Mapping<>(IdentitySetupRecordValue.class, IdentitySetupIntent.class));

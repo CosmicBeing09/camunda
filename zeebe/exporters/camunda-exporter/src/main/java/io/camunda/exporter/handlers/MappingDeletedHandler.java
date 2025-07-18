@@ -12,7 +12,7 @@ import io.camunda.exporter.store.BatchRequest;
 import io.camunda.webapps.schema.entities.usermanagement.MappingEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.MappingRecordValue;
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class MappingDeletedHandler implements ExportHandler<MappingEntity, Mappi
   @Override
   public boolean handlesRecord(final Record<MappingRecordValue> record) {
     return getHandledValueType().equals(record.getValueType())
-        && MappingIntent.DELETED.equals(record.getIntent());
+        && MappingAction.DELETED.equals(record.getIntent());
   }
 
   @Override

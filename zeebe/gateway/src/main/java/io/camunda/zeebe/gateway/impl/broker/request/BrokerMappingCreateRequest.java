@@ -11,7 +11,7 @@ import io.camunda.zeebe.broker.client.api.dto.BrokerExecuteCommand;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import org.agrona.DirectBuffer;
 
 public class BrokerMappingCreateRequest extends BrokerExecuteCommand<MappingRecord> {
@@ -19,7 +19,7 @@ public class BrokerMappingCreateRequest extends BrokerExecuteCommand<MappingReco
   private final MappingRecord requestDto = new MappingRecord();
 
   public BrokerMappingCreateRequest() {
-    super(ValueType.MAPPING, MappingIntent.CREATE);
+    super(ValueType.MAPPING, MappingAction.CREATE);
     setPartitionId(Protocol.DEPLOYMENT_PARTITION);
   }
 

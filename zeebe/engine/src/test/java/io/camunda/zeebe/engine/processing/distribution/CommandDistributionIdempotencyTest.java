@@ -61,7 +61,7 @@ import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.protocol.record.intent.GroupIntent;
 import io.camunda.zeebe.protocol.record.intent.Intent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ResourceDeletionIntent;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
@@ -384,7 +384,7 @@ public class CommandDistributionIdempotencyTest {
             "Mapping.CREATE is idempotent",
             new Scenario(
                 ValueType.MAPPING,
-                MappingIntent.CREATE,
+                MappingAction.CREATE,
                 CommandDistributionIdempotencyTest::createMapping),
             MappingCreateProcessor.class
           },
@@ -392,7 +392,7 @@ public class CommandDistributionIdempotencyTest {
             "Mapping.UPDATE is idempotent",
             new Scenario(
                 ValueType.MAPPING,
-                MappingIntent.UPDATE,
+                MappingAction.UPDATE,
                 () -> {
                   final var mapping = createMapping();
                   return ENGINE.mapping().updateMapping(mapping.getValue().getMappingId()).update();
@@ -403,7 +403,7 @@ public class CommandDistributionIdempotencyTest {
             "Mapping.DELETE is idempotent",
             new Scenario(
                 ValueType.MAPPING,
-                MappingIntent.DELETE,
+                MappingAction.DELETE,
                 () -> {
                   final var mapping = createMapping();
                   return ENGINE.mapping().deleteMapping(mapping.getValue().getMappingId()).delete();

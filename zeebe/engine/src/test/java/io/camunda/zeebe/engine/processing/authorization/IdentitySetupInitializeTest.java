@@ -20,7 +20,7 @@ import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.protocol.record.intent.IdentitySetupIntent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.intent.TenantIntent;
 import io.camunda.zeebe.protocol.record.intent.UserIntent;
@@ -381,7 +381,7 @@ public class IdentitySetupInitializeTest {
             RecordingExporter.roleRecords(RoleIntent.CREATED).withRoleId(role.getRoleId()).exists())
         .isTrue();
     final var createdMappings =
-        RecordingExporter.mappingRecords(MappingIntent.CREATED).limit(2).toList().stream()
+        RecordingExporter.mappingRecords(MappingAction.CREATED).limit(2).toList().stream()
             .map(Record::getValue)
             .toList();
     Assertions.assertThat(createdMappings)

@@ -177,7 +177,7 @@ public final class CommandDistributionRecord extends UnifiedRecordValue
   }
 
   public CommandDistributionRecord setIntent(final Intent intent) {
-    intentProperty.setValue(intent.getIntentValue());
+    intentProperty.setValue(intent.value());
     return this;
   }
 

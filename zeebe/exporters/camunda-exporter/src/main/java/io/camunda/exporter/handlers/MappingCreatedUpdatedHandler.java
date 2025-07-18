@@ -13,7 +13,7 @@ import io.camunda.webapps.schema.entities.usermanagement.MappingEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.MappingRecordValue;
 import java.util.List;
 import java.util.Set;
@@ -21,7 +21,7 @@ import java.util.Set;
 public class MappingCreatedUpdatedHandler
     implements ExportHandler<MappingEntity, MappingRecordValue> {
   private static final Set<Intent> SUPPORTED_INTENTS =
-      Set.of(MappingIntent.CREATED, MappingIntent.UPDATED);
+      Set.of(MappingAction.CREATED, MappingAction.UPDATED);
 
   private final String indexName;
 

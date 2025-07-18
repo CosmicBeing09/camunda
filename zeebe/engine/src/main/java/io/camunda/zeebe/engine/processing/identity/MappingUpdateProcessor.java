@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.state.immutable.MappingState;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -91,9 +91,9 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
       return;
     }
 
-    stateWriter.appendFollowUpEvent(record.getMappingKey(), MappingIntent.UPDATED, record);
+    stateWriter.appendFollowUpEvent(record.getMappingKey(), MappingAction.UPDATED, record);
     responseWriter.writeEventOnCommand(
-        record.getMappingKey(), MappingIntent.UPDATED, record, command);
+        record.getMappingKey(), MappingAction.UPDATED, record, command);
 
     commandDistributionBehavior
         .withKey(keyGenerator.nextKey())
@@ -103,7 +103,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
 
   @Override
   public void processDistributedCommand(final TypedRecord<MappingRecord> command) {
-    stateWriter.appendFollowUpEvent(command.getKey(), MappingIntent.UPDATED, command.getValue());
+    stateWriter.appendFollowUpEvent(command.getKey(), MappingAction.UPDATED, command.getValue());
     commandDistributionBehavior.acknowledgeCommand(command);
   }
 }

@@ -143,7 +143,7 @@ public final class ExecuteCommandRequest implements ClientRequest {
         .partitionId(partitionId)
         .key(key)
         .valueType(valueType)
-        .intent(intent.getIntentValue())
+        .intent(intent.value())
         .putValue(encodedCmd, 0, encodedCmd.length);
   }
 }

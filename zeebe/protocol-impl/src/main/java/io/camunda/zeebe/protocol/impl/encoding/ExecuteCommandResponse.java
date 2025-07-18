@@ -205,7 +205,7 @@ public final class ExecuteCommandResponse implements BufferReader, BufferWriter 
         .key(key)
         .recordType(recordType)
         .valueType(valueType)
-        .intent(intent.getIntentValue())
+        .intent(intent.value())
         .rejectionType(rejectionType)
         .putValue(value, 0, value.capacity())
         .putRejectionReason(rejectionReason, 0, rejectionReason.capacity());

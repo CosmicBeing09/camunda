@@ -34,7 +34,7 @@ import io.camunda.zeebe.gateway.impl.broker.request.BrokerMappingDeleteRequest;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerMappingUpdateRequest;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
-import io.camunda.zeebe.protocol.record.intent.MappingIntent;
+import io.camunda.zeebe.protocol.record.intent.MappingAction;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -76,7 +76,7 @@ public class MappingServicesTest {
 
     // then
     final BrokerMappingCreateRequest request = stubbedBrokerClient.getSingleBrokerRequest();
-    assertThat(request.getIntent()).isEqualTo(MappingIntent.CREATE);
+    assertThat(request.getIntent()).isEqualTo(MappingAction.CREATE);
     assertThat(request.getValueType()).isEqualTo(ValueType.MAPPING);
     final MappingRecord brokerRequestValue = request.getRequestWriter();
     assertThat(brokerRequestValue.getClaimName()).isEqualTo(mappingDTO.claimName());

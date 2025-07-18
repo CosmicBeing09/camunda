@@ -32,7 +32,7 @@ final class IntentEncodingDecodingTest {
   @ParameterizedTest
   @MethodSource("parameters")
   void shouldEncodeAndDecodeTimerIntent(final ParameterSet parameterSet) {
-    final short value = parameterSet.intent.getIntentValue();
+    final short value = parameterSet.intent.value();
 
     final Intent decoded = parameterSet.decoder.apply(value);
 

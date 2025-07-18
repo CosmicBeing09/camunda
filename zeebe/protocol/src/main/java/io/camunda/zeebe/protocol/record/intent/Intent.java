@@ -69,7 +69,7 @@ public interface Intent {
           ScaleIntent.class,
           RedistributionIntent.class,
           GroupIntent.class,
-          MappingIntent.class,
+          MappingAction.class,
           IdentitySetupIntent.class,
           BatchOperationIntent.class,
           BatchOperationChunkIntent.class,
@@ -78,7 +78,7 @@ public interface Intent {
   short NULL_VAL = 255;
   Intent UNKNOWN = UnknownIntent.UNKNOWN;
 
-  short getIntentValue();
+  short value();
 
   String name();
 
@@ -181,7 +181,7 @@ public interface Intent {
       case GROUP:
         return GroupIntent.from(intent);
       case MAPPING:
-        return MappingIntent.from(intent);
+        return MappingAction.from(intent);
       case IDENTITY_SETUP:
         return IdentitySetupIntent.from(intent);
       case BATCH_OPERATION_CREATION:
@@ -288,7 +288,7 @@ public interface Intent {
       case GROUP:
         return GroupIntent.valueOf(intent);
       case MAPPING:
-        return MappingIntent.valueOf(intent);
+        return MappingAction.valueOf(intent);
       case IDENTITY_SETUP:
         return IdentitySetupIntent.valueOf(intent);
       case BATCH_OPERATION_CREATION:

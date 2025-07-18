@@ -115,7 +115,7 @@ final class InterPartitionCommandSenderImpl implements InterPartitionCommandSend
           .checkpointId(checkpointId)
           .receiverPartitionId(receiverPartitionId)
           .valueType(valueType.value())
-          .intent(intent.getIntentValue())
+          .intent(intent.value())
           .putCommand(commandBuffer, 0, command.getLength());
 
       bodyEncoder.recordKey(
