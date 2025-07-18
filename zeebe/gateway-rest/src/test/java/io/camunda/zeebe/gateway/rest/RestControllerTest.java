@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.gateway.rest;
 
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.Operator;
 import io.camunda.security.auth.Authentication;
 import io.camunda.zeebe.gateway.rest.config.JacksonConfig;
@@ -32,48 +32,48 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
     })
 @Import(JacksonConfig.class)
 public abstract class RestControllerTest {
-  public static final List<List<Operation<Long>>> LONG_OPERATIONS =
+  public static final List<List<FilterOperation<Long>>> LONG_OPERATIONS =
       List.of(
-          List.of(Operation.gt(5L)),
-          List.of(Operation.gte(5L)),
-          List.of(Operation.lt(5L)),
-          List.of(Operation.lte(5L)),
-          List.of(Operation.gt(5L), Operation.lt(10L)),
-          List.of(Operation.gte(5L), Operation.lte(10L)));
-  public static final List<List<Operation<Long>>> BASIC_LONG_OPERATIONS =
+          List.of(FilterOperation.gt(5L)),
+          List.of(FilterOperation.gte(5L)),
+          List.of(FilterOperation.lt(5L)),
+          List.of(FilterOperation.lte(5L)),
+          List.of(FilterOperation.gt(5L), FilterOperation.lt(10L)),
+          List.of(FilterOperation.gte(5L), FilterOperation.lte(10L)));
+  public static final List<List<FilterOperation<Long>>> BASIC_LONG_OPERATIONS =
       List.of(
-          List.of(Operation.eq(10L)),
-          List.of(Operation.neq(1L)),
-          List.of(Operation.exists(true)),
-          List.of(Operation.exists(false)),
-          List.of(Operation.in(5L, 10L)));
-  public static final List<List<Operation<String>>> BASIC_STRING_OPERATIONS =
+          List.of(FilterOperation.eq(10L)),
+          List.of(FilterOperation.neq(1L)),
+          List.of(FilterOperation.exists(true)),
+          List.of(FilterOperation.exists(false)),
+          List.of(FilterOperation.in(5L, 10L)));
+  public static final List<List<FilterOperation<String>>> BASIC_STRING_OPERATIONS =
       List.of(
-          List.of(Operation.eq("this")),
-          List.of(Operation.neq("that")),
-          List.of(Operation.exists(true)),
-          List.of(Operation.exists(false)),
-          List.of(Operation.in("this", "that")));
-  public static final List<List<Operation<String>>> STRING_OPERATIONS =
+          List.of(FilterOperation.eq("this")),
+          List.of(FilterOperation.neq("that")),
+          List.of(FilterOperation.exists(true)),
+          List.of(FilterOperation.exists(false)),
+          List.of(FilterOperation.in("this", "that")));
+  public static final List<List<FilterOperation<String>>> STRING_OPERATIONS =
       List.of(
-          List.of(Operation.like("th%")),
-          List.of(Operation.in("this", "that"), Operation.like("th%")));
-  public static final List<List<Operation<OffsetDateTime>>> DATE_TIME_OPERATIONS =
+          List.of(FilterOperation.like("th%")),
+          List.of(FilterOperation.in("this", "that"), FilterOperation.like("th%")));
+  public static final List<List<FilterOperation<OffsetDateTime>>> DATE_TIME_OPERATIONS =
       List.of(
-          List.of(Operation.eq(OffsetDateTime.now())),
-          List.of(Operation.neq(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("Z")))),
-          List.of(Operation.exists(true)),
-          List.of(Operation.exists(false)),
-          List.of(Operation.gt(OffsetDateTime.now().minusHours(1))),
-          List.of(Operation.gte(OffsetDateTime.now().minusHours(1))),
-          List.of(Operation.lt(OffsetDateTime.now().minusHours(1))),
-          List.of(Operation.lte(OffsetDateTime.now().minusHours(1))),
+          List.of(FilterOperation.eq(OffsetDateTime.now())),
+          List.of(FilterOperation.neq(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.of("Z")))),
+          List.of(FilterOperation.exists(true)),
+          List.of(FilterOperation.exists(false)),
+          List.of(FilterOperation.gt(OffsetDateTime.now().minusHours(1))),
+          List.of(FilterOperation.gte(OffsetDateTime.now().minusHours(1))),
+          List.of(FilterOperation.lt(OffsetDateTime.now().minusHours(1))),
+          List.of(FilterOperation.lte(OffsetDateTime.now().minusHours(1))),
           List.of(
-              Operation.gt(OffsetDateTime.now().minusHours(1)), Operation.lt(OffsetDateTime.now())),
+              FilterOperation.gt(OffsetDateTime.now().minusHours(1)), FilterOperation.lt(OffsetDateTime.now())),
           List.of(
-              Operation.gte(OffsetDateTime.now().minusHours(1)),
-              Operation.lte(OffsetDateTime.now())),
-          List.of(Operation.in(OffsetDateTime.now(), OffsetDateTime.now().minusDays(1))));
+              FilterOperation.gte(OffsetDateTime.now().minusHours(1)),
+              FilterOperation.lte(OffsetDateTime.now())),
+          List.of(FilterOperation.in(OffsetDateTime.now(), OffsetDateTime.now().minusDays(1))));
   @Autowired protected WebTestClient webClient;
 
   public ResponseSpec withMultiTenancy(
@@ -89,15 +89,15 @@ public abstract class RestControllerTest {
 
   protected static <T> Arguments generateParameterizedArguments(
       final String filterKey,
-      final Function<List<Operation<T>>, Object> consumer,
-      final List<Operation<T>> operations,
+      final Function<List<FilterOperation<T>>, Object> consumer,
+      final List<FilterOperation<T>> operations,
       final boolean stringValues) {
     return Arguments.of(
         operationsToJSON(filterKey, operations, stringValues), consumer.apply(operations));
   }
 
-  public static Operation<Integer> toIntOperation(final Operation<Long> op) {
-    return new Operation<>(
+  public static FilterOperation<Integer> toIntOperation(final FilterOperation<Long> op) {
+    return new FilterOperation<>(
         op.operator(),
         op.values() != null ? op.values().stream().map(Long::intValue).toList() : null);
   }
@@ -105,7 +105,7 @@ public abstract class RestControllerTest {
   public static void integerOperationTestCases(
       final Stream.Builder<Arguments> streamBuilder,
       final String filterKey,
-      final Function<List<Operation<Integer>>, Object> builderMethod) {
+      final Function<List<FilterOperation<Integer>>, Object> builderMethod) {
     BASIC_LONG_OPERATIONS.stream()
         .map(ops -> ops.stream().map(RestControllerTest::toIntOperation).toList())
         .map(ops -> generateParameterizedArguments(filterKey, builderMethod, ops, false))
@@ -119,7 +119,7 @@ public abstract class RestControllerTest {
   public static void keyOperationTestCases(
       final Stream.Builder<Arguments> streamBuilder,
       final String filterKey,
-      final Function<List<Operation<Long>>, Object> builderMethod) {
+      final Function<List<FilterOperation<Long>>, Object> builderMethod) {
     BASIC_LONG_OPERATIONS.stream()
         .map(ops -> generateParameterizedArguments(filterKey, builderMethod, ops, true))
         .forEach(streamBuilder::add);
@@ -128,7 +128,7 @@ public abstract class RestControllerTest {
   public static void basicStringOperationTestCases(
       final Stream.Builder<Arguments> streamBuilder,
       final String filterKey,
-      final Function<List<Operation<String>>, Object> builderMethod) {
+      final Function<List<FilterOperation<String>>, Object> builderMethod) {
     BASIC_STRING_OPERATIONS.stream()
         .map(ops -> generateParameterizedArguments(filterKey, builderMethod, ops, true))
         .forEach(streamBuilder::add);
@@ -137,7 +137,7 @@ public abstract class RestControllerTest {
   public static void stringOperationTestCases(
       final Stream.Builder<Arguments> streamBuilder,
       final String filterKey,
-      final Function<List<Operation<String>>, Object> builderMethod) {
+      final Function<List<FilterOperation<String>>, Object> builderMethod) {
     BASIC_STRING_OPERATIONS.stream()
         .map(ops -> generateParameterizedArguments(filterKey, builderMethod, ops, true))
         .forEach(streamBuilder::add);
@@ -149,7 +149,7 @@ public abstract class RestControllerTest {
   public static void dateTimeOperationTestCases(
       final Stream.Builder<Arguments> streamBuilder,
       final String filterKey,
-      final Function<List<Operation<OffsetDateTime>>, Object> builderMethod) {
+      final Function<List<FilterOperation<OffsetDateTime>>, Object> builderMethod) {
     DATE_TIME_OPERATIONS.stream()
         .map(ops -> generateParameterizedArguments(filterKey, builderMethod, ops, true))
         .forEach(streamBuilder::add);
@@ -158,8 +158,8 @@ public abstract class RestControllerTest {
   public static <T> void customOperationTestCases(
       final Stream.Builder<Arguments> streamBuilder,
       final String filterKey,
-      final Function<List<Operation<T>>, Object> builderMethod,
-      final List<List<Operation<T>>> operations,
+      final Function<List<FilterOperation<T>>, Object> builderMethod,
+      final List<List<FilterOperation<T>>> operations,
       final boolean stringValues) {
     operations.stream()
         .map(ops -> generateParameterizedArguments(filterKey, builderMethod, ops, stringValues))
@@ -167,7 +167,7 @@ public abstract class RestControllerTest {
   }
 
   public static <T> String operationsToJSON(
-      final String filterKey, final List<Operation<T>> operations, final boolean stringValues) {
+      final String filterKey, final List<FilterOperation<T>> operations, final boolean stringValues) {
 
     final var implicitTpl = stringValues ? "\"%s\"" : "%s";
     final var keyValueTpl = "\"%s\": %s";

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.UserFilter;
 import io.camunda.search.filter.UserFilter.Builder;
 import io.camunda.util.ObjectBuilder;
@@ -52,7 +52,7 @@ public class UserQueryTransformerTest extends AbstractTransformerTest {
         Arguments.of((Function<Builder, ObjectBuilder<UserFilter>>) f -> f.key(1L), "key", 1L),
         Arguments.of(
             (Function<Builder, ObjectBuilder<UserFilter>>)
-                f -> f.usernameOperations(List.of(Operation.eq("username1"))),
+                f -> f.usernameOperations(List.of(FilterOperation.eq("username1"))),
             "username",
             "username1"),
         Arguments.of(

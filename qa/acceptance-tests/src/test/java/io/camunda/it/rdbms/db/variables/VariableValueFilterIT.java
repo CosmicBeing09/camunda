@@ -20,7 +20,7 @@ import io.camunda.it.rdbms.db.fixtures.VariableFixtures;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsInvocationContextProviderExtension;
 import io.camunda.it.rdbms.db.util.CamundaRdbmsTestApplication;
 import io.camunda.search.entities.VariableEntity;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.VariableFilter;
 import io.camunda.search.page.SearchQueryPage;
 import io.camunda.search.query.VariableQuery;
@@ -62,7 +62,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, valueForOne);
 
     // and an eq value filter
-    final Operation<String> operation = Operation.eq(valueForOne);
+    final FilterOperation<String> operation = FilterOperation.eq(valueForOne);
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(
@@ -78,7 +78,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, "someName", "variable-42-value");
 
     // and a like value filter
-    final Operation<String> operation = Operation.like("*able-42-v?l*");
+    final FilterOperation<String> operation = FilterOperation.like("*able-42-v?l*");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(
@@ -95,7 +95,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "42000");
 
     // and an eq value filter
-    final Operation<String> operation = Operation.eq("42000");
+    final FilterOperation<String> operation = FilterOperation.eq("42000");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(
@@ -112,7 +112,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "true");
 
     // and an eq value filter
-    final Operation<String> operation = Operation.eq("true");
+    final FilterOperation<String> operation = FilterOperation.eq("true");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(
@@ -133,7 +133,7 @@ public class VariableValueFilterIT {
     createAndSaveVariable(rdbmsService, randomizedVariable);
 
     // and a neq value filter
-    final Operation<String> operation = Operation.neq("DEFINITELY NOT");
+    final FilterOperation<String> operation = FilterOperation.neq("DEFINITELY NOT");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(rdbmsService, randomizedVariable, varName, operation);
@@ -149,7 +149,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "42000");
 
     // and a gt value filter
-    final Operation<String> operation = Operation.gt("40000");
+    final FilterOperation<String> operation = FilterOperation.gt("40000");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(rdbmsService, randomizedVariable, varName, operation);
@@ -165,7 +165,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "42000");
 
     // and a gte value filter
-    final Operation<String> operation = Operation.gte("42000");
+    final FilterOperation<String> operation = FilterOperation.gte("42000");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(rdbmsService, randomizedVariable, varName, operation);
@@ -181,7 +181,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "-42000");
 
     // and a lt value filter
-    final Operation<String> operation = Operation.lt("-40000");
+    final FilterOperation<String> operation = FilterOperation.lt("-40000");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(rdbmsService, randomizedVariable, varName, operation);
@@ -197,7 +197,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "-42000");
 
     // and a lte value filter
-    final Operation<String> operation = Operation.lte("-42000");
+    final FilterOperation<String> operation = FilterOperation.lte("-42000");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(rdbmsService, randomizedVariable, varName, operation);
@@ -213,7 +213,7 @@ public class VariableValueFilterIT {
         prepareRandomVariablesAndReturnOne(testApplication, varName, "-4200.1234");
 
     // and a lt value filter
-    final Operation<String> operation = Operation.lt("-4200.123");
+    final FilterOperation<String> operation = FilterOperation.lt("-4200.123");
 
     // when we search for it, we should find one
     searchAndAssertVariableValueFilter(rdbmsService, randomizedVariable, varName, operation);
@@ -299,7 +299,7 @@ public class VariableValueFilterIT {
             .getVariableReader()
             .search(
                 VariableQuery.of(
-                    b -> b.filter(f -> f.valueOperations(Operation.like(variableValue + "*")))));
+                    b -> b.filter(f -> f.valueOperations(FilterOperation.like(variableValue + "*")))));
 
     // then
     assertThat(actual.total()).isEqualTo(2);
@@ -325,7 +325,7 @@ public class VariableValueFilterIT {
             .getVariableReader()
             .search(
                 VariableQuery.of(
-                    b -> b.filter(f -> f.valueOperations(Operation.like(variableValue + "?")))));
+                    b -> b.filter(f -> f.valueOperations(FilterOperation.like(variableValue + "?")))));
 
     // then
     assertThat(actual.total()).isEqualTo(2);
@@ -351,7 +351,7 @@ public class VariableValueFilterIT {
             .getVariableReader()
             .search(
                 VariableQuery.of(
-                    b -> b.filter(f -> f.valueOperations(Operation.like("ignoreAnyValue\\%X")))));
+                    b -> b.filter(f -> f.valueOperations(FilterOperation.like("ignoreAnyValue\\%X")))));
 
     // then
     assertThat(actual.total()).isEqualTo(1);
@@ -377,7 +377,7 @@ public class VariableValueFilterIT {
             .search(
                 VariableQuery.of(
                     b ->
-                        b.filter(f -> f.valueOperations(Operation.like("ignoreSingleValue\\_X")))));
+                        b.filter(f -> f.valueOperations(FilterOperation.like("ignoreSingleValue\\_X")))));
 
     // then
     assertThat(actual.total()).isEqualTo(1);
@@ -400,7 +400,7 @@ public class VariableValueFilterIT {
             .getVariableReader()
             .search(
                 VariableQuery.of(
-                    b -> b.filter(f -> f.valueOperations(Operation.like("value\\*any\\%*")))));
+                    b -> b.filter(f -> f.valueOperations(FilterOperation.like("value\\*any\\%*")))));
 
     // then
     assertThat(actual.total()).isEqualTo(2);
@@ -428,7 +428,7 @@ public class VariableValueFilterIT {
                     b ->
                         b.filter(
                             f ->
-                                f.valueOperations(Operation.like("value\\?single\\_wildcards?")))));
+                                f.valueOperations(FilterOperation.like("value\\?single\\_wildcards?")))));
 
     // then
     assertThat(actual.total()).isEqualTo(2);
@@ -443,7 +443,7 @@ public class VariableValueFilterIT {
       final RdbmsService rdbmsService,
       final VariableDbModel variableDbModel,
       final String variableName,
-      final Operation<String> operation) {
+      final FilterOperation<String> operation) {
     searchAndAssertVariableValueFilters(
         rdbmsService, variableDbModel, variableName, List.of(operation));
   }
@@ -452,7 +452,7 @@ public class VariableValueFilterIT {
       final RdbmsService rdbmsService,
       final VariableDbModel variableDbModel,
       final String variableName,
-      final List<Operation<String>> operations) {
+      final List<FilterOperation<String>> operations) {
 
     final var builder = new VariableFilter.Builder().names(variableName);
     if (operations != null) {

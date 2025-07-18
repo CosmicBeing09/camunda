@@ -20,9 +20,9 @@ import java.util.Set;
 
 public record UserFilter(
     Long key,
-    List<Operation<String>> usernameOperations,
-    List<Operation<String>> nameOperations,
-    List<Operation<String>> emailOperations,
+    List<FilterOperation<String>> usernameOperations,
+    List<FilterOperation<String>> nameOperations,
+    List<FilterOperation<String>> emailOperations,
     String tenantId,
     String groupId,
     String roleId)
@@ -40,9 +40,9 @@ public record UserFilter(
 
   public static final class Builder implements ObjectBuilder<UserFilter> {
     private Long key;
-    private List<Operation<String>> usernameOperations;
-    private List<Operation<String>> nameOperations;
-    private List<Operation<String>> emailOperations;
+    private List<FilterOperation<String>> usernameOperations;
+    private List<FilterOperation<String>> nameOperations;
+    private List<FilterOperation<String>> emailOperations;
     private String tenantId;
     private String groupId;
     private String roleId;
@@ -52,13 +52,13 @@ public record UserFilter(
       return this;
     }
 
-    public Builder usernameOperations(final List<Operation<String>> operations) {
+    public Builder usernameOperations(final List<FilterOperation<String>> operations) {
       usernameOperations = addValuesToList(usernameOperations, operations);
       return this;
     }
 
     public Builder usernames(final Set<String> value) {
-      return usernameOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return usernameOperations(FilterUtil.mapFiltersToOperation(new ArrayList<>(value)));
     }
 
     public Builder usernames(final String value, final String... values) {
@@ -67,17 +67,17 @@ public record UserFilter(
 
     @SafeVarargs
     public final Builder usernameOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return usernameOperations(collectValues(operation, operations));
     }
 
-    public Builder nameOperations(final List<Operation<String>> operations) {
+    public Builder nameOperations(final List<FilterOperation<String>> operations) {
       nameOperations = addValuesToList(nameOperations, operations);
       return this;
     }
 
     public Builder names(final Set<String> value) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return nameOperations(FilterUtil.mapFiltersToOperation(new ArrayList<>(value)));
     }
 
     public Builder names(final String value, final String... values) {
@@ -86,17 +86,17 @@ public record UserFilter(
 
     @SafeVarargs
     public final Builder nameOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return nameOperations(collectValues(operation, operations));
     }
 
-    public Builder emailOperations(final List<Operation<String>> operations) {
+    public Builder emailOperations(final List<FilterOperation<String>> operations) {
       emailOperations = addValuesToList(emailOperations, operations);
       return this;
     }
 
     public Builder emails(final Set<String> value) {
-      return emailOperations(FilterUtil.mapDefaultToOperation(new ArrayList<>(value)));
+      return emailOperations(FilterUtil.mapFiltersToOperation(new ArrayList<>(value)));
     }
 
     public Builder emails(final String value, final String... values) {
@@ -105,7 +105,7 @@ public record UserFilter(
 
     @SafeVarargs
     public final Builder emailOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return emailOperations(collectValues(operation, operations));
     }
 

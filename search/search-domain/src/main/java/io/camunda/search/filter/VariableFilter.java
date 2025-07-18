@@ -17,25 +17,25 @@ import java.util.List;
 import java.util.Objects;
 
 public record VariableFilter(
-    List<Operation<String>> nameOperations,
+    List<FilterOperation<String>> nameOperations,
     List<UntypedOperation> valueOperations,
-    List<Operation<Long>> scopeKeyOperations,
-    List<Operation<Long>> processInstanceKeyOperations,
-    List<Operation<Long>> variableKeyOperations,
+    List<FilterOperation<Long>> scopeKeyOperations,
+    List<FilterOperation<Long>> processInstanceKeyOperations,
+    List<FilterOperation<Long>> variableKeyOperations,
     List<String> tenantIds,
     Boolean isTruncated)
     implements FilterBase {
 
   public static final class Builder implements ObjectBuilder<VariableFilter> {
-    private List<Operation<String>> nameOperations;
+    private List<FilterOperation<String>> nameOperations;
     private List<UntypedOperation> valueOperations;
-    private List<Operation<Long>> scopeKeyOperations;
-    private List<Operation<Long>> processInstanceKeyOperations;
-    private List<Operation<Long>> variableKeyOperations;
+    private List<FilterOperation<Long>> scopeKeyOperations;
+    private List<FilterOperation<Long>> processInstanceKeyOperations;
+    private List<FilterOperation<Long>> variableKeyOperations;
     private List<String> tenantIds;
     private Boolean isTruncated;
 
-    public Builder nameOperations(final List<Operation<String>> operations) {
+    public Builder nameOperations(final List<FilterOperation<String>> operations) {
       nameOperations = addValuesToList(nameOperations, operations);
       return this;
     }
@@ -45,17 +45,17 @@ public record VariableFilter(
     }
 
     public Builder names(final List<String> values) {
-      return nameOperations(FilterUtil.mapDefaultToOperation(values));
+      return nameOperations(FilterUtil.mapFiltersToOperation(values));
     }
 
     @SafeVarargs
     public final Builder nameOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return nameOperations(collectValues(operation, operations));
     }
 
-    public Builder valueOperations(final List<Operation<String>> operations) {
-      final List<Operation<String>> ops =
+    public Builder valueOperations(final List<FilterOperation<String>> operations) {
+      final List<FilterOperation<String>> ops =
           Objects.requireNonNullElse(operations, Collections.emptyList());
       valueOperations =
           addValuesToList(valueOperations, ops.stream().map(UntypedOperation::of).toList());
@@ -72,16 +72,16 @@ public record VariableFilter(
     }
 
     public Builder values(final List<String> values) {
-      return valueOperations(FilterUtil.mapDefaultToOperation(values));
+      return valueOperations(FilterUtil.mapFiltersToOperation(values));
     }
 
     @SafeVarargs
     public final Builder valueOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return valueOperations(collectValues(operation, operations));
     }
 
-    public Builder scopeKeyOperations(final List<Operation<Long>> operations) {
+    public Builder scopeKeyOperations(final List<FilterOperation<Long>> operations) {
       scopeKeyOperations = addValuesToList(scopeKeyOperations, operations);
       return this;
     }
@@ -91,23 +91,23 @@ public record VariableFilter(
     }
 
     public Builder scopeKeys(final List<Long> values) {
-      return scopeKeyOperations(FilterUtil.mapDefaultToOperation(values));
+      return scopeKeyOperations(FilterUtil.mapFiltersToOperation(values));
     }
 
     @SafeVarargs
     public final Builder scopeKeyOperations(
-        final Operation<Long> operation, final Operation<Long>... operations) {
+        final FilterOperation<Long> operation, final FilterOperation<Long>... operations) {
       return scopeKeyOperations(collectValues(operation, operations));
     }
 
-    public Builder processInstanceKeyOperations(final List<Operation<Long>> operations) {
+    public Builder processInstanceKeyOperations(final List<FilterOperation<Long>> operations) {
       processInstanceKeyOperations = addValuesToList(processInstanceKeyOperations, operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder processInstanceKeyOperations(
-        final Operation<Long> operation, final Operation<Long>... operations) {
+        final FilterOperation<Long> operation, final FilterOperation<Long>... operations) {
       return processInstanceKeyOperations(collectValues(operation, operations));
     }
 
@@ -115,7 +115,7 @@ public record VariableFilter(
       return processInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder variableKeyOperations(final List<Operation<Long>> operations) {
+    public Builder variableKeyOperations(final List<FilterOperation<Long>> operations) {
       variableKeyOperations = addValuesToList(variableKeyOperations, operations);
       return this;
     }
@@ -126,7 +126,7 @@ public record VariableFilter(
 
     @SafeVarargs
     public final Builder variableKeyOperations(
-        final Operation<Long> operation, final Operation<Long>... operations) {
+        final FilterOperation<Long> operation, final FilterOperation<Long>... operations) {
       return variableKeyOperations(collectValues(operation, operations));
     }
 

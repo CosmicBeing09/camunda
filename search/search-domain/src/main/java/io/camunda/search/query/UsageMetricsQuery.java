@@ -27,7 +27,7 @@ public record UsageMetricsQuery(
   public static final class Builder extends SearchQueryBase.AbstractQueryBuilder<Builder>
       implements TypedSearchQueryBuilder<
           UsageMetricsQuery, Builder, UsageMetricsFilter, UsageMetricsSort> {
-    private static final UsageMetricsFilter EMPTY_FILTER = FilterBuilders.usageMetrics().build();
+    private static final UsageMetricsFilter EMPTY_FILTER = FilterBuilders.usageMetricsFilter().build();
     private static final UsageMetricsSort EMPTY_SORT = SortOptionBuilders.usageMetrics().build();
 
     private UsageMetricsFilter filter;

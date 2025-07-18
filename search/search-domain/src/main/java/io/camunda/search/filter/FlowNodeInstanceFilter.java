@@ -19,22 +19,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 
-public record FlowNodeInstanceFilter(
-    List<Long> flowNodeInstanceKeys,
-    List<Long> processInstanceKeys,
-    List<Long> processDefinitionKeys,
-    List<String> processDefinitionIds,
-    List<Operation<String>> stateOperations,
-    List<FlowNodeType> types,
-    List<String> flowNodeIds,
-    List<String> flowNodeNames,
-    List<String> treePaths,
-    Boolean hasIncident,
-    List<Long> incidentKeys,
-    List<String> tenantIds,
-    List<String> startDates,
-    List<String> endDates)
-    implements FilterBase {
+FilterBase {
 
   public static FlowNodeInstanceFilter of(
       final Function<FlowNodeInstanceFilter.Builder, ObjectBuilder<FlowNodeInstanceFilter>> fn) {
@@ -47,7 +32,7 @@ public record FlowNodeInstanceFilter(
     private List<Long> processInstanceKeys;
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
-    private List<Operation<String>> stateOperations;
+    private List<FilterOperation<String>> stateFilters;
     private List<FlowNodeType> types;
     private List<String> flowNodeIds;
     private List<String> flowNodeNames;
@@ -55,8 +40,8 @@ public record FlowNodeInstanceFilter(
     private Boolean hasIncident;
     private List<Long> incidentKeys;
     private List<String> tenantIds;
-    private List<String> startDates;
-    private List<String> endDates;
+    private List<String> startDateFilters;
+    private List<String> endDateFilters;
 
     public FlowNodeInstanceFilter.Builder flowNodeInstanceKeys(final List<Long> values) {
       flowNodeInstanceKeys = addValuesToList(flowNodeInstanceKeys, values);
@@ -94,20 +79,20 @@ public record FlowNodeInstanceFilter(
       return processDefinitionIds(collectValuesAsList(values));
     }
 
-    public FlowNodeInstanceFilter.Builder stateOperations(
-        final List<Operation<String>> operations) {
-      stateOperations = addValuesToList(stateOperations, operations);
+    public FlowNodeInstanceFilter.Builder stateFilters(
+        final List<FilterOperation<String>> operations) {
+      stateFilters = addValuesToList(stateFilters, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder states(final String value, final String... values) {
-      return stateOperations(FilterUtil.mapDefaultToOperation(value, values));
+    public FlowNodeInstanceFilter.Builder stateFilters(final String value, final String... values) {
+      return stateFilters(FilterUtil.mapDefaultToOperation(value, values));
     }
 
     @SafeVarargs
-    public final FlowNodeInstanceFilter.Builder stateOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
-      return stateOperations(collectValues(operation, operations));
+    public final FlowNodeInstanceFilter.Builder stateFilters(
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
+      return stateFilters(collectValues(operation, operations));
     }
 
     public FlowNodeInstanceFilter.Builder types(final List<FlowNodeType> values) {
@@ -169,17 +154,17 @@ public record FlowNodeInstanceFilter(
       return tenantIds(collectValuesAsList(values));
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final List<String> values) {
-      startDates = addValuesToList(startDates, values);
+    public FlowNodeInstanceFilter.Builder startDateFilters(final List<String> operations) {
+      startDateFilters = addValuesToList(startDateFilters, operations);
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder startDates(final String... values) {
-      return startDates(collectValuesAsList(values));
+    public FlowNodeInstanceFilter.Builder startDateFilters(final String... values) {
+      return startDateFilters(collectValuesAsList(values));
     }
 
     public FlowNodeInstanceFilter.Builder endDates(final List<String> values) {
-      endDates = addValuesToList(endDates, values);
+      endDateFilters = addValuesToList(endDateFilters, values);
       return this;
     }
 
@@ -194,7 +179,7 @@ public record FlowNodeInstanceFilter(
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
-          Objects.requireNonNullElse(stateOperations, Collections.emptyList()),
+          Objects.requireNonNullElse(stateFilters, Collections.emptyList()),
           Objects.requireNonNullElse(types, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeNames, Collections.emptyList()),
@@ -202,8 +187,24 @@ public record FlowNodeInstanceFilter(
           hasIncident,
           Objects.requireNonNullElse(incidentKeys, Collections.emptyList()),
           Objects.requireNonNullElse(tenantIds, Collections.emptyList()),
-          Objects.requireNonNullElse(startDates, Collections.emptyList()),
-          Objects.requireNonNullElse(endDates, Collections.emptyList()));
+          Objects.requireNonNullElse(startDateFilters, Collections.emptyList()),
+          Objects.requireNonNullElse(endDateFilters, Collections.emptyList()));
     }
   }
 }
+    implements
+public record FlowNodeInstanceFilter(
+    List<Long> flowNodeInstanceKeys,
+    List<Long> processInstanceKeys,
+    List<Long> processDefinitionKeys,
+    List<String> processDefinitionIds,
+    List<FilterOperation<String>> stateFilters,
+    List<FlowNodeType> types,
+    List<String> flowNodeIds,
+    List<String> flowNodeNames,
+    List<String> treePaths,
+    Boolean hasIncident,
+    List<Long> incidentKeys,
+    List<String> tenantIds,
+    List<String> startDateFilters,
+    List<String> endDates)

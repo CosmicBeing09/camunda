@@ -28,7 +28,7 @@ public record ProcessDefinitionDbQuery(
   public static final class Builder implements ObjectBuilder<ProcessDefinitionDbQuery> {
 
     private static final ProcessDefinitionFilter EMPTY_FILTER =
-        FilterBuilders.processDefinition().build();
+        FilterBuilders.processDefinitionFilter().build();
 
     private ProcessDefinitionFilter filter;
     private DbQuerySorting<ProcessDefinitionEntity> sort;

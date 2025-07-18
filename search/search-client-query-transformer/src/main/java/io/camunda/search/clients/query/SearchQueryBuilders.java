@@ -14,7 +14,7 @@ import io.camunda.search.clients.query.SearchHasParentQuery.Builder;
 import io.camunda.search.clients.query.SearchMatchQuery.SearchMatchQueryOperator;
 import io.camunda.search.clients.types.TypedValue;
 import io.camunda.search.entities.ValueTypeEnum;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.Operator;
 import io.camunda.search.filter.UntypedOperation;
 import io.camunda.util.ObjectBuilder;
@@ -339,7 +339,7 @@ public final class SearchQueryBuilders {
     return new IllegalStateException("Unexpected %s operation: %s".formatted(type, op));
   }
 
-  public static <C extends List<Operation<Integer>>> List<SearchQuery> intOperations(
+  public static <C extends List<FilterOperation<Integer>>> List<SearchQuery> intOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
@@ -347,7 +347,7 @@ public final class SearchQueryBuilders {
       final var queries = new ArrayList<SearchQuery>();
       SearchRangeQuery.Builder rangeQueryBuilder = null;
 
-      for (final Operation<Integer> op : operations) {
+      for (final FilterOperation<Integer> op : operations) {
         switch (op.operator()) {
           case EQUALS -> queries.add(term(field, op.value()));
           case NOT_EQUALS -> queries.add(mustNot(term(field, op.value())));
@@ -376,7 +376,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends List<Operation<Long>>> List<SearchQuery> longOperations(
+  public static <C extends List<FilterOperation<Long>>> List<SearchQuery> longOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
@@ -384,7 +384,7 @@ public final class SearchQueryBuilders {
       final var queries = new ArrayList<SearchQuery>();
       SearchRangeQuery.Builder rangeQueryBuilder = null;
 
-      for (final Operation<Long> op : operations) {
+      for (final FilterOperation<Long> op : operations) {
         switch (op.operator()) {
           case EQUALS -> queries.add(term(field, op.value()));
           case NOT_EQUALS -> queries.add(mustNot(term(field, op.value())));
@@ -413,7 +413,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends List<Operation<String>>> List<SearchQuery> stringOperations(
+  public static <C extends List<FilterOperation<String>>> List<SearchQuery> stringOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
@@ -437,7 +437,7 @@ public final class SearchQueryBuilders {
     }
   }
 
-  public static <C extends List<Operation<String>>>
+  public static <C extends List<FilterOperation<String>>>
       List<SearchQuery> stringMatchWithHasChildOperations(
           final String field,
           final C operations,
@@ -507,14 +507,14 @@ public final class SearchQueryBuilders {
     return builder;
   }
 
-  public static <C extends List<Operation<OffsetDateTime>>> List<SearchQuery> dateTimeOperations(
+  public static <C extends List<FilterOperation<OffsetDateTime>>> List<SearchQuery> dateTimeOperations(
       final String field, final C operations) {
     if (operations == null || operations.isEmpty()) {
       return List.of();
     } else {
       final var queries = new ArrayList<SearchQuery>();
       SearchRangeQuery.Builder rangeQueryBuilder = null;
-      for (final Operation<OffsetDateTime> op : operations) {
+      for (final FilterOperation<OffsetDateTime> op : operations) {
         switch (op.operator()) {
           case EQUALS -> queries.add(term(field, formatDate(op.value())));
           case NOT_EQUALS -> queries.add(mustNot(term(field, formatDate(op.value()))));

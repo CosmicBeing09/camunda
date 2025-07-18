@@ -12,7 +12,7 @@ import static io.camunda.webapps.schema.descriptors.template.OperationTemplate.*
 
 import io.camunda.search.clients.query.SearchQuery;
 import io.camunda.search.filter.BatchOperationItemFilter;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import java.util.List;
 
@@ -32,14 +32,14 @@ public final class BatchOperationItemFilterTransformer
         longOperations(PROCESS_INSTANCE_KEY, filter.processInstanceKeyOperations()));
   }
 
-  private List<Operation<String>> mapStateOperations(
-      final List<Operation<String>> stateOperations) {
+  private List<FilterOperation<String>> mapStateOperations(
+      final List<FilterOperation<String>> stateOperations) {
     if (stateOperations == null) {
       return null;
     }
 
     return stateOperations.stream()
-        .map(o -> new Operation<>(o.operator(), o.values().stream().map(this::mapState).toList()))
+        .map(o -> new FilterOperation<>(o.operator(), o.values().stream().map(this::mapState).toList()))
         .toList();
   }
 

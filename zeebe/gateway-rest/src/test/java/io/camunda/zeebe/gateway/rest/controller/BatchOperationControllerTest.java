@@ -13,7 +13,7 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.search.entities.BatchOperationEntity;
 import io.camunda.search.entities.BatchOperationEntity.BatchOperationState;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.query.BatchOperationQuery;
 import io.camunda.search.query.SearchQueryResult;
 import io.camunda.security.auth.Authentication;
@@ -92,13 +92,13 @@ class BatchOperationControllerTest extends RestControllerTest {
                 .operationTypeOperations(ops)
                 .build(),
         List.of(
-            List.of(Operation.eq(String.valueOf(BatchOperationTypeEnum.CANCEL_PROCESS_INSTANCE))),
-            List.of(Operation.neq(String.valueOf(BatchOperationTypeEnum.MIGRATE_PROCESS_INSTANCE))),
+            List.of(FilterOperation.eq(String.valueOf(BatchOperationTypeEnum.CANCEL_PROCESS_INSTANCE))),
+            List.of(FilterOperation.neq(String.valueOf(BatchOperationTypeEnum.MIGRATE_PROCESS_INSTANCE))),
             List.of(
-                Operation.in(
+                FilterOperation.in(
                     String.valueOf(BatchOperationTypeEnum.MIGRATE_PROCESS_INSTANCE),
                     String.valueOf(BatchOperationTypeEnum.CANCEL_PROCESS_INSTANCE)),
-                Operation.like("act"))),
+                FilterOperation.like("act"))),
         true);
     customOperationTestCases(
         streamBuilder,
@@ -108,13 +108,13 @@ class BatchOperationControllerTest extends RestControllerTest {
                 .stateOperations(ops)
                 .build(),
         List.of(
-            List.of(Operation.eq(String.valueOf(BatchOperationStateEnum.ACTIVE))),
-            List.of(Operation.neq(String.valueOf(BatchOperationStateEnum.COMPLETED))),
+            List.of(FilterOperation.eq(String.valueOf(BatchOperationStateEnum.ACTIVE))),
+            List.of(FilterOperation.neq(String.valueOf(BatchOperationStateEnum.COMPLETED))),
             List.of(
-                Operation.in(
+                FilterOperation.in(
                     String.valueOf(BatchOperationStateEnum.COMPLETED),
                     String.valueOf(BatchOperationStateEnum.ACTIVE)),
-                Operation.like("act"))),
+                FilterOperation.like("act"))),
         true);
 
     return streamBuilder.build();

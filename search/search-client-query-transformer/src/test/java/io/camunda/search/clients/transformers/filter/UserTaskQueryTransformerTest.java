@@ -7,7 +7,7 @@
  */
 package io.camunda.search.clients.transformers.filter;
 
-import static io.camunda.search.filter.Operation.eq;
+import static io.camunda.search.filter.FilterOperation.eq;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.clients.query.SearchBoolQuery;

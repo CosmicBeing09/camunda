@@ -14,22 +14,22 @@ public final class FilterBuilders {
 
   private FilterBuilders() {}
 
-  public static UsageMetricsFilter.Builder usageMetrics() {
+  public static UsageMetricsFilter.Builder usageMetricsFilter() {
     return new UsageMetricsFilter.Builder();
   }
 
   public static UsageMetricsFilter usageMetrics(
       final Function<UsageMetricsFilter.Builder, ObjectBuilder<UsageMetricsFilter>> fn) {
-    return fn.apply(usageMetrics()).build();
+    return fn.apply(usageMetricsFilter()).build();
   }
 
-  public static ProcessDefinitionFilter.Builder processDefinition() {
+  public static ProcessDefinitionFilter.Builder processDefinitionFilter() {
     return new ProcessDefinitionFilter.Builder();
   }
 
   public static ProcessDefinitionFilter processDefinition(
       final Function<ProcessDefinitionFilter.Builder, ObjectBuilder<ProcessDefinitionFilter>> fn) {
-    return fn.apply(processDefinition()).build();
+    return fn.apply(processDefinitionFilter()).build();
   }
 
   public static ProcessDefinitionStatisticsFilter.Builder processDefinitionStatisticsFilter(

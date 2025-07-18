@@ -18,20 +18,20 @@ import java.util.List;
 import java.util.Objects;
 
 public record BatchOperationItemFilter(
-    List<Operation<String>> batchOperationIdOperations,
-    List<Operation<Long>> itemKeyOperations,
-    List<Operation<Long>> processInstanceKeyOperations,
-    List<Operation<String>> stateOperations)
+    List<FilterOperation<String>> batchOperationIdOperations,
+    List<FilterOperation<Long>> itemKeyOperations,
+    List<FilterOperation<Long>> processInstanceKeyOperations,
+    List<FilterOperation<String>> stateOperations)
     implements FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationItemFilter> {
 
-    private List<Operation<String>> batchOperationIdOperations;
-    private List<Operation<Long>> itemKeyOperations;
-    private List<Operation<Long>> processInstanceKeyOperations;
-    private List<Operation<String>> stateOperations;
+    private List<FilterOperation<String>> batchOperationIdOperations;
+    private List<FilterOperation<Long>> itemKeyOperations;
+    private List<FilterOperation<Long>> processInstanceKeyOperations;
+    private List<FilterOperation<String>> stateOperations;
 
-    public Builder batchOperationIdOperations(final List<Operation<String>> operations) {
+    public Builder batchOperationIdOperations(final List<FilterOperation<String>> operations) {
       batchOperationIdOperations = addValuesToList(batchOperationIdOperations, operations);
       return this;
     }
@@ -40,18 +40,18 @@ public record BatchOperationItemFilter(
       return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceBatchOperationIdOperations(final List<Operation<String>> operations) {
+    public Builder replaceBatchOperationIdOperations(final List<FilterOperation<String>> operations) {
       batchOperationIdOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder batchOperationIdOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return batchOperationIdOperations(collectValues(operation, operations));
     }
 
-    public Builder itemKeyOperations(final List<Operation<Long>> operations) {
+    public Builder itemKeyOperations(final List<FilterOperation<Long>> operations) {
       itemKeyOperations = addValuesToList(itemKeyOperations, operations);
       return this;
     }
@@ -60,18 +60,18 @@ public record BatchOperationItemFilter(
       return itemKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceItemKeyOperations(final List<Operation<Long>> operations) {
+    public Builder replaceItemKeyOperations(final List<FilterOperation<Long>> operations) {
       itemKeyOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder itemKeyOperations(
-        final Operation<Long> operation, final Operation<Long>... operations) {
+        final FilterOperation<Long> operation, final FilterOperation<Long>... operations) {
       return itemKeyOperations(collectValues(operation, operations));
     }
 
-    public Builder processInstanceKeyOperations(final List<Operation<Long>> operations) {
+    public Builder processInstanceKeyOperations(final List<FilterOperation<Long>> operations) {
       processInstanceKeyOperations = addValuesToList(processInstanceKeyOperations, operations);
       return this;
     }
@@ -80,18 +80,18 @@ public record BatchOperationItemFilter(
       return processInstanceKeyOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceProcessInstanceKeyOperations(final List<Operation<Long>> operations) {
+    public Builder replaceProcessInstanceKeyOperations(final List<FilterOperation<Long>> operations) {
       processInstanceKeyOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder processInstanceKeyOperations(
-        final Operation<Long> operation, final Operation<Long>... operations) {
+        final FilterOperation<Long> operation, final FilterOperation<Long>... operations) {
       return processInstanceKeyOperations(collectValues(operation, operations));
     }
 
-    public Builder stateOperations(final List<Operation<String>> operations) {
+    public Builder stateOperations(final List<FilterOperation<String>> operations) {
       stateOperations = addValuesToList(stateOperations, operations);
       return this;
     }
@@ -100,14 +100,14 @@ public record BatchOperationItemFilter(
       return stateOperations(FilterUtil.mapDefaultToOperation(value, values));
     }
 
-    public Builder replaceStateOperationsOperations(final List<Operation<String>> operations) {
+    public Builder replaceStateOperationsOperations(final List<FilterOperation<String>> operations) {
       stateOperations = new ArrayList<>(operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder stateOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return stateOperations(collectValues(operation, operations));
     }
 

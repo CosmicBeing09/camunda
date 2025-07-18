@@ -23,21 +23,21 @@ public record UserTaskFilter(
     List<String> elementIds,
     List<String> names,
     List<String> bpmnProcessIds,
-    List<Operation<String>> assigneeOperations,
-    List<Operation<Integer>> priorityOperations,
+    List<FilterOperation<String>> assigneeOperations,
+    List<FilterOperation<Integer>> priorityOperations,
     List<String> states,
     List<Long> processInstanceKeys,
     List<Long> processDefinitionKeys,
-    List<Operation<String>> candidateUserOperations,
-    List<Operation<String>> candidateGroupOperations,
+    List<FilterOperation<String>> candidateUserOperations,
+    List<FilterOperation<String>> candidateGroupOperations,
     List<String> tenantIds,
     List<VariableValueFilter> processInstanceVariableFilter,
     List<VariableValueFilter> localVariableFilters,
     List<Long> elementInstanceKeys,
-    List<Operation<OffsetDateTime>> creationDateOperations,
-    List<Operation<OffsetDateTime>> completionDateOperations,
-    List<Operation<OffsetDateTime>> followUpDateOperations,
-    List<Operation<OffsetDateTime>> dueDateOperations,
+    List<FilterOperation<OffsetDateTime>> creationDateOperations,
+    List<FilterOperation<OffsetDateTime>> completionDateOperations,
+    List<FilterOperation<OffsetDateTime>> followUpDateOperations,
+    List<FilterOperation<OffsetDateTime>> dueDateOperations,
     String type)
     implements FilterBase {
 
@@ -47,21 +47,21 @@ public record UserTaskFilter(
     private List<String> elementIds;
     private List<String> names;
     private List<String> bpmnProcessIds;
-    private List<Operation<String>> assigneeOperations;
-    private List<Operation<Integer>> priorityOperations;
+    private List<FilterOperation<String>> assigneeOperations;
+    private List<FilterOperation<Integer>> priorityOperations;
     private List<String> states;
     private List<Long> processInstanceKeys;
     private List<Long> processDefinitionKeys;
-    private List<Operation<String>> candidateUserOperations;
-    private List<Operation<String>> candidateGroupOperations;
+    private List<FilterOperation<String>> candidateUserOperations;
+    private List<FilterOperation<String>> candidateGroupOperations;
     private List<String> tenantIds;
     private List<VariableValueFilter> processInstanceVariableFilters;
     private List<VariableValueFilter> localVariableFilters;
     private List<Long> elementInstanceKeys;
-    private List<Operation<OffsetDateTime>> creationDateOperations;
-    private List<Operation<OffsetDateTime>> completionDateOperations;
-    private List<Operation<OffsetDateTime>> followUpDateOperations;
-    private List<Operation<OffsetDateTime>> dueDateOperations;
+    private List<FilterOperation<OffsetDateTime>> creationDateOperations;
+    private List<FilterOperation<OffsetDateTime>> completionDateOperations;
+    private List<FilterOperation<OffsetDateTime>> followUpDateOperations;
+    private List<FilterOperation<OffsetDateTime>> dueDateOperations;
     private String type;
 
     public Builder userTaskKeys(final Long... values) {
@@ -100,7 +100,7 @@ public record UserTaskFilter(
       return this;
     }
 
-    public Builder assigneeOperations(final List<Operation<String>> operations) {
+    public Builder assigneeOperations(final List<FilterOperation<String>> operations) {
       assigneeOperations = addValuesToList(assigneeOperations, operations);
       return this;
     }
@@ -111,11 +111,11 @@ public record UserTaskFilter(
 
     @SafeVarargs
     public final Builder assigneeOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return assigneeOperations(collectValues(operation, operations));
     }
 
-    public Builder priorityOperations(final List<Operation<Integer>> operations) {
+    public Builder priorityOperations(final List<FilterOperation<Integer>> operations) {
       priorityOperations = addValuesToList(priorityOperations, operations);
       return this;
     }
@@ -126,7 +126,7 @@ public record UserTaskFilter(
 
     @SafeVarargs
     public final Builder priorityOperations(
-        final Operation<Integer> operation, final Operation<Integer>... operations) {
+        final FilterOperation<Integer> operation, final FilterOperation<Integer>... operations) {
       return priorityOperations(collectValues(operation, operations));
     }
 
@@ -157,7 +157,7 @@ public record UserTaskFilter(
       return this;
     }
 
-    public Builder candidateUserOperations(final List<Operation<String>> operations) {
+    public Builder candidateUserOperations(final List<FilterOperation<String>> operations) {
       candidateUserOperations = addValuesToList(candidateUserOperations, operations);
       return this;
     }
@@ -168,11 +168,11 @@ public record UserTaskFilter(
 
     @SafeVarargs
     public final Builder candidateUserOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return candidateUserOperations(collectValues(operation, operations));
     }
 
-    public Builder candidateGroupOperations(final List<Operation<String>> operations) {
+    public Builder candidateGroupOperations(final List<FilterOperation<String>> operations) {
       candidateGroupOperations = addValuesToList(candidateGroupOperations, operations);
       return this;
     }
@@ -183,7 +183,7 @@ public record UserTaskFilter(
 
     @SafeVarargs
     public final Builder candidateGroupOperations(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return candidateGroupOperations(collectValues(operation, operations));
     }
 
@@ -215,47 +215,47 @@ public record UserTaskFilter(
       return this;
     }
 
-    public Builder creationDateOperations(final List<Operation<OffsetDateTime>> operations) {
+    public Builder creationDateOperations(final List<FilterOperation<OffsetDateTime>> operations) {
       creationDateOperations = addValuesToList(creationDateOperations, operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder creationDateOperations(
-        final Operation<OffsetDateTime> operation, final Operation<OffsetDateTime>... operations) {
+        final FilterOperation<OffsetDateTime> operation, final FilterOperation<OffsetDateTime>... operations) {
       return creationDateOperations(collectValues(operation, operations));
     }
 
-    public Builder completionDateOperations(final List<Operation<OffsetDateTime>> operations) {
+    public Builder completionDateOperations(final List<FilterOperation<OffsetDateTime>> operations) {
       completionDateOperations = addValuesToList(completionDateOperations, operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder completionDateOperations(
-        final Operation<OffsetDateTime> operation, final Operation<OffsetDateTime>... operations) {
+        final FilterOperation<OffsetDateTime> operation, final FilterOperation<OffsetDateTime>... operations) {
       return completionDateOperations(collectValues(operation, operations));
     }
 
-    public Builder followUpDateOperations(final List<Operation<OffsetDateTime>> operations) {
+    public Builder followUpDateOperations(final List<FilterOperation<OffsetDateTime>> operations) {
       followUpDateOperations = addValuesToList(followUpDateOperations, operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder followUpDateOperations(
-        final Operation<OffsetDateTime> operation, final Operation<OffsetDateTime>... operations) {
+        final FilterOperation<OffsetDateTime> operation, final FilterOperation<OffsetDateTime>... operations) {
       return followUpDateOperations(collectValues(operation, operations));
     }
 
-    public Builder dueDateOperations(final List<Operation<OffsetDateTime>> operations) {
+    public Builder dueDateOperations(final List<FilterOperation<OffsetDateTime>> operations) {
       dueDateOperations = addValuesToList(dueDateOperations, operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder dueDateOperations(
-        final Operation<OffsetDateTime> operation, final Operation<OffsetDateTime>... operations) {
+        final FilterOperation<OffsetDateTime> operation, final FilterOperation<OffsetDateTime>... operations) {
       return dueDateOperations(collectValues(operation, operations));
     }
 

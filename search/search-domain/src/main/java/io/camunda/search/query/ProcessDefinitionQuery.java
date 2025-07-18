@@ -34,7 +34,7 @@ public record ProcessDefinitionQuery(
           ProcessDefinitionSort> {
 
     private static final ProcessDefinitionFilter EMPTY_FILTER =
-        FilterBuilders.processDefinition().build();
+        FilterBuilders.processDefinitionFilter().build();
     private static final ProcessDefinitionSort EMPTY_SORT =
         SortOptionBuilders.processDefinition().build();
 

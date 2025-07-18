@@ -29,7 +29,7 @@ import io.camunda.search.filter.FlowNodeInstanceFilter;
 import io.camunda.search.filter.GroupFilter;
 import io.camunda.search.filter.IncidentFilter;
 import io.camunda.search.filter.MappingFilter;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessDefinitionFilter;
 import io.camunda.search.filter.ProcessDefinitionStatisticsFilter;
 import io.camunda.search.filter.ProcessInstanceFilter;
@@ -794,7 +794,7 @@ public final class SearchQueryRequestMapper {
 
   private static ProcessDefinitionFilter toProcessDefinitionFilter(
       final io.camunda.zeebe.gateway.protocol.rest.ProcessDefinitionFilter filter) {
-    final var builder = FilterBuilders.processDefinition();
+    final var builder = FilterBuilders.processDefinitionFilter();
     Optional.ofNullable(filter)
         .ifPresent(
             f -> {
@@ -1527,7 +1527,7 @@ public final class SearchQueryRequestMapper {
 
   private static List<VariableValueFilter> toVariableValueFilters(
       final String name, final StringFilterProperty value) {
-    final List<Operation<String>> operations = mapToOperations(String.class).apply(value);
+    final List<FilterOperation<String>> operations = mapToOperations(String.class).apply(value);
     return new VariableValueFilter.Builder()
         .name(name)
         .valueTypedOperations(operations)

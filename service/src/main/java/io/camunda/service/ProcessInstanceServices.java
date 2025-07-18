@@ -17,7 +17,7 @@ import io.camunda.search.entities.ProcessFlowNodeStatisticsEntity;
 import io.camunda.search.entities.ProcessInstanceEntity;
 import io.camunda.search.entities.ProcessInstanceEntity.ProcessInstanceState;
 import io.camunda.search.entities.SequenceFlowEntity;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.search.query.IncidentQuery;
 import io.camunda.search.query.ProcessInstanceQuery;
@@ -132,7 +132,7 @@ public final class ProcessInstanceServices
         processInstanceSearchClient
             .searchProcessInstances(
                 processInstanceSearchQuery(
-                    q -> q.filter(f -> f.processInstanceKeyOperations(Operation.in(orderedKeys)))))
+                    q -> q.filter(f -> f.processInstanceKeyOperations(FilterOperation.in(orderedKeys)))))
             .items()
             .stream()
             .collect(
@@ -312,7 +312,7 @@ public final class ProcessInstanceServices
         .searchIncidents(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.treePathOperations(Operation.like("*" + treePath + "*")))
+                    b.filter(f -> f.treePathOperations(FilterOperation.like("*" + treePath + "*")))
                         .page(query.page())
                         .sort(query.sort())));
   }

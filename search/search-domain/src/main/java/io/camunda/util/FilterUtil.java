@@ -7,22 +7,23 @@
  */
 package io.camunda.util;
 
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import java.util.List;
 
 public final class FilterUtil {
 
   private FilterUtil() {}
 
-  public static <T> Operation<T> mapDefaultToOperation(final List<T> values) {
-    if (values.isEmpty()) {
+  public static <T> FilterOperation<T> mapFiltersToOperation(final List<T> filterValues) {
+    if (filterValues.isEmpty()) {
       return null;
     }
-    return values.size() == 1 ? Operation.eq(values.getFirst()) : Operation.in(values);
+    return filterValues.size() == 1 ? FilterOperation.eq(filterValues.getFirst()) : FilterOperation.in(
+        filterValues);
   }
 
   @SafeVarargs
-  public static <T> Operation<T> mapDefaultToOperation(final T value, final T... values) {
-    return mapDefaultToOperation(CollectionUtil.collectValues(value, values));
+  public static <T> FilterOperation<T> mapDefaultToOperation(final T value, final T... values) {
+    return mapFiltersToOperation(CollectionUtil.collectValues(value, values));
   }
 }

@@ -42,7 +42,7 @@ import io.camunda.search.entities.UserEntity;
 import io.camunda.search.entities.UserTaskEntity;
 import io.camunda.search.entities.VariableEntity;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.Operator;
 import io.camunda.search.filter.ProcessDefinitionStatisticsFilter;
 import io.camunda.search.filter.ProcessInstanceStatisticsFilter;
@@ -211,7 +211,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
             final var updatedFilter =
                 filter.toBuilder()
                     .replaceProcessInstanceKeyOperations(
-                        List.of(Operation.in(List.copyOf(processInstanceKeys))))
+                        List.of(FilterOperation.in(List.copyOf(processInstanceKeys))))
                     .hasIncident(true)
                     .build();
             return executeProcessDefinitionFlowNodeStatistics(updatedFilter);
@@ -243,7 +243,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
             final var updatedFilter =
                 filter.filter().toBuilder()
                     .replaceProcessInstanceKeyOperations(
-                        List.of(Operation.in(List.copyOf(processInstanceKeys))))
+                        List.of(FilterOperation.in(List.copyOf(processInstanceKeys))))
                     .hasIncident(true)
                     .build();
 
@@ -279,7 +279,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
 
   private <R> R mapIncidentErrorHashCodesToProcessInstanceKeys(
       final List<Integer> incidentErrorHashCodes,
-      final List<Operation<Long>> existingProcessInstanceKeyOperations,
+      final List<FilterOperation<Long>> existingProcessInstanceKeyOperations,
       final Supplier<R> fnEmptyResult,
       final Function<Set<Long>, R> fnResult) {
 
@@ -288,7 +288,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
         FilterBuilders.incident(
             f ->
                 f.errorMessageHashOperations(
-                        FilterUtil.mapDefaultToOperation(incidentErrorHashCodes))
+                        FilterUtil.mapFiltersToOperation(incidentErrorHashCodes))
                     .states(IncidentState.ACTIVE.name()));
 
     final var incidentResult = searchIncidents(IncidentQuery.of(f -> f.filter(incidentFilter)));
