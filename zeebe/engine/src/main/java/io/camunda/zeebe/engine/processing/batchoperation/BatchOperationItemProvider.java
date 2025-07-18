@@ -261,7 +261,7 @@ public class BatchOperationItemProvider {
           result.items().stream()
               .map(pi -> new Item(pi.processInstanceKey(), pi.processInstanceKey()))
               .collect(Collectors.toList()),
-          result.searchAfterCursor(),
+          result.after(),
           result.total());
     }
   }
@@ -286,7 +286,7 @@ public class BatchOperationItemProvider {
           result.items().stream()
               .map(pi -> new Item(pi.incidentKey(), pi.processInstanceKey()))
               .collect(Collectors.toList()),
-          result.searchAfterCursor(),
+          result.after(),
           result.total());
     }
   }

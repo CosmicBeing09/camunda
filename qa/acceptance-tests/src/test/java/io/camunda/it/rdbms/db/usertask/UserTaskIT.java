@@ -627,7 +627,7 @@ public class UserTaskIT {
                 b ->
                     b.filter(f -> f.tenantIds("tenant-1337"))
                         .sort(sort)
-                        .page(p -> p.size(5).after(firstPage.searchAfterCursor()))));
+                        .page(p -> p.size(5).after(firstPage.after()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(5);
