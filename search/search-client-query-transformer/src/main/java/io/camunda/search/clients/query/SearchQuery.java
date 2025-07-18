@@ -63,13 +63,13 @@ public final record SearchQuery(SearchQueryOption queryOption) {
       return hasChild(SearchQueryBuilders.hasChild(fn));
     }
 
-    public Builder ids(final SearchIdsQuery query) {
+    public Builder idOperations(final SearchIdsQuery query) {
       queryOption = query;
       return this;
     }
 
-    public Builder ids(final Function<SearchIdsQuery.Builder, ObjectBuilder<SearchIdsQuery>> fn) {
-      return ids(SearchQueryBuilders.ids(fn));
+    public Builder idOperations(final Function<SearchIdsQuery.Builder, ObjectBuilder<SearchIdsQuery>> fn) {
+      return idOperations(SearchQueryBuilders.ids(fn));
     }
 
     public Builder match(final SearchMatchQuery query) {
