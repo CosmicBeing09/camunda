@@ -59,7 +59,7 @@ public abstract class AbstractBpmnModelElementBuilder<
    * @return the parent sub-process builder
    * @throws BpmnModelException if no parent sub-process can be found
    */
-  public SubProcessBuilder subProcessDone() {
+  public SubProcessBuilder endSubProcess() {
     final BpmnModelElementInstance lastSubProcess = element.getScope();
     if (lastSubProcess != null && lastSubProcess instanceof SubProcess) {
       return ((SubProcess) lastSubProcess).builder();
@@ -68,7 +68,7 @@ public abstract class AbstractBpmnModelElementBuilder<
     }
   }
 
-  public TransactionBuilder transactionDone() {
+  public TransactionBuilder endTransaction() {
     final BpmnModelElementInstance lastTransaction = element.getScope();
     if (lastTransaction != null && lastTransaction instanceof Transaction) {
       return new TransactionBuilder(modelInstance, (Transaction) lastTransaction);

@@ -59,7 +59,7 @@ public final class BpmnElementTypeTest {
                   .subProcess(elementId())
                   .embeddedSubProcess()
                   .startEvent()
-                  .subProcessDone()
+                  .endSubProcess()
                   .done();
             }
           },

@@ -324,7 +324,7 @@ public class DiGeneratorForFlowNodesTest {
             .startEvent("innerStartEvent")
             .userTask("innerUserTask")
             .endEvent("innerEndEvent")
-            .subProcessDone()
+            .endSubProcess()
             .endEvent(END_EVENT_ID)
             .done();
 
@@ -357,7 +357,7 @@ public class DiGeneratorForFlowNodesTest {
             .embeddedSubProcess()
             .startEvent("innerStartEvent")
             .endEvent("innerEndEvent")
-            .subProcessDone()
+            .endSubProcess()
             .done();
 
     // then
@@ -408,7 +408,7 @@ public class DiGeneratorForFlowNodesTest {
             .startEvent("innerStartEvent")
             .userTask("innerUserTask")
             .endEvent("innerEndEvent")
-            .transactionDone()
+            .endTransaction()
             .endEvent(END_EVENT_ID)
             .done();
 

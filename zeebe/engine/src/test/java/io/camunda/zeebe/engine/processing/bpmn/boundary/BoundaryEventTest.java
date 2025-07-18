@@ -226,7 +226,7 @@ public final class BoundaryEventTest {
             .startEvent()
             .serviceTask("task", t -> t.zeebeJobType("type"))
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .boundaryEvent("timer")
             .cancelActivity(true)
             .timerWithDuration("PT1S")

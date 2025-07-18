@@ -54,7 +54,7 @@ public class MultiInstanceBatchedSubProcessesTest {
                               .zeebeInputElement("input")))
           .embeddedSubProcess()
           .startEvent(SUB_PROCESS_START)
-          .subProcessDone()
+          .endSubProcess()
           .endEvent()
           .done();
 

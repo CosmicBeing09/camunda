@@ -717,7 +717,7 @@ public final class MultiInstanceIncidentTest {
         .startEvent()
         .zeebeOutput(overwrittenValue, outputCollectionName) // overwrite output collection
         .endEvent()
-        .subProcessDone()
+        .endSubProcess()
         .endEvent()
         .done();
   }

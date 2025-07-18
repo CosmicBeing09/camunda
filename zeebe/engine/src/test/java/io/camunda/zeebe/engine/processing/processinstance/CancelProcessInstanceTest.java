@@ -63,7 +63,7 @@ public final class CancelProcessInstanceTest {
           .startEvent()
           .serviceTask("task", t -> t.zeebeJobType("test").zeebeJobRetries("5"))
           .endEvent()
-          .subProcessDone()
+          .endSubProcess()
           .endEvent()
           .done();
   private static final BpmnModelInstance FORK_PROCESS;

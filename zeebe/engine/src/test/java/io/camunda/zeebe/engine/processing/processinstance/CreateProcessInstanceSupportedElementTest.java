@@ -59,7 +59,7 @@ public class CreateProcessInstanceSupportedElementTest {
                 .subProcess(START_ELEMENT_ID)
                 .embeddedSubProcess()
                 .startEvent()
-                .subProcessDone()
+                .endSubProcess()
                 .done(),
             Collections.emptyMap()),
         new Scenario(

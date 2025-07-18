@@ -80,7 +80,7 @@ public class SubProcessBlockBuilder extends AbstractBlockBuilder {
     }
 
     final var subProcessBuilderDone =
-        workInProgress.endEvent(subProcessEndEventId).subProcessDone();
+        workInProgress.endEvent(subProcessEndEventId).endSubProcess();
 
     AbstractFlowNodeBuilder result = subProcessBuilderDone;
     if (hasBoundaryEvents) {

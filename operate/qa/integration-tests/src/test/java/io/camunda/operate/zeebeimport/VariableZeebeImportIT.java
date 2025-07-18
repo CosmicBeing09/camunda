@@ -71,7 +71,7 @@ public class VariableZeebeImportIT extends OperateZeebeAbstractIT {
             .zeebeInput("=subprocessVarIn", "taskVarIn")
             .zeebeOutput("=taskVarOut", "varOut")
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .serviceTask("task3")
             .zeebeJobType("task3")
             .endEvent()

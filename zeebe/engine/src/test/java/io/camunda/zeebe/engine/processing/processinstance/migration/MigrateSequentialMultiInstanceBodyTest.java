@@ -376,7 +376,7 @@ public class MigrateSequentialMultiInstanceBodyTest {
                     .startEvent()
                     .serviceTask("A", t -> t.zeebeJobType("A"))
                     .endEvent()
-                    .subProcessDone()
+                    .endSubProcess()
                     .endEvent()
                     .done())
             .withXmlResource(
@@ -394,7 +394,7 @@ public class MigrateSequentialMultiInstanceBodyTest {
                     .startEvent()
                     .serviceTask("B", t -> t.zeebeJobType("B"))
                     .endEvent()
-                    .subProcessDone()
+                    .endSubProcess()
                     .endEvent("multi_instance_target_process_end")
                     .done())
             .deploy();

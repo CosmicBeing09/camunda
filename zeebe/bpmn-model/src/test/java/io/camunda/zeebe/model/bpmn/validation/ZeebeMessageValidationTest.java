@@ -114,7 +114,7 @@ public class ZeebeMessageValidationTest extends AbstractZeebeValidationTest {
             .startEvent("subProcessStart")
             .message(b -> b.name("message").zeebeCorrelationKeyExpression("correlationKey"))
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .endEvent()
             .done(),
         singletonList(expect("subProcess", "Start events in subprocesses must be of type none"))

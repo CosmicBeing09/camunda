@@ -409,7 +409,7 @@ public class ProcessBuilderTest {
             .startEvent()
             .userTask()
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .serviceTask(SERVICE_TASK_ID)
             .endEvent()
             .done();
@@ -457,10 +457,10 @@ public class ProcessBuilderTest {
             .startEvent()
             .userTask()
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .serviceTask(SERVICE_TASK_ID + 1)
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .serviceTask(SERVICE_TASK_ID + 2)
             .endEvent()
             .done();
@@ -484,7 +484,7 @@ public class ProcessBuilderTest {
   @Test
   public void testSubProcessBuilderWrongScope() {
     try {
-      modelInstance = Bpmn.createProcess().startEvent().subProcessDone().endEvent().done();
+      modelInstance = Bpmn.createProcess().startEvent().endSubProcess().endEvent().done();
       fail("Exception expected");
     } catch (final Exception e) {
       assertThat(e).isInstanceOf(BpmnModelException.class);
@@ -502,7 +502,7 @@ public class ProcessBuilderTest {
             .startEvent()
             .userTask()
             .endEvent()
-            .transactionDone()
+            .endTransaction()
             .serviceTask(SERVICE_TASK_ID)
             .endEvent()
             .done();
@@ -571,7 +571,7 @@ public class ProcessBuilderTest {
             .embeddedSubProcess()
             .startEvent("subStart")
             .message("message")
-            .subProcessDone()
+            .endSubProcess()
             .done();
 
     final Message message = assertMessageEventDefinition("start", "message");
@@ -883,7 +883,7 @@ public class ProcessBuilderTest {
             .embeddedSubProcess()
             .startEvent("subStart")
             .signal("signal")
-            .subProcessDone()
+            .endSubProcess()
             .done();
 
     final Signal signal = assertSignalEventDefinition("start", "signal");
@@ -1815,7 +1815,7 @@ public class ProcessBuilderTest {
             .startEvent()
             .userTask("subProcessTask")
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .endEvent("throw")
             .compensateEventDefinition()
             .activityRef("subProcessTask")
@@ -2091,7 +2091,7 @@ public class ProcessBuilderTest {
             .startEvent()
             .userTask()
             .endEvent()
-            .subProcessDone()
+            .endSubProcess()
             .userTask()
             .endEvent()
             .done();
@@ -2104,7 +2104,7 @@ public class ProcessBuilderTest {
         .startEvent()
         .userTask()
         .endEvent()
-        .subProcessDone();
+        .endSubProcess();
 
     final SubProcess eventSubProcess = modelInstance.getModelElementById("myeventsubprocess");
 
@@ -2130,7 +2130,7 @@ public class ProcessBuilderTest {
     eventSubProcess.startEvent().userTask().endEvent();
 
     try {
-      eventSubProcess.subProcessDone();
+      eventSubProcess.endSubProcess();
       fail("eventSubProcess has returned a builder after completion");
     } catch (final BpmnModelException e) {
       assertThat(e).hasMessageContaining("Unable to find a parent subProcess.");

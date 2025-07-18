@@ -151,7 +151,7 @@ public class MigrateCompensationSubscriptionTest {
                                 c -> c.serviceTask("undoA", t -> t.zeebeJobType("undoA"))))
                     .moveToActivity("A")
                     .endEvent()
-                    .subProcessDone()
+                    .endSubProcess()
                     .serviceTask("B", t -> t.zeebeJobType("B"))
                     .intermediateThrowEvent(
                         "boundary_throw", AbstractThrowEventBuilder::compensateEventDefinition)
@@ -171,7 +171,7 @@ public class MigrateCompensationSubscriptionTest {
                                 c -> c.serviceTask("undoC", t -> t.zeebeJobType("undoC"))))
                     .moveToActivity("C")
                     .endEvent()
-                    .subProcessDone()
+                    .endSubProcess()
                     .serviceTask("D", t -> t.zeebeJobType("D"))
                     .intermediateThrowEvent(
                         "boundary_throw", AbstractThrowEventBuilder::compensateEventDefinition)
