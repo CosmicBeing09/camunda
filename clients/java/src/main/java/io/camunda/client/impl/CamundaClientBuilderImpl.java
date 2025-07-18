@@ -143,7 +143,7 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public List<String> getDefaultJobWorkerTenantIds() {
+  public List<String> getJobWorkerTenantIds() {
     return defaultJobWorkerTenantIds;
   }
 
@@ -153,7 +153,7 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public int getDefaultJobWorkerMaxJobsActive() {
+  public int getJobWorkerMaxJobsActive() {
     return jobWorkerMaxJobsActive;
   }
 

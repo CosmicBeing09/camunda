@@ -70,7 +70,7 @@ public final class StreamJobsCommandImpl
     timeout(config.getDefaultJobTimeout());
     workerName(config.getDefaultJobWorkerName());
 
-    defaultTenantIds = new HashSet<>(config.getDefaultJobWorkerTenantIds());
+    defaultTenantIds = new HashSet<>(config.getJobWorkerTenantIds());
     customTenantIds = new HashSet<>();
   }
 

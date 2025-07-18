@@ -53,10 +53,10 @@ public class CamundaClientConfigurationDefaultPropertiesTest {
     assertThat(configuration.getCredentialsProvider()).isInstanceOf(NoopCredentialsProvider.class);
     assertThat(configuration.getDefaultJobPollInterval()).isEqualTo(Duration.ofMillis(100));
     assertThat(configuration.getDefaultJobTimeout()).isEqualTo(Duration.ofMinutes(5));
-    assertThat(configuration.getDefaultJobWorkerMaxJobsActive()).isEqualTo(32);
+    assertThat(configuration.getJobWorkerMaxJobsActive()).isEqualTo(32);
     assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("default");
     assertThat(configuration.getDefaultJobWorkerStreamEnabled()).isFalse();
-    assertThat(configuration.getDefaultJobWorkerTenantIds())
+    assertThat(configuration.getJobWorkerTenantIds())
         .isEqualTo(Collections.singletonList("<default>"));
     assertThat(configuration.getDefaultMessageTimeToLive()).isEqualTo(Duration.ofHours(1));
     assertThat(configuration.getDefaultRequestTimeout()).isEqualTo(Duration.ofSeconds(10));

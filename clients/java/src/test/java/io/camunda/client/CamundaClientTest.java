@@ -100,7 +100,7 @@ public final class CamundaClientTest {
       assertThat(configuration.getGatewayAddress()).isEqualTo(DEFAULT_GATEWAY_ADDRESS);
       assertThat(configuration.getGrpcAddress()).isEqualTo(DEFAULT_GRPC_ADDRESS);
       assertThat(configuration.getRestAddress()).isEqualTo(DEFAULT_REST_ADDRESS);
-      assertThat(configuration.getDefaultJobWorkerMaxJobsActive()).isEqualTo(32);
+      assertThat(configuration.getJobWorkerMaxJobsActive()).isEqualTo(32);
       assertThat(configuration.getNumJobWorkerExecutionThreads()).isEqualTo(1);
       assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("default");
       assertThat(configuration.getDefaultJobTimeout()).isEqualTo(Duration.ofMinutes(5));
@@ -114,7 +114,7 @@ public final class CamundaClientTest {
       assertThat(configuration.getDefaultTenantId())
           .isEqualTo(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
       assertThat(configuration.getDefaultJobWorkerStreamEnabled()).isFalse();
-      assertThat(configuration.getDefaultJobWorkerTenantIds())
+      assertThat(configuration.getJobWorkerTenantIds())
           .containsExactly(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
       assertThat(configuration.preferRestOverGrpc()).isFalse();
     }
@@ -971,7 +971,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds())
+    assertThat(builder.getJobWorkerTenantIds())
         .containsExactly(CommandWithTenantStep.DEFAULT_TENANT_IDENTIFIER);
   }
 
@@ -986,7 +986,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactly(overrideTenant);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactly(overrideTenant);
   }
 
   @ParameterizedTest
@@ -1008,7 +1008,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
   }
 
   @ParameterizedTest
@@ -1027,7 +1027,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
   }
 
   @ParameterizedTest
@@ -1059,7 +1059,7 @@ public final class CamundaClientTest {
     builder.build();
 
     // then
-    assertThat(builder.getDefaultJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
+    assertThat(builder.getJobWorkerTenantIds()).containsExactlyElementsOf(tenantIdList);
   }
 
   @ParameterizedTest
@@ -1087,7 +1087,7 @@ public final class CamundaClientTest {
 
     // then
     // todo(#14106): verify that tenant ids are set in the request
-    assertThat(client.getConfiguration().getDefaultJobWorkerTenantIds()).isEmpty();
+    assertThat(client.getConfiguration().getJobWorkerTenantIds()).isEmpty();
   }
 
   @Test
