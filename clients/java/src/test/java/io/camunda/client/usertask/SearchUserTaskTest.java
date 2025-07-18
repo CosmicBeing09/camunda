@@ -34,7 +34,7 @@ import org.junit.jupiter.api.Test;
 public final class SearchUserTaskTest extends ClientRestTest {
 
   @Test
-  void shouldSearchUserTask() {
+  void search() {
     // when
     client.newUserTaskSearchRequest().send().join();
 
@@ -44,7 +44,7 @@ public final class SearchUserTaskTest extends ClientRestTest {
   }
 
   @Test
-  void shouldSearchUserTaskByAssignee() {
+  void byAssignee() {
     // when
     client.newUserTaskSearchRequest().filter(f -> f.assignee("demo")).send().join();
 
