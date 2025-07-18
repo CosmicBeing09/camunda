@@ -122,14 +122,14 @@ public class TaskController extends ApiErrorController {
         // this is backwards compatible with previous versions, but in the future this will change
         && currentUser.getUserId() != null
         && !currentUser.getUserId().isEmpty()) {
-      final List<String> listOfUserGroups = userGroupService.getUserGroups();
-      if (!listOfUserGroups.contains(IdentityProperties.FULL_GROUP_ACCESS)) {
+      final List<String> userGroups = userGroupService.getUserGroups();
+      if (!userGroups.contains(IdentityProperties.FULL_GROUP_ACCESS)) {
         final String userName = currentUser.getUserId();
-        final TaskByCandidateUserOrGroup taskByCandidateUserOrGroup =
+        final TaskByCandidateUserOrGroup candidateQuery =
             new TaskByCandidateUserOrGroup();
-        taskByCandidateUserOrGroup.setUserGroups(listOfUserGroups.toArray(String[]::new));
-        taskByCandidateUserOrGroup.setUserName(userName);
-        query.setTaskByCandidateUserOrGroup(taskByCandidateUserOrGroup);
+        candidateQuery.setUserGroups(userGroups.toArray(String[]::new));
+        candidateQuery.setUserName(userName);
+        query.setTaskByCandidateUserOrGroup(candidateQuery);
       }
     }
 
