@@ -29,23 +29,23 @@ public class DecisionDefinitionReader extends AbstractEntityReader<DecisionDefin
   }
 
   public Optional<DecisionDefinitionEntity> findOne(final long decisionDefinitionKey) {
-    final var result =
+    final var response =
         search(
             DecisionDefinitionQuery.of(
                 b -> b.filter(f -> f.decisionDefinitionKeys(decisionDefinitionKey))));
-    return Optional.ofNullable(result.items()).flatMap(it -> it.stream().findFirst());
+    return Optional.ofNullable(response.items()).flatMap(it -> it.stream().findFirst());
   }
 
   public SearchQueryResult<DecisionDefinitionEntity> search(final DecisionDefinitionQuery query) {
-    final var dbSort =
+    final var sort =
         convertSort(query.sort(), DecisionDefinitionSearchColumn.DECISION_DEFINITION_KEY);
     final var dbQuery =
         DecisionDefinitionDbQuery.of(
-            b -> b.filter(query.filter()).sort(dbSort).page(convertPaging(dbSort, query.page())));
+            b -> b.filter(query.filter()).sort(sort).page(convertPaging(sort, query.page())));
 
     LOG.trace("[RDBMS DB] Search for decision definition with filter {}", dbQuery);
     final var totalHits = decisionDefinitionMapper.count(dbQuery);
     final var hits = decisionDefinitionMapper.search(dbQuery);
-    return buildSearchQueryResult(totalHits, hits, dbSort);
+    return buildSearchQueryResult(totalHits, hits, sort);
   }
 }
