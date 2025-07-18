@@ -29,34 +29,34 @@ public class CreateRequestOperationValidator {
   }
 
   public void validate(
-      final CreateOperationRequestDto operationRequest, final String processInstanceId) {
-    if (operationRequest.getOperationType() == null) {
+      final CreateOperationRequestDto request, final String processInstanceId) {
+    if (request.getOperationType() == null) {
       throw new InvalidRequestException("Operation type must be defined.");
     }
-    if (Set.of(UPDATE_VARIABLE, ADD_VARIABLE).contains(operationRequest.getOperationType())
-        && (operationRequest.getVariableScopeId() == null
-            || operationRequest.getVariableName() == null
-            || operationRequest.getVariableName().isEmpty()
-            || operationRequest.getVariableValue() == null)) {
+    if (Set.of(UPDATE_VARIABLE, ADD_VARIABLE).contains(request.getOperationType())
+        && (request.getVariableScopeId() == null
+            || request.getVariableName() == null
+            || request.getVariableName().isEmpty()
+            || request.getVariableValue() == null)) {
       throw new InvalidRequestException(
           "ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
     }
-    if (operationRequest.getOperationType().equals(ADD_VARIABLE)
+    if (request.getOperationType().equals(ADD_VARIABLE)
         && (variableReader.getVariableByName(
                     processInstanceId,
-                    operationRequest.getVariableScopeId(),
-                    operationRequest.getVariableName())
+                    request.getVariableScopeId(),
+                    request.getVariableName())
                 != null
             || !operationReader
                 .getOperations(
                     ADD_VARIABLE,
                     processInstanceId,
-                    operationRequest.getVariableScopeId(),
-                    operationRequest.getVariableName())
+                    request.getVariableScopeId(),
+                    request.getVariableName())
                 .isEmpty())) {
       throw new InvalidRequestException(
           String.format(
-              "Variable with the name \"%s\" already exists.", operationRequest.getVariableName()));
+              "Variable with the name \"%s\" already exists.", request.getVariableName()));
     }
   }
 }
