@@ -31,7 +31,7 @@ public class CompleteUserTaskMigrationIT extends UserTaskMigrationHelper {
           .withBeforeUpgradeConsumer((db, migrator) -> setup(db, migrator, "demo"));
 
   @Test
-  void shouldComplete87ZeebeTaskV1(final CamundaMigrator migrator) {
+  void shouldCompleteZeebeV1(final CamundaMigrator migrator) {
 
     final long taskKey = USER_TASK_KEYS.get("first");
 
@@ -43,7 +43,7 @@ public class CompleteUserTaskMigrationIT extends UserTaskMigrationHelper {
   }
 
   @Test
-  void shouldComplete87ZeebeTaskV2(final CamundaMigrator migrator) {
+  void shouldCompleteZeebeV2(final CamundaMigrator migrator) {
 
     final long taskKey = USER_TASK_KEYS.get("second");
 
