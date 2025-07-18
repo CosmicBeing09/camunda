@@ -73,10 +73,10 @@ public interface JobWorkerBuilderStep1 {
      *
      * <p>If no timeout is set, then the default is used from the configuration.
      *
-     * @param timeout the time in milliseconds
+     * @param timeoutMillis the time in milliseconds
      * @return the builder for this worker
      */
-    JobWorkerBuilderStep3 timeout(long timeout);
+    JobWorkerBuilderStep3 timeout(long timeoutMillis);
 
     /**
      * Set the time for how long a job is exclusively assigned for this worker.
@@ -87,10 +87,10 @@ public interface JobWorkerBuilderStep1 {
      *
      * <p>If no time is set then the default is used from the configuration.
      *
-     * @param timeout the time as duration (e.g. "Duration.ofMinutes(5)")
+     * @param timeoutDuration the time as duration (e.g. "Duration.ofMinutes(5)")
      * @return the builder for this worker
      */
-    JobWorkerBuilderStep3 timeout(Duration timeout);
+    JobWorkerBuilderStep3 timeout(Duration timeoutDuration);
 
     /**
      * Set the name of the worker owner.
