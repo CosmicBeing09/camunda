@@ -30,7 +30,7 @@ import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
 
-public class DecisionEvaluationEvaluteProcessor
+public class DecisionEvaluationEvaluateProcessor
     implements TypedRecordProcessor<DecisionEvaluationRecord> {
 
   private static final String ERROR_MESSAGE_NO_IDENTIFIER_SPECIFIED =
@@ -43,7 +43,7 @@ public class DecisionEvaluationEvaluteProcessor
   private final EventStateWriter stateWriter;
   private final KeyGenerator keyGenerator;
 
-  public DecisionEvaluationEvaluteProcessor(
+  public DecisionEvaluationEvaluateProcessor(
       final DecisionBehavior decisionBehavior,
       final KeyGenerator keyGenerator,
       final Writers writers,
@@ -58,9 +58,9 @@ public class DecisionEvaluationEvaluteProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<DecisionEvaluationRecord> processInstanceRecord) {
+  public void processRecord(final TypedRecord<DecisionEvaluationRecord> commandRecord) {
 
-    final DecisionEvaluationRecord record = processInstanceRecord.getValue();
+    final DecisionEvaluationRecord record = commandRecord.getValue();
     final var decisionOrFailure = getDecision(record);
 
     if (decisionOrFailure.isRight()) {
@@ -68,7 +68,7 @@ public class DecisionEvaluationEvaluteProcessor
       final var decisionId = bufferAsString(decision.getDecisionId());
       final var authRequest =
           new AuthorizationRequest(
-              processInstanceRecord,
+              commandRecord,
                   AuthorizationResourceType.DECISION_DEFINITION,
                   PermissionType.CREATE_DECISION_INSTANCE,
                   record.getTenantId())
@@ -82,8 +82,8 @@ public class DecisionEvaluationEvaluteProcessor
                 ? AuthorizationCheckBehavior.NOT_FOUND_ERROR_MESSAGE.formatted(
                     "evaluate a decision", record.getDecisionKey(), "such decision")
                 : rejection.reason();
-        responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), errorMessage);
-        rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), errorMessage);
+        responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), errorMessage);
+        rejectionWriter.appendRejection(commandRecord, rejection.type(), errorMessage);
         return;
       }
     }
@@ -116,12 +116,12 @@ public class DecisionEvaluationEvaluteProcessor
                   evaluationRecordKey,
                   evaluationRecordTuple.getLeft(),
                   evaluationRecordTuple.getRight(),
-                  processInstanceRecord);
+                  commandRecord);
             },
             rejection -> {
               final String reason = rejection.reason();
-              responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), reason);
-              rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), reason);
+              responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), reason);
+              rejectionWriter.appendRejection(commandRecord, rejection.type(), reason);
             });
   }
 

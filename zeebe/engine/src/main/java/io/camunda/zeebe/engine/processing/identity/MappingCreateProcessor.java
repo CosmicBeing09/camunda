@@ -57,19 +57,19 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> cancelBatchOperationCommand) {
+  public void processNewCommand(final TypedRecord<MappingRecord> deleteTenantCommand) {
     final var authorizationRequest =
         new AuthorizationRequest(
-            cancelBatchOperationCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
+            deleteTenantCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = cancelBatchOperationCommand.getValue();
+    final var record = deleteTenantCommand.getValue();
     if (record.getMappingId() == null
         || record.getMappingId().isBlank()
         || record.getName() == null
@@ -84,8 +84,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
               record.getClaimValue(),
               record.getName(),
               record.getMappingId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NULL_VAL, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NULL_VAL, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NULL_VAL, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NULL_VAL, errorMessage);
       return;
     }
 
@@ -95,8 +95,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       final var errorMessage =
           MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
               record.getClaimName(), record.getClaimValue());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -104,8 +104,8 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
     if (persistedMappingWithSameId.isPresent()) {
       final var errorMessage =
           MAPPING_SAME_ID_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getMappingId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -114,17 +114,17 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
 
     stateWriter.appendFollowUpEvent(key, MappingIntent.CREATED, record);
     responseWriter.writeEventOnCommand(key, MappingIntent.CREATED, record,
-        cancelBatchOperationCommand);
+        deleteTenantCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     mappingState
         .getMappingById(record.getMappingId())
         .ifPresentOrElse(
@@ -132,10 +132,10 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
               final var errorMessage =
                   MAPPING_SAME_ID_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
                       existingMapping.getMappingId());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), MappingIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), MappingIntent.CREATED, record));
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 }

@@ -33,11 +33,11 @@ public final class BatchOperationStartProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<BatchOperationCreationRecord> processInstanceRecord) {
-    final var recordValue = processInstanceRecord.getValue();
-    LOGGER.debug("Processing new command with key '{}': {}", processInstanceRecord.getKey(), recordValue);
+  public void processRecord(final TypedRecord<BatchOperationCreationRecord> commandRecord) {
+    final var recordValue = commandRecord.getValue();
+    LOGGER.debug("Processing new command with key '{}': {}", commandRecord.getKey(), recordValue);
 
-    stateWriter.appendFollowUpEvent(processInstanceRecord.getKey(), BatchOperationIntent.STARTED, recordValue);
+    stateWriter.appendFollowUpEvent(commandRecord.getKey(), BatchOperationIntent.STARTED, recordValue);
 
     metrics.recordStarted(recordValue.getBatchOperationType());
   }

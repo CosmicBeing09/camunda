@@ -44,9 +44,9 @@ public final class IdentitySetupInitializeProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<IdentitySetupRecord> processInstanceRecord) {
+  public void processRecord(final TypedRecord<IdentitySetupRecord> commandRecord) {
     final var initializationKey = keyGenerator.nextKey();
-    final var setupRecord = processInstanceRecord.getValue();
+    final var setupRecord = commandRecord.getValue();
 
     createRoles(initializationKey, setupRecord.getRoles());
     createDefaultTenant(initializationKey, setupRecord.getDefaultTenant());

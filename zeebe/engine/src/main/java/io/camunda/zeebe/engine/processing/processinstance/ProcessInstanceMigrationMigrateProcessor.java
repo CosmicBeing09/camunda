@@ -123,8 +123,8 @@ public class ProcessInstanceMigrationMigrateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceMigrationRecord> processInstanceRecord) {
-    final ProcessInstanceMigrationRecord value = processInstanceRecord.getValue();
+  public void processRecord(final TypedRecord<ProcessInstanceMigrationRecord> commandRecord) {
+    final ProcessInstanceMigrationRecord value = commandRecord.getValue();
     final long processInstanceKey = value.getProcessInstanceKey();
     final long targetProcessDefinitionKey = value.getTargetProcessDefinitionKey();
     final var mappingInstructions = value.getMappingInstructions();
@@ -134,7 +134,7 @@ public class ProcessInstanceMigrationMigrateProcessor
 
     final var authorizationRequest =
         new AuthorizationRequest(
-            processInstanceRecord,
+            commandRecord,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 processInstance.getValue().getTenantId())
@@ -149,8 +149,8 @@ public class ProcessInstanceMigrationMigrateProcessor
                   processInstance.getValue().getProcessInstanceKey(),
                   "such process instance")
               : rejection.reason();
-      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), errorMessage);
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), errorMessage);
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), errorMessage);
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), errorMessage);
       return;
     }
 
@@ -187,7 +187,7 @@ public class ProcessInstanceMigrationMigrateProcessor
     stateWriter.appendFollowUpEvent(
         processInstanceKey, ProcessInstanceMigrationIntent.MIGRATED, value);
     responseWriter.writeEventOnCommand(
-        processInstanceKey, ProcessInstanceMigrationIntent.MIGRATED, value, processInstanceRecord);
+        processInstanceKey, ProcessInstanceMigrationIntent.MIGRATED, value, commandRecord);
   }
 
   @Override

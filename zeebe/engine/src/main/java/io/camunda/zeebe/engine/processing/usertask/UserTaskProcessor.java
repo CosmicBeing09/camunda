@@ -97,13 +97,13 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   @Override
-  public void processRecord(final TypedRecord<UserTaskRecord> processInstanceRecord) {
-    final UserTaskIntent intent = (UserTaskIntent) processInstanceRecord.getIntent();
+  public void processRecord(final TypedRecord<UserTaskRecord> commandRecord) {
+    final UserTaskIntent intent = (UserTaskIntent) commandRecord.getIntent();
     switch (intent) {
       case CREATE, ASSIGN, CLAIM, UPDATE, COMPLETE, CANCEL ->
-          processOperationCommand(processInstanceRecord, intent);
-      case COMPLETE_TASK_LISTENER -> processCompleteTaskListener(processInstanceRecord);
-      case DENY_TASK_LISTENER -> processDenyTaskListener(processInstanceRecord);
+          processOperationCommand(commandRecord, intent);
+      case COMPLETE_TASK_LISTENER -> processCompleteTaskListener(commandRecord);
+      case DENY_TASK_LISTENER -> processDenyTaskListener(commandRecord);
       default -> throw new UnsupportedOperationException("Unexpected user task intent: " + intent);
     }
   }

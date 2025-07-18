@@ -65,24 +65,24 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
   }
 
   @Override
-  public void processRecord(final TypedRecord<T> processInstanceRecord) {
+  public void processRecord(final TypedRecord<T> commandRecord) {
 
-    entityKey = processInstanceRecord.getKey();
+    entityKey = commandRecord.getKey();
 
-    final boolean shouldRespond = wrappedProcessor.onCommand(processInstanceRecord, this);
+    final boolean shouldRespond = wrappedProcessor.onCommand(commandRecord, this);
 
-    final boolean respond = shouldRespond && processInstanceRecord.hasRequestMetadata();
+    final boolean respond = shouldRespond && commandRecord.hasRequestMetadata();
 
     if (isAccepted) {
       stateWriter.appendFollowUpEvent(entityKey, newState, updatedValue);
       wrappedProcessor.afterAccept(commandWriter, stateWriter, entityKey, newState, updatedValue);
       if (respond) {
-        responseWriter.writeEventOnCommand(entityKey, newState, updatedValue, processInstanceRecord);
+        responseWriter.writeEventOnCommand(entityKey, newState, updatedValue, commandRecord);
       }
     } else {
-      rejectionWriter.appendRejection(processInstanceRecord, rejectionType, rejectionReason);
+      rejectionWriter.appendRejection(commandRecord, rejectionType, rejectionReason);
       if (respond) {
-        responseWriter.writeRejectionOnCommand(processInstanceRecord, rejectionType, rejectionReason);
+        responseWriter.writeRejectionOnCommand(commandRecord, rejectionType, rejectionReason);
       }
     }
   }

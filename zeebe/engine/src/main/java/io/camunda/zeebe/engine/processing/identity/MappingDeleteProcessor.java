@@ -80,52 +80,52 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MappingRecord> cancelBatchOperationCommand) {
-    final var record = cancelBatchOperationCommand.getValue();
+  public void processNewCommand(final TypedRecord<MappingRecord> deleteTenantCommand) {
+    final var record = deleteTenantCommand.getValue();
     final String id = record.getMappingId();
     final var persistedMappingOptional = mappingState.getMappingById(id);
     if (persistedMappingOptional.isEmpty()) {
       final var errorMessage = MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(id);
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var authorizationRequest =
         new AuthorizationRequest(
-            cancelBatchOperationCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
+            deleteTenantCommand, AuthorizationResourceType.MAPPING_RULE, PermissionType.DELETE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
     final long key = keyGenerator.nextKey();
     deleteMapping(persistedMappingOptional.get(), key);
     responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record,
-        cancelBatchOperationCommand);
+        deleteTenantCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<MappingRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     mappingState
         .getMappingById(record.getMappingId())
         .ifPresentOrElse(
-            persistedMapping -> deleteMapping(persistedMapping, distributedCreateCommand.getKey()),
+            persistedMapping -> deleteMapping(persistedMapping, distributedDeleteTenantCommand.getKey()),
             () -> {
               final var errorMessage =
                   MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(record.getMappingKey());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void deleteMapping(final PersistedMapping mapping, final long key) {

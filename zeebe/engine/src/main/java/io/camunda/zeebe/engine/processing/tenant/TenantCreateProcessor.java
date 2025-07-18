@@ -54,37 +54,37 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> cancelBatchOperationCommand) {
-    if (!isAuthorizedToCreate(cancelBatchOperationCommand)) {
+  public void processNewCommand(final TypedRecord<TenantRecord> deleteTenantCommand) {
+    if (!isAuthorizedToCreate(deleteTenantCommand)) {
       return;
     }
 
-    final var record = cancelBatchOperationCommand.getValue();
+    final var record = deleteTenantCommand.getValue();
     if (tenantAlreadyExists(record.getTenantId())) {
       rejectCommand(
-          cancelBatchOperationCommand,
+          deleteTenantCommand,
           RejectionType.ALREADY_EXISTS,
           TENANT_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getTenantId()));
     } else {
-      createTenant(cancelBatchOperationCommand, record);
-      distributeCommand(cancelBatchOperationCommand, record);
+      createTenant(deleteTenantCommand, record);
+      distributeCommand(deleteTenantCommand, record);
     }
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     tenantState
         .getTenantById(record.getTenantId())
         .ifPresentOrElse(
             tenant -> {
               final var errorMessage =
                   TENANT_ALREADY_EXISTS_ERROR_MESSAGE.formatted(tenant.getTenantId());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), TenantIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), TenantIntent.CREATED, record));
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean isAuthorizedToCreate(final TypedRecord<TenantRecord> command) {

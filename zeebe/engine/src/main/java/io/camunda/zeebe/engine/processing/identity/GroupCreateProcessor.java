@@ -52,25 +52,25 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> cancelBatchOperationCommand) {
+  public void processNewCommand(final TypedRecord<GroupRecord> deleteTenantCommand) {
     final var authorizationRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
 
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = cancelBatchOperationCommand.getValue();
+    final var record = deleteTenantCommand.getValue();
     final var groupId = record.getGroupId();
     final var persistedGroup = groupState.get(groupId);
     if (persistedGroup.isPresent()) {
       final var errorMessage = GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -79,27 +79,27 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
 
     stateWriter.appendFollowUpEvent(key, GroupIntent.CREATED, record);
     responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record,
-        cancelBatchOperationCommand);
+        deleteTenantCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     groupState
         .get(record.getGroupId())
         .ifPresentOrElse(
             persistedGroup -> {
               final var errorMessage =
                   GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(persistedGroup.getGroupId());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), GroupIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), GroupIntent.CREATED, record));
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 }

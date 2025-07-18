@@ -87,23 +87,23 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
   }
 
   @Override
-  public void processRecord(final TypedRecord<MessageRecord> processInstanceRecord) {
+  public void processRecord(final TypedRecord<MessageRecord> commandRecord) {
     final var authRequest =
         new AuthorizationRequest(
-            processInstanceRecord,
+            commandRecord,
             AuthorizationResourceType.MESSAGE,
             PermissionType.CREATE,
-            processInstanceRecord.getValue().getTenantId(),
+            commandRecord.getValue().getTenantId(),
             true);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
       return;
     }
 
-    messageRecord = processInstanceRecord.getValue();
+    messageRecord = commandRecord.getValue();
 
     if (messageRecord.hasMessageId()
         && messageState.exist(
@@ -115,11 +115,11 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
           String.format(
               ALREADY_PUBLISHED_MESSAGE, bufferAsString(messageRecord.getMessageIdBuffer()));
 
-      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
+      rejectionWriter.appendRejection(commandRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
       responseWriter.writeRejectionOnCommand(
-          processInstanceRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
+          commandRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
     } else {
-      handleNewMessage(processInstanceRecord);
+      handleNewMessage(commandRecord);
     }
   }
 

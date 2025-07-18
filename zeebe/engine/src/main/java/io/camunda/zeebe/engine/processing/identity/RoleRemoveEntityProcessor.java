@@ -69,69 +69,69 @@ public class RoleRemoveEntityProcessor implements DistributedTypedRecordProcesso
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> cancelBatchOperationCommand) {
-    final var record = cancelBatchOperationCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> deleteTenantCommand) {
+    final var record = deleteTenantCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
             .addResourceId(record.getRoleId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(record.getRoleId());
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var entityId = record.getEntityId();
     final var entityType = record.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(cancelBatchOperationCommand))) {
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(deleteTenantCommand))) {
       final var errorMessage =
           ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, record.getRoleId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     if (!isEntityAssigned(record)) {
       final var errorMessage =
           ENTITY_NOT_ASSIGNED_ERROR_MESSAGE.formatted(record.getEntityId(), record.getRoleId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.ENTITY_REMOVED, record);
     responseWriter.writeEventOnCommand(
-        record.getRoleKey(), RoleIntent.ENTITY_REMOVED, record, cancelBatchOperationCommand);
+        record.getRoleKey(), RoleIntent.ENTITY_REMOVED, record, deleteTenantCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
 
     if (isEntityAssigned(record)) {
       stateWriter.appendFollowUpEvent(
-          distributedCreateCommand.getKey(), RoleIntent.ENTITY_REMOVED, distributedCreateCommand.getValue());
+          distributedDeleteTenantCommand.getKey(), RoleIntent.ENTITY_REMOVED, distributedDeleteTenantCommand.getValue());
     } else {
       final var errorMessage =
           ENTITY_NOT_ASSIGNED_ERROR_MESSAGE.formatted(record.getEntityId(), record.getRoleId());
-      rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
     }
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean isEntityAssigned(final RoleRecord record) {

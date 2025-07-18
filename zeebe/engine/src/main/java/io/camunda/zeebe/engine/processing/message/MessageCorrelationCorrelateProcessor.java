@@ -86,30 +86,32 @@ public final class MessageCorrelationCorrelateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<MessageCorrelationRecord> processInstanceRecord) {
-    final var messageCorrelationRecord = processInstanceRecord.getValue();
+  public void processRecord(final TypedRecord<MessageCorrelationRecord> commandRecord) {
+    final var messageCorrelationRecord = commandRecord.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(processInstanceRecord, messageCorrelationRecord.getTenantId())) {
-      final var message =
+    if (!authCheckBehavior.isAssignedToTenant(commandRecord, messageCorrelationRecord.getTenantId())) {
+      final var tenantForbiddenMessage =
           "Expected to correlate message for tenant '%s', but user is not assigned to this tenant."
               .formatted(messageCorrelationRecord.getTenantId());
-      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(commandRecord, RejectionType.FORBIDDEN,
+          tenantForbiddenMessage);
+      responseWriter.writeRejectionOnCommand(commandRecord, RejectionType.FORBIDDEN,
+          tenantForbiddenMessage);
       return;
     }
 
     final long messageKey = keyGenerator.nextKey();
     messageCorrelationRecord
         .setMessageKey(messageKey)
-        .setRequestId(processInstanceRecord.getRequestId())
-        .setRequestStreamId(processInstanceRecord.getRequestStreamId());
+        .setRequestId(commandRecord.getRequestId())
+        .setRequestStreamId(commandRecord.getRequestStreamId());
 
     final var messageRecord =
         new MessageRecord()
-            .setName(processInstanceRecord.getValue().getName())
-            .setCorrelationKey(processInstanceRecord.getValue().getCorrelationKey())
-            .setVariables(processInstanceRecord.getValue().getVariablesBuffer())
-            .setTenantId(processInstanceRecord.getValue().getTenantId())
+            .setName(commandRecord.getValue().getName())
+            .setCorrelationKey(commandRecord.getValue().getCorrelationKey())
+            .setVariables(commandRecord.getValue().getVariablesBuffer())
+            .setTenantId(commandRecord.getValue().getTenantId())
             .setTimeToLive(-1L);
     stateWriter.appendFollowUpEvent(messageKey, MessageIntent.PUBLISHED, messageRecord);
 
@@ -123,20 +125,20 @@ public final class MessageCorrelationCorrelateProcessor
 
     final var authorizationRejectionOptional =
         isAuthorizedForAllSubscriptions(
-            processInstanceRecord, correlatingSubscriptions, messageCorrelationRecord.getTenantId());
+            commandRecord, correlatingSubscriptions, messageCorrelationRecord.getTenantId());
     if (authorizationRejectionOptional.isPresent()) {
       final var rejection = authorizationRejectionOptional.get();
-      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
       return;
     }
 
     if (correlatingSubscriptions.isEmpty()) {
       final var errorMessage =
           SUBSCRIPTION_NOT_FOUND.formatted(
-              processInstanceRecord.getValue().getName(), processInstanceRecord.getValue().getCorrelationKey());
-      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.NOT_FOUND, errorMessage);
+              commandRecord.getValue().getName(), commandRecord.getValue().getCorrelationKey());
+      rejectionWriter.appendRejection(commandRecord, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(commandRecord, RejectionType.NOT_FOUND, errorMessage);
     } else {
       correlatingSubscriptions
           .getFirstMessageStartEventSubscription()
@@ -151,7 +153,7 @@ public final class MessageCorrelationCorrelateProcessor
                     messageKey,
                     MessageCorrelationIntent.CORRELATED,
                     messageCorrelationRecord,
-                    processInstanceRecord);
+                    commandRecord);
               });
     }
 
@@ -176,7 +178,7 @@ public final class MessageCorrelationCorrelateProcessor
       final Subscriptions correlatingSubscriptions,
       final String tenantId) {
     final AtomicReference<AuthorizationRequest> request = new AtomicReference<>();
-    final AtomicReference<Rejection> rejection = new AtomicReference<>();
+    final AtomicReference<Rejection> authRejectionRef = new AtomicReference<>();
 
     final var isAuthorized =
         correlatingSubscriptions.visitSubscriptions(
@@ -196,13 +198,13 @@ public final class MessageCorrelationCorrelateProcessor
               final var processIdString = bufferAsString(subscription.getBpmnProcessId());
               request.get().addResourceId(processIdString);
               final var rejectionOrAuthorized = authCheckBehavior.authorizationResult(request.get());
-              rejectionOrAuthorized.ifLeft(rejection::set);
+              rejectionOrAuthorized.ifLeft(authRejectionRef::set);
               return rejectionOrAuthorized.isRight();
             },
             true);
 
     if (!isAuthorized) {
-      return Optional.of(rejection.get());
+      return Optional.of(authRejectionRef.get());
     }
 
     return Optional.empty();

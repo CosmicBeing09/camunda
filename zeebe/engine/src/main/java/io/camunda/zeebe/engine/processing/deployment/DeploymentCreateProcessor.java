@@ -128,41 +128,41 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> cancelBatchOperationCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> deleteTenantCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            cancelBatchOperationCommand,
+            deleteTenantCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            cancelBatchOperationCommand.getValue().getTenantId(),
+            deleteTenantCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(cancelBatchOperationCommand);
+    transformAndDistributeDeployment(deleteTenantCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(cancelBatchOperationCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(deleteTenantCommand.getValue());
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<DeploymentRecord> distributedCreateCommand) {
-    if (deploymentState.hasStoredDeploymentRecord(distributedCreateCommand.getKey())) {
+  public void processDistributedCommand(final TypedRecord<DeploymentRecord> distributedDeleteTenantCommand) {
+    if (deploymentState.hasStoredDeploymentRecord(distributedDeleteTenantCommand.getKey())) {
       // we already processed this deployment, so we can ignore it
-      distributionBehavior.acknowledgeCommand(distributedCreateCommand);
+      distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
       rejectionWriter.appendRejection(
-          distributedCreateCommand, RejectionType.ALREADY_EXISTS, "Deployment already exists");
+          distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, "Deployment already exists");
       return;
     }
 
-    processDistributedRecord(distributedCreateCommand);
+    processDistributedRecord(distributedDeleteTenantCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(distributedCreateCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(distributedDeleteTenantCommand.getValue());
   }
 
   @Override

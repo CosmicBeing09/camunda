@@ -66,25 +66,25 @@ public final class BatchOperationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> cancelBatchOperationCommand) {
-    if (isEmptyOrNullFilter(cancelBatchOperationCommand)) {
+  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> deleteTenantCommand) {
+    if (isEmptyOrNullFilter(deleteTenantCommand)) {
       rejectionWriter.appendRejection(
-          cancelBatchOperationCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          deleteTenantCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       responseWriter.writeRejectionOnCommand(
-          cancelBatchOperationCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          deleteTenantCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
 
-    final var authorizationResult = isAuthorized(cancelBatchOperationCommand);
+    final var authorizationResult = isAuthorized(deleteTenantCommand);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    final var recordValue = cancelBatchOperationCommand.getValue();
+    final var recordValue = deleteTenantCommand.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
     metrics.startTotalLatencyMeasure(key, recordValue.getBatchOperationType());
 
@@ -99,26 +99,26 @@ public final class BatchOperationCreateProcessor
         recordWithKey,
         FollowUpEventMetadata.of(b -> b.batchOperationReference(key)));
     responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey,
-        cancelBatchOperationCommand);
+        deleteTenantCommand);
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(cancelBatchOperationCommand.getValueType(), cancelBatchOperationCommand.getIntent(), recordWithKey);
+        .distribute(deleteTenantCommand.getValueType(), deleteTenantCommand.getIntent(), recordWithKey);
 
     metrics.recordCreated(recordWithKey.getBatchOperationType());
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<BatchOperationCreationRecord> distributedCreateCommand) {
-    final var recordValue = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<BatchOperationCreationRecord> distributedDeleteTenantCommand) {
+    final var recordValue = distributedDeleteTenantCommand.getValue();
 
-    LOGGER.debug("Processing distributed command with key '{}': {}", distributedCreateCommand.getKey(), recordValue);
+    LOGGER.debug("Processing distributed command with key '{}': {}", distributedDeleteTenantCommand.getKey(), recordValue);
     stateWriter.appendFollowUpEvent(
-        distributedCreateCommand.getKey(),
+        distributedDeleteTenantCommand.getKey(),
         BatchOperationIntent.CREATED,
-        distributedCreateCommand.getValue(),
-        FollowUpEventMetadata.of(b -> b.batchOperationReference(distributedCreateCommand.getKey())));
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+        distributedDeleteTenantCommand.getValue(),
+        FollowUpEventMetadata.of(b -> b.batchOperationReference(distributedDeleteTenantCommand.getKey())));
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private Either<Rejection, Void> isAuthorized(

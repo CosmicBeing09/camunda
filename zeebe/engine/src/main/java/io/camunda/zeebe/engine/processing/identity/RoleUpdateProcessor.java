@@ -52,44 +52,44 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> cancelBatchOperationCommand) {
-    final var record = cancelBatchOperationCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> deleteTenantCommand) {
+    final var roleRecord = deleteTenantCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
-            .addResourceId(record.getRoleId());
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+            .addResourceId(roleRecord.getRoleId());
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var persistedRecord = roleState.getRole(record.getRoleId());
+    final var persistedRecord = roleState.getRole(roleRecord.getRoleId());
     if (persistedRecord.isEmpty()) {
-      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
+      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var persistedRole = persistedRecord.get();
-    record.setRoleKey(persistedRole.getRoleKey());
-    stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.UPDATED, record);
-    responseWriter.writeEventOnCommand(record.getRoleKey(), RoleIntent.UPDATED, record,
-        cancelBatchOperationCommand);
+    roleRecord.setRoleKey(persistedRole.getRoleKey());
+    stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.UPDATED, roleRecord);
+    responseWriter.writeEventOnCommand(roleRecord.getRoleKey(), RoleIntent.UPDATED, roleRecord,
+        deleteTenantCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedCreateCommand) {
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
     stateWriter.appendFollowUpEvent(
-        distributedCreateCommand.getValue().getRoleKey(), RoleIntent.UPDATED, distributedCreateCommand.getValue());
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+        distributedDeleteTenantCommand.getValue().getRoleKey(), RoleIntent.UPDATED, distributedDeleteTenantCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 }

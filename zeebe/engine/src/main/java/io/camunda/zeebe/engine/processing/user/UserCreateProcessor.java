@@ -61,57 +61,57 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> cancelBatchOperationCommand) {
+  public void processNewCommand(final TypedRecord<UserRecord> deleteTenantCommand) {
     final var authRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var username = cancelBatchOperationCommand.getValue().getUsername();
+    final var username = deleteTenantCommand.getValue().getUsername();
     final var user = userState.getUser(username);
 
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, message);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    cancelBatchOperationCommand.getValue().setUserKey(key);
+    deleteTenantCommand.getValue().setUserKey(key);
 
-    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, cancelBatchOperationCommand.getValue());
+    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, deleteTenantCommand.getValue());
     addUserPermissions(key, username);
-    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, cancelBatchOperationCommand.getValue(),
-        cancelBatchOperationCommand);
+    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, deleteTenantCommand.getValue(),
+        deleteTenantCommand);
 
     distributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
 
     userState
         .getUser(record.getUserKey())
         .ifPresentOrElse(
             user -> {
               final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.getUsername());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.ALREADY_EXISTS, message);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, message);
             },
             () -> {
-              stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), UserIntent.CREATED, record);
+              stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), UserIntent.CREATED, record);
             });
 
-    distributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void addUserPermissions(final long key, final String username) {

@@ -65,16 +65,16 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> cancelBatchOperationCommand) {
-    final var record = cancelBatchOperationCommand.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> deleteTenantCommand) {
+    final var record = deleteTenantCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(cancelBatchOperationCommand, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(deleteTenantCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -82,32 +82,33 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
 
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          cancelBatchOperationCommand,
+          deleteTenantCommand,
           RejectionType.NOT_FOUND,
           "Expected to remove entity from tenant '%s', but no tenant with this ID exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!validateEntityAssignment(cancelBatchOperationCommand, tenantId)) {
+    if (!validateEntityAssignment(deleteTenantCommand, tenantId)) {
       return;
     }
 
     final var tenantKey = persistedTenant.get().getTenantKey();
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_REMOVED, record);
     responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_REMOVED, record,
-        cancelBatchOperationCommand);
-    distributeCommand(cancelBatchOperationCommand);
+        deleteTenantCommand);
+    distributeCommand(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedCreateCommand) {
-    if (validateEntityAssignment(distributedCreateCommand, distributedCreateCommand.getValue().getTenantId())) {
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteTenantCommand) {
+    if (validateEntityAssignment(
+        distributedDeleteTenantCommand, distributedDeleteTenantCommand.getValue().getTenantId())) {
       stateWriter.appendFollowUpEvent(
-          distributedCreateCommand.getKey(), TenantIntent.ENTITY_REMOVED, distributedCreateCommand.getValue());
+          distributedDeleteTenantCommand.getKey(), TenantIntent.ENTITY_REMOVED, distributedDeleteTenantCommand.getValue());
     }
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean validateEntityAssignment(

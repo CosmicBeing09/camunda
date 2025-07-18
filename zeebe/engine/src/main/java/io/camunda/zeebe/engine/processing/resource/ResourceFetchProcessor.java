@@ -53,16 +53,16 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
   }
 
   @Override
-  public void processRecord(final TypedRecord<ResourceRecord> processInstanceRecord) {
-    final var resourceKey = processInstanceRecord.getValue().getResourceKey();
-    findResource(processInstanceRecord, resourceKey)
+  public void processRecord(final TypedRecord<ResourceRecord> commandRecord) {
+    final var resourceKey = commandRecord.getValue().getResourceKey();
+    findResource(commandRecord, resourceKey)
         .ifPresentOrElse(
             resource -> {
-              checkAuthorization(processInstanceRecord, resource);
+              checkAuthorization(commandRecord, resource);
               final var record = asResourceRecord(resource);
               stateWriter.appendFollowUpEvent(resourceKey, ResourceIntent.FETCHED, record);
               responseWriter.writeEventOnCommand(
-                  resourceKey, ResourceIntent.FETCHED, record, processInstanceRecord);
+                  resourceKey, ResourceIntent.FETCHED, record, commandRecord);
             },
             () -> {
               throw new NoSuchResourceException(resourceKey);

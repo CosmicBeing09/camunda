@@ -67,22 +67,22 @@ public final class ProcessInstanceCancelProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceRecord> processInstanceRecord) {
-    final var targetElementInstance = elementInstanceState.getInstance(processInstanceRecord.getKey());
+  public void processRecord(final TypedRecord<ProcessInstanceRecord> commandRecord) {
+    final var targetElementInstance = elementInstanceState.getInstance(commandRecord.getKey());
 
-    if (!validateCommand(processInstanceRecord, targetElementInstance)) {
+    if (!validateCommand(commandRecord, targetElementInstance)) {
       return;
     }
 
-    asyncRequestBehavior.writeAsyncRequestReceived(processInstanceRecord.getKey(),
-        processInstanceRecord);
+    asyncRequestBehavior.writeAsyncRequestReceived(commandRecord.getKey(),
+        commandRecord);
 
     final ProcessInstanceRecord value = targetElementInstance.getValue();
     commandWriter.appendFollowUpCommand(
-        processInstanceRecord.getKey(), ProcessInstanceIntent.TERMINATE_ELEMENT, value);
+        commandRecord.getKey(), ProcessInstanceIntent.TERMINATE_ELEMENT, value);
     responseWriter.writeEventOnCommand(
-        processInstanceRecord.getKey(), ProcessInstanceIntent.ELEMENT_TERMINATING, value,
-        processInstanceRecord);
+        commandRecord.getKey(), ProcessInstanceIntent.ELEMENT_TERMINATING, value,
+        commandRecord);
   }
 
   private boolean validateCommand(

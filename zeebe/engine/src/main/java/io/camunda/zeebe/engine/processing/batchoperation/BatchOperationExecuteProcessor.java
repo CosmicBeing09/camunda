@@ -75,11 +75,11 @@ public final class BatchOperationExecuteProcessor
 
   @Override
   @SuppressWarnings("checkstyle:MissingSwitchDefault")
-  public void processRecord(final TypedRecord<BatchOperationExecutionRecord> processInstanceRecord) {
-    final var executionRecord = processInstanceRecord.getValue();
+  public void processRecord(final TypedRecord<BatchOperationExecutionRecord> commandRecord) {
+    final var executionRecord = commandRecord.getValue();
     LOGGER.debug(
         "Processing new command with key '{}' on partition{} : {}",
-        processInstanceRecord.getKey(),
+        commandRecord.getKey(),
         partitionId,
         executionRecord);
     final long batchKey = executionRecord.getBatchOperationKey();
@@ -104,8 +104,8 @@ public final class BatchOperationExecuteProcessor
       LOGGER.debug(
           "No items to process for BatchOperation {} on partition {}", batchKey, partitionId);
 
-      appendBatchOperationExecutionExecutedEvent(processInstanceRecord.getValue(), Collections.emptySet());
-      appendBatchOperationExecutionCompletedEvent(processInstanceRecord.getValue());
+      appendBatchOperationExecutionExecutedEvent(commandRecord.getValue(), Collections.emptySet());
+      appendBatchOperationExecutionCompletedEvent(commandRecord.getValue());
 
       metrics.stopTotalExecutionLatencyMeasure(batchKey);
       return;
@@ -114,13 +114,13 @@ public final class BatchOperationExecuteProcessor
     // This is only done for the first batch operation execution iteration
     metrics.stopStartExecuteLatencyMeasure(batchKey);
 
-    appendBatchOperationExecutionExecutingEvent(processInstanceRecord.getValue(), Set.copyOf(entityKeys));
+    appendBatchOperationExecutionExecutingEvent(commandRecord.getValue(), Set.copyOf(entityKeys));
 
     final var handler = handlers.get(batchOperation.getBatchOperationType());
     entityKeys.forEach(entityKey -> handler.execute(entityKey, batchOperation));
 
-    appendBatchOperationExecutionExecutedEvent(processInstanceRecord.getValue(), Set.copyOf(entityKeys));
-    appendBatchOperationExecuteCommand(processInstanceRecord, batchKey, batchOperation);
+    appendBatchOperationExecutionExecutedEvent(commandRecord.getValue(), Set.copyOf(entityKeys));
+    appendBatchOperationExecuteCommand(commandRecord, batchKey, batchOperation);
 
     metrics.startExecuteCycleLatencyMeasure(batchKey, batchOperation.getBatchOperationType());
   }

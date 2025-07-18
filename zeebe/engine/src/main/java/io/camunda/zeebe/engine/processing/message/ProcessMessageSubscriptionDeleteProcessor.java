@@ -48,9 +48,9 @@ public final class ProcessMessageSubscriptionDeleteProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> processInstanceRecord) {
+  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> commandRecord) {
 
-    final ProcessMessageSubscriptionRecord subscriptionRecord = processInstanceRecord.getValue();
+    final ProcessMessageSubscriptionRecord subscriptionRecord = commandRecord.getValue();
     final long elementInstanceKey = subscriptionRecord.getElementInstanceKey();
     final String messageName = subscriptionRecord.getMessageName();
     final String tenantId = subscriptionRecord.getTenantId();
@@ -59,7 +59,7 @@ public final class ProcessMessageSubscriptionDeleteProcessor
             elementInstanceKey, subscriptionRecord.getMessageNameBuffer(), tenantId);
 
     if (subscription == null) {
-      rejectCommand(processInstanceRecord);
+      rejectCommand(commandRecord);
       return;
     }
 

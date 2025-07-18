@@ -31,9 +31,9 @@ public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord>
   }
 
   @Override
-  public void processRecord(final TypedRecord<ScaleRecord> processInstanceRecord) {
+  public void processRecord(final TypedRecord<ScaleRecord> commandRecord) {
     final var key = keyGenerator.nextKey();
-    final var request = processInstanceRecord.getValue();
+    final var request = commandRecord.getValue();
     final var desiredPartitions = routingState.desiredPartitions();
     final var response = new ScaleRecord();
     final var desiredPartitionCount = routingState.desiredPartitions().size();
@@ -43,6 +43,6 @@ public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord>
         routingState.bootstrappedAt(desiredPartitionCount));
     writers.state().appendFollowUpEvent(key, ScaleIntent.STATUS_RESPONSE, response);
     writers.response().writeEventOnCommand(key, ScaleIntent.STATUS_RESPONSE, response,
-        processInstanceRecord);
+        commandRecord);
   }
 }

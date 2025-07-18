@@ -49,37 +49,37 @@ public class AuthorizationDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> cancelBatchOperationCommand) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> deleteTenantCommand) {
     permissionsBehavior
-        .isAuthorized(cancelBatchOperationCommand, PermissionType.DELETE)
+        .isAuthorized(deleteTenantCommand, PermissionType.DELETE)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
                     authorizationRecord, AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION))
         .map(PersistedAuthorization::getAuthorizationKey)
         .ifRightOrLeft(
-            authorizationKey -> writeEventAndDistribute(cancelBatchOperationCommand, authorizationKey),
+            authorizationKey -> writeEventAndDistribute(deleteTenantCommand, authorizationKey),
             (rejection) -> {
-              rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
             });
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> distributedCreateCommand) {
+  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> distributedDeleteTenantCommand) {
     permissionsBehavior
         .authorizationExists(
-            distributedCreateCommand.getValue(), AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION)
+            distributedDeleteTenantCommand.getValue(), AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION)
         .ifRightOrLeft(
             ignored ->
                 stateWriter.appendFollowUpEvent(
-                    distributedCreateCommand.getValue().getAuthorizationKey(),
+                    distributedDeleteTenantCommand.getValue().getAuthorizationKey(),
                     AuthorizationIntent.DELETED,
-                    distributedCreateCommand.getValue()),
+                    distributedDeleteTenantCommand.getValue()),
             rejection ->
-                rejectionWriter.appendRejection(distributedCreateCommand, rejection.type(), rejection.reason()));
+                rejectionWriter.appendRejection(distributedDeleteTenantCommand, rejection.type(), rejection.reason()));
 
-    distributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void writeEventAndDistribute(

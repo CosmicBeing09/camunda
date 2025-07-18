@@ -52,50 +52,50 @@ public class RoleCreateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> cancelBatchOperationCommand) {
+  public void processNewCommand(final TypedRecord<RoleRecord> deleteTenantCommand) {
     final var roleAuthorizationRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.ROLE, PermissionType.CREATE);
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.ROLE, PermissionType.CREATE);
     final var isAuthorized = authCheckBehavior.authorizationResult(roleAuthorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = cancelBatchOperationCommand.getValue();
+    final var record = deleteTenantCommand.getValue();
     final var persistedRole = roleState.getRole(record.getRoleId());
     if (persistedRole.isPresent()) {
       final var errorMessage = ROLE_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
     final long key = keyGenerator.nextKey();
     record.setRoleKey(key);
 
     stateWriter.appendFollowUpEvent(key, RoleIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, RoleIntent.CREATED, record, cancelBatchOperationCommand);
+    responseWriter.writeEventOnCommand(key, RoleIntent.CREATED, record, deleteTenantCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     roleState
         .getRole(record.getRoleId())
         .ifPresentOrElse(
             persistedRole -> {
               final var errorMessage =
                   ROLE_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getRoleId());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(distributedCreateCommand.getKey(), RoleIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), RoleIntent.CREATED, record));
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 }

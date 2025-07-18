@@ -172,9 +172,9 @@ public final class ProcessInstanceModificationModifyProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceModificationRecord> processInstanceRecord) {
-    final long commandKey = processInstanceRecord.getKey();
-    final var value = processInstanceRecord.getValue();
+  public void processRecord(final TypedRecord<ProcessInstanceModificationRecord> commandRecord) {
+    final long commandKey = commandRecord.getKey();
+    final var value = commandRecord.getValue();
 
     // if set, the command's key should take precedence over the processInstanceKey
     final long eventKey = commandKey > -1 ? commandKey : value.getProcessInstanceKey();
@@ -184,14 +184,14 @@ public final class ProcessInstanceModificationModifyProcessor
 
     if (processInstance == null) {
       final String reason = String.format(ERROR_MESSAGE_PROCESS_INSTANCE_NOT_FOUND, eventKey);
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.NOT_FOUND, reason);
-      rejectionWriter.appendRejection(processInstanceRecord, RejectionType.NOT_FOUND, reason);
+      responseWriter.writeRejectionOnCommand(commandRecord, RejectionType.NOT_FOUND, reason);
+      rejectionWriter.appendRejection(commandRecord, RejectionType.NOT_FOUND, reason);
       return;
     }
 
     final var authRequest =
         new AuthorizationRequest(
-            processInstanceRecord,
+            commandRecord,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 processInstance.getValue().getTenantId())
@@ -206,8 +206,8 @@ public final class ProcessInstanceModificationModifyProcessor
                   processInstance.getValue().getProcessInstanceKey(),
                   "such process instance")
               : rejection.reason();
-      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), errorMessage);
-      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), errorMessage);
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), errorMessage);
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), errorMessage);
       return;
     }
 

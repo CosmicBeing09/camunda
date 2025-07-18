@@ -52,9 +52,9 @@ public final class ProcessMessageSubscriptionCreateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> processInstanceRecord) {
+  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> commandRecord) {
 
-    final ProcessMessageSubscriptionRecord subscriptionRecord = processInstanceRecord.getValue();
+    final ProcessMessageSubscriptionRecord subscriptionRecord = commandRecord.getValue();
     final long elementInstanceKey = subscriptionRecord.getElementInstanceKey();
     final String tenantId = subscriptionRecord.getTenantId();
     final String messageName = subscriptionRecord.getMessageName();
@@ -77,7 +77,7 @@ public final class ProcessMessageSubscriptionCreateProcessor
             return true;
           });
     } else {
-      rejectCommand(processInstanceRecord, subscription);
+      rejectCommand(commandRecord, subscription);
     }
   }
 

@@ -70,12 +70,12 @@ public class UserCreateInitialAdminProcessor implements TypedRecordProcessor<Use
   }
 
   @Override
-  public void processRecord(final TypedRecord<UserRecord> processInstanceRecord) {
-    final var userRecord = processInstanceRecord.getValue();
+  public void processRecord(final TypedRecord<UserRecord> commandRecord) {
+    final var userRecord = commandRecord.getValue();
     final var adminRoleId = DefaultRole.ADMIN.getId();
 
-    checkUserCreateAuthorization(processInstanceRecord)
-        .flatMap(ignored -> checkRoleUpdateAuthorization(processInstanceRecord))
+    checkUserCreateAuthorization(commandRecord)
+        .flatMap(ignored -> checkRoleUpdateAuthorization(commandRecord))
         .flatMap(ignored -> checkUserDoesNotExist(userRecord.getUsername()))
         .flatMap(ignored -> checkAdminRoleExists(adminRoleId))
         .flatMap(ignored -> checkAdminRoleHasNoUsers(adminRoleId))
@@ -93,12 +93,12 @@ public class UserCreateInitialAdminProcessor implements TypedRecordProcessor<Use
               stateWriter.appendFollowUpEvent(generatedUserKey, UserIntent.INITIAL_ADMIN_CREATED, userRecord);
               responseWriter.writeEventOnCommand(
                   generatedUserKey, UserIntent.INITIAL_ADMIN_CREATED, userRecord,
-                  processInstanceRecord);
+                  commandRecord);
             },
             message -> {
               // For this command we always want to reject with FORBIDDEN
-              rejectionWriter.appendRejection(processInstanceRecord, RejectionType.FORBIDDEN, message);
-              responseWriter.writeRejectionOnCommand(processInstanceRecord, RejectionType.FORBIDDEN, message);
+              rejectionWriter.appendRejection(commandRecord, RejectionType.FORBIDDEN, message);
+              responseWriter.writeRejectionOnCommand(commandRecord, RejectionType.FORBIDDEN, message);
             });
   }
 

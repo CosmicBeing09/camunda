@@ -63,26 +63,26 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> cancelBatchOperationCommand) {
-    final var record = cancelBatchOperationCommand.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> deleteTenantCommand) {
+    final var record = deleteTenantCommand.getValue();
     final String roleId = record.getRoleId();
     final var authorizationRequest =
-        new AuthorizationRequest(cancelBatchOperationCommand, AuthorizationResourceType.ROLE, PermissionType.DELETE)
+        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.ROLE, PermissionType.DELETE)
             .addResourceId(roleId);
 
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(roleId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleId);
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -95,33 +95,33 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
 
     stateWriter.appendFollowUpEvent(roleKey, RoleIntent.DELETED, record);
     responseWriter.writeEventOnCommand(roleKey, RoleIntent.DELETED, record,
-        cancelBatchOperationCommand);
+        deleteTenantCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(cancelBatchOperationCommand);
+        .distribute(deleteTenantCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedCreateCommand) {
-    final var record = distributedCreateCommand.getValue();
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     roleState
         .getRole(record.getRoleId())
         .ifPresentOrElse(
             role -> {
-              removeMembers(distributedCreateCommand.getValue());
-              deleteAuthorizations(distributedCreateCommand.getValue());
+              removeMembers(distributedDeleteTenantCommand.getValue());
+              deleteAuthorizations(distributedDeleteTenantCommand.getValue());
               stateWriter.appendFollowUpEvent(
-                  distributedCreateCommand.getKey(), RoleIntent.DELETED, distributedCreateCommand.getValue());
+                  distributedDeleteTenantCommand.getKey(), RoleIntent.DELETED, distributedDeleteTenantCommand.getValue());
             },
             () -> {
               final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-              rejectionWriter.appendRejection(distributedCreateCommand, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void removeMembers(final RoleRecord record) {

@@ -71,19 +71,19 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> cancelBatchOperationCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> deleteTenantCommand) {
     final var request =
         new AuthorizationRequest(
-            cancelBatchOperationCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            deleteTenantCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(cancelBatchOperationCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(cancelBatchOperationCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var lifecycleManagementRecord = cancelBatchOperationCommand.getValue();
+    final var lifecycleManagementRecord = deleteTenantCommand.getValue();
     final var batchOperationKey = lifecycleManagementRecord.getBatchOperationKey();
     final var cancelKey = keyGenerator.nextKey();
     LOGGER.debug(
@@ -95,21 +95,21 @@ public final class BatchOperationCancelProcessor
     if (batchOperation.isPresent() && batchOperation.get().canCancel()) {
       cancelBatchOperationEvent(cancelKey, lifecycleManagementRecord);
       responseWriter.writeEventOnCommand(
-          cancelKey, BatchOperationIntent.CANCELED, cancelBatchOperationCommand.getValue(),
-          cancelBatchOperationCommand);
+          cancelKey, BatchOperationIntent.CANCELED, deleteTenantCommand.getValue(),
+          deleteTenantCommand);
       commandDistributionBehavior
           .withKey(cancelKey)
           .inQueue(DistributionQueue.BATCH_OPERATION)
-          .distribute(cancelBatchOperationCommand);
+          .distribute(deleteTenantCommand);
 
       metrics.recordCancelled(batchOperation.get().getBatchOperationType());
     } else {
       rejectionWriter.appendRejection(
-          cancelBatchOperationCommand,
+          deleteTenantCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
       responseWriter.writeRejectionOnCommand(
-          cancelBatchOperationCommand,
+          deleteTenantCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
     }
@@ -117,15 +117,15 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedCreateCommand) {
-    final var recordValue = distributedCreateCommand.getValue();
+      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedDeleteTenantCommand) {
+    final var recordValue = distributedDeleteTenantCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
 
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
       rejectionWriter.appendRejection(
-          distributedCreateCommand, RejectionType.NOT_FOUND, "Batch operation does not exist!");
-      commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+          distributedDeleteTenantCommand, RejectionType.NOT_FOUND, "Batch operation does not exist!");
+      commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
       return;
     }
 
@@ -134,7 +134,7 @@ public final class BatchOperationCancelProcessor
         batchOperationKey,
         recordValue);
     cancelBatchOperationEvent(batchOperationKey, recordValue);
-    commandDistributionBehavior.acknowledgeCommand(distributedCreateCommand);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void cancelBatchOperationEvent(

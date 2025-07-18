@@ -34,30 +34,30 @@ public class JobUpdateTimeoutProcessor implements TypedRecordProcessor<JobRecord
   }
 
   @Override
-  public void processRecord(final TypedRecord<JobRecord> processInstanceRecord) {
-    final long jobKey = processInstanceRecord.getKey();
+  public void processRecord(final TypedRecord<JobRecord> commandRecord) {
+    final long jobKey = commandRecord.getKey();
     jobUpdateBehaviour
-        .fetchJobOrReject(jobKey, processInstanceRecord)
-        .flatMap(job -> jobUpdateBehaviour.authorizeJobUpdate(processInstanceRecord, job))
+        .fetchJobOrReject(jobKey, commandRecord)
+        .flatMap(job -> jobUpdateBehaviour.authorizeJobUpdate(commandRecord, job))
         .ifRightOrLeft(
             job ->
                 jobUpdateBehaviour
-                    .updateJobTimeout(jobKey, processInstanceRecord.getValue().getTimeout(), job)
+                    .updateJobTimeout(jobKey, commandRecord.getValue().getTimeout(), job)
                     .ifPresentOrElse(
                         errorMessage -> {
                           rejectionWriter.appendRejection(
-                              processInstanceRecord, RejectionType.INVALID_STATE, errorMessage);
+                              commandRecord, RejectionType.INVALID_STATE, errorMessage);
                           responseWriter.writeRejectionOnCommand(
-                              processInstanceRecord, RejectionType.INVALID_STATE, errorMessage);
+                              commandRecord, RejectionType.INVALID_STATE, errorMessage);
                         },
                         () -> {
                           stateWriter.appendFollowUpEvent(jobKey, JobIntent.TIMEOUT_UPDATED, job);
                           responseWriter.writeEventOnCommand(
-                              jobKey, JobIntent.TIMEOUT_UPDATED, job, processInstanceRecord);
+                              jobKey, JobIntent.TIMEOUT_UPDATED, job, commandRecord);
                         }),
             rejection -> {
-              rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
             });
   }
 }
