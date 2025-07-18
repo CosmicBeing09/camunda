@@ -34,12 +34,12 @@ public class AssignUserTaskMigrationIT extends UserTaskMigrationHelper {
   void shouldAssign87ZeebeTaskV1(final CamundaMigrator migrator) {
 
     final long taskKey = USER_TASK_KEYS.get("first");
-    final var res =
+    final var response =
         migrator
             .getTasklistClient()
             .withAuthentication("demo", "demo")
             .assignUserTask(taskKey, "demo");
-    assertThat(res.statusCode()).isEqualTo(200);
+    assertThat(response.statusCode()).isEqualTo(200);
 
     shouldBeAssigned(migrator.getCamundaClient(), taskKey);
   }
@@ -57,11 +57,11 @@ public class AssignUserTaskMigrationIT extends UserTaskMigrationHelper {
   @Test
   void shouldAssign88ZeebeTaskV1(final CamundaMigrator migrator) {
 
-    final var piKey =
+    final var processInstanceKey =
         startProcessInstance(
             migrator.getCamundaClient(),
             PROCESS_DEFINITION_KEYS.get(TaskImplementation.ZEEBE_USER_TASK));
-    final var taskKey = waitFor88TaskToBeImportedReturningId(migrator, piKey);
+    final var taskKey = waitFor88TaskToBeImportedReturningId(migrator, processInstanceKey);
 
     final var res =
         migrator
