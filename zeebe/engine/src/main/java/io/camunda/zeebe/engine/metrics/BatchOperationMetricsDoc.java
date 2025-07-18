@@ -99,7 +99,7 @@ public enum BatchOperationMetricsDoc implements ExtendedMeterDocumentation {
     }
   },
 
-  BATCH_OPERATION_LATENCY {
+  BATCH_OPERATION_DURATION {
     private static final KeyName[] KEY_NAMES =
         new KeyName[] {
           PartitionKeyNames.PARTITION,
@@ -219,7 +219,7 @@ public enum BatchOperationMetricsDoc implements ExtendedMeterDocumentation {
   }
 
   public enum BatchOperationLatency {
-    TOTAL_LATENCY("totalLatency"),
+    TOTAL_DURATION("totalLatency"),
     TOTAL_EXECUTION_LATENCY("totalExecutionLatency"),
     TOTAL_QUERY_LATENCY("totalQueryLatency"),
     START_EXECUTE_LATENCY("startExecuteLatency"),

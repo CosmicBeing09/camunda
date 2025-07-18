@@ -138,9 +138,9 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
 
       appendExecution(batchOperation.getKey(), taskResultBuilder);
 
-      metrics.startStartExecuteLatencyMeasure(
+      metrics.startStartExecuteDurationMeasure(
           batchOperation.getKey(), batchOperation.getBatchOperationType());
-      metrics.startTotalExecutionLatencyMeasure(
+      metrics.startTotalExecutionDurationMeasure(
           batchOperation.getKey(), batchOperation.getBatchOperationType());
     } catch (final Exception e) {
       LOG.error(
@@ -220,7 +220,7 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
         () -> !batchOperationState.exists(batchOperation.getKey());
 
     try (final var ignored =
-        metrics.startTotalQueryLatencyMeasure(
+        metrics.startTotalQueryDurationMeasure(
             batchOperation.getKey(), batchOperation.getBatchOperationType())) {
       return switch (batchOperation.getBatchOperationType()) {
         case CANCEL_PROCESS_INSTANCE ->
@@ -253,7 +253,7 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
                 "Unexpected batch operation type: " + batchOperation.getBatchOperationType());
       };
     } finally {
-      metrics.stopQueryLatencyMeasure(batchOperation.getKey());
+      metrics.stopQueryDurationMeasure(batchOperation.getKey());
     }
   }
 }

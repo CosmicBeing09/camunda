@@ -32,7 +32,7 @@ public class BatchOperationMetrics {
 
   private final Map<Tuple<BatchOperationAction, BatchOperationType>, Counter> executedActions =
       new ConcurrentHashMap<>();
-  private final Map<Tuple<BatchOperationLatency, Long>, ResourceSample> latency =
+  private final Map<Tuple<BatchOperationLatency, Long>, ResourceSample> durations =
       new ConcurrentHashMap<>();
   private Counter queryCounter;
 
@@ -77,26 +77,26 @@ public class BatchOperationMetrics {
     batchOperationEvent(BatchOperationAction.COMPLETED, batchOperationType);
   }
 
-  public void startTotalLatencyMeasure(
+  public void startTotalDurationMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
-    createLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey, batchOperationType);
+    createLatency(BatchOperationLatency.TOTAL_DURATION, batchOperationKey, batchOperationType);
   }
 
-  public void stopTotalLatencyMeasure(final Long batchOperationKey) {
-    closeAndRemoveLatency(BatchOperationLatency.TOTAL_LATENCY, batchOperationKey);
+  public void stopTotalDurationMeasure(final Long batchOperationKey) {
+    closeAndRemoveLatency(BatchOperationLatency.TOTAL_DURATION, batchOperationKey);
   }
 
-  public ResourceSample startTotalQueryLatencyMeasure(
+  public ResourceSample startTotalQueryDurationMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
     return createLatency(
         BatchOperationLatency.TOTAL_QUERY_LATENCY, batchOperationKey, batchOperationType);
   }
 
-  public void stopQueryLatencyMeasure(final Long batchOperationKey) {
+  public void stopQueryDurationMeasure(final Long batchOperationKey) {
     closeAndRemoveLatency(BatchOperationLatency.TOTAL_QUERY_LATENCY, batchOperationKey);
   }
 
-  public void startTotalExecutionLatencyMeasure(
+  public void startTotalExecutionDurationMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
     createLatency(
         BatchOperationLatency.TOTAL_EXECUTION_LATENCY, batchOperationKey, batchOperationType);
@@ -113,7 +113,7 @@ public class BatchOperationMetrics {
    * @param batchOperationKey
    * @param batchOperationType
    */
-  public void startStartExecuteLatencyMeasure(
+  public void startStartExecuteDurationMeasure(
       final Long batchOperationKey, final BatchOperationType batchOperationType) {
     createLatency(
         BatchOperationLatency.START_EXECUTE_LATENCY, batchOperationKey, batchOperationType);
@@ -228,7 +228,7 @@ public class BatchOperationMetrics {
       final BatchOperationLatency latencyType,
       final Long batchOperationKey,
       final BatchOperationType batchOperationType) {
-    return latency.computeIfAbsent(
+    return durations.computeIfAbsent(
         createLatencyKey(latencyType, batchOperationKey),
         (key) -> registerBatchOperationLatency(batchOperationKey, latencyType, batchOperationType));
   }
@@ -243,9 +243,9 @@ public class BatchOperationMetrics {
   private void closeAndRemoveLatency(
       final BatchOperationLatency latency, final Long batchOperationKey) {
     final var key = createLatencyKey(latency, batchOperationKey);
-    if (this.latency.containsKey(key)) {
-      this.latency.get(key).close();
-      this.latency.remove(key);
+    if (durations.containsKey(key)) {
+      durations.get(key).close();
+      durations.remove(key);
     }
   }
 
@@ -258,7 +258,7 @@ public class BatchOperationMetrics {
       final Long batchOperationKey,
       final BatchOperationLatency batchOperationLatency,
       final BatchOperationType batchOperationType) {
-    final var meterDoc = BatchOperationMetricsDoc.BATCH_OPERATION_LATENCY;
+    final var meterDoc = BatchOperationMetricsDoc.BATCH_OPERATION_DURATION;
     return Timer.resource(registry, meterDoc.getName())
         .description(meterDoc.getDescription())
         .tag(
