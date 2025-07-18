@@ -8,30 +8,30 @@
 package io.camunda.zeebe.gateway.impl.broker.request;
 
 import io.camunda.zeebe.broker.client.api.dto.BrokerExecuteCommand;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import org.agrona.DirectBuffer;
 
-public class BrokerUserTaskUpdateRequest extends BrokerExecuteCommand<UserTaskRecord> {
+public class BrokerUserTaskUpdateRequest extends BrokerExecuteCommand<UserTaskEntity> {
 
-  private final UserTaskRecord requestDto = new UserTaskRecord();
+  private final UserTaskEntity requestDto = new UserTaskEntity();
 
   public BrokerUserTaskUpdateRequest(
-      final long key, final UserTaskRecord changeset, final String action) {
+      final long key, final UserTaskEntity changeset, final String action) {
     super(ValueType.USER_TASK, UserTaskIntent.UPDATE);
     requestDto.setUserTaskKey(key).setAction(action).wrapChangedAttributes(changeset, true);
     request.setKey(key);
   }
 
   @Override
-  public UserTaskRecord getRequestWriter() {
+  public UserTaskEntity getRequestWriter() {
     return requestDto;
   }
 
   @Override
-  protected UserTaskRecord toResponseDto(final DirectBuffer buffer) {
-    final var responseDto = new UserTaskRecord();
+  protected UserTaskEntity toResponseDto(final DirectBuffer buffer) {
+    final var responseDto = new UserTaskEntity();
     responseDto.wrap(buffer);
     return responseDto;
   }

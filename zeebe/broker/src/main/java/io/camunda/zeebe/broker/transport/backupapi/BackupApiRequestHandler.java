@@ -18,7 +18,7 @@ import io.camunda.zeebe.logstreams.log.LogStreamWriter;
 import io.camunda.zeebe.logstreams.log.WriteContext;
 import io.camunda.zeebe.protocol.impl.encoding.BackupListResponse;
 import io.camunda.zeebe.protocol.impl.encoding.BackupStatusResponse;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.management.CheckpointRecord;
 import io.camunda.zeebe.protocol.management.AdminRequestType;
 import io.camunda.zeebe.protocol.management.BackupRequestType;
@@ -108,8 +108,8 @@ public final class BackupApiRequestHandler
       return Either.left(errorWriter.outOfDiskSpace(partitionId));
     }
 
-    final RecordMetadata metadata =
-        new RecordMetadata()
+    final RecordRequest metadata =
+        new RecordRequest()
             .recordType(RecordType.COMMAND)
             .valueType(ValueType.CHECKPOINT)
             .intent(CheckpointIntent.CREATE)

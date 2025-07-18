@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.job.JobBatchCollector.TooLargeJob;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -344,8 +344,8 @@ final class JobBatchCollectorTest {
   }
 
   private TypedRecord<JobBatchRecord> createRecord(final String... tenantIds) {
-    final RecordMetadata metadata =
-        new RecordMetadata()
+    final RecordRequest metadata =
+        new RecordRequest()
             .recordType(RecordType.COMMAND)
             .intent(JobBatchIntent.ACTIVATE)
             .valueType(ValueType.JOB_BATCH);

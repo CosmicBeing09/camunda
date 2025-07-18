@@ -15,7 +15,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
@@ -210,7 +210,7 @@ public final class BanInstanceTest {
   @Test
   public void shouldBanInstance() {
     // given
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.intent(recordIntent);
     metadata.valueType(recordValueType);
     final TypedRecordImpl typedEvent = new TypedRecordImpl(1);

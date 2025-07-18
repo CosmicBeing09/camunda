@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -37,11 +37,11 @@ public final class UpdateUserTaskTest {
   private static final int DEFAULT_PRIORITY = 50;
   private static final List<String> ALL_UPDATABLE_ATTRIBUTES =
       List.of(
-          UserTaskRecord.CANDIDATE_GROUPS,
-          UserTaskRecord.CANDIDATE_USERS,
-          UserTaskRecord.DUE_DATE,
-          UserTaskRecord.FOLLOW_UP_DATE,
-          UserTaskRecord.PRIORITY);
+          UserTaskEntity.CANDIDATE_GROUPS,
+          UserTaskEntity.CANDIDATE_USERS,
+          UserTaskEntity.DUE_DATE,
+          UserTaskEntity.FOLLOW_UP_DATE,
+          UserTaskEntity.PRIORITY);
 
   @Rule
   public final RecordingExporterTestWatcher recordingExporterTestWatcher =
@@ -185,7 +185,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.CANDIDATE_GROUPS));
+                    .hasOnlyChangedAttributes(UserTaskEntity.CANDIDATE_GROUPS));
   }
 
   @Test
@@ -231,7 +231,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.CANDIDATE_USERS));
+                    .hasOnlyChangedAttributes(UserTaskEntity.CANDIDATE_USERS));
   }
 
   @Test
@@ -273,7 +273,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("updated_dueDate")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.DUE_DATE));
+                    .hasOnlyChangedAttributes(UserTaskEntity.DUE_DATE));
   }
 
   @Test
@@ -319,7 +319,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("updated_followUpDate")
                     .hasPriority(20)
-                    .hasOnlyChangedAttributes(UserTaskRecord.FOLLOW_UP_DATE));
+                    .hasOnlyChangedAttributes(UserTaskEntity.FOLLOW_UP_DATE));
   }
 
   @Test
@@ -362,7 +362,7 @@ public final class UpdateUserTaskTest {
                     .hasDueDate("2023-03-02T15:35+02:00")
                     .hasFollowUpDate("2023-03-02T16:35+02:00")
                     .hasPriority(newPriority)
-                    .hasOnlyChangedAttributes(UserTaskRecord.PRIORITY));
+                    .hasOnlyChangedAttributes(UserTaskEntity.PRIORITY));
   }
 
   @Test
@@ -510,9 +510,9 @@ public final class UpdateUserTaskTest {
                     .describedAs(
                         "Expect `changedAttributes` to include only the actually updated attributes")
                     .hasOnlyChangedAttributes(
-                        UserTaskRecord.CANDIDATE_GROUPS,
-                        UserTaskRecord.DUE_DATE,
-                        UserTaskRecord.PRIORITY));
+                        UserTaskEntity.CANDIDATE_GROUPS,
+                        UserTaskEntity.DUE_DATE,
+                        UserTaskEntity.PRIORITY));
   }
 
   @Test
@@ -549,7 +549,7 @@ public final class UpdateUserTaskTest {
                     .describedAs("Expect that unknown attributes are not tracked")
                     .doesNotHaveChangedAttributes(unknownAttributeName)
                     .hasOnlyChangedAttributes(
-                        UserTaskRecord.CANDIDATE_GROUPS, UserTaskRecord.PRIORITY));
+                        UserTaskEntity.CANDIDATE_GROUPS, UserTaskEntity.PRIORITY));
   }
 
   @Test

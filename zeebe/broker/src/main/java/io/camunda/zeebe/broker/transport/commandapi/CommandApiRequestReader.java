@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.ExecuteCommandRequestDecoder.TEMP
 import io.camunda.zeebe.broker.transport.AsyncApiRequestHandler.RequestReader;
 import io.camunda.zeebe.broker.transport.RequestReaderException;
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
@@ -44,7 +44,7 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.ExecuteCommandRequestDecoder;
 import io.camunda.zeebe.protocol.record.MessageHeaderDecoder;
@@ -75,7 +75,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
     RECORDS_BY_TYPE.put(ValueType.COMMAND_DISTRIBUTION, CommandDistributionRecord::new);
     RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE_BATCH, ProcessInstanceBatchRecord::new);
     RECORDS_BY_TYPE.put(ValueType.RESOURCE_DELETION, ResourceDeletionRecord::new);
-    RECORDS_BY_TYPE.put(ValueType.USER_TASK, UserTaskRecord::new);
+    RECORDS_BY_TYPE.put(ValueType.USER_TASK, UserTaskEntity::new);
     RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE_MIGRATION, ProcessInstanceMigrationRecord::new);
     RECORDS_BY_TYPE.put(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,
@@ -99,7 +99,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
   }
 
   private UnifiedRecordValue value;
-  private final RecordMetadata metadata = new RecordMetadata();
+  private final RecordRequest metadata = new RecordRequest();
   private final AuthInfo authInfo = new AuthInfo();
   private final MessageHeaderDecoder messageHeaderDecoder = new MessageHeaderDecoder();
   private final ExecuteCommandRequestDecoder commandRequestDecoder =
@@ -157,7 +157,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
     return value;
   }
 
-  public RecordMetadata metadata() {
+  public RecordRequest metadata() {
     return metadata;
   }
 }

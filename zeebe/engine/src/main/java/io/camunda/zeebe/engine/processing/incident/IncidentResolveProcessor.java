@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -50,7 +50,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
       "Unexpected user task lifecycle state: '%s' encountered during conversion to failed user task command.";
 
   private final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor;
-  private final TypedRecordProcessor<UserTaskRecord> userTaskProcessor;
+  private final TypedRecordProcessor<UserTaskEntity> userTaskProcessor;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
@@ -65,7 +65,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   public IncidentResolveProcessor(
       final ProcessingState processingState,
       final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
+      final TypedRecordProcessor<UserTaskEntity> userTaskProcessor,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -156,8 +156,8 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   private void processFailedCommand(final TypedRecord<? extends UnifiedRecordValue> failedCommand) {
     if (failedCommand.getValue() instanceof ProcessInstanceRecord) {
       bpmnStreamProcessor.processRecord((TypedRecord<ProcessInstanceRecord>) failedCommand);
-    } else if (failedCommand.getValue() instanceof UserTaskRecord) {
-      userTaskProcessor.processRecord((TypedRecord<UserTaskRecord>) failedCommand);
+    } else if (failedCommand.getValue() instanceof UserTaskEntity) {
+      userTaskProcessor.processRecord((TypedRecord<UserTaskEntity>) failedCommand);
     } else {
       throw new IllegalStateException(
           "Failed to process command due to unsupported record type: '%s'."
@@ -213,7 +213,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
     return getFailedUserTaskCommandIntent(intermediateState.getLifecycleState())
         .map(
             intent -> {
-              final var userTaskRecord = new UserTaskRecord();
+              final var userTaskRecord = new UserTaskEntity();
               userTaskRecord.wrap(intermediateState.getRecord());
               return new RetryTypedRecord<>(userTaskKey, intent, userTaskRecord);
             });

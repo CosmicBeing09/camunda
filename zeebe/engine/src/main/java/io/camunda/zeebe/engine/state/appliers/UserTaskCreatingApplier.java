@@ -12,11 +12,11 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
 public final class UserTaskCreatingApplier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, UserTaskEntity> {
 
   private final MutableElementInstanceState elementInstanceState;
   private final MutableUserTaskState userTaskState;
@@ -27,7 +27,7 @@ public final class UserTaskCreatingApplier
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final UserTaskEntity value) {
     userTaskState.create(value);
 
     final long elementInstanceKey = value.getElementInstanceKey();

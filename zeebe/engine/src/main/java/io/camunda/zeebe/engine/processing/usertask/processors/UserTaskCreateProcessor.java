@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
@@ -58,14 +58,14 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, UserTaskEntity> validateCommand(
+      final TypedRecord<UserTaskEntity> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
 
     // Current assumption: there can not be corrections of the assignee if there is an initial
     // assignee.
@@ -76,7 +76,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
             // if there is initial assignee -> remove the assignee from UT record as we are going
             // to assign user task to initial assignee via assigning event
             initialAssignee -> {
-              final var valueWithoutAssignee = userTaskRecord.copy().unsetAssignee();
+              final var valueWithoutAssignee = userTaskEntity.copy().unsetAssignee();
               stateWriter.appendFollowUpEvent(
                   userTaskKey, UserTaskIntent.CREATED, valueWithoutAssignee);
 
@@ -89,10 +89,10 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
                 // if no initial assignee -> keep the assignee on the UT record in CREATED event
                 // it could be a corrected assignee or no assignee at all
                 stateWriter.appendFollowUpEvent(
-                    userTaskKey, UserTaskIntent.CREATED, userTaskRecord));
+                    userTaskKey, UserTaskIntent.CREATED, userTaskEntity));
   }
 
-  private void assignUserTask(final UserTaskRecord userTaskRecord, final String assignee) {
+  private void assignUserTask(final UserTaskEntity userTaskRecord, final String assignee) {
     userTaskBehavior.userTaskAssigning(userTaskRecord, assignee);
 
     final var element =
@@ -113,7 +113,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
         .ifPresentOrElse(
             listener ->
                 jobBehavior.createNewTaskListenerJob(
-                    context, userTaskRecord, listener, List.of(UserTaskRecord.ASSIGNEE)),
+                    context, userTaskRecord, listener, List.of(UserTaskEntity.ASSIGNEE)),
             () -> userTaskBehavior.userTaskAssigned(userTaskRecord, assignee));
   }
 }

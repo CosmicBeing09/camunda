@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstance
 import static io.camunda.zeebe.engine.state.immutable.IncidentState.MISSING_INCIDENT;
 
 import io.camunda.zeebe.engine.Loggers;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSequenceFlow;
@@ -89,7 +89,7 @@ public class ProcessInstanceMigrationMigrateProcessor
   public ProcessInstanceMigrationMigrateProcessor(
       final Writers writers,
       final ProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final CommandDistributionBehavior commandDistributionBehavior,
       final int partitionId,
       final RoutingInfo routingInfo,

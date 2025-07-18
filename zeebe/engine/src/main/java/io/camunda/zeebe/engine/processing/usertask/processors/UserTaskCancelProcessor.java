@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWr
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -33,11 +33,11 @@ public class UserTaskCancelProcessor implements UserTaskCommandProcessor {
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CANCELED, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CANCELED, userTaskEntity);
 
-    final var userTaskElementInstanceKey = userTaskRecord.getElementInstanceKey();
+    final var userTaskElementInstanceKey = userTaskEntity.getElementInstanceKey();
     final var userTaskElementInstance =
         elementInstanceState.getInstance(userTaskElementInstanceKey);
     if (userTaskElementInstance != null && userTaskElementInstance.isTerminating()) {

@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -831,11 +831,11 @@ public final class CamundaUserTaskTest {
         .hasFollowUpDate("")
         .hasPriority(50)
         .hasChangedAttributes(
-            UserTaskRecord.CANDIDATE_GROUPS,
-            UserTaskRecord.CANDIDATE_USERS,
-            UserTaskRecord.DUE_DATE,
-            UserTaskRecord.FOLLOW_UP_DATE,
-            UserTaskRecord.PRIORITY);
+            UserTaskEntity.CANDIDATE_GROUPS,
+            UserTaskEntity.CANDIDATE_USERS,
+            UserTaskEntity.DUE_DATE,
+            UserTaskEntity.FOLLOW_UP_DATE,
+            UserTaskEntity.PRIORITY);
 
     Assertions.assertThat(userTaskState.getUserTask(createdUserTask.getUserTaskKey()))
         .hasNoCandidateGroupsList()
@@ -1065,8 +1065,8 @@ public final class CamundaUserTaskTest {
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
-            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
-            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
+            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskEntity.VARIABLES)),
+            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskEntity.VARIABLES)));
   }
 
   @Test
@@ -1119,7 +1119,7 @@ public final class CamundaUserTaskTest {
         .describedAs(
             "Expect the user task to pass the update transition with variables as a changed attribute")
         .containsSequence(
-            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskRecord.VARIABLES)),
-            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskRecord.VARIABLES)));
+            Tuple.tuple(UserTaskIntent.UPDATING, List.of(UserTaskEntity.VARIABLES)),
+            Tuple.tuple(UserTaskIntent.UPDATED, List.of(UserTaskEntity.VARIABLES)));
   }
 }

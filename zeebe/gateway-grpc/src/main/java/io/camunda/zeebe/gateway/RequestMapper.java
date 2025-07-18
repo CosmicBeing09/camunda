@@ -54,7 +54,7 @@ import io.camunda.zeebe.gateway.protocol.GatewayOuterClass.UpdateJobTimeoutReque
 import io.camunda.zeebe.msgpack.value.StringValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.impl.stream.job.JobActivationProperties;
 import io.camunda.zeebe.protocol.impl.stream.job.JobActivationPropertiesImpl;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -183,27 +183,27 @@ public final class RequestMapper extends RequestUtil {
 
     if (requestCorrections.hasAssignee()) {
       corrections.setAssignee(requestCorrections.getAssignee());
-      correctedAttributes.add(UserTaskRecord.ASSIGNEE);
+      correctedAttributes.add(UserTaskEntity.ASSIGNEE);
     }
     if (requestCorrections.hasDueDate()) {
       corrections.setDueDate(requestCorrections.getDueDate());
-      correctedAttributes.add(UserTaskRecord.DUE_DATE);
+      correctedAttributes.add(UserTaskEntity.DUE_DATE);
     }
     if (requestCorrections.hasFollowUpDate()) {
       corrections.setFollowUpDate(requestCorrections.getFollowUpDate());
-      correctedAttributes.add(UserTaskRecord.FOLLOW_UP_DATE);
+      correctedAttributes.add(UserTaskEntity.FOLLOW_UP_DATE);
     }
     if (requestCorrections.hasCandidateUsers()) {
       corrections.setCandidateUsersList(requestCorrections.getCandidateUsers().getValuesList());
-      correctedAttributes.add(UserTaskRecord.CANDIDATE_USERS);
+      correctedAttributes.add(UserTaskEntity.CANDIDATE_USERS);
     }
     if (requestCorrections.hasCandidateGroups()) {
       corrections.setCandidateGroupsList(requestCorrections.getCandidateGroups().getValuesList());
-      correctedAttributes.add(UserTaskRecord.CANDIDATE_GROUPS);
+      correctedAttributes.add(UserTaskEntity.CANDIDATE_GROUPS);
     }
     if (requestCorrections.hasPriority()) {
       corrections.setPriority(requestCorrections.getPriority());
-      correctedAttributes.add(UserTaskRecord.PRIORITY);
+      correctedAttributes.add(UserTaskEntity.PRIORITY);
     }
 
     return new JobResult()

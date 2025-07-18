@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import java.util.Optional;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,7 +45,7 @@ public class UserTaskCreatingV2ApplierTest {
     final long elementInstanceKey = new Random().nextLong();
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new UserTaskEntity().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // when
     userTaskCreatingV2Applier.applyState(userTaskKey, userTaskRecord);
@@ -64,7 +64,7 @@ public class UserTaskCreatingV2ApplierTest {
     final String initialAssignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new UserTaskEntity()
             .setUserTaskKey(userTaskKey)
             .setAssignee(initialAssignee)
             .setElementInstanceKey(elementInstanceKey);
@@ -92,7 +92,7 @@ public class UserTaskCreatingV2ApplierTest {
     final long elementInstanceKey = new Random().nextLong();
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new UserTaskEntity().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // when
     userTaskCreatingV2Applier.applyState(userTaskKey, userTaskRecord);

@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -56,81 +56,81 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, UserTaskEntity> validateCommand(
+      final TypedRecord<UserTaskEntity> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
-    userTaskRecord.wrapChangedAttributesIfValueChanged(command.getValue());
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskEntity.wrapChangedAttributesIfValueChanged(command.getValue());
+    userTaskEntity.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskEntity);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
-    if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+    if (command.hasRequest()) {
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskEntity);
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.UPDATED, userTaskRecord, command);
+          userTaskKey, UserTaskIntent.UPDATED, userTaskEntity, command);
       return;
     }
 
-    final var recordRequestMetadata = userTaskState.findRecordRequestMetadata(userTaskKey);
-    if (recordRequestMetadata.isEmpty()) {
+    final var requestContext = userTaskState.findTriggerRequest(userTaskKey);
+    if (requestContext.isEmpty()) {
       LOGGER.error(
           "No request metadata found for userTaskKey='{}', writing 'USER_TASK.UPDATED' without response. "
               + "This may indicate a problem with how the update was triggered. "
               + "If the update was triggered by a user task variables update, variables will not be merged. "
               + "Please report this as a bug.",
           userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskEntity);
       return;
     }
 
-    final var metadata = recordRequestMetadata.get();
-    switch (metadata.getTriggerType()) {
+    final var request = requestContext.get();
+    switch (request.getTriggerType()) {
       case USER_TASK -> {
-        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskEntity);
         responseWriter.writeResponse(
             userTaskKey,
             UserTaskIntent.UPDATED,
-            userTaskRecord,
+            userTaskEntity,
             ValueType.USER_TASK,
-            metadata.getRequestId(),
-            metadata.getRequestStreamId());
+            request.getRequestId(),
+            request.getRequestStreamId());
       }
       case VARIABLE_DOCUMENT -> {
         // Update triggered by a VariableDocument command.
         // Retrieve the original VariableDocumentRecord to apply correct variable
         // merge logic and write follow-up event.
         final var optionalVariableDocumentState =
-            variableState.findVariableDocumentState(userTaskRecord.getElementInstanceKey());
+            variableState.findVariableDocumentState(userTaskEntity.getElementInstanceKey());
         if (optionalVariableDocumentState.isEmpty()) {
           LOGGER.error(
               "No variable document state found for elementInstanceKey='{}' during a task update triggered by a user task variables update. "
                   + "No variables will be merged, and only 'USER_TASK.UPDATED' will be written. "
                   + "This may be caused by a corrupted or incomplete variable update request. "
                   + "Please report this as a bug.",
-              userTaskRecord.getElementInstanceKey());
-          stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+              userTaskEntity.getElementInstanceKey());
+          stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskEntity);
           return;
         }
 
         final var variableDocumentState = optionalVariableDocumentState.get();
         final var variableDocumentRecord = variableDocumentState.getRecord();
-        mergeVariables(userTaskRecord, variableDocumentRecord);
+        mergeVariables(userTaskEntity, variableDocumentRecord);
 
         // Write follow-up events
-        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskEntity);
         final long variableDocumentKey = variableDocumentState.getKey();
         stateWriter.appendFollowUpEvent(
             variableDocumentKey, VariableDocumentIntent.UPDATED, variableDocumentRecord);
@@ -140,18 +140,18 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
             VariableDocumentIntent.UPDATED,
             variableDocumentRecord,
             ValueType.VARIABLE_DOCUMENT,
-            metadata.getRequestId(),
-            metadata.getRequestStreamId());
+            request.getRequestId(),
+            request.getRequestStreamId());
       }
       default ->
           throw new IllegalArgumentException(
               "Unexpected user task transition trigger type: '%s'"
-                  .formatted(metadata.getTriggerType()));
+                  .formatted(request.getTriggerType()));
     }
   }
 
   private void mergeVariables(
-      final UserTaskRecord userTaskRecord, final VariableDocumentRecord variableRecord) {
+      final UserTaskEntity userTaskRecord, final VariableDocumentRecord variableRecord) {
     switch (variableRecord.getUpdateSemantics()) {
       case LOCAL ->
           variableBehavior.mergeLocalDocument(

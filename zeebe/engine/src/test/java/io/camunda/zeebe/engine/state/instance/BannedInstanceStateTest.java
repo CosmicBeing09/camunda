@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableBannedInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -101,7 +101,7 @@ public final class BannedInstanceStateTest {
     processInstanceRecord.setProcessDefinitionKey(2);
     processInstanceRecord.setBpmnElementType(BpmnElementType.START_EVENT);
 
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.intent(ProcessInstanceIntent.CANCEL);
     metadata.valueType(ValueType.PROCESS_INSTANCE);
 
@@ -148,7 +148,7 @@ public final class BannedInstanceStateTest {
     processInstanceRecord.setProcessDefinitionKey(2);
     processInstanceRecord.setBpmnElementType(BpmnElementType.START_EVENT);
 
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.intent(ProcessInstanceIntent.ACTIVATE_ELEMENT);
     metadata.valueType(ValueType.PROCESS_INSTANCE);
 

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.util.stream;
 import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -58,7 +58,7 @@ public class FakeProcessingResultBuilder<V extends UnifiedRecordValue>
 
   @Override
   public Either<RuntimeException, ProcessingResultBuilder> appendRecordReturnEither(
-      final long key, final RecordValue value, final RecordMetadata metadata) {
+      final long key, final RecordValue value, final RecordRequest metadata) {
     final int partitionId = Protocol.decodePartitionId(key);
     final var copiedRecord = new CopiedRecord<>((V) value, metadata, key, partitionId, -1, -1, -1);
     followupRecords.add(copiedRecord.copyOf());

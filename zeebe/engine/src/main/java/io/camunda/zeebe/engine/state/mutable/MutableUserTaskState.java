@@ -9,21 +9,21 @@ package io.camunda.zeebe.engine.state.mutable;
 
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
-import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequest;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import java.util.function.Consumer;
 
 public interface MutableUserTaskState extends UserTaskState {
 
-  void create(final UserTaskRecord userTask);
+  void create(final UserTaskEntity userTask);
 
-  void update(final UserTaskRecord userTask);
+  void update(final UserTaskEntity userTask);
 
   void updateUserTaskLifecycleState(final long userTaskKey, final LifecycleState newLifecycleState);
 
   void delete(final long userTaskKey);
 
-  void storeIntermediateState(final UserTaskRecord userTask, final LifecycleState lifecycleState);
+  void storeIntermediateState(final UserTaskEntity userTask, final LifecycleState lifecycleState);
 
   void updateIntermediateState(long key, Consumer<UserTaskIntermediateStateValue> updater);
 
@@ -31,8 +31,8 @@ public interface MutableUserTaskState extends UserTaskState {
 
   void deleteIntermediateStateIfExists(final long userTaskKey);
 
-  void storeRecordRequestMetadata(
-      final long userTaskKey, final UserTaskTransitionTriggerRequestMetadata recordRequestMetadata);
+  void storeTransitionTriggerRequest(
+      final long userTaskKey, final UserTaskTransitionTriggerRequest transitionTriggerRequest);
 
   void deleteRecordRequestMetadata(final long userTaskKey);
 

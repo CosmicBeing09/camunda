@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.event;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnProcessingException;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
@@ -27,7 +27,7 @@ public final class BoundaryEventProcessor implements BpmnElementProcessor<Execut
   private final BpmnJobBehavior jobBehavior;
 
   public BoundaryEventProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     this.stateTransitionBehavior = stateTransitionBehavior;
     variableMappingBehavior = bpmnBehaviors.variableMappingBehavior();

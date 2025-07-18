@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.resource;
 import static io.camunda.zeebe.engine.state.instance.TimerInstance.NO_ELEMENT_INSTANCE;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor.EvaluationException;
@@ -94,7 +94,7 @@ public class ResourceDeletionDeleteProcessor
       final KeyGenerator keyGenerator,
       final ProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final AuthorizationCheckBehavior authCheckBehavior) {
     stateWriter = writers.state();
     responseWriter = writers.response();

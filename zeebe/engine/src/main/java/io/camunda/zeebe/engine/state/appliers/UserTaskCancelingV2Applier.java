@@ -13,11 +13,11 @@ import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
 public final class UserTaskCancelingV2Applier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, UserTaskEntity> {
 
   private final MutableUserTaskState userTaskState;
   private final MutableVariableState variableState;
@@ -30,7 +30,7 @@ public final class UserTaskCancelingV2Applier
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final UserTaskEntity value) {
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CANCELING);
 
     // Clean up data that may have been persisted by a previous transition
@@ -44,7 +44,7 @@ public final class UserTaskCancelingV2Applier
     userTaskState.deleteInitialAssignee(key);
   }
 
-  private void resetTaskListenerIndices(final UserTaskRecord record) {
+  private void resetTaskListenerIndices(final UserTaskEntity record) {
     final long userTaskInstanceKey = record.getElementInstanceKey();
     final var userTaskInstance = elementInstanceState.getInstance(userTaskInstanceKey);
 

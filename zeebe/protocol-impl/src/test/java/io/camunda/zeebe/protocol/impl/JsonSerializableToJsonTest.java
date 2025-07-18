@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.protocol.impl.encoding.AuthInfo;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.impl.record.VersionInfo;
 import io.camunda.zeebe.protocol.impl.record.value.adhocsubprocess.AdHocSubProcessActivityActivationRecord;
@@ -73,7 +73,7 @@ import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionReco
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.JsonSerializable;
@@ -148,7 +148,7 @@ final class JsonSerializableToJsonTest {
         "Record",
         (Supplier<JsonSerializable>)
             () -> {
-              final RecordMetadata recordMetadata = new RecordMetadata();
+              final RecordRequest recordMetadata = new RecordRequest();
 
               final DeploymentIntent intent = DeploymentIntent.CREATE;
               final int protocolVersion = 1;
@@ -264,7 +264,7 @@ final class JsonSerializableToJsonTest {
         (Supplier<JsonSerializable>)
             () -> {
               final var record = new DeploymentRecord();
-              final var metadata = new RecordMetadata().brokerVersion(new VersionInfo(0, 0, 0));
+              final var metadata = new RecordRequest().brokerVersion(new VersionInfo(0, 0, 0));
               final int key = -1;
               final int partitionId = -1;
               final int position = -1;
@@ -2394,7 +2394,7 @@ final class JsonSerializableToJsonTest {
         "UserTaskRecord",
         (Supplier<UnifiedRecordValue>)
             () ->
-                new UserTaskRecord()
+                new UserTaskEntity()
                     .setUserTaskKey(123)
                     .setAssignee("myAssignee")
                     .setCandidateGroupsList(List.of("myCandidateGroups"))
@@ -2454,7 +2454,7 @@ final class JsonSerializableToJsonTest {
       /////////////////////////////////////////////////////////////////////////////////////////////
       {
         "Empty UserTaskRecord",
-        (Supplier<UnifiedRecordValue>) UserTaskRecord::new,
+        (Supplier<UnifiedRecordValue>) UserTaskEntity::new,
         """
       {
         "bpmnProcessId": "",
@@ -2489,7 +2489,7 @@ final class JsonSerializableToJsonTest {
         "UserTaskRecord WithNullableVariable",
         (Supplier<UnifiedRecordValue>)
             () ->
-                new UserTaskRecord()
+                new UserTaskEntity()
                     .setVariables(
                         new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
         """

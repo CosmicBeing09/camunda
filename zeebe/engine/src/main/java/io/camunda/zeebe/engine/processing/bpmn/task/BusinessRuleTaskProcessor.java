@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.bpmn.task;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnProcessingException;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnDecisionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBehavior;
@@ -35,7 +35,7 @@ public final class BusinessRuleTaskProcessor
   private final BpmnJobBehavior jobBehavior;
 
   public BusinessRuleTaskProcessor(
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final BpmnStateTransitionBehavior stateTransitionBehavior) {
     super(bpmnBehaviors, stateTransitionBehavior);
     decisionBehavior = bpmnBehaviors.bpmnDecisionBehavior();

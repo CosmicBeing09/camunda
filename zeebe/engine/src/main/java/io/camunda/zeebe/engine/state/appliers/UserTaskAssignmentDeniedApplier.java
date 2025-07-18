@@ -13,11 +13,11 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
 public class UserTaskAssignmentDeniedApplier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, UserTaskEntity> {
 
   private final MutableUserTaskState userTaskState;
 
@@ -29,7 +29,7 @@ public class UserTaskAssignmentDeniedApplier
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final UserTaskEntity value) {
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
     userTaskState.deleteIntermediateState(key);
     userTaskState.deleteRecordRequestMetadata(key);

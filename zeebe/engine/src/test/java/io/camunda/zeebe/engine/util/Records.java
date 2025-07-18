@@ -11,7 +11,7 @@ import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.protocol.impl.encoding.MsgPackConverter;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
@@ -99,20 +99,20 @@ public final class Records {
       return false;
     }
 
-    final RecordMetadata metadata = getMetadata(event);
+    final RecordRequest metadata = getMetadata(event);
 
     return metadata.getIntent() == intent;
   }
 
-  private static RecordMetadata getMetadata(final LoggedEvent event) {
-    final RecordMetadata metadata = new RecordMetadata();
+  private static RecordRequest getMetadata(final LoggedEvent event) {
+    final RecordRequest metadata = new RecordRequest();
     event.readMetadata(metadata);
 
     return metadata;
   }
 
   public static boolean isRejection(final LoggedEvent event) {
-    final RecordMetadata metadata = getMetadata(event);
+    final RecordRequest metadata = getMetadata(event);
     return metadata.getRecordType() == RecordType.COMMAND_REJECTION;
   }
 
@@ -122,7 +122,7 @@ public final class Records {
   }
 
   public static boolean isEvent(final LoggedEvent event) {
-    final RecordMetadata metadata = getMetadata(event);
+    final RecordRequest metadata = getMetadata(event);
     return metadata.getRecordType() == RecordType.EVENT;
   }
 
@@ -132,7 +132,7 @@ public final class Records {
   }
 
   public static boolean isCommand(final LoggedEvent event) {
-    final RecordMetadata metadata = getMetadata(event);
+    final RecordRequest metadata = getMetadata(event);
     return metadata.getRecordType() == RecordType.COMMAND;
   }
 
@@ -146,7 +146,7 @@ public final class Records {
       return false;
     }
 
-    final RecordMetadata metadata = getMetadata(event);
+    final RecordRequest metadata = getMetadata(event);
 
     return metadata.getValueType() == type;
   }

@@ -15,7 +15,7 @@ import io.camunda.zeebe.logstreams.impl.log.LoggedEventImpl;
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.util.TestEntry;
 import io.camunda.zeebe.msgpack.property.StringProperty;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.test.util.junit.RegressionTest;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -112,7 +112,7 @@ final class LogAppendEntrySerializerTest {
     final var rejection = "foo".repeat(Short.MAX_VALUE * 2);
     final var entry = TestEntry.builder().withRecordValue(new TestValue().setFoo("bar")).build();
     final var event = new LoggedEventImpl();
-    final var metadata = new RecordMetadata();
+    final var metadata = new RecordRequest();
     final var value = new TestValue();
     entry.recordMetadata().rejectionReason(rejection);
 

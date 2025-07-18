@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.timer;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
@@ -60,7 +60,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
 
   public TimerTriggerProcessor(
       final MutableProcessingState processingState,
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final Writers writers) {
     catchEventBehavior = bpmnBehaviors.catchEventBehavior();
     expressionProcessor = bpmnBehaviors.expressionBehavior();

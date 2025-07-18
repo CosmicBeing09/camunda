@@ -17,7 +17,7 @@ import io.camunda.zeebe.logstreams.log.LogRecordAwaiter;
 import io.camunda.zeebe.logstreams.log.LogStream;
 import io.camunda.zeebe.logstreams.log.LogStreamReader;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.Intent;
@@ -621,7 +621,7 @@ public final class ExporterDirector extends Actor implements HealthMonitorable, 
   }
 
   private void skipRecord(final LoggedEvent currentEvent) {
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     final long eventPosition = currentEvent.getPosition();
 
     currentEvent.readMetadata(metadata);
@@ -743,7 +743,7 @@ public final class ExporterDirector extends Actor implements HealthMonitorable, 
 
   private static class ExporterEventFilter implements EventFilter {
 
-    private final RecordMetadata metadata = new RecordMetadata();
+    private final RecordRequest metadata = new RecordRequest();
     private final Map<RecordType, Boolean> acceptRecordTypes;
     private final Map<ValueType, Boolean> acceptValueTypes;
     private final Map<Intent, Boolean> acceptIntents;

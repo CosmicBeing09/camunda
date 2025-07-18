@@ -31,7 +31,7 @@ import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.distribution.CommandDistributionRecord;
 import io.camunda.zeebe.protocol.record.Record;
@@ -77,7 +77,7 @@ public class CommandDistributionScalingTest {
     intent = DeploymentIntent.CREATE;
     command =
         new MockTypedRecord<>(
-            key, new RecordMetadata().valueType(valueType).intent(intent), new DeploymentRecord());
+            key, new RecordRequest().valueType(valueType).intent(intent), new DeploymentRecord());
 
     // given a scale operation ongoing to transition to 3 partitions
     state.getRoutingState().initializeRoutingInfo(2);

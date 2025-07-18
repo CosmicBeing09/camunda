@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
@@ -90,7 +90,7 @@ public final class AssignUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction(DEFAULT_ACTION)
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(UserTaskEntity.ASSIGNEE)
                     .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
   }
 
@@ -127,8 +127,8 @@ public final class AssignUserTaskTest {
             tuple(UserTaskIntent.CREATED, StringUtils.EMPTY, action, List.of()),
             // The `assignee` property isn't yet available during the `CREATED` event
             // as it becomes effective only during the assignment phase.
-            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(UserTaskIntent.ASSIGNING, assignee, action, List.of(UserTaskEntity.ASSIGNEE)),
+            tuple(UserTaskIntent.ASSIGNED, assignee, action, List.of(UserTaskEntity.ASSIGNEE)));
   }
 
   @Test
@@ -214,7 +214,7 @@ public final class AssignUserTaskTest {
                     .hasUserTaskKey(userTaskKey)
                     .hasAction("customAction")
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(UserTaskEntity.ASSIGNEE)
                     .hasTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER));
   }
 
@@ -264,11 +264,11 @@ public final class AssignUserTaskTest {
             tuple(UserTaskIntent.CREATED, "", "", List.of()),
             // The `assignee` property isn't yet available during the `CREATING/CREATED` events
             // as it becomes effective only during the assignment phase.
-            tuple(UserTaskIntent.ASSIGNING, initialAssignee, "", List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.ASSIGNED, initialAssignee, "", List.of(UserTaskRecord.ASSIGNEE)),
+            tuple(UserTaskIntent.ASSIGNING, initialAssignee, "", List.of(UserTaskEntity.ASSIGNEE)),
+            tuple(UserTaskIntent.ASSIGNED, initialAssignee, "", List.of(UserTaskEntity.ASSIGNEE)),
             // records related to user task unassignment
-            tuple(UserTaskIntent.ASSIGNING, "", unassignAction, List.of(UserTaskRecord.ASSIGNEE)),
-            tuple(UserTaskIntent.ASSIGNED, "", unassignAction, List.of(UserTaskRecord.ASSIGNEE)));
+            tuple(UserTaskIntent.ASSIGNING, "", unassignAction, List.of(UserTaskEntity.ASSIGNEE)),
+            tuple(UserTaskIntent.ASSIGNED, "", unassignAction, List.of(UserTaskEntity.ASSIGNEE)));
   }
 
   @Test
@@ -326,7 +326,7 @@ public final class AssignUserTaskTest {
                 Assertions.assertThat(recordValue)
                     .hasAction(DEFAULT_ACTION)
                     .hasAssignee("foo")
-                    .hasOnlyChangedAttributes(UserTaskRecord.ASSIGNEE)
+                    .hasOnlyChangedAttributes(UserTaskEntity.ASSIGNEE)
                     .hasTenantId(tenantId));
   }
 

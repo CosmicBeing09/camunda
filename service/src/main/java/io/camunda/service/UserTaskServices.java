@@ -17,7 +17,6 @@ import io.camunda.search.clients.FormSearchClient;
 import io.camunda.search.clients.UserTaskSearchClient;
 import io.camunda.search.clients.VariableSearchClient;
 import io.camunda.search.entities.FormEntity;
-import io.camunda.search.entities.UserTaskEntity;
 import io.camunda.search.entities.VariableEntity;
 import io.camunda.search.query.SearchQueryResult;
 import io.camunda.search.query.UserTaskQuery;
@@ -33,7 +32,7 @@ import io.camunda.zeebe.broker.client.api.BrokerClient;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskAssignmentRequest;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskCompletionRequest;
 import io.camunda.zeebe.gateway.impl.broker.request.BrokerUserTaskUpdateRequest;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +43,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public final class UserTaskServices
-    extends SearchQueryService<UserTaskServices, UserTaskQuery, UserTaskEntity> {
+    extends SearchQueryService<UserTaskServices, UserTaskQuery, io.camunda.search.entities.UserTaskEntity> {
 
   private final UserTaskSearchClient userTaskSearchClient;
   private final FormSearchClient formSearchClient;
@@ -79,7 +78,7 @@ public final class UserTaskServices
   }
 
   @Override
-  public SearchQueryResult<UserTaskEntity> search(final UserTaskQuery query) {
+  public SearchQueryResult<io.camunda.search.entities.UserTaskEntity> search(final UserTaskQuery query) {
     return userTaskSearchClient
         .withSecurityContext(
             securityContextProvider.provideSecurityContext(
@@ -87,12 +86,12 @@ public final class UserTaskServices
         .searchUserTasks(query);
   }
 
-  public SearchQueryResult<UserTaskEntity> search(
+  public SearchQueryResult<io.camunda.search.entities.UserTaskEntity> search(
       final Function<Builder, ObjectBuilder<UserTaskQuery>> fn) {
     return search(userTaskSearchQuery(fn));
   }
 
-  public CompletableFuture<UserTaskRecord> assignUserTask(
+  public CompletableFuture<UserTaskEntity> assignUserTask(
       final long userTaskKey,
       final String assignee,
       final String action,
@@ -105,24 +104,24 @@ public final class UserTaskServices
             allowOverride ? UserTaskIntent.ASSIGN : UserTaskIntent.CLAIM));
   }
 
-  public CompletableFuture<UserTaskRecord> completeUserTask(
+  public CompletableFuture<UserTaskEntity> completeUserTask(
       final long userTaskKey, final Map<String, Object> variables, final String action) {
     return sendBrokerRequest(
         new BrokerUserTaskCompletionRequest(userTaskKey, getDocumentOrEmpty(variables), action));
   }
 
-  public CompletableFuture<UserTaskRecord> unassignUserTask(
+  public CompletableFuture<UserTaskEntity> unassignUserTask(
       final long userTaskKey, final String action) {
     return sendBrokerRequest(
         new BrokerUserTaskAssignmentRequest(userTaskKey, "", action, UserTaskIntent.ASSIGN));
   }
 
-  public CompletableFuture<UserTaskRecord> updateUserTask(
-      final long userTaskKey, final UserTaskRecord changeset, final String action) {
+  public CompletableFuture<UserTaskEntity> updateUserTask(
+      final long userTaskKey, final UserTaskEntity changeset, final String action) {
     return sendBrokerRequest(new BrokerUserTaskUpdateRequest(userTaskKey, changeset, action));
   }
 
-  public UserTaskEntity getByKey(final long userTaskKey) {
+  public io.camunda.search.entities.UserTaskEntity getByKey(final long userTaskKey) {
     final var result =
         userTaskSearchClient
             .withSecurityContext(securityContextProvider.provideSecurityContext(authentication))

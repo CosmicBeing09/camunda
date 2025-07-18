@@ -29,7 +29,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import java.time.InstantSource;
 
-public final class BpmnBehaviorsImpl implements BpmnBehaviors {
+public final class BpmnBehaviorsImpl implements BpmnBehaviorProvider {
 
   private final ExpressionProcessor expressionBehavior;
   private final BpmnDecisionBehavior bpmnDecisionBehavior;

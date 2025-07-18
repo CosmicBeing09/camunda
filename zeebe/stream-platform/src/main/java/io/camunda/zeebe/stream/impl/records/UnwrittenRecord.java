@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.stream.impl.records;
 
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -20,13 +20,13 @@ public class UnwrittenRecord implements TypedRecord {
   private final long key;
   private final int partitionId;
   private final UnifiedRecordValue value;
-  private final RecordMetadata metadata;
+  private final RecordRequest metadata;
 
   public UnwrittenRecord(
       final long key,
       final int partitionId,
       final UnifiedRecordValue value,
-      final RecordMetadata metadata) {
+      final RecordRequest metadata) {
     this.key = key;
     this.partitionId = partitionId;
     this.value = value;

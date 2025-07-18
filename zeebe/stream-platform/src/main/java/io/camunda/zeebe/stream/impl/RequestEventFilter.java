@@ -8,16 +8,16 @@
 package io.camunda.zeebe.stream.impl;
 
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.stream.api.EventFilter;
 import io.camunda.zeebe.stream.api.MetadataFilter;
 
-public class MetadataEventFilter implements EventFilter {
+public class RequestEventFilter implements EventFilter {
 
-  protected final RecordMetadata metadata = new RecordMetadata();
+  protected final RecordRequest metadata = new RecordRequest();
   protected final MetadataFilter metadataFilter;
 
-  public MetadataEventFilter(final MetadataFilter metadataFilter) {
+  public RequestEventFilter(final MetadataFilter metadataFilter) {
     this.metadataFilter = metadataFilter;
   }
 

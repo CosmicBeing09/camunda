@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.bpmn.task;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
@@ -32,7 +32,7 @@ public final class ReceiveTaskProcessor implements BpmnElementProcessor<Executab
   private final BpmnJobBehavior jobBehavior;
 
   public ReceiveTaskProcessor(
-      final BpmnBehaviors behaviors, final BpmnStateTransitionBehavior stateTransitionBehavior) {
+      final BpmnBehaviorProvider behaviors, final BpmnStateTransitionBehavior stateTransitionBehavior) {
     eventSubscriptionBehavior = behaviors.eventSubscriptionBehavior();
     incidentBehavior = behaviors.incidentBehavior();
     this.stateTransitionBehavior = stateTransitionBehavior;

@@ -11,7 +11,7 @@ import static io.camunda.zeebe.stream.impl.TypedEventRegistry.EVENT_REGISTRY;
 
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.protocol.impl.record.CopiedRecord;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.util.ReflectUtil;
 import org.agrona.DirectBuffer;
@@ -33,7 +33,7 @@ public final class CopiedRecords {
     contentBuffer.getBytes(rawEvent.getMetadataOffset(), metadataBytes);
     final DirectBuffer metadataBuffer = new UnsafeBuffer(metadataBytes);
 
-    final RecordMetadata metadata = new RecordMetadata();
+    final RecordRequest metadata = new RecordRequest();
     metadata.wrap(metadataBuffer, 0, metadataBuffer.capacity());
 
     final byte[] valueBytes = new byte[rawEvent.getValueLength()];

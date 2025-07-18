@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.util;
 import io.camunda.zeebe.logstreams.log.LogStreamReader;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.logstreams.util.TestLogStream;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 public final class ProcessingExporterTransistor implements StreamProcessorLifecycleAware {
 
   private final RecordValues recordValues = new RecordValues();
-  private final RecordMetadata metadata = new RecordMetadata();
+  private final RecordRequest metadata = new RecordRequest();
 
   private LogStreamReader logStreamReader;
   private TypedRecordImpl typedEvent;

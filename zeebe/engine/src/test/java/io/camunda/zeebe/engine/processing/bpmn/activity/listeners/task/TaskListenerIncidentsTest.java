@@ -16,7 +16,7 @@ import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -308,7 +308,7 @@ public class TaskListenerIncidentsTest {
             userTask ->
                 Assertions.assertThat(userTask)
                     .hasAction("")
-                    .hasOnlyChangedAttributes(UserTaskRecord.VARIABLES));
+                    .hasOnlyChangedAttributes(UserTaskEntity.VARIABLES));
 
     Assertions.assertThat(
             RecordingExporter.variableRecords(VariableIntent.CREATED)

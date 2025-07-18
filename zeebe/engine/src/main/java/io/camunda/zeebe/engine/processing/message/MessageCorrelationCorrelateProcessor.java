@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.message;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviorProvider;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
@@ -56,7 +56,7 @@ public final class MessageCorrelationCorrelateProcessor
       final KeyGenerator keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final ProcessState processState,
-      final BpmnBehaviors bpmnBehaviors,
+      final BpmnBehaviorProvider bpmnBehaviors,
       final MessageStartEventSubscriptionState startEventSubscriptionState,
       final MessageState messageState,
       final MessageSubscriptionState messageSubscriptionState,

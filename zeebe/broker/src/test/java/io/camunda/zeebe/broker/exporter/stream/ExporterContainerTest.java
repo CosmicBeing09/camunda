@@ -17,7 +17,7 @@ import io.camunda.zeebe.broker.exporter.stream.ExporterDirector.ExporterInitiali
 import io.camunda.zeebe.exporter.api.Exporter;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.exporter.api.context.Controller;
-import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
+import io.camunda.zeebe.protocol.impl.record.RecordRequest;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RecordType;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -200,7 +200,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
 
       // when
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
@@ -218,7 +218,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
 
       // when
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
@@ -239,7 +239,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
 
       // when
@@ -264,7 +264,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
 
       // when
@@ -287,7 +287,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
 
       // when
@@ -310,7 +310,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
       when(mockedRecord.getPosition()).thenReturn(2L);
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
@@ -337,7 +337,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
 
       // when
@@ -361,7 +361,7 @@ final class ExporterContainerTest {
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
       final byte[] metadata = "metadata".getBytes();
-      final var recordMetadata = new RecordMetadata().requestId(1L);
+      final var recordMetadata = new RecordRequest().requestId(1L);
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
 
       exporterContainer.updateLastExportedRecordPosition(mockedRecord.getPosition(), metadata);
@@ -391,7 +391,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
 
       // when
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
@@ -411,7 +411,7 @@ final class ExporterContainerTest {
 
       final var mockedRecord = mock(TypedRecord.class);
       when(mockedRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, mockedRecord);
       exporterContainer.updateLastExportedRecordPosition(mockedRecord.getPosition());
       awaitPreviousCall();
@@ -437,7 +437,7 @@ final class ExporterContainerTest {
 
       final var firstRecord = mock(TypedRecord.class);
       when(firstRecord.getPosition()).thenReturn(1L);
-      final var recordMetadata = new RecordMetadata();
+      final var recordMetadata = new RecordRequest();
       exporterContainer.exportRecord(recordMetadata, firstRecord);
 
       // when
