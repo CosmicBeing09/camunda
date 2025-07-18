@@ -65,6 +65,16 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
     return versionProp.getValue();
   }
 
+  public ProcessMetadata setVersion(final int version) {
+    versionProp.setValue(version);
+    return this;
+  }
+
+  @Override
+  public String getVersionTag() {
+    return bufferAsString(versionTagProp.getValue());
+  }
+
   @Override
   public long getProcessDefinitionKey() {
     return getKey();
@@ -115,8 +125,8 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
     return this;
   }
 
-  public ProcessMetadata setVersion(final int version) {
-    versionProp.setValue(version);
+  public ProcessMetadata setVersionTag(final String versionTag) {
+    versionTagProp.setValue(versionTag);
     return this;
   }
 
@@ -174,22 +184,12 @@ public final class ProcessMetadata extends UnifiedRecordValue implements Process
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 
   public ProcessMetadata setTenantId(final String tenantId) {
     tenantIdProp.setValue(tenantId);
-    return this;
-  }
-
-  @Override
-  public String getVersionTag() {
-    return bufferAsString(versionTagProp.getValue());
-  }
-
-  public ProcessMetadata setVersionTag(final String versionTag) {
-    versionTagProp.setValue(versionTag);
     return this;
   }
 }

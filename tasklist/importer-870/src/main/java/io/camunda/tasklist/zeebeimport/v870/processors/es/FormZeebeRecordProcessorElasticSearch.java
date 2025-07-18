@@ -52,7 +52,7 @@ public class FormZeebeRecordProcessorElasticSearch {
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
           (long) recordValue.getVersion(),
-          recordValue.getTenantId(),
+          recordValue.getTenantIdentifier(),
           recordValue.getFormId(),
           false,
           bulkRequest);
@@ -61,7 +61,7 @@ public class FormZeebeRecordProcessorElasticSearch {
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
           (long) recordValue.getVersion(),
-          recordValue.getTenantId(),
+          recordValue.getTenantIdentifier(),
           recordValue.getFormId(),
           true,
           bulkRequest);

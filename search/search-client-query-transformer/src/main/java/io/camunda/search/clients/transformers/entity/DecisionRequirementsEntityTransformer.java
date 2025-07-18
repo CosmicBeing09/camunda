@@ -25,6 +25,6 @@ public class DecisionRequirementsEntityTransformer
         source.getVersion(),
         source.getResourceName(),
         source.getXml(),
-        source.getTenantId());
+        source.getTenantIdentifier());
   }
 }

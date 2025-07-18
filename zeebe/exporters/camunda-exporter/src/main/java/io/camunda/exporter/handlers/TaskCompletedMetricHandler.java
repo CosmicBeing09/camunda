@@ -58,7 +58,7 @@ public class TaskCompletedMetricHandler
         .setEvent(EVENT_TASK_COMPLETED_BY_ASSIGNEE)
         .setEventTime(ExporterUtil.toOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())))
         .setValue(record.getValue().getAssignee())
-        .setTenantId(record.getValue().getTenantId());
+        .setTenantId(record.getValue().getTenantIdentifier());
   }
 
   @Override

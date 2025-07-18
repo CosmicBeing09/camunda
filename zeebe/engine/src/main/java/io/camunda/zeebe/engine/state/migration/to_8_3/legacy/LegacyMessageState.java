@@ -154,7 +154,7 @@ public final class LegacyMessageState {
             messagesDeadlineCountKey,
             messagesDeadlineCount);
 
-    messagesDeadlineCountKey.wrapString(DEADLINE_MESSAGE_COUNT_KEY);
+    messagesDeadlineCountKey.setValueFromString(DEADLINE_MESSAGE_COUNT_KEY);
 
     messageId = new DbString();
     nameCorrelationMessageIdKey = new DbCompositeKey<>(nameAndCorrelationKey, messageId);
@@ -194,25 +194,25 @@ public final class LegacyMessageState {
   }
 
   public void put(final long key, final MessageRecord record) {
-    messageKey.wrapLong(key);
+    messageKey.setValue(key);
     message.setMessageKey(key).setMessage(record);
     messageColumnFamily.insert(messageKey, message);
 
-    messageName.wrapBuffer(record.getNameBuffer());
-    correlationKey.wrapBuffer(record.getCorrelationKeyBuffer());
+    messageName.setValueFromBuffer(record.getNameBuffer());
+    correlationKey.setValueFromBuffer(record.getCorrelationKeyBuffer());
     nameCorrelationMessageColumnFamily.insert(nameCorrelationMessageKey, DbNil.INSTANCE);
 
-    deadline.wrapLong(record.getDeadline());
+    deadline.setValue(record.getDeadline());
     deadlineColumnFamily.insert(deadlineMessageKey, DbNil.INSTANCE);
 
     localMessageDeadlineCount += 1L;
-    messagesDeadlineCount.wrapLong(localMessageDeadlineCount);
+    messagesDeadlineCount.setValue(localMessageDeadlineCount);
     messagesDeadlineCountColumnFamily.upsert(messagesDeadlineCountKey, messagesDeadlineCount);
     bufferedMessagesMetrics.setBufferedMessagesCounter(localMessageDeadlineCount);
 
     final DirectBuffer messageId = record.getMessageIdBuffer();
     if (messageId.capacity() > 0) {
-      this.messageId.wrapBuffer(messageId);
+      this.messageId.setValueFromBuffer(messageId);
       messageIdColumnFamily.upsert(nameCorrelationMessageIdKey, DbNil.INSTANCE);
     }
   }

@@ -43,7 +43,7 @@ final class ProcessInstanceSequenceFlowTakenApplier
     final var sequenceFlow =
         processState.getFlowElement(
             value.getProcessDefinitionKey(),
-            value.getTenantId(),
+            value.getTenantIdentifier(),
             value.getElementIdBuffer(),
             ExecutableSequenceFlow.class);
     final var target = sequenceFlow.getTarget();

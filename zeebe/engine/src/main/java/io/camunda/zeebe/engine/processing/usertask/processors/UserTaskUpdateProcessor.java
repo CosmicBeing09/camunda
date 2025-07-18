@@ -175,7 +175,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
               userTaskRecord.getProcessDefinitionKey(),
               userTaskRecord.getProcessInstanceKey(),
               userTaskRecord.getBpmnProcessIdBuffer(),
-              userTaskRecord.getTenantId(),
+              userTaskRecord.getTenantIdentifier(),
               variableRecord.getVariablesBuffer());
       case PROPAGATE ->
           variableBehavior.mergeDocument(
@@ -183,7 +183,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
               userTaskRecord.getProcessDefinitionKey(),
               userTaskRecord.getProcessInstanceKey(),
               userTaskRecord.getBpmnProcessIdBuffer(),
-              userTaskRecord.getTenantId(),
+              userTaskRecord.getTenantIdentifier(),
               variableRecord.getVariablesBuffer());
       default ->
           throw new IllegalStateException(

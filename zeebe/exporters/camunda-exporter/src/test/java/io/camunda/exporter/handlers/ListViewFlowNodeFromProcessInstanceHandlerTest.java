@@ -240,8 +240,8 @@ public class ListViewFlowNodeFromProcessInstanceHandlerTest {
         .isEqualTo(processInstanceRecord.getKey());
     assertThat(flowNodeInstanceForListViewEntity.getProcessInstanceKey())
         .isEqualTo(processInstanceRecordValue.getProcessInstanceKey());
-    assertThat(flowNodeInstanceForListViewEntity.getTenantId())
-        .isEqualTo(processInstanceRecordValue.getTenantId());
+    assertThat(flowNodeInstanceForListViewEntity.getTenantIdentifier())
+        .isEqualTo(processInstanceRecordValue.getTenantIdentifier());
     assertThat(flowNodeInstanceForListViewEntity.getPartitionId())
         .isEqualTo(processInstanceRecord.getPartitionId());
     assertThat(flowNodeInstanceForListViewEntity.getPosition())

@@ -150,7 +150,7 @@ public class FormResponse {
         .setProcessDefinitionKey(form.getProcessDefinitionId())
         .setSchema(form.getSchema())
         .setVersion(form.getVersion())
-        .setTenantId(form.getTenantId())
+        .setTenantId(form.getTenantIdentifier())
         .setIsDeleted(form.getIsDeleted());
   }
 
@@ -165,7 +165,7 @@ public class FormResponse {
                 : processEntity.getBpmnProcessId())
         .setSchema(form.getSchema())
         .setVersion(form.getVersion())
-        .setTenantId(form.getTenantId())
+        .setTenantId(form.getTenantIdentifier())
         .setIsDeleted(form.getIsDeleted());
   }
 }

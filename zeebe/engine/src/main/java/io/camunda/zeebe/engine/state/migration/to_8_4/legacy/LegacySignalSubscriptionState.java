@@ -83,7 +83,7 @@ public class LegacySignalSubscriptionState {
   }
 
   private void wrapSubscriptionKeys(final long key, final DirectBuffer signalName) {
-    subscriptionKey.wrapLong(key);
-    this.signalName.wrapBuffer(signalName);
+    subscriptionKey.setValue(key);
+    this.signalName.setValueFromBuffer(signalName);
   }
 }

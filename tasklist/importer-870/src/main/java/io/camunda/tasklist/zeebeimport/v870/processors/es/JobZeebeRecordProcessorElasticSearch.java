@@ -87,7 +87,7 @@ public class JobZeebeRecordProcessorElasticSearch {
             .setProcessInstanceId(String.valueOf(recordValue.getProcessInstanceKey()))
             .setBpmnProcessId(recordValue.getBpmnProcessId())
             .setProcessDefinitionId(processDefinitionId)
-            .setTenantId(recordValue.getTenantId());
+            .setTenantId(recordValue.getTenantIdentifier());
 
     final String dueDate =
         recordValue.getCustomHeaders().get(Protocol.USER_TASK_DUE_DATE_HEADER_NAME);

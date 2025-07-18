@@ -58,7 +58,7 @@ public final class MessageSubscriptionRecord extends UnifiedRecordValue
     setInterrupting(record.isInterrupting());
     setBpmnProcessId(record.getBpmnProcessIdBuffer());
     setVariables(record.getVariablesBuffer());
-    setTenantId(record.getTenantId());
+    setTenantId(record.getTenantIdentifier());
   }
 
   @JsonIgnore
@@ -162,7 +162,7 @@ public final class MessageSubscriptionRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

@@ -59,8 +59,8 @@ public final class VersionManager {
   }
 
   public void addResourceVersion(final String resourceId, final long value, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapString(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromString(resourceId);
     final var versionInfo = getVersionInfo();
     versionInfo.addKnownVersion(value);
     versionInfoColumnFamily.upsert(tenantAwareIdKey, versionInfo);
@@ -76,8 +76,8 @@ public final class VersionManager {
    */
   public void deleteResourceVersion(
       final String resourceId, final long version, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapString(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromString(resourceId);
     final var versionInfo = getVersionInfo();
     versionInfo.removeKnownVersion(version);
     versionInfoColumnFamily.update(tenantAwareIdKey, versionInfo);
@@ -97,8 +97,8 @@ public final class VersionManager {
    * @return the latest known version of this resource
    */
   public long getLatestResourceVersion(final String resourceId, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapString(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromString(resourceId);
     return getVersionInfo().getLatestVersion();
   }
 
@@ -111,8 +111,8 @@ public final class VersionManager {
    * @return the latest known version of this resource
    */
   public long getLatestResourceVersion(final DirectBuffer resourceId, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapBuffer(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromBuffer(resourceId);
     return getVersionInfo().getLatestVersion();
   }
 
@@ -125,8 +125,8 @@ public final class VersionManager {
    * @return the highest version ever deployed for this resource id.
    */
   public long getHighestResourceVersion(final String resourceId, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapString(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromString(resourceId);
     return getHighestResourceVersion();
   }
 
@@ -139,8 +139,8 @@ public final class VersionManager {
    * @return the highest version ever deployed for this resource id.
    */
   public long getHighestResourceVersion(final DirectBuffer resourceId, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapBuffer(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromBuffer(resourceId);
     return getHighestResourceVersion();
   }
 
@@ -150,8 +150,8 @@ public final class VersionManager {
 
   public Optional<Integer> findResourceVersionBefore(
       final String resourceId, final long version, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    idKey.wrapString(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
+    idKey.setValueFromString(resourceId);
     return getVersionInfo().findVersionBefore(version);
   }
 

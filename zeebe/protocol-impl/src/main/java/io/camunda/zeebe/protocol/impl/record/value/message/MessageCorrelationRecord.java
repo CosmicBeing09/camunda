@@ -51,7 +51,7 @@ public final class MessageCorrelationRecord extends UnifiedRecordValue
     setName(record.getName());
     setCorrelationKey(record.getCorrelationKey());
     setVariables(record.getVariablesBuffer());
-    setTenantId(record.getTenantId());
+    setTenantId(record.getTenantIdentifier());
     setProcessInstanceKey(record.getProcessInstanceKey());
   }
 
@@ -131,7 +131,7 @@ public final class MessageCorrelationRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

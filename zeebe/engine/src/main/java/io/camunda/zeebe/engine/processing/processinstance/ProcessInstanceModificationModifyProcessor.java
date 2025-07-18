@@ -194,7 +194,7 @@ public final class ProcessInstanceModificationModifyProcessor
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
-                processInstance.getValue().getTenantId())
+                processInstance.getValue().getTenantIdentifier())
             .addResourceId(processInstance.getValue().getBpmnProcessId());
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
     if (isAuthorized.isLeft()) {
@@ -214,7 +214,7 @@ public final class ProcessInstanceModificationModifyProcessor
     final var processInstanceRecord = processInstance.getValue();
     final var process =
         processState.getProcessByKeyAndTenant(
-            processInstanceRecord.getProcessDefinitionKey(), processInstanceRecord.getTenantId());
+            processInstanceRecord.getProcessDefinitionKey(), processInstanceRecord.getTenantIdentifier());
 
     final var validationResult = validateCommand(command, process);
     if (validationResult.isLeft()) {

@@ -132,7 +132,7 @@ public class ListViewZeebeRecordProcessor {
     entity.setPositionIncident(record.getPosition());
     entity.setActivityId(recordValue.getElementId());
     entity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
-    entity.setTenantId(tenantOrDefault(recordValue.getTenantId()));
+    entity.setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     if (intentStr.equals(IncidentIntent.CREATED.name())) {
       entity.setErrorMessage(StringUtils.trimWhitespace(recordValue.getErrorMessage()));
@@ -352,7 +352,7 @@ public class ListViewZeebeRecordProcessor {
         .setId(String.valueOf(recordValue.getProcessInstanceKey()))
         .setProcessInstanceKey(recordValue.getProcessInstanceKey())
         .setKey(recordValue.getProcessInstanceKey())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()))
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()))
         .setPartitionId(record.getPartitionId())
         .setPosition(record.getPosition())
         .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
@@ -413,7 +413,7 @@ public class ListViewZeebeRecordProcessor {
       throws PersistenceException {
     final String processInstanceKey = String.valueOf(piEntity.getProcessInstanceKey());
     metricsStore.registerProcessInstanceStartEvent(
-        processInstanceKey, piEntity.getTenantId(), timestamp, batchRequest);
+        processInstanceKey, piEntity.getTenantIdentifier(), timestamp, batchRequest);
   }
 
   private String getTreePathForCalledProcess(final ProcessInstanceRecordValue recordValue) {
@@ -488,7 +488,7 @@ public class ListViewZeebeRecordProcessor {
     entity.setPositionJob(record.getPosition());
     entity.setActivityId(recordValue.getElementId());
     entity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
-    entity.setTenantId(tenantOrDefault(recordValue.getTenantId()));
+    entity.setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
     entity.getJoinRelation().setParent(recordValue.getProcessInstanceKey());
 
     if (FAILED_JOB_EVENTS.contains(intentStr) && recordValue.getRetries() > 0) {
@@ -530,7 +530,7 @@ public class ListViewZeebeRecordProcessor {
     entity.setPosition(record.getPosition());
     entity.setActivityId(recordValue.getElementId());
     entity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
-    entity.setTenantId(tenantOrDefault(recordValue.getTenantId()));
+    entity.setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     if (PI_AND_AI_FINISH_STATES.contains(intentStr)) {
       // TODO this seems to never be updated in Elastic (updateFields does not include this)
@@ -574,7 +574,7 @@ public class ListViewZeebeRecordProcessor {
     entity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
     entity.setVarName(recordValue.getName());
     entity.setVarValue(recordValue.getValue());
-    entity.setTenantId(tenantOrDefault(recordValue.getTenantId()));
+    entity.setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     // set parent
     final Long processInstanceKey = recordValue.getProcessInstanceKey();

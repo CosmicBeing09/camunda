@@ -203,8 +203,8 @@ public final class DbProcessState implements MutableProcessState {
 
   @Override
   public void putLatestVersionDigest(final ProcessRecord processRecord) {
-    tenantIdKey.wrapString(processRecord.getTenantId());
-    processId.wrapBuffer(processRecord.getBpmnProcessIdBuffer());
+    tenantIdKey.setValueFromString(processRecord.getTenantIdentifier());
+    processId.setValueFromBuffer(processRecord.getBpmnProcessIdBuffer());
     digest.set(processRecord.getChecksumBuffer());
 
     digestByIdColumnFamily.upsert(fkTenantAwareProcessId, digest);
@@ -220,10 +220,10 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public void storeProcessDefinitionKeyByProcessIdAndDeploymentKey(
       final ProcessRecord processRecord) {
-    tenantIdKey.wrapString(processRecord.getTenantId());
-    processDefinitionKey.wrapLong(processRecord.getProcessDefinitionKey());
-    processId.wrapBuffer(processRecord.getBpmnProcessIdBuffer());
-    deploymentKey.wrapLong(processRecord.getDeploymentKey());
+    tenantIdKey.setValueFromString(processRecord.getTenantIdentifier());
+    processDefinitionKey.setValue(processRecord.getProcessDefinitionKey());
+    processId.setValueFromBuffer(processRecord.getBpmnProcessIdBuffer());
+    deploymentKey.setValue(processRecord.getDeploymentKey());
     processDefinitionKeyByProcessIdAndDeploymentKeyColumnFamily.upsert(
         tenantAwareProcessIdAndDeploymentKey, fkProcessDefinitionKey);
   }
@@ -232,10 +232,10 @@ public final class DbProcessState implements MutableProcessState {
   public void storeProcessDefinitionKeyByProcessIdAndVersionTag(final ProcessRecord processRecord) {
     final var versionTag = processRecord.getVersionTag();
     if (!versionTag.isBlank()) {
-      tenantIdKey.wrapString(processRecord.getTenantId());
-      processDefinitionKey.wrapLong(processRecord.getProcessDefinitionKey());
-      processId.wrapBuffer(processRecord.getBpmnProcessIdBuffer());
-      this.versionTag.wrapString(versionTag);
+      tenantIdKey.setValueFromString(processRecord.getTenantIdentifier());
+      processDefinitionKey.setValue(processRecord.getProcessDefinitionKey());
+      processId.setValueFromBuffer(processRecord.getBpmnProcessIdBuffer());
+      this.versionTag.setValueFromString(versionTag);
       processDefinitionKeyByProcessIdAndVersionTagColumnFamily.upsert(
           tenantAwareProcessIdAndVersionTagKey, fkProcessDefinitionKey);
     }
@@ -244,8 +244,8 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public void updateProcessState(
       final ProcessRecord processRecord, final PersistedProcessState state) {
-    tenantIdKey.wrapString(processRecord.getTenantId());
-    processDefinitionKey.wrapLong(processRecord.getProcessDefinitionKey());
+    tenantIdKey.setValueFromString(processRecord.getTenantIdentifier());
+    processDefinitionKey.setValue(processRecord.getProcessDefinitionKey());
 
     final var process = processColumnFamily.get(tenantAwareProcessDefinitionKey);
     process.setState(state);
@@ -256,9 +256,9 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public void setMissingDeploymentKey(
       final String tenantId, final long processDefinitionKey, final long deploymentKey) {
-    tenantIdKey.wrapString(tenantId);
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
-    this.deploymentKey.wrapLong(deploymentKey);
+    tenantIdKey.setValueFromString(tenantId);
+    this.processDefinitionKey.setValue(processDefinitionKey);
+    this.deploymentKey.setValue(deploymentKey);
 
     final var process = processColumnFamily.get(tenantAwareProcessDefinitionKey);
 
@@ -273,7 +273,7 @@ public final class DbProcessState implements MutableProcessState {
               deploymentKey, processDefinitionKey, process.getDeploymentKey()));
     }
 
-    processId.wrapBuffer(process.getBpmnProcessId());
+    processId.setValueFromBuffer(process.getBpmnProcessId());
 
     process.setDeploymentKey(deploymentKey);
     processColumnFamily.update(tenantAwareProcessDefinitionKey, process);
@@ -289,12 +289,12 @@ public final class DbProcessState implements MutableProcessState {
 
   @Override
   public void deleteProcess(final ProcessRecord processRecord) {
-    tenantIdKey.wrapString(processRecord.getTenantId());
-    processDefinitionKey.wrapLong(processRecord.getProcessDefinitionKey());
-    processId.wrapString(processRecord.getBpmnProcessId());
-    processVersion.wrapLong(processRecord.getVersion());
-    deploymentKey.wrapLong(processRecord.getDeploymentKey());
-    versionTag.wrapString(processRecord.getVersionTag());
+    tenantIdKey.setValueFromString(processRecord.getTenantIdentifier());
+    processDefinitionKey.setValue(processRecord.getProcessDefinitionKey());
+    processId.setValueFromString(processRecord.getBpmnProcessId());
+    processVersion.setValue(processRecord.getVersion());
+    deploymentKey.setValue(processRecord.getDeploymentKey());
+    versionTag.setValueFromString(processRecord.getVersionTag());
 
     processColumnFamily.deleteExisting(tenantAwareProcessDefinitionKey);
     processByIdAndVersionColumnFamily.deleteExisting(tenantAwareProcessIdAndVersionKey);
@@ -308,7 +308,7 @@ public final class DbProcessState implements MutableProcessState {
         tenantAwareProcessIdAndVersionTagKey);
 
     invalidateCaches(
-        processRecord.getTenantId(),
+        processRecord.getTenantIdentifier(),
         processRecord.getBpmnProcessIdBuffer(),
         processRecord.getProcessDefinitionKey(),
         processRecord.getDeploymentKey(),
@@ -316,7 +316,7 @@ public final class DbProcessState implements MutableProcessState {
 
     final long latestVersion =
         versionManager.getLatestResourceVersion(
-            processRecord.getBpmnProcessId(), processRecord.getTenantId());
+            processRecord.getBpmnProcessId(), processRecord.getTenantIdentifier());
     if (latestVersion == processRecord.getVersion()) {
       // As we don't set the digest to the digest of the previous there is a chance it does not
       // exist. This happens when deleting the latest version two times in a row. To be safe we must
@@ -325,7 +325,7 @@ public final class DbProcessState implements MutableProcessState {
     }
 
     versionManager.deleteResourceVersion(
-        processRecord.getBpmnProcessId(), processRecord.getVersion(), processRecord.getTenantId());
+        processRecord.getBpmnProcessId(), processRecord.getVersion(), processRecord.getTenantIdentifier());
   }
 
   private void invalidateCaches(
@@ -350,23 +350,23 @@ public final class DbProcessState implements MutableProcessState {
   }
 
   private void persistProcess(final long processDefinitionKey, final ProcessRecord processRecord) {
-    tenantIdKey.wrapString(processRecord.getTenantId());
+    tenantIdKey.setValueFromString(processRecord.getTenantIdentifier());
     persistedProcess.wrap(processRecord, processDefinitionKey);
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
 
     processColumnFamily.upsert(tenantAwareProcessDefinitionKey, persistedProcess);
 
-    processId.wrapBuffer(processRecord.getBpmnProcessIdBuffer());
-    processVersion.wrapLong(processRecord.getVersion());
+    processId.setValueFromBuffer(processRecord.getBpmnProcessIdBuffer());
+    processVersion.setValue(processRecord.getVersion());
 
     processByIdAndVersionColumnFamily.upsert(tenantAwareProcessIdAndVersionKey, persistedProcess);
   }
 
   private void updateLatestVersion(final ProcessRecord processRecord) {
-    processId.wrapBuffer(processRecord.getBpmnProcessIdBuffer());
+    processId.setValueFromBuffer(processRecord.getBpmnProcessIdBuffer());
     final var bpmnProcessId = processRecord.getBpmnProcessId();
     final var version = processRecord.getVersion();
-    versionManager.addResourceVersion(bpmnProcessId, version, processRecord.getTenantId());
+    versionManager.addResourceVersion(bpmnProcessId, version, processRecord.getTenantIdentifier());
   }
 
   // is called on getters, if process is not in memory
@@ -436,7 +436,7 @@ public final class DbProcessState implements MutableProcessState {
         processesByTenantAndProcessIdAndVersionCache.getIfPresent(tenantIdAndProcessIdAndVersion);
 
     if (cachedProcess == null) {
-      processId.wrapBuffer(processIdBuffer);
+      processId.setValueFromBuffer(processIdBuffer);
       return lookupProcessByIdAndPersistedVersion(latestVersion, tenantId);
     }
     return cachedProcess;
@@ -459,9 +459,9 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public DeployedProcess getProcessByProcessIdAndVersionTag(
       final DirectBuffer processId, final String versionTag, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    this.processId.wrapBuffer(processId);
-    this.versionTag.wrapString(versionTag);
+    tenantIdKey.setValueFromString(tenantId);
+    this.processId.setValueFromBuffer(processId);
+    this.versionTag.setValueFromString(versionTag);
     final var foreignKey =
         processDefinitionKeyByProcessIdAndVersionTagColumnFamily.get(
             tenantAwareProcessIdAndVersionTagKey);
@@ -506,8 +506,8 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public DirectBuffer getLatestVersionDigest(
       final DirectBuffer processIdBuffer, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    processId.wrapBuffer(processIdBuffer);
+    tenantIdKey.setValueFromString(tenantId);
+    processId.setValueFromBuffer(processIdBuffer);
     final Digest latestDigest = digestByIdColumnFamily.get(fkTenantAwareProcessId);
     return latestDigest == null || digest.get().byteArray() == null ? null : latestDigest.get();
   }
@@ -572,8 +572,8 @@ public final class DbProcessState implements MutableProcessState {
       return;
     }
 
-    tenantIdKey.wrapString(previousProcess.tenantId());
-    processDefinitionKey.wrapLong(previousProcess.processDefinitionKey());
+    tenantIdKey.setValueFromString(previousProcess.tenantId());
+    processDefinitionKey.setValue(previousProcess.processDefinitionKey());
     processColumnFamily.whileTrue(
         tenantAwareProcessDefinitionKey,
         (key, value) -> {
@@ -602,8 +602,8 @@ public final class DbProcessState implements MutableProcessState {
 
   private DeployedProcess lookupProcessByIdAndPersistedVersion(
       final long latestVersion, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    processVersion.wrapLong(latestVersion);
+    tenantIdKey.setValueFromString(tenantId);
+    processVersion.setValue(latestVersion);
 
     final PersistedProcess processWithVersionAndId =
         processByIdAndVersionColumnFamily.get(tenantAwareProcessIdAndVersionKey);
@@ -616,9 +616,9 @@ public final class DbProcessState implements MutableProcessState {
 
   private DeployedProcess lookupPersistenceState(
       final DirectBuffer processIdBuffer, final int version, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    processId.wrapBuffer(processIdBuffer);
-    processVersion.wrapLong(version);
+    tenantIdKey.setValueFromString(tenantId);
+    processId.setValueFromBuffer(processIdBuffer);
+    processVersion.setValue(version);
 
     final PersistedProcess processWithVersionAndId =
         processByIdAndVersionColumnFamily.get(tenantAwareProcessIdAndVersionKey);
@@ -639,8 +639,8 @@ public final class DbProcessState implements MutableProcessState {
 
   private DeployedProcess lookupPersistenceStateForProcessByKey(
       final long processDefinitionKey, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    tenantIdKey.setValueFromString(tenantId);
+    this.processDefinitionKey.setValue(processDefinitionKey);
 
     final PersistedProcess processWithKey =
         processColumnFamily.get(tenantAwareProcessDefinitionKey);
@@ -656,9 +656,9 @@ public final class DbProcessState implements MutableProcessState {
 
   private Long lookupPersistenceStateForProcessDefinitionKey(
       final DirectBuffer processIdBuffer, final long deploymentKey, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    processId.wrapBuffer(processIdBuffer);
-    this.deploymentKey.wrapLong(deploymentKey);
+    tenantIdKey.setValueFromString(tenantId);
+    processId.setValueFromBuffer(processIdBuffer);
+    this.deploymentKey.setValue(deploymentKey);
 
     final var foreignKey =
         processDefinitionKeyByProcessIdAndDeploymentKeyColumnFamily.get(

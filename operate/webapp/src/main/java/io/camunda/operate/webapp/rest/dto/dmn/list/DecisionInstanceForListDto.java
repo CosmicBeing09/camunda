@@ -44,7 +44,7 @@ public class DecisionInstanceForListDto {
         .setProcessInstanceId(String.valueOf(entity.getProcessInstanceKey()))
         .setState(DecisionInstanceStateDto.getState(entity.getState()))
         .setSortValues(SortValuesWrapper.createFrom(entity.getSortValues(), objectMapper))
-        .setTenantId(entity.getTenantId());
+        .setTenantId(entity.getTenantIdentifier());
   }
 
   public static List<DecisionInstanceForListDto> createFrom(

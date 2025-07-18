@@ -216,7 +216,7 @@ public class FlowNodeInstanceEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

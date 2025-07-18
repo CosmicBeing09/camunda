@@ -26,7 +26,7 @@ public final class DbLastProcessedPositionState implements MutableLastProcessedP
   public DbLastProcessedPositionState(
       final ZeebeDb<ZbColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     positionKey = new DbString();
-    positionKey.wrapString(LAST_PROCESSED_EVENT_KEY);
+    positionKey.setValueFromString(LAST_PROCESSED_EVENT_KEY);
     positionColumnFamily =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.DEFAULT, transactionContext, positionKey, position);

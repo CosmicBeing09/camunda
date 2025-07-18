@@ -103,7 +103,7 @@ public class VariableForListViewEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

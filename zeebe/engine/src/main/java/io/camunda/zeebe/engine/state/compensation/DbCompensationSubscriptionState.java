@@ -64,8 +64,8 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   @Override
   public List<CompensationSubscription> findSubscriptionsByProcessInstanceKey(
       final String tenantId, final long piKey) {
-    tenantIdKey.wrapString(tenantId);
-    processInstanceKey.wrapLong(piKey);
+    tenantIdKey.setValueFromString(tenantId);
+    processInstanceKey.setValue(piKey);
 
     final List<CompensationSubscription> subscriptions = new ArrayList<>();
     compensationSubscriptionColumnFamily.whileEqualPrefix(
@@ -79,8 +79,8 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   @Override
   public Optional<CompensationSubscription> findSubscriptionByCompensationHandlerId(
       final String tenantId, final long piKey, final String compensationHandlerId) {
-    tenantIdKey.wrapString(tenantId);
-    processInstanceKey.wrapLong(piKey);
+    tenantIdKey.setValueFromString(tenantId);
+    processInstanceKey.setValue(piKey);
 
     final List<CompensationSubscription> compensationSubscription = new ArrayList<>();
     compensationSubscriptionColumnFamily.whileEqualPrefix(
@@ -97,8 +97,8 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   @Override
   public List<CompensationSubscription> findSubscriptionsByThrowEventInstanceKey(
       final String tenantId, final long piKey, final long throwEventInstanceKey) {
-    tenantIdKey.wrapString(tenantId);
-    processInstanceKey.wrapLong(piKey);
+    tenantIdKey.setValueFromString(tenantId);
+    processInstanceKey.setValue(piKey);
 
     final List<CompensationSubscription> compensations = new ArrayList<>();
     compensationSubscriptionColumnFamily.whileEqualPrefix(
@@ -139,8 +139,8 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
 
   private void wrapCompensationKeys(
       final long processInstance, final long key, final String tenantId) {
-    processInstanceKey.wrapLong(processInstance);
-    recordKey.wrapLong(key);
-    tenantIdKey.wrapString(tenantId);
+    processInstanceKey.setValue(processInstance);
+    recordKey.setValue(key);
+    tenantIdKey.setValueFromString(tenantId);
   }
 }

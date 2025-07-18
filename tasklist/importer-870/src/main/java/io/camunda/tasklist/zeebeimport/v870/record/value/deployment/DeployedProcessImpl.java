@@ -110,7 +110,7 @@ public class DeployedProcessImpl implements Process {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

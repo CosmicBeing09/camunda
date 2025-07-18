@@ -176,7 +176,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
             .setElementId(job.getElementIdBuffer())
             .setElementInstanceKey(job.getElementInstanceKey())
             .setJobKey(jobKey)
-            .setTenantId(job.getTenantId())
+            .setTenantId(job.getTenantIdentifier())
             .setVariableScopeKey(job.getElementInstanceKey())
             .setElementInstancePath(treePathProperties.elementInstancePath())
             .setProcessDefinitionPath(treePathProperties.processDefinitionPath())

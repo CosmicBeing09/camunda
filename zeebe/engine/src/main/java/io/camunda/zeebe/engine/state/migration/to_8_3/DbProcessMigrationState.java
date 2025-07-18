@@ -161,13 +161,13 @@ public final class DbProcessMigrationState {
 
   public void migrateProcessStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
-    tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    tenantIdKey.setValueFromString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     iterator.drain(
         deprecatedProcessCacheColumnFamily,
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          processDefinitionKey.wrapLong(key.getValue());
+          processDefinitionKey.setValue(key.getValue());
           processColumnFamily.insert(tenantAwareProcessDefinitionKey, value);
         });
 
@@ -175,22 +175,22 @@ public final class DbProcessMigrationState {
         deprecatedProcessCacheByIdAndVersionColumnFamily,
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          processId.wrapBuffer(value.getBpmnProcessId());
-          processVersion.wrapLong(value.getVersion());
+          processId.setValueFromBuffer(value.getBpmnProcessId());
+          processVersion.setValue(value.getVersion());
           processByIdAndVersionColumnFamily.insert(tenantAwareProcessIdAndVersionKey, value);
         });
 
     iterator.drain(
         deprecatedDigestByIdColumnFamily,
         (key, value) -> {
-          processId.wrapBuffer(key.inner().getBuffer());
+          processId.setValueFromBuffer(key.inner().getBuffer());
           digestByIdColumnFamily.insert(fkTenantAwareProcessId, value);
         });
 
     iterator.drain(
         deprecatedProcessVersionColumnFamily,
         (key, value) -> {
-          idKey.wrapBuffer(key.getBuffer());
+          idKey.setValueFromBuffer(key.getBuffer());
 
           final long highestVersion = value.getHighestVersion();
           for (long version = 1; version <= highestVersion; version++) {

@@ -102,7 +102,7 @@ public class ZeebeProcessInstanceImportService
             firstRecordValue.getBpmnProcessId(),
             firstRecordValue.getProcessInstanceKey(),
             firstRecordValue.getProcessDefinitionKey(),
-            firstRecordValue.getTenantId());
+            firstRecordValue.getTenantIdentifier());
     instanceToAdd.setProcessDefinitionVersion(String.valueOf(firstRecordValue.getVersion()));
     instanceToAdd.setIncidents(Collections.emptyList());
     instanceToAdd.setVariables(Collections.emptyList());
@@ -185,7 +185,7 @@ public class ZeebeProcessInstanceImportService
         new FlowNodeInstanceDto(
             String.valueOf(zeebeInstanceRecord.getBpmnProcessId()),
             String.valueOf(zeebeInstanceRecord.getVersion()),
-            zeebeInstanceRecord.getTenantId(),
+            zeebeInstanceRecord.getTenantIdentifier(),
             String.valueOf(zeebeInstanceRecord.getProcessInstanceKey()),
             zeebeInstanceRecord.getElementId(),
             zeebeInstanceRecord

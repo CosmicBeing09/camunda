@@ -999,7 +999,7 @@ public final class DecisionStateTest {
     final var visitor = Mockito.mock(PersistedDecisionRequirementsVisitor.class);
     Mockito.when(visitor.visit(any())).thenReturn(true);
     decisionState.forEachDecisionRequirements(
-        new DecisionRequirementsIdentifier(drg1.getTenantId(), drg1.getDecisionRequirementsKey()),
+        new DecisionRequirementsIdentifier(drg1.getTenantIdentifier(), drg1.getDecisionRequirementsKey()),
         visitor);
 
     // then
@@ -1019,12 +1019,12 @@ public final class DecisionStateTest {
 
     // when
     decisionState.setMissingDeploymentKey(
-        decision.getTenantId(), decision.getDecisionKey(), someDeploymentKey);
+        decision.getTenantIdentifier(), decision.getDecisionKey(), someDeploymentKey);
 
     // then
     final var updatedDecision =
         decisionState
-            .findDecisionByTenantAndKey(decision.getTenantId(), decision.getDecisionKey())
+            .findDecisionByTenantAndKey(decision.getTenantIdentifier(), decision.getDecisionKey())
             .orElseThrow();
     assertThat(updatedDecision.getDeploymentKey()).isEqualTo(someDeploymentKey);
   }
@@ -1040,7 +1040,7 @@ public final class DecisionStateTest {
     decisionState.storeDecisionRequirements(drg);
     decisionState.storeDecisionRecord(decision);
     decisionState.setMissingDeploymentKey(
-        decision.getTenantId(), decision.getDecisionKey(), someDeploymentKey);
+        decision.getTenantIdentifier(), decision.getDecisionKey(), someDeploymentKey);
 
     // when
     decisionState.clearCache();
@@ -1048,7 +1048,7 @@ public final class DecisionStateTest {
     // then
     final var updatedDecision =
         decisionState
-            .findDecisionByTenantAndKey(decision.getTenantId(), decision.getDecisionKey())
+            .findDecisionByTenantAndKey(decision.getTenantIdentifier(), decision.getDecisionKey())
             .orElseThrow();
     assertThat(updatedDecision.getDeploymentKey()).isEqualTo(someDeploymentKey);
   }
@@ -1066,13 +1066,13 @@ public final class DecisionStateTest {
 
     // when
     decisionState.setMissingDeploymentKey(
-        decision.getTenantId(), decision.getDecisionKey(), someDeploymentKey);
+        decision.getTenantIdentifier(), decision.getDecisionKey(), someDeploymentKey);
 
     // then
     final var foundDecision =
         decisionState
             .findDecisionByIdAndDeploymentKey(
-                decision.getTenantId(),
+                decision.getTenantIdentifier(),
                 BufferUtil.wrapString(decision.getDecisionId()),
                 someDeploymentKey)
             .orElseThrow();

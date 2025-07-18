@@ -76,9 +76,9 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
     }
 
     public void insertElementInstance(final long key, final ElementInstance elementInstance) {
-      elementInstanceKey.wrapLong(key);
+      elementInstanceKey.setValue(key);
       elementInstanceColumnFamily.insert(elementInstanceKey, elementInstance);
-      parentKey.inner().wrapLong(elementInstance.getParentKey());
+      parentKey.inner().setValue(elementInstance.getParentKey());
       parentChildColumnFamily.insert(parentChildKey, DbNil.INSTANCE);
     }
   }
@@ -135,8 +135,8 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       sut.runMigration(new MigrationTaskContextImpl(new ClusterContextImpl(1), processingState));
 
       // then
-      elementInstanceKey.wrapLong(processInstanceKey);
-      this.processDefinitionKey.wrapLong(processDefinitionKey);
+      elementInstanceKey.setValue(processInstanceKey);
+      this.processDefinitionKey.setValue(processDefinitionKey);
       assertThat(
               processInstanceKeyByProcessDefinitionKeyColumnFamily.exists(
                   processInstanceKeyByProcessDefinitionKey))
@@ -161,8 +161,8 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       sut.runMigration(new MigrationTaskContextImpl(new ClusterContextImpl(1), processingState));
 
       // then
-      this.elementInstanceKey.wrapLong(elementInstanceKey);
-      this.processDefinitionKey.wrapLong(processDefinitionKey);
+      this.elementInstanceKey.setValue(elementInstanceKey);
+      this.processDefinitionKey.setValue(processDefinitionKey);
       assertThat(
               processInstanceKeyByProcessDefinitionKeyColumnFamily.exists(
                   processInstanceKeyByProcessDefinitionKey))
@@ -187,8 +187,8 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       final long processInstanceKey = 100L;
       final long processDefinitionKey = 101L;
 
-      elementInstanceKey.wrapLong(processInstanceKey);
-      this.processDefinitionKey.wrapLong(processDefinitionKey);
+      elementInstanceKey.setValue(processInstanceKey);
+      this.processDefinitionKey.setValue(processDefinitionKey);
       processInstanceKeyByProcessDefinitionKeyColumnFamily.insert(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
 
@@ -211,8 +211,8 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
       final long processInstanceKey = 100L;
       final long processDefinitionKey = 101L;
 
-      elementInstanceKey.wrapLong(processInstanceKey);
-      this.processDefinitionKey.wrapLong(processDefinitionKey);
+      elementInstanceKey.setValue(processInstanceKey);
+      this.processDefinitionKey.setValue(processDefinitionKey);
       processInstanceKeyByProcessDefinitionKeyColumnFamily.insert(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
 

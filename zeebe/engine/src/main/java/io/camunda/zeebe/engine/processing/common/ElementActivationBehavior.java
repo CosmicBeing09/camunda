@@ -426,7 +426,7 @@ public final class ElementActivationBehavior {
         .setParentProcessInstanceKey(-1L)
         .setParentElementInstanceKey(-1L)
         .setBpmnEventType(elementToActivate.getEventType())
-        .setTenantId(processInstanceRecord.getTenantId());
+        .setTenantId(processInstanceRecord.getTenantIdentifier());
 
     return elementInstanceRecord;
   }

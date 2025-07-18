@@ -53,7 +53,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
     formKeyProp.setValue(metadata.getFormKey());
     resourceNameProp.setValue(metadata.getResourceNameBuffer());
     resourceProp.setValue(BufferUtil.wrapArray(resource));
-    tenantIdProp.setValue(metadata.getTenantId());
+    tenantIdProp.setValue(metadata.getTenantIdentifier());
     deploymentKeyProp.setValue(metadata.getDeploymentKey());
     versionTagProp.setValue(metadata.getVersionTag());
     return this;
@@ -196,7 +196,7 @@ public final class FormRecord extends UnifiedRecordValue implements Form {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

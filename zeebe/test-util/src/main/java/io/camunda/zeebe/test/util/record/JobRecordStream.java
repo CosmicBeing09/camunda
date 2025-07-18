@@ -50,6 +50,6 @@ public final class JobRecordStream
   }
 
   public JobRecordStream withTenantId(final String tenantId) {
-    return valueFilter(v -> v.getTenantId().equals(tenantId));
+    return valueFilter(v -> v.getTenantIdentifier().equals(tenantId));
   }
 }

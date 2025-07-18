@@ -216,7 +216,7 @@ public class UserTaskRecordValueImpl implements UserTaskRecordValue {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

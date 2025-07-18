@@ -110,14 +110,14 @@ public class DbDistributionMigrationState8dot7 {
   }
 
   public void migrateIdempotentCommandDistributions() {
-    queueId.wrapString(DistributionQueue.DEPLOYMENT.getQueueId());
+    queueId.setValueFromString(DistributionQueue.DEPLOYMENT.getQueueId());
     final var isFirstInQueue = new AtomicBoolean(true);
 
     pendingDistributionColumnFamily.forEach(
         (compositeKey, nil) -> {
           final var distributionKey = compositeKey.first().inner().getValue();
           final var partitionId = compositeKey.second().getValue();
-          this.distributionKey.wrapLong(distributionKey);
+          this.distributionKey.setValue(distributionKey);
           partitionKey.wrapInt(partitionId);
 
           final var persistedDistribution =

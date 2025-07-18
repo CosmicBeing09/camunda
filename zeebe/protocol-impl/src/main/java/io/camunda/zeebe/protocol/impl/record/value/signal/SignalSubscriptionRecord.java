@@ -46,7 +46,7 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
     signalNameProp.setValue(record.getSignalNameBuffer());
     catchEventIdProp.setValue(record.getCatchEventId());
     catchEventInstanceKeyProp.setValue(record.getCatchEventInstanceKey());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
   }
 
   @JsonIgnore
@@ -121,7 +121,7 @@ public final class SignalSubscriptionRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

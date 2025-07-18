@@ -79,7 +79,7 @@ public class ProcessInstanceElementMigratedApplierTest {
         .hasProcessInstanceKey(processInstance.getProcessInstanceKey())
         .hasParentElementInstanceKey(processInstance.getParentElementInstanceKey())
         .hasParentProcessInstanceKey(processInstance.getParentProcessInstanceKey())
-        .hasTenantId(processInstance.getTenantId())
+        .hasTenantId(processInstance.getTenantIdentifier())
         .hasBpmnElementType(processInstance.getBpmnElementType())
         .hasBpmnEventType(processInstance.getBpmnEventType())
         .hasFlowScopeKey(processInstance.getFlowScopeKey());

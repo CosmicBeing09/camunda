@@ -589,7 +589,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

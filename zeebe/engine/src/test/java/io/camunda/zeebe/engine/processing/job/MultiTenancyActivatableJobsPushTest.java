@@ -134,7 +134,7 @@ public class MultiTenancyActivatableJobsPushTest {
               final JobRecord jobRecord = activatedJob.jobRecord();
               assertThat(jobRecord.getWorkerBuffer()).isEqualTo(worker);
               assertThat(jobRecord.getVariables()).isEqualTo(variables);
-              assertThat(jobRecord.getTenantId()).isEqualTo(tenantId);
+              assertThat(jobRecord.getTenantIdentifier()).isEqualTo(tenantId);
             });
   }
 

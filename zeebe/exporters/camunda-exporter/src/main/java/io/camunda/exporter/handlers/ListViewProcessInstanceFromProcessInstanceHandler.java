@@ -100,7 +100,7 @@ public class ListViewProcessInstanceFromProcessInstanceHandler
         .setId(String.valueOf(recordValue.getProcessInstanceKey()))
         .setProcessInstanceKey(recordValue.getProcessInstanceKey())
         .setKey(recordValue.getProcessInstanceKey())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()))
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()))
         .setPartitionId(record.getPartitionId())
         .setPosition(record.getPosition())
         .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())

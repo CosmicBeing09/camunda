@@ -68,7 +68,7 @@ public class VariableHandler implements ExportHandler<VariableEntity, VariableRe
         .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setName(recordValue.getName())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()))
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()))
         .setPosition(record.getPosition());
 
     if (recordValue.getValue().length() > variableSizeThreshold) {

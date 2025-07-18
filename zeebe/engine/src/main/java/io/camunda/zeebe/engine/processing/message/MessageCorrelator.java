@@ -47,7 +47,7 @@ public final class MessageCorrelator {
     final var isMessageCorrelated = new MutableBoolean(false);
 
     messageState.visitMessages(
-        subscriptionRecord.getTenantId(),
+        subscriptionRecord.getTenantIdentifier(),
         subscriptionRecord.getMessageNameBuffer(),
         subscriptionRecord.getCorrelationKeyBuffer(),
         storedMessage -> {
@@ -94,6 +94,6 @@ public final class MessageCorrelator {
         subscriptionRecord.getMessageKey(),
         subscriptionRecord.getVariablesBuffer(),
         subscriptionRecord.getCorrelationKeyBuffer(),
-        subscriptionRecord.getTenantId());
+        subscriptionRecord.getTenantIdentifier());
   }
 }

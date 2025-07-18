@@ -29,10 +29,10 @@ public class ZeebeProcessInstanceDataDto implements ProcessInstanceRecordValue {
   private long processInstanceKey;
   private String tenantId;
 
-  private BpmnEventType bpmnEventType;
-  private List<List<Long>> elementInstancePath;
-  private List<Long> processDefinitionPath;
-  private List<Integer> callingElementPath;
+  private final BpmnEventType bpmnEventType;
+  private final List<List<Long>> elementInstancePath;
+  private final List<Long> processDefinitionPath;
+  private final List<Integer> callingElementPath;
 
   public ZeebeProcessInstanceDataDto() {
     bpmnEventType = BpmnEventType.UNSPECIFIED;
@@ -42,7 +42,7 @@ public class ZeebeProcessInstanceDataDto implements ProcessInstanceRecordValue {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return StringUtils.isEmpty(tenantId) ? ZEEBE_DEFAULT_TENANT_ID : tenantId;
   }
 
@@ -186,7 +186,7 @@ public class ZeebeProcessInstanceDataDto implements ProcessInstanceRecordValue {
         + ", processInstanceKey="
         + getProcessInstanceKey()
         + ", tenantId="
-        + getTenantId()
+        + getTenantIdentifier()
         + ")";
   }
 

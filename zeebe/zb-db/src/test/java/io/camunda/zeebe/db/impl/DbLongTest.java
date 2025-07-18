@@ -21,7 +21,7 @@ public final class DbLongTest {
   @Test
   public void shouldWrapLong() {
     // given
-    zbLong.wrapLong(234L);
+    zbLong.setValue(234L);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();

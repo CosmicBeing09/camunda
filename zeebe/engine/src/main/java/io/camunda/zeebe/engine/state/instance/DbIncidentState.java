@@ -73,16 +73,16 @@ public final class DbIncidentState implements MutableIncidentState {
 
   @Override
   public void createIncident(final long incidentKey, final IncidentRecord incident) {
-    this.incidentKey.wrapLong(incidentKey);
+    this.incidentKey.setValue(incidentKey);
     incidentWrite.setRecord(incident);
     incidentColumnFamily.insert(this.incidentKey, incidentWrite);
 
     incidentKeyValue.set(incidentKey);
     if (isJobIncident(incident)) {
-      jobKey.inner().wrapLong(incident.getJobKey());
+      jobKey.inner().setValue(incident.getJobKey());
       jobIncidentColumnFamily.insert(jobKey, incidentKeyValue);
     } else {
-      elementInstanceKey.inner().wrapLong(incident.getElementInstanceKey());
+      elementInstanceKey.inner().setValue(incident.getElementInstanceKey());
       processInstanceIncidentColumnFamily.insert(elementInstanceKey, incidentKeyValue);
     }
 
@@ -97,10 +97,10 @@ public final class DbIncidentState implements MutableIncidentState {
       incidentColumnFamily.deleteExisting(incidentKey);
 
       if (isJobIncident(incidentRecord)) {
-        jobKey.inner().wrapLong(incidentRecord.getJobKey());
+        jobKey.inner().setValue(incidentRecord.getJobKey());
         jobIncidentColumnFamily.deleteExisting(jobKey);
       } else {
-        elementInstanceKey.inner().wrapLong(incidentRecord.getElementInstanceKey());
+        elementInstanceKey.inner().setValue(incidentRecord.getElementInstanceKey());
         processInstanceIncidentColumnFamily.deleteExisting(elementInstanceKey);
       }
 
@@ -110,14 +110,14 @@ public final class DbIncidentState implements MutableIncidentState {
 
   @Override
   public void migrateIncident(final long incidentKey, final IncidentRecord incident) {
-    this.incidentKey.wrapLong(incidentKey);
+    this.incidentKey.setValue(incidentKey);
     incidentWrite.setRecord(incident);
     incidentColumnFamily.update(this.incidentKey, incidentWrite);
   }
 
   @Override
   public IncidentRecord getIncidentRecord(final long incidentKey) {
-    this.incidentKey.wrapLong(incidentKey);
+    this.incidentKey.setValue(incidentKey);
 
     final Incident incident = incidentColumnFamily.get(this.incidentKey);
     if (incident != null) {
@@ -130,7 +130,7 @@ public final class DbIncidentState implements MutableIncidentState {
   public IncidentRecord getIncidentRecord(
       final long incidentKey, final AuthorizedTenants authorizedTenantIds) {
     final IncidentRecord incident = getIncidentRecord(incidentKey);
-    if (incident != null && authorizedTenantIds.isAuthorizedForTenantId(incident.getTenantId())) {
+    if (incident != null && authorizedTenantIds.isAuthorizedForTenantId(incident.getTenantIdentifier())) {
       return incident;
     }
     return null;
@@ -138,7 +138,7 @@ public final class DbIncidentState implements MutableIncidentState {
 
   @Override
   public long getProcessInstanceIncidentKey(final long processInstanceKey) {
-    elementInstanceKey.inner().wrapLong(processInstanceKey);
+    elementInstanceKey.inner().setValue(processInstanceKey);
 
     final IncidentKey incidentKey = processInstanceIncidentColumnFamily.get(elementInstanceKey);
 
@@ -151,7 +151,7 @@ public final class DbIncidentState implements MutableIncidentState {
 
   @Override
   public long getJobIncidentKey(final long jobKey) {
-    this.jobKey.inner().wrapLong(jobKey);
+    this.jobKey.inner().setValue(jobKey);
     final IncidentKey incidentKey = jobIncidentColumnFamily.get(this.jobKey);
 
     if (incidentKey != null) {

@@ -285,7 +285,7 @@ public class UserTaskHandlerTest {
     assertThat(taskEntity.getId())
         .isEqualTo(String.valueOf(taskRecordValue.getElementInstanceKey()));
     assertThat(taskEntity.getKey()).isEqualTo(taskRecord.getKey());
-    assertThat(taskEntity.getTenantId()).isEqualTo(taskRecordValue.getTenantId());
+    assertThat(taskEntity.getTenantIdentifier()).isEqualTo(taskRecordValue.getTenantIdentifier());
     assertThat(taskEntity.getPartitionId()).isEqualTo(taskRecord.getPartitionId());
     assertThat(taskEntity.getPosition()).isEqualTo(taskRecord.getPosition());
     assertThat(taskEntity.getProcessInstanceId()).isEqualTo(String.valueOf(processInstanceKey));

@@ -93,7 +93,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
       return;
     }
 
-    final var tenantId = timer.getTenantId();
+    final var tenantId = timer.getTenantIdentifier();
     // this is an additional safeguard to avoid banning unrelated instances
     // as noticed in https://github.com/camunda/camunda/issues/20677
     final var deployedProcess =
@@ -168,7 +168,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
         record.getProcessInstanceKey(),
         record.getProcessDefinitionKey(),
         event.getId(),
-        record.getTenantId(),
+        record.getTenantIdentifier(),
         refreshedTimer);
   }
 

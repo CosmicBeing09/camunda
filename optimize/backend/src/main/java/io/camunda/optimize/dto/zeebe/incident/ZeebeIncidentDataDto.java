@@ -36,8 +36,53 @@ public class ZeebeIncidentDataDto implements IncidentRecordValue {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return StringUtils.isEmpty(tenantId) ? ZEEBE_DEFAULT_TENANT_ID : tenantId;
+  }
+
+  @Override
+  public ErrorType getErrorType() {
+    return errorType;
+  }
+
+  @Override
+  public String getErrorMessage() {
+    return errorMessage;
+  }
+
+  @Override
+  public String getBpmnProcessId() {
+    return bpmnProcessId;
+  }
+
+  @Override
+  public long getProcessDefinitionKey() {
+    return processDefinitionKey;
+  }
+
+  @Override
+  public long getProcessInstanceKey() {
+    return processInstanceKey;
+  }
+
+  @Override
+  public String getElementId() {
+    return elementId;
+  }
+
+  @Override
+  public long getElementInstanceKey() {
+    return elementInstanceKey;
+  }
+
+  @Override
+  public long getJobKey() {
+    return jobKey;
+  }
+
+  @Override
+  public long getVariableScopeKey() {
+    return variableScopeKey;
   }
 
   @JsonIgnore
@@ -58,56 +103,20 @@ public class ZeebeIncidentDataDto implements IncidentRecordValue {
     throw new UnsupportedOperationException("Operation not supported");
   }
 
-  public String getErrorMessage() {
-    return this.errorMessage;
+  public void setVariableScopeKey(final long variableScopeKey) {
+    this.variableScopeKey = variableScopeKey;
   }
 
-  public String getBpmnProcessId() {
-    return this.bpmnProcessId;
-  }
-
-  public String getElementId() {
-    return this.elementId;
-  }
-
-  public long getElementInstanceKey() {
-    return this.elementInstanceKey;
-  }
-
-  public long getProcessInstanceKey() {
-    return this.processInstanceKey;
-  }
-
-  public long getProcessDefinitionKey() {
-    return this.processDefinitionKey;
-  }
-
-  public long getJobKey() {
-    return this.jobKey;
-  }
-
-  public ErrorType getErrorType() {
-    return this.errorType;
-  }
-
-  public long getVariableScopeKey() {
-    return this.variableScopeKey;
-  }
-
-  public void setErrorMessage(final String errorMessage) {
-    this.errorMessage = errorMessage;
-  }
-
-  public void setBpmnProcessId(final String bpmnProcessId) {
-    this.bpmnProcessId = bpmnProcessId;
-  }
-
-  public void setElementId(final String elementId) {
-    this.elementId = elementId;
+  public void setJobKey(final long jobKey) {
+    this.jobKey = jobKey;
   }
 
   public void setElementInstanceKey(final long elementInstanceKey) {
     this.elementInstanceKey = elementInstanceKey;
+  }
+
+  public void setElementId(final String elementId) {
+    this.elementId = elementId;
   }
 
   public void setProcessInstanceKey(final long processInstanceKey) {
@@ -118,56 +127,59 @@ public class ZeebeIncidentDataDto implements IncidentRecordValue {
     this.processDefinitionKey = processDefinitionKey;
   }
 
-  public void setJobKey(final long jobKey) {
-    this.jobKey = jobKey;
+  public void setBpmnProcessId(final String bpmnProcessId) {
+    this.bpmnProcessId = bpmnProcessId;
+  }
+
+  public void setErrorMessage(final String errorMessage) {
+    this.errorMessage = errorMessage;
   }
 
   public void setErrorType(final ErrorType errorType) {
     this.errorType = errorType;
   }
 
-  public void setVariableScopeKey(final long variableScopeKey) {
-    this.variableScopeKey = variableScopeKey;
-  }
-
   public void setTenantId(final String tenantId) {
     this.tenantId = tenantId;
-  }
-
-  public String toString() {
-    return "ZeebeIncidentDataDto(errorMessage="
-        + this.getErrorMessage()
-        + ", bpmnProcessId="
-        + this.getBpmnProcessId()
-        + ", elementId="
-        + this.getElementId()
-        + ", elementInstanceKey="
-        + this.getElementInstanceKey()
-        + ", processInstanceKey="
-        + this.getProcessInstanceKey()
-        + ", processDefinitionKey="
-        + this.getProcessDefinitionKey()
-        + ", jobKey="
-        + this.getJobKey()
-        + ", errorType="
-        + this.getErrorType()
-        + ", variableScopeKey="
-        + this.getVariableScopeKey()
-        + ", tenantId="
-        + this.getTenantId()
-        + ")";
-  }
-
-  public boolean equals(final Object o) {
-    return org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals(this, o);
   }
 
   protected boolean canEqual(final Object other) {
     return other instanceof ZeebeIncidentDataDto;
   }
 
+  @Override
   public int hashCode() {
     return org.apache.commons.lang3.builder.HashCodeBuilder.reflectionHashCode(this);
+  }
+
+  @Override
+  public boolean equals(final Object o) {
+    return org.apache.commons.lang3.builder.EqualsBuilder.reflectionEquals(this, o);
+  }
+
+  @Override
+  public String toString() {
+    return "ZeebeIncidentDataDto(errorMessage="
+        + getErrorMessage()
+        + ", bpmnProcessId="
+        + getBpmnProcessId()
+        + ", elementId="
+        + getElementId()
+        + ", elementInstanceKey="
+        + getElementInstanceKey()
+        + ", processInstanceKey="
+        + getProcessInstanceKey()
+        + ", processDefinitionKey="
+        + getProcessDefinitionKey()
+        + ", jobKey="
+        + getJobKey()
+        + ", errorType="
+        + getErrorType()
+        + ", variableScopeKey="
+        + getVariableScopeKey()
+        + ", tenantId="
+        + getTenantIdentifier()
+        + ")";
   }
 
   @SuppressWarnings("checkstyle:ConstantName")

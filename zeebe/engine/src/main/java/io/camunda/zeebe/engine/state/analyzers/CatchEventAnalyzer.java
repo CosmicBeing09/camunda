@@ -63,7 +63,7 @@ public final class CatchEventAnalyzer {
     while (instance != null && instance.isActive()) {
       final var instanceRecord = instance.getValue();
       final var process =
-          getProcess(instanceRecord.getProcessDefinitionKey(), instanceRecord.getTenantId());
+          getProcess(instanceRecord.getProcessDefinitionKey(), instanceRecord.getTenantIdentifier());
 
       final var found = findErrorCatchEventInProcess(errorCode, process, instance);
       if (found.isRight()) {
@@ -164,7 +164,7 @@ public final class CatchEventAnalyzer {
     // walk through the scope hierarchy and look for a matching catch event
     final var instanceRecord = instance.getValue();
     final var process =
-        getProcess(instanceRecord.getProcessDefinitionKey(), instanceRecord.getTenantId());
+        getProcess(instanceRecord.getProcessDefinitionKey(), instanceRecord.getTenantIdentifier());
 
     return findEscalationCatchEventInProcess(escalationCode, process, instance)
         .or(

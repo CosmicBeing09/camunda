@@ -174,7 +174,7 @@ public class EmbeddedFormHandlerTest {
         .isEqualTo(String.format("%s_%s", processDefinitionKey, "my-embedded-form"));
     assertThat(formEntity.getFormId()).isEqualTo("my-embedded-form");
     assertThat(formEntity.getSchema()).isEqualTo(formJson());
-    assertThat(formEntity.getTenantId()).isEqualTo("my-tenant");
+    assertThat(formEntity.getTenantIdentifier()).isEqualTo("my-tenant");
     assertThat(formEntity.getProcessDefinitionId()).isEqualTo(String.valueOf(processDefinitionKey));
     assertThat(formEntity.getEmbedded()).isTrue();
     assertThat(formEntity.getIsDeleted()).isFalse();

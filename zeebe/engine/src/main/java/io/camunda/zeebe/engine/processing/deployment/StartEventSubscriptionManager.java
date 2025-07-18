@@ -65,7 +65,7 @@ public class StartEventSubscriptionManager {
   private boolean isLatestProcess(final ProcessMetadata processRecord) {
     return processState
             .getLatestProcessVersionByProcessId(
-                processRecord.getBpmnProcessIdBuffer(), processRecord.getTenantId())
+                processRecord.getBpmnProcessIdBuffer(), processRecord.getTenantIdentifier())
             .getVersion()
         == processRecord.getVersion();
   }
@@ -128,7 +128,7 @@ public class StartEventSubscriptionManager {
     for (int version = processRecord.getVersion() - 1; version > 0; --version) {
       final DeployedProcess lastStartProcess =
           processState.getProcessByProcessIdAndVersion(
-              processRecord.getBpmnProcessIdBuffer(), version, processRecord.getTenantId());
+              processRecord.getBpmnProcessIdBuffer(), version, processRecord.getTenantIdentifier());
       if (lastStartProcess != null
           && lastStartProcess.getProcess().getStartEvents().stream()
               .anyMatch(hasStartEventMatching)) {
@@ -142,7 +142,7 @@ public class StartEventSubscriptionManager {
   private void openStartEventSubscriptions(final ProcessMetadata processRecord) {
     final long processDefinitionKey = processRecord.getKey();
     final DeployedProcess processDefinition =
-        processState.getProcessByKeyAndTenant(processDefinitionKey, processRecord.getTenantId());
+        processState.getProcessByKeyAndTenant(processDefinitionKey, processRecord.getTenantIdentifier());
     final ExecutableProcess process = processDefinition.getProcess();
     final List<ExecutableStartEvent> startEvents = process.getStartEvents();
     for (final ExecutableStartEvent startEvent : startEvents) {

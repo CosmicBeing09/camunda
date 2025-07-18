@@ -221,7 +221,7 @@ public class ZeebeUserTaskDataDto implements UserTaskRecordValue {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 
@@ -277,7 +277,7 @@ public class ZeebeUserTaskDataDto implements UserTaskRecordValue {
         + ", processInstanceKey="
         + getProcessInstanceKey()
         + ", tenantId="
-        + getTenantId()
+        + getTenantIdentifier()
         + ", changedAttributes="
         + getChangedAttributes()
         + ", variables="

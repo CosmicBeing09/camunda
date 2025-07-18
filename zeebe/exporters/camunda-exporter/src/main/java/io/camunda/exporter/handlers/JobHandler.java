@@ -92,7 +92,7 @@ public class JobHandler implements ExportHandler<JobEntity, JobRecordValue> {
         .setFlowNodeInstanceId(recordValue.getElementInstanceKey())
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
-        .setTenantId(recordValue.getTenantId())
+        .setTenantId(recordValue.getTenantIdentifier())
         .setType(recordValue.getType())
         .setWorker(recordValue.getWorker())
         .setState(record.getIntent().name())

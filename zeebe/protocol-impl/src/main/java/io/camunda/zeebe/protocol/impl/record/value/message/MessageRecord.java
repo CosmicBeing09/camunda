@@ -51,7 +51,7 @@ public final class MessageRecord extends UnifiedRecordValue implements MessageRe
     setDeadline(record.getDeadline());
     setVariables(record.getVariablesBuffer());
     setMessageId(record.getMessageIdBuffer());
-    setTenantId(record.getTenantId());
+    setTenantId(record.getTenantIdentifier());
   }
 
   public boolean hasMessageId() {
@@ -154,7 +154,7 @@ public final class MessageRecord extends UnifiedRecordValue implements MessageRe
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

@@ -108,7 +108,7 @@ public class MessageEntity implements ExporterEntity<MessageEntity>, TenantOwned
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

@@ -52,7 +52,7 @@ public final class PendingMessageSubscriptionChecker implements Runnable {
         record.getMessageKey(),
         record.getVariablesBuffer(),
         record.getCorrelationKeyBuffer(),
-        record.getTenantId());
+        record.getTenantIdentifier());
 
     // Update the sent time for the subscription to avoid it being considered for resending too soon
     final var sentTime = clock.millis();

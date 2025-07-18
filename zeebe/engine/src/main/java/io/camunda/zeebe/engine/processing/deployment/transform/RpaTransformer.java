@@ -83,7 +83,7 @@ public class RpaTransformer implements DeploymentResourceTransformer {
                     .setResourceKey(key)
                     .setVersion(
                         resourceState.getNextResourceVersion(
-                            metadata.getResourceId(), metadata.getTenantId()))
+                            metadata.getResourceId(), metadata.getTenantIdentifier()))
                     .setDuplicate(false)
                     .setDeploymentKey(deployment.getDeploymentKey());
               }
@@ -107,7 +107,7 @@ public class RpaTransformer implements DeploymentResourceTransformer {
     final LongSupplier newResourceKey = keyGenerator::nextKey;
     final DirectBuffer checksum =
         checksumGenerator.checksum(deploymentResource.getResourceBuffer());
-    final String tenantId = deploymentRecord.getTenantId();
+    final String tenantId = deploymentRecord.getTenantIdentifier();
 
     resourceMetadataRecord.setResourceId(resource.id);
     resourceMetadataRecord.setChecksum(checksum);

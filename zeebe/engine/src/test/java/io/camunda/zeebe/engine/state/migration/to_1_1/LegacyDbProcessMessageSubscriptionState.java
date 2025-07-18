@@ -71,7 +71,7 @@ public final class LegacyDbProcessMessageSubscriptionState {
 
     subscriptionColumnFamily.upsert(elementKeyAndMessageName, processMessageSubscription);
 
-    sentTime.wrapLong(commandSentTime);
+    sentTime.setValue(commandSentTime);
     sentTimeColumnFamily.upsert(sentTimeCompositeKey, DbNil.INSTANCE);
   }
 
@@ -170,12 +170,12 @@ public final class LegacyDbProcessMessageSubscriptionState {
     final long updatedSentTime = subscription.getCommandSentTime();
     if (updatedSentTime != previousSentTime) {
       if (previousSentTime > 0) {
-        sentTime.wrapLong(previousSentTime);
+        sentTime.setValue(previousSentTime);
         sentTimeColumnFamily.deleteIfExists(sentTimeCompositeKey);
       }
 
       if (updatedSentTime > 0) {
-        sentTime.wrapLong(updatedSentTime);
+        sentTime.setValue(updatedSentTime);
         sentTimeColumnFamily.upsert(sentTimeCompositeKey, DbNil.INSTANCE);
       }
     }
@@ -188,12 +188,12 @@ public final class LegacyDbProcessMessageSubscriptionState {
 
     subscriptionColumnFamily.deleteIfExists(elementKeyAndMessageName);
 
-    sentTime.wrapLong(subscription.getCommandSentTime());
+    sentTime.setValue(subscription.getCommandSentTime());
     sentTimeColumnFamily.deleteIfExists(sentTimeCompositeKey);
   }
 
   private void wrapSubscriptionKeys(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
+    this.elementInstanceKey.setValue(elementInstanceKey);
+    this.messageName.setValueFromBuffer(messageName);
   }
 }

@@ -66,7 +66,7 @@ public class EventFromIncidentHandler extends AbstractEventHandler<IncidentRecor
     entity
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setFlowNodeId(recordValue.getElementId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
     if (recordValue.getElementInstanceKey() > 0) {
       entity.setFlowNodeInstanceKey(recordValue.getElementInstanceKey());
     }

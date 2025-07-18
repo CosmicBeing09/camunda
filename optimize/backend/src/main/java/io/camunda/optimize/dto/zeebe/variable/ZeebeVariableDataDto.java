@@ -30,7 +30,7 @@ public class ZeebeVariableDataDto implements VariableRecordValue {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return StringUtils.isEmpty(tenantId) ? ZEEBE_DEFAULT_TENANT_ID : tenantId;
   }
 
@@ -121,7 +121,7 @@ public class ZeebeVariableDataDto implements VariableRecordValue {
         + ", bpmnProcessId="
         + getBpmnProcessId()
         + ", tenantId="
-        + getTenantId()
+        + getTenantIdentifier()
         + ")";
   }
 }

@@ -228,7 +228,7 @@ public class UserTaskJobBasedHandler implements ExportHandler<TaskEntity, JobRec
         .setProcessDefinitionId(String.valueOf(recordValue.getProcessDefinitionKey()))
         .setProcessDefinitionVersion(recordValue.getProcessDefinitionVersion())
         .setPartitionId(record.getPartitionId())
-        .setTenantId(recordValue.getTenantId())
+        .setTenantId(recordValue.getTenantIdentifier())
         .setPosition(record.getPosition())
         .setCreationTime(
             ExporterUtil.toZonedOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())));

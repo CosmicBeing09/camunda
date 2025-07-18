@@ -112,7 +112,7 @@ public class TaskCompletedMetricHandlerTest {
     assertThat(entity.getValue()).isEqualTo(String.valueOf(recordValue.getAssignee()));
     assertThat(entity.getEventTime())
         .isEqualTo(OffsetDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneOffset.UTC));
-    assertThat(entity.getTenantId()).isEqualTo(recordValue.getTenantId());
+    assertThat(entity.getTenantIdentifier()).isEqualTo(recordValue.getTenantIdentifier());
   }
 
   @Test

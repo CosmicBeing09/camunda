@@ -278,7 +278,7 @@ public class DbMigrationState implements MutableMigrationState {
     signalSubscriptionMigrationState =
         new DbSignalSubscriptionMigrationState(zeebeDb, transactionContext);
 
-    migratedByVersionKey.wrapString(MIGRATED_BY_VERSION);
+    migratedByVersionKey.setValueFromString(MIGRATED_BY_VERSION);
     migrationsState =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.MIGRATIONS_STATE,
@@ -409,8 +409,8 @@ public class DbMigrationState implements MutableMigrationState {
   public void migrateDecisionsPopulateDecisionVersionByDecisionIdAndDecisionKey() {
     decisionsByKeyColumnFamily.forEach(
         (key, value) -> {
-          dbDecisionId.wrapBuffer(value.getDecisionId());
-          dbDecisionKey.wrapLong(value.getDecisionKey());
+          dbDecisionId.setValueFromBuffer(value.getDecisionId());
+          dbDecisionKey.setValue(value.getDecisionKey());
           dbDecisionVersion.wrapInt(value.getVersion());
           decisionKeyByDecisionIdAndVersion.insert(decisionKeyAndVersion, fkDecision);
         });
@@ -420,8 +420,8 @@ public class DbMigrationState implements MutableMigrationState {
   public void migrateDrgPopulateDrgVersionByDrgIdAndKey() {
     decisionRequirementsByKeyColumnFamily.forEach(
         (key, value) -> {
-          dbDecisionRequirementsId.wrapBuffer(value.getDecisionRequirementsId());
-          dbDecisionRequirementsKey.wrapLong(value.getDecisionRequirementsKey());
+          dbDecisionRequirementsId.setValueFromBuffer(value.getDecisionRequirementsId());
+          dbDecisionRequirementsKey.setValue(value.getDecisionRequirementsKey());
           dbDecisionRequirementsVersion.wrapInt(value.getDecisionRequirementsVersion());
           decisionRequirementsKeyByIdAndVersionColumnFamily.insert(
               decisionRequirementsIdAndVersion, fkDecisionRequirements);
@@ -430,14 +430,14 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public void migrateElementInstancePopulateProcessInstanceByDefinitionKey() {
-    parentKey.inner().wrapLong(NO_PARENT_KEY);
+    parentKey.inner().setValue(NO_PARENT_KEY);
     parentChildColumnFamily.whileEqualPrefix(
         parentKey,
         (key, nil) -> {
-          elementInstanceKey.wrapLong(key.second().inner().getValue());
+          elementInstanceKey.setValue(key.second().inner().getValue());
           final ElementInstance processInstance =
               elementInstanceColumnFamily.get(elementInstanceKey);
-          processDefinitionKey.wrapLong(processInstance.getValue().getProcessDefinitionKey());
+          processDefinitionKey.setValue(processInstance.getValue().getProcessDefinitionKey());
           processInstanceKeyByProcessDefinitionKeyColumnFamily.upsert(
               processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
         });
@@ -486,7 +486,7 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public boolean shouldRunElementInstancePopulateProcessInstanceByDefinitionKey() {
-    parentKey.inner().wrapLong(NO_PARENT_KEY);
+    parentKey.inner().setValue(NO_PARENT_KEY);
     return processInstanceKeyByProcessDefinitionKeyColumnFamily.isEmpty()
         || processInstanceKeyByProcessDefinitionKeyColumnFamily.count()
             != parentChildColumnFamily.countEqualPrefix(parentKey);
@@ -500,7 +500,7 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public void setMigratedByVersion(final String version) {
-    migratedByVersionValue.wrapString(version);
+    migratedByVersionValue.setValueFromString(version);
     migrationsState.upsert(migratedByVersionKey, migratedByVersionValue);
   }
 

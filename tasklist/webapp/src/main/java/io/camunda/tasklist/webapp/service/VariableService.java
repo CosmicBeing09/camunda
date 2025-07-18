@@ -182,7 +182,7 @@ public class VariableService {
       finalVariablesMap.put(
           var.getName(),
           createSnapshotVariableFrom(
-              task.getTenantId(),
+              task.getTenantIdentifier(),
               taskId,
               processInstanceKey,
               var.getName(),
@@ -625,7 +625,7 @@ public class VariableService {
     entity
         .setTaskId(String.valueOf(taskEntity.getKey()))
         .setName(name)
-        .setTenantId(taskEntity.getTenantId());
+        .setTenantId(taskEntity.getTenantIdentifier());
     if (value.length() > variableSizeThreshold) {
       // store preview
       entity.setValue(value.substring(0, variableSizeThreshold));
@@ -675,7 +675,7 @@ public class VariableService {
             variableEntity.getIsPreview()
                 ? variableEntity.getFullValue()
                 : variableEntity.getValue())
-        .setTenantId(variableEntity.getTenantId());
+        .setTenantId(variableEntity.getTenantIdentifier());
   }
 
   public static SnapshotTaskVariableEntity createSnapshotVariableFrom(
@@ -690,6 +690,6 @@ public class VariableService {
         .setValue(draftTaskVariableEntity.getValue())
         .setIsPreview(draftTaskVariableEntity.getIsPreview())
         .setFullValue(draftTaskVariableEntity.getFullValue())
-        .setTenantId(draftTaskVariableEntity.getTenantId());
+        .setTenantId(draftTaskVariableEntity.getTenantIdentifier());
   }
 }

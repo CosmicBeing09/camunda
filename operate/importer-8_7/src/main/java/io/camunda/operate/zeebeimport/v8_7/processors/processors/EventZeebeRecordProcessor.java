@@ -187,7 +187,7 @@ public class EventZeebeRecordProcessor {
           .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
           .setProcessInstanceKey(recordValue.getProcessInstanceKey())
           .setBpmnProcessId(recordValue.getBpmnProcessId())
-          .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+          .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
       if (recordValue.getElementId() != null) {
         eventEntity.setFlowNodeId(recordValue.getElementId());
@@ -225,7 +225,7 @@ public class EventZeebeRecordProcessor {
     eventEntity
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setFlowNodeId(recordValue.getElementId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()))
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()))
         .setPositionProcessMessageSubscription(record.getPosition());
 
     final long activityInstanceKey = recordValue.getElementInstanceKey();
@@ -269,7 +269,7 @@ public class EventZeebeRecordProcessor {
     eventEntity
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setFlowNodeId(recordValue.getElementId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     final long activityInstanceKey = recordValue.getElementInstanceKey();
     if (activityInstanceKey > 0) {
@@ -315,7 +315,7 @@ public class EventZeebeRecordProcessor {
     eventEntity
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setFlowNodeId(recordValue.getElementId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
     if (recordValue.getElementInstanceKey() > 0) {
       eventEntity.setFlowNodeInstanceKey(recordValue.getElementInstanceKey());
     }

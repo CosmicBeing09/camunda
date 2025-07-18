@@ -66,7 +66,7 @@ public class DecisionHandler
         .setDecisionId(decision.getDecisionId())
         .setDecisionRequirementsId(decision.getDecisionRequirementsId())
         .setDecisionRequirementsKey(decision.getDecisionRequirementsKey())
-        .setTenantId(tenantOrDefault(decision.getTenantId()));
+        .setTenantId(tenantOrDefault(decision.getTenantIdentifier()));
   }
 
   @Override

@@ -89,7 +89,7 @@ public class TenantAwareTimerCatchEventTest {
                 .withIntents(TimerIntent.TRIGGER, TimerIntent.TRIGGERED)
                 .withProcessInstanceKey(processInstanceKey)
                 .limit(2))
-        .extracting(r -> r.getValue().getTenantId(), Record::getIntent)
+        .extracting(r -> r.getValue().getTenantIdentifier(), Record::getIntent)
         .containsSequence(tuple(TENANT, TimerIntent.TRIGGER), tuple(TENANT, TimerIntent.TRIGGERED));
   }
 
@@ -201,7 +201,7 @@ public class TenantAwareTimerCatchEventTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .limitToProcessInstanceCompleted()
                 .withElementId("timer"))
-        .extracting(r -> r.getValue().getTenantId(), Record::getIntent)
+        .extracting(r -> r.getValue().getTenantIdentifier(), Record::getIntent)
         .containsSequence(
             tuple(TENANT, ProcessInstanceIntent.ACTIVATE_ELEMENT),
             tuple(TENANT, ProcessInstanceIntent.ELEMENT_ACTIVATING),

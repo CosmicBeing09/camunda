@@ -49,6 +49,6 @@ public final class IncidentRecordStream
   }
 
   public IncidentRecordStream withTenantId(final String tenantId) {
-    return valueFilter(v -> v.getTenantId().equals(tenantId));
+    return valueFilter(v -> v.getTenantIdentifier().equals(tenantId));
   }
 }

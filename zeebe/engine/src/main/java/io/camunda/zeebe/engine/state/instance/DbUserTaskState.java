@@ -85,7 +85,7 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public void create(final UserTaskRecord userTask) {
-    userTaskKey.wrapLong(userTask.getUserTaskKey());
+    userTaskKey.setValue(userTask.getUserTaskKey());
     // do not persist variables in user task state
     userTaskRecordToWrite.setRecordWithoutVariables(userTask);
     userTasksColumnFamily.insert(userTaskKey, userTaskRecordToWrite);
@@ -96,7 +96,7 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public void update(final UserTaskRecord userTask) {
-    userTaskKey.wrapLong(userTask.getUserTaskKey());
+    userTaskKey.setValue(userTask.getUserTaskKey());
     // do not persist variables in user task state
     userTaskRecordToWrite.setRecordWithoutVariables(userTask);
     userTasksColumnFamily.update(userTaskKey, userTaskRecordToWrite);
@@ -104,21 +104,21 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public void updateUserTaskLifecycleState(final long key, final LifecycleState newLifecycleState) {
-    userTaskKey.wrapLong(key);
+    userTaskKey.setValue(key);
     userTaskState.setLifecycleState(newLifecycleState);
     statesUserTaskColumnFamily.update(fkUserTask, userTaskState);
   }
 
   @Override
   public void delete(final long key) {
-    userTaskKey.wrapLong(key);
+    userTaskKey.setValue(key);
     userTasksColumnFamily.deleteExisting(userTaskKey);
     statesUserTaskColumnFamily.deleteExisting(fkUserTask);
   }
 
   @Override
   public void storeIntermediateState(final UserTaskRecord record, final LifecycleState lifecycle) {
-    userTaskIntermediateStateKey.wrapLong(record.getUserTaskKey());
+    userTaskIntermediateStateKey.setValue(record.getUserTaskKey());
     userTaskIntermediateStateToWrite.setRecord(record);
     userTaskIntermediateStateToWrite.setLifecycleState(lifecycle);
     userTasksIntermediateStatesColumnFamily.insert(
@@ -128,7 +128,7 @@ public class DbUserTaskState implements MutableUserTaskState {
   @Override
   public void updateIntermediateState(
       final long key, final Consumer<UserTaskIntermediateStateValue> updater) {
-    userTaskIntermediateStateKey.wrapLong(key);
+    userTaskIntermediateStateKey.setValue(key);
     final var intermediateState =
         userTasksIntermediateStatesColumnFamily.get(userTaskIntermediateStateKey);
 
@@ -142,34 +142,34 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public void deleteIntermediateState(final long key) {
-    userTaskIntermediateStateKey.wrapLong(key);
+    userTaskIntermediateStateKey.setValue(key);
     userTasksIntermediateStatesColumnFamily.deleteExisting(userTaskIntermediateStateKey);
   }
 
   @Override
   public void deleteIntermediateStateIfExists(final long key) {
-    userTaskIntermediateStateKey.wrapLong(key);
+    userTaskIntermediateStateKey.setValue(key);
     userTasksIntermediateStatesColumnFamily.deleteIfExists(userTaskIntermediateStateKey);
   }
 
   @Override
   public void storeInitialAssignee(final long key, final String assignee) {
     if (!StringUtils.isEmpty(assignee)) {
-      userTaskKey.wrapLong(key);
-      initialAssignee.wrapString(assignee);
+      userTaskKey.setValue(key);
+      initialAssignee.setValueFromString(assignee);
       userTasksInitialAssigneeColumnFamily.insert(userTaskKey, initialAssignee);
     }
   }
 
   @Override
   public void deleteInitialAssignee(final long key) {
-    userTaskKey.wrapLong(key);
+    userTaskKey.setValue(key);
     userTasksInitialAssigneeColumnFamily.deleteIfExists(userTaskKey);
   }
 
   @Override
   public LifecycleState getLifecycleState(final long key) {
-    userTaskKey.wrapLong(key);
+    userTaskKey.setValue(key);
     final UserTaskLifecycleStateValue storedLifecycleState =
         statesUserTaskColumnFamily.get(fkUserTask);
     if (storedLifecycleState == null) {
@@ -180,7 +180,7 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public UserTaskRecord getUserTask(final long key) {
-    userTaskKey.wrapLong(key);
+    userTaskKey.setValue(key);
     final UserTaskRecordValue userTask = userTasksColumnFamily.get(userTaskKey);
     return userTask == null ? null : userTask.getRecord();
   }
@@ -188,7 +188,7 @@ public class DbUserTaskState implements MutableUserTaskState {
   @Override
   public UserTaskRecord getUserTask(final long key, final AuthorizedTenants authorizedTenantIds) {
     final UserTaskRecord userTask = getUserTask(key);
-    if (userTask != null && authorizedTenantIds.isAuthorizedForTenantId(userTask.getTenantId())) {
+    if (userTask != null && authorizedTenantIds.isAuthorizedForTenantId(userTask.getTenantIdentifier())) {
       return userTask;
     }
     return null;
@@ -196,13 +196,13 @@ public class DbUserTaskState implements MutableUserTaskState {
 
   @Override
   public UserTaskIntermediateStateValue getIntermediateState(final long userTaskKey) {
-    userTaskIntermediateStateKey.wrapLong(userTaskKey);
+    userTaskIntermediateStateKey.setValue(userTaskKey);
     return userTasksIntermediateStatesColumnFamily.get(userTaskIntermediateStateKey);
   }
 
   @Override
   public Optional<String> findInitialAssignee(final long key) {
-    userTaskKey.wrapLong(key);
+    userTaskKey.setValue(key);
     return Optional.ofNullable(userTasksInitialAssigneeColumnFamily.get(userTaskKey))
         .map(DbString::toString);
   }

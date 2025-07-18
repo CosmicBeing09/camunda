@@ -138,20 +138,20 @@ public class DbResourceState implements MutableResourceState {
 
   @Override
   public void storeResourceInResourceColumnFamily(final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceKey.wrapLong(record.getResourceKey());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceKey.setValue(record.getResourceKey());
     dbPersistedResource.wrap(record);
     resourcesByKey.upsert(tenantAwareResourceKey, dbPersistedResource);
     resourcesByTenantIdAndIdCache.put(
-        new DbResourceState.TenantIdAndResourceId(record.getTenantId(), record.getResourceId()),
+        new DbResourceState.TenantIdAndResourceId(record.getTenantIdentifier(), record.getResourceId()),
         dbPersistedResource.copy());
   }
 
   @Override
   public void storeResourceInResourceByIdAndVersionColumnFamily(final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceId.wrapString(record.getResourceId());
-    resourceVersion.wrapLong(record.getVersion());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceId.setValueFromString(record.getResourceId());
+    resourceVersion.setValue(record.getVersion());
     dbPersistedResource.wrap(record);
     resourceByIdAndVersionColumnFamily.upsert(tenantAwareIdAndVersionKey, fkResourceKey);
   }
@@ -159,10 +159,10 @@ public class DbResourceState implements MutableResourceState {
   @Override
   public void storeResourceInResourceKeyByResourceIdAndDeploymentKeyColumnFamily(
       final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceKey.wrapLong(record.getResourceKey());
-    dbResourceId.wrapString(record.getResourceId());
-    dbDeploymentKey.wrapLong(record.getDeploymentKey());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceKey.setValue(record.getResourceKey());
+    dbResourceId.setValueFromString(record.getResourceId());
+    dbDeploymentKey.setValue(record.getDeploymentKey());
     resourceKeyByResourceIdAndDeploymentKeyColumnFamily.upsert(
         tenantAwareResourceIdAndDeploymentKey, fkResourceKey);
   }
@@ -172,10 +172,10 @@ public class DbResourceState implements MutableResourceState {
       final ResourceRecord record) {
     final var versionTag = record.getVersionTag();
     if (!versionTag.isBlank()) {
-      tenantIdKey.wrapString(record.getTenantId());
-      dbResourceKey.wrapLong(record.getResourceKey());
-      dbResourceId.wrapString(record.getResourceId());
-      dbVersionTag.wrapString(versionTag);
+      tenantIdKey.setValueFromString(record.getTenantIdentifier());
+      dbResourceKey.setValue(record.getResourceKey());
+      dbResourceId.setValueFromString(record.getResourceId());
+      dbVersionTag.setValueFromString(versionTag);
       resourceKeyByResourceIdAndVersionTagColumnFamily.upsert(
           tenantAwareResourceIdAndVersionTagKey, fkResourceKey);
     }
@@ -184,38 +184,38 @@ public class DbResourceState implements MutableResourceState {
   @Override
   public void updateLatestVersion(final ResourceRecord record) {
     versionManager.addResourceVersion(
-        record.getResourceId(), record.getVersion(), record.getTenantId());
+        record.getResourceId(), record.getVersion(), record.getTenantIdentifier());
   }
 
   @Override
   public void deleteResourceInResourcesColumnFamily(final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceKey.wrapLong(record.getResourceKey());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceKey.setValue(record.getResourceKey());
     resourcesByKey.deleteExisting(tenantAwareResourceKey);
     resourcesByTenantIdAndIdCache.invalidate(
-        new DbResourceState.TenantIdAndResourceId(record.getTenantId(), record.getResourceId()));
+        new DbResourceState.TenantIdAndResourceId(record.getTenantIdentifier(), record.getResourceId()));
   }
 
   @Override
   public void deleteResourceInResourceByIdAndVersionColumnFamily(final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceId.wrapString(record.getResourceId());
-    resourceVersion.wrapLong(record.getVersion());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceId.setValueFromString(record.getResourceId());
+    resourceVersion.setValue(record.getVersion());
     resourceByIdAndVersionColumnFamily.deleteExisting(tenantAwareIdAndVersionKey);
   }
 
   @Override
   public void deleteResourceInResourceVersionColumnFamily(final ResourceRecord record) {
     versionManager.deleteResourceVersion(
-        record.getResourceId(), record.getVersion(), record.getTenantId());
+        record.getResourceId(), record.getVersion(), record.getTenantIdentifier());
   }
 
   @Override
   public void deleteResourceInResourceKeyByResourceIdAndDeploymentKeyColumnFamily(
       final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceId.wrapString(record.getResourceId());
-    dbDeploymentKey.wrapLong(record.getDeploymentKey());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceId.setValueFromString(record.getResourceId());
+    dbDeploymentKey.setValue(record.getDeploymentKey());
     resourceKeyByResourceIdAndDeploymentKeyColumnFamily.deleteIfExists(
         tenantAwareResourceIdAndDeploymentKey);
   }
@@ -223,9 +223,9 @@ public class DbResourceState implements MutableResourceState {
   @Override
   public void deleteResourceInResourceKeyByResourceIdAndVersionTagColumnFamily(
       final ResourceRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbResourceId.wrapString(record.getResourceId());
-    dbVersionTag.wrapString(record.getVersionTag());
+    tenantIdKey.setValueFromString(record.getTenantIdentifier());
+    dbResourceId.setValueFromString(record.getResourceId());
+    dbVersionTag.setValueFromString(record.getVersionTag());
     resourceKeyByResourceIdAndVersionTagColumnFamily.deleteIfExists(
         tenantAwareResourceIdAndVersionTagKey);
   }
@@ -239,8 +239,8 @@ public class DbResourceState implements MutableResourceState {
   @Override
   public Optional<PersistedResource> findResourceByKey(
       final long resourceKey, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    dbResourceKey.wrapLong(resourceKey);
+    tenantIdKey.setValueFromString(tenantId);
+    dbResourceKey.setValue(resourceKey);
     return Optional.ofNullable(resourcesByKey.get(tenantAwareResourceKey))
         .map(PersistedResource::copy);
   }
@@ -248,9 +248,9 @@ public class DbResourceState implements MutableResourceState {
   @Override
   public Optional<PersistedResource> findResourceByIdAndDeploymentKey(
       final String resourceId, final long deploymentKey, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    dbResourceId.wrapString(resourceId);
-    dbDeploymentKey.wrapLong(deploymentKey);
+    tenantIdKey.setValueFromString(tenantId);
+    dbResourceId.setValueFromString(resourceId);
+    dbDeploymentKey.setValue(deploymentKey);
     return Optional.ofNullable(
             resourceKeyByResourceIdAndDeploymentKeyColumnFamily.get(
                 tenantAwareResourceIdAndDeploymentKey))
@@ -260,9 +260,9 @@ public class DbResourceState implements MutableResourceState {
   @Override
   public Optional<PersistedResource> findResourceByIdAndVersionTag(
       final String resourceId, final String versionTag, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    dbResourceId.wrapString(resourceId);
-    dbVersionTag.wrapString(versionTag);
+    tenantIdKey.setValueFromString(tenantId);
+    dbResourceId.setValueFromString(resourceId);
+    dbVersionTag.setValueFromString(versionTag);
     return Optional.ofNullable(
             resourceKeyByResourceIdAndVersionTagColumnFamily.get(
                 tenantAwareResourceIdAndVersionTagKey))
@@ -282,10 +282,10 @@ public class DbResourceState implements MutableResourceState {
 
   private PersistedResource getPersistedResourceById(final String resourceId, final String tenantId)
       throws ResourceNotFoundException {
-    dbResourceId.wrapString(resourceId);
-    tenantIdKey.wrapString(tenantId);
+    dbResourceId.setValueFromString(resourceId);
+    tenantIdKey.setValueFromString(tenantId);
     final long latestVersion = versionManager.getLatestResourceVersion(resourceId, tenantId);
-    resourceVersion.wrapLong(latestVersion);
+    resourceVersion.setValue(latestVersion);
     final Optional<PersistedResource> persistedResource =
         Optional.ofNullable(resourceByIdAndVersionColumnFamily.get(tenantAwareIdAndVersionKey))
             .flatMap(key -> findResourceByKey(key.inner().wrappedKey().getValue(), tenantId));

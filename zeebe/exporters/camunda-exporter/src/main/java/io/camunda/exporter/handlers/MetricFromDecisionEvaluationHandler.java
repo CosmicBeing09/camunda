@@ -70,7 +70,7 @@ public class MetricFromDecisionEvaluationHandler
     final DecisionEvaluationRecordValue recordValue = record.getValue();
     final OffsetDateTime timestamp =
         OffsetDateTime.ofInstant(Instant.ofEpochMilli(record.getTimestamp()), ZoneOffset.UTC);
-    final String tenantId = tenantOrDefault(recordValue.getTenantId());
+    final String tenantId = tenantOrDefault(recordValue.getTenantIdentifier());
     final String value = entity.getId();
     entity
         .setEvent(EVENT_DECISION_INSTANCE_EVALUATED)

@@ -102,7 +102,7 @@ public class PersistedResource extends UnpackedObject implements DbValue {
     resourceKeyProp.setValue(record.getResourceKey());
     checksumProp.setValue(record.getChecksumBuffer());
     resourceNameProp.setValue(record.getResourceName());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
     deploymentKeyProp.setValue(record.getDeploymentKey());
     versionTagProp.setValue(record.getVersionTag());
     resourceProp.setValue(record.getResourceProp());

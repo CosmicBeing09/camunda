@@ -48,7 +48,7 @@ public abstract class ZeebeRecordTestUtil {
         .withElementId(inc.getFlowNodeId())
         .withBpmnProcessId(inc.getBpmnProcessId())
         .withErrorType(ErrorType.valueOf(inc.getErrorType().name()))
-        .withTenantId(inc.getTenantId());
+        .withTenantId(inc.getTenantIdentifier());
     if (recordValueBuilderFunction != null) {
       recordValueBuilderFunction.accept(valueBuilder);
     }
@@ -163,7 +163,7 @@ public abstract class ZeebeRecordTestUtil {
         .withBpmnElementType(BpmnElementType.PROCESS)
         .withProcessDefinitionKey(pi.getProcessDefinitionKey())
         .withVersion(pi.getProcessVersion())
-        .withTenantId(pi.getTenantId());
+        .withTenantId(pi.getTenantIdentifier());
     if (recordValueBuilderFunction != null) {
       recordValueBuilderFunction.accept(valueBuilder);
     }
@@ -190,7 +190,7 @@ public abstract class ZeebeRecordTestUtil {
         .withBpmnElementType(BpmnElementType.valueOf(fni.getActivityType().toString()))
         .withElementId(fni.getActivityId())
         .withProcessInstanceKey(fni.getProcessInstanceKey())
-        .withTenantId(fni.getTenantId());
+        .withTenantId(fni.getTenantIdentifier());
     if (recordValueBuilderFunction != null) {
       recordValueBuilderFunction.accept(valueBuilder);
     }
@@ -220,7 +220,7 @@ public abstract class ZeebeRecordTestUtil {
         .withProcessDefinitionKey(var.getProcessDefinitionKey())
         .withBpmnProcessId(var.getBpmnProcessId())
         .withScopeKey(var.getScopeKey())
-        .withTenantId(var.getTenantId());
+        .withTenantId(var.getTenantIdentifier());
     if (recordValueBuilderFunction != null) {
       recordValueBuilderFunction.accept(valueBuilder);
     }

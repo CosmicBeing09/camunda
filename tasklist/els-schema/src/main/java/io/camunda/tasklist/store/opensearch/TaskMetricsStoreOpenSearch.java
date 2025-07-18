@@ -143,6 +143,6 @@ public class TaskMetricsStoreOpenSearch implements TaskMetricsStore {
         .setEvent(EVENT_TASK_COMPLETED_BY_ASSIGNEE)
         .setValue(task.getAssignee())
         .setEventTime(task.getCompletionTime())
-        .setTenantId(task.getTenantId());
+        .setTenantId(task.getTenantIdentifier());
   }
 }

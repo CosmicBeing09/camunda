@@ -120,7 +120,7 @@ public class FlowNodeInstanceZeebeRecordProcessor {
             .setProcessInstanceKey(recordValue.getProcessInstanceKey())
             .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
             .setBpmnProcessId(recordValue.getBpmnProcessId())
-            .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+            .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
     if (intentStr.equals(IncidentIntent.CREATED.name())) {
       entity.setIncidentKey(record.getKey());
     } else if (intentStr.equals(IncidentIntent.RESOLVED.name())) {

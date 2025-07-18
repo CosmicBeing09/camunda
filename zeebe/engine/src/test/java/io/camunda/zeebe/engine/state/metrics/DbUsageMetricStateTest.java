@@ -37,10 +37,10 @@ public class DbUsageMetricStateTest {
     final var eventTime = InstantSource.system().millis();
 
     // when
-    state.createRPIMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordRPIMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
-    final var actual = state.getTenantIdPIsMapByEventTime(eventTime);
+    final var actual = state.getTenantProcessInstanceIdsByEventTime(eventTime);
     assertThat(actual)
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
@@ -52,14 +52,14 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.createRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.createRPIMetric(eventTime2, 10L, "tenant1");
-    state.createRPIMetric(eventTime2, 11L, "tenant1");
-    state.createRPIMetric(eventTime2, 12L, "tenant2");
+    state.recordRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordRPIMetric(eventTime2, 10L, "tenant1");
+    state.recordRPIMetric(eventTime2, 11L, "tenant1");
+    state.recordRPIMetric(eventTime2, 12L, "tenant2");
 
     // when
-    final var actual1 = state.getTenantIdPIsMapByEventTime(eventTime1);
-    final var actual2 = state.getTenantIdPIsMapByEventTime(eventTime2);
+    final var actual1 = state.getTenantProcessInstanceIdsByEventTime(eventTime1);
+    final var actual2 = state.getTenantProcessInstanceIdsByEventTime(eventTime2);
 
     // then
     assertThat(actual1)
@@ -76,14 +76,14 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.createRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.createRPIMetric(eventTime2, 10L, "tenant1");
-    state.createRPIMetric(eventTime2, 11L, "tenant1");
-    state.createRPIMetric(eventTime2, 12L, "tenant2");
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime1))
+    state.recordRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordRPIMetric(eventTime2, 10L, "tenant1");
+    state.recordRPIMetric(eventTime2, 11L, "tenant1");
+    state.recordRPIMetric(eventTime2, 12L, "tenant2");
+    assertThat(state.getTenantProcessInstanceIdsByEventTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime2))
+    assertThat(state.getTenantProcessInstanceIdsByEventTime(eventTime2))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of("tenant1", List.of(10L, 11L), "tenant2", List.of(12L)));
 
@@ -91,9 +91,9 @@ public class DbUsageMetricStateTest {
     state.deleteByEventTime(eventTime2);
 
     // then
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime1))
+    assertThat(state.getTenantProcessInstanceIdsByEventTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getTenantIdPIsMapByEventTime(eventTime2)).isEmpty();
+    assertThat(state.getTenantProcessInstanceIdsByEventTime(eventTime2)).isEmpty();
   }
 }

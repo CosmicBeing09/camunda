@@ -73,7 +73,7 @@ public class SequenceFlowEntity implements ExporterEntity<SequenceFlowEntity>, T
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

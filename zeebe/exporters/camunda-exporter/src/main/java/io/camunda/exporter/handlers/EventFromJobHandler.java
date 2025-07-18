@@ -82,7 +82,7 @@ public class EventFromJobHandler extends AbstractEventHandler<JobRecordValue> {
     entity
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setFlowNodeId(recordValue.getElementId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     final long activityInstanceKey = recordValue.getElementInstanceKey();
     if (activityInstanceKey > 0) {
