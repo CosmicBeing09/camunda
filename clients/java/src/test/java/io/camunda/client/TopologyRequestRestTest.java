@@ -48,7 +48,7 @@ public final class TopologyRequestRestTest extends ClientRestTest {
   @Test
   void shouldRequestTopology() throws ExecutionException, InterruptedException {
     // given
-    gatewayService.onTopologyRequest(
+    gatewayService.topology(
         new TopologyResponse()
             .gatewayVersion("1.22.3-SNAPSHOT")
             .clusterSize(3)
@@ -139,7 +139,7 @@ public final class TopologyRequestRestTest extends ClientRestTest {
   @Test
   void shouldAcceptDeadPartitions() {
     // given
-    gatewayService.onTopologyRequest(
+    gatewayService.topology(
         new TopologyResponse()
             .gatewayVersion("1.22.3-SNAPSHOT")
             .clusterSize(1)

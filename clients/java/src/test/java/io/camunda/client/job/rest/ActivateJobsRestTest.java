@@ -78,7 +78,7 @@ public final class ActivateJobsRestTest extends ClientRestTest {
             .variables(singletonMap("bar", 3))
             .tenantId("test-tenant-2");
 
-    gatewayService.onActivateJobsRequest(
+    gatewayService.activateJobs(
         new JobActivationResult().addJobsItem(activatedJob1).addJobsItem(activatedJob2));
 
     // when
@@ -360,7 +360,7 @@ public final class ActivateJobsRestTest extends ClientRestTest {
     final ActivatedJobResult activatedJob1 = new ActivatedJobResult().variables(variablesJob1);
     final ActivatedJobResult activatedJob2 = new ActivatedJobResult().variables(variablesJob2);
 
-    gatewayService.onActivateJobsRequest(
+    gatewayService.activateJobs(
         new JobActivationResult().addJobsItem(activatedJob1).addJobsItem(activatedJob2));
 
     // when
@@ -389,7 +389,7 @@ public final class ActivateJobsRestTest extends ClientRestTest {
     variables.put("joe", "doe");
     final ActivatedJobResult activatedJob1 = new ActivatedJobResult().variables(variables);
 
-    gatewayService.onActivateJobsRequest(new JobActivationResult().addJobsItem(activatedJob1));
+    gatewayService.activateJobs(new JobActivationResult().addJobsItem(activatedJob1));
 
     // when
     final ActivateJobsResponse response =
@@ -407,7 +407,7 @@ public final class ActivateJobsRestTest extends ClientRestTest {
     // given
     final ActivatedJobResult activatedJob1 = new ActivatedJobResult().variables(variables);
 
-    gatewayService.onActivateJobsRequest(new JobActivationResult().addJobsItem(activatedJob1));
+    gatewayService.activateJobs(new JobActivationResult().addJobsItem(activatedJob1));
 
     // when
     final ActivateJobsResponse response =
