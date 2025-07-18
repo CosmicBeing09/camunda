@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.appliers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.Assertions;
@@ -25,13 +25,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class UserTaskUpdateDeniedApplierTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
   private UserTaskUpdateDeniedApplier userTaskUpdateDeniedApplier;
 
   /** Used for state */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;

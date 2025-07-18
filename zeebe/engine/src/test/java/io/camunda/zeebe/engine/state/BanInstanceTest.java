@@ -12,7 +12,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.logstreams.log.LoggedEvent;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
@@ -220,7 +220,7 @@ public final class BanInstanceTest {
     typedEvent.wrap(loggedEvent, metadata, new Value());
 
     // when
-    final MutableProcessingState processingState = ZEEBE_STATE_RULE.getProcessingState();
+    final MutableAsyncProcessingContext processingState = ZEEBE_STATE_RULE.getProcessingState();
     processingState
         .getBannedInstanceState()
         .tryToBanInstance(typedEvent, (processInstanceKey) -> {});

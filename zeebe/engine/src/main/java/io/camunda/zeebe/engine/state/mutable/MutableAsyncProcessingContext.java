@@ -10,10 +10,10 @@ package io.camunda.zeebe.engine.state.mutable;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
 
-public interface MutableProcessingState extends ProcessingState {
+public interface MutableAsyncProcessingContext extends ProcessingState {
 
   @Override
-  MutableDeploymentState getDeploymentState();
+  MutableDeploymentState getDeploymentContext();
 
   @Override
   MutableProcessState getProcessState();
@@ -73,7 +73,7 @@ public interface MutableProcessingState extends ProcessingState {
   MutableMigrationState getMigrationState();
 
   @Override
-  MutableUserTaskState getUserTaskState();
+  MutableTaskState getUserTaskState();
 
   @Override
   MutableCompensationSubscriptionState getCompensationSubscriptionState();

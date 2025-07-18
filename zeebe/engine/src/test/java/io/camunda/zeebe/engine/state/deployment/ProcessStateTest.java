@@ -20,8 +20,8 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutablePro
 import io.camunda.zeebe.engine.state.deployment.PersistedProcess.PersistedProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState.PersistedProcessVisitor;
 import io.camunda.zeebe.engine.state.immutable.ProcessState.ProcessIdentifier;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
@@ -45,7 +45,7 @@ public final class ProcessStateTest {
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableProcessState processState;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Before
   public void setUp() {
@@ -1173,19 +1173,19 @@ public final class ProcessStateTest {
   }
 
   public static DeploymentRecord creatingDeploymentRecord(
-      final MutableProcessingState processingState) {
+      final MutableAsyncProcessingContext processingState) {
     return creatingDeploymentRecord(processingState, "processId");
   }
 
   public static DeploymentRecord creatingDeploymentRecord(
-      final MutableProcessingState processingState, final String processId) {
+      final MutableAsyncProcessingContext processingState, final String processId) {
     final MutableProcessState processState = processingState.getProcessState();
     final int version = processState.getNextProcessVersion(processId, TENANT_ID);
     return creatingDeploymentRecord(processingState, processId, version);
   }
 
   public static DeploymentRecord creatingDeploymentRecord(
-      final MutableProcessingState processingState, final String processId, final int version) {
+      final MutableAsyncProcessingContext processingState, final String processId, final int version) {
     final BpmnModelInstance modelInstance =
         Bpmn.createExecutableProcess(processId)
             .startEvent()
@@ -1224,24 +1224,24 @@ public final class ProcessStateTest {
     return deploymentRecord;
   }
 
-  public static ProcessRecord creatingProcessRecord(final MutableProcessingState processingState) {
+  public static ProcessRecord creatingProcessRecord(final MutableAsyncProcessingContext processingState) {
     return creatingProcessRecord(processingState, "processId");
   }
 
   public static ProcessRecord creatingProcessRecord(
-      final MutableProcessingState processingState, final String processId) {
+      final MutableAsyncProcessingContext processingState, final String processId) {
     final MutableProcessState processState = processingState.getProcessState();
     final int version = processState.getNextProcessVersion(processId, TENANT_ID);
     return creatingProcessRecord(processingState, processId, version, null);
   }
 
   public static ProcessRecord creatingProcessRecord(
-      final MutableProcessingState processingState, final String processId, final int version) {
+      final MutableAsyncProcessingContext processingState, final String processId, final int version) {
     return creatingProcessRecord(processingState, processId, version, null);
   }
 
   public static ProcessRecord creatingProcessRecord(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final String processId,
       final int version,
       final String versionTag) {

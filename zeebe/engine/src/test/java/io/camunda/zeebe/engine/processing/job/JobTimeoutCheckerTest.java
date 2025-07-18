@@ -19,8 +19,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.engine.EngineConfiguration;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
@@ -41,7 +41,7 @@ public class JobTimeoutCheckerTest {
   public static final int NUMBER_OF_ACTIVE_JOBS = 10;
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableJobState jobState;
   private ReadonlyStreamProcessorContext mockContext;
   private ProcessingScheduleService mockScheduleService;

@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -24,22 +24,23 @@ import org.junit.jupiter.api.extension.ExtendWith;
 public class UserTaskAssignmentDeniedApplierTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext asyncProcessingContext;
 
   /** The class under test. */
-  private UserTaskAssignmentDeniedApplier userTaskAssignmentDeniedApplierApplier;
+  private UserTaskAssignmentDeniedApplier userTaskAssignmentDeniedApplier;
 
   /** Used for state assertions. */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;
 
   @BeforeEach
   public void setup() {
-    userTaskAssignmentDeniedApplierApplier = new UserTaskAssignmentDeniedApplier(processingState);
-    userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    userTaskAssignmentDeniedApplier = new UserTaskAssignmentDeniedApplier(
+        asyncProcessingContext);
+    userTaskState = asyncProcessingContext.getUserTaskState();
+    testSetup = new AppliersTestSetupHelper(asyncProcessingContext);
   }
 
   @Test
@@ -68,7 +69,7 @@ public class UserTaskAssignmentDeniedApplierTest {
         .isEqualTo(LifecycleState.ASSIGNING);
 
     // when
-    userTaskAssignmentDeniedApplierApplier.applyState(userTaskKey, given.setAssignee(newAssignee));
+    userTaskAssignmentDeniedApplier.applyState(userTaskKey, given.setAssignee(newAssignee));
 
     // then
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey))
@@ -105,7 +106,7 @@ public class UserTaskAssignmentDeniedApplierTest {
         .isEqualTo(Optional.of(initialAssignee));
 
     // when
-    userTaskAssignmentDeniedApplierApplier.applyState(userTaskKey, given);
+    userTaskAssignmentDeniedApplier.applyState(userTaskKey, given);
 
     // then
     Assertions.assertThat(userTaskState.findInitialAssignee(userTaskKey))

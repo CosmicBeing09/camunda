@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.authorization;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableMappingState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class MappingStateTest {
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableMappingState mappingState;
 
   @BeforeEach

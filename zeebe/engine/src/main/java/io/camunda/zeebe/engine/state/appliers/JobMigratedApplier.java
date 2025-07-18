@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
 
@@ -17,7 +17,7 @@ public final class JobMigratedApplier implements TypedEventApplier<JobIntent, Jo
 
   private final MutableJobState jobState;
 
-  public JobMigratedApplier(final MutableProcessingState state) {
+  public JobMigratedApplier(final MutableAsyncProcessingContext state) {
     jobState = state.getJobState();
   }
 

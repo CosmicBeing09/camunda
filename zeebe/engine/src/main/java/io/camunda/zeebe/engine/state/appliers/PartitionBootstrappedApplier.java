@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
@@ -20,7 +20,7 @@ public class PartitionBootstrappedApplier implements TypedEventApplier<ScaleInte
   private static final Logger LOG = LoggerFactory.getLogger(PartitionBootstrappedApplier.class);
   private final MutableRoutingState routingState;
 
-  public PartitionBootstrappedApplier(final MutableProcessingState state) {
+  public PartitionBootstrappedApplier(final MutableAsyncProcessingContext state) {
     routingState = state.getRoutingState();
   }
 

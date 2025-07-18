@@ -15,12 +15,12 @@ import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSen
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableEventScopeInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageCorrelationState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageStartEventSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageState;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.MessageBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageCorrelationIntent;
@@ -36,7 +36,7 @@ public final class MessageEventProcessors {
   public static void addMessageProcessors(
       final BpmnBehaviors bpmnBehaviors,
       final TypedRecordProcessors typedRecordProcessors,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskStateFactory,
       final SubscriptionCommandSender subscriptionCommandSender,
       final Writers writers,

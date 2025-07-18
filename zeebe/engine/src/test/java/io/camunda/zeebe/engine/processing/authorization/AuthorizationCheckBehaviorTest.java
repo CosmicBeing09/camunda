@@ -26,7 +26,7 @@ import io.camunda.zeebe.engine.state.appliers.MappingCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.RoleCreatedApplier;
 import io.camunda.zeebe.engine.state.appliers.RoleEntityAddedApplier;
 import io.camunda.zeebe.engine.state.appliers.UserCreatedApplier;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.MappingRecord;
@@ -55,7 +55,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 final class AuthorizationCheckBehaviorTest {
 
   @SuppressWarnings("unused") // injected by the extension
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private AuthorizationCheckBehavior authorizationCheckBehavior;
   private UserCreatedApplier userCreatedApplier;

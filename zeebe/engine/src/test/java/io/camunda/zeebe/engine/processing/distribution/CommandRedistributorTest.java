@@ -15,8 +15,8 @@ import static org.mockito.Mockito.verify;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableDistributionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo.StaticRoutingInfo;
@@ -40,7 +40,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 public class CommandRedistributorTest {
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private MutableRoutingState routingState;
   @Mock private DistributionMetrics mockDistributionMetrics;

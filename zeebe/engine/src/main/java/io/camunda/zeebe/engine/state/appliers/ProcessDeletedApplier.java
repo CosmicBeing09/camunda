@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
 
@@ -17,7 +17,7 @@ public class ProcessDeletedApplier implements TypedEventApplier<ProcessIntent, P
 
   private final MutableProcessState processState;
 
-  public ProcessDeletedApplier(final MutableProcessingState state) {
+  public ProcessDeletedApplier(final MutableAsyncProcessingContext state) {
     processState = state.getProcessState();
   }
 

@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.appliers;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 
@@ -15,7 +15,7 @@ class AppliersTestSetupHelper {
 
   private final EventAppliers eventAppliers;
 
-  AppliersTestSetupHelper(final MutableProcessingState processingState) {
+  AppliersTestSetupHelper(final MutableAsyncProcessingContext processingState) {
     eventAppliers = new EventAppliers();
     eventAppliers.registerEventAppliers(processingState);
   }

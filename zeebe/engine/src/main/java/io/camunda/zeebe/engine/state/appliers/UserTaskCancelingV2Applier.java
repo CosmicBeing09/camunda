@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.appliers;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -19,11 +19,11 @@ import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 public final class UserTaskCancelingV2Applier
     implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
 
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final MutableVariableState variableState;
   private final MutableElementInstanceState elementInstanceState;
 
-  public UserTaskCancelingV2Applier(final MutableProcessingState processingState) {
+  public UserTaskCancelingV2Applier(final MutableAsyncProcessingContext processingState) {
     userTaskState = processingState.getUserTaskState();
     variableState = processingState.getVariableState();
     elementInstanceState = processingState.getElementInstanceState();

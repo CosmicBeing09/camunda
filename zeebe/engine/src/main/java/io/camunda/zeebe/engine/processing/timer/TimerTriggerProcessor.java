@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejection
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTimerInstanceState;
 import io.camunda.zeebe.model.bpmn.util.time.Interval;
 import io.camunda.zeebe.model.bpmn.util.time.RepeatingInterval;
@@ -59,7 +59,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
   private final EventHandler eventHandle;
 
   public TimerTriggerProcessor(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers) {
     catchEventBehavior = bpmnBehaviors.catchEventBehavior();

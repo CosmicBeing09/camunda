@@ -12,7 +12,7 @@ import static java.util.function.Predicate.not;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
@@ -37,7 +37,7 @@ public final class ElementInstanceStateTest {
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableElementInstanceState elementInstanceState;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Before
   public void setUp() {

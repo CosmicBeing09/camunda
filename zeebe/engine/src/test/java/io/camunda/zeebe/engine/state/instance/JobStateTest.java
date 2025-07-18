@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.JobState.DeadlineIndex;
 import io.camunda.zeebe.engine.state.immutable.JobState.State;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -40,7 +40,7 @@ public final class JobStateTest {
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
   private MutableJobState jobState;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Before
   public void setUp() {

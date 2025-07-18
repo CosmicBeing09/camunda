@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.migration.to_8_4.legacy.LegacySignalSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.signal.DbSignalSubscriptionState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
@@ -37,7 +37,7 @@ public class MultiTenancyMigrationTest {
     final MultiTenancySignalSubscriptionStateMigration sut =
         new MultiTenancySignalSubscriptionStateMigration();
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private LegacySignalSubscriptionState legacyState;

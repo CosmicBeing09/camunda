@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.authorization;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoleState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.RoleRecord;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class RoleStateTest {
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableRoleState roleState;
 
   @BeforeEach

@@ -14,7 +14,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
@@ -36,7 +36,7 @@ public class OrderedCommandDistributionMigrationTest {
     final OrderedCommandDistributionMigration sut = new OrderedCommandDistributionMigration();
 
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private DbDistributionState state;

@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.ScheduledTaskDbState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.stream.api.InterPartitionCommandSender;
 import io.camunda.zeebe.stream.api.RecordProcessorContext;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
@@ -78,7 +78,7 @@ public class TypedRecordProcessorContextImpl implements TypedRecordProcessorCont
   }
 
   @Override
-  public MutableProcessingState getProcessingState() {
+  public MutableAsyncProcessingContext getProcessingState() {
     return processingState;
   }
 

@@ -11,10 +11,10 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableIncidentState;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -32,7 +32,7 @@ public final class IncidentStateTest {
   private MutableIncidentState incidentState;
   private MutableElementInstanceState elementInstanceState;
   private MutableJobState jobState;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Before
   public void setUp() {

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.identity;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.stream.api.state.KeyGenerator;
@@ -20,7 +20,7 @@ public final class AuthorizationProcessors {
   public static void addAuthorizationProcessors(
       final KeyGenerator keyGenerator,
       final TypedRecordProcessors typedRecordProcessors,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {

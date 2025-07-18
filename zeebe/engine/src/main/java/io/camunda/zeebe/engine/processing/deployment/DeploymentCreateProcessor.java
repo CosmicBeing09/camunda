@@ -100,7 +100,7 @@ public final class DeploymentCreateProcessor
       final EngineConfiguration config,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    deploymentState = processingState.getDeploymentState();
+    deploymentState = processingState.getDeploymentContext();
     processState = processingState.getProcessState();
     decisionState = processingState.getDecisionState();
     formState = processingState.getFormState();

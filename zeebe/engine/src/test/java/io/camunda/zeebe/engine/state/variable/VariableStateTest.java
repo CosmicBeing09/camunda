@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.immutable.VariableState.Variable;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
@@ -52,7 +52,7 @@ public final class VariableStateTest {
 
   @BeforeClass
   public static void setUp() {
-    final MutableProcessingState processingState = ZEEBE_STATE_RULE.getProcessingState();
+    final MutableAsyncProcessingContext processingState = ZEEBE_STATE_RULE.getProcessingState();
     elementInstanceState = processingState.getElementInstanceState();
     variableState = processingState.getVariableState();
   }

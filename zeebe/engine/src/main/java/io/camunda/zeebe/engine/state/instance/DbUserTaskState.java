@@ -14,14 +14,14 @@ import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import java.util.Optional;
 import java.util.function.Consumer;
 import org.apache.commons.lang3.StringUtils;
 
-public class DbUserTaskState implements MutableUserTaskState {
+public class DbUserTaskState implements MutableTaskState {
 
   // key => user task record value
   // we need two separate wrapper to not interfere with get and put

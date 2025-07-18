@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.state.message.MessageSubscription;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
@@ -35,7 +35,7 @@ public class DbMigrationStateTest {
 
   private ZeebeDb<ZbColumnFamilies> zeebeDb;
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private TransactionContext transactionContext;
 

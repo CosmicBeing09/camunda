@@ -30,7 +30,7 @@ import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.instance.AsyncTransitionTriggerMetadata;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -58,7 +58,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   private final UserTaskCommandProcessors commandProcessors;
   private final ProcessState processState;
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final ElementInstanceState elementInstanceState;
   private final VariableState variableState;
 
@@ -70,7 +70,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   public UserTaskProcessor(
       final ProcessingState state,
-      final MutableUserTaskState userTaskState,
+      final MutableTaskState userTaskState,
       final KeyGenerator keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,

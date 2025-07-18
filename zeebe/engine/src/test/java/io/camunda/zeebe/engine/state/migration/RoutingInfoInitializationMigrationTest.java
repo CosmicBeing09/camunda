@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.migration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.immutable.RoutingState.MessageCorrelation;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
 import org.junit.jupiter.api.Test;
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 final class RoutingInfoInitializationMigrationTest {
   @SuppressWarnings("unused")
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Test
   void shouldRunMigration() {

@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.instance.TimerInstance;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.RecordStream;
 import io.camunda.zeebe.engine.util.Records;
@@ -83,7 +83,7 @@ public final class EngineErrorHandlingTest {
   private TestStreams streams;
   private KeyGenerator keyGenerator;
   private CommandResponseWriter mockCommandResponseWriter;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @Before
   public void setUp() {

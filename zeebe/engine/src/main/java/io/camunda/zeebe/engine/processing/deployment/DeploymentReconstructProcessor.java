@@ -68,7 +68,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
       final ProcessingState processingState,
       final Writers writers) {
     this.keyGenerator = keyGenerator;
-    deploymentState = processingState.getDeploymentState();
+    deploymentState = processingState.getDeploymentContext();
     processState = processingState.getProcessState();
     formState = processingState.getFormState();
     decisionState = processingState.getDecisionState();

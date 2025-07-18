@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.migration.MigrationTaskState.State;
 import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily48Corrector;
 import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily49Corrector;
 import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily50Corrector;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.signal.SignalSubscription;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
@@ -47,7 +47,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   class ColumnFamily48CorrectorTestTest {
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private ColumnFamily48Corrector sut;
@@ -186,7 +186,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   class ColumnFamily49CorrectorTestTest {
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private ColumnFamily49Corrector sut;
@@ -322,7 +322,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   class ColumnFamily50CorrectorTest {
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 
     private ColumnFamily50Corrector sut;

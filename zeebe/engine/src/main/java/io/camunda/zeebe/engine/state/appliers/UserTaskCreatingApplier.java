@@ -9,9 +9,9 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
@@ -19,9 +19,9 @@ public final class UserTaskCreatingApplier
     implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
 
   private final MutableElementInstanceState elementInstanceState;
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
 
-  public UserTaskCreatingApplier(final MutableProcessingState processingState) {
+  public UserTaskCreatingApplier(final MutableAsyncProcessingContext processingState) {
     elementInstanceState = processingState.getElementInstanceState();
     userTaskState = processingState.getUserTaskState();
   }

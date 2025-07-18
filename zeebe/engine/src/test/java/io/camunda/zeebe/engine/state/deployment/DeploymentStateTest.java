@@ -33,7 +33,7 @@ public class DeploymentStateTest {
   @Before
   public void setUp() {
     final var processingState = stateRule.getProcessingState();
-    deploymentState = processingState.getDeploymentState();
+    deploymentState = processingState.getDeploymentContext();
   }
 
   @Test

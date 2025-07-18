@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.instance.AsyncTransitionTriggerMetadata;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.msgpack.spec.MsgpackReaderException;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
@@ -49,7 +49,7 @@ public final class VariableDocumentUpdateProcessor
       "Expected to trigger update transition for user task with key '%d', but it is in state '%s'";
 
   private final ElementInstanceState elementInstanceState;
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final ProcessState processState;
   private final KeyGenerator keyGenerator;
   private final VariableBehavior variableBehavior;
@@ -62,7 +62,7 @@ public final class VariableDocumentUpdateProcessor
       final KeyGenerator keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
-      final MutableUserTaskState userTaskState,
+      final MutableTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
     elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;

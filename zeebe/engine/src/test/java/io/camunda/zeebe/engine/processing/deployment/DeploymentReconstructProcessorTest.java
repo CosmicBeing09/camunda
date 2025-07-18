@@ -15,7 +15,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.engine.util.stream.FakeProcessingResultBuilder;
 import io.camunda.zeebe.model.bpmn.Bpmn;
@@ -46,7 +46,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 final class DeploymentReconstructProcessorTest {
   private ZeebeDb<?> zeebeDb;
   private TransactionContext transactionContext;
-  private MutableProcessingState state;
+  private MutableAsyncProcessingContext state;
   private DeploymentReconstructProcessor processor;
   private FakeProcessingResultBuilder<UnifiedRecordValue> resultBuilder;
 
@@ -91,7 +91,7 @@ final class DeploymentReconstructProcessorTest {
                 .setBpmnProcessId("process")
                 .setResourceName("process.bpmn")
                 .setVersion(1));
-    state.getDeploymentState().storeDeploymentRecord(deploymentKey, new DeploymentRecord());
+    state.getDeploymentContext().storeDeploymentRecord(deploymentKey, new DeploymentRecord());
 
     // when
     processor.processRecord(command);

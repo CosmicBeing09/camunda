@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.instance;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTimerInstanceState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
@@ -29,7 +29,7 @@ public final class TimerInstanceStateTest {
 
   @Before
   public void setUp() {
-    final MutableProcessingState processingState = stateRule.getProcessingState();
+    final MutableAsyncProcessingContext processingState = stateRule.getProcessingState();
     state = processingState.getTimerState();
   }
 

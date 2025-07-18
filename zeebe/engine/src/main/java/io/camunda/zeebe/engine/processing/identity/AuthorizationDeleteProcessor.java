@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseW
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.authorization.PersistedAuthorization;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
@@ -37,7 +37,7 @@ public class AuthorizationDeleteProcessor
   public AuthorizationDeleteProcessor(
       final Writers writers,
       final KeyGenerator keyGenerator,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final CommandDistributionBehavior distributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     this.keyGenerator = keyGenerator;

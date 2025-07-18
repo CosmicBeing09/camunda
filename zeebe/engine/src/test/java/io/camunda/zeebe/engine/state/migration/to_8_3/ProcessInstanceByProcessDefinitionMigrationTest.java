@@ -19,7 +19,7 @@ import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
@@ -87,7 +87,7 @@ class ProcessInstanceByProcessDefinitionMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   class ProcessInstanceKeyByProcessDefinitionKeyTest {
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyElementInstanceState legacyState;
     private DbLong elementInstanceKey;

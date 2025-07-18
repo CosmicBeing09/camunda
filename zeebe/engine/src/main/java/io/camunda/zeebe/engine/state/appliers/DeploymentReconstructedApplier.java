@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableDecisionState;
 import io.camunda.zeebe.engine.state.mutable.MutableDeploymentState;
 import io.camunda.zeebe.engine.state.mutable.MutableFormState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 
@@ -23,8 +23,8 @@ public final class DeploymentReconstructedApplier
   private final MutableFormState formState;
   private final MutableDecisionState decisionState;
 
-  public DeploymentReconstructedApplier(final MutableProcessingState processingState) {
-    deploymentState = processingState.getDeploymentState();
+  public DeploymentReconstructedApplier(final MutableAsyncProcessingContext processingState) {
+    deploymentState = processingState.getDeploymentContext();
     processState = processingState.getProcessState();
     formState = processingState.getFormState();
     decisionState = processingState.getDecisionState();

@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.any;
 import io.camunda.zeebe.engine.state.immutable.DecisionState.DecisionRequirementsIdentifier;
 import io.camunda.zeebe.engine.state.immutable.DecisionState.PersistedDecisionRequirementsVisitor;
 import io.camunda.zeebe.engine.state.mutable.MutableDecisionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 public final class DecisionStateTest {
 
   private static final String TENANT_ID = "tenant";
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableDecisionState decisionState;
 
   @BeforeEach

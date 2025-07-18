@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.deployment.PersistedForm;
 import io.camunda.zeebe.engine.state.mutable.MutableFormState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
@@ -34,7 +34,7 @@ abstract class AbstractFormCreatedApplierTest {
   MutableFormState formState;
   TypedEventApplier<FormIntent, FormRecord> formCreatedApplier;
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   @BeforeEach
   void setup() {

@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.EventApplier;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.processing.DbBannedInstanceState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.error.ErrorRecord;
@@ -54,7 +54,7 @@ public class Engine implements RecordProcessor {
 
   private EventApplier eventApplier;
   private RecordProcessorMap recordProcessorMap;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private final ErrorRecord errorRecord = new ErrorRecord();
 

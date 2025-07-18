@@ -25,7 +25,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState.PendingSubscription;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.impl.record.value.message.ProcessMessageSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -61,7 +61,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   public ProcessMessageSubscriptionCorrelateProcessor(
       final ProcessMessageSubscriptionState subscriptionState,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState) {

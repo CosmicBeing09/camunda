@@ -42,6 +42,7 @@ import io.camunda.zeebe.engine.state.message.DbProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
 import io.camunda.zeebe.engine.state.metrics.DbUsageMetricState;
 import io.camunda.zeebe.engine.state.migration.DbMigrationState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableAuthorizationState;
 import io.camunda.zeebe.engine.state.mutable.MutableBannedInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableBatchOperationState;
@@ -65,16 +66,15 @@ import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableMigrationState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableResourceState;
 import io.camunda.zeebe.engine.state.mutable.MutableRoleState;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.engine.state.mutable.MutableSignalSubscriptionState;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableTenantState;
 import io.camunda.zeebe.engine.state.mutable.MutableTimerInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableUsageMetricState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.state.mutable.MutableVariableState;
 import io.camunda.zeebe.engine.state.processing.DbBannedInstanceState;
 import io.camunda.zeebe.engine.state.routing.DbRoutingState;
@@ -89,7 +89,7 @@ import java.time.InstantSource;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
-public class ProcessingDbState implements MutableProcessingState {
+public class ProcessingDbState implements MutableAsyncProcessingContext {
   private final ZeebeDb<ZbColumnFamilies> zeebeDb;
   private final KeyGenerator keyGenerator;
   private final MutableProcessState processState;
@@ -112,7 +112,7 @@ public class ProcessingDbState implements MutableProcessingState {
   private final MutableResourceState resourceState;
   private final MutableSignalSubscriptionState signalSubscriptionState;
   private final MutableDistributionState distributionState;
-  private final MutableUserTaskState userTaskState;
+  private final MutableTaskState userTaskState;
   private final MutableCompensationSubscriptionState compensationSubscriptionState;
   private final MutableUserState userState;
   private final MutableClockState clockState;
@@ -193,7 +193,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableDeploymentState getDeploymentState() {
+  public MutableDeploymentState getDeploymentContext() {
     return deploymentState;
   }
 
@@ -293,7 +293,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableUserTaskState getUserTaskState() {
+  public MutableTaskState getUserTaskState() {
     return userTaskState;
   }
 

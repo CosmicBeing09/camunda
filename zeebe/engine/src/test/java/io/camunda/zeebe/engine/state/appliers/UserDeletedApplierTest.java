@@ -14,7 +14,7 @@ import static io.camunda.zeebe.protocol.record.value.PermissionType.DELETE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableAuthorizationState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableUserState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
@@ -28,7 +28,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserDeletedApplierTest {
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private MutableUserState userState;
   private MutableAuthorizationState authorizationState;

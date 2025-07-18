@@ -60,7 +60,7 @@ import io.camunda.zeebe.engine.processing.usertask.UserTaskProcessor;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
@@ -327,7 +327,7 @@ public final class EngineProcessors {
   }
 
   private static TypedRecordProcessor<UserTaskRecord> createUserTaskProcessor(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -341,7 +341,7 @@ public final class EngineProcessors {
   }
 
   private static BpmnBehaviorsImpl createBehaviors(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final SubscriptionCommandSender subscriptionCommandSender,
       final RoutingInfo routingInfo,
@@ -367,7 +367,7 @@ public final class EngineProcessors {
   }
 
   private static TypedRecordProcessor<ProcessInstanceRecord> addProcessProcessors(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final TypedRecordProcessors typedRecordProcessors,
@@ -448,7 +448,7 @@ public final class EngineProcessors {
 
     // completes the deployment distribution
     final var completeDeploymentDistributionProcessor =
-        new DeploymentDistributionCompleteProcessor(processingState.getDeploymentState(), writers);
+        new DeploymentDistributionCompleteProcessor(processingState.getDeploymentContext(), writers);
     typedRecordProcessors.onCommand(
         ValueType.DEPLOYMENT_DISTRIBUTION,
         DeploymentDistributionIntent.COMPLETE,
@@ -460,7 +460,7 @@ public final class EngineProcessors {
         new DeploymentReconstructProcessor(keyGenerator, processingState, writers));
 
     typedRecordProcessors.withListener(
-        new DeploymentReconstructionStarter(processingState.getDeploymentState()));
+        new DeploymentReconstructionStarter(processingState.getDeploymentContext()));
   }
 
   private static void addIncidentProcessors(
@@ -484,7 +484,7 @@ public final class EngineProcessors {
   private static void addMessageProcessors(
       final BpmnBehaviorsImpl bpmnBehaviors,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskStateFactory,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
@@ -511,7 +511,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final DecisionBehavior decisionBehavior,
       final Writers writers,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
     final DecisionEvaluationEvaluteProcessor decisionEvaluationEvaluteProcessor =
@@ -526,7 +526,7 @@ public final class EngineProcessors {
   private static void addResourceDeletionProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
       final BpmnBehaviors bpmnBehaviors,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -557,7 +557,7 @@ public final class EngineProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     final var signalBroadcastProcessor =

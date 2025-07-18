@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableGroupState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.group.GroupRecord;
 import io.camunda.zeebe.protocol.record.intent.GroupIntent;
 
@@ -17,7 +17,7 @@ public class GroupDeletedApplier implements TypedEventApplier<GroupIntent, Group
 
   private final MutableGroupState groupState;
 
-  public GroupDeletedApplier(final MutableProcessingState processingState) {
+  public GroupDeletedApplier(final MutableAsyncProcessingContext processingState) {
     groupState = processingState.getGroupState();
   }
 

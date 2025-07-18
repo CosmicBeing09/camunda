@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.appliers;
 import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
-import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
+import io.camunda.zeebe.engine.state.mutable.MutableTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -24,13 +24,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class UserTaskCanceledApplierTest {
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   /** The class under test. */
   private UserTaskCanceledApplier userTaskCanceledApplier;
 
   /** Used for state assertions. */
-  private MutableUserTaskState userTaskState;
+  private MutableTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
   private AppliersTestSetupHelper testSetup;

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.clock;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.engine.state.mutable.MutableClockState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock.Modification;
 import java.time.Duration;
@@ -26,7 +26,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 @ExtendWith(ProcessingStateExtension.class)
 final class DbClockStateTest {
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableClockState state;
 
   @BeforeEach

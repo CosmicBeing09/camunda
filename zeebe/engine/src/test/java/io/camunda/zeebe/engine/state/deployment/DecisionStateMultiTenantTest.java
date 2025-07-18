@@ -13,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.camunda.zeebe.db.ZeebeDbInconsistentException;
 import io.camunda.zeebe.engine.state.mutable.MutableDecisionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
@@ -24,7 +24,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith(ProcessingStateExtension.class)
 public class DecisionStateMultiTenantTest {
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableDecisionState decisionState;
 
   @BeforeEach

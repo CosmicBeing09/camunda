@@ -24,7 +24,7 @@ import io.camunda.zeebe.db.impl.DbInt;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DecisionRequirementsRecord;
@@ -43,7 +43,7 @@ public class DecisionRequirementsMigrationTest {
     @Test
     public void noMigrationNeededWhenDecisionsRequirementsColumnFamilyIsEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
       when(mockProcessingState.isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
@@ -63,7 +63,7 @@ public class DecisionRequirementsMigrationTest {
     @Test
     public void noMigrationNeededWhenVersionColumnFamilyIsPopulated() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
       when(mockProcessingState.isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
@@ -83,7 +83,7 @@ public class DecisionRequirementsMigrationTest {
     @Test
     public void migrationNeededWhenDecisionHaveNotBeenMigratedYet() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
       when(mockProcessingState.isEmpty(ZbColumnFamilies.DEPRECATED_DMN_DECISION_REQUIREMENTS))
@@ -103,7 +103,7 @@ public class DecisionRequirementsMigrationTest {
     @Test
     public void migrationCallsMethodInMigrationState() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class, RETURNS_DEEP_STUBS);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class, RETURNS_DEEP_STUBS);
 
       // when
       sutMigration.runMigration(
@@ -120,7 +120,7 @@ public class DecisionRequirementsMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   public class BlackboxTest {
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDecisionState legacyDecisionState;
 

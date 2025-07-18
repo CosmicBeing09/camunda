@@ -18,7 +18,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.migration.MessageSubscriptionSentTimeMigration;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.stream.impl.ClusterContextImpl;
@@ -38,7 +38,7 @@ public class MessageSubscriptionSentTimeMigrationTest {
     @Test
     public void noMigrationNeededWhenColumnIsEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
       when(mockProcessingState.isEmpty(ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME))
           .thenReturn(true);
       // when
@@ -53,7 +53,7 @@ public class MessageSubscriptionSentTimeMigrationTest {
     @Test
     public void migrationNeededWhenColumnIsNotEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
       when(mockProcessingState.isEmpty(ZbColumnFamilies.MESSAGE_SUBSCRIPTION_BY_SENT_TIME))
           .thenReturn(false);
 
@@ -69,7 +69,7 @@ public class MessageSubscriptionSentTimeMigrationTest {
     @Test
     public void migrationCallsMethodInMigrationState() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class, RETURNS_DEEP_STUBS);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class, RETURNS_DEEP_STUBS);
 
       // when
       sutMigration.runMigration(
@@ -93,7 +93,7 @@ public class MessageSubscriptionSentTimeMigrationTest {
 
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
 
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
 
     private TransactionContext transactionContext;
 

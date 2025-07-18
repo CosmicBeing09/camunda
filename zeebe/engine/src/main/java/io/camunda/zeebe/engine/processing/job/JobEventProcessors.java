@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessors;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ScheduledTaskState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.JobIntent;
@@ -26,7 +26,7 @@ public final class JobEventProcessors {
 
   public static void addJobProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Supplier<ScheduledTaskState> scheduledTaskStateFactory,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,

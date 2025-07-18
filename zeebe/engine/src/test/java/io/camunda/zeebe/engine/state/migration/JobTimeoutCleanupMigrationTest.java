@@ -17,7 +17,7 @@ import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.state.instance.JobRecordValue;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -32,7 +32,7 @@ public class JobTimeoutCleanupMigrationTest {
   final JobTimeoutCleanupMigration jobTimeoutCleanupMigration = new JobTimeoutCleanupMigration();
 
   private ZeebeDb<ZbColumnFamilies> zeebeDb;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
 
   private final JobRecordValue jobRecordToRead = new JobRecordValue();

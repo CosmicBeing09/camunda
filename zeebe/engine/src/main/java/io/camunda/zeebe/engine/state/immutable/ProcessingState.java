@@ -13,7 +13,7 @@ import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
 
 public interface ProcessingState extends StreamProcessorLifecycleAware {
 
-  DeploymentState getDeploymentState();
+  DeploymentState getDeploymentContext();
 
   ProcessState getProcessState();
 

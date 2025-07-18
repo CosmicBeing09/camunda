@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
@@ -25,7 +25,7 @@ public final class ProcessingStateRule extends ExternalResource {
   private final TemporaryFolder tempFolder = new TemporaryFolder();
   private final int partition;
   private ZeebeDb<ZbColumnFamilies> db;
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   public ProcessingStateRule() {
     this(Protocol.DEPLOYMENT_PARTITION);
@@ -64,7 +64,7 @@ public final class ProcessingStateRule extends ExternalResource {
     tempFolder.delete();
   }
 
-  public MutableProcessingState getProcessingState() {
+  public MutableAsyncProcessingContext getProcessingState() {
     return processingState;
   }
 

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.tenant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableTenantState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class DbTenantStateTest {
 
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
   private MutableTenantState tenantState;
 
   @BeforeEach

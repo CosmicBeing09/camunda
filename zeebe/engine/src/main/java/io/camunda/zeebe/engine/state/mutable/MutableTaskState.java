@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import java.util.function.Consumer;
 
-public interface MutableUserTaskState extends TaskState {
+public interface MutableTaskState extends TaskState {
 
   void create(final UserTaskRecord userTask);
 

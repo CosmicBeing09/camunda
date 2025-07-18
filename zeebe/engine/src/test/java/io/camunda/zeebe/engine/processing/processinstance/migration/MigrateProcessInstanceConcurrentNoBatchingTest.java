@@ -12,7 +12,7 @@ import static io.camunda.zeebe.protocol.record.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.EngineRule;
 import io.camunda.zeebe.engine.util.RecordToWrite;
 import io.camunda.zeebe.model.bpmn.Bpmn;
@@ -977,7 +977,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     // this requires us to pause processing to avoid concurrent database transaction modification
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
-        ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
+        ((MutableAsyncProcessingContext) ENGINE.getProcessingState()).getKeyGenerator();
     final var intermediateCatchEventKey = keyGenerator.nextKey();
 
     // we need to stop the engine to ensure events are applied after writing the records directly
@@ -1329,7 +1329,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     // this requires us to pause processing to avoid concurrent database transaction modification
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
-        ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
+        ((MutableAsyncProcessingContext) ENGINE.getProcessingState()).getKeyGenerator();
     final var sequenceFlowKey = keyGenerator.nextKey();
     final var multiInstanceBodyKey = keyGenerator.nextKey();
 

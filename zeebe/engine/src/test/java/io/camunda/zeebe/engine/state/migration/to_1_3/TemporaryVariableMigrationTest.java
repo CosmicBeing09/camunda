@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.instance.DbElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.EventTrigger;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.migration.TemporaryVariableMigration;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
@@ -48,7 +48,7 @@ public class TemporaryVariableMigrationTest {
     @Test
     public void noMigrationNeededWhenColumnIsEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
       when(mockProcessingState.isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE)).thenReturn(true);
@@ -63,7 +63,7 @@ public class TemporaryVariableMigrationTest {
     @Test
     public void migrationNeededWhenColumnIsNotEmpty() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class);
 
       // when
       when(mockProcessingState.isEmpty(ZbColumnFamilies.TEMPORARY_VARIABLE_STORE))
@@ -79,7 +79,7 @@ public class TemporaryVariableMigrationTest {
     @Test
     public void migrationCallsMethodInMigrationState() {
       // given
-      final var mockProcessingState = mock(MutableProcessingState.class, RETURNS_DEEP_STUBS);
+      final var mockProcessingState = mock(MutableAsyncProcessingContext.class, RETURNS_DEEP_STUBS);
 
       // when
       sutMigration.runMigration(
@@ -100,7 +100,7 @@ public class TemporaryVariableMigrationTest {
   public class BlackboxTest {
 
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDbTemporaryVariablesState legacyTemporaryVariablesState;
     private DbVariableState variableState;

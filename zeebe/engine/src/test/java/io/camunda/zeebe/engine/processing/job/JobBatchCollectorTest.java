@@ -13,7 +13,7 @@ import io.camunda.security.configuration.SecurityConfiguration;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.job.JobBatchCollector.TooLargeJob;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
@@ -53,7 +53,7 @@ final class JobBatchCollectorTest {
   private final RecordLengthEvaluator lengthEvaluator = new RecordLengthEvaluator();
 
   @SuppressWarnings("unused") // injected by the extension
-  private MutableProcessingState state;
+  private MutableAsyncProcessingContext state;
 
   private JobBatchCollector collector;
 

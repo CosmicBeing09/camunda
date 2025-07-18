@@ -25,7 +25,7 @@ import io.camunda.zeebe.engine.processing.timer.DueDateTimerChecker;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.processing.variable.VariableStateEvaluationContextLookup;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import java.time.InstantSource;
 
@@ -54,7 +54,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   private final JobUpdateBehaviour jobUpdateBehaviour;
 
   public BpmnBehaviorsImpl(
-      final MutableProcessingState processingState,
+      final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final ProcessingMetrics jobMetrics,
       final DecisionBehavior decisionBehavior,

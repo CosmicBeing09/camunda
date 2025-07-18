@@ -15,7 +15,7 @@ import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.engine.processing.deployment.distribute.DeploymentDistributionCommandSender;
 import io.camunda.zeebe.engine.processing.deployment.distribute.DeploymentRedistributor;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo.StaticRoutingInfo;
@@ -42,7 +42,7 @@ public class DeploymentRedistributorTest {
   @Mock private DeploymentDistributionCommandSender deploymentDistributionCommandSender;
 
   /** Injected by {@link ProcessingStateExtension} */
-  private MutableProcessingState processingState;
+  private MutableAsyncProcessingContext processingState;
 
   private MutableRoutingState routingState;
 
@@ -59,7 +59,7 @@ public class DeploymentRedistributorTest {
     when(context.getPartitionId()).thenReturn(1);
     taskCaptor = forClass(Runnable.class);
 
-    final var deploymentState = processingState.getDeploymentState();
+    final var deploymentState = processingState.getDeploymentContext();
     routingState = processingState.getRoutingState();
     routingState.initializeRoutingInfo(2);
     routingState.setDesiredPartitions(Set.of(1, 2, 3), 239123L);

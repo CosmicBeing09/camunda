@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableJobState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.msgpack.value.LongValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -20,7 +20,7 @@ public class JobBatchActivatedApplier implements TypedEventApplier<JobBatchInten
 
   private final MutableJobState jobState;
 
-  public JobBatchActivatedApplier(final MutableProcessingState state) {
+  public JobBatchActivatedApplier(final MutableAsyncProcessingContext state) {
     jobState = state.getJobState();
   }
 

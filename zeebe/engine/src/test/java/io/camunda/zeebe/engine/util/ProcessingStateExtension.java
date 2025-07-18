@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
@@ -127,7 +127,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
             testClass,
             field ->
                 ReflectionUtils.isNotStatic(field)
-                    && field.getType().isAssignableFrom(MutableProcessingState.class),
+                    && field.getType().isAssignableFrom(MutableAsyncProcessingContext.class),
             HierarchyTraversalMode.TOP_DOWN)
         .forEach(
             field -> {
@@ -149,7 +149,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
     private Path tempFolder;
     private ZeebeDb<ZbColumnFamilies> zeebeDb;
     private TransactionContext transactionContext;
-    private MutableProcessingState processingState;
+    private MutableAsyncProcessingContext processingState;
 
     private ProcessingStateExtensionState() {
 
@@ -240,7 +240,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
       return zeebeDb;
     }
 
-    private MutableProcessingState getProcessingState() {
+    private MutableAsyncProcessingContext getProcessingState() {
       return processingState;
     }
 

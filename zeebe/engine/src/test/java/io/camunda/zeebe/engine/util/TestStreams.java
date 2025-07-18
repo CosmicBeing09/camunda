@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.Engine;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.Loggers;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessorFactory;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.processing.DbBannedInstanceState;
 import io.camunda.zeebe.logstreams.log.LogAppendEntry;
 import io.camunda.zeebe.logstreams.log.LogStreamReader;
@@ -256,7 +256,7 @@ public final class TestStreams {
     final var snapshot = storage.getParent().resolve(SNAPSHOT_FOLDER);
 
     final AtomicReference<StreamClock> streamClockRef = new AtomicReference<>();
-    final AtomicReference<MutableProcessingState> processingStateRef = new AtomicReference<>();
+    final AtomicReference<MutableAsyncProcessingContext> processingStateRef = new AtomicReference<>();
     final var recoveredLatch = new CountDownLatch(1);
     final var recoveredAwaiter =
         new StreamProcessorLifecycleAware() {
@@ -389,7 +389,7 @@ public final class TestStreams {
     this.maxCommandsInBatch = maxCommandsInBatch;
   }
 
-  public MutableProcessingState getProcessingState(final String streamName) {
+  public MutableAsyncProcessingContext getProcessingState(final String streamName) {
     return Optional.ofNullable(streamContextMap.get(streamName))
         .map(c -> c.processingState)
         .orElseThrow(
@@ -521,7 +521,7 @@ public final class TestStreams {
     private final Path runtimePath;
     private final Path snapshotPath;
     private final StreamClock streamClock;
-    private final MutableProcessingState processingState;
+    private final MutableAsyncProcessingContext processingState;
     private final MeterRegistry meterRegistry;
     private boolean closed = false;
 
@@ -531,7 +531,7 @@ public final class TestStreams {
         final Path runtimePath,
         final Path snapshotPath,
         final StreamClock streamClock,
-        final MutableProcessingState processingState,
+        final MutableAsyncProcessingContext processingState,
         final MeterRegistry meterRegistry) {
       this.streamProcessor = streamProcessor;
       this.zeebeDb = zeebeDb;
@@ -548,7 +548,7 @@ public final class TestStreams {
         final Path runtimePath,
         final Path snapshotPath,
         final StreamClock streamClock,
-        final MutableProcessingState processingState,
+        final MutableAsyncProcessingContext processingState,
         final MeterRegistry meterRegistry) {
       return new ProcessorContext(
           streamProcessor,

@@ -14,8 +14,8 @@ import io.camunda.zeebe.engine.state.EventApplier;
 import io.camunda.zeebe.engine.state.EventApplier.NoSuchEventApplier.NoApplierForIntent;
 import io.camunda.zeebe.engine.state.EventApplier.NoSuchEventApplier.NoApplierForVersion;
 import io.camunda.zeebe.engine.state.TypedEventApplier;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessMessageSubscriptionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
 import io.camunda.zeebe.protocol.record.RecordValue;
 import io.camunda.zeebe.protocol.record.intent.AdHocSubProcessActivityActivationIntent;
@@ -72,7 +72,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Applies state changes from events to the {@link MutableProcessingState}.
+ * Applies state changes from events to the {@link MutableAsyncProcessingContext}.
  *
  * <p>Finds the correct {@link TypedEventApplier} and delegates.
  */
@@ -83,7 +83,7 @@ public final class EventAppliers implements EventApplier {
 
   private final Map<Intent, Map<Integer, TypedEventApplier>> mapping = new HashMap<>();
 
-  public EventAppliers registerEventAppliers(final MutableProcessingState state) {
+  public EventAppliers registerEventAppliers(final MutableAsyncProcessingContext state) {
     registerProcessInstanceEventAppliers(state);
     registerProcessInstanceCreationAppliers(state);
     registerProcessInstanceModificationAppliers(state);
@@ -143,44 +143,44 @@ public final class EventAppliers implements EventApplier {
     return this;
   }
 
-  private void registerProcessAppliers(final MutableProcessingState state) {
+  private void registerProcessAppliers(final MutableAsyncProcessingContext state) {
     register(ProcessIntent.CREATED, 1, new ProcessCreatedV1Applier(state));
     register(ProcessIntent.CREATED, 2, new ProcessCreatedV2Applier(state));
     register(ProcessIntent.DELETING, new ProcessDeletingApplier(state));
     register(ProcessIntent.DELETED, new ProcessDeletedApplier(state));
   }
 
-  private void registerTimeEventAppliers(final MutableProcessingState state) {
+  private void registerTimeEventAppliers(final MutableAsyncProcessingContext state) {
     register(TimerIntent.CREATED, new TimerCreatedApplier(state.getTimerState()));
     register(TimerIntent.CANCELED, new TimerCancelledApplier(state.getTimerState()));
     register(TimerIntent.TRIGGERED, new TimerTriggeredApplier(state.getTimerState()));
     register(TimerIntent.MIGRATED, new TimerInstanceMigratedApplier(state.getTimerState()));
   }
 
-  private void registerDeploymentAppliers(final MutableProcessingState state) {
+  private void registerDeploymentAppliers(final MutableAsyncProcessingContext state) {
     register(DeploymentDistributionIntent.DISTRIBUTING, new DeploymentDistributionApplier(state));
     register(
         DeploymentDistributionIntent.COMPLETED,
-        new DeploymentDistributionCompletedApplier(state.getDeploymentState()));
+        new DeploymentDistributionCompletedApplier(state.getDeploymentContext()));
 
     register(
-        DeploymentIntent.CREATED, 1, new DeploymentCreatedV1Applier(state.getDeploymentState()));
+        DeploymentIntent.CREATED, 1, new DeploymentCreatedV1Applier(state.getDeploymentContext()));
     register(DeploymentIntent.CREATED, 2, NOOP_EVENT_APPLIER);
     register(
-        DeploymentIntent.CREATED, 3, new DeploymentCreatedV3Applier(state.getDeploymentState()));
+        DeploymentIntent.CREATED, 3, new DeploymentCreatedV3Applier(state.getDeploymentContext()));
     register(
         DeploymentIntent.DISTRIBUTED,
         new DeploymentDistributedApplier(state.getProcessState(), state.getDecisionState()));
     register(
         DeploymentIntent.FULLY_DISTRIBUTED,
-        new DeploymentFullyDistributedApplier(state.getDeploymentState()));
+        new DeploymentFullyDistributedApplier(state.getDeploymentContext()));
     register(DeploymentIntent.RECONSTRUCTED, new DeploymentReconstructedApplier(state));
     register(
         DeploymentIntent.RECONSTRUCTED_ALL,
-        new DeploymentReconstructedAllApplier(state.getDeploymentState()));
+        new DeploymentReconstructedAllApplier(state.getDeploymentContext()));
   }
 
-  private void registerVariableEventAppliers(final MutableProcessingState state) {
+  private void registerVariableEventAppliers(final MutableAsyncProcessingContext state) {
     final var variableState = state.getVariableState();
     final var variableApplier = new VariableApplier(variableState);
     register(VariableIntent.CREATED, variableApplier);
@@ -193,7 +193,7 @@ public final class EventAppliers implements EventApplier {
         new VariableDocumentUpdateDeniedApplier(variableState));
   }
 
-  private void registerProcessInstanceEventAppliers(final MutableProcessingState state) {
+  private void registerProcessInstanceEventAppliers(final MutableAsyncProcessingContext state) {
     final var elementInstanceState = state.getElementInstanceState();
     final var eventScopeInstanceState = state.getEventScopeInstanceState();
     final var processState = state.getProcessState();
@@ -254,7 +254,7 @@ public final class EventAppliers implements EventApplier {
         new ProcessInstanceAncestorMigratedApplier(elementInstanceState));
   }
 
-  private void registerProcessInstanceCreationAppliers(final MutableProcessingState state) {
+  private void registerProcessInstanceCreationAppliers(final MutableAsyncProcessingContext state) {
     final var processState = state.getProcessState();
     final var elementInstanceState = state.getElementInstanceState();
 
@@ -263,7 +263,7 @@ public final class EventAppliers implements EventApplier {
         new ProcessInstanceCreationCreatedApplier(processState, elementInstanceState));
   }
 
-  private void registerProcessInstanceModificationAppliers(final MutableProcessingState state) {
+  private void registerProcessInstanceModificationAppliers(final MutableAsyncProcessingContext state) {
     register(
         ProcessInstanceModificationIntent.MODIFIED,
         new ProcessInstanceModifiedEventApplier(
@@ -274,7 +274,7 @@ public final class EventAppliers implements EventApplier {
     register(ProcessInstanceMigrationIntent.MIGRATED, NOOP_EVENT_APPLIER);
   }
 
-  private void registerJobIntentEventAppliers(final MutableProcessingState state) {
+  private void registerJobIntentEventAppliers(final MutableAsyncProcessingContext state) {
     register(JobIntent.CANCELED, new JobCanceledApplier(state));
     register(JobIntent.COMPLETED, new JobCompletedApplier(state));
     register(JobIntent.CREATED, new JobCreatedApplier(state));
@@ -289,25 +289,25 @@ public final class EventAppliers implements EventApplier {
     register(JobIntent.MIGRATED, new JobMigratedApplier(state));
   }
 
-  private void registerMessageAppliers(final MutableProcessingState state) {
+  private void registerMessageAppliers(final MutableAsyncProcessingContext state) {
     register(MessageIntent.PUBLISHED, new MessagePublishedApplier(state.getMessageState()));
     register(MessageIntent.EXPIRED, new MessageExpiredApplier(state.getMessageState()));
   }
 
-  private void registerMessageCorrelationAppliers(final MutableProcessingState state) {
+  private void registerMessageCorrelationAppliers(final MutableAsyncProcessingContext state) {
     register(MessageCorrelationIntent.CORRELATING, new MessageCorrelationCorrelatingApplier(state));
     register(MessageCorrelationIntent.CORRELATED, new MessageCorrelationCorrelatedApplier(state));
     register(
         MessageCorrelationIntent.NOT_CORRELATED, new MessageCorrelationNotCorrelatedApplier(state));
   }
 
-  private void registerUserAppliers(final MutableProcessingState state) {
+  private void registerUserAppliers(final MutableAsyncProcessingContext state) {
     register(UserIntent.CREATED, new UserCreatedApplier(state.getUserState()));
     register(UserIntent.UPDATED, new UserUpdatedApplier(state.getUserState()));
     register(UserIntent.DELETED, new UserDeletedApplier(state));
   }
 
-  private void registerMessageSubscriptionAppliers(final MutableProcessingState state) {
+  private void registerMessageSubscriptionAppliers(final MutableAsyncProcessingContext state) {
     register(
         MessageSubscriptionIntent.CREATED,
         new MessageSubscriptionCreatedApplier(state.getMessageSubscriptionState()));
@@ -330,7 +330,7 @@ public final class EventAppliers implements EventApplier {
         new MessageSubscriptionMigratedApplier(state.getMessageSubscriptionState()));
   }
 
-  private void registerMessageStartEventSubscriptionAppliers(final MutableProcessingState state) {
+  private void registerMessageStartEventSubscriptionAppliers(final MutableAsyncProcessingContext state) {
     register(
         MessageStartEventSubscriptionIntent.CREATED,
         new MessageStartEventSubscriptionCreatedApplier(
@@ -344,7 +344,7 @@ public final class EventAppliers implements EventApplier {
             state.getMessageStartEventSubscriptionState()));
   }
 
-  private void registerIncidentEventAppliers(final MutableProcessingState state) {
+  private void registerIncidentEventAppliers(final MutableAsyncProcessingContext state) {
     register(
         IncidentIntent.CREATED,
         new IncidentCreatedApplier(state.getIncidentState(), state.getJobState()));
@@ -361,7 +361,7 @@ public final class EventAppliers implements EventApplier {
     register(IncidentIntent.MIGRATED, new IncidentMigratedApplier(state.getIncidentState()));
   }
 
-  private void registerProcessMessageSubscriptionEventAppliers(final MutableProcessingState state) {
+  private void registerProcessMessageSubscriptionEventAppliers(final MutableAsyncProcessingContext state) {
     final MutableProcessMessageSubscriptionState subscriptionState =
         state.getProcessMessageSubscriptionState();
 
@@ -385,7 +385,7 @@ public final class EventAppliers implements EventApplier {
         new ProcessMessageSubscriptionMigratedApplier(subscriptionState));
   }
 
-  private void registerProcessEventAppliers(final MutableProcessingState state) {
+  private void registerProcessEventAppliers(final MutableAsyncProcessingContext state) {
     register(
         ProcessEventIntent.TRIGGERING,
         new ProcessEventTriggeringApplier(
@@ -397,7 +397,7 @@ public final class EventAppliers implements EventApplier {
         new ProcessEventTriggeredApplier(state.getEventScopeInstanceState()));
   }
 
-  private void registerSignalAppliers(final MutableProcessingState state) {
+  private void registerSignalAppliers(final MutableAsyncProcessingContext state) {
     register(
         SignalSubscriptionIntent.CREATED,
         new SignalSubscriptionCreatedApplier(state.getSignalSubscriptionState()));
@@ -410,13 +410,13 @@ public final class EventAppliers implements EventApplier {
     register(SignalIntent.BROADCASTED, NOOP_EVENT_APPLIER);
   }
 
-  private void registerDecisionAppliers(final MutableProcessingState state) {
+  private void registerDecisionAppliers(final MutableAsyncProcessingContext state) {
     register(DecisionIntent.CREATED, 1, new DecisionCreatedV1Applier(state.getDecisionState()));
     register(DecisionIntent.CREATED, 2, new DecisionCreatedV2Applier(state.getDecisionState()));
     register(DecisionIntent.DELETED, new DecisionDeletedApplier(state.getDecisionState()));
   }
 
-  private void registerDecisionRequirementsAppliers(final MutableProcessingState state) {
+  private void registerDecisionRequirementsAppliers(final MutableAsyncProcessingContext state) {
     register(
         DecisionRequirementsIntent.CREATED,
         new DecisionRequirementsCreatedApplier(state.getDecisionState()));
@@ -430,19 +430,19 @@ public final class EventAppliers implements EventApplier {
     register(DecisionEvaluationIntent.FAILED, NOOP_EVENT_APPLIER);
   }
 
-  private void registerFormAppliers(final MutableProcessingState state) {
+  private void registerFormAppliers(final MutableAsyncProcessingContext state) {
     register(FormIntent.CREATED, 1, new FormCreatedV1Applier(state.getFormState()));
     register(FormIntent.CREATED, 2, new FormCreatedV2Applier(state.getFormState()));
     register(FormIntent.DELETED, new FormDeletedApplier(state.getFormState()));
   }
 
-  private void registerResourceAppliers(final MutableProcessingState state) {
+  private void registerResourceAppliers(final MutableAsyncProcessingContext state) {
     register(ResourceIntent.CREATED, new ResourceCreatedApplier(state.getResourceState()));
     register(ResourceIntent.DELETED, new ResourceDeletedApplier(state.getResourceState()));
     register(ResourceIntent.FETCHED, NOOP_EVENT_APPLIER);
   }
 
-  private void registerUserTaskAppliers(final MutableProcessingState state) {
+  private void registerUserTaskAppliers(final MutableAsyncProcessingContext state) {
     register(UserTaskIntent.CREATING, new UserTaskCreatingApplier(state));
     register(UserTaskIntent.CREATING, 2, new UserTaskCreatingV2Applier(state));
     register(UserTaskIntent.CREATED, new UserTaskCreatedApplier(state));
@@ -460,9 +460,9 @@ public final class EventAppliers implements EventApplier {
     register(UserTaskIntent.ASSIGNED, 2, new UserTaskAssignedV2Applier(state));
     register(UserTaskIntent.CLAIMING, new UserTaskClaimingApplier(state));
     register(UserTaskIntent.UPDATING, 1, new UserTaskUpdatingV1Applier(state));
-    register(UserTaskIntent.UPDATING, 2, new UserTaskUpdatingV2Applier(state));
+    register(UserTaskIntent.UPDATING, 2, new AsyncTaskLifecycleApplier(state));
     register(UserTaskIntent.UPDATED, 1, new UserTaskUpdatedV1Applier(state));
-    register(UserTaskIntent.UPDATED, 2, new UserTaskUpdatedV2Applier(state));
+    register(UserTaskIntent.UPDATED, 2, new TaskUpdatedApplier(state));
     register(UserTaskIntent.MIGRATED, new UserTaskMigratedApplier(state));
     register(UserTaskIntent.CORRECTED, new UserTaskCorrectedApplier(state));
     register(UserTaskIntent.COMPLETION_DENIED, new UserTaskCompletionDeniedApplier(state));
@@ -471,7 +471,7 @@ public final class EventAppliers implements EventApplier {
   }
 
   private void registerCompensationSubscriptionApplier(
-      final MutableProcessingState processingState) {
+      final MutableAsyncProcessingContext processingState) {
     register(
         CompensationSubscriptionIntent.CREATED,
         new CompensationSubscriptionCreatedApplier(
@@ -494,7 +494,7 @@ public final class EventAppliers implements EventApplier {
             processingState.getCompensationSubscriptionState()));
   }
 
-  private void registerCommandDistributionAppliers(final MutableProcessingState state) {
+  private void registerCommandDistributionAppliers(final MutableAsyncProcessingContext state) {
     final var distributionState = state.getDistributionState();
     register(
         CommandDistributionIntent.STARTED,
@@ -519,7 +519,7 @@ public final class EventAppliers implements EventApplier {
         new CommandDistributionContinuedApplier(distributionState));
   }
 
-  private void registerAuthorizationAppliers(final MutableProcessingState state) {
+  private void registerAuthorizationAppliers(final MutableAsyncProcessingContext state) {
     register(
         AuthorizationIntent.CREATED,
         new AuthorizationCreatedApplier(state.getAuthorizationState()));
@@ -545,12 +545,12 @@ public final class EventAppliers implements EventApplier {
     register(AdHocSubProcessActivityActivationIntent.ACTIVATED, NOOP_EVENT_APPLIER);
   }
 
-  private void registerClockAppliers(final MutableProcessingState state) {
+  private void registerClockAppliers(final MutableAsyncProcessingContext state) {
     register(ClockIntent.PINNED, new ClockPinnedApplier(state.getClockState()));
     register(ClockIntent.RESETTED, new ClockResettedApplier(state.getClockState()));
   }
 
-  private void registerRoleAppliers(final MutableProcessingState state) {
+  private void registerRoleAppliers(final MutableAsyncProcessingContext state) {
     register(RoleIntent.CREATED, new RoleCreatedApplier(state.getRoleState()));
     register(RoleIntent.UPDATED, new RoleUpdatedApplier(state.getRoleState()));
     register(RoleIntent.ENTITY_ADDED, new RoleEntityAddedApplier(state));
@@ -558,7 +558,7 @@ public final class EventAppliers implements EventApplier {
     register(RoleIntent.DELETED, new RoleDeletedApplier(state.getRoleState()));
   }
 
-  private void registerGroupAppliers(final MutableProcessingState state) {
+  private void registerGroupAppliers(final MutableAsyncProcessingContext state) {
     register(GroupIntent.CREATED, new GroupCreatedApplier(state.getGroupState()));
     register(GroupIntent.UPDATED, new GroupUpdatedApplier(state.getGroupState()));
     register(GroupIntent.ENTITY_ADDED, new GroupEntityAddedApplier(state));
@@ -566,14 +566,14 @@ public final class EventAppliers implements EventApplier {
     register(GroupIntent.DELETED, new GroupDeletedApplier(state));
   }
 
-  private void registerScalingAppliers(final MutableProcessingState state) {
+  private void registerScalingAppliers(final MutableAsyncProcessingContext state) {
     register(ScaleIntent.SCALING_UP, new ScalingUpApplier(state.getRoutingState()));
     register(ScaleIntent.SCALED_UP, new ScaledUpApplier(state.getRoutingState()));
     register(ScaleIntent.STATUS_RESPONSE, new ScaleUpStatusResponseApplier());
     register(ScaleIntent.PARTITION_BOOTSTRAPPED, new PartitionBootstrappedApplier(state));
   }
 
-  private void registerTenantAppliers(final MutableProcessingState state) {
+  private void registerTenantAppliers(final MutableAsyncProcessingContext state) {
     register(TenantIntent.CREATED, new TenantCreatedApplier(state.getTenantState()));
     register(TenantIntent.UPDATED, new TenantUpdatedApplier(state.getTenantState()));
     register(TenantIntent.ENTITY_ADDED, new TenantEntityAddedApplier(state));
@@ -581,13 +581,13 @@ public final class EventAppliers implements EventApplier {
     register(TenantIntent.DELETED, new TenantDeletedApplier(state.getTenantState()));
   }
 
-  private void registerMappingAppliers(final MutableProcessingState state) {
+  private void registerMappingAppliers(final MutableAsyncProcessingContext state) {
     register(MappingIntent.CREATED, new MappingCreatedApplier(state.getMappingState()));
     register(MappingIntent.DELETED, new MappingDeletedApplier(state.getMappingState()));
     register(MappingIntent.UPDATED, new MappingUpdatedApplier(state.getMappingState()));
   }
 
-  private void registerBatchOperationAppliers(final MutableProcessingState state) {
+  private void registerBatchOperationAppliers(final MutableAsyncProcessingContext state) {
     register(
         BatchOperationIntent.CREATED,
         new BatchOperationCreatedApplier(state.getBatchOperationState()));

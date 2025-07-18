@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
 import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
 import io.camunda.zeebe.engine.state.immutable.DistributionState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableRoutingState;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
@@ -50,7 +50,7 @@ public class CommandDistributionScalingTest {
   /* Injected from {@link ProcessingStateExtension} */
   private ZeebeDb<ZbColumnFamilies> zeebeDb;
   private MutableRoutingState routingState;
-  private MutableProcessingState state;
+  private MutableAsyncProcessingContext state;
   private TransactionContext transactionContext;
 
   private DistributionState distributionState;

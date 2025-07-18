@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.authorization.DbMembershipState.RelationType;
+import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.state.mutable.MutableMembershipState;
-import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.group.GroupRecord;
 import io.camunda.zeebe.protocol.record.intent.GroupIntent;
 
@@ -18,7 +18,7 @@ public class GroupEntityRemovedApplier implements TypedEventApplier<GroupIntent,
 
   private final MutableMembershipState membershipState;
 
-  public GroupEntityRemovedApplier(final MutableProcessingState processingState) {
+  public GroupEntityRemovedApplier(final MutableAsyncProcessingContext processingState) {
     membershipState = processingState.getMembershipState();
   }
 
