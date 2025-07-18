@@ -19,17 +19,17 @@ import java.util.List;
 import java.util.Objects;
 
 public record UserTaskFilter(
-    List<Long> userTaskKeys,
-    List<String> elementIds,
-    List<String> elementNames,
-    List<String> bpmnProcessIds,
-    List<Operation<String>> assigneeOperations,
-    List<Operation<Integer>> priorityOperations,
+    List<Long> taskKeys,
+    List<String> ids,
+    List<String> names,
+    List<String> processIds,
+    List<Operation<String>> assigneeOps,
+    List<Operation<Integer>> priorityOps,
     List<String> states,
-    List<Long> processInstanceKeys,
-    List<Long> processDefinitionKeys,
-    List<Operation<String>> candidateUserOperations,
-    List<Operation<String>> candidateGroupOperations,
+    List<Long> instanceKeys,
+    List<Long> definitionKeys,
+    List<Operation<String>> candidateUserOps,
+    List<Operation<String>> candidateGroupOps,
     List<String> tenantIds,
     List<VariableValueFilter> processInstanceVariableFilter,
     List<VariableValueFilter> localVariableFilters,
@@ -43,8 +43,8 @@ public record UserTaskFilter(
 
   public static final class Builder implements ObjectBuilder<UserTaskFilter> {
 
-    private List<Long> userTaskKeys;
-    private List<String> elementIds;
+    private List<Long> taskKeys;
+    private List<String> ids;
     private List<String> elementNames;
     private List<String> bpmnProcessIds;
     private List<Operation<String>> assigneeOperations;
@@ -69,7 +69,7 @@ public record UserTaskFilter(
     }
 
     public Builder userTaskKeys(final List<Long> values) {
-      userTaskKeys = addValuesToList(userTaskKeys, values);
+      taskKeys = addValuesToList(taskKeys, values);
       return this;
     }
 
@@ -78,11 +78,11 @@ public record UserTaskFilter(
     }
 
     public Builder elementIds(final List<String> values) {
-      elementIds = addValuesToList(elementIds, values);
+      ids = addValuesToList(ids, values);
       return this;
     }
 
-    public Builder elementNames(final String... values) {
+    public Builder names(final String... values) {
       return elementNames(collectValuesAsList(values));
     }
 
@@ -267,8 +267,8 @@ public record UserTaskFilter(
     @Override
     public UserTaskFilter build() {
       return new UserTaskFilter(
-          Objects.requireNonNullElse(userTaskKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(elementIds, Collections.emptyList()),
+          Objects.requireNonNullElse(taskKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(ids, Collections.emptyList()),
           Objects.requireNonNullElse(elementNames, Collections.emptyList()),
           Objects.requireNonNullElse(bpmnProcessIds, Collections.emptyList()),
           Objects.requireNonNullElse(assigneeOperations, Collections.emptyList()),
