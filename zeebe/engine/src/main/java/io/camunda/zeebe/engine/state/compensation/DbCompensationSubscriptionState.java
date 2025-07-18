@@ -64,7 +64,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   @Override
   public List<CompensationSubscription> findSubscriptionsByProcessInstanceKey(
       final String tenantId, final long piKey) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     processInstanceKey.wrapLong(piKey);
 
     final List<CompensationSubscription> subscriptions = new ArrayList<>();
@@ -79,7 +79,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   @Override
   public Optional<CompensationSubscription> findSubscriptionByCompensationHandlerId(
       final String tenantId, final long piKey, final String compensationHandlerId) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     processInstanceKey.wrapLong(piKey);
 
     final List<CompensationSubscription> compensationSubscription = new ArrayList<>();
@@ -97,7 +97,7 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
   @Override
   public List<CompensationSubscription> findSubscriptionsByThrowEventInstanceKey(
       final String tenantId, final long piKey, final long throwEventInstanceKey) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     processInstanceKey.wrapLong(piKey);
 
     final List<CompensationSubscription> compensations = new ArrayList<>();
@@ -141,6 +141,6 @@ public class DbCompensationSubscriptionState implements MutableCompensationSubsc
       final long processInstance, final long key, final String tenantId) {
     processInstanceKey.wrapLong(processInstance);
     recordKey.wrapLong(key);
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
   }
 }

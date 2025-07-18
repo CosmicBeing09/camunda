@@ -41,7 +41,7 @@ public class DbDecisionMigrationState {
   public void migrateDecisionStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
     // setting the tenant id key once, because it's the same for all steps below
-    to.tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    to.tenantIdKey.wrapStringValue(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     /*
     `DEPRECATED_DMN_DECISIONS` -> `DMN_DECISIONS`
@@ -77,7 +77,7 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getLatestDecisionKeysByDecisionId(),
         (key, value) -> {
-          to.dbDecisionId.wrapBuffer(key.getBuffer());
+          to.dbDecisionId.wrapBufferValue(key.getBuffer());
           to.dbDecisionKey.wrapLong(value.inner().getValue());
           to.latestDecisionKeysByDecisionId.insert(to.tenantAwareDecisionId, to.fkDecision);
         });
@@ -90,7 +90,7 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getLatestDecisionRequirementsKeysById(),
         (key, value) -> {
-          to.dbDecisionRequirementsId.wrapBuffer(key.getBuffer());
+          to.dbDecisionRequirementsId.wrapBufferValue(key.getBuffer());
           to.dbDecisionRequirementsKey.wrapLong(value.inner().getValue());
           to.latestDecisionRequirementsKeysById.insert(
               to.tenantAwareDecisionRequirementsId, to.fkDecisionRequirements);
@@ -117,7 +117,7 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getDecisionKeyByDecisionIdAndVersion(),
         (key, value) -> {
-          to.dbDecisionId.wrapBuffer(key.first().getBuffer());
+          to.dbDecisionId.wrapBufferValue(key.first().getBuffer());
           to.dbDecisionVersion.wrapInt(key.second().getValue());
           to.dbDecisionKey.wrapLong(value.inner().getValue());
           to.decisionKeyByDecisionIdAndVersion.insert(
@@ -132,7 +132,7 @@ public class DbDecisionMigrationState {
     iterator.drain(
         from.getDecisionRequirementsKeyByIdAndVersion(),
         (key, value) -> {
-          to.dbDecisionRequirementsId.wrapBuffer(key.first().getBuffer());
+          to.dbDecisionRequirementsId.wrapBufferValue(key.first().getBuffer());
           to.dbDecisionRequirementsVersion.wrapInt(key.second().getValue());
           to.dbDecisionRequirementsKey.wrapLong(value.inner().getValue());
           to.decisionRequirementsKeyByIdAndVersion.insert(

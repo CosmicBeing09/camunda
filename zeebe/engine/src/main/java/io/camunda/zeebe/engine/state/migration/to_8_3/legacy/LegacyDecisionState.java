@@ -162,7 +162,7 @@ public final class LegacyDecisionState {
   }
 
   public Optional<PersistedDecision> findLatestDecisionById(final DirectBuffer decisionId) {
-    dbDecisionId.wrapBuffer(decisionId);
+    dbDecisionId.wrapBufferValue(decisionId);
 
     return Optional.ofNullable(latestDecisionKeysByDecisionId.get(dbDecisionId))
         .flatMap(decisionKey -> findDecisionByKey(decisionKey.inner().getValue()));
@@ -175,7 +175,7 @@ public final class LegacyDecisionState {
 
   public Optional<DeployedDrg> findLatestDecisionRequirementsById(
       final DirectBuffer decisionRequirementsId) {
-    dbDecisionRequirementsId.wrapBuffer(decisionRequirementsId);
+    dbDecisionRequirementsId.wrapBufferValue(decisionRequirementsId);
 
     return Optional.ofNullable(latestDecisionRequirementsKeysById.get(dbDecisionRequirementsId))
         .map((requirementsKey) -> requirementsKey.inner().getValue())
@@ -246,7 +246,7 @@ public final class LegacyDecisionState {
       final DirectBuffer decisionId, final int currentVersion) {
     final Map<Integer, Long> decisionKeysByVersion = new HashMap<>();
 
-    dbDecisionId.wrapBuffer(decisionId);
+    dbDecisionId.wrapBufferValue(decisionId);
     decisionKeyByDecisionIdAndVersion.whileEqualPrefix(
         dbDecisionId,
         ((key, decisionKey) -> {
@@ -267,7 +267,7 @@ public final class LegacyDecisionState {
       final DirectBuffer decisionRequirementsId, final int currentVersion) {
     final Map<Integer, Long> decisionRequirementsKeysByVersion = new HashMap<>();
 
-    dbDecisionRequirementsId.wrapBuffer(decisionRequirementsId);
+    dbDecisionRequirementsId.wrapBufferValue(decisionRequirementsId);
     decisionRequirementsKeyByIdAndVersion.whileEqualPrefix(
         dbDecisionRequirementsId,
         ((key, drgKey) -> {
@@ -295,7 +295,7 @@ public final class LegacyDecisionState {
     decisionKeyByDecisionRequirementsKey.upsert(
         dbDecisionRequirementsKeyAndDecisionKey, DbNil.INSTANCE);
 
-    dbDecisionId.wrapString(record.getDecisionId());
+    dbDecisionId.wrapStringValue(record.getDecisionId());
     dbDecisionVersion.wrapInt(record.getVersion());
     decisionKeyByDecisionIdAndVersion.upsert(decisionIdAndVersion, fkDecision);
 
@@ -307,7 +307,7 @@ public final class LegacyDecisionState {
     dbPersistedDecisionRequirements.wrap(record);
     decisionRequirementsByKey.upsert(dbDecisionRequirementsKey, dbPersistedDecisionRequirements);
 
-    dbDecisionRequirementsId.wrapString(record.getDecisionRequirementsId());
+    dbDecisionRequirementsId.wrapStringValue(record.getDecisionRequirementsId());
     dbDecisionRequirementsVersion.wrapInt(record.getDecisionRequirementsVersion());
     decisionRequirementsKeyByIdAndVersion.upsert(
         decisionRequirementsIdAndVersion, fkDecisionRequirements);
@@ -321,7 +321,7 @@ public final class LegacyDecisionState {
         .ifPresent(
             latestVersion -> {
               if (latestVersion == record.getVersion()) {
-                dbDecisionId.wrapBuffer(record.getDecisionIdBuffer());
+                dbDecisionId.wrapBufferValue(record.getDecisionIdBuffer());
                 findPreviousVersionDecisionKey(record.getDecisionIdBuffer(), record.getVersion())
                     .ifPresentOrElse(
                         previousDecisionKey -> {
@@ -338,7 +338,7 @@ public final class LegacyDecisionState {
 
     dbDecisionRequirementsKey.wrapLong(record.getDecisionRequirementsKey());
     dbDecisionKey.wrapLong(record.getDecisionKey());
-    dbDecisionId.wrapBuffer(record.getDecisionIdBuffer());
+    dbDecisionId.wrapBufferValue(record.getDecisionIdBuffer());
     dbDecisionVersion.wrapInt(record.getVersion());
 
     decisionKeyByDecisionRequirementsKey.deleteExisting(dbDecisionRequirementsKeyAndDecisionKey);
@@ -352,7 +352,7 @@ public final class LegacyDecisionState {
         .ifPresent(
             latestVersion -> {
               if (latestVersion == record.getDecisionRequirementsVersion()) {
-                dbDecisionRequirementsId.wrapBuffer(record.getDecisionRequirementsIdBuffer());
+                dbDecisionRequirementsId.wrapBufferValue(record.getDecisionRequirementsIdBuffer());
                 findPreviousVersionDecisionRequirementsKey(
                         record.getDecisionRequirementsIdBuffer(),
                         record.getDecisionRequirementsVersion())
@@ -372,7 +372,7 @@ public final class LegacyDecisionState {
             });
 
     dbDecisionRequirementsKey.wrapLong(record.getDecisionRequirementsKey());
-    dbDecisionRequirementsId.wrapBuffer(record.getDecisionRequirementsIdBuffer());
+    dbDecisionRequirementsId.wrapBufferValue(record.getDecisionRequirementsIdBuffer());
     dbDecisionRequirementsVersion.wrapInt(record.getDecisionRequirementsVersion());
 
     decisionRequirementsByKey.deleteExisting(dbDecisionRequirementsKey);
@@ -391,13 +391,13 @@ public final class LegacyDecisionState {
   }
 
   private void updateDecisionAsLatestVersion(final DecisionRecord record) {
-    dbDecisionId.wrapBuffer(record.getDecisionIdBuffer());
+    dbDecisionId.wrapBufferValue(record.getDecisionIdBuffer());
     dbDecisionKey.wrapLong(record.getDecisionKey());
     latestDecisionKeysByDecisionId.update(dbDecisionId, fkDecision);
   }
 
   private void insertDecisionAsLatestVersion(final DecisionRecord record) {
-    dbDecisionId.wrapBuffer(record.getDecisionIdBuffer());
+    dbDecisionId.wrapBufferValue(record.getDecisionIdBuffer());
     dbDecisionKey.wrapLong(record.getDecisionKey());
     latestDecisionKeysByDecisionId.upsert(dbDecisionId, fkDecision);
   }
@@ -415,13 +415,13 @@ public final class LegacyDecisionState {
   }
 
   private void updateDecisionRequirementsAsLatestVersion(final DecisionRequirementsRecord record) {
-    dbDecisionRequirementsId.wrapBuffer(record.getDecisionRequirementsIdBuffer());
+    dbDecisionRequirementsId.wrapBufferValue(record.getDecisionRequirementsIdBuffer());
     dbDecisionRequirementsKey.wrapLong(record.getDecisionRequirementsKey());
     latestDecisionRequirementsKeysById.update(dbDecisionRequirementsId, fkDecisionRequirements);
   }
 
   private void insertDecisionRequirementsAsLatestVersion(final DecisionRequirementsRecord record) {
-    dbDecisionRequirementsId.wrapBuffer(record.getDecisionRequirementsIdBuffer());
+    dbDecisionRequirementsId.wrapBufferValue(record.getDecisionRequirementsIdBuffer());
     dbDecisionRequirementsKey.wrapLong(record.getDecisionRequirementsKey());
     latestDecisionRequirementsKeysById.upsert(dbDecisionRequirementsId, fkDecisionRequirements);
   }

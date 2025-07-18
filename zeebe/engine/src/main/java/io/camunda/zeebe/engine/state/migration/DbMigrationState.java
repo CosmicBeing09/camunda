@@ -278,7 +278,7 @@ public class DbMigrationState implements MutableMigrationState {
     signalSubscriptionMigrationState =
         new DbSignalSubscriptionMigrationState(zeebeDb, transactionContext);
 
-    migratedByVersionKey.wrapString(MIGRATED_BY_VERSION);
+    migratedByVersionKey.wrapStringValue(MIGRATED_BY_VERSION);
     migrationsState =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.MIGRATIONS_STATE,
@@ -409,7 +409,7 @@ public class DbMigrationState implements MutableMigrationState {
   public void migrateDecisionsPopulateDecisionVersionByDecisionIdAndDecisionKey() {
     decisionsByKeyColumnFamily.forEach(
         (key, value) -> {
-          dbDecisionId.wrapBuffer(value.getDecisionId());
+          dbDecisionId.wrapBufferValue(value.getDecisionId());
           dbDecisionKey.wrapLong(value.getDecisionKey());
           dbDecisionVersion.wrapInt(value.getVersion());
           decisionKeyByDecisionIdAndVersion.insert(decisionKeyAndVersion, fkDecision);
@@ -420,7 +420,7 @@ public class DbMigrationState implements MutableMigrationState {
   public void migrateDrgPopulateDrgVersionByDrgIdAndKey() {
     decisionRequirementsByKeyColumnFamily.forEach(
         (key, value) -> {
-          dbDecisionRequirementsId.wrapBuffer(value.getDecisionRequirementsId());
+          dbDecisionRequirementsId.wrapBufferValue(value.getDecisionRequirementsId());
           dbDecisionRequirementsKey.wrapLong(value.getDecisionRequirementsKey());
           dbDecisionRequirementsVersion.wrapInt(value.getDecisionRequirementsVersion());
           decisionRequirementsKeyByIdAndVersionColumnFamily.insert(
@@ -500,7 +500,7 @@ public class DbMigrationState implements MutableMigrationState {
 
   @Override
   public void setMigratedByVersion(final String version) {
-    migratedByVersionValue.wrapString(version);
+    migratedByVersionValue.wrapStringValue(version);
     migrationsState.upsert(migratedByVersionKey, migratedByVersionValue);
   }
 

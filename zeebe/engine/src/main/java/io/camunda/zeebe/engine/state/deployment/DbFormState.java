@@ -129,7 +129,7 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void storeFormInFormColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
+    tenantIdKey.wrapStringValue(record.getTenantId());
     dbFormKey.wrapLong(record.getFormKey());
     dbPersistedForm.wrap(record);
     formsByKey.upsert(tenantAwareFormKey, dbPersistedForm);
@@ -139,8 +139,8 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void storeFormInFormByIdAndVersionColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbFormId.wrapString(record.getFormId());
+    tenantIdKey.wrapStringValue(record.getTenantId());
+    dbFormId.wrapStringValue(record.getFormId());
     formVersion.wrapLong(record.getVersion());
     dbPersistedForm.wrap(record);
     formByIdAndVersionColumnFamily.upsert(tenantAwareIdAndVersionKey, dbPersistedForm);
@@ -148,9 +148,9 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void storeFormInFormKeyByFormIdAndDeploymentKeyColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
+    tenantIdKey.wrapStringValue(record.getTenantId());
     dbFormKey.wrapLong(record.getFormKey());
-    dbFormId.wrapString(record.getFormId());
+    dbFormId.wrapStringValue(record.getFormId());
     dbDeploymentKey.wrapLong(record.getDeploymentKey());
     formKeyByFormIdAndDeploymentKeyColumnFamily.upsert(
         tenantAwareFormIdAndDeploymentKey, fkFormKey);
@@ -160,10 +160,10 @@ public class DbFormState implements MutableFormState {
   public void storeFormInFormKeyByFormIdAndVersionTagColumnFamily(final FormRecord record) {
     final var versionTag = record.getVersionTag();
     if (!versionTag.isBlank()) {
-      tenantIdKey.wrapString(record.getTenantId());
+      tenantIdKey.wrapStringValue(record.getTenantId());
       dbFormKey.wrapLong(record.getFormKey());
-      dbFormId.wrapString(record.getFormId());
-      dbVersionTag.wrapString(versionTag);
+      dbFormId.wrapStringValue(record.getFormId());
+      dbVersionTag.wrapStringValue(versionTag);
       formKeyByFormIdAndVersionTagColumnFamily.upsert(tenantAwareFormIdAndVersionTagKey, fkFormKey);
     }
   }
@@ -176,7 +176,7 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void deleteFormInFormsColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
+    tenantIdKey.wrapStringValue(record.getTenantId());
     dbFormKey.wrapLong(record.getFormKey());
     formsByKey.deleteExisting(tenantAwareFormKey);
     formsByTenantIdAndIdCache.invalidate(
@@ -185,8 +185,8 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void deleteFormInFormByIdAndVersionColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbFormId.wrapString(record.getFormId());
+    tenantIdKey.wrapStringValue(record.getTenantId());
+    dbFormId.wrapStringValue(record.getFormId());
     formVersion.wrapLong(record.getVersion());
     formByIdAndVersionColumnFamily.deleteExisting(tenantAwareIdAndVersionKey);
   }
@@ -199,24 +199,24 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public void deleteFormInFormKeyByFormIdAndDeploymentKeyColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbFormId.wrapString(record.getFormId());
+    tenantIdKey.wrapStringValue(record.getTenantId());
+    dbFormId.wrapStringValue(record.getFormId());
     dbDeploymentKey.wrapLong(record.getDeploymentKey());
     formKeyByFormIdAndDeploymentKeyColumnFamily.deleteIfExists(tenantAwareFormIdAndDeploymentKey);
   }
 
   @Override
   public void deleteFormInFormKeyByFormIdAndVersionTagColumnFamily(final FormRecord record) {
-    tenantIdKey.wrapString(record.getTenantId());
-    dbFormId.wrapString(record.getFormId());
-    dbVersionTag.wrapString(record.getVersionTag());
+    tenantIdKey.wrapStringValue(record.getTenantId());
+    dbFormId.wrapStringValue(record.getFormId());
+    dbVersionTag.wrapStringValue(record.getVersionTag());
     formKeyByFormIdAndVersionTagColumnFamily.deleteIfExists(tenantAwareFormIdAndVersionTagKey);
   }
 
   @Override
   public void setMissingDeploymentKey(
       final String tenantId, final long formKey, final long deploymentKey) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     dbFormKey.wrapLong(formKey);
     dbDeploymentKey.wrapLong(deploymentKey);
 
@@ -249,7 +249,7 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public Optional<PersistedForm> findLatestFormById(final String formId, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     final Optional<PersistedForm> cachedForm = getFormFromCache(tenantId, formId);
     if (cachedForm.isPresent()) {
       return cachedForm;
@@ -265,7 +265,7 @@ public class DbFormState implements MutableFormState {
 
   @Override
   public Optional<PersistedForm> findFormByKey(final long formKey, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     dbFormKey.wrapLong(formKey);
     return Optional.ofNullable(formsByKey.get(tenantAwareFormKey)).map(PersistedForm::copy);
   }
@@ -273,8 +273,8 @@ public class DbFormState implements MutableFormState {
   @Override
   public Optional<PersistedForm> findFormByIdAndDeploymentKey(
       final String formId, final long deploymentKey, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    dbFormId.wrapString(formId);
+    tenantIdKey.wrapStringValue(tenantId);
+    dbFormId.wrapStringValue(formId);
     dbDeploymentKey.wrapLong(deploymentKey);
     return Optional.ofNullable(
             formKeyByFormIdAndDeploymentKeyColumnFamily.get(tenantAwareFormIdAndDeploymentKey))
@@ -284,9 +284,9 @@ public class DbFormState implements MutableFormState {
   @Override
   public Optional<PersistedForm> findFormByIdAndVersionTag(
       final String formId, final String versionTag, final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    dbFormId.wrapString(formId);
-    dbVersionTag.wrapString(versionTag);
+    tenantIdKey.wrapStringValue(tenantId);
+    dbFormId.wrapStringValue(formId);
+    dbVersionTag.wrapStringValue(versionTag);
     return Optional.ofNullable(
             formKeyByFormIdAndVersionTagColumnFamily.get(tenantAwareFormIdAndVersionTagKey))
         .flatMap(key -> findFormByKey(key.inner().wrappedKey().getValue(), tenantId));
@@ -299,7 +299,7 @@ public class DbFormState implements MutableFormState {
       return;
     }
 
-    tenantIdKey.wrapString(previousForm.tenantId());
+    tenantIdKey.wrapStringValue(previousForm.tenantId());
     dbFormKey.wrapLong(previousForm.key());
     formsByKey.whileTrue(
         tenantAwareFormKey,
@@ -324,7 +324,7 @@ public class DbFormState implements MutableFormState {
   }
 
   private PersistedForm getPersistedFormById(final String formId, final String tenantId) {
-    dbFormId.wrapString(formId);
+    dbFormId.wrapStringValue(formId);
     final long latestVersion = versionManager.getLatestResourceVersion(formId, tenantId);
     formVersion.wrapLong(latestVersion);
     final PersistedForm persistedForm =

@@ -406,7 +406,7 @@ public final class DbJobState implements JobState, MutableJobState {
       final DirectBuffer type,
       final List<String> tenantIds,
       final BiFunction<Long, JobRecord, Boolean> callback) {
-    jobTypeKey.wrapBuffer(type);
+    jobTypeKey.wrapBufferValue(type);
 
     activatableColumnFamily.whileEqualPrefix(
         jobTypeKey,
@@ -502,9 +502,9 @@ public final class DbJobState implements JobState, MutableJobState {
     EnsureUtil.ensureNotNullOrEmpty("type", type);
     EnsureUtil.ensureNotNullOrEmpty("tenantId", tenantId);
 
-    jobTypeKey.wrapBuffer(type);
+    jobTypeKey.wrapBufferValue(type);
     jobKey.wrapLong(key);
-    tenantIdKey.wrapString(tenantId);
+    tenantIdKey.wrapStringValue(tenantId);
     // Need to upsert here because jobs can be marked as failed (and thus made activatable)
     // without activating them first
     activatableColumnFamily.upsert(tenantAwareTypeJobKey, DbNil.INSTANCE);
@@ -514,8 +514,8 @@ public final class DbJobState implements JobState, MutableJobState {
     EnsureUtil.ensureNotNullOrEmpty("type", type);
     EnsureUtil.ensureNotNullOrEmpty("tenantid", tenantId);
 
-    jobTypeKey.wrapBuffer(type);
-    tenantIdKey.wrapString(tenantId);
+    jobTypeKey.wrapBufferValue(type);
+    tenantIdKey.wrapStringValue(tenantId);
     activatableColumnFamily.deleteIfExists(tenantAwareTypeJobKey);
   }
 

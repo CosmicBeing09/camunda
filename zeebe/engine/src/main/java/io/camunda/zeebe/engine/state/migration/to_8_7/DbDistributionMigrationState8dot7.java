@@ -110,7 +110,7 @@ public class DbDistributionMigrationState8dot7 {
   }
 
   public void migrateIdempotentCommandDistributions() {
-    queueId.wrapString(DistributionQueue.DEPLOYMENT.getQueueId());
+    queueId.wrapStringValue(DistributionQueue.DEPLOYMENT.getQueueId());
     final var isFirstInQueue = new AtomicBoolean(true);
 
     pendingDistributionColumnFamily.forEach(

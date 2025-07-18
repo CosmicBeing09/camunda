@@ -156,7 +156,7 @@ public class DbUserTaskState implements MutableUserTaskState {
   public void storeInitialAssignee(final long key, final String assignee) {
     if (!StringUtils.isEmpty(assignee)) {
       userTaskKey.wrapLong(key);
-      initialAssignee.wrapString(assignee);
+      initialAssignee.wrapStringValue(assignee);
       userTasksInitialAssigneeColumnFamily.insert(userTaskKey, initialAssignee);
     }
   }

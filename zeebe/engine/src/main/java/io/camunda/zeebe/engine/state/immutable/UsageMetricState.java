@@ -12,5 +12,5 @@ import java.util.Map;
 
 public interface UsageMetricState {
 
-  Map<String, List<Long>> getActiveUsageMetricsByTenant(final long key);
+  Map<String, List<Long>> getUsageMetricsByTimestamp(final long tenantKey);
 }

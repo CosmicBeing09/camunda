@@ -46,12 +46,12 @@ public final class DbStringColumnFamilyTest {
   @Test
   public void shouldUpsertValue() {
     // given
-    key.wrapString("foo");
-    value.wrapString("baring");
+    key.wrapStringValue("foo");
+    value.wrapStringValue("baring");
 
     // when
     columnFamily.upsert(key, value);
-    value.wrapString("yes");
+    value.wrapStringValue("yes");
 
     // then
     final DbString zbLong = columnFamily.get(key);
@@ -137,7 +137,7 @@ public final class DbStringColumnFamilyTest {
     upsertKeyValuePair("another", "string");
     upsertKeyValuePair("this is the one", "as you know");
     final var startAtKey = new DbString();
-    startAtKey.wrapString("hello");
+    startAtKey.wrapStringValue("hello");
 
     // when
     final List<String> keys = new ArrayList<>();
@@ -166,7 +166,7 @@ public final class DbStringColumnFamilyTest {
     upsertKeyValuePair("and", "be good");
 
     // when
-    key.wrapString("an");
+    key.wrapStringValue("an");
     final List<String> keys = new ArrayList<>();
     final List<String> values = new ArrayList<>();
     columnFamily.whileEqualPrefix(
@@ -196,7 +196,7 @@ public final class DbStringColumnFamilyTest {
     upsertKeyValuePair("and", "be good");
 
     // when
-    key.wrapString("and");
+    key.wrapStringValue("and");
     final List<String> keys = new ArrayList<>();
     final List<String> values = new ArrayList<>();
     columnFamily.whileEqualPrefix(
@@ -217,7 +217,7 @@ public final class DbStringColumnFamilyTest {
   public void shouldAllowSingleNestedWhileEqualPrefix() {
     // given
     upsertKeyValuePair("and", "be good");
-    key.wrapString("and");
+    key.wrapStringValue("and");
 
     // when
     columnFamily.whileEqualPrefix(
@@ -233,7 +233,7 @@ public final class DbStringColumnFamilyTest {
   public void shouldThrowExceptionOnMultipleNestedWhileEqualPrefix() {
     // given
     upsertKeyValuePair("and", "be good");
-    key.wrapString("and");
+    key.wrapStringValue("and");
 
     // when
     assertThatThrownBy(
@@ -253,8 +253,8 @@ public final class DbStringColumnFamilyTest {
   }
 
   private void upsertKeyValuePair(final String key, final String value) {
-    this.key.wrapString(key);
-    this.value.wrapString(value);
+    this.key.wrapStringValue(key);
+    this.value.wrapStringValue(value);
     columnFamily.upsert(this.key, this.value);
   }
 }

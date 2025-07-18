@@ -37,10 +37,10 @@ public class DbUsageMetricStateTest {
     final var eventTime = InstantSource.system().millis();
 
     // when
-    state.insertUsageMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordUsageMetricEvent(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
-    final var actual = state.getActiveUsageMetricsByTenant(eventTime);
+    final var actual = state.getUsageMetricsByTimestamp(eventTime);
     assertThat(actual)
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
@@ -52,14 +52,14 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.insertUsageMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.insertUsageMetric(eventTime2, 10L, "tenant1");
-    state.insertUsageMetric(eventTime2, 11L, "tenant1");
-    state.insertUsageMetric(eventTime2, 12L, "tenant2");
+    state.recordUsageMetricEvent(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordUsageMetricEvent(eventTime2, 10L, "tenant1");
+    state.recordUsageMetricEvent(eventTime2, 11L, "tenant1");
+    state.recordUsageMetricEvent(eventTime2, 12L, "tenant2");
 
     // when
-    final var actual1 = state.getActiveUsageMetricsByTenant(eventTime1);
-    final var actual2 = state.getActiveUsageMetricsByTenant(eventTime2);
+    final var actual1 = state.getUsageMetricsByTimestamp(eventTime1);
+    final var actual2 = state.getUsageMetricsByTimestamp(eventTime2);
 
     // then
     assertThat(actual1)
@@ -76,24 +76,24 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.insertUsageMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.insertUsageMetric(eventTime2, 10L, "tenant1");
-    state.insertUsageMetric(eventTime2, 11L, "tenant1");
-    state.insertUsageMetric(eventTime2, 12L, "tenant2");
-    assertThat(state.getActiveUsageMetricsByTenant(eventTime1))
+    state.recordUsageMetricEvent(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordUsageMetricEvent(eventTime2, 10L, "tenant1");
+    state.recordUsageMetricEvent(eventTime2, 11L, "tenant1");
+    state.recordUsageMetricEvent(eventTime2, 12L, "tenant2");
+    assertThat(state.getUsageMetricsByTimestamp(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getActiveUsageMetricsByTenant(eventTime2))
+    assertThat(state.getUsageMetricsByTimestamp(eventTime2))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of("tenant1", List.of(10L, 11L), "tenant2", List.of(12L)));
 
     // when
-    state.deleteByEventTime(eventTime2);
+    state.removeMetricsByTimestamp(eventTime2);
 
     // then
-    assertThat(state.getActiveUsageMetricsByTenant(eventTime1))
+    assertThat(state.getUsageMetricsByTimestamp(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getActiveUsageMetricsByTenant(eventTime2)).isEmpty();
+    assertThat(state.getUsageMetricsByTimestamp(eventTime2)).isEmpty();
   }
 }
