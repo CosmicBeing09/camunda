@@ -176,7 +176,7 @@ public class CreateDocumentCommandImpl extends DocumentBuilder
 
   @Override
   public CreateDocumentCommandStep2 processInstanceKey(final long processInstanceKey) {
-    super.getMetadata().setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
+    super.getMetadata().setProcessInstanceKey(ParseUtil.toStringOrNull(processInstanceKey));
     return this;
   }
 }

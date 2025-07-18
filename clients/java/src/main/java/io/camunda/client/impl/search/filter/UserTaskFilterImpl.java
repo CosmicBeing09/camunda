@@ -44,7 +44,7 @@ public class UserTaskFilterImpl
 
   @Override
   public UserTaskFilter key(final Long value) {
-    filter.setUserTaskKey(ParseUtil.keyToString(value));
+    filter.setUserTaskKey(ParseUtil.toStringOrNull(value));
     return this;
   }
 
@@ -125,7 +125,7 @@ public class UserTaskFilterImpl
 
   @Override
   public UserTaskFilter definitionKey(final Long processDefinitionKey) {
-    filter.setProcessDefinitionKey(ParseUtil.keyToString(processDefinitionKey));
+    filter.setProcessDefinitionKey(ParseUtil.toStringOrNull(processDefinitionKey));
     return this;
   }
 
@@ -176,14 +176,14 @@ public class UserTaskFilterImpl
 
   @Override
   public UserTaskFilter elementInstanceKey(final Long processInstanceKey) {
-    filter.setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
+    filter.setProcessInstanceKey(ParseUtil.toStringOrNull(processInstanceKey));
     return this;
   }
 
   // elementInstanceKey
   @Override
   public UserTaskFilter elementInstanceKey(final Long elementKey) {
-    filter.setElementInstanceKey(ParseUtil.keyToString(elementKey));
+    filter.setElementInstanceKey(ParseUtil.toStringOrNull(elementKey));
     return this;
   }
 

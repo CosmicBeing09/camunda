@@ -86,7 +86,7 @@ public final class MigrateProcessInstanceCommandImpl
             .setTargetProcessDefinitionKey(targetProcessDefinitionKey)
             .build());
     httpRequestObject.setTargetProcessDefinitionKey(
-        ParseUtil.keyToString(targetProcessDefinitionKey));
+        ParseUtil.toStringOrNull(targetProcessDefinitionKey));
     return this;
   }
 
@@ -110,7 +110,7 @@ public final class MigrateProcessInstanceCommandImpl
 
   private void buildRequestObject(final MigrationPlan migrationPlan) {
     httpRequestObject.setTargetProcessDefinitionKey(
-        ParseUtil.keyToString(migrationPlan.getTargetProcessDefinitionKey()));
+        ParseUtil.toStringOrNull(migrationPlan.getTargetProcessDefinitionKey()));
     httpRequestObject.setMappingInstructions(
         migrationPlan.getMappingInstructions().stream()
             .map(

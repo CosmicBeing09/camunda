@@ -85,7 +85,7 @@ public final class DeploymentEventImpl implements DeploymentEvent {
   }
 
   public DeploymentEventImpl(final DeploymentResult response) {
-    key = ParseUtil.parseLongOrEmpty(response.getDeploymentKey());
+    key = ParseUtil.parseLongOrDefault(response.getDeploymentKey());
     tenantId = response.getTenantId();
 
     for (final DeploymentMetadataResult deployment : response.getDeployments()) {
@@ -104,7 +104,7 @@ public final class DeploymentEventImpl implements DeploymentEvent {
                     new FormImpl(
                         f.getFormId(),
                         f.getVersion(),
-                        ParseUtil.parseLongOrEmpty(f.getFormKey()),
+                        ParseUtil.parseLongOrDefault(f.getFormKey()),
                         f.getResourceName(),
                         f.getTenantId())));
   }
@@ -119,7 +119,7 @@ public final class DeploymentEventImpl implements DeploymentEvent {
                         dr.getDecisionRequirementsId(),
                         dr.getDecisionRequirementsName(),
                         dr.getVersion(),
-                        ParseUtil.parseLongOrEmpty(dr.getDecisionRequirementsKey()),
+                        ParseUtil.parseLongOrDefault(dr.getDecisionRequirementsKey()),
                         dr.getResourceName(),
                         dr.getTenantId())));
   }
@@ -133,9 +133,9 @@ public final class DeploymentEventImpl implements DeploymentEvent {
                         d.getDecisionDefinitionId(),
                         d.getName(),
                         d.getVersion(),
-                        ParseUtil.parseLongOrEmpty(d.getDecisionDefinitionKey()),
+                        ParseUtil.parseLongOrDefault(d.getDecisionDefinitionKey()),
                         d.getDecisionRequirementsId(),
-                        ParseUtil.parseLongOrEmpty(d.getDecisionRequirementsKey()),
+                        ParseUtil.parseLongOrDefault(d.getDecisionRequirementsKey()),
                         d.getTenantId())));
   }
 
@@ -145,7 +145,7 @@ public final class DeploymentEventImpl implements DeploymentEvent {
             p ->
                 processes.add(
                     new ProcessImpl(
-                        ParseUtil.parseLongOrEmpty(p.getProcessDefinitionKey()),
+                        ParseUtil.parseLongOrDefault(p.getProcessDefinitionKey()),
                         p.getProcessDefinitionId(),
                         p.getProcessDefinitionVersion(),
                         p.getResourceName(),

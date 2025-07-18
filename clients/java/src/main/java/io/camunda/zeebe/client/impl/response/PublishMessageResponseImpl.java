@@ -31,7 +31,7 @@ public final class PublishMessageResponseImpl implements PublishMessageResponse 
   }
 
   public PublishMessageResponseImpl(final MessagePublicationResult response) {
-    key = ParseUtil.parseLongOrEmpty(response.getMessageKey());
+    key = ParseUtil.parseLongOrDefault(response.getMessageKey());
     tenantId = response.getTenantId();
   }
 

@@ -35,7 +35,7 @@ public class CreateUserResponseImpl implements CreateUserResponse {
   }
 
   public CreateUserResponseImpl setResponse(final UserCreateResult response) {
-    userKey = ParseUtil.parseLongOrEmpty(response.getUserKey());
+    userKey = ParseUtil.parseLongOrDefault(response.getUserKey());
     return this;
   }
 }

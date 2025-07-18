@@ -92,7 +92,7 @@ public class CreateDocumentBatchCommandImpl implements CreateDocumentBatchComman
           document.getMetadata().setProcessDefinitionId(processDefinitionId);
         }
         if (processInstanceKey != null) {
-          document.getMetadata().setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
+          document.getMetadata().setProcessInstanceKey(ParseUtil.toStringOrNull(processInstanceKey));
         }
         final String metadataString = jsonMapper.toJson(document.getMetadata());
         final MultipartPart part =

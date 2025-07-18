@@ -103,7 +103,7 @@ public final class ModifyProcessInstanceCommandImpl
         TerminateInstruction.newBuilder().setElementInstanceKey(elementInstanceKey).build());
     httpRequestObject.addTerminateInstructionsItem(
         new ProcessInstanceModificationTerminateInstruction()
-            .elementInstanceKey(ParseUtil.keyToString(elementInstanceKey)));
+            .elementInstanceKey(ParseUtil.toStringOrNull(elementInstanceKey)));
     return this;
   }
 
@@ -119,7 +119,7 @@ public final class ModifyProcessInstanceCommandImpl
     final ProcessInstanceModificationActivateInstruction activateInstructionsItem =
         new ProcessInstanceModificationActivateInstruction()
             .elementId(elementId)
-            .ancestorElementInstanceKey(ParseUtil.keyToString(ancestorElementInstanceKey));
+            .ancestorElementInstanceKey(ParseUtil.toStringOrNull(ancestorElementInstanceKey));
     latestActivateInstructionRest = activateInstructionsItem;
     httpRequestObject.addActivateInstructionsItem(activateInstructionsItem);
     return this;

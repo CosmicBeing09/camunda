@@ -155,7 +155,7 @@ public final class CreateProcessInstanceCommandImpl
   @Override
   public CreateProcessInstanceCommandStep3 processDefinitionKey(final long processDefinitionKey) {
     grpcRequestObjectBuilder.setProcessDefinitionKey(processDefinitionKey);
-    httpRequestObject.setProcessDefinitionKey(ParseUtil.keyToString(processDefinitionKey));
+    httpRequestObject.setProcessDefinitionKey(ParseUtil.toStringOrNull(processDefinitionKey));
     return this;
   }
 

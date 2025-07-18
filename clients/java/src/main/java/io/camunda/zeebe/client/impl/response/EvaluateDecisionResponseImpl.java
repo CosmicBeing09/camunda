@@ -46,16 +46,16 @@ public class EvaluateDecisionResponseImpl implements EvaluateDecisionResponse {
       final EvaluateDecisionResult response, final JsonMapper jsonMapper) {
     this.jsonMapper = jsonMapper;
     decisionId = response.getDecisionDefinitionId();
-    decisionKey = ParseUtil.parseLongOrEmpty(response.getDecisionDefinitionKey());
+    decisionKey = ParseUtil.parseLongOrDefault(response.getDecisionDefinitionKey());
     decisionVersion = response.getDecisionDefinitionVersion();
     decisionName = response.getDecisionDefinitionName();
     decisionRequirementsId = response.getDecisionRequirementsId();
-    decisionRequirementsKey = ParseUtil.parseLongOrEmpty(response.getDecisionRequirementsKey());
+    decisionRequirementsKey = ParseUtil.parseLongOrDefault(response.getDecisionRequirementsKey());
     decisionOutput = response.getOutput();
     failedDecisionId = response.getFailedDecisionDefinitionId();
     failureMessage = response.getFailureMessage();
     tenantId = response.getTenantId();
-    decisionInstanceKey = ParseUtil.parseLongOrEmpty(response.getDecisionInstanceKey());
+    decisionInstanceKey = ParseUtil.parseLongOrDefault(response.getDecisionInstanceKey());
     buildEvaluatedDecisions(response);
   }
 

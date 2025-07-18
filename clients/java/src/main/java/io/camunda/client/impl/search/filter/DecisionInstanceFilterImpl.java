@@ -42,7 +42,7 @@ public class DecisionInstanceFilterImpl
 
   @Override
   public DecisionInstanceFilter decisionInstanceKey(final long decisionInstanceKey) {
-    filter.setDecisionInstanceKey(ParseUtil.keyToString(decisionInstanceKey));
+    filter.setDecisionInstanceKey(ParseUtil.toStringOrNull(decisionInstanceKey));
     return this;
   }
 
@@ -97,13 +97,13 @@ public class DecisionInstanceFilterImpl
 
   @Override
   public DecisionInstanceFilter processDefinitionKey(final long processDefinitionKey) {
-    filter.setProcessDefinitionKey(ParseUtil.keyToString(processDefinitionKey));
+    filter.setProcessDefinitionKey(ParseUtil.toStringOrNull(processDefinitionKey));
     return this;
   }
 
   @Override
   public DecisionInstanceFilter processInstanceKey(final long processInstanceKey) {
-    filter.setProcessInstanceKey(ParseUtil.keyToString(processInstanceKey));
+    filter.setProcessInstanceKey(ParseUtil.toStringOrNull(processInstanceKey));
     return this;
   }
 
