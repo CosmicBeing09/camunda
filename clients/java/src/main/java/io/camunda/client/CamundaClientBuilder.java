@@ -47,7 +47,7 @@ public interface CamundaClientBuilder {
    * <p>The default value is <code>true</code>.
    */
   CamundaClientBuilder applyEnvironmentVariableOverrides(
-      final boolean applyEnvironmentVariableOverrides);
+      final boolean enableEnvOverride);
 
   /**
    * @deprecated since 8.5 for removal with 8.8, replaced by {@link
@@ -57,7 +57,7 @@ public interface CamundaClientBuilder {
    *     </code> .
    */
   @Deprecated
-  CamundaClientBuilder gatewayAddress(String gatewayAddress);
+  CamundaClientBuilder deprecatedGatewayAddress(String gatewayAddress);
 
   /**
    * @param restAddress the REST API address of a gateway that the client can connect to. The

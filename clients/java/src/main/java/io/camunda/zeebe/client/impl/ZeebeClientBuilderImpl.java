@@ -43,8 +43,8 @@ import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.DEFAU
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.DEFAULT_TENANT_ID_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.GRPC_ADDRESS_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.KEEP_ALIVE_VAR;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID_VAR;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OVERRIDE_AUTHORITY_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.PLAINTEXT_CONNECTION_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.PREFER_REST_VAR;
@@ -614,8 +614,8 @@ public final class ZeebeClientBuilderImpl implements ZeebeClientBuilder, ZeebeCl
 
   private boolean shouldUseDefaultCredentialsProvider() {
     return credentialsProvider == null
-        && Environment.system().get(OAUTH_ENV_CLIENT_ID) != null
-        && Environment.system().get(OAUTH_ENV_CLIENT_SECRET) != null;
+        && Environment.system().get(OAUTH_ENV_CLIENT_ID_VAR) != null
+        && Environment.system().get(OAUTH_ENV_CLIENT_SECRET_VAR) != null;
   }
 
   private CredentialsProvider createDefaultCredentialsProvider() {

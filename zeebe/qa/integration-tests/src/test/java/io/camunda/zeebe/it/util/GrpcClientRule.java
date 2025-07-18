@@ -39,7 +39,7 @@ public final class GrpcClientRule extends ExternalResource {
     this(
         config -> {
           config
-              .gatewayAddress(NetUtil.toSocketAddressString(brokerRule.getGatewayAddress()))
+              .deprecatedGatewayAddress(NetUtil.toSocketAddressString(brokerRule.getGatewayAddress()))
               .usePlaintext();
           configurator.accept(config);
         });
@@ -49,7 +49,7 @@ public final class GrpcClientRule extends ExternalResource {
     this(
         config ->
             config
-                .gatewayAddress(NetUtil.toSocketAddressString(clusteringRule.getGatewayAddress()))
+                .deprecatedGatewayAddress(NetUtil.toSocketAddressString(clusteringRule.getGatewayAddress()))
                 .usePlaintext());
   }
 

@@ -134,8 +134,8 @@ public class CamundaClientCloudBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder gatewayAddress(final String gatewayAddress) {
-    innerBuilder.gatewayAddress(gatewayAddress);
+  public CamundaClientBuilder deprecatedGatewayAddress(final String gatewayAddress) {
+    innerBuilder.deprecatedGatewayAddress(gatewayAddress);
     return this;
   }
 

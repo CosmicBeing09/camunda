@@ -101,7 +101,7 @@ public class ZeebeExtension implements BeforeEachCallback, AfterEachCallback {
       camundaClient =
           CamundaClient.newClientBuilder()
               .defaultRequestTimeout(Duration.ofMillis(15000))
-              .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
+              .deprecatedGatewayAddress(zeebeContainer.getExternalGatewayAddress())
               .usePlaintext()
               .build();
     } else {

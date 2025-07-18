@@ -152,7 +152,7 @@ public class ElasticsearchOperateZeebeRuleProvider implements OperateZeebeRulePr
 
     client =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
+            .deprecatedGatewayAddress(zeebeContainer.getExternalGatewayAddress())
             .usePlaintext()
             .defaultRequestTimeout(REQUEST_TIMEOUT)
             .build();

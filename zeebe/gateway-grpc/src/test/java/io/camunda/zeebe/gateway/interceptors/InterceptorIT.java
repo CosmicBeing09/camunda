@@ -181,7 +181,7 @@ final class InterceptorIT {
 
   private CamundaClient createCamundaClient() {
     return CamundaClient.newClientBuilder()
-        .gatewayAddress(
+        .deprecatedGatewayAddress(
             NetUtil.toSocketAddressString(gateway.getGatewayCfg().getNetwork().toSocketAddress()))
         .usePlaintext()
         .build();

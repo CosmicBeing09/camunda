@@ -219,7 +219,7 @@ public class Starter extends App {
   private CamundaClient createCamundaClient() {
     final CamundaClientBuilder builder =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(appCfg.getBrokerUrl())
+            .deprecatedGatewayAddress(appCfg.getBrokerUrl())
             .numJobWorkerExecutionThreads(0)
             .withProperties(System.getProperties())
             .withInterceptors(monitoringInterceptor);

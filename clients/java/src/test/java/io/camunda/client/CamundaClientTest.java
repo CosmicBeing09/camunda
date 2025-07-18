@@ -31,7 +31,7 @@ import static io.camunda.client.ClientProperties.USE_PLAINTEXT_CONNECTION;
 import static io.camunda.client.impl.CamundaClientBuilderImpl.DEFAULT_GATEWAY_ADDRESS;
 import static io.camunda.client.impl.CamundaClientBuilderImpl.DEFAULT_GRPC_ADDRESS;
 import static io.camunda.client.impl.CamundaClientBuilderImpl.DEFAULT_REST_ADDRESS;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.CAMUNDA_CLIENT_WORKER_STREAM_ENABLED;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.WORKER_STREAM_ENABLED_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.CA_CERTIFICATE_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.DEFAULT_JOB_WORKER_TENANT_IDS_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.DEFAULT_TENANT_ID_VAR;
@@ -228,28 +228,28 @@ public final class CamundaClientTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {CAMUNDA_CLIENT_WORKER_STREAM_ENABLED, ZEEBE_CLIENT_WORKER_STREAM_ENABLED})
+  @ValueSource(strings = {WORKER_STREAM_ENABLED_VAR, ZEEBE_CLIENT_WORKER_STREAM_ENABLED})
   public void shouldEnableStreamingWithEnvironmentVariableWhenApplied(final String envName) {
     // given
     Environment.system().put(envName, "true");
 
-    final CamundaClientBuilderImpl builder1 = new CamundaClientBuilderImpl();
-    final CamundaClientBuilderImpl builder2 = new CamundaClientBuilderImpl();
-    builder1.applyEnvironmentVariableOverrides(false);
-    builder2.applyEnvironmentVariableOverrides(true);
+    final CamundaClientBuilderImpl builderWithoutEnvOverride = new CamundaClientBuilderImpl();
+    final CamundaClientBuilderImpl builderWithEnvOverride = new CamundaClientBuilderImpl();
+    builderWithoutEnvOverride.applyEnvironmentVariableOverrides(false);
+    builderWithEnvOverride.applyEnvironmentVariableOverrides(true);
 
     // when
-    builder1.build();
-    builder2.build();
-    assertThat(builder1.getDefaultJobWorkerStreamEnabled()).isFalse();
-    assertThat(builder2.getDefaultJobWorkerStreamEnabled()).isTrue();
+    builderWithoutEnvOverride.build();
+    builderWithEnvOverride.build();
+    assertThat(builderWithoutEnvOverride.getDefaultJobWorkerStreamEnabled()).isFalse();
+    assertThat(builderWithEnvOverride.getDefaultJobWorkerStreamEnabled()).isTrue();
   }
 
   @ParameterizedTest
   @CsvSource({
-    CAMUNDA_CLIENT_WORKER_STREAM_ENABLED + "," + STREAM_ENABLED,
+    WORKER_STREAM_ENABLED_VAR + "," + STREAM_ENABLED,
     ZEEBE_CLIENT_WORKER_STREAM_ENABLED + "," + STREAM_ENABLED,
-    CAMUNDA_CLIENT_WORKER_STREAM_ENABLED
+    WORKER_STREAM_ENABLED_VAR
         + ","
         + io.camunda.zeebe.client.ClientProperties.STREAM_ENABLED,
     ZEEBE_CLIENT_WORKER_STREAM_ENABLED
@@ -486,7 +486,7 @@ public final class CamundaClientTest {
             .withClusterId("clusterId")
             .withClientId("clientId")
             .withClientSecret("clientSecret")
-            .gatewayAddress(gatewayAddress)
+            .deprecatedGatewayAddress(gatewayAddress)
             .credentialsProvider(credentialsProvider)
             .build()) {
       final CamundaClientConfiguration configuration = client.getConfiguration();

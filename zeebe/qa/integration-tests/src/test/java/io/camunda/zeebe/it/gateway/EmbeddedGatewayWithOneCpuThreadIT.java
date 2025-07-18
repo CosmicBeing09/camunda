@@ -40,7 +40,7 @@ public final class EmbeddedGatewayWithOneCpuThreadIT {
 
     return CamundaClient.newClientBuilder()
         .usePlaintext()
-        .gatewayAddress("localhost:" + port)
+        .deprecatedGatewayAddress("localhost:" + port)
         .build();
   }
 

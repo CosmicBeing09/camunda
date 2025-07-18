@@ -267,7 +267,7 @@ public final class EmbeddedBrokerRule extends ExternalResource {
     if (brokerCfg.getGateway().isEnable()) {
       try (final var client =
           CamundaClient.newClientBuilder()
-              .gatewayAddress(NetUtil.toSocketAddressString(getGatewayAddress()))
+              .deprecatedGatewayAddress(NetUtil.toSocketAddressString(getGatewayAddress()))
               .usePlaintext()
               .build()) {
         Awaitility.await("until we have a complete topology")

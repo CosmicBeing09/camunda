@@ -90,7 +90,7 @@ public class NonDefaultContainerSetupTest {
       try (final CamundaClient client =
           CamundaClient.newClientBuilder()
               .usePlaintext()
-              .gatewayAddress(gateway.getExternalGatewayAddress())
+              .deprecatedGatewayAddress(gateway.getExternalGatewayAddress())
               .build()) {
         // when
         client

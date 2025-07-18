@@ -130,7 +130,7 @@ public class OpensearchOperateZeebeRuleProvider implements OperateZeebeRuleProvi
 
     client =
         CamundaClient.newClientBuilder()
-            .gatewayAddress(zeebeContainer.getExternalGatewayAddress())
+            .deprecatedGatewayAddress(zeebeContainer.getExternalGatewayAddress())
             .usePlaintext()
             .defaultRequestTimeout(REQUEST_TIMEOUT)
             .build();

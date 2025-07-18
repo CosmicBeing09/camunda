@@ -38,14 +38,14 @@ import static io.camunda.client.ClientProperties.STREAM_ENABLED;
 import static io.camunda.client.ClientProperties.USE_DEFAULT_RETRY_POLICY;
 import static io.camunda.client.ClientProperties.USE_PLAINTEXT_CONNECTION;
 import static io.camunda.client.impl.BuilderUtils.applyEnvironmentValueIfNotNull;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.CAMUNDA_CLIENT_WORKER_STREAM_ENABLED;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.WORKER_STREAM_ENABLED_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.CA_CERTIFICATE_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.DEFAULT_JOB_WORKER_TENANT_IDS_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.DEFAULT_TENANT_ID_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.GRPC_ADDRESS_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.KEEP_ALIVE_VAR;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_CLIENT_ID_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_CLIENT_SECRET_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OVERRIDE_AUTHORITY_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.PLAINTEXT_CONNECTION_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.PREFER_REST_VAR;
@@ -109,7 +109,7 @@ public final class CamundaClientBuilderImpl
   private Duration defaultRequestTimeout = Duration.ofSeconds(10);
   private Duration defaultRequestTimeoutOffset = Duration.ofSeconds(1);
   private boolean usePlaintextConnection = false;
-  private String certificatePath;
+  private String caCertificatePath;
   private CredentialsProvider credentialsProvider;
   private Duration keepAlive = Duration.ofSeconds(45);
   private JsonMapper jsonMapper = new CamundaObjectMapper();
@@ -194,7 +194,7 @@ public final class CamundaClientBuilderImpl
 
   @Override
   public String getCaCertificatePath() {
-    return certificatePath;
+    return caCertificatePath;
   }
 
   @Override
@@ -283,7 +283,7 @@ public final class CamundaClientBuilderImpl
         io.camunda.zeebe.client.ClientProperties.REST_ADDRESS);
 
     BuilderUtils.applyPropertyValueIfNotNull(
-        properties, this::gatewayAddress, io.camunda.zeebe.client.ClientProperties.GATEWAY_ADDRESS);
+        properties, this::deprecatedGatewayAddress, io.camunda.zeebe.client.ClientProperties.GATEWAY_ADDRESS);
 
     BuilderUtils.applyPropertyValueIfNotNull(
         properties,
@@ -414,7 +414,7 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder gatewayAddress(final String gatewayAddress) {
+  public CamundaClientBuilder deprecatedGatewayAddress(final String gatewayAddress) {
     this.gatewayAddress = gatewayAddress;
     grpcAddressUsed = false;
     return this;
@@ -453,8 +453,8 @@ public final class CamundaClientBuilderImpl
   }
 
   @Override
-  public CamundaClientBuilder numJobWorkerExecutionThreads(final int numSubscriptionThreads) {
-    numJobWorkerExecutionThreads = numSubscriptionThreads;
+  public CamundaClientBuilder numJobWorkerExecutionThreads(final int numJobWorkerExecutionThreads) {
+    this.numJobWorkerExecutionThreads = numJobWorkerExecutionThreads;
     return this;
   }
 
@@ -511,7 +511,7 @@ public final class CamundaClientBuilderImpl
 
   @Override
   public CamundaClientBuilder caCertificatePath(final String certificatePath) {
-    this.certificatePath = certificatePath;
+    caCertificatePath = certificatePath;
     return this;
   }
 
@@ -648,7 +648,7 @@ public final class CamundaClientBuilderImpl
         ZeebeClientEnvironmentVariables.DEFAULT_JOB_WORKER_TENANT_IDS_VAR);
     applyEnvironmentValueIfNotNull(
         value -> defaultJobWorkerStreamEnabled(Boolean.parseBoolean(value)),
-        CAMUNDA_CLIENT_WORKER_STREAM_ENABLED,
+        WORKER_STREAM_ENABLED_VAR,
         ZeebeClientEnvironmentVariables.ZEEBE_CLIENT_WORKER_STREAM_ENABLED);
     applyEnvironmentValueIfNotNull(
         value -> useDefaultRetryPolicy(Boolean.parseBoolean(value)),
@@ -685,11 +685,11 @@ public final class CamundaClientBuilderImpl
 
   private boolean shouldUseDefaultCredentialsProvider() {
     return credentialsProvider == null
-        && (Environment.system().isDefined(OAUTH_ENV_CLIENT_ID)
-            || Environment.system().isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID))
-        && (Environment.system().isDefined(OAUTH_ENV_CLIENT_SECRET)
+        && (Environment.system().isDefined(OAUTH_CLIENT_ID_VAR)
+            || Environment.system().isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID_VAR))
+        && (Environment.system().isDefined(OAUTH_CLIENT_SECRET_VAR)
             || Environment.system()
-                .isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET));
+                .isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET_VAR));
   }
 
   private CredentialsProvider createDefaultCredentialsProvider() {

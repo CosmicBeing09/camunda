@@ -70,7 +70,7 @@ final class PartitionLeaveTest {
     try (final var client =
         CamundaClient.newClientBuilder()
             .usePlaintext()
-            .gatewayAddress("localhost:" + broker0.getConfig().getGateway().getNetwork().getPort())
+            .deprecatedGatewayAddress("localhost:" + broker0.getConfig().getGateway().getNetwork().getPort())
             .build()) {
       Awaitility.await()
           .untilAsserted(
@@ -125,7 +125,7 @@ final class PartitionLeaveTest {
     try (final var client =
         CamundaClient.newClientBuilder()
             .usePlaintext()
-            .gatewayAddress("localhost:" + broker0.getConfig().getGateway().getNetwork().getPort())
+            .deprecatedGatewayAddress("localhost:" + broker0.getConfig().getGateway().getNetwork().getPort())
             .build()) {
       Awaitility.await()
           .untilAsserted(
@@ -184,7 +184,7 @@ final class PartitionLeaveTest {
     try (final var client =
         CamundaClient.newClientBuilder()
             .usePlaintext()
-            .gatewayAddress("localhost:" + broker0.getConfig().getGateway().getNetwork().getPort())
+            .deprecatedGatewayAddress("localhost:" + broker0.getConfig().getGateway().getNetwork().getPort())
             .build()) {
       Awaitility.await()
           .untilAsserted(

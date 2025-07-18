@@ -16,21 +16,21 @@
 package io.camunda.client.impl.oauth;
 
 import static io.camunda.client.impl.BuilderUtils.applyEnvironmentValueIfNotNull;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.ENTRA_ENV_CERTIFICATE_PASSWORD;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_CERT_PASSWORD;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.ENTRA_ENV_CERTIFICATE_PATH;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_AUTHORIZATION_SERVER;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CACHE_PATH;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_AUTHORIZATION_SERVER_URL_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_CLIENT_CONFIG_PATH_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_CLIENT_ID_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_CLIENT_SECRET_VAR;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_CONNECT_TIMEOUT;
 import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_READ_TIMEOUT;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_KEY_SECRET;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_PATH;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_SECRET;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_PATH;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_SECRET;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_TOKEN_AUDIENCE;
-import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_ENV_TOKEN_SCOPE;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_SSL_CLIENT_KEYSTORE_KEY_SECRET_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_SSL_CLIENT_KEYSTORE_PATH_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_SSL_CLIENT_KEYSTORE_SECRET_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_SSL_CLIENT_TRUSTSTORE_PATH_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_SSL_CLIENT_TRUSTSTORE_SECRET_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_TOKEN_AUDIENCE_VAR;
+import static io.camunda.client.impl.CamundaClientEnvironmentVariables.OAUTH_TOKEN_SCOPE_VAR;
 
 import io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables;
 import java.io.File;
@@ -63,8 +63,8 @@ public final class OAuthCredentialsProviderBuilder {
   private String keystoreKeyPassword;
   private Path truststorePath;
   private String truststorePassword;
-  private String credentialsCachePath;
-  private File credentialsCache;
+  private String credentialsCacheFilePath;
+  private File credentialsCacheFile;
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
@@ -221,7 +221,7 @@ public final class OAuthCredentialsProviderBuilder {
    * $HOME/.camunda/credentials
    */
   public OAuthCredentialsProviderBuilder credentialsCachePath(final String cachePath) {
-    credentialsCachePath = cachePath;
+    credentialsCacheFilePath = cachePath;
     return this;
   }
 
@@ -229,7 +229,7 @@ public final class OAuthCredentialsProviderBuilder {
    * @see OAuthCredentialsProviderBuilder#credentialsCachePath(String)
    */
   File getCredentialsCache() {
-    return credentialsCache;
+    return credentialsCacheFile;
   }
 
   /**
@@ -328,49 +328,50 @@ public final class OAuthCredentialsProviderBuilder {
 
   private void applyMSEntraConfiguration() {
     applyEnvironmentValueIfNotNull(this::entraCertificatePath, ENTRA_ENV_CERTIFICATE_PATH);
-    applyEnvironmentValueIfNotNull(this::entraCertificatePassword, ENTRA_ENV_CERTIFICATE_PASSWORD);
+    applyEnvironmentValueIfNotNull(this::entraCertificatePassword,
+        OAUTH_ENV_SSL_CLIENT_CERT_PASSWORD);
   }
 
   private void checkEnvironmentOverrides() {
     applyEnvironmentValueIfNotNull(
-        this::clientId, OAUTH_ENV_CLIENT_ID, ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID);
+        this::clientId, OAUTH_CLIENT_ID_VAR, ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID_VAR);
     applyEnvironmentValueIfNotNull(
         this::clientSecret,
-        OAUTH_ENV_CLIENT_SECRET,
-        ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET);
+        OAUTH_CLIENT_SECRET_VAR,
+        ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET_VAR);
     applyEnvironmentValueIfNotNull(
         this::audience,
-        OAUTH_ENV_TOKEN_AUDIENCE,
+        OAUTH_TOKEN_AUDIENCE_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_TOKEN_AUDIENCE);
     applyEnvironmentValueIfNotNull(
-        this::scope, OAUTH_ENV_TOKEN_SCOPE, ZeebeClientEnvironmentVariables.OAUTH_ENV_TOKEN_SCOPE);
+        this::scope, OAUTH_TOKEN_SCOPE_VAR, ZeebeClientEnvironmentVariables.OAUTH_ENV_TOKEN_SCOPE);
     applyEnvironmentValueIfNotNull(
         this::authorizationServerUrl,
-        OAUTH_ENV_AUTHORIZATION_SERVER,
+        OAUTH_AUTHORIZATION_SERVER_URL_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_AUTHORIZATION_SERVER);
     applyEnvironmentValueIfNotNull(
         this::keystorePath,
-        OAUTH_ENV_SSL_CLIENT_KEYSTORE_PATH,
+        OAUTH_SSL_CLIENT_KEYSTORE_PATH_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_PATH);
     applyEnvironmentValueIfNotNull(
         this::keystorePassword,
-        OAUTH_ENV_SSL_CLIENT_KEYSTORE_SECRET,
+        OAUTH_SSL_CLIENT_KEYSTORE_SECRET_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_SECRET);
     applyEnvironmentValueIfNotNull(
         this::keystoreKeyPassword,
-        OAUTH_ENV_SSL_CLIENT_KEYSTORE_KEY_SECRET,
+        OAUTH_SSL_CLIENT_KEYSTORE_KEY_SECRET_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_KEYSTORE_KEY_SECRET);
     applyEnvironmentValueIfNotNull(
         this::truststorePath,
-        OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_PATH,
+        OAUTH_SSL_CLIENT_TRUSTSTORE_PATH_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_PATH);
     applyEnvironmentValueIfNotNull(
         this::truststorePassword,
-        OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_SECRET,
+        OAUTH_SSL_CLIENT_TRUSTSTORE_SECRET_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_SSL_CLIENT_TRUSTSTORE_SECRET);
     applyEnvironmentValueIfNotNull(
         this::credentialsCachePath,
-        OAUTH_ENV_CACHE_PATH,
+        OAUTH_CLIENT_CONFIG_PATH_VAR,
         ZeebeClientEnvironmentVariables.OAUTH_ENV_CACHE_PATH);
     applyEnvironmentValueIfNotNull(
         this::readTimeout,
@@ -383,8 +384,8 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void applyDefaults() {
-    if (credentialsCachePath == null) {
-      credentialsCachePath =
+    if (credentialsCacheFilePath == null) {
+      credentialsCacheFilePath =
           Paths.get(System.getProperty("user.home"), ".camunda", "credentials")
               .toAbsolutePath()
               .toString();
@@ -429,9 +430,9 @@ public final class OAuthCredentialsProviderBuilder {
         throw new IllegalArgumentException("Truststore path does not exist: " + keystorePath);
       }
 
-      credentialsCache = new File(credentialsCachePath);
+      credentialsCacheFile = new File(credentialsCacheFilePath);
 
-      if (credentialsCache.isDirectory()) {
+      if (credentialsCacheFile.isDirectory()) {
         throw new IllegalArgumentException(
             "Expected specified credentials cache to be a file but found directory instead.");
       }
