@@ -27,7 +27,7 @@ public class UserTaskAssignmentDeniedApplierTest {
   private MutableProcessingState processingState;
 
   /** The class under test. */
-  private UserTaskAssignmentDeniedApplier userTaskAssignmentDeniedApplierApplier;
+  private UserTaskAssignmentDeniedApplier assignmentDeniedApplier;
 
   /** Used for state assertions. */
   private MutableUserTaskState userTaskState;
@@ -37,7 +37,7 @@ public class UserTaskAssignmentDeniedApplierTest {
 
   @BeforeEach
   public void setup() {
-    userTaskAssignmentDeniedApplierApplier = new UserTaskAssignmentDeniedApplier(processingState);
+    assignmentDeniedApplier = new UserTaskAssignmentDeniedApplier(processingState);
     userTaskState = processingState.getUserTaskState();
     testSetup = new TestSetupHelper(processingState);
   }
@@ -68,7 +68,7 @@ public class UserTaskAssignmentDeniedApplierTest {
         .isEqualTo(LifecycleState.ASSIGNING);
 
     // when
-    userTaskAssignmentDeniedApplierApplier.applyState(userTaskKey, given.setAssignee(newAssignee));
+    assignmentDeniedApplier.applyState(userTaskKey, given.setAssignee(newAssignee));
 
     // then
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey))
@@ -105,7 +105,7 @@ public class UserTaskAssignmentDeniedApplierTest {
         .isEqualTo(Optional.of(initialAssignee));
 
     // when
-    userTaskAssignmentDeniedApplierApplier.applyState(userTaskKey, given);
+    assignmentDeniedApplier.applyState(userTaskKey, given);
 
     // then
     Assertions.assertThat(userTaskState.findInitialAssignee(userTaskKey))
