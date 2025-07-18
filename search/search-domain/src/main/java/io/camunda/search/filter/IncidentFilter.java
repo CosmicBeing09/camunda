@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.Objects;
 
 public record IncidentFilter(
-    List<Long> incidentKeys,
-    List<Long> processDefinitionKeys,
+    List<Long> incidentKeyOperations,
+    List<Long> processDefinitionKeyOperations,
     List<String> processDefinitionIds,
     List<Long> processInstanceKeys,
-    List<ErrorType> errorTypes,
+    List<ErrorType> errorTypeOperations,
     List<String> errorMessages,
     List<Integer> errorMessageHashes,
     List<String> flowNodeIds,
@@ -40,7 +40,7 @@ public record IncidentFilter(
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
     private List<Long> processInstanceKeys;
-    private List<ErrorType> errorTypes;
+    private List<ErrorType> errorTypeOperations;
     private List<String> errorMessages;
     private List<Integer> errorMessageHashes;
     private List<String> flowNodeIds;
@@ -51,7 +51,7 @@ public record IncidentFilter(
     private List<Long> jobKeys;
     private List<String> tenantIds;
 
-    public Builder incidentKeys(final Long value, final Long... values) {
+    public Builder incidentKeyOperations(final Long value, final Long... values) {
       return incidentKeys(collectValues(value, values));
     }
 
@@ -60,7 +60,7 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder processDefinitionKeys(final Long value, final Long... values) {
+    public Builder processDefinitionKeyOperations(final Long value, final Long... values) {
       return processDefinitionKeys(collectValues(value, values));
     }
 
@@ -87,12 +87,12 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder errorTypes(final ErrorType value, final ErrorType... values) {
-      return errorTypes(collectValues(value, values));
+    public Builder errorTypeOperations(final ErrorType value, final ErrorType... values) {
+      return errorTypeOperations(collectValues(value, values));
     }
 
-    public Builder errorTypes(final List<ErrorType> values) {
-      errorTypes = addValuesToList(errorTypes, values);
+    public Builder errorTypeOperations(final List<ErrorType> values) {
+      errorTypeOperations = addValuesToList(errorTypeOperations, values);
       return this;
     }
 
@@ -176,7 +176,7 @@ public record IncidentFilter(
           Objects.requireNonNullElse(processDefinitionKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processDefinitionIds, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(errorTypes, Collections.emptyList()),
+          Objects.requireNonNullElse(errorTypeOperations, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessages, Collections.emptyList()),
           Objects.requireNonNullElse(errorMessageHashes, Collections.emptyList()),
           Objects.requireNonNullElse(flowNodeIds, Collections.emptyList()),

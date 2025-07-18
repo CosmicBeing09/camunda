@@ -25,7 +25,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByIncidentKey() {
-    final var filter = FilterBuilders.incident(f -> f.incidentKeys(1L));
+    final var filter = FilterBuilders.incident(f -> f.incidentKeyOperations(1L));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -43,7 +43,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByProcessDefinitionKey() {
-    final var filter = FilterBuilders.incident(f -> f.processDefinitionKeys(5432L));
+    final var filter = FilterBuilders.incident(f -> f.processDefinitionKeyOperations(5432L));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -97,7 +97,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByErrorType() {
-    final var filter = FilterBuilders.incident(f -> f.errorTypes(ErrorType.JOB_NO_RETRIES));
+    final var filter = FilterBuilders.incident(f -> f.errorTypeOperations(ErrorType.JOB_NO_RETRIES));
 
     // when
     final var searchRequest = transformQuery(filter);
@@ -115,7 +115,7 @@ public final class IncidentQueryTransformerTest extends AbstractTransformerTest 
 
   @Test
   public void shouldQueryByResourceNotFoundErrorType() {
-    final var filter = FilterBuilders.incident(f -> f.errorTypes(ErrorType.RESOURCE_NOT_FOUND));
+    final var filter = FilterBuilders.incident(f -> f.errorTypeOperations(ErrorType.RESOURCE_NOT_FOUND));
 
     // when
     final var searchRequest = transformQuery(filter);

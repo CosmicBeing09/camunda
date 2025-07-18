@@ -146,12 +146,12 @@ public class IncidentIT {
                 b ->
                     b.filter(
                             f ->
-                                f.incidentKeys(original.incidentKey())
+                                f.incidentKeyOperations(original.incidentKey())
                                     .processInstanceKeys(original.processInstanceKey())
                                     .processDefinitionIds(original.processDefinitionId())
-                                    .processDefinitionKeys(original.processDefinitionKey())
+                                    .processDefinitionKeyOperations(original.processDefinitionKey())
                                     .states(original.state())
-                                    .errorTypes(original.errorType())
+                                    .errorTypeOperations(original.errorType())
                                     .errorMessages(original.errorMessage())
                                     .errorMessageHashes(original.errorMessageHash())
                                     .flowNodeInstanceKeys(original.flowNodeInstanceKey())
@@ -183,7 +183,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(processDefinitionKey))
+                    b.filter(f -> f.processDefinitionKeyOperations(processDefinitionKey))
                         .sort(sort)
                         .page(p -> p.from(0).size(20))));
 
@@ -192,7 +192,7 @@ public class IncidentIT {
         processInstanceReader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(processDefinitionKey))
+                    b.filter(f -> f.processDefinitionKeyOperations(processDefinitionKey))
                         .sort(sort)
                         .page(
                             p ->
@@ -256,7 +256,7 @@ public class IncidentIT {
         reader.search(
             IncidentQuery.of(
                 b ->
-                    b.filter(f -> f.processDefinitionKeys(definition.processDefinitionKey()))
+                    b.filter(f -> f.processDefinitionKeyOperations(definition.processDefinitionKey()))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(20))));
 

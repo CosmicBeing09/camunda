@@ -1115,16 +1115,16 @@ public final class SearchQueryRequestMapper {
     final var builder = FilterBuilders.incident();
 
     if (filter != null) {
-      ofNullable(filter.getIncidentKey()).map(KeyUtil::keyToLong).ifPresent(builder::incidentKeys);
+      ofNullable(filter.getIncidentKey()).map(KeyUtil::keyToLong).ifPresent(builder::incidentKeyOperations);
       ofNullable(filter.getProcessDefinitionKey())
           .map(KeyUtil::keyToLong)
-          .ifPresent(builder::processDefinitionKeys);
+          .ifPresent(builder::processDefinitionKeyOperations);
       ofNullable(filter.getProcessDefinitionId()).ifPresent(builder::processDefinitionIds);
       ofNullable(filter.getProcessInstanceKey())
           .map(KeyUtil::keyToLong)
           .ifPresent(builder::processInstanceKeys);
       ofNullable(filter.getErrorType())
-          .ifPresent(t -> builder.errorTypes(IncidentEntity.ErrorType.valueOf(t.getValue())));
+          .ifPresent(t -> builder.errorTypeOperations(IncidentEntity.ErrorType.valueOf(t.getValue())));
       ofNullable(filter.getErrorMessage()).ifPresent(builder::errorMessages);
       ofNullable(filter.getElementId()).ifPresent(builder::flowNodeIds);
       ofNullable(filter.getElementInstanceKey())
