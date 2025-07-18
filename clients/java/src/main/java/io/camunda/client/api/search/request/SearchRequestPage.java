@@ -24,8 +24,8 @@ public interface SearchRequestPage {
   SearchRequestPage limit(final Integer value);
 
   /** Get previous page before the set of values. */
-  SearchRequestPage searchBefore(final String values);
+  SearchRequestPage beforeCursor(final String values);
 
   /** Get next page after the set of values. */
-  SearchRequestPage searchAfter(final String values);
+  SearchRequestPage afterCursor(final String values);
 }

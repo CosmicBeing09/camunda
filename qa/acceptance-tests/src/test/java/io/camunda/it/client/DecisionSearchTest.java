@@ -492,7 +492,7 @@ class DecisionSearchTest {
     final var resultAfter =
         camundaClient
             .newDecisionRequirementsSearchRequest()
-            .page(p -> p.searchAfter(result.page().endCursor()))
+            .page(p -> p.afterCursor(result.page().endCursor()))
             .send()
             .join();
 
@@ -502,7 +502,7 @@ class DecisionSearchTest {
     final var resultBefore =
         camundaClient
             .newDecisionRequirementsSearchRequest()
-            .page(p -> p.searchBefore(resultAfter.page().startCursor()))
+            .page(p -> p.beforeCursor(resultAfter.page().startCursor()))
             .send()
             .join();
     assertThat(result.items().size()).isEqualTo(1);
