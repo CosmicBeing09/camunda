@@ -99,7 +99,7 @@ public abstract class RestControllerTest {
   public static Operation<Integer> toIntOperation(final Operation<Long> op) {
     return new Operation<>(
         op.operator(),
-        op.values() != null ? op.values().stream().map(Long::intValue).toList() : null);
+        op.operands() != null ? op.operands().stream().map(Long::intValue).toList() : null);
   }
 
   public static void integerOperationTestCases(
@@ -180,14 +180,14 @@ public abstract class RestControllerTest {
                           keyValueTpl.formatted(
                               "$in",
                               stringValues
-                                  ? op.values().stream().map(implicitTpl::formatted).toList()
-                                  : op.values());
+                                  ? op.operands().stream().map(implicitTpl::formatted).toList()
+                                  : op.operands());
                       case NOT_IN ->
                           keyValueTpl.formatted(
                               "$notIn",
                               stringValues
-                                  ? op.values().stream().map(implicitTpl::formatted).toList()
-                                  : op.values());
+                                  ? op.operands().stream().map(implicitTpl::formatted).toList()
+                                  : op.operands());
                       case LIKE -> explicitTpl.formatted("$like", op.value());
                     })
             .collect(Collectors.joining(","));

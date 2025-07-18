@@ -355,8 +355,8 @@ public final class SearchQueryBuilders {
               rangeQueryBuilder = buildRangeQuery(rangeQueryBuilder, field, b -> b.lt(op.value()));
           case LOWER_THAN_EQUALS ->
               rangeQueryBuilder = buildRangeQuery(rangeQueryBuilder, field, b -> b.lte(op.value()));
-          case IN -> queries.add(intTerms(field, op.values()));
-          case NOT_IN -> queries.add(mustNot(intTerms(field, op.values())));
+          case IN -> queries.add(intTerms(field, op.operands()));
+          case NOT_IN -> queries.add(mustNot(intTerms(field, op.operands())));
           default -> throw unexpectedOperation("Integer", op.operator());
         }
       }
@@ -392,8 +392,8 @@ public final class SearchQueryBuilders {
               rangeQueryBuilder = buildRangeQuery(rangeQueryBuilder, field, b -> b.lt(op.value()));
           case LOWER_THAN_EQUALS ->
               rangeQueryBuilder = buildRangeQuery(rangeQueryBuilder, field, b -> b.lte(op.value()));
-          case IN -> queries.add(longTerms(field, op.values()));
-          case NOT_IN -> queries.add(mustNot(longTerms(field, op.values())));
+          case IN -> queries.add(longTerms(field, op.operands()));
+          case NOT_IN -> queries.add(mustNot(longTerms(field, op.operands())));
           default -> throw unexpectedOperation("Long", op.operator());
         }
       }
@@ -421,8 +421,8 @@ public final class SearchQueryBuilders {
                   case NOT_EQUALS -> mustNot(term(field, op.value()));
                   case EXISTS -> exists(field);
                   case NOT_EXISTS -> mustNot(exists(field));
-                  case IN -> stringTerms(field, op.values());
-                  case NOT_IN -> mustNot(stringTerms(field, op.values()));
+                  case IN -> stringTerms(field, op.operands());
+                  case NOT_IN -> mustNot(stringTerms(field, op.operands()));
                   case LIKE -> wildcardQuery(field, op.value());
                   default -> throw unexpectedOperation("String", op.operator());
                 });
@@ -472,7 +472,7 @@ public final class SearchQueryBuilders {
                       hasChildQuery(
                           childType,
                           or(
-                              op.values().stream()
+                              op.operands().stream()
                                   .map(value -> match(field, value, matchQueryOperator))
                                   .toList()));
 

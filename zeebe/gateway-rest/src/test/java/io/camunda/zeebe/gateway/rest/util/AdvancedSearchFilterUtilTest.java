@@ -47,7 +47,7 @@ class AdvancedSearchFilterUtilTest {
         case IN ->
             method.invoke(
                 filter,
-                op.values().stream()
+                op.operands().stream()
                     .map(v -> AdvancedSearchFilterUtil.convertValue(pClass, v))
                     .toList());
         case EXISTS, NOT_EXISTS -> method.invoke(filter, operator.equals(Operator.EXISTS));

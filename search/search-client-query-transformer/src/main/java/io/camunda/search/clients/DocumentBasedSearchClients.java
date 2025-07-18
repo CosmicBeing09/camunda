@@ -301,7 +301,7 @@ public class DocumentBasedSearchClients implements SearchClientsProxy, Closeable
       if (op.operator().equals(Operator.EQUALS)) {
         processInstanceKeys.add(op.value());
       } else if (op.operator().equals(Operator.IN)) {
-        processInstanceKeys.addAll(op.values());
+        processInstanceKeys.addAll(op.operands());
       }
     }
     return fnResult.apply(processInstanceKeys);

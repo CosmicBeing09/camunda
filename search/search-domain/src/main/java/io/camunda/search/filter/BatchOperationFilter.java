@@ -17,29 +17,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationFilter(
-    List<Operation<String>> batchOperationIdOperations,
-    List<String> operationTypes,
-    List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationFilter> {
 
     private List<Operation<String>> batchOperationIdOperations;
     private List<String> operationTypes;
-    private List<String> state;
+    private List<String> states;
 
-    public Builder batchOperationIdOperations(final List<Operation<String>> operations) {
-      batchOperationIdOperations = addValuesToList(batchOperationIdOperations, operations);
+    public Builder batchOperationIdOperations(final List<Operation<String>> batchOperationIdOperations) {
+      this.batchOperationIdOperations = addValuesToList(this.batchOperationIdOperations,
+          batchOperationIdOperations);
       return this;
     }
 
-    public Builder batchOperationIds(final String value, final String... values) {
-      return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(value, values));
+    public Builder batchOperationIds(final String batchOperationId, final String... batchOperationIds) {
+      return batchOperationIdOperations(FilterUtil.mapDefaultToOperation(batchOperationId, batchOperationIds));
     }
 
-    public Builder replaceBatchOperationIdOperations(final List<Operation<String>> operations) {
-      batchOperationIdOperations = new ArrayList<>(operations);
+    public Builder replaceBatchOperationIdOperations(final List<Operation<String>> batchOperationIdOperations) {
+      this.batchOperationIdOperations = new ArrayList<>(batchOperationIdOperations);
       return this;
     }
 
@@ -49,21 +46,21 @@ public record BatchOperationFilter(
       return batchOperationIdOperations(collectValues(operation, operations));
     }
 
-    public Builder operationTypes(final String value, final String... values) {
-      return operationTypes(collectValues(value, values));
+    public Builder operationTypes(final String operationType, final String... operationTypes) {
+      return operationTypes(collectValues(operationType, operationTypes));
     }
 
-    public Builder operationTypes(final List<String> values) {
-      operationTypes = addValuesToList(operationTypes, values);
+    public Builder operationTypes(final List<String> operationTypes) {
+      this.operationTypes = addValuesToList(this.operationTypes, operationTypes);
       return this;
     }
 
-    public Builder state(final String value, final String... values) {
-      return state(collectValues(value, values));
+    public Builder state(final String stateValue, final String... states) {
+      return state(collectValues(stateValue, states));
     }
 
-    public Builder state(final List<String> values) {
-      state = addValuesToList(state, values);
+    public Builder state(final List<String> states) {
+      this.states = addValuesToList(this.states, states);
       return this;
     }
 
@@ -72,7 +69,12 @@ public record BatchOperationFilter(
       return new BatchOperationFilter(
           Objects.requireNonNullElse(batchOperationIdOperations, Collections.emptyList()),
           Objects.requireNonNullElse(operationTypes, Collections.emptyList()),
-          Objects.requireNonNullElse(state, Collections.emptyList()));
+          Objects.requireNonNullElse(states, Collections.emptyList()));
     }
   }
 }
+    implements
+public record BatchOperationFilter(
+    List<Operation<String>> batchOperationIdOperations,
+    List<String> operationTypes,
+    List<String> states)
