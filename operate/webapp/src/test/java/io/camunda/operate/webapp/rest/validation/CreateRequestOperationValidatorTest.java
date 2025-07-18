@@ -24,7 +24,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateRequestOperationValidatorTest {
-  private CreateRequestOperationValidator underTest;
+  private CreateRequestOperationValidator validator;
 
   @Mock private VariableReader mockVariableReader;
 
@@ -32,7 +32,7 @@ public class CreateRequestOperationValidatorTest {
 
   @BeforeEach
   public void setup() {
-    underTest = new CreateRequestOperationValidator(mockVariableReader, mockOperationReader);
+    validator = new CreateRequestOperationValidator(mockVariableReader, mockOperationReader);
   }
 
   @Test
@@ -41,7 +41,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage()).isEqualTo("Operation type must be defined.");
   }
@@ -57,7 +57,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -74,7 +74,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -91,7 +91,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -108,7 +108,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -123,7 +123,7 @@ public class CreateRequestOperationValidatorTest {
     request.setVariableName("var");
     request.setVariableValue("val");
 
-    assertDoesNotThrow(() -> underTest.validate(request, "123"));
+    assertDoesNotThrow(() -> validator.validate(request, "123"));
   }
 
   @Test
@@ -137,7 +137,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -154,7 +154,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -171,7 +171,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -188,7 +188,7 @@ public class CreateRequestOperationValidatorTest {
 
     final InvalidRequestException exception =
         assertThrows(
-            InvalidRequestException.class, () -> underTest.validate(request, "123"));
+            InvalidRequestException.class, () -> validator.validate(request, "123"));
 
     assertThat(exception.getMessage())
         .isEqualTo("ScopeId, name and value must be defined for UPDATE_VARIABLE operation.");
@@ -203,6 +203,6 @@ public class CreateRequestOperationValidatorTest {
     request.setVariableName("var");
     request.setVariableValue("val");
 
-    assertDoesNotThrow(() -> underTest.validate(request, "123"));
+    assertDoesNotThrow(() -> validator.validate(request, "123"));
   }
 }
