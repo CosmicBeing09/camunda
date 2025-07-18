@@ -43,8 +43,8 @@ public record UserTaskFilter(
 
   public static final class Builder implements ObjectBuilder<UserTaskFilter> {
 
-    private List<Long> userTaskKeys;
-    private List<String> elementIds;
+    private List<Long> taskKeys;
+    private List<String> ids;
     private List<String> elementNames;
     private List<String> bpmnProcessIds;
     private List<Operation<String>> assigneeOperations;
@@ -69,7 +69,7 @@ public record UserTaskFilter(
     }
 
     public Builder userTaskKeys(final List<Long> values) {
-      userTaskKeys = addValuesToList(userTaskKeys, values);
+      taskKeys = addValuesToList(taskKeys, values);
       return this;
     }
 
@@ -78,7 +78,7 @@ public record UserTaskFilter(
     }
 
     public Builder elementIds(final List<String> values) {
-      elementIds = addValuesToList(elementIds, values);
+      ids = addValuesToList(ids, values);
       return this;
     }
 
@@ -267,8 +267,8 @@ public record UserTaskFilter(
     @Override
     public UserTaskFilter build() {
       return new UserTaskFilter(
-          Objects.requireNonNullElse(userTaskKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(elementIds, Collections.emptyList()),
+          Objects.requireNonNullElse(taskKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(ids, Collections.emptyList()),
           Objects.requireNonNullElse(elementNames, Collections.emptyList()),
           Objects.requireNonNullElse(bpmnProcessIds, Collections.emptyList()),
           Objects.requireNonNullElse(assigneeOperations, Collections.emptyList()),
