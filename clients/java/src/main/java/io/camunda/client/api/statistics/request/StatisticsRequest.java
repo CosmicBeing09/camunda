@@ -24,18 +24,18 @@ public interface StatisticsRequest<
   /**
    * Sets the filter to be included in the statistics request.
    *
-   * @param value the filter
+   * @param filter the filter
    * @return the builder for the statistics request
    */
-  SELF filter(final F value);
+  SELF filter(final F filter);
 
   /**
    * Provides a fluent builder to create a filter to be included in the statistics request.
    *
-   * @param fn consumer to create the filter
+   * @param configureFilter consumer to create the filter
    * @return the builder for the statistics request
    */
-  SELF filter(final Consumer<F> fn);
+  SELF filter(final Consumer<F> configureFilter);
 
   interface StatisticsRequestFilter {}
 }
