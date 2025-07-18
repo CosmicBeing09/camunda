@@ -128,7 +128,7 @@ public final class DbRoutingState implements MutableRoutingState {
 
   private void setBootstrappedAt(final int partitionCount, final long key) {
     partitionIdKey.wrapInt(partitionCount);
-    dbLong.wrapLong(key);
+    dbLong.setValue(key);
     if (bootstrappedAtColumnFamily.get(partitionIdKey) == null) {
       // do not override if it's already set
       bootstrappedAtColumnFamily.insert(partitionIdKey, dbLong);

@@ -75,7 +75,7 @@ public class DbAsyncRequestState implements MutableAsyncRequestState {
 
   @Override
   public Stream<AsyncRequest> findAllRequestsByScopeKey(final long scopeKey) {
-    this.scopeKey.wrapLong(scopeKey);
+    this.scopeKey.setValue(scopeKey);
 
     final var values = new ArrayList<AsyncRequestMetadataValue>();
     asyncRequestMetadataColumnFamily.whileEqualPrefix(
@@ -94,7 +94,7 @@ public class DbAsyncRequestState implements MutableAsyncRequestState {
     }
 
     public void setAll(final long scopeKey, final ValueType valueType) {
-      first().wrapLong(scopeKey);
+      first().setValue(scopeKey);
       second().wrapShort(valueType.value());
     }
 

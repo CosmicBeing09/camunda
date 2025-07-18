@@ -50,7 +50,7 @@ public final class DbCompositeKeyColumnFamilyTest {
   public void shouldUpsertValue() {
     // given
     firstKey.wrapString("foo");
-    secondKey.wrapLong(2);
+    secondKey.setValue(2);
     value.wrapString("baring");
 
     // when
@@ -228,7 +228,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     final var firstKey = new DbString();
     firstKey.wrapString("foo");
     final var secondKey = new DbLong();
-    secondKey.wrapLong(13);
+    secondKey.setValue(13);
     final var startAt = new DbCompositeKey<>(firstKey, secondKey);
 
     upsertKeyValuePair("foo", 12, "baring");
@@ -458,7 +458,7 @@ public final class DbCompositeKeyColumnFamilyTest {
 
     // when
     firstKey.wrapString("foo");
-    secondKey.wrapLong(3L);
+    secondKey.setValue(3L);
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
     final List<String> values = new ArrayList<>();
@@ -492,7 +492,7 @@ public final class DbCompositeKeyColumnFamilyTest {
 
     // when
     firstKey.wrapString("foo");
-    secondKey.wrapLong(3L);
+    secondKey.setValue(3L);
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
     final List<String> values = new ArrayList<>();
@@ -526,7 +526,7 @@ public final class DbCompositeKeyColumnFamilyTest {
 
     // when
     firstKey.wrapString("baz");
-    secondKey.wrapLong(1L);
+    secondKey.setValue(1L);
     final List<String> firstKeyParts = new ArrayList<>();
     final List<Long> secondKeyParts = new ArrayList<>();
     final List<String> values = new ArrayList<>();
@@ -602,7 +602,7 @@ public final class DbCompositeKeyColumnFamilyTest {
     upsertKeyValuePair("might", 37426, "be good");
 
     firstKey.wrapString("foo");
-    secondKey.wrapLong(14L);
+    secondKey.setValue(14L);
     columnFamily.deleteExisting(compositeKey);
 
     // when
@@ -615,7 +615,7 @@ public final class DbCompositeKeyColumnFamilyTest {
 
   private void upsertKeyValuePair(final String firstKey, final long secondKey, final String value) {
     this.firstKey.wrapString(firstKey);
-    this.secondKey.wrapLong(secondKey);
+    this.secondKey.setValue(secondKey);
 
     this.value.wrapString(value);
     columnFamily.upsert(compositeKey, this.value);

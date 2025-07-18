@@ -18,10 +18,6 @@ public final class DbLong implements DbKey, DbValue {
 
   private long longValue;
 
-  public void wrapLong(final long value) {
-    longValue = value;
-  }
-
   @Override
   public void wrap(final DirectBuffer buffer, final int offset, final int length) {
     longValue = buffer.getLong(offset, ZB_DB_BYTE_ORDER);
@@ -39,6 +35,10 @@ public final class DbLong implements DbKey, DbValue {
 
   public long getValue() {
     return longValue;
+  }
+
+  public void setValue(final long value) {
+    longValue = value;
   }
 
   @Override

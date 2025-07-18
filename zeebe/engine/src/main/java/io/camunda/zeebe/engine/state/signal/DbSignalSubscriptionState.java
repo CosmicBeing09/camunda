@@ -114,14 +114,14 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
   @Override
   public void visitStartEventSubscriptionsByProcessDefinitionKey(
       final long processDefinitionKey, final SignalSubscriptionVisitor visitor) {
-    subscriptionKey.wrapLong(processDefinitionKey);
+    subscriptionKey.setValue(processDefinitionKey);
     visitSubscriptions(visitor);
   }
 
   @Override
   public void visitByElementInstanceKey(
       final long elementInstanceKey, final SignalSubscriptionVisitor visitor) {
-    subscriptionKey.wrapLong(elementInstanceKey);
+    subscriptionKey.setValue(elementInstanceKey);
     visitSubscriptions(visitor);
   }
 
@@ -147,7 +147,7 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
 
   private void wrapSubscriptionKeys(
       final long key, final DirectBuffer signalName, final String tenantId) {
-    subscriptionKey.wrapLong(key);
+    subscriptionKey.setValue(key);
     this.signalName.wrapBuffer(signalName);
     tenantIdKey.wrapString(tenantId);
   }

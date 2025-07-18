@@ -22,8 +22,8 @@ import java.util.Map;
 
 public class DbUsageMetricState implements MutableUsageMetricState {
 
-  private final ColumnFamily<DbCompositeKey<DbLong, DbLong>, DbString> rPIColumnFamily;
-  private final DbCompositeKey<DbLong, DbLong> eventTimePiKey;
+  private final ColumnFamily<DbCompositeKey<DbLong, DbLong>, DbString> usageMetricsCf;
+  private final DbCompositeKey<DbLong, DbLong> timeInstanceKey;
   private final DbLong eventTimeKey;
   private final DbLong piKey;
   private final DbString tenantIdVal;
@@ -34,18 +34,18 @@ public class DbUsageMetricState implements MutableUsageMetricState {
     eventTimeKey = new DbLong();
     piKey = new DbLong();
     tenantIdVal = new DbString();
-    eventTimePiKey = new DbCompositeKey<>(eventTimeKey, piKey);
+    timeInstanceKey = new DbCompositeKey<>(eventTimeKey, piKey);
 
-    rPIColumnFamily =
+    usageMetricsCf =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.RPI_USAGE_METRICS, transactionContext, eventTimePiKey, tenantIdVal);
+            ZbColumnFamilies.RPI_USAGE_METRICS, transactionContext, timeInstanceKey, tenantIdVal);
   }
 
   @Override
   public Map<String, List<Long>> getBuckets(final long eventTime) {
     final var tenantIdPIsMap = new HashMap<String, List<Long>>();
-    eventTimeKey.wrapLong(eventTime);
-    rPIColumnFamily.whileEqualPrefix(
+    eventTimeKey.setValue(eventTime);
+    usageMetricsCf.whileEqualPrefix(
         eventTimeKey,
         (eventTimePiKey, tenantIdVal) -> {
           tenantIdPIsMap
@@ -58,19 +58,19 @@ public class DbUsageMetricState implements MutableUsageMetricState {
   @Override
   public void createRPIMetric(
       final long eventTime, final long processInstanceKey, final String tenantId) {
-    eventTimeKey.wrapLong(eventTime);
-    piKey.wrapLong(processInstanceKey);
+    eventTimeKey.setValue(eventTime);
+    piKey.setValue(processInstanceKey);
     tenantIdVal.wrapString(tenantId);
-    rPIColumnFamily.insert(eventTimePiKey, tenantIdVal);
+    usageMetricsCf.insert(timeInstanceKey, tenantIdVal);
   }
 
   @Override
   public void deleteByEventTime(final long eventTime) {
-    eventTimeKey.wrapLong(eventTime);
-    rPIColumnFamily.whileEqualPrefix(
+    eventTimeKey.setValue(eventTime);
+    usageMetricsCf.whileEqualPrefix(
         eventTimeKey,
         (eventTimePiKey, tenantIdVal) -> {
-          rPIColumnFamily.deleteExisting(eventTimePiKey);
+          usageMetricsCf.deleteExisting(eventTimePiKey);
         });
   }
 }

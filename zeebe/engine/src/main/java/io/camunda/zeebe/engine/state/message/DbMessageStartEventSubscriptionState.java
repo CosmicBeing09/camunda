@@ -76,7 +76,7 @@ public final class DbMessageStartEventSubscriptionState
 
     tenantIdKey.wrapString(subscription.getTenantId());
     messageName.wrapBuffer(subscription.getMessageNameBuffer());
-    processDefinitionKey.wrapLong(subscription.getProcessDefinitionKey());
+    processDefinitionKey.setValue(subscription.getProcessDefinitionKey());
     subscriptionsColumnFamily.upsert(
         messageNameAndProcessDefinitionKey, messageStartEventSubscription);
     subscriptionsOfProcessDefinitionKeyColumnFamily.upsert(
@@ -87,7 +87,7 @@ public final class DbMessageStartEventSubscriptionState
   public void remove(
       final long processDefinitionKey, final DirectBuffer messageName, final String tenantId) {
     tenantIdKey.wrapString(tenantId);
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
     this.messageName.wrapBuffer(messageName);
 
     subscriptionsColumnFamily.deleteExisting(messageNameAndProcessDefinitionKey);
@@ -99,7 +99,7 @@ public final class DbMessageStartEventSubscriptionState
   public boolean exists(final MessageStartEventSubscriptionRecord subscription) {
     tenantIdKey.wrapString(subscription.getTenantId());
     messageName.wrapBuffer(subscription.getMessageNameBuffer());
-    processDefinitionKey.wrapLong(subscription.getProcessDefinitionKey());
+    processDefinitionKey.setValue(subscription.getProcessDefinitionKey());
 
     return subscriptionsColumnFamily.exists(messageNameAndProcessDefinitionKey);
   }
@@ -122,7 +122,7 @@ public final class DbMessageStartEventSubscriptionState
   @Override
   public void visitSubscriptionsByProcessDefinition(
       final long processDefinitionKey, final MessageStartEventSubscriptionVisitor visitor) {
-    this.processDefinitionKey.wrapLong(processDefinitionKey);
+    this.processDefinitionKey.setValue(processDefinitionKey);
 
     subscriptionsOfProcessDefinitionKeyColumnFamily.whileEqualPrefix(
         this.processDefinitionKey,
