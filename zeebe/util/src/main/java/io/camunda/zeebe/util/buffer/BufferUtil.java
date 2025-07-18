@@ -41,8 +41,8 @@ public final class BufferUtil {
     return new String(bytes, StandardCharsets.UTF_8);
   }
 
-  public static DirectBuffer wrapString(final String argument) {
-    return new UnsafeBuffer(getBytes(argument));
+  public static DirectBuffer wrapString(final String inputString) {
+    return new UnsafeBuffer(getBytes(inputString));
   }
 
   /** Compare the given buffers. */
@@ -77,11 +77,11 @@ public final class BufferUtil {
    * buffer.
    *
    * @param source the buffer to copy from
-   * @param dest the buffer to write to
+   * @param destinationReader the buffer to write to
    */
-  public static void copy(final BufferWriter source, final BufferReader dest) {
+  public static void copy(final BufferWriter source, final BufferReader destinationReader) {
     final var buffer = createCopy(source);
-    dest.wrap(buffer, 0, buffer.capacity());
+    destinationReader.wrap(buffer, 0, buffer.capacity());
   }
 
   /**

@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ObjectValue extends BaseValue {
-  private final List<BaseProperty<? extends BaseValue>> declaredProperties;
-  private final List<UndeclaredProperty> undeclaredProperties = new ArrayList<>(0);
+  private final List<BaseProperty<? extends BaseValue>> declaredPropertiesList;
+  private final List<UndeclaredProperty> dynamicProperties = new ArrayList<>(0);
   private final List<UndeclaredProperty> recycledProperties = new ArrayList<>(0);
 
   private final StringValue decodedKey = new StringValue();
@@ -29,23 +29,23 @@ public class ObjectValue extends BaseValue {
    *     the correct number helps to avoid allocations and memory copies.
    */
   public ObjectValue(final int expectedDeclaredProperties) {
-    declaredProperties = new ArrayList<>(expectedDeclaredProperties);
+    declaredPropertiesList = new ArrayList<>(expectedDeclaredProperties);
   }
 
   public ObjectValue declareProperty(final BaseProperty<? extends BaseValue> prop) {
-    declaredProperties.add(prop);
+    declaredPropertiesList.add(prop);
     return this;
   }
 
   @Override
   public void reset() {
-    for (int i = 0; i < declaredProperties.size(); ++i) {
-      final BaseProperty<? extends BaseValue> prop = declaredProperties.get(i);
+    for (int i = 0; i < declaredPropertiesList.size(); ++i) {
+      final BaseProperty<? extends BaseValue> prop = declaredPropertiesList.get(i);
       prop.reset();
     }
 
-    for (int i = undeclaredProperties.size() - 1; i >= 0; --i) {
-      final UndeclaredProperty undeclaredProperty = undeclaredProperties.remove(i);
+    for (int i = dynamicProperties.size() - 1; i >= 0; --i) {
+      final UndeclaredProperty undeclaredProperty = dynamicProperties.remove(i);
       undeclaredProperty.reset();
       recycledProperties.add(undeclaredProperty);
     }
@@ -63,7 +63,7 @@ public class ObjectValue extends BaseValue {
     }
 
     prop.getKey().wrap(key);
-    undeclaredProperties.add(prop);
+    dynamicProperties.add(prop);
 
     return prop;
   }
@@ -72,8 +72,8 @@ public class ObjectValue extends BaseValue {
   public void writeJSON(final StringBuilder builder) {
     builder.append("{");
 
-    writeJson(builder, declaredProperties);
-    writeJson(builder, undeclaredProperties);
+    writeJson(builder, declaredPropertiesList);
+    writeJson(builder, dynamicProperties);
 
     builder.append("}");
   }
@@ -86,11 +86,11 @@ public class ObjectValue extends BaseValue {
    */
   @Override
   public void write(final MsgPackWriter writer) {
-    final int size = declaredProperties.size() + undeclaredProperties.size();
+    final int size = declaredPropertiesList.size() + dynamicProperties.size();
 
     writer.writeMapHeader(size);
-    write(writer, declaredProperties);
-    write(writer, undeclaredProperties);
+    write(writer, declaredPropertiesList);
+    write(writer, dynamicProperties);
   }
 
   @Override
@@ -102,8 +102,8 @@ public class ObjectValue extends BaseValue {
 
       BaseProperty<? extends BaseValue> prop = null;
 
-      for (int k = 0; k < declaredProperties.size(); ++k) {
-        final BaseProperty<?> declaredProperty = declaredProperties.get(k);
+      for (int k = 0; k < declaredPropertiesList.size(); ++k) {
+        final BaseProperty<?> declaredProperty = declaredPropertiesList.get(k);
         final StringValue declaredKey = declaredProperty.getKey();
 
         if (declaredKey.equals(decodedKey)) {
@@ -124,8 +124,8 @@ public class ObjectValue extends BaseValue {
     }
 
     // verify that all required properties are set
-    for (int p = 0; p < declaredProperties.size(); p++) {
-      final BaseProperty<?> prop = declaredProperties.get(p);
+    for (int p = 0; p < declaredPropertiesList.size(); p++) {
+      final BaseProperty<?> prop = declaredPropertiesList.get(p);
       if (!prop.hasValue()) {
         throw new RuntimeException(
             String.format("Property '%s' has no valid value", prop.getKey()));
@@ -135,11 +135,11 @@ public class ObjectValue extends BaseValue {
 
   @Override
   public int getEncodedLength() {
-    final int size = declaredProperties.size() + undeclaredProperties.size();
+    final int size = declaredPropertiesList.size() + dynamicProperties.size();
 
     int length = MsgPackWriter.getEncodedMapHeaderLenght(size);
-    length += getEncodedLength(declaredProperties);
-    length += getEncodedLength(undeclaredProperties);
+    length += getEncodedLength(declaredPropertiesList);
+    length += getEncodedLength(dynamicProperties);
 
     return length;
   }
@@ -173,7 +173,7 @@ public class ObjectValue extends BaseValue {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(declaredProperties, undeclaredProperties, recycledProperties);
+    return Objects.hash(declaredPropertiesList, dynamicProperties, recycledProperties);
   }
 
   /**
@@ -191,8 +191,8 @@ public class ObjectValue extends BaseValue {
     }
 
     final ObjectValue that = (ObjectValue) o;
-    return Objects.equals(declaredProperties, that.declaredProperties)
-        && Objects.equals(undeclaredProperties, that.undeclaredProperties)
+    return Objects.equals(declaredPropertiesList, that.declaredPropertiesList)
+        && Objects.equals(dynamicProperties, that.dynamicProperties)
         && Objects.equals(recycledProperties, that.recycledProperties);
   }
 
@@ -206,6 +206,6 @@ public class ObjectValue extends BaseValue {
   }
 
   public boolean isEmpty() {
-    return declaredProperties.isEmpty() && undeclaredProperties.isEmpty();
+    return declaredPropertiesList.isEmpty() && dynamicProperties.isEmpty();
   }
 }

@@ -26,8 +26,8 @@ public class DbUserTaskState implements MutableUserTaskState {
   // key => user task record value
   // we need two separate wrapper to not interfere with get and put
   // see https://github.com/zeebe-io/zeebe/issues/1914
-  private final UserTaskRecordValue userTaskRecordToRead = new UserTaskRecordValue();
-  private final UserTaskRecordValue userTaskRecordToWrite = new UserTaskRecordValue();
+  private final UserTaskRecordValue userTaskReadBuffer = new UserTaskRecordValue();
+  private final UserTaskRecordValue userTaskWriteBuffer = new UserTaskRecordValue();
 
   private final DbLong userTaskKey;
 
@@ -67,7 +67,7 @@ public class DbUserTaskState implements MutableUserTaskState {
 
     userTasksColumnFamily =
         zeebeDb.createColumnFamily(
-            ZbColumnFamilies.USER_TASKS, transactionContext, userTaskKey, userTaskRecordToRead);
+            ZbColumnFamilies.USER_TASKS, transactionContext, userTaskKey, userTaskReadBuffer);
 
     statesUserTaskColumnFamily =
         zeebeDb.createColumnFamily(
@@ -99,8 +99,8 @@ public class DbUserTaskState implements MutableUserTaskState {
   public void create(final UserTaskRecord userTask) {
     userTaskKey.wrapLong(userTask.getUserTaskKey());
     // do not persist variables in user task state
-    userTaskRecordToWrite.setRecordWithoutVariables(userTask);
-    userTasksColumnFamily.insert(userTaskKey, userTaskRecordToWrite);
+    userTaskWriteBuffer.setRecordWithoutVariables(userTask);
+    userTasksColumnFamily.insert(userTaskKey, userTaskWriteBuffer);
     // initialize state
     userTaskState.setLifecycleState(LifecycleState.CREATING);
     statesUserTaskColumnFamily.insert(fkUserTask, userTaskState);
@@ -110,8 +110,8 @@ public class DbUserTaskState implements MutableUserTaskState {
   public void update(final UserTaskRecord userTask) {
     userTaskKey.wrapLong(userTask.getUserTaskKey());
     // do not persist variables in user task state
-    userTaskRecordToWrite.setRecordWithoutVariables(userTask);
-    userTasksColumnFamily.update(userTaskKey, userTaskRecordToWrite);
+    userTaskWriteBuffer.setRecordWithoutVariables(userTask);
+    userTasksColumnFamily.update(userTaskKey, userTaskWriteBuffer);
   }
 
   @Override

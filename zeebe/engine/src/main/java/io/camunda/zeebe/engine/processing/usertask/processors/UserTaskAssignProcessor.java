@@ -24,12 +24,12 @@ import java.util.List;
 
 public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
 
-  private static final String DEFAULT_ACTION = "assign";
+  private static final String DEFAULT_ASSIGN_ACTION = "assign";
 
   private final UserTaskState userTaskState;
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
-  private final UserTaskCommandPreconditionChecker preconditionChecker;
+  private final UserTaskCommandPreconditionChecker assignPreconditionChecker;
 
   public UserTaskAssignProcessor(
       final ProcessingState state,
@@ -38,7 +38,7 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
     userTaskState = state.getUserTaskState();
     stateWriter = writers.state();
     responseWriter = writers.response();
-    preconditionChecker =
+    assignPreconditionChecker =
         new UserTaskCommandPreconditionChecker(
             List.of(LifecycleState.CREATED), "assign", state.getUserTaskState(), authCheckBehavior);
   }
@@ -46,7 +46,7 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
   @Override
   public Either<Rejection, UserTaskRecord> validateCommand(
       final TypedRecord<UserTaskRecord> command) {
-    return preconditionChecker.check(command);
+    return assignPreconditionChecker.check(command);
   }
 
   @Override
@@ -59,7 +59,7 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
       userTaskRecord.setAssignee(newAssignee);
       userTaskRecord.setAssigneeChanged();
     }
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ASSIGN_ACTION));
 
     stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
   }

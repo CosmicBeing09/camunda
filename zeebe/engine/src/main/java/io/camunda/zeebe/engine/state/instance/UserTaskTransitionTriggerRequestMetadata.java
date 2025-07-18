@@ -49,16 +49,16 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
   private final EnumProperty<ValueType> triggerTypeProperty =
       new EnumProperty<>("triggerType", ValueType.class);
   private final StringProperty intentProperty = new StringProperty("intent");
-  private final LongProperty requestIdProperty = new LongProperty("requestId", -1);
-  private final IntegerProperty requestStreamIdProperty =
+  private final LongProperty originalRequestIdProperty = new LongProperty("requestId", -1);
+  private final IntegerProperty originalRequestStreamIdProperty =
       new IntegerProperty("requestStreamId", -1);
 
   public UserTaskTransitionTriggerRequestMetadata() {
     super(4);
     declareProperty(triggerTypeProperty)
         .declareProperty(intentProperty)
-        .declareProperty(requestIdProperty)
-        .declareProperty(requestStreamIdProperty);
+        .declareProperty(originalRequestIdProperty)
+        .declareProperty(originalRequestStreamIdProperty);
   }
 
   /**
@@ -73,11 +73,11 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
   /**
    * Sets the type of request that triggered the user task transition.
    *
-   * @param triggerType The trigger type (`USER_TASK` or `VARIABLE_DOCUMENT`).
+   * @param valueType The trigger type (`USER_TASK` or `VARIABLE_DOCUMENT`).
    * @return this metadata instance.
    */
-  public UserTaskTransitionTriggerRequestMetadata setTriggerType(final ValueType triggerType) {
-    triggerTypeProperty.setValue(triggerType);
+  public UserTaskTransitionTriggerRequestMetadata setTriggerType(final ValueType valueType) {
+    triggerTypeProperty.setValue(valueType);
     return this;
   }
 
@@ -108,7 +108,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The request ID.
    */
   public long getRequestId() {
-    return requestIdProperty.getValue();
+    return originalRequestIdProperty.getValue();
   }
 
   /**
@@ -118,7 +118,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setRequestId(final long requestId) {
-    requestIdProperty.setValue(requestId);
+    originalRequestIdProperty.setValue(requestId);
     return this;
   }
 
@@ -128,7 +128,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return The request stream ID.
    */
   public int getRequestStreamId() {
-    return requestStreamIdProperty.getValue();
+    return originalRequestStreamIdProperty.getValue();
   }
 
   /**
@@ -138,7 +138,7 @@ public class UserTaskTransitionTriggerRequestMetadata extends UnpackedObject imp
    * @return this metadata instance.
    */
   public UserTaskTransitionTriggerRequestMetadata setRequestStreamId(final int requestStreamId) {
-    requestStreamIdProperty.setValue(requestStreamId);
+    originalRequestStreamIdProperty.setValue(requestStreamId);
     return this;
   }
 }
