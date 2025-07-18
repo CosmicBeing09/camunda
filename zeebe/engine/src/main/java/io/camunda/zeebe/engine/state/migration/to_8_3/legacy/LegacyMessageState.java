@@ -194,7 +194,7 @@ public final class LegacyMessageState {
   }
 
   public void put(final long key, final MessageRecord record) {
-    messageKey.wrapLong(key);
+    messageKey.recordValue(key);
     message.setMessageKey(key).setMessage(record);
     messageColumnFamily.insert(messageKey, message);
 
@@ -202,11 +202,11 @@ public final class LegacyMessageState {
     correlationKey.wrapBuffer(record.getCorrelationKeyBuffer());
     nameCorrelationMessageColumnFamily.insert(nameCorrelationMessageKey, DbNil.INSTANCE);
 
-    deadline.wrapLong(record.getDeadline());
+    deadline.recordValue(record.getDeadline());
     deadlineColumnFamily.insert(deadlineMessageKey, DbNil.INSTANCE);
 
     localMessageDeadlineCount += 1L;
-    messagesDeadlineCount.wrapLong(localMessageDeadlineCount);
+    messagesDeadlineCount.recordValue(localMessageDeadlineCount);
     messagesDeadlineCountColumnFamily.upsert(messagesDeadlineCountKey, messagesDeadlineCount);
     bufferedMessagesMetrics.setBufferedMessagesCounter(localMessageDeadlineCount);
 

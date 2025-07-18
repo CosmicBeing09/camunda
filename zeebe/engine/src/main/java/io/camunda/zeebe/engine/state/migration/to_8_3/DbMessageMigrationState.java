@@ -50,7 +50,7 @@ public class DbMessageMigrationState {
         (key, value) -> {
           to.messageName.wrapBuffer(key.first().first().getBuffer());
           to.correlationKey.wrapBuffer(key.first().second().getBuffer());
-          to.messageKey.wrapLong(key.second().inner().getValue());
+          to.messageKey.recordValue(key.second().inner().getValue());
           to.nameCorrelationMessageColumnFamily.insert(
               to.nameCorrelationMessageKey, DbNil.INSTANCE);
         });

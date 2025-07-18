@@ -35,8 +35,8 @@ final class MemoryBoundedColumnIterationTest {
     LongStream.range(0, 100)
         .forEach(
             i -> {
-              key.wrapLong(i);
-              value.wrapLong(i);
+              key.recordValue(i);
+              value.recordValue(i);
               column.upsert(key, value);
               expected.put(i, i);
             });
@@ -62,8 +62,8 @@ final class MemoryBoundedColumnIterationTest {
     LongStream.range(0, 100)
         .forEach(
             i -> {
-              key.wrapLong(i);
-              value.wrapLong(i);
+              key.recordValue(i);
+              value.recordValue(i);
               column.upsert(key, value);
             });
     final var spiedColumn = Mockito.spy(column);

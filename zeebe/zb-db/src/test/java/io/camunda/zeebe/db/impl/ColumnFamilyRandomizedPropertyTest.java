@@ -95,7 +95,7 @@ public class ColumnFamilyRandomizedPropertyTest {
     map.forEach(
         (key, value) -> {
           final var dbKey = new DbLong();
-          dbKey.wrapLong(key);
+          dbKey.recordValue(key);
           assertThat(columnFamily.get(dbKey))
               .as("Key " + dbKey.getValue() + " should exist ")
               .isNotNull()
@@ -184,8 +184,8 @@ public class ColumnFamilyRandomizedPropertyTest {
     default void apply(final ColumnFamily<DbLong, DbLong> columnFamily) {
       final var dbKey = new DbLong();
       final var dbValue = new DbLong();
-      dbKey.wrapLong(key());
-      dbValue.wrapLong(value());
+      dbKey.recordValue(key());
+      dbValue.recordValue(value());
       try {
         modify(columnFamily).accept(dbKey, dbValue);
       } catch (final RuntimeException e) {

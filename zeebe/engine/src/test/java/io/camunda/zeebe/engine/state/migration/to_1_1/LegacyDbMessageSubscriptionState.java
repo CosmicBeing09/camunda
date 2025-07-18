@@ -84,12 +84,12 @@ final class LegacyDbMessageSubscriptionState {
   public LegacyMessageSubscription get(
       final long elementInstanceKey, final DirectBuffer messageName) {
     this.messageName.wrapBuffer(messageName);
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
     return subscriptionColumnFamily.get(elementKeyAndMessageName);
   }
 
   public void put(final long key, final MessageSubscriptionRecord record) {
-    elementInstanceKey.wrapLong(record.getElementInstanceKey());
+    elementInstanceKey.recordValue(record.getElementInstanceKey());
     messageName.wrapBuffer(record.getMessageNameBuffer());
 
     messageSubscription.setKey(key).setRecord(record).setCommandSentTime(0);
@@ -135,7 +135,7 @@ final class LegacyDbMessageSubscriptionState {
 
   public void updateSentTime(final LegacyMessageSubscription subscription, final long sentTime) {
     final var record = subscription.getRecord();
-    elementInstanceKey.wrapLong(record.getElementInstanceKey());
+    elementInstanceKey.recordValue(record.getElementInstanceKey());
     messageName.wrapBuffer(record.getMessageNameBuffer());
 
     removeSubscriptionFromSentTimeColumnFamily(subscription);
@@ -144,21 +144,21 @@ final class LegacyDbMessageSubscriptionState {
     subscriptionColumnFamily.upsert(elementKeyAndMessageName, subscription);
 
     if (sentTime > 0) {
-      this.sentTime.wrapLong(subscription.getCommandSentTime());
+      this.sentTime.recordValue(subscription.getCommandSentTime());
       sentTimeColumnFamily.upsert(sentTimeCompositeKey, DbNil.INSTANCE);
     }
   }
 
   public boolean existSubscriptionForElementInstance(
       final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
     this.messageName.wrapBuffer(messageName);
 
     return subscriptionColumnFamily.exists(elementKeyAndMessageName);
   }
 
   public boolean remove(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
     this.messageName.wrapBuffer(messageName);
 
     final LegacyMessageSubscription messageSubscription =
@@ -185,7 +185,7 @@ final class LegacyDbMessageSubscriptionState {
   private void removeSubscriptionFromSentTimeColumnFamily(
       final LegacyMessageSubscription subscription) {
     if (subscription.getCommandSentTime() > 0) {
-      sentTime.wrapLong(subscription.getCommandSentTime());
+      sentTime.recordValue(subscription.getCommandSentTime());
       sentTimeColumnFamily.deleteIfExists(sentTimeCompositeKey);
     }
   }

@@ -79,7 +79,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
 
   @Override
   public void create(final long authorizationKey, final AuthorizationRecord authorization) {
-    this.authorizationKey.wrapLong(authorizationKey);
+    this.authorizationKey.recordValue(authorizationKey);
     persistedAuthorization.wrap(authorization);
     authorizationByAuthorizationKeyColumnFamily.insert(
         this.authorizationKey, persistedAuthorization);
@@ -119,7 +119,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
 
   @Override
   public void delete(final long authorizationKey) {
-    this.authorizationKey.wrapLong(authorizationKey);
+    this.authorizationKey.recordValue(authorizationKey);
     final var persistedAuthorization =
         authorizationByAuthorizationKeyColumnFamily.get(this.authorizationKey);
 
@@ -149,7 +149,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
 
   @Override
   public Optional<PersistedAuthorization> get(final long authorizationKey) {
-    this.authorizationKey.wrapLong(authorizationKey);
+    this.authorizationKey.recordValue(authorizationKey);
     final var persistedAuthorization =
         authorizationByAuthorizationKeyColumnFamily.get(this.authorizationKey);
     return Optional.ofNullable(persistedAuthorization);

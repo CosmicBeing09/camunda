@@ -47,7 +47,7 @@ public class DbSignalSubscriptionMigrationState {
               final var signalName = key.first().getBuffer();
 
               to.signalName.wrapBuffer(signalName);
-              to.subscriptionKey.wrapLong(subscriptionKey);
+              to.subscriptionKey.recordValue(subscriptionKey);
 
               to.signalNameAndSubscriptionKeyColumnFamily.insert(
                   to.tenantAwareSignalNameAndSubscriptionKey, value);
@@ -61,7 +61,7 @@ public class DbSignalSubscriptionMigrationState {
               final var subscriptionKey = key.first().getValue();
               final var signalName = key.second().getBuffer();
 
-              to.subscriptionKey.wrapLong(subscriptionKey);
+              to.subscriptionKey.recordValue(subscriptionKey);
               to.signalName.wrapBuffer(signalName);
 
               to.subscriptionKeyAndSignalNameColumnFamily.insert(

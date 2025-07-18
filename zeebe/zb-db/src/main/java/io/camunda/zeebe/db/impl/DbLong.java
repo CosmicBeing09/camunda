@@ -16,15 +16,15 @@ import org.agrona.MutableDirectBuffer;
 
 public final class DbLong implements DbKey, DbValue {
 
-  private long longValue;
+  private long value;
 
-  public void wrapLong(final long value) {
-    longValue = value;
+  public void recordValue(final long value) {
+    this.value = value;
   }
 
   @Override
   public void wrap(final DirectBuffer buffer, final int offset, final int length) {
-    longValue = buffer.getLong(offset, ZB_DB_BYTE_ORDER);
+    value = buffer.getLong(offset, ZB_DB_BYTE_ORDER);
   }
 
   @Override
@@ -34,15 +34,15 @@ public final class DbLong implements DbKey, DbValue {
 
   @Override
   public void write(final MutableDirectBuffer buffer, final int offset) {
-    buffer.putLong(offset, longValue, ZB_DB_BYTE_ORDER);
+    buffer.putLong(offset, value, ZB_DB_BYTE_ORDER);
   }
 
   public long getValue() {
-    return longValue;
+    return value;
   }
 
   @Override
   public String toString() {
-    return "DbLong{" + longValue + '}';
+    return "DbLong{" + value + '}';
   }
 }

@@ -54,7 +54,7 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
       final Collection<DirectBuffer> boundaryElementIds) {
     eventScopeInstance.reset();
 
-    this.eventScopeKey.wrapLong(eventScopeKey);
+    this.eventScopeKey.recordValue(eventScopeKey);
     eventScopeInstance.setAccepting(true);
     eventScopeInstance.setInterrupted(false);
 
@@ -70,20 +70,20 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
 
   @Override
   public void deleteInstance(final long eventScopeKey) {
-    eventTriggerScopeKey.wrapLong(eventScopeKey);
+    eventTriggerScopeKey.recordValue(eventScopeKey);
 
     eventTriggerColumnFamily.whileEqualPrefix(
         eventTriggerScopeKey,
         (BiConsumer<DbCompositeKey<DbLong, DbLong>, EventTrigger>)
             (key, value) -> deleteTrigger(key));
 
-    this.eventScopeKey.wrapLong(eventScopeKey);
+    this.eventScopeKey.recordValue(eventScopeKey);
     eventScopeInstanceColumnFamily.deleteIfExists(this.eventScopeKey);
   }
 
   @Override
   public EventTrigger pollEventTrigger(final long eventScopeKey) {
-    eventTriggerScopeKey.wrapLong(eventScopeKey);
+    eventTriggerScopeKey.recordValue(eventScopeKey);
     final EventTrigger[] next = new EventTrigger[1];
     eventTriggerColumnFamily.whileEqualPrefix(
         eventTriggerScopeKey,
@@ -103,7 +103,7 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
       final DirectBuffer elementId,
       final DirectBuffer variables,
       final long processInstanceKey) {
-    this.eventScopeKey.wrapLong(eventScopeKey);
+    this.eventScopeKey.recordValue(eventScopeKey);
     final EventScopeInstance instance = eventScopeInstanceColumnFamily.get(this.eventScopeKey);
 
     if (canTriggerEvent(instance, elementId)) {
@@ -135,21 +135,21 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
 
   @Override
   public void deleteTrigger(final long eventScopeKey, final long eventKey) {
-    eventTriggerScopeKey.wrapLong(eventScopeKey);
-    eventTriggerEventKey.wrapLong(eventKey);
+    eventTriggerScopeKey.recordValue(eventScopeKey);
+    eventTriggerEventKey.recordValue(eventKey);
     deleteTrigger(eventTriggerKey);
   }
 
   @Override
   public EventScopeInstance getInstance(final long eventScopeKey) {
-    this.eventScopeKey.wrapLong(eventScopeKey);
+    this.eventScopeKey.recordValue(eventScopeKey);
     final EventScopeInstance instance = eventScopeInstanceColumnFamily.get(this.eventScopeKey);
     return instance != null ? new EventScopeInstance(instance) : null;
   }
 
   @Override
   public EventTrigger peekEventTrigger(final long eventScopeKey) {
-    eventTriggerScopeKey.wrapLong(eventScopeKey);
+    eventTriggerScopeKey.recordValue(eventScopeKey);
     final EventTrigger[] next = new EventTrigger[1];
     eventTriggerColumnFamily.whileEqualPrefix(
         eventTriggerScopeKey,
@@ -163,7 +163,7 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
 
   @Override
   public boolean canTriggerEvent(final long eventScopeKey, final DirectBuffer elementId) {
-    this.eventScopeKey.wrapLong(eventScopeKey);
+    this.eventScopeKey.recordValue(eventScopeKey);
     final EventScopeInstance instance = eventScopeInstanceColumnFamily.get(this.eventScopeKey);
 
     return canTriggerEvent(instance, elementId);
@@ -187,8 +187,8 @@ public final class DbEventScopeInstanceState implements MutableEventScopeInstanc
       final DirectBuffer elementId,
       final DirectBuffer variables,
       final long processInstanceKey) {
-    eventTriggerScopeKey.wrapLong(eventScopeKey);
-    eventTriggerEventKey.wrapLong(eventKey);
+    eventTriggerScopeKey.recordValue(eventScopeKey);
+    eventTriggerEventKey.recordValue(eventKey);
 
     eventTrigger
         .setElementId(elementId)

@@ -49,13 +49,13 @@ public class LegacyDecisionState {
   }
 
   public void putDecision(final long key, final DecisionRecord decision) {
-    dbDecisionKey.wrapLong(key);
+    dbDecisionKey.recordValue(key);
     dbPersistedDecision.wrap(decision);
     decisionsByKeyColumnFamily.upsert(dbDecisionKey, dbPersistedDecision);
   }
 
   public void putDecisionRequirements(final long key, final DecisionRequirementsRecord drg) {
-    dbDecisionRequirementsKey.wrapLong(key);
+    dbDecisionRequirementsKey.recordValue(key);
     dbPersistedDecisionRequirements.wrap(drg);
     decisionRequirementsByKey.upsert(dbDecisionRequirementsKey, dbPersistedDecisionRequirements);
   }
