@@ -133,11 +133,11 @@ public final class ProcessInstanceClient {
     }
 
     public ProcessInstanceCreationClient withRuntimeSuspendInstruction(
-        final String afterElementId) {
+        final String elementAfterSuspension) {
       final var instruction =
           new ProcessInstanceCreationRuntimeInstruction()
               .setType(RuntimeInstructionType.SUSPEND_PROCESS_INSTANCE)
-              .setAfterElementId(afterElementId);
+              .setAfterElementId(elementAfterSuspension);
       processInstanceCreationRecord.addRuntimeInstruction(instruction);
       return this;
     }
@@ -152,7 +152,7 @@ public final class ProcessInstanceClient {
     }
 
     public long create(final AuthInfo authorizations) {
-      final long position =
+      final long sourceRecordPosition =
           writer.writeCommandOnPartition(
               partition,
               r ->
@@ -162,7 +162,7 @@ public final class ProcessInstanceClient {
                       .requestId(new Random().nextLong())
                       .requestStreamId(new Random().nextInt()));
 
-      final var resultingRecord = expectation.apply(position);
+      final var resultingRecord = expectation.apply(sourceRecordPosition);
       return resultingRecord.getValue().getProcessInstanceKey();
     }
 
