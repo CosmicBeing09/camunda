@@ -12,5 +12,5 @@ import java.util.Map;
 
 public interface UsageMetricState {
 
-  Map<String, List<Long>> getBuckets(final long metricKey);
+  Map<String, List<Long>> getUsageOverTime(final long metricKey);
 }

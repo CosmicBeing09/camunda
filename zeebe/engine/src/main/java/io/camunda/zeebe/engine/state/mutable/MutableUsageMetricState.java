@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.state.immutable.UsageMetricState;
 
 public interface MutableUsageMetricState extends UsageMetricState {
 
-  void createRPIMetric(final long eventTime, final long processInstanceKey, final String tenantId);
+  void recordMetric(final long eventTime, final long processInstanceKey, final String tenantId);
 
   void deleteByEventTime(final long eventTime);
 }

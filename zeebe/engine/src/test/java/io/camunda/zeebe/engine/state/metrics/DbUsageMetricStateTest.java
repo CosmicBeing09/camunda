@@ -37,10 +37,10 @@ public class DbUsageMetricStateTest {
     final var eventTime = InstantSource.system().millis();
 
     // when
-    state.createRPIMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordMetric(eventTime, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     // then
-    final var actual = state.getBuckets(eventTime);
+    final var actual = state.getUsageOverTime(eventTime);
     assertThat(actual)
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
@@ -52,14 +52,14 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.createRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.createRPIMetric(eventTime2, 10L, "tenant1");
-    state.createRPIMetric(eventTime2, 11L, "tenant1");
-    state.createRPIMetric(eventTime2, 12L, "tenant2");
+    state.recordMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordMetric(eventTime2, 10L, "tenant1");
+    state.recordMetric(eventTime2, 11L, "tenant1");
+    state.recordMetric(eventTime2, 12L, "tenant2");
 
     // when
-    final var actual1 = state.getBuckets(eventTime1);
-    final var actual2 = state.getBuckets(eventTime2);
+    final var actual1 = state.getUsageOverTime(eventTime1);
+    final var actual2 = state.getUsageOverTime(eventTime2);
 
     // then
     assertThat(actual1)
@@ -76,14 +76,14 @@ public class DbUsageMetricStateTest {
     final var eventTime1 = InstantSource.system().millis();
     final var eventTime2 =
         InstantSource.offset(InstantSource.system(), Duration.ofSeconds(10)).millis();
-    state.createRPIMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-    state.createRPIMetric(eventTime2, 10L, "tenant1");
-    state.createRPIMetric(eventTime2, 11L, "tenant1");
-    state.createRPIMetric(eventTime2, 12L, "tenant2");
-    assertThat(state.getBuckets(eventTime1))
+    state.recordMetric(eventTime1, 123L, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    state.recordMetric(eventTime2, 10L, "tenant1");
+    state.recordMetric(eventTime2, 11L, "tenant1");
+    state.recordMetric(eventTime2, 12L, "tenant2");
+    assertThat(state.getUsageOverTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getBuckets(eventTime2))
+    assertThat(state.getUsageOverTime(eventTime2))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of("tenant1", List.of(10L, 11L), "tenant2", List.of(12L)));
 
@@ -91,9 +91,9 @@ public class DbUsageMetricStateTest {
     state.deleteByEventTime(eventTime2);
 
     // then
-    assertThat(state.getBuckets(eventTime1))
+    assertThat(state.getUsageOverTime(eventTime1))
         .containsExactlyInAnyOrderEntriesOf(
             Map.of(TenantOwned.DEFAULT_TENANT_IDENTIFIER, List.of(123L)));
-    assertThat(state.getBuckets(eventTime2)).isEmpty();
+    assertThat(state.getUsageOverTime(eventTime2)).isEmpty();
   }
 }
