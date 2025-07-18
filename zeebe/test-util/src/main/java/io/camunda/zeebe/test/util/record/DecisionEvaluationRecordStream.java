@@ -50,6 +50,6 @@ public final class DecisionEvaluationRecordStream
   }
 
   public DecisionEvaluationRecordStream withTenantId(final String tenantId) {
-    return valueFilter(v -> tenantId.equals(v.getTenantId()));
+    return valueFilter(v -> tenantId.equals(v.getTenantIdentifier()));
   }
 }

@@ -32,23 +32,23 @@ public class DbTenantState implements MutableTenantState {
 
   @Override
   public void createTenant(final TenantRecord tenantRecord) {
-    tenantId.wrapString(tenantRecord.getTenantId());
+    tenantId.recordStringContent(tenantRecord.getTenantId());
     persistedTenant.from(tenantRecord);
-    tenantsColumnFamily.insert(tenantId, persistedTenant);
+    tenantsColumnFamily.recordEntry(tenantId, persistedTenant);
   }
 
   @Override
   public void updateTenant(final TenantRecord updatedTenantRecord) {
-    tenantId.wrapString(updatedTenantRecord.getTenantId());
+    tenantId.recordStringContent(updatedTenantRecord.getTenantId());
     final var persistedTenant = tenantsColumnFamily.get(tenantId);
     persistedTenant.setName(updatedTenantRecord.getName());
     persistedTenant.setDescription(updatedTenantRecord.getDescription());
-    tenantsColumnFamily.update(tenantId, persistedTenant);
+    tenantsColumnFamily.updateEntry(tenantId, persistedTenant);
   }
 
   @Override
   public void delete(final TenantRecord tenantRecord) {
-    tenantId.wrapString(tenantRecord.getTenantId());
+    tenantId.recordStringContent(tenantRecord.getTenantId());
     tenantsColumnFamily.deleteExisting(tenantId);
   }
 
@@ -59,7 +59,7 @@ public class DbTenantState implements MutableTenantState {
 
   @Override
   public Optional<PersistedTenant> getTenantById(final String tenantId) {
-    this.tenantId.wrapString(tenantId);
+    this.tenantId.recordStringContent(tenantId);
     final var persistedTenant = tenantsColumnFamily.get(this.tenantId);
     return Optional.ofNullable(persistedTenant);
   }

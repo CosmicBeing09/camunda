@@ -161,7 +161,7 @@ final class EventFromProcessMessageSubscriptionHandlerTest {
     assertThat(entity.getFlowNodeInstanceKey()).isEqualTo(elementInstanceKey);
     assertThat(entity.getFlowNodeId()).isEqualTo(elementId);
     assertThat(entity.getBpmnProcessId()).isEqualTo(bpmnProcessId);
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
     assertThat(entity.getPositionProcessMessageSubscription()).isEqualTo(position);
     assertThat(entity.getMetadata().getMessageName()).isEqualTo(messageName);
     assertThat(entity.getMetadata().getCorrelationKey()).isEqualTo(correlationKey);

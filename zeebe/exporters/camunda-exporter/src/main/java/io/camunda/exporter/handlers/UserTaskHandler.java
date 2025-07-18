@@ -216,7 +216,7 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
         .setCustomHeaders(record.getValue().getCustomHeaders())
         .setPriority(record.getValue().getPriority())
         .setPartitionId(record.getPartitionId())
-        .setTenantId(record.getValue().getTenantId())
+        .setTenantId(record.getValue().getTenantIdentifier())
         .setPosition(record.getPosition())
         .setAction(
             ExporterUtil.isEmpty(record.getValue().getAction())

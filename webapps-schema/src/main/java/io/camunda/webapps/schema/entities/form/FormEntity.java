@@ -39,7 +39,7 @@ public class FormEntity implements ExporterEntity<FormEntity>, TenantOwned {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

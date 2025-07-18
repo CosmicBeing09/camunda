@@ -216,7 +216,7 @@ public class ProcessInstanceForListViewEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

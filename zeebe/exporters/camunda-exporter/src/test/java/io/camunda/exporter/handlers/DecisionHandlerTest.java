@@ -147,6 +147,6 @@ final class DecisionHandlerTest {
     assertThat(decisionDefinitionEntity.getDecisionRequirementsId())
         .isEqualTo("decisionRequirementsId");
     assertThat(decisionDefinitionEntity.getDecisionRequirementsKey()).isEqualTo(222L);
-    assertThat(decisionDefinitionEntity.getTenantId()).isEqualTo("tenantId");
+    assertThat(decisionDefinitionEntity.getTenantIdentifier()).isEqualTo("tenantId");
   }
 }

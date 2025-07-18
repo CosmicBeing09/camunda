@@ -148,7 +148,7 @@ public final class ProcessInstanceModificationRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     // todo(#13288): replace dummy implementation
     return TenantOwned.DEFAULT_TENANT_IDENTIFIER;
   }

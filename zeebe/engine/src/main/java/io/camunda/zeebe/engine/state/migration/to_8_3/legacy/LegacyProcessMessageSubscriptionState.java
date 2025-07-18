@@ -49,12 +49,12 @@ public final class LegacyProcessMessageSubscriptionState {
     processMessageSubscription.reset();
     processMessageSubscription.setKey(key).setRecord(record);
 
-    subscriptionColumnFamily.insert(elementKeyAndMessageName, processMessageSubscription);
+    subscriptionColumnFamily.recordEntry(elementKeyAndMessageName, processMessageSubscription);
   }
 
   private void wrapSubscriptionKeys(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
+    this.messageName.recordBufferContent(messageName);
   }
 
   public ColumnFamily<DbCompositeKey<DbLong, DbString>, ProcessMessageSubscription>

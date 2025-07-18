@@ -220,7 +220,7 @@ public class CompensationEventExecutionTest {
             CompensationSubscriptionRecordValue::getCompensationHandlerId)
         .containsOnly(
             tuple(
-                compensationActivityActivated.getValue().getTenantId(),
+                compensationActivityActivated.getValue().getTenantIdentifier(),
                 processInstanceKey,
                 compensationActivityActivated.getValue().getProcessDefinitionKey(),
                 "ActivityToCompensate",

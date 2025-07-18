@@ -69,7 +69,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       sut = new ColumnFamily48Corrector(zeebeDb, transactionContext);
 
       messagesDeadlineCountKey = new DbString();
-      messagesDeadlineCountKey.wrapString(DbMessageState.DEADLINE_MESSAGE_COUNT_KEY);
+      messagesDeadlineCountKey.recordStringContent(DbMessageState.DEADLINE_MESSAGE_COUNT_KEY);
       messagesDeadlineCount = new DbLong();
       wrongMessageStatsColumnFamily =
           zeebeDb.createColumnFamily(
@@ -97,8 +97,8 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMoveMessageStatsToCorrectColumnFamily() {
       // given
-      messagesDeadlineCount.wrapLong(123);
-      wrongMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
+      messagesDeadlineCount.recordValue(123);
+      wrongMessageStatsColumnFamily.recordEntry(messagesDeadlineCountKey, messagesDeadlineCount);
 
       // when
       sut.correctColumnFamilyPrefix();
@@ -114,10 +114,10 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMergeWithCorrectMessageStats() {
       // given
-      messagesDeadlineCount.wrapLong(123);
-      wrongMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
-      messagesDeadlineCount.wrapLong(456);
-      correctMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
+      messagesDeadlineCount.recordValue(123);
+      wrongMessageStatsColumnFamily.recordEntry(messagesDeadlineCountKey, messagesDeadlineCount);
+      messagesDeadlineCount.recordValue(456);
+      correctMessageStatsColumnFamily.recordEntry(messagesDeadlineCountKey, messagesDeadlineCount);
 
       // when
       sut.correctColumnFamilyPrefix();
@@ -133,18 +133,18 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldIgnoreDecisionKeyEntries() {
       // given
-      decisionId.wrapString("decision");
+      decisionId.recordStringContent("decision");
       decisionVersion.wrapInt(1);
-      decisionKey.wrapLong(123);
-      correctDecisionColumnFamily.insert(decisionIdAndVersion, decisionKey);
+      decisionKey.recordValue(123);
+      correctDecisionColumnFamily.recordEntry(decisionIdAndVersion, decisionKey);
 
-      messagesDeadlineCount.wrapLong(123);
-      wrongMessageStatsColumnFamily.insert(messagesDeadlineCountKey, messagesDeadlineCount);
+      messagesDeadlineCount.recordValue(123);
+      wrongMessageStatsColumnFamily.recordEntry(messagesDeadlineCountKey, messagesDeadlineCount);
 
-      decisionId.wrapString("decision2");
+      decisionId.recordStringContent("decision2");
       decisionVersion.wrapInt(2);
-      decisionKey.wrapLong(234);
-      correctDecisionColumnFamily.insert(decisionIdAndVersion, decisionKey);
+      decisionKey.recordValue(234);
+      correctDecisionColumnFamily.recordEntry(decisionIdAndVersion, decisionKey);
 
       Assertions.assertThat(correctDecisionColumnFamily.count()).isEqualTo(3);
 
@@ -156,14 +156,14 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // just no longer message stats entries, but we can simply count the entries
       Assertions.assertThat(correctDecisionColumnFamily.count()).isEqualTo(2);
 
-      decisionId.wrapString("decision");
+      decisionId.recordStringContent("decision");
       decisionVersion.wrapInt(1);
       Assertions.assertThat(correctDecisionColumnFamily.get(decisionIdAndVersion))
           .isNotNull()
           .extracting(DbLong::getValue)
           .isEqualTo(123L);
 
-      decisionId.wrapString("decision2");
+      decisionId.recordStringContent("decision2");
       decisionVersion.wrapInt(2);
       Assertions.assertThat(correctDecisionColumnFamily.get(decisionIdAndVersion))
           .isNotNull()
@@ -247,9 +247,9 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMovePiKeyByProcDefKeyToCorrectColumnFamily() {
       // given
-      elementInstanceKey.wrapLong(123);
-      processDefinitionKey.wrapLong(456);
-      wrongPiKeyByProcDefKeyColumnFamily.insert(
+      elementInstanceKey.recordValue(123);
+      processDefinitionKey.recordValue(456);
+      wrongPiKeyByProcDefKeyColumnFamily.recordEntry(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
 
       // when
@@ -265,21 +265,21 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldIgnoreProcessInstanceKeyByDefinitionKeyEntries() {
       // given
-      decisionRequirementsId.wrapString("drg");
+      decisionRequirementsId.recordStringContent("drg");
       decisionRequirementsVersion.wrapInt(1);
-      decisionRequirementsKey.wrapLong(543);
-      correctDecisionRequirementsKeyColumnFamily.insert(
+      decisionRequirementsKey.recordValue(543);
+      correctDecisionRequirementsKeyColumnFamily.recordEntry(
           decisionRequirementsIdAndVersion, decisionRequirementsKey);
 
-      elementInstanceKey.wrapLong(123);
-      processDefinitionKey.wrapLong(456);
-      wrongPiKeyByProcDefKeyColumnFamily.insert(
+      elementInstanceKey.recordValue(123);
+      processDefinitionKey.recordValue(456);
+      wrongPiKeyByProcDefKeyColumnFamily.recordEntry(
           processInstanceKeyByProcessDefinitionKey, DbNil.INSTANCE);
 
-      decisionRequirementsId.wrapString("drg2");
+      decisionRequirementsId.recordStringContent("drg2");
       decisionRequirementsVersion.wrapInt(2);
-      decisionRequirementsKey.wrapLong(987);
-      correctDecisionRequirementsKeyColumnFamily.insert(
+      decisionRequirementsKey.recordValue(987);
+      correctDecisionRequirementsKeyColumnFamily.recordEntry(
           decisionRequirementsIdAndVersion, decisionRequirementsKey);
 
       Assertions.assertThat(correctDecisionRequirementsKeyColumnFamily.count()).isEqualTo(3);
@@ -293,13 +293,13 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // simply count the entries
       Assertions.assertThat(correctDecisionRequirementsKeyColumnFamily.count()).isEqualTo(2);
 
-      elementInstanceKey.wrapLong(123);
-      processDefinitionKey.wrapLong(456);
+      elementInstanceKey.recordValue(123);
+      processDefinitionKey.recordValue(456);
       Assertions.assertThat(
               correctPiKeyByProcDefKeyColumnFamily.exists(processInstanceKeyByProcessDefinitionKey))
           .isTrue();
 
-      decisionRequirementsId.wrapString("drg");
+      decisionRequirementsId.recordStringContent("drg");
       decisionRequirementsVersion.wrapInt(1);
       Assertions.assertThat(
               correctDecisionRequirementsKeyColumnFamily.get(decisionRequirementsIdAndVersion))
@@ -307,7 +307,7 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
           .extracting(DbLong::getValue)
           .isEqualTo(543L);
 
-      decisionRequirementsId.wrapString("drg2");
+      decisionRequirementsId.recordStringContent("drg2");
       decisionRequirementsVersion.wrapInt(2);
       Assertions.assertThat(
               correctDecisionRequirementsKeyColumnFamily.get(decisionRequirementsIdAndVersion))
@@ -378,9 +378,9 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMoveMigrationStateToCorrectColumnFamily() {
       // given
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.FINISHED);
-      wrongMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      wrongMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
       // when
       sut.correctColumnFamilyPrefix();
@@ -396,13 +396,13 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMergeWithCorrectMigrationStateOverwritingWhenFinished() {
       // given
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.FINISHED);
-      wrongMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      wrongMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.NOT_STARTED);
-      correctMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      correctMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
       // when
       sut.correctColumnFamilyPrefix();
@@ -418,13 +418,13 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMergeWithCorrectMigrationStateNotOverwritingAlreadyFinishedState() {
       // given
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.NOT_STARTED);
-      wrongMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      wrongMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.FINISHED);
-      correctMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      correctMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
       // when
       sut.correctColumnFamilyPrefix();
@@ -440,25 +440,25 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldMergeWithCorrectMigrationStateNotOverwritingDifferentIdentifiers() {
       // given
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.NOT_STARTED);
-      wrongMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      wrongMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER + "2");
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER + "2");
       migrationTaskState.setState(State.FINISHED);
-      correctMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      correctMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
       // when
       sut.correctColumnFamilyPrefix();
 
       // then
       Assertions.assertThat(wrongMigrationStateColumnFamily.isEmpty()).isTrue();
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
           .isEqualTo(State.NOT_STARTED);
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER + "2");
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER + "2");
       Assertions.assertThat(correctMigrationStateColumnFamily.get(migrationIdentifier))
           .isNotNull()
           .extracting(MigrationTaskState::getState)
@@ -468,25 +468,25 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
     @Test
     void shouldIgnoreSignalSubscriptionEntries() {
       // given
-      signalName.wrapString("signal");
-      subscriptionKey.wrapLong(123);
+      signalName.recordStringContent("signal");
+      subscriptionKey.recordValue(123);
       signalSubscription
           .setKey(123)
           .setRecord(new SignalSubscriptionRecord().setSignalName(BufferUtil.wrapString("signal")));
-      correctSignalSubscriptionColumnFamily.insert(
+      correctSignalSubscriptionColumnFamily.recordEntry(
           signalNameAndSubscriptionKey, signalSubscription);
 
-      migrationIdentifier.wrapString(EXAMPLE_IDENTIFIER);
+      migrationIdentifier.recordStringContent(EXAMPLE_IDENTIFIER);
       migrationTaskState.setState(State.FINISHED);
-      wrongMigrationStateColumnFamily.insert(migrationIdentifier, migrationTaskState);
+      wrongMigrationStateColumnFamily.recordEntry(migrationIdentifier, migrationTaskState);
 
-      signalName.wrapString("signal2");
-      subscriptionKey.wrapLong(234);
+      signalName.recordStringContent("signal2");
+      subscriptionKey.recordValue(234);
       signalSubscription
           .setKey(234)
           .setRecord(
               new SignalSubscriptionRecord().setSignalName(BufferUtil.wrapString("signal2")));
-      correctSignalSubscriptionColumnFamily.insert(
+      correctSignalSubscriptionColumnFamily.recordEntry(
           signalNameAndSubscriptionKey, signalSubscription);
 
       Assertions.assertThat(correctSignalSubscriptionColumnFamily.count()).isEqualTo(3);
@@ -500,15 +500,15 @@ public class ColumnFamilyPrefixCorrectionMigrationTest {
       // just no longer migration state entries, but we can simply count the entries
       Assertions.assertThat(correctSignalSubscriptionColumnFamily.count()).isEqualTo(2);
 
-      signalName.wrapString("signal");
-      subscriptionKey.wrapLong(123);
+      signalName.recordStringContent("signal");
+      subscriptionKey.recordValue(123);
       Assertions.assertThat(correctSignalSubscriptionColumnFamily.get(signalNameAndSubscriptionKey))
           .isNotNull()
           .extracting(SignalSubscription::getKey, s -> s.getRecord().getSignalName())
           .isEqualTo(List.of(123L, "signal"));
 
-      signalName.wrapString("signal2");
-      subscriptionKey.wrapLong(234);
+      signalName.recordStringContent("signal2");
+      subscriptionKey.recordValue(234);
       Assertions.assertThat(correctSignalSubscriptionColumnFamily.get(signalNameAndSubscriptionKey))
           .isNotNull()
           .extracting(SignalSubscription::getKey, s -> s.getRecord().getSignalName())

@@ -66,7 +66,7 @@ public interface TaskStore {
         .setFormId(taskBefore.getFormId())
         .setFormVersion(taskBefore.getFormVersion())
         .setIsFormEmbedded(taskBefore.getIsFormEmbedded())
-        .setTenantId(taskBefore.getTenantId())
+        .setTenantId(taskBefore.getTenantIdentifier())
         .setImplementation(taskBefore.getImplementation())
         .setExternalFormReference(taskBefore.getExternalFormReference())
         .setCustomHeaders(taskBefore.getCustomHeaders())

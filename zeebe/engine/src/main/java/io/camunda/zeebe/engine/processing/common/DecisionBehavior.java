@@ -207,7 +207,7 @@ public class DecisionBehavior {
         .setDecisionVersion(decisionInfo.version())
         .setDecisionType(evaluatedDecision.decisionType().name())
         .setDecisionOutput(evaluatedDecision.decisionOutput())
-        .setTenantId(decisionEvaluationEvent.getTenantId());
+        .setTenantId(decisionEvaluationEvent.getTenantIdentifier());
 
     evaluatedDecision
         .evaluatedInputs()

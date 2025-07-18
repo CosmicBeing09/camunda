@@ -137,7 +137,7 @@ public class AdHocSubProcessActivityActivateProcessor
         processState
             .getProcessByKeyAndTenant(
                 adHocSubProcessElementInstance.getValue().getProcessDefinitionKey(),
-                adHocSubProcessElementInstance.getValue().getTenantId())
+                adHocSubProcessElementInstance.getValue().getTenantIdentifier())
             .getProcess();
 
     final var adHocSubProcessElement =
@@ -218,7 +218,7 @@ public class AdHocSubProcessActivityActivateProcessor
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
-                adHocSubProcessElementInstance.getValue().getTenantId())
+                adHocSubProcessElementInstance.getValue().getTenantIdentifier())
             .addResourceId(adHocSubProcessElementInstance.getValue().getBpmnProcessId());
 
     return authCheckBehavior.isAuthorized(authRequest);

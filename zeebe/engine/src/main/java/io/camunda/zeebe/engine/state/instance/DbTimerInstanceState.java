@@ -64,30 +64,30 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
 
   @Override
   public void store(final TimerInstance timer) {
-    timerKey.wrapLong(timer.getKey());
-    elementInstanceKey.inner().wrapLong(timer.getElementInstanceKey());
+    timerKey.recordValue(timer.getKey());
+    elementInstanceKey.inner().recordValue(timer.getElementInstanceKey());
 
-    timerInstanceColumnFamily.insert(elementAndTimerKey, timer);
+    timerInstanceColumnFamily.recordEntry(elementAndTimerKey, timer);
 
-    dueDate.wrapLong(timer.getDueDate());
-    dueDateColumnFamily.insert(dueDateCompositeKey, DbNil.INSTANCE);
+    dueDate.recordValue(timer.getDueDate());
+    dueDateColumnFamily.recordEntry(dueDateCompositeKey, DbNil.INSTANCE);
   }
 
   @Override
   public void remove(final TimerInstance timer) {
-    elementInstanceKey.inner().wrapLong(timer.getElementInstanceKey());
-    timerKey.wrapLong(timer.getKey());
+    elementInstanceKey.inner().recordValue(timer.getElementInstanceKey());
+    timerKey.recordValue(timer.getKey());
     timerInstanceColumnFamily.deleteExisting(elementAndTimerKey);
 
-    dueDate.wrapLong(timer.getDueDate());
+    dueDate.recordValue(timer.getDueDate());
     dueDateColumnFamily.deleteExisting(dueDateCompositeKey);
   }
 
   @Override
   public void update(final TimerInstance timer) {
-    elementInstanceKey.inner().wrapLong(timer.getElementInstanceKey());
-    timerKey.wrapLong(timer.getKey());
-    timerInstanceColumnFamily.update(elementAndTimerKey, timer);
+    elementInstanceKey.inner().recordValue(timer.getElementInstanceKey());
+    timerKey.recordValue(timer.getKey());
+    timerInstanceColumnFamily.updateEntry(elementAndTimerKey, timer);
   }
 
   @Override
@@ -125,7 +125,7 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
   @Override
   public void forEachTimerForElementInstance(
       final long elementInstanceKey, final Consumer<TimerInstance> action) {
-    this.elementInstanceKey.inner().wrapLong(elementInstanceKey);
+    this.elementInstanceKey.inner().recordValue(elementInstanceKey);
 
     timerInstanceColumnFamily.whileEqualPrefix(
         this.elementInstanceKey,
@@ -136,8 +136,8 @@ public final class DbTimerInstanceState implements MutableTimerInstanceState {
 
   @Override
   public TimerInstance get(final long elementInstanceKey, final long timerKey) {
-    this.elementInstanceKey.inner().wrapLong(elementInstanceKey);
-    this.timerKey.wrapLong(timerKey);
+    this.elementInstanceKey.inner().recordValue(elementInstanceKey);
+    this.timerKey.recordValue(timerKey);
 
     return timerInstanceColumnFamily.get(elementAndTimerKey);
   }

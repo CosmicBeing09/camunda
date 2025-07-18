@@ -118,8 +118,8 @@ public class ListViewFlowNodeFromIncidentHandlerTest {
         .isEqualTo(incidentRecord.getValue().getProcessInstanceKey());
     assertThat(flowNodeInstanceForListViewEntity.getErrorMessage())
         .isEqualTo(incidentRecord.getValue().getErrorMessage());
-    assertThat(flowNodeInstanceForListViewEntity.getTenantId())
-        .isEqualTo(incidentRecord.getValue().getTenantId());
+    assertThat(flowNodeInstanceForListViewEntity.getTenantIdentifier())
+        .isEqualTo(incidentRecord.getValue().getTenantIdentifier());
     assertThat(flowNodeInstanceForListViewEntity.getJoinRelation().getParent())
         .isEqualTo(incidentRecord.getValue().getProcessInstanceKey());
     assertThat(flowNodeInstanceForListViewEntity.getPositionIncident())

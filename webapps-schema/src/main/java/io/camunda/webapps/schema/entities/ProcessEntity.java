@@ -218,7 +218,7 @@ public class ProcessEntity implements ExporterEntity<ProcessEntity>, TenantOwned
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

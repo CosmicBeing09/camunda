@@ -79,7 +79,7 @@ class TransactionalColumnFamily<
   }
 
   @Override
-  public void insert(final KeyType key, final ValueType value) {
+  public void recordEntry(final KeyType key, final ValueType value) {
     try (final var timer = metrics.measurePutLatency()) {
       ensureInOpenTransaction(
           transaction -> {
@@ -99,7 +99,7 @@ class TransactionalColumnFamily<
   }
 
   @Override
-  public void update(final KeyType key, final ValueType value) {
+  public void updateEntry(final KeyType key, final ValueType value) {
     try (final var timer = metrics.measurePutLatency()) {
       ensureInOpenTransaction(
           transaction -> {

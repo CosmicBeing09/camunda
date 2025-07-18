@@ -26,14 +26,14 @@ public interface ColumnFamily<KeyType extends DbKey, ValueType extends DbValue>
    *
    * @throws IllegalStateException if key already exists
    */
-  void insert(KeyType key, ValueType value);
+  void recordEntry(KeyType key, ValueType value);
 
   /**
    * Updates the value of an existing key in the column family.
    *
    * @throws IllegalStateException if key does not exist
    */
-  void update(KeyType key, ValueType value);
+  void updateEntry(KeyType key, ValueType value);
 
   /** Inserts or updates a key value pair in the column family. */
   void upsert(KeyType key, ValueType value);

@@ -28,6 +28,6 @@ public final class SignalRecordStream
   }
 
   public SignalRecordStream withTenantId(final String tenantId) {
-    return valueFilter(v -> tenantId.equals(v.getTenantId()));
+    return valueFilter(v -> tenantId.equals(v.getTenantIdentifier()));
   }
 }

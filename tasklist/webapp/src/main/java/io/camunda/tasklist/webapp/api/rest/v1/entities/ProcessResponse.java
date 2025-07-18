@@ -130,7 +130,7 @@ public class ProcessResponse {
         .setBpmnProcessId(process.getBpmnProcessId())
         .setVersion(process.getVersion())
         .setStartEventFormId(startEventFormId)
-        .setTenantId(process.getTenantId());
+        .setTenantId(process.getTenantIdentifier());
   }
 
   @Override

@@ -75,7 +75,7 @@ final class ProcessInstanceElementMigratedV3Applier
     final ExecutableSequenceFlow sequenceFlow =
         processState.getFlowElement(
             sequenceFlowRecord.getProcessDefinitionKey(),
-            sequenceFlowRecord.getTenantId(),
+            sequenceFlowRecord.getTenantIdentifier(),
             sequenceFlowRecord.getElementIdBuffer(),
             ExecutableSequenceFlow.class);
     final var migratedSequenceFlowId = sequenceFlow.getId();
@@ -117,7 +117,7 @@ final class ProcessInstanceElementMigratedV3Applier
         processState
             .getFlowElement(
                 value.getProcessDefinitionKey(),
-                value.getTenantId(),
+                value.getTenantIdentifier(),
                 value.getElementIdBuffer(),
                 ExecutableFlowElementContainer.class)
             .hasMessageStartEvent();

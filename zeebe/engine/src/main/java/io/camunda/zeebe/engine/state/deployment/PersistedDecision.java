@@ -56,7 +56,7 @@ public final class PersistedDecision extends UnpackedObject implements DbValue {
     decisionKeyProp.setValue(record.getDecisionKey());
     decisionRequirementsIdProp.setValue(record.getDecisionRequirementsIdBuffer());
     decisionRequirementsKeyProp.setValue(record.getDecisionRequirementsKey());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
     deploymentKeyProp.setValue(record.getDeploymentKey());
     versionTagProp.setValue(record.getVersionTag());
   }

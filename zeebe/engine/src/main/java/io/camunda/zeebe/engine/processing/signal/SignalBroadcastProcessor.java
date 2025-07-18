@@ -79,10 +79,10 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
     final long eventKey = keyGenerator.nextKey();
     final var signalRecord = command.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(command, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(command, signalRecord.getTenantIdentifier())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
-              .formatted(signalRecord.getTenantId());
+              .formatted(signalRecord.getTenantIdentifier());
       rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
       responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
       return;
@@ -92,7 +92,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
 
     signalSubscriptionState.visitBySignalName(
         signalRecord.getSignalNameBuffer(),
-        signalRecord.getTenantId(),
+        signalRecord.getTenantIdentifier(),
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
@@ -104,7 +104,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
                 keyGenerator.nextKey(),
                 subscriptionRecord.getCatchEventIdBuffer(),
                 signalRecord.getVariablesBuffer(),
-                signalRecord.getTenantId());
+                signalRecord.getTenantIdentifier());
           } else {
             activateElement(subscriptionRecord, signalRecord.getVariablesBuffer());
           }
@@ -122,7 +122,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
     final var value = command.getValue();
     signalSubscriptionState.visitBySignalName(
         value.getSignalNameBuffer(),
-        value.getTenantId(),
+        value.getTenantIdentifier(),
         subscription -> activateElement(subscription.getRecord(), value.getVariablesBuffer()));
 
     stateWriter.appendFollowUpEvent(command.getKey(), SignalIntent.BROADCASTED, command.getValue());
@@ -142,7 +142,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
                 command,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 permissionType,
-                command.getValue().getTenantId())
+                command.getValue().getTenantIdentifier())
             .addResourceId(subscriptionRecord.getBpmnProcessId());
 
     final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
@@ -159,7 +159,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
     final var catchEvent =
         processState.getFlowElement(
             processDefinitionKey,
-            subscription.getTenantId(),
+            subscription.getTenantIdentifier(),
             catchEventId,
             ExecutableCatchEvent.class);
 

@@ -71,21 +71,21 @@ public final class DbTransactionTest {
   @Test
   public void shouldUseTransaction() {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
 
     // when
     transactionContext.runInTransaction(
         () -> {
-          oneColumnFamily.insert(oneKey, oneValue);
-          twoColumnFamily.insert(twoKey, twoValue);
-          threeColumnFamily.insert(threeKey, threeValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
+          twoColumnFamily.recordEntry(twoKey, twoValue);
+          threeColumnFamily.recordEntry(threeKey, threeValue);
         });
 
     // then
@@ -97,21 +97,21 @@ public final class DbTransactionTest {
   @Test
   public void shouldStartNewTransaction() throws Exception {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
 
     final ZeebeDbTransaction transaction = transactionContext.getCurrentTransaction();
     transaction.run(
         () -> {
-          oneColumnFamily.insert(oneKey, oneValue);
-          twoColumnFamily.insert(twoKey, twoValue);
-          threeColumnFamily.insert(threeKey, threeValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
+          twoColumnFamily.recordEntry(twoKey, twoValue);
+          threeColumnFamily.recordEntry(threeKey, threeValue);
         });
 
     // when
@@ -126,21 +126,21 @@ public final class DbTransactionTest {
   @Test
   public void shouldAccessOnOpenTransaction() throws Exception {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
 
     final ZeebeDbTransaction transaction = transactionContext.getCurrentTransaction();
     transaction.run(
         () -> {
-          oneColumnFamily.insert(oneKey, oneValue);
-          twoColumnFamily.insert(twoKey, twoValue);
-          threeColumnFamily.insert(threeKey, threeValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
+          twoColumnFamily.recordEntry(twoKey, twoValue);
+          threeColumnFamily.recordEntry(threeKey, threeValue);
         });
 
     // when
@@ -172,14 +172,14 @@ public final class DbTransactionTest {
   @Test
   public void shouldNotReopenTransactionWithOperations() {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
 
     transactionContext.runInTransaction(
         () -> {
@@ -188,9 +188,9 @@ public final class DbTransactionTest {
           final ZeebeDbTransaction sameTransaction = transactionContext.getCurrentTransaction();
           sameTransaction.run(
               () -> {
-                oneColumnFamily.insert(oneKey, oneValue);
-                twoColumnFamily.insert(twoKey, twoValue);
-                threeColumnFamily.insert(threeKey, threeValue);
+                oneColumnFamily.recordEntry(oneKey, oneValue);
+                twoColumnFamily.recordEntry(twoKey, twoValue);
+                threeColumnFamily.recordEntry(threeKey, threeValue);
               });
           sameTransaction.commit();
 
@@ -211,21 +211,21 @@ public final class DbTransactionTest {
   @Test
   public void shouldRollbackTransaction() throws Exception {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
 
     final ZeebeDbTransaction transaction = transactionContext.getCurrentTransaction();
     transaction.run(
         () -> {
-          oneColumnFamily.insert(oneKey, oneValue);
-          twoColumnFamily.insert(twoKey, twoValue);
-          threeColumnFamily.insert(threeKey, threeValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
+          twoColumnFamily.recordEntry(twoKey, twoValue);
+          threeColumnFamily.recordEntry(threeKey, threeValue);
         });
 
     // when
@@ -241,13 +241,13 @@ public final class DbTransactionTest {
   public void shouldGetValueInTransaction() {
     // given
     final AtomicLong actualValue = new AtomicLong(0);
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
     // when
     transactionContext.runInTransaction(
         () -> {
-          oneColumnFamily.insert(oneKey, oneValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
           final DbLong value = oneColumnFamily.get(oneKey);
           actualValue.set(value.getValue());
         });
@@ -261,25 +261,25 @@ public final class DbTransactionTest {
   public void shouldFindValueInTransaction() {
     // given
     final Map<Long, Long> actualValues = new HashMap<>();
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
-    oneColumnFamily.insert(oneKey, oneValue);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
+    oneColumnFamily.recordEntry(oneKey, oneValue);
 
     // when
     transactionContext.runInTransaction(
         () -> {
           // update value
-          oneKey.wrapLong(1);
-          oneValue.wrapLong(-2);
-          oneColumnFamily.update(oneKey, oneValue);
+          oneKey.recordValue(1);
+          oneValue.recordValue(-2);
+          oneColumnFamily.updateEntry(oneKey, oneValue);
 
           // create new key-value pair
-          oneKey.wrapLong(2);
-          oneValue.wrapLong(-3);
-          oneColumnFamily.insert(oneKey, oneValue);
+          oneKey.recordValue(2);
+          oneValue.recordValue(-3);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
 
           actualValues.put(oneKey.getValue(), oneColumnFamily.get(oneKey).getValue());
-          oneKey.wrapLong(1);
+          oneKey.recordValue(1);
           actualValues.put(oneKey.getValue(), oneColumnFamily.get(oneKey).getValue());
         });
 
@@ -295,26 +295,26 @@ public final class DbTransactionTest {
     // given
     final Map<Long, Long> actualValues = new HashMap<>();
 
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
-    oneColumnFamily.insert(oneKey, oneValue);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
+    oneColumnFamily.recordEntry(oneKey, oneValue);
 
-    oneKey.wrapLong(2);
-    oneValue.wrapLong(-2);
-    oneColumnFamily.insert(oneKey, oneValue);
+    oneKey.recordValue(2);
+    oneValue.recordValue(-2);
+    oneColumnFamily.recordEntry(oneKey, oneValue);
 
     // when
     transactionContext.runInTransaction(
         () -> {
           // update old value
-          oneKey.wrapLong(2);
-          oneValue.wrapLong(-5);
-          oneColumnFamily.update(oneKey, oneValue);
+          oneKey.recordValue(2);
+          oneValue.recordValue(-5);
+          oneColumnFamily.updateEntry(oneKey, oneValue);
 
           // create new key-value pair
-          oneKey.wrapLong(3);
-          oneValue.wrapLong(-3);
-          oneColumnFamily.insert(oneKey, oneValue);
+          oneKey.recordValue(3);
+          oneValue.recordValue(-3);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
 
           oneColumnFamily.forEach((k, v) -> actualValues.put(k.getValue(), v.getValue()));
         });
@@ -330,13 +330,13 @@ public final class DbTransactionTest {
   @Test
   public void shouldIterateAndDeleteInTransaction() {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
-    oneColumnFamily.insert(oneKey, oneValue);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
+    oneColumnFamily.recordEntry(oneKey, oneValue);
 
-    oneKey.wrapLong(2);
-    oneValue.wrapLong(-2);
-    oneColumnFamily.insert(oneKey, oneValue);
+    oneKey.recordValue(2);
+    oneValue.recordValue(-2);
+    oneColumnFamily.recordEntry(oneKey, oneValue);
 
     // when
     transactionContext.runInTransaction(
@@ -344,7 +344,7 @@ public final class DbTransactionTest {
 
     // then
     assertThat(oneColumnFamily.exists(oneKey)).isFalse();
-    oneKey.wrapLong(2);
+    oneKey.recordValue(2);
     assertThat(oneColumnFamily.exists(oneKey)).isFalse();
   }
 
@@ -352,16 +352,16 @@ public final class DbTransactionTest {
   public void shouldEndInSameTransaction() {
     // given
     final AtomicLong actualValue = new AtomicLong(0);
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
-    oneColumnFamily.insert(oneKey, oneValue);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
+    oneColumnFamily.recordEntry(oneKey, oneValue);
 
-    twoValue.wrapLong(192313);
+    twoValue.recordValue(192313);
 
     // when
     transactionContext.runInTransaction(
         () -> {
-          transactionContext.runInTransaction(() -> oneColumnFamily.update(oneKey, twoValue));
+          transactionContext.runInTransaction(() -> oneColumnFamily.updateEntry(oneKey, twoValue));
           final DbLong value = oneColumnFamily.get(oneKey);
           actualValue.set(value.getValue());
         });
@@ -374,29 +374,29 @@ public final class DbTransactionTest {
   @Test
   public void shouldWriteAndDeleteInTransaction() {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
-    twoColumnFamily.insert(twoKey, twoValue);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
+    twoColumnFamily.recordEntry(twoKey, twoValue);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
-    threeColumnFamily.insert(threeKey, threeValue);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
+    threeColumnFamily.recordEntry(threeKey, threeValue);
 
     // when
     transactionContext.runInTransaction(
         () -> {
           // create
-          oneColumnFamily.insert(oneKey, oneValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
 
           // delete
           twoColumnFamily.deleteExisting(twoKey);
 
           // update
-          threeValue.wrapLong(Integer.MIN_VALUE);
-          threeColumnFamily.update(threeKey, threeValue);
+          threeValue.recordValue(Integer.MIN_VALUE);
+          threeColumnFamily.updateEntry(threeKey, threeValue);
         });
 
     // then
@@ -412,14 +412,14 @@ public final class DbTransactionTest {
   @Test
   public void shouldWriteAndDeleteSameKeyValuePairInTransaction() {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
     // when
     transactionContext.runInTransaction(
         () -> {
           // create
-          oneColumnFamily.insert(oneKey, oneValue);
+          oneColumnFamily.recordEntry(oneKey, oneValue);
 
           // delete
           oneColumnFamily.deleteExisting(oneKey);
@@ -432,24 +432,24 @@ public final class DbTransactionTest {
   @Test
   public void shouldNotCommitOnError() {
     // given
-    oneKey.wrapLong(1);
-    oneValue.wrapLong(-1);
+    oneKey.recordValue(1);
+    oneValue.recordValue(-1);
 
-    twoKey.wrapLong(52000);
-    twoValue.wrapLong(192313);
-    twoColumnFamily.insert(twoKey, twoValue);
+    twoKey.recordValue(52000);
+    twoValue.recordValue(192313);
+    twoColumnFamily.recordEntry(twoKey, twoValue);
 
-    threeKey.wrapLong(Short.MAX_VALUE);
-    threeValue.wrapLong(Integer.MAX_VALUE);
+    threeKey.recordValue(Short.MAX_VALUE);
+    threeValue.recordValue(Integer.MAX_VALUE);
 
     // when
     assertThat(twoColumnFamily.exists(twoKey)).isTrue();
     try {
       transactionContext.runInTransaction(
           () -> {
-            oneColumnFamily.insert(oneKey, oneValue);
+            oneColumnFamily.recordEntry(oneKey, oneValue);
             twoColumnFamily.deleteExisting(twoKey);
-            threeColumnFamily.insert(threeKey, threeValue);
+            threeColumnFamily.recordEntry(threeKey, threeValue);
             throw new RuntimeException();
           });
     } catch (final Exception e) {

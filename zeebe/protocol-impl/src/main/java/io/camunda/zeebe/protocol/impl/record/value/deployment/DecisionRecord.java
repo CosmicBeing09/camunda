@@ -157,7 +157,7 @@ public final class DecisionRecord extends UnifiedRecordValue implements Decision
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

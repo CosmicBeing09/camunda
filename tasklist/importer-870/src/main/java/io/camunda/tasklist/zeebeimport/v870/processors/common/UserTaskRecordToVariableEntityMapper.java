@@ -57,7 +57,7 @@ public class UserTaskRecordToVariableEntityMapper {
         variableEntity.setTaskId(String.valueOf(recordValue.getUserTaskKey()));
         variableEntity.setProcessInstanceKey(recordValue.getProcessInstanceKey());
         variableEntity.setPartitionId(record.getPartitionId());
-        variableEntity.setTenantId(recordValue.getTenantId());
+        variableEntity.setTenantId(recordValue.getTenantIdentifier());
         variableEntity.setFullValue(varValue);
         if (varValue.length() > tasklistProperties.getImporter().getVariableSizeThreshold()) {
           // store preview

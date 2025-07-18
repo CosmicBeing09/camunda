@@ -44,31 +44,31 @@ public class DbUserState implements UserState, MutableUserState {
 
   @Override
   public void create(final UserRecord user) {
-    username.wrapBuffer(user.getUsernameBuffer());
-    userKey.wrapLong(user.getUserKey());
+    username.recordBufferContent(user.getUsernameBuffer());
+    userKey.recordValue(user.getUserKey());
     persistedUser.setUser(user);
 
-    usersColumnFamily.insert(username, persistedUser);
-    userKeyByUsernameColumnFamily.insert(userKey, fkUsername);
+    usersColumnFamily.recordEntry(username, persistedUser);
+    userKeyByUsernameColumnFamily.recordEntry(userKey, fkUsername);
   }
 
   @Override
   public void update(final UserRecord user) {
-    username.wrapBuffer(user.getUsernameBuffer());
+    username.recordBufferContent(user.getUsernameBuffer());
     persistedUser.setUser(user);
 
-    usersColumnFamily.update(username, persistedUser);
+    usersColumnFamily.updateEntry(username, persistedUser);
   }
 
   @Override
   public void delete(final String username) {
-    this.username.wrapString(username);
+    this.username.recordStringContent(username);
     usersColumnFamily.deleteExisting(this.username);
   }
 
   @Override
   public Optional<PersistedUser> getUser(final String username) {
-    this.username.wrapString(username);
+    this.username.recordStringContent(username);
     final var persistedUser = usersColumnFamily.get(this.username);
 
     if (persistedUser == null) {
@@ -79,7 +79,7 @@ public class DbUserState implements UserState, MutableUserState {
 
   @Override
   public Optional<PersistedUser> getUser(final long userKey) {
-    this.userKey.wrapLong(userKey);
+    this.userKey.recordValue(userKey);
     final var username = userKeyByUsernameColumnFamily.get(this.userKey);
 
     return Optional.ofNullable(username)

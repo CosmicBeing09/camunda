@@ -116,7 +116,7 @@ public class UserTaskCompletionVariableHandler
             .setKey(record.getKey())
             .setPartitionId(record.getPartitionId())
             .setName(e.getKey())
-            .setTenantId(recordValue.getTenantId())
+            .setTenantId(recordValue.getTenantIdentifier())
             .setProcessInstanceKey(recordValue.getProcessInstanceKey())
             .setTaskId(String.valueOf(record.getValue().getUserTaskKey()))
             .setFullValue(variableValueAsString);

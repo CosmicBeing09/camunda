@@ -161,36 +161,36 @@ public final class DbProcessMigrationState {
 
   public void migrateProcessStateForMultiTenancy() {
     final var iterator = new MemoryBoundedColumnIteration();
-    tenantIdKey.wrapString(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
+    tenantIdKey.recordStringContent(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
 
     iterator.drain(
         deprecatedProcessCacheColumnFamily,
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          processDefinitionKey.wrapLong(key.getValue());
-          processColumnFamily.insert(tenantAwareProcessDefinitionKey, value);
+          processDefinitionKey.recordValue(key.getValue());
+          processColumnFamily.recordEntry(tenantAwareProcessDefinitionKey, value);
         });
 
     iterator.drain(
         deprecatedProcessCacheByIdAndVersionColumnFamily,
         (key, value) -> {
           value.setTenantId(TenantOwned.DEFAULT_TENANT_IDENTIFIER);
-          processId.wrapBuffer(value.getBpmnProcessId());
-          processVersion.wrapLong(value.getVersion());
-          processByIdAndVersionColumnFamily.insert(tenantAwareProcessIdAndVersionKey, value);
+          processId.recordBufferContent(value.getBpmnProcessId());
+          processVersion.recordValue(value.getVersion());
+          processByIdAndVersionColumnFamily.recordEntry(tenantAwareProcessIdAndVersionKey, value);
         });
 
     iterator.drain(
         deprecatedDigestByIdColumnFamily,
         (key, value) -> {
-          processId.wrapBuffer(key.inner().getBuffer());
-          digestByIdColumnFamily.insert(fkTenantAwareProcessId, value);
+          processId.recordBufferContent(key.inner().getBuffer());
+          digestByIdColumnFamily.recordEntry(fkTenantAwareProcessId, value);
         });
 
     iterator.drain(
         deprecatedProcessVersionColumnFamily,
         (key, value) -> {
-          idKey.wrapBuffer(key.getBuffer());
+          idKey.recordBufferContent(key.getBuffer());
 
           final long highestVersion = value.getHighestVersion();
           for (long version = 1; version <= highestVersion; version++) {
@@ -199,7 +199,7 @@ public final class DbProcessMigrationState {
             }
           }
 
-          versionInfoColumnFamily.insert(tenantAwareIdKey, value);
+          versionInfoColumnFamily.recordEntry(tenantAwareIdKey, value);
         });
   }
 }

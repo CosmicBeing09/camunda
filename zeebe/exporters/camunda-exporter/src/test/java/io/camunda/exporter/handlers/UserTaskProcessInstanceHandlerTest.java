@@ -153,8 +153,8 @@ public class UserTaskProcessInstanceHandlerTest {
     // then
     assertThat(processInstanceEntity.getId()).isEqualTo(String.valueOf(expectedId));
     assertThat(processInstanceEntity.getProcessInstanceId()).isEqualTo(expectedId);
-    assertThat(processInstanceEntity.getTenantId())
-        .isEqualTo(processInstanceRecordValue.getTenantId());
+    assertThat(processInstanceEntity.getTenantIdentifier())
+        .isEqualTo(processInstanceRecordValue.getTenantIdentifier());
     assertThat(processInstanceEntity.getJoin()).isNotNull();
     assertThat(processInstanceEntity.getJoin().getName())
         .isEqualTo(TaskJoinRelationshipType.PROCESS.getType());

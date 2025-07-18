@@ -102,8 +102,8 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
       final DirectBuffer signalName,
       final String tenantId,
       final SignalSubscriptionVisitor visitor) {
-    tenantIdKey.wrapString(tenantId);
-    this.signalName.wrapBuffer(signalName);
+    tenantIdKey.recordStringContent(tenantId);
+    this.signalName.recordBufferContent(signalName);
     signalNameAndSubscriptionKeyColumnFamily.whileEqualPrefix(
         tenantAwareSignalName,
         (key, value) -> {
@@ -114,14 +114,14 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
   @Override
   public void visitStartEventSubscriptionsByProcessDefinitionKey(
       final long processDefinitionKey, final SignalSubscriptionVisitor visitor) {
-    subscriptionKey.wrapLong(processDefinitionKey);
+    subscriptionKey.recordValue(processDefinitionKey);
     visitSubscriptions(visitor);
   }
 
   @Override
   public void visitByElementInstanceKey(
       final long elementInstanceKey, final SignalSubscriptionVisitor visitor) {
-    subscriptionKey.wrapLong(elementInstanceKey);
+    subscriptionKey.recordValue(elementInstanceKey);
     visitSubscriptions(visitor);
   }
 
@@ -129,8 +129,8 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
     subscriptionKeyAndSignalNameColumnFamily.whileEqualPrefix(
         subscriptionKey,
         (key, value) -> {
-          signalName.wrapBuffer(key.second().wrappedKey().getBuffer());
-          tenantIdKey.wrapBuffer(key.second().tenantKey().getBuffer());
+          signalName.recordBufferContent(key.second().wrappedKey().getBuffer());
+          tenantIdKey.recordBufferContent(key.second().tenantKey().getBuffer());
           final var subscription =
               signalNameAndSubscriptionKeyColumnFamily.get(tenantAwareSignalNameAndSubscriptionKey);
 
@@ -142,13 +142,13 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
 
   private void wrapSubscriptionKeys(final SignalSubscriptionRecord subscription) {
     final var key = subscription.getSubscriptionKey();
-    wrapSubscriptionKeys(key, subscription.getSignalNameBuffer(), subscription.getTenantId());
+    wrapSubscriptionKeys(key, subscription.getSignalNameBuffer(), subscription.getTenantIdentifier());
   }
 
   private void wrapSubscriptionKeys(
       final long key, final DirectBuffer signalName, final String tenantId) {
-    subscriptionKey.wrapLong(key);
-    this.signalName.wrapBuffer(signalName);
-    tenantIdKey.wrapString(tenantId);
+    subscriptionKey.recordValue(key);
+    this.signalName.recordBufferContent(signalName);
+    tenantIdKey.recordStringContent(tenantId);
   }
 }

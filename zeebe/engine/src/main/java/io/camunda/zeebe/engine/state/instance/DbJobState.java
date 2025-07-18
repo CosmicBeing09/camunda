@@ -118,7 +118,7 @@ public final class DbJobState implements JobState, MutableJobState {
   @Override
   public void activate(final long key, final JobRecord record) {
     final DirectBuffer type = record.getTypeBuffer();
-    final String tenantId = record.getTenantId();
+    final String tenantId = record.getTenantIdentifier();
     final long deadline = record.getDeadline();
 
     validateParameters(type);
@@ -163,21 +163,21 @@ public final class DbJobState implements JobState, MutableJobState {
   @Override
   public void disable(final long key, final JobRecord record) {
     updateJob(key, record, State.FAILED);
-    makeJobNotActivatable(record.getTypeBuffer(), record.getTenantId());
+    makeJobNotActivatable(record.getTypeBuffer(), record.getTenantIdentifier());
   }
 
   @Override
   public void throwError(final long key, final JobRecord updatedValue) {
     updateJob(key, updatedValue, State.ERROR_THROWN);
-    makeJobNotActivatable(updatedValue.getTypeBuffer(), updatedValue.getTenantId());
+    makeJobNotActivatable(updatedValue.getTypeBuffer(), updatedValue.getTenantIdentifier());
   }
 
   @Override
   public void delete(final long key, final JobRecord record) {
     final DirectBuffer type = record.getTypeBuffer();
-    final String tenantId = record.getTenantId();
+    final String tenantId = record.getTenantIdentifier();
 
-    jobKey.wrapLong(key);
+    jobKey.recordValue(key);
     jobsColumnFamily.deleteExisting(jobKey);
 
     statesJobColumnFamily.deleteExisting(fkJob);
@@ -194,13 +194,13 @@ public final class DbJobState implements JobState, MutableJobState {
       if (updatedValue.getRetryBackoff() > 0) {
         addJobBackoff(key, updatedValue.getRecurringTime());
         updateJob(key, updatedValue, State.FAILED);
-        makeJobNotActivatable(updatedValue.getTypeBuffer(), updatedValue.getTenantId());
+        makeJobNotActivatable(updatedValue.getTypeBuffer(), updatedValue.getTenantIdentifier());
       } else {
         updateJob(key, updatedValue, State.ACTIVATABLE);
       }
     } else {
       updateJob(key, updatedValue, State.FAILED);
-      makeJobNotActivatable(updatedValue.getTypeBuffer(), updatedValue.getTenantId());
+      makeJobNotActivatable(updatedValue.getTypeBuffer(), updatedValue.getTenantIdentifier());
     }
   }
 
@@ -255,13 +255,13 @@ public final class DbJobState implements JobState, MutableJobState {
 
   @Override
   public void updateJobDeadline(final long jobKey, final long newDeadline) {
-    this.jobKey.wrapLong(jobKey);
+    this.jobKey.recordValue(jobKey);
     final JobRecord job = getJob(jobKey);
 
     if (job != null) {
       final long oldDeadline = job.getDeadline();
 
-      deadlineKey.wrapLong(oldDeadline);
+      deadlineKey.recordValue(oldDeadline);
       deadlinesColumnFamily.deleteExisting(deadlineJobKey);
 
       job.setDeadline(newDeadline);
@@ -303,8 +303,8 @@ public final class DbJobState implements JobState, MutableJobState {
           final var backoff = jobRecord.getRecord().getRecurringTime();
           final var retries = jobRecord.getRecord().getRetries();
           if (backoff > 0 && retries > 0) {
-            backoffKey.wrapLong(backoff);
-            backoffColumnFamily.insert(backoffJobKey, DbNil.INSTANCE);
+            backoffKey.recordValue(backoff);
+            backoffColumnFamily.recordEntry(backoffJobKey, DbNil.INSTANCE);
           }
         });
   }
@@ -312,7 +312,7 @@ public final class DbJobState implements JobState, MutableJobState {
   private void createJob(final long key, final JobRecord record, final DirectBuffer type) {
     createJobRecord(key, record);
     initializeJobState();
-    makeJobActivatable(type, key, record.getTenantId());
+    makeJobActivatable(type, key, record.getTenantIdentifier());
   }
 
   private void updateJob(final long key, final JobRecord updatedValue, final State newState) {
@@ -325,7 +325,7 @@ public final class DbJobState implements JobState, MutableJobState {
     updateJobState(newState);
 
     if (newState == State.ACTIVATABLE) {
-      makeJobActivatable(type, key, updatedValue.getTenantId());
+      makeJobActivatable(type, key, updatedValue.getTenantIdentifier());
     }
 
     if (newState != State.ACTIVATED) {
@@ -349,8 +349,8 @@ public final class DbJobState implements JobState, MutableJobState {
 
     final DbCompositeKey<DbLong, DbForeignKey<DbLong>> startAtKey;
     if (startAt != null) {
-      deadlineKey.wrapLong(startAt.deadline());
-      jobKey.wrapLong(startAt.key());
+      deadlineKey.recordValue(startAt.deadline());
+      jobKey.recordValue(startAt.key());
       startAtKey = deadlineJobKey;
     } else {
       startAtKey = null;
@@ -379,13 +379,13 @@ public final class DbJobState implements JobState, MutableJobState {
 
   @Override
   public boolean exists(final long jobKey) {
-    this.jobKey.wrapLong(jobKey);
+    this.jobKey.recordValue(jobKey);
     return jobsColumnFamily.exists(this.jobKey);
   }
 
   @Override
   public State getState(final long key) {
-    jobKey.wrapLong(key);
+    jobKey.recordValue(key);
 
     final JobStateValue storedState = statesJobColumnFamily.get(fkJob);
 
@@ -406,7 +406,7 @@ public final class DbJobState implements JobState, MutableJobState {
       final DirectBuffer type,
       final List<String> tenantIds,
       final BiFunction<Long, JobRecord, Boolean> callback) {
-    jobTypeKey.wrapBuffer(type);
+    jobTypeKey.recordBufferContent(type);
 
     activatableColumnFamily.whileEqualPrefix(
         jobTypeKey,
@@ -424,7 +424,7 @@ public final class DbJobState implements JobState, MutableJobState {
 
   @Override
   public JobRecord getJob(final long key) {
-    jobKey.wrapLong(key);
+    jobKey.recordValue(key);
     final JobRecordValue jobState = jobsColumnFamily.get(jobKey);
     return jobState == null ? null : jobState.getRecord();
   }
@@ -432,7 +432,7 @@ public final class DbJobState implements JobState, MutableJobState {
   @Override
   public JobRecord getJob(final long key, final AuthorizedTenants authorizedTenantIds) {
     final JobRecord jobRecord = getJob(key);
-    if (jobRecord != null && authorizedTenantIds.isAuthorizedForTenantId(jobRecord.getTenantId())) {
+    if (jobRecord != null && authorizedTenantIds.isAuthorizedForTenantId(jobRecord.getTenantIdentifier())) {
       return jobRecord;
     }
     return null;
@@ -440,8 +440,8 @@ public final class DbJobState implements JobState, MutableJobState {
 
   @Override
   public boolean jobDeadlineExists(final long jobKey, final long deadline) {
-    this.jobKey.wrapLong(jobKey);
-    deadlineKey.wrapLong(deadline);
+    this.jobKey.recordValue(jobKey);
+    deadlineKey.recordValue(deadline);
     return deadlinesColumnFamily.exists(deadlineJobKey);
   }
 
@@ -474,37 +474,37 @@ public final class DbJobState implements JobState, MutableJobState {
   }
 
   private void createJobRecord(final long key, final JobRecord record) {
-    jobKey.wrapLong(key);
+    jobKey.recordValue(key);
     // do not persist variables in job state
     jobRecordToWrite.setRecordWithoutVariables(record);
-    jobsColumnFamily.insert(jobKey, jobRecordToWrite);
+    jobsColumnFamily.recordEntry(jobKey, jobRecordToWrite);
   }
 
   /** Updates the job record without updating variables */
   private void updateJobRecord(final long key, final JobRecord updatedValue) {
-    jobKey.wrapLong(key);
+    jobKey.recordValue(key);
     // do not persist variables in job state
     jobRecordToWrite.setRecordWithoutVariables(updatedValue);
-    jobsColumnFamily.update(jobKey, jobRecordToWrite);
+    jobsColumnFamily.updateEntry(jobKey, jobRecordToWrite);
   }
 
   private void initializeJobState() {
     jobState.setState(State.ACTIVATABLE);
-    statesJobColumnFamily.insert(fkJob, jobState);
+    statesJobColumnFamily.recordEntry(fkJob, jobState);
   }
 
   private void updateJobState(final State newState) {
     jobState.setState(newState);
-    statesJobColumnFamily.update(fkJob, jobState);
+    statesJobColumnFamily.updateEntry(fkJob, jobState);
   }
 
   private void makeJobActivatable(final DirectBuffer type, final long key, final String tenantId) {
     EnsureUtil.ensureNotNullOrEmpty("type", type);
     EnsureUtil.ensureNotNullOrEmpty("tenantId", tenantId);
 
-    jobTypeKey.wrapBuffer(type);
-    jobKey.wrapLong(key);
-    tenantIdKey.wrapString(tenantId);
+    jobTypeKey.recordBufferContent(type);
+    jobKey.recordValue(key);
+    tenantIdKey.recordStringContent(tenantId);
     // Need to upsert here because jobs can be marked as failed (and thus made activatable)
     // without activating them first
     activatableColumnFamily.upsert(tenantAwareTypeJobKey, DbNil.INSTANCE);
@@ -514,39 +514,39 @@ public final class DbJobState implements JobState, MutableJobState {
     EnsureUtil.ensureNotNullOrEmpty("type", type);
     EnsureUtil.ensureNotNullOrEmpty("tenantid", tenantId);
 
-    jobTypeKey.wrapBuffer(type);
-    tenantIdKey.wrapString(tenantId);
+    jobTypeKey.recordBufferContent(type);
+    tenantIdKey.recordStringContent(tenantId);
     activatableColumnFamily.deleteIfExists(tenantAwareTypeJobKey);
   }
 
   private void addJobDeadline(final long job, final long deadline) {
     if (deadline > 0) {
-      jobKey.wrapLong(job);
-      deadlineKey.wrapLong(deadline);
-      deadlinesColumnFamily.insert(deadlineJobKey, DbNil.INSTANCE);
+      jobKey.recordValue(job);
+      deadlineKey.recordValue(deadline);
+      deadlinesColumnFamily.recordEntry(deadlineJobKey, DbNil.INSTANCE);
     }
   }
 
   private void removeJobDeadline(final long job, final long deadline) {
     if (deadline > 0) {
-      jobKey.wrapLong(job);
-      deadlineKey.wrapLong(deadline);
+      jobKey.recordValue(job);
+      deadlineKey.recordValue(deadline);
       deadlinesColumnFamily.deleteIfExists(deadlineJobKey);
     }
   }
 
   private void addJobBackoff(final long job, final long backoff) {
     if (backoff > 0) {
-      jobKey.wrapLong(job);
-      backoffKey.wrapLong(backoff);
-      backoffColumnFamily.insert(backoffJobKey, DbNil.INSTANCE);
+      jobKey.recordValue(job);
+      backoffKey.recordValue(backoff);
+      backoffColumnFamily.recordEntry(backoffJobKey, DbNil.INSTANCE);
     }
   }
 
   private void removeJobBackoff(final long job, final long backoff) {
     if (backoff > 0) {
-      jobKey.wrapLong(job);
-      backoffKey.wrapLong(backoff);
+      jobKey.recordValue(job);
+      backoffKey.recordValue(backoff);
       backoffColumnFamily.deleteIfExists(backoffJobKey);
     }
   }

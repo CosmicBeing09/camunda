@@ -66,7 +66,7 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
     setBpmnProcessId(record.getBpmnProcessIdBuffer());
     setCorrelationKey(record.getCorrelationKeyBuffer());
     setElementId(record.getElementIdBuffer());
-    setTenantId(record.getTenantId());
+    setTenantId(record.getTenantIdentifier());
   }
 
   @JsonIgnore
@@ -195,7 +195,7 @@ public final class ProcessMessageSubscriptionRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

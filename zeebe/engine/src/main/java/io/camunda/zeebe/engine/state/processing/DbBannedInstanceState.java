@@ -62,14 +62,14 @@ public final class DbBannedInstanceState implements MutableBannedInstanceState {
     if (key >= 0) {
       LOG.warn(BAN_INSTANCE_MESSAGE, key);
 
-      processInstanceKey.wrapLong(key);
+      processInstanceKey.recordValue(key);
       bannedInstanceColumnFamily.upsert(processInstanceKey, DbNil.INSTANCE);
       bannedInstanceMetrics.countBannedInstance();
     }
   }
 
   private boolean isBanned(final long key) {
-    processInstanceKey.wrapLong(key);
+    processInstanceKey.recordValue(key);
     return bannedInstanceColumnFamily.exists(processInstanceKey);
   }
 

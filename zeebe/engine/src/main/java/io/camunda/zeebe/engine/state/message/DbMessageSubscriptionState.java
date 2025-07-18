@@ -106,8 +106,8 @@ public final class DbMessageSubscriptionState
 
   @Override
   public MessageSubscription get(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.messageName.wrapBuffer(messageName);
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
+    this.messageName.recordBufferContent(messageName);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
     return subscriptionColumnFamily.get(elementKeyAndMessageName);
   }
 
@@ -118,9 +118,9 @@ public final class DbMessageSubscriptionState
       final DirectBuffer correlationKey,
       final MessageSubscriptionVisitor visitor) {
 
-    tenantIdKey.wrapString(tenantId);
-    this.messageName.wrapBuffer(messageName);
-    this.correlationKey.wrapBuffer(correlationKey);
+    tenantIdKey.recordStringContent(tenantId);
+    this.messageName.recordBufferContent(messageName);
+    this.correlationKey.recordBufferContent(correlationKey);
 
     messageNameAndCorrelationKeyColumnFamily.whileEqualPrefix(
         tenantAwareNameAndCorrelationKey,
@@ -132,8 +132,8 @@ public final class DbMessageSubscriptionState
   @Override
   public boolean existSubscriptionForElementInstance(
       final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
+    this.messageName.recordBufferContent(messageName);
 
     return subscriptionColumnFamily.exists(elementKeyAndMessageName);
   }
@@ -141,14 +141,14 @@ public final class DbMessageSubscriptionState
   @Override
   public void put(final long key, final MessageSubscriptionRecord record) {
     wrapSubscriptionKeys(
-        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantId());
+        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantIdentifier());
 
     messageSubscription.setKey(key).setRecord(record).setCorrelating(false);
 
-    subscriptionColumnFamily.insert(elementKeyAndMessageName, messageSubscription);
+    subscriptionColumnFamily.recordEntry(elementKeyAndMessageName, messageSubscription);
 
-    correlationKey.wrapBuffer(record.getCorrelationKeyBuffer());
-    messageNameAndCorrelationKeyColumnFamily.insert(
+    correlationKey.recordBufferContent(record.getCorrelationKeyBuffer());
+    messageNameAndCorrelationKeyColumnFamily.recordEntry(
         tenantAwareNameCorrelationAndElementInstanceKey, DbNil.INSTANCE);
   }
 
@@ -178,7 +178,7 @@ public final class DbMessageSubscriptionState
         new PendingSubscription(
             subscription.getRecord().getElementInstanceKey(),
             subscription.getRecord().getMessageName(),
-            subscription.getRecord().getTenantId()),
+            subscription.getRecord().getTenantIdentifier()),
         clock.millis());
   }
 
@@ -188,13 +188,13 @@ public final class DbMessageSubscriptionState
     final var record = subscription.getRecord();
     transientState.remove(
         new PendingSubscription(
-            record.getElementInstanceKey(), record.getMessageName(), record.getTenantId()));
+            record.getElementInstanceKey(), record.getMessageName(), record.getTenantIdentifier()));
   }
 
   @Override
   public boolean remove(final long elementInstanceKey, final DirectBuffer messageName) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
+    this.messageName.recordBufferContent(messageName);
 
     final MessageSubscription messageSubscription =
         subscriptionColumnFamily.get(elementKeyAndMessageName);
@@ -211,9 +211,9 @@ public final class DbMessageSubscriptionState
     subscriptionColumnFamily.deleteExisting(elementKeyAndMessageName);
 
     final var record = subscription.getRecord();
-    tenantIdKey.wrapString(record.getTenantId());
-    messageName.wrapBuffer(record.getMessageNameBuffer());
-    correlationKey.wrapBuffer(record.getCorrelationKeyBuffer());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
+    messageName.recordBufferContent(record.getMessageNameBuffer());
+    correlationKey.recordBufferContent(record.getCorrelationKeyBuffer());
     messageNameAndCorrelationKeyColumnFamily.deleteExisting(
         tenantAwareNameCorrelationAndElementInstanceKey);
 
@@ -235,20 +235,20 @@ public final class DbMessageSubscriptionState
     }
 
     wrapSubscriptionKeys(
-        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantId());
+        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantIdentifier());
     messageSubscription.setKey(key).setRecord(record).setCorrelating(subscription.isCorrelating());
 
-    subscriptionColumnFamily.update(elementKeyAndMessageName, messageSubscription);
+    subscriptionColumnFamily.updateEntry(elementKeyAndMessageName, messageSubscription);
   }
 
   private void updateCorrelatingFlag(
       final MessageSubscription subscription, final boolean correlating) {
     final var record = subscription.getRecord();
-    elementInstanceKey.wrapLong(record.getElementInstanceKey());
-    messageName.wrapBuffer(record.getMessageNameBuffer());
+    elementInstanceKey.recordValue(record.getElementInstanceKey());
+    messageName.recordBufferContent(record.getMessageNameBuffer());
 
     subscription.setCorrelating(correlating);
-    subscriptionColumnFamily.update(elementKeyAndMessageName, subscription);
+    subscriptionColumnFamily.updateEntry(elementKeyAndMessageName, subscription);
   }
 
   private Boolean visitMessageSubscription(
@@ -298,8 +298,8 @@ public final class DbMessageSubscriptionState
 
   private void wrapSubscriptionKeys(
       final long elementInstanceKey, final DirectBuffer messageName, final String tenantId) {
-    this.elementInstanceKey.wrapLong(elementInstanceKey);
-    this.messageName.wrapBuffer(messageName);
-    tenantIdKey.wrapString(tenantId);
+    this.elementInstanceKey.recordValue(elementInstanceKey);
+    this.messageName.recordBufferContent(messageName);
+    tenantIdKey.recordStringContent(tenantId);
   }
 }

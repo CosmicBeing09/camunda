@@ -186,7 +186,7 @@ public class FNITransformerTest {
     assertThat(entity.getProcessDefinitionKey()).isEqualTo(123);
     assertThat(entity.getProcessInstanceKey()).isEqualTo(1);
     assertThat(entity.getKey()).isEqualTo(4L);
-    assertThat(entity.getTenantId()).isEqualTo("none");
+    assertThat(entity.getTenantIdentifier()).isEqualTo("none");
     assertThat(entity.getType()).isEqualTo(FlowNodeType.START_EVENT);
   }
 

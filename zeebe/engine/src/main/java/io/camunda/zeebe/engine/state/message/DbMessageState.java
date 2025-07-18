@@ -172,7 +172,7 @@ public final class DbMessageState implements MutableMessageState {
             messagesDeadlineCountKey,
             messagesDeadlineCount);
 
-    messagesDeadlineCountKey.wrapString(DEADLINE_MESSAGE_COUNT_KEY);
+    messagesDeadlineCountKey.recordStringContent(DEADLINE_MESSAGE_COUNT_KEY);
 
     messageId = new DbString();
     nameCorrelationMessageIdKey = new DbCompositeKey<>(nameAndCorrelationKey, messageId);
@@ -223,26 +223,26 @@ public final class DbMessageState implements MutableMessageState {
 
   @Override
   public void put(final long key, final MessageRecord record) {
-    messageKey.wrapLong(key);
+    messageKey.recordValue(key);
     message.setMessageKey(key).setMessage(record);
-    messageColumnFamily.insert(messageKey, message);
+    messageColumnFamily.recordEntry(messageKey, message);
 
-    tenantIdKey.wrapString(record.getTenantId());
-    messageName.wrapBuffer(record.getNameBuffer());
-    correlationKey.wrapBuffer(record.getCorrelationKeyBuffer());
-    nameCorrelationMessageColumnFamily.insert(nameCorrelationMessageKey, DbNil.INSTANCE);
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
+    messageName.recordBufferContent(record.getNameBuffer());
+    correlationKey.recordBufferContent(record.getCorrelationKeyBuffer());
+    nameCorrelationMessageColumnFamily.recordEntry(nameCorrelationMessageKey, DbNil.INSTANCE);
 
-    deadline.wrapLong(record.getDeadline());
-    deadlineColumnFamily.insert(deadlineMessageKey, DbNil.INSTANCE);
+    deadline.recordValue(record.getDeadline());
+    deadlineColumnFamily.recordEntry(deadlineMessageKey, DbNil.INSTANCE);
 
     localMessageDeadlineCount += 1L;
-    messagesDeadlineCount.wrapLong(localMessageDeadlineCount);
+    messagesDeadlineCount.recordValue(localMessageDeadlineCount);
     messagesDeadlineCountColumnFamily.upsert(messagesDeadlineCountKey, messagesDeadlineCount);
     bufferedMessagesMetrics.setBufferedMessagesCounter(localMessageDeadlineCount);
 
     final DirectBuffer messageId = record.getMessageIdBuffer();
     if (messageId.capacity() > 0) {
-      this.messageId.wrapBuffer(messageId);
+      this.messageId.recordBufferContent(messageId);
       messageIdColumnFamily.upsert(nameCorrelationMessageIdKey, DbNil.INSTANCE);
     }
   }
@@ -252,9 +252,9 @@ public final class DbMessageState implements MutableMessageState {
     ensureGreaterThan("message key", messageKey, 0);
     ensureNotNullOrEmpty("BPMN process id", bpmnProcessId);
 
-    this.messageKey.wrapLong(messageKey);
-    bpmnProcessIdKey.wrapBuffer(bpmnProcessId);
-    correlatedMessageColumnFamily.insert(messageBpmnProcessIdKey, DbNil.INSTANCE);
+    this.messageKey.recordValue(messageKey);
+    bpmnProcessIdKey.recordBufferContent(bpmnProcessId);
+    correlatedMessageColumnFamily.recordEntry(messageBpmnProcessIdKey, DbNil.INSTANCE);
   }
 
   @Override
@@ -262,8 +262,8 @@ public final class DbMessageState implements MutableMessageState {
     ensureGreaterThan("message key", messageKey, 0);
     ensureNotNullOrEmpty("BPMN process id", bpmnProcessId);
 
-    this.messageKey.wrapLong(messageKey);
-    bpmnProcessIdKey.wrapBuffer(bpmnProcessId);
+    this.messageKey.recordValue(messageKey);
+    bpmnProcessIdKey.recordBufferContent(bpmnProcessId);
 
     correlatedMessageColumnFamily.deleteIfExists(messageBpmnProcessIdKey);
   }
@@ -274,9 +274,9 @@ public final class DbMessageState implements MutableMessageState {
     ensureNotNullOrEmpty("BPMN process id", bpmnProcessId);
     ensureNotNullOrEmpty("correlation key", correlationKey);
 
-    bpmnProcessIdKey.wrapBuffer(bpmnProcessId);
-    this.correlationKey.wrapBuffer(correlationKey);
-    activeProcessInstancesByCorrelationKeyColumnFamily.insert(
+    bpmnProcessIdKey.recordBufferContent(bpmnProcessId);
+    this.correlationKey.recordBufferContent(correlationKey);
+    activeProcessInstancesByCorrelationKeyColumnFamily.recordEntry(
         bpmnProcessIdCorrelationKey, DbNil.INSTANCE);
   }
 
@@ -286,8 +286,8 @@ public final class DbMessageState implements MutableMessageState {
     ensureNotNullOrEmpty("BPMN process id", bpmnProcessId);
     ensureNotNullOrEmpty("correlation key", correlationKey);
 
-    bpmnProcessIdKey.wrapBuffer(bpmnProcessId);
-    this.correlationKey.wrapBuffer(correlationKey);
+    bpmnProcessIdKey.recordBufferContent(bpmnProcessId);
+    this.correlationKey.recordBufferContent(correlationKey);
     activeProcessInstancesByCorrelationKeyColumnFamily.deleteExisting(bpmnProcessIdCorrelationKey);
   }
 
@@ -297,16 +297,16 @@ public final class DbMessageState implements MutableMessageState {
     ensureGreaterThan("process instance key", processInstanceKey, 0);
     ensureNotNullOrEmpty("correlation key", correlationKey);
 
-    this.processInstanceKey.wrapLong(processInstanceKey);
-    this.correlationKey.wrapBuffer(correlationKey);
-    processInstanceCorrelationKeyColumnFamily.insert(this.processInstanceKey, this.correlationKey);
+    this.processInstanceKey.recordValue(processInstanceKey);
+    this.correlationKey.recordBufferContent(correlationKey);
+    processInstanceCorrelationKeyColumnFamily.recordEntry(this.processInstanceKey, this.correlationKey);
   }
 
   @Override
   public void removeProcessInstanceCorrelationKey(final long processInstanceKey) {
     ensureGreaterThan("process instance key", processInstanceKey, 0);
 
-    this.processInstanceKey.wrapLong(processInstanceKey);
+    this.processInstanceKey.recordValue(processInstanceKey);
     processInstanceCorrelationKeyColumnFamily.deleteExisting(this.processInstanceKey);
   }
 
@@ -317,26 +317,26 @@ public final class DbMessageState implements MutableMessageState {
       return;
     }
 
-    messageKey.wrapLong(storedMessage.getMessageKey());
+    messageKey.recordValue(storedMessage.getMessageKey());
     messageColumnFamily.deleteExisting(messageKey);
 
-    tenantIdKey.wrapString(storedMessage.getMessage().getTenantId());
-    messageName.wrapBuffer(storedMessage.getMessage().getNameBuffer());
-    correlationKey.wrapBuffer(storedMessage.getMessage().getCorrelationKeyBuffer());
+    tenantIdKey.recordStringContent(storedMessage.getMessage().getTenantIdentifier());
+    messageName.recordBufferContent(storedMessage.getMessage().getNameBuffer());
+    correlationKey.recordBufferContent(storedMessage.getMessage().getCorrelationKeyBuffer());
 
     nameCorrelationMessageColumnFamily.deleteExisting(nameCorrelationMessageKey);
 
     final DirectBuffer messageId = storedMessage.getMessage().getMessageIdBuffer();
     if (messageId.capacity() > 0) {
-      this.messageId.wrapBuffer(messageId);
+      this.messageId.recordBufferContent(messageId);
       messageIdColumnFamily.deleteExisting(nameCorrelationMessageIdKey);
     }
 
-    deadline.wrapLong(storedMessage.getMessage().getDeadline());
+    deadline.recordValue(storedMessage.getMessage().getDeadline());
     deadlineColumnFamily.deleteExisting(deadlineMessageKey);
 
     localMessageDeadlineCount -= 1L;
-    messagesDeadlineCount.wrapLong(localMessageDeadlineCount);
+    messagesDeadlineCount.recordValue(localMessageDeadlineCount);
     messagesDeadlineCountColumnFamily.upsert(messagesDeadlineCountKey, messagesDeadlineCount);
     bufferedMessagesMetrics.setBufferedMessagesCounter(localMessageDeadlineCount);
 
@@ -352,8 +352,8 @@ public final class DbMessageState implements MutableMessageState {
     ensureGreaterThan("message key", messageKey, 0);
     ensureNotNullOrEmpty("BPMN process id", bpmnProcessId);
 
-    this.messageKey.wrapLong(messageKey);
-    bpmnProcessIdKey.wrapBuffer(bpmnProcessId);
+    this.messageKey.recordValue(messageKey);
+    bpmnProcessIdKey.recordBufferContent(bpmnProcessId);
 
     return correlatedMessageColumnFamily.exists(messageBpmnProcessIdKey);
   }
@@ -364,8 +364,8 @@ public final class DbMessageState implements MutableMessageState {
     ensureNotNullOrEmpty("BPMN process id", bpmnProcessId);
     ensureNotNullOrEmpty("correlation key", correlationKey);
 
-    bpmnProcessIdKey.wrapBuffer(bpmnProcessId);
-    this.correlationKey.wrapBuffer(correlationKey);
+    bpmnProcessIdKey.recordBufferContent(bpmnProcessId);
+    this.correlationKey.recordBufferContent(correlationKey);
     return activeProcessInstancesByCorrelationKeyColumnFamily.exists(bpmnProcessIdCorrelationKey);
   }
 
@@ -373,7 +373,7 @@ public final class DbMessageState implements MutableMessageState {
   public DirectBuffer getProcessInstanceCorrelationKey(final long processInstanceKey) {
     ensureGreaterThan("process instance key", processInstanceKey, 0);
 
-    this.processInstanceKey.wrapLong(processInstanceKey);
+    this.processInstanceKey.recordValue(processInstanceKey);
     final var correlationKey =
         processInstanceCorrelationKeyColumnFamily.get(this.processInstanceKey);
 
@@ -386,9 +386,9 @@ public final class DbMessageState implements MutableMessageState {
       final DirectBuffer name,
       final DirectBuffer correlationKey,
       final MessageVisitor visitor) {
-    tenantIdKey.wrapString(tenantId);
-    messageName.wrapBuffer(name);
-    this.correlationKey.wrapBuffer(correlationKey);
+    tenantIdKey.recordStringContent(tenantId);
+    messageName.recordBufferContent(name);
+    this.correlationKey.recordBufferContent(correlationKey);
 
     nameCorrelationMessageColumnFamily.whileEqualPrefix(
         nameAndCorrelationKey,
@@ -401,7 +401,7 @@ public final class DbMessageState implements MutableMessageState {
 
   @Override
   public StoredMessage getMessage(final long messageKey) {
-    this.messageKey.wrapLong(messageKey);
+    this.messageKey.recordValue(messageKey);
     return messageColumnFamily.get(this.messageKey);
   }
 
@@ -410,8 +410,8 @@ public final class DbMessageState implements MutableMessageState {
       final long timestamp, final Index startAt, final ExpiredMessageVisitor visitor) {
     final DbCompositeKey<DbLong, DbForeignKey<DbLong>> startAtKey;
     if (startAt != null) {
-      deadline.wrapLong(startAt.deadline());
-      messageKey.wrapLong(startAt.key());
+      deadline.recordValue(startAt.deadline());
+      messageKey.recordValue(startAt.key());
       startAtKey = deadlineMessageKey;
     } else {
       startAtKey = null;
@@ -439,10 +439,10 @@ public final class DbMessageState implements MutableMessageState {
       final DirectBuffer correlationKey,
       final DirectBuffer messageId,
       final String tenantId) {
-    tenantIdKey.wrapString(tenantId);
-    messageName.wrapBuffer(name);
-    this.correlationKey.wrapBuffer(correlationKey);
-    this.messageId.wrapBuffer(messageId);
+    tenantIdKey.recordStringContent(tenantId);
+    messageName.recordBufferContent(name);
+    this.correlationKey.recordBufferContent(correlationKey);
+    this.messageId.recordBufferContent(messageId);
 
     return messageIdColumnFamily.exists(nameCorrelationMessageIdKey);
   }

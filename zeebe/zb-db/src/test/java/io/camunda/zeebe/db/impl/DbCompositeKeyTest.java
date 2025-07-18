@@ -22,8 +22,8 @@ public final class DbCompositeKeyTest {
     final DbLong secondLong = new DbLong();
     final DbCompositeKey<DbLong, DbLong> compositeKey = new DbCompositeKey<>(firstLong, secondLong);
 
-    firstLong.wrapLong(23);
-    secondLong.wrapLong(121);
+    firstLong.recordValue(23);
+    secondLong.recordValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -42,8 +42,8 @@ public final class DbCompositeKeyTest {
     final DbLong secondLong = new DbLong();
     final DbCompositeKey<DbLong, DbLong> compositeKey = new DbCompositeKey<>(firstLong, secondLong);
 
-    firstLong.wrapLong(23);
-    secondLong.wrapLong(121);
+    firstLong.recordValue(23);
+    secondLong.recordValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -67,8 +67,8 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbString, DbLong> compositeKey =
         new DbCompositeKey<>(firstString, secondLong);
 
-    firstString.wrapString("foo");
-    secondLong.wrapLong(121);
+    firstString.recordStringContent("foo");
+    secondLong.recordValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -93,8 +93,8 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbString, DbLong> compositeKey =
         new DbCompositeKey<>(firstString, secondLong);
 
-    firstString.wrapString("foo");
-    secondLong.wrapLong(121);
+    firstString.recordStringContent("foo");
+    secondLong.recordValue(121);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -122,9 +122,9 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbCompositeKey<DbString, DbLong>, DbLong> nestedCompositeKey =
         new DbCompositeKey<>(compositeKey, thirdLong);
 
-    firstString.wrapString("foo");
-    secondLong.wrapLong(121);
-    thirdLong.wrapLong(100_234L);
+    firstString.recordStringContent("foo");
+    secondLong.recordValue(121);
+    thirdLong.recordValue(100_234L);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -162,9 +162,9 @@ public final class DbCompositeKeyTest {
     final DbCompositeKey<DbCompositeKey<DbString, DbLong>, DbLong> nestedCompositeKey =
         new DbCompositeKey<>(compositeKey, thirdLong);
 
-    firstString.wrapString("foo");
-    secondLong.wrapLong(121);
-    thirdLong.wrapLong(100_234L);
+    firstString.recordStringContent("foo");
+    secondLong.recordValue(121);
+    thirdLong.recordValue(100_234L);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();

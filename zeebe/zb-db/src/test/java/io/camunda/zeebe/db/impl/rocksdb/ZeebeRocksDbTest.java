@@ -37,12 +37,12 @@ final class ZeebeRocksDbTest {
         dbFactory.createDb(Files.createDirectory(tempDir.resolve("db")).toFile());
 
     final DbString key = new DbString();
-    key.wrapString("foo");
+    key.recordStringContent("foo");
     final DbString value = new DbString();
-    value.wrapString("bar");
+    value.recordStringContent("bar");
     final ColumnFamily<DbString, DbString> columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
-    columnFamily.insert(key, value);
+    columnFamily.recordEntry(key, value);
 
     // when
     final var snapshotDir = tempDir.resolve("snapshot").toFile();
@@ -60,12 +60,12 @@ final class ZeebeRocksDbTest {
     ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
 
     final DbString key = new DbString();
-    key.wrapString("foo");
+    key.recordStringContent("foo");
     final DbString value = new DbString();
-    value.wrapString("bar");
+    value.recordStringContent("bar");
     ColumnFamily<DbString, DbString> columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
-    columnFamily.insert(key, value);
+    columnFamily.recordEntry(key, value);
     db.close();
 
     // when
@@ -87,17 +87,17 @@ final class ZeebeRocksDbTest {
         dbFactory.createDb(Files.createDirectory(tempDir.resolve("db")).toFile());
 
     final DbString key = new DbString();
-    key.wrapString("foo");
+    key.recordStringContent("foo");
     final DbString value = new DbString();
-    value.wrapString("bar");
+    value.recordStringContent("bar");
     ColumnFamily<DbString, DbString> columnFamily =
         db.createColumnFamily(DefaultColumnFamily.DEFAULT, db.createContext(), key, value);
-    columnFamily.insert(key, value);
+    columnFamily.recordEntry(key, value);
 
     final var snapshotDir = tempDir.resolve("snapshot").toFile();
     db.createSnapshot(snapshotDir);
-    value.wrapString("otherString");
-    columnFamily.update(key, value);
+    value.recordStringContent("otherString");
+    columnFamily.updateEntry(key, value);
 
     // when
     assertThat(tempDir.resolve("db")).isNotEmptyDirectory();

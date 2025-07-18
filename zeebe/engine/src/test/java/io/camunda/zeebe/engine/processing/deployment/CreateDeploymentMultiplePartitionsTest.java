@@ -624,7 +624,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
             .deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     for (int partitionId = 1; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
               RecordingExporter.processRecords()
@@ -636,7 +636,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
               ProcessMetadataValue::getBpmnProcessId,
               ProcessMetadataValue::getVersion,
               ProcessMetadataValue::getProcessDefinitionKey,
-              TenantOwned::getTenantId)
+              TenantOwned::getTenantIdentifier)
           .describedAs("Processes are created for correct tenant")
           .containsExactly(
               tuple(
@@ -663,7 +663,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
             .deploy();
 
     // then
-    assertThat(deployment.getValue().getTenantId()).isEqualTo(tenant);
+    assertThat(deployment.getValue().getTenantIdentifier()).isEqualTo(tenant);
     for (int partitionId = 1; partitionId <= PARTITION_COUNT; partitionId++) {
       assertThat(
               RecordingExporter.decisionRequirementsRecords()
@@ -675,7 +675,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
               DecisionRequirementsMetadataValue::getDecisionRequirementsId,
               DecisionRequirementsMetadataValue::getDecisionRequirementsVersion,
               DecisionRequirementsMetadataValue::getDecisionRequirementsKey,
-              TenantOwned::getTenantId)
+              TenantOwned::getTenantIdentifier)
           .describedAs("DRGs are created for correct tenant")
           .containsExactly(
               tuple(
@@ -700,7 +700,7 @@ public final class CreateDeploymentMultiplePartitionsTest {
               DecisionRecordValue::getDecisionKey,
               DecisionRecordValue::getDecisionRequirementsId,
               DecisionRecordValue::getDecisionRequirementsKey,
-              TenantOwned::getTenantId)
+              TenantOwned::getTenantIdentifier)
           .describedAs("Decisions are created for correct tenant")
           .containsExactly(
               tuple(

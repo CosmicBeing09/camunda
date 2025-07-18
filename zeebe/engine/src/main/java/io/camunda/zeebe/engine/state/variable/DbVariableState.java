@@ -122,28 +122,28 @@ public class DbVariableState implements MutableVariableState {
     newVariable.setValue(value, valueOffset, valueLength);
     newVariable.setKey(key);
 
-    this.scopeKey.wrapLong(scopeKey);
+    this.scopeKey.recordValue(scopeKey);
     variableNameView.wrap(name, nameOffset, nameLength);
-    variableName.wrapBuffer(variableNameView);
+    variableName.recordBufferContent(variableNameView);
 
     variablesColumnFamily.upsert(scopeKeyVariableNameKey, newVariable);
   }
 
   @Override
   public void createScope(final long childKey, final long parentKey) {
-    this.childKey.wrapLong(childKey);
+    this.childKey.recordValue(childKey);
     this.parentKey.set(parentKey);
 
-    childParentColumnFamily.insert(this.childKey, this.parentKey);
+    childParentColumnFamily.recordEntry(this.childKey, this.parentKey);
   }
 
   @Override
   public void removeScope(final long scopeKey) {
-    this.scopeKey.wrapLong(scopeKey);
+    this.scopeKey.recordValue(scopeKey);
 
     removeAllVariables(scopeKey);
 
-    childKey.wrapLong(scopeKey);
+    childKey.recordValue(scopeKey);
     // TODO: Could be deleteExisting except for tests
     childParentColumnFamily.deleteIfExists(childKey);
   }
@@ -155,6 +155,19 @@ public class DbVariableState implements MutableVariableState {
         dbString -> true,
         (dbString, variable1) -> variablesColumnFamily.deleteExisting(scopeKeyVariableNameKey),
         () -> false);
+  }
+
+  @Override
+  public void storeVariableDocumentState(final long key, final VariableDocumentRecord record) {
+    scopeKey.recordValue(record.getScopeKey());
+    variableDocumentStateToWrite.setKey(key).setRecord(record);
+    variableDocumentStateByScopeKeyColumnFamily.recordEntry(scopeKey, variableDocumentStateToWrite);
+  }
+
+  @Override
+  public void removeVariableDocumentState(final long scopeKey) {
+    this.scopeKey.recordValue(scopeKey);
+    variableDocumentStateByScopeKeyColumnFamily.deleteIfExists(this.scopeKey);
   }
 
   @Override
@@ -319,36 +332,23 @@ public class DbVariableState implements MutableVariableState {
 
   @Override
   public long getParentScopeKey(final long childScopeKey) {
-    childKey.wrapLong(childScopeKey);
+    childKey.recordValue(childScopeKey);
 
     final ParentScopeKey parentScopeKey = childParentColumnFamily.get(childKey);
     return parentScopeKey != null ? parentScopeKey.get() : NO_PARENT;
   }
 
   @Override
-  public void storeVariableDocumentState(final long key, final VariableDocumentRecord record) {
-    scopeKey.wrapLong(record.getScopeKey());
-    variableDocumentStateToWrite.setKey(key).setRecord(record);
-    variableDocumentStateByScopeKeyColumnFamily.insert(scopeKey, variableDocumentStateToWrite);
-  }
-
-  @Override
-  public void removeVariableDocumentState(final long scopeKey) {
-    this.scopeKey.wrapLong(scopeKey);
-    variableDocumentStateByScopeKeyColumnFamily.deleteIfExists(this.scopeKey);
-  }
-
-  @Override
   public Optional<VariableDocumentState> findVariableDocumentState(final long scopeKey) {
-    this.scopeKey.wrapLong(scopeKey);
+    this.scopeKey.recordValue(scopeKey);
     return Optional.ofNullable(variableDocumentStateByScopeKeyColumnFamily.get(this.scopeKey));
   }
 
   private VariableInstance getVariableLocal(
       final long scopeKey, final DirectBuffer name, final int nameOffset, final int nameLength) {
-    this.scopeKey.wrapLong(scopeKey);
+    this.scopeKey.recordValue(scopeKey);
     variableNameView.wrap(name, nameOffset, nameLength);
-    variableName.wrapBuffer(variableNameView);
+    variableName.recordBufferContent(variableNameView);
 
     return variablesColumnFamily.get(scopeKeyVariableNameKey);
   }
@@ -387,7 +387,7 @@ public class DbVariableState implements MutableVariableState {
       final Predicate<DbString> variableFilter,
       final BiConsumer<DbString, VariableInstance> variableConsumer,
       final BooleanSupplier completionCondition) {
-    this.scopeKey.wrapLong(scopeKey);
+    this.scopeKey.recordValue(scopeKey);
 
     variablesColumnFamily.whileEqualPrefix(
         this.scopeKey,

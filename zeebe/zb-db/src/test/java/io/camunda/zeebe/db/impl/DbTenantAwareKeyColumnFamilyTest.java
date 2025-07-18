@@ -62,13 +62,13 @@ public final class DbTenantAwareKeyColumnFamilyTest {
   @Test
   void shouldInsertValue() {
     // given
-    tenantKey.wrapString("tenant");
-    firstKey.wrapLong(1);
-    value.wrapString("foo");
+    tenantKey.recordStringContent("tenant");
+    firstKey.recordValue(1);
+    value.recordStringContent("foo");
 
     // when
-    columnFamily.insert(tenantAwareKey, value);
-    value.wrapString("bar");
+    columnFamily.recordEntry(tenantAwareKey, value);
+    value.recordStringContent("bar");
 
     // then
     final DbString zbString = columnFamily.get(tenantAwareKey);
@@ -83,13 +83,13 @@ public final class DbTenantAwareKeyColumnFamilyTest {
   @Test
   void shouldUpsertValue() {
     // given
-    tenantKey.wrapString("tenant");
-    firstKey.wrapLong(1);
-    value.wrapString("foo");
+    tenantKey.recordStringContent("tenant");
+    firstKey.recordValue(1);
+    value.recordStringContent("foo");
 
     // when
     columnFamily.upsert(tenantAwareKey, value);
-    value.wrapString("bar");
+    value.recordStringContent("bar");
 
     // then
     final DbString zbString = columnFamily.get(tenantAwareKey);
@@ -106,15 +106,15 @@ public final class DbTenantAwareKeyColumnFamilyTest {
     // given
     final String tenant = "tenant";
     final String otherTenant = "otherTenant";
-    tenantKey.wrapString(tenant);
-    firstKey.wrapLong(1);
-    value.wrapString("foo");
+    tenantKey.recordStringContent(tenant);
+    firstKey.recordValue(1);
+    value.recordStringContent("foo");
 
     // when
     columnFamily.upsert(tenantAwareKey, value);
-    tenantKey.wrapString(otherTenant);
+    tenantKey.recordStringContent(otherTenant);
     columnFamily.upsert(tenantAwareKey, value);
-    value.wrapString("bar");
+    value.recordStringContent("bar");
 
     // then
     final var keys = new ArrayList<>();
@@ -136,15 +136,15 @@ public final class DbTenantAwareKeyColumnFamilyTest {
   @Test
   public void shouldUpdateValue() {
     // given
-    tenantKey.wrapString("tenant");
-    firstKey.wrapLong(1);
-    value.wrapString("foo");
-    columnFamily.insert(tenantAwareKey, value);
+    tenantKey.recordStringContent("tenant");
+    firstKey.recordValue(1);
+    value.recordStringContent("foo");
+    columnFamily.recordEntry(tenantAwareKey, value);
 
     // when
-    value.wrapString("bar");
+    value.recordStringContent("bar");
     columnFamily.upsert(tenantAwareKey, value);
-    value.wrapString("baz");
+    value.recordStringContent("baz");
 
     // then
     final DbString zbString = columnFamily.get(tenantAwareKey);
@@ -251,8 +251,8 @@ public final class DbTenantAwareKeyColumnFamilyTest {
     upsertKeyValuePair(888L, "otherTenantId", "lastOne");
     upsertKeyValuePair(125L, "otherTenantId", "baz");
     final var startAtWrappedKey = new DbLong();
-    startAtWrappedKey.wrapLong(124L);
-    tenantKey.wrapString("tenantId");
+    startAtWrappedKey.recordValue(124L);
+    tenantKey.recordStringContent("tenantId");
     final var startAt = new DbTenantAwareKey<>(tenantKey, startAtWrappedKey, PlacementType.SUFFIX);
 
     // when
@@ -284,7 +284,7 @@ public final class DbTenantAwareKeyColumnFamilyTest {
     upsertCompositeKeyValuePair(321L, 222L, "otherTenantId", "lastOne");
     upsertCompositeKeyValuePair(123L, 222L, "otherTenantId", "baz");
     final var prefix = new DbLong();
-    prefix.wrapLong(123L);
+    prefix.recordValue(123L);
 
     // when
     final var firstKeys = new ArrayList<>();
@@ -308,18 +308,18 @@ public final class DbTenantAwareKeyColumnFamilyTest {
   }
 
   private void upsertKeyValuePair(final long key, final String tenantId, final String value) {
-    firstKey.wrapLong(key);
-    this.value.wrapString(value);
-    tenantKey.wrapString(tenantId);
+    firstKey.recordValue(key);
+    this.value.recordStringContent(value);
+    tenantKey.recordStringContent(tenantId);
     columnFamily.upsert(tenantAwareKey, this.value);
   }
 
   private void upsertCompositeKeyValuePair(
       final long firstKey, final long secondKey, final String tenantId, final String value) {
-    this.firstKey.wrapLong(firstKey);
-    this.secondKey.wrapLong(secondKey);
-    this.value.wrapString(value);
-    tenantKey.wrapString(tenantId);
+    this.firstKey.recordValue(firstKey);
+    this.secondKey.recordValue(secondKey);
+    this.value.recordStringContent(value);
+    tenantKey.recordStringContent(tenantId);
     compositeColumnFamily.upsert(compositeTenantAwareKey, this.value);
   }
 }

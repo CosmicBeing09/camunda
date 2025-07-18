@@ -68,40 +68,40 @@ public final class DbDeploymentState implements MutableDeploymentState {
 
   @Override
   public void addPendingDeploymentDistribution(final long deploymentKey, final int partition) {
-    this.deploymentKey.wrapLong(deploymentKey);
+    this.deploymentKey.recordValue(deploymentKey);
     partitionKey.wrapInt(partition);
-    pendingDeploymentColumnFamily.insert(deploymentPartitionKey, DbNil.INSTANCE);
+    pendingDeploymentColumnFamily.recordEntry(deploymentPartitionKey, DbNil.INSTANCE);
   }
 
   @Override
   public void removePendingDeploymentDistribution(final long deploymentKey, final int partition) {
-    this.deploymentKey.wrapLong(deploymentKey);
+    this.deploymentKey.recordValue(deploymentKey);
     partitionKey.wrapInt(partition);
     pendingDeploymentColumnFamily.deleteExisting(deploymentPartitionKey);
   }
 
   @Override
   public void storeDeploymentRecord(final long key, final DeploymentRecord value) {
-    deploymentKey.wrapLong(key);
+    deploymentKey.recordValue(key);
     deploymentRaw.setDeploymentRecord(value);
-    deploymentRawColumnFamily.insert(deploymentKey, deploymentRaw);
+    deploymentRawColumnFamily.recordEntry(deploymentKey, deploymentRaw);
   }
 
   @Override
   public void removeDeploymentRecord(final long key) {
-    deploymentKey.wrapLong(key);
+    deploymentKey.recordValue(key);
     deploymentRawColumnFamily.deleteIfExists(deploymentKey);
   }
 
   @Override
   public void markAllDeploymentsAsStored() {
-    deploymentsRecreatedKey.wrapString(DEPLOYMENTS_RECREATED_KEY);
-    deploymentsRecreatedColumnFamily.insert(deploymentsRecreatedKey, DbNil.INSTANCE);
+    deploymentsRecreatedKey.recordStringContent(DEPLOYMENTS_RECREATED_KEY);
+    deploymentsRecreatedColumnFamily.recordEntry(deploymentsRecreatedKey, DbNil.INSTANCE);
   }
 
   @Override
   public boolean hasPendingDeploymentDistribution(final long deploymentKey) {
-    this.deploymentKey.wrapLong(deploymentKey);
+    this.deploymentKey.recordValue(deploymentKey);
 
     final var hasPending = new MutableBoolean();
     pendingDeploymentColumnFamily.whileEqualPrefix(
@@ -116,26 +116,26 @@ public final class DbDeploymentState implements MutableDeploymentState {
 
   @Override
   public boolean hasPendingDeploymentDistribution(final long deploymentKey, final int partitionId) {
-    this.deploymentKey.wrapLong(deploymentKey);
+    this.deploymentKey.recordValue(deploymentKey);
     partitionKey.wrapInt(partitionId);
     return pendingDeploymentColumnFamily.exists(deploymentPartitionKey);
   }
 
   @Override
   public boolean hasStoredAllDeployments() {
-    deploymentsRecreatedKey.wrapString(DEPLOYMENTS_RECREATED_KEY);
+    deploymentsRecreatedKey.recordStringContent(DEPLOYMENTS_RECREATED_KEY);
     return deploymentsRecreatedColumnFamily.exists(deploymentsRecreatedKey);
   }
 
   @Override
   public boolean hasStoredDeploymentRecord(final long deploymentKey) {
-    this.deploymentKey.wrapLong(deploymentKey);
+    this.deploymentKey.recordValue(deploymentKey);
     return deploymentRawColumnFamily.exists(this.deploymentKey);
   }
 
   @Override
   public DeploymentRecord getStoredDeploymentRecord(final long key) {
-    deploymentKey.wrapLong(key);
+    deploymentKey.recordValue(key);
 
     final var storedDeploymentRaw = deploymentRawColumnFamily.get(deploymentKey);
 
@@ -183,7 +183,7 @@ public final class DbDeploymentState implements MutableDeploymentState {
   @Override
   public DeploymentRecord nextDeployment(final long previousDeploymentKey) {
     final var nextRawDeployment = new MutableReference<DeploymentRaw>();
-    deploymentKey.wrapLong(previousDeploymentKey + 1);
+    deploymentKey.recordValue(previousDeploymentKey + 1);
     deploymentRawColumnFamily.whileTrue(
         deploymentKey,
         (deploymentKey, rawDeployment) -> {

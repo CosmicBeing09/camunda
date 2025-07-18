@@ -145,7 +145,7 @@ public final class MessageSubscriptionCorrelateProcessor
               .setName(messageSubscription.getMessageName())
               .setCorrelationKey(messageSubscription.getCorrelationKey())
               .setVariables(messageSubscription.getVariablesBuffer())
-              .setTenantId(messageSubscription.getTenantId())
+              .setTenantId(messageSubscription.getTenantIdentifier())
               .setMessageKey(messageKey)
               .setProcessInstanceKey(messageSubscription.getProcessInstanceKey());
 

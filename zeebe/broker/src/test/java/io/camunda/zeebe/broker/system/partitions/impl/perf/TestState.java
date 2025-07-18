@@ -94,7 +94,7 @@ final class TestState {
 
     for (int i = 0; i < BATCH_INSERT_SIZE; i++) {
       final var column = columns.get(random.nextInt(columns.size()));
-      column.insert(generateData(), generateData());
+      column.recordEntry(generateData(), generateData());
     }
   }
 
@@ -102,7 +102,7 @@ final class TestState {
     final var buffer = new byte[KEY_VALUE_SIZE];
     final var data = new DbString();
     ThreadLocalRandom.current().nextBytes(buffer);
-    data.wrapBuffer(new UnsafeBuffer(buffer));
+    data.recordBufferContent(new UnsafeBuffer(buffer));
 
     return data;
   }

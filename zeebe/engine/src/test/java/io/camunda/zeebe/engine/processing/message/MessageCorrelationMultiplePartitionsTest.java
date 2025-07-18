@@ -107,7 +107,7 @@ public final class MessageCorrelationMultiplePartitionsTest {
                 tuple(
                     r.getPartitionId(),
                     r.getValue().getCorrelationKey(),
-                    r.getValue().getTenantId()))
+                    r.getValue().getTenantIdentifier()))
         .containsOnly(
             tuple(
                 START_PARTITION_ID,
@@ -226,7 +226,7 @@ public final class MessageCorrelationMultiplePartitionsTest {
                 tuple(
                     r.getPartitionId(),
                     r.getValue().getCorrelationKey(),
-                    r.getValue().getTenantId()))
+                    r.getValue().getTenantIdentifier()))
         .hasSize(30)
         .containsOnly(
             tuple(

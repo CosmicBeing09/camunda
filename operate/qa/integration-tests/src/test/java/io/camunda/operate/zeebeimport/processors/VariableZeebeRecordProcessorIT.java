@@ -72,7 +72,7 @@ public class VariableZeebeRecordProcessorIT extends OperateSearchAbstractIT {
     // process instance fields are updated
     final VariableEntity updatedVar = findVariableById(var.getId());
     // old values
-    assertThat(updatedVar.getTenantId()).isEqualTo(var.getTenantId());
+    assertThat(updatedVar.getTenantIdentifier()).isEqualTo(var.getTenantIdentifier());
     assertThat(updatedVar.getName()).isEqualTo(var.getName());
     // new values
     assertThat(updatedVar.getValue()).isEqualTo(newVarValue);

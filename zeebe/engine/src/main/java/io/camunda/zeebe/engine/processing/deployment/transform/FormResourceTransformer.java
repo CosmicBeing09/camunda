@@ -83,7 +83,7 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
                 metadata
                     .setFormKey(key)
                     .setVersion(
-                        formState.getNextFormVersion(metadata.getFormId(), metadata.getTenantId()))
+                        formState.getNextFormVersion(metadata.getFormId(), metadata.getTenantIdentifier()))
                     .setDuplicate(false)
                     .setDeploymentKey(deployment.getDeploymentKey());
               }
@@ -132,7 +132,7 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
       final DeploymentRecord deployment) {
     final LongSupplier newFormKey = keyGenerator::nextKey;
     final DirectBuffer checksum = checksumGenerator.checksum(resource.getResourceBuffer());
-    final String tenantId = deployment.getTenantId();
+    final String tenantId = deployment.getTenantIdentifier();
 
     formRecord.setFormId(form.id);
     formRecord.setChecksum(checksum);

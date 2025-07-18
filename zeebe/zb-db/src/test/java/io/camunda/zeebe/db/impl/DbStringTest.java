@@ -24,7 +24,7 @@ public final class DbStringTest {
   @Test
   public void shouldWrapString() {
     // given
-    zbString.wrapString("foo");
+    zbString.recordStringContent("foo");
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -40,7 +40,7 @@ public final class DbStringTest {
   @Test
   public void shouldWrapBuffer() {
     // given
-    zbString.wrapBuffer(wrapString("foo"));
+    zbString.recordBufferContent(wrapString("foo"));
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();
@@ -60,7 +60,7 @@ public final class DbStringTest {
     final DirectBuffer view = new UnsafeBuffer(0, 0);
     view.wrap(value.getBytes(), 0, 3);
 
-    zbString.wrapBuffer(view);
+    zbString.recordBufferContent(view);
 
     // when
     final ExpandableArrayBuffer buffer = new ExpandableArrayBuffer();

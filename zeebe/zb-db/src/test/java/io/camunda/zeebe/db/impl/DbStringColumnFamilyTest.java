@@ -46,12 +46,12 @@ public final class DbStringColumnFamilyTest {
   @Test
   public void shouldUpsertValue() {
     // given
-    key.wrapString("foo");
-    value.wrapString("baring");
+    key.recordStringContent("foo");
+    value.recordStringContent("baring");
 
     // when
     columnFamily.upsert(key, value);
-    value.wrapString("yes");
+    value.recordStringContent("yes");
 
     // then
     final DbString zbLong = columnFamily.get(key);
@@ -137,7 +137,7 @@ public final class DbStringColumnFamilyTest {
     upsertKeyValuePair("another", "string");
     upsertKeyValuePair("this is the one", "as you know");
     final var startAtKey = new DbString();
-    startAtKey.wrapString("hello");
+    startAtKey.recordStringContent("hello");
 
     // when
     final List<String> keys = new ArrayList<>();
@@ -166,7 +166,7 @@ public final class DbStringColumnFamilyTest {
     upsertKeyValuePair("and", "be good");
 
     // when
-    key.wrapString("an");
+    key.recordStringContent("an");
     final List<String> keys = new ArrayList<>();
     final List<String> values = new ArrayList<>();
     columnFamily.whileEqualPrefix(
@@ -196,7 +196,7 @@ public final class DbStringColumnFamilyTest {
     upsertKeyValuePair("and", "be good");
 
     // when
-    key.wrapString("and");
+    key.recordStringContent("and");
     final List<String> keys = new ArrayList<>();
     final List<String> values = new ArrayList<>();
     columnFamily.whileEqualPrefix(
@@ -217,7 +217,7 @@ public final class DbStringColumnFamilyTest {
   public void shouldAllowSingleNestedWhileEqualPrefix() {
     // given
     upsertKeyValuePair("and", "be good");
-    key.wrapString("and");
+    key.recordStringContent("and");
 
     // when
     columnFamily.whileEqualPrefix(
@@ -233,7 +233,7 @@ public final class DbStringColumnFamilyTest {
   public void shouldThrowExceptionOnMultipleNestedWhileEqualPrefix() {
     // given
     upsertKeyValuePair("and", "be good");
-    key.wrapString("and");
+    key.recordStringContent("and");
 
     // when
     assertThatThrownBy(
@@ -253,8 +253,8 @@ public final class DbStringColumnFamilyTest {
   }
 
   private void upsertKeyValuePair(final String key, final String value) {
-    this.key.wrapString(key);
-    this.value.wrapString(value);
+    this.key.recordStringContent(key);
+    this.value.recordStringContent(value);
     columnFamily.upsert(this.key, this.value);
   }
 }

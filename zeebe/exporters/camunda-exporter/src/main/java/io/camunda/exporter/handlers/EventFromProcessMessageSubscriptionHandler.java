@@ -73,7 +73,7 @@ public class EventFromProcessMessageSubscriptionHandler
     entity
         .setBpmnProcessId(recordValue.getBpmnProcessId())
         .setFlowNodeId(recordValue.getElementId())
-        .setTenantId(tenantOrDefault(recordValue.getTenantId()))
+        .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()))
         .setPositionProcessMessageSubscription(record.getPosition());
 
     final long activityInstanceKey = recordValue.getElementInstanceKey();

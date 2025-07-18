@@ -67,7 +67,7 @@ public final class SignalSubscriptionStateTest {
     // when
     final var storedSubscription = new MutableReference<SignalSubscription>();
     state.visitBySignalName(
-        subscription.getSignalNameBuffer(), subscription.getTenantId(), storedSubscription::set);
+        subscription.getSignalNameBuffer(), subscription.getTenantIdentifier(), storedSubscription::set);
 
     assertThat(storedSubscription).isNotNull();
     assertThat(storedSubscription.get().getKey()).isEqualTo(1L);

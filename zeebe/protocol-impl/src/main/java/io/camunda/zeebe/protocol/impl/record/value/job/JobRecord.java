@@ -130,7 +130,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
     jobListenerEventTypeProp.setValue(record.getJobListenerEventType());
     elementIdProp.setValue(record.getElementIdBuffer());
     elementInstanceKeyProp.setValue(record.getElementInstanceKey());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
     setChangedAttributes(record.getChangedAttributes());
     resultProp.getValue().wrap(record.getResult());
   }
@@ -449,7 +449,7 @@ public final class JobRecord extends UnifiedRecordValue implements JobRecordValu
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

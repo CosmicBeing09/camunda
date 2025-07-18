@@ -115,7 +115,7 @@ public final class PersistedForm extends UnpackedObject implements DbValue {
     resourceNameProp.setValue(record.getResourceNameBuffer());
     resourceProp.setValue(BufferUtil.wrapArray(record.getResource()));
     checksumProp.setValue(record.getChecksumBuffer());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
     deploymentKeyProp.setValue(record.getDeploymentKey());
     versionTagProp.setValue(record.getVersionTag());
   }

@@ -51,7 +51,7 @@ public class IncidentEntityTransformer
         value.getCreationTime(),
         toState(value.getState()),
         value.getJobKey(),
-        value.getTenantId());
+        value.getTenantIdentifier());
   }
 
   private IncidentState toState(

@@ -107,7 +107,7 @@ public final class TimerRecord extends UnifiedRecordValue implements TimerRecord
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

@@ -80,7 +80,7 @@ public class TaskVariableEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

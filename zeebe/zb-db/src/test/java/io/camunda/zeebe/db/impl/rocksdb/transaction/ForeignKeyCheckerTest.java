@@ -40,7 +40,7 @@ final class ForeignKeyCheckerTest {
     final var tx = mock(ZeebeTransaction.class);
     final var check = new ForeignKeyChecker(db, new ConsistencyChecksSettings(true, true));
     final var key = new DbLong();
-    key.wrapLong(1);
+    key.recordValue(1);
 
     // when
     when(tx.get(anyLong(), anyLong(), any(), anyInt())).thenReturn(null);
@@ -60,7 +60,7 @@ final class ForeignKeyCheckerTest {
     final var tx = mock(ZeebeTransaction.class);
     final var check = new ForeignKeyChecker(db, new ConsistencyChecksSettings(true, true));
     final var key = new DbLong();
-    key.wrapLong(1);
+    key.recordValue(1);
 
     // when -- tx says every key exists
     when(tx.get(anyLong(), anyLong(), any(), anyInt())).thenReturn(new byte[] {});
@@ -111,7 +111,7 @@ final class ForeignKeyCheckerTest {
     // then
     assertThatThrownBy(
             () -> {
-              key.wrapLong(5);
+              key.recordValue(5);
               check.assertExists(
                   tx,
                   new DbForeignKey<>(
@@ -140,8 +140,8 @@ final class ForeignKeyCheckerTest {
 
     // when -- key 1 exists in first column family
     final var cf1Key = new DbLong();
-    cf1Key.wrapLong(1);
-    cf1.insert(cf1Key, DbNil.INSTANCE);
+    cf1Key.recordValue(1);
+    cf1.recordEntry(cf1Key, DbNil.INSTANCE);
 
     // then -- referring to key 1 does not throw
     assertDoesNotThrow(
@@ -160,8 +160,8 @@ final class ForeignKeyCheckerTest {
     final var txContext = db.createContext();
 
     final var cf1Key = new DbCompositeKey<>(new DbLong(), new DbString());
-    cf1Key.first().wrapLong(1);
-    cf1Key.second().wrapString("suffix");
+    cf1Key.first().recordValue(1);
+    cf1Key.second().recordStringContent("suffix");
     final var cf1 =
         db.createColumnFamily(
             TestColumnFamilies.TEST_COLUMN_FAMILY, txContext, cf1Key, DbNil.INSTANCE);
@@ -171,13 +171,13 @@ final class ForeignKeyCheckerTest {
             (ZeebeTransactionDb<?>) db, new ConsistencyChecksSettings(true, true));
 
     // when -- key 1 exists in first column family
-    cf1.insert(cf1Key, DbNil.INSTANCE);
+    cf1.recordEntry(cf1Key, DbNil.INSTANCE);
 
     // then -- referring to key 1 by prefix does not throw
     final var fk =
         new DbForeignKey<>(
             new DbLong(), TestColumnFamilies.TEST_COLUMN_FAMILY, MatchType.Prefix, (any) -> false);
-    fk.inner().wrapLong(cf1Key.first().getValue());
+    fk.inner().recordValue(cf1Key.first().getValue());
     assertDoesNotThrow(
         () -> check.assertExists((ZeebeTransaction) txContext.getCurrentTransaction(), fk));
 
@@ -191,8 +191,8 @@ final class ForeignKeyCheckerTest {
     final var txContext = db.createContext();
 
     final var cf1Key = new DbCompositeKey<>(new DbLong(), new DbString());
-    cf1Key.first().wrapLong(1);
-    cf1Key.second().wrapString("suffix");
+    cf1Key.first().recordValue(1);
+    cf1Key.second().recordStringContent("suffix");
     final var cf1 =
         db.createColumnFamily(
             TestColumnFamilies.TEST_COLUMN_FAMILY, txContext, cf1Key, DbNil.INSTANCE);
@@ -202,13 +202,13 @@ final class ForeignKeyCheckerTest {
             (ZeebeTransactionDb<?>) db, new ConsistencyChecksSettings(true, true));
 
     // when -- key 1 exists in first column family
-    cf1.insert(cf1Key, DbNil.INSTANCE);
+    cf1.recordEntry(cf1Key, DbNil.INSTANCE);
 
     // then -- referring to a non-existing key prefix fails
     final var fk =
         new DbForeignKey<>(
             new DbLong(), TestColumnFamilies.TEST_COLUMN_FAMILY, MatchType.Prefix, (any) -> false);
-    fk.inner().wrapLong(cf1Key.first().getValue() + 1);
+    fk.inner().recordValue(cf1Key.first().getValue() + 1);
     assertThatThrownBy(
             () -> check.assertExists((ZeebeTransaction) txContext.getCurrentTransaction(), fk))
         .isInstanceOf(ZeebeDbInconsistentException.class)

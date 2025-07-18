@@ -82,7 +82,7 @@ final class ProcessInstanceElementMigratedV2Applier
         processState
             .getFlowElement(
                 value.getProcessDefinitionKey(),
-                value.getTenantId(),
+                value.getTenantIdentifier(),
                 value.getElementIdBuffer(),
                 ExecutableFlowElementContainer.class)
             .hasMessageStartEvent();

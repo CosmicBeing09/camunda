@@ -25,5 +25,5 @@ public interface TenantOwned {
   String DEFAULT_TENANT_IDENTIFIER = "<default>";
 
   /** Returns the identifier of the tenant that owns this entity. */
-  String getTenantId();
+  String getTenantIdentifier();
 }

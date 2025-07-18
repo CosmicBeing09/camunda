@@ -140,14 +140,14 @@ final class ZeebeRocksDbFactoryTest {
     final var factory = DefaultZeebeDbFactory.<DefaultColumnFamily>getDefaultFactory();
     final var key = new DbString();
     final var value = new DbString();
-    key.wrapString("foo");
-    value.wrapString("bar");
+    key.recordStringContent("foo");
+    value.recordStringContent("bar");
 
     try (final var db = factory.createDb(path)) {
       final var column =
           db.createColumnFamily(
               DefaultColumnFamily.DEFAULT, db.createContext(), new DbString(), new DbString());
-      column.insert(key, value);
+      column.recordEntry(key, value);
     }
 
     // when
@@ -189,14 +189,14 @@ final class ZeebeRocksDbFactoryTest {
     final var factory = DefaultZeebeDbFactory.<DefaultColumnFamily>getDefaultFactory();
     final var key = new DbString();
     final var value = new DbString();
-    key.wrapString("foo");
-    value.wrapString("bar");
+    key.recordStringContent("foo");
+    value.recordStringContent("bar");
 
     try (final var db = factory.createDb(dbPath)) {
       final var column =
           db.createColumnFamily(
               DefaultColumnFamily.DEFAULT, db.createContext(), new DbString(), new DbString());
-      column.insert(key, value);
+      column.recordEntry(key, value);
     }
 
     // when - then

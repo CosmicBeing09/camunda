@@ -123,7 +123,7 @@ public class ZeebeProcessDefinitionImportService
         .dataSource(
             new ZeebeDataSourceDto(
                 configurationService.getConfiguredZeebe().getName(), partitionId))
-        .tenantId(recordData.getTenantId())
+        .tenantId(recordData.getTenantIdentifier())
         .deleted(false)
         .flowNodeData(BpmnModelUtil.extractFlowNodeData(bpmn))
         .userTaskNames(BpmnModelUtil.extractUserTaskNames(bpmn))

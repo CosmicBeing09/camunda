@@ -131,7 +131,7 @@ final class DecisionRequirementsHandlerTest {
     assertThat(entity.getResourceName()).isEqualTo(recordValue.getResourceName());
     assertThat(entity.getXml())
         .isEqualTo(new String(recordValue.getResource(), StandardCharsets.UTF_8));
-    assertThat(entity.getTenantId()).isEqualTo(recordValue.getTenantId());
+    assertThat(entity.getTenantIdentifier()).isEqualTo(recordValue.getTenantIdentifier());
   }
 
   @Test

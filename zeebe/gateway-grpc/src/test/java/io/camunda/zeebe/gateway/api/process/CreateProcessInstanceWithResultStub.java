@@ -53,7 +53,7 @@ public final class CreateProcessInstanceWithResultStub
         .setBpmnProcessId(PROCESS_ID)
         .setVariables(piCreationRecord.getVariablesBuffer())
         .setVersion(PROCESS_VERSION)
-        .setTenantId(piCreationRecord.getTenantId())
+        .setTenantId(piCreationRecord.getTenantIdentifier())
         .setProcessDefinitionKey(PROCESS_KEY)
         .setProcessInstanceKey(PROCESS_INSTANCE_KEY);
 

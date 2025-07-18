@@ -188,7 +188,7 @@ public class DecisionInstanceDto
     setId(entity.getId())
         .setDecisionDefinitionId(entity.getDecisionDefinitionId())
         .setDecisionId(entity.getDecisionId())
-        .setTenantId(entity.getTenantId())
+        .setTenantId(entity.getTenantIdentifier())
         .setDecisionName(entity.getDecisionName())
         .setDecisionType(entity.getDecisionType())
         .setDecisionVersion(entity.getDecisionVersion())

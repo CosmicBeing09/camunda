@@ -166,7 +166,7 @@ public final class ProcessInstanceCreationRecord extends UnifiedRecordValue
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProperty.getValue());
   }
 

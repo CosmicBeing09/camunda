@@ -150,7 +150,7 @@ public class IncidentZeebeRecordProcessor {
       incident
           .setState(IncidentState.PENDING)
           .setCreationTime(DateUtil.toOffsetDateTime(Instant.ofEpochMilli(record.getTimestamp())))
-          .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+          .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
       LOGGER.debug("Index incident: id {}", incident.getId());
 

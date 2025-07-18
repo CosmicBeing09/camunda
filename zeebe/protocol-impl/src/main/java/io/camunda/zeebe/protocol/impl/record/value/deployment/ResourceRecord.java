@@ -52,7 +52,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
     checksumProp.setValue(metadata.getChecksumBuffer());
     resourceKeyProp.setValue(metadata.getResourceKey());
     resourceNameProp.setValue(metadata.getResourceNameBuffer());
-    tenantIdProp.setValue(metadata.getTenantId());
+    tenantIdProp.setValue(metadata.getTenantIdentifier());
     deploymentKeyProp.setValue(metadata.getDeploymentKey());
     versionTagProp.setValue(metadata.getVersionTag());
     resourceProp.setValue(BufferUtil.wrapArray(resource));
@@ -172,7 +172,7 @@ public class ResourceRecord extends UnifiedRecordValue implements Resource {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

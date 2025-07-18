@@ -55,18 +55,18 @@ public class DbDistributionMigrationState {
   }
 
   public void migratePendingDistributionsToRetriableDistributions() {
-    pendingDistributionColumnFamily.forEach(retriableDistributionColumnFamily::insert);
+    pendingDistributionColumnFamily.forEach(retriableDistributionColumnFamily::recordEntry);
   }
 
   public boolean existsPendingDistribution(final long distributionKey, final int partitionId) {
-    this.distributionKey.wrapLong(distributionKey);
+    this.distributionKey.recordValue(distributionKey);
     partitionKey.wrapInt(partitionId);
 
     return pendingDistributionColumnFamily.exists(distributionPartitionKey);
   }
 
   public boolean existsRetriableDistribution(final long distributionKey, final int partitionId) {
-    this.distributionKey.wrapLong(distributionKey);
+    this.distributionKey.recordValue(distributionKey);
     partitionKey.wrapInt(partitionId);
 
     return retriableDistributionColumnFamily.exists(distributionPartitionKey);
