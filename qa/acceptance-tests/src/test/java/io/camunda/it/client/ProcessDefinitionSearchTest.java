@@ -58,10 +58,10 @@ public class ProcessDefinitionSearchTest {
   @Test
   void shouldSearchByFromWithLimit() {
     // when
-    final var resultAll = camundaClient.newProcessDefinitionSearchRequest().send().join();
-    final var thirdKey = resultAll.items().get(2).getProcessDefinitionKey();
+    final var allProcessDefinitionsResult = camundaClient.newProcessDefinitionSearchRequest().send().join();
+    final var thirdKey = allProcessDefinitionsResult.items().get(2).getProcessDefinitionKey();
 
-    final var resultSearchFrom =
+    final var pagedDefinitionsFromOffset =
         camundaClient
             .newProcessDefinitionSearchRequest()
             .page(p -> p.limit(2).from(2))
@@ -69,8 +69,8 @@ public class ProcessDefinitionSearchTest {
             .join();
 
     // then
-    assertThat(resultSearchFrom.items().size()).isEqualTo(2);
-    assertThat(resultSearchFrom.items().stream().findFirst().get().getProcessDefinitionKey())
+    assertThat(pagedDefinitionsFromOffset.items().size()).isEqualTo(2);
+    assertThat(pagedDefinitionsFromOffset.items().stream().findFirst().get().getProcessDefinitionKey())
         .isEqualTo(thirdKey);
   }
 

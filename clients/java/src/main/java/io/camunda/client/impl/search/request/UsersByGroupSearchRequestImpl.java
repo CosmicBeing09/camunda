@@ -23,7 +23,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.fetch.UsersByGroupSearchRequest;
 import io.camunda.client.api.search.filter.GroupUserFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.GroupUser;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.GroupUserSort;
@@ -103,13 +103,13 @@ public class UsersByGroupSearchRequestImpl
   }
 
   @Override
-  public UsersByGroupSearchRequest page(final SearchRequestPage value) {
+  public UsersByGroupSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public UsersByGroupSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public UsersByGroupSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

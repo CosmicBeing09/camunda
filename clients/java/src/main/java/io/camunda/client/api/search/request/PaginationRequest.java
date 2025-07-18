@@ -13,27 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.camunda.zeebe.client.api.search;
+package io.camunda.client.api.search.request;
 
-import io.camunda.client.api.search.request.PaginationRequest;
 import java.util.List;
 
-/**
- * @deprecated since 8.8 for removal in 8.9, replaced by {@link
- *     PaginationRequest}
- */
-@Deprecated
-public interface SearchRequestPage {
+public interface PaginationRequest {
 
   /** Start the page from. */
-  SearchRequestPage from(final Integer value);
+  PaginationRequest from(final Integer value);
 
   /** Limit the the number of returned entities. */
-  SearchRequestPage limit(final Integer value);
+  PaginationRequest limit(final Integer value);
 
   /** Get previous page before the set of values. */
-  SearchRequestPage searchBefore(final List<Object> values);
+  PaginationRequest searchBefore(final List<Object> values);
 
   /** Get next page after the set of values. */
-  SearchRequestPage searchAfter(final List<Object> values);
+  PaginationRequest searchAfter(final List<Object> values);
 }

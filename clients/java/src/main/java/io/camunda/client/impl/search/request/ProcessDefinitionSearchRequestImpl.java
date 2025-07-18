@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.ProcessDefinitionFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
 import io.camunda.client.api.search.request.ProcessDefinitionSearchRequest;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.ProcessDefinition;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.ProcessDefinitionSort;
@@ -99,13 +99,13 @@ public class ProcessDefinitionSearchRequestImpl
   }
 
   @Override
-  public ProcessDefinitionSearchRequest page(final SearchRequestPage value) {
+  public ProcessDefinitionSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public ProcessDefinitionSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public ProcessDefinitionSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

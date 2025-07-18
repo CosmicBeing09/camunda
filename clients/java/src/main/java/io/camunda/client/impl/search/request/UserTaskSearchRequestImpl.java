@@ -22,7 +22,7 @@ import static io.camunda.client.api.search.request.SearchRequestBuilders.userTas
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.UserTaskFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.request.UserTaskSearchRequest;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.response.UserTask;
@@ -97,13 +97,13 @@ public class UserTaskSearchRequestImpl
   }
 
   @Override
-  public UserTaskSearchRequest page(final SearchRequestPage value) {
+  public UserTaskSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public UserTaskSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public UserTaskSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

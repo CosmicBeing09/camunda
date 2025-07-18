@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.ElementInstanceFilter;
 import io.camunda.client.api.search.request.ElementInstanceSearchRequest;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.ElementInstance;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.ElementInstanceSort;
@@ -99,13 +99,13 @@ public class ElementInstanceSearchRequestImpl
   }
 
   @Override
-  public ElementInstanceSearchRequest page(final SearchRequestPage value) {
+  public ElementInstanceSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public ElementInstanceSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public ElementInstanceSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

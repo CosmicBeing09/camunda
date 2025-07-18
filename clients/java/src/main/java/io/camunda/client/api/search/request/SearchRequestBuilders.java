@@ -149,8 +149,8 @@ public final class SearchRequestBuilders {
     return sort;
   }
 
-  public static SearchRequestPage searchRequestPage(final Consumer<SearchRequestPage> fn) {
-    final SearchRequestPage filter = new SearchRequestPageImpl();
+  public static PaginationRequest searchRequestPage(final Consumer<PaginationRequest> fn) {
+    final PaginationRequest filter = new SearchRequestPageImpl();
     fn.accept(filter);
     return filter;
   }

@@ -23,7 +23,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.ClientFilter;
 import io.camunda.client.api.search.request.ClientsByRoleSearchRequest;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.Client;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.ClientSort;
@@ -103,13 +103,13 @@ public class ClientsByRoleSearchRequestImpl
   }
 
   @Override
-  public ClientsByRoleSearchRequest page(final SearchRequestPage value) {
+  public ClientsByRoleSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public ClientsByRoleSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public ClientsByRoleSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

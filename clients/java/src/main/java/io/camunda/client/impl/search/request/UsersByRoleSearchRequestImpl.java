@@ -22,7 +22,7 @@ import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.RoleUserFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.request.UsersByRoleSearchRequest;
 import io.camunda.client.api.search.response.RoleUser;
 import io.camunda.client.api.search.response.SearchResponse;
@@ -103,13 +103,13 @@ public class UsersByRoleSearchRequestImpl
   }
 
   @Override
-  public UsersByRoleSearchRequest page(final SearchRequestPage value) {
+  public UsersByRoleSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public UsersByRoleSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public UsersByRoleSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 

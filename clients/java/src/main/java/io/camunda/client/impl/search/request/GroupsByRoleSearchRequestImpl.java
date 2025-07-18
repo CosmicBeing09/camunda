@@ -24,7 +24,7 @@ import io.camunda.client.api.JsonMapper;
 import io.camunda.client.api.search.filter.GroupFilter;
 import io.camunda.client.api.search.request.FinalSearchRequestStep;
 import io.camunda.client.api.search.request.GroupsByRoleSearchRequest;
-import io.camunda.client.api.search.request.SearchRequestPage;
+import io.camunda.client.api.search.request.PaginationRequest;
 import io.camunda.client.api.search.response.Group;
 import io.camunda.client.api.search.response.SearchResponse;
 import io.camunda.client.api.search.sort.GroupSort;
@@ -102,13 +102,13 @@ public class GroupsByRoleSearchRequestImpl
   }
 
   @Override
-  public GroupsByRoleSearchRequest page(final SearchRequestPage value) {
+  public GroupsByRoleSearchRequest page(final PaginationRequest value) {
     request.setPage(provideSearchRequestProperty(value));
     return this;
   }
 
   @Override
-  public GroupsByRoleSearchRequest page(final Consumer<SearchRequestPage> fn) {
+  public GroupsByRoleSearchRequest page(final Consumer<PaginationRequest> fn) {
     return page(searchRequestPage(fn));
   }
 
