@@ -164,7 +164,7 @@ public final class OAuthCredentialsProviderTest {
   @Test
   void shouldRequestTokenAndAddToCall() throws IOException {
     // given
-    final OAuthCredentialsProvider provider =
+    final OAuthCredentialsProvider oauthCredentialsProvider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
             .clientSecret(CLIENT_SECRET)
@@ -175,7 +175,7 @@ public final class OAuthCredentialsProviderTest {
     mockCredentials(ACCESS_TOKEN, null);
 
     // when
-    provider.applyCredentials(applier);
+    oauthCredentialsProvider.applyCredentials(applier);
 
     // then
     assertThat(applier.getCredentials())
@@ -185,7 +185,7 @@ public final class OAuthCredentialsProviderTest {
   @Test
   void shouldRequestTokenWithScopeAndAddToCall() throws IOException {
     // given
-    final OAuthCredentialsProvider provider =
+    final OAuthCredentialsProvider oauthCredentialsProvider =
         new OAuthCredentialsProviderBuilder()
             .clientId(CLIENT_ID)
             .clientSecret(CLIENT_SECRET)
@@ -197,7 +197,7 @@ public final class OAuthCredentialsProviderTest {
     mockCredentials(ACCESS_TOKEN, SCOPE);
 
     // when
-    provider.applyCredentials(applier);
+    oauthCredentialsProvider.applyCredentials(applier);
 
     // then
     assertThat(applier.getCredentials())
