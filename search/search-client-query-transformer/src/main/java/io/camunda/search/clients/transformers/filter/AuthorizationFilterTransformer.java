@@ -31,8 +31,8 @@ public final class AuthorizationFilterTransformer
   @Override
   public SearchQuery toSearchQuery(final AuthorizationFilter filter) {
     return and(
-        filter.authorizationKey() == null ? null : term(ID, filter.authorizationKey()),
-        stringTerms(OWNER_ID, filter.ownerIds()),
+        filter.key() == null ? null : term(ID, filter.key()),
+        stringTerms(OWNER_ID, filter.owners()),
         filter.ownerType() == null ? null : term(OWNER_TYPE, filter.ownerType()),
         stringTerms(RESOURCE_ID, filter.resourceIds()),
         filter.resourceType() == null ? null : term(RESOURCE_TYPE, filter.resourceType()),
