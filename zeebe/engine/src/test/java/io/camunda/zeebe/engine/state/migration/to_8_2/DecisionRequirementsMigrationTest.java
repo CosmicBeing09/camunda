@@ -16,8 +16,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -119,7 +119,7 @@ public class DecisionRequirementsMigrationTest {
   @Nested
   @ExtendWith(ProcessingStateExtension.class)
   public class BlackboxTest {
-    private ZeebeDb<ColumnFamilies> zeebeDb;
+    private GenericDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDecisionState legacyDecisionState;

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.user;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -30,7 +30,7 @@ public class DbUserState implements UserState, MutableUserState {
   private final ColumnFamily<DbString, PersistedUser> usersColumnFamily;
 
   public DbUserState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     username = new DbString();
     userKey = new DbLong();
     fkUsername = new DbForeignKey<>(username, ColumnFamilies.USERS);

@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.engine.state;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.batchoperation.DbBatchOperationState;
 import io.camunda.zeebe.engine.state.deployment.DbDeploymentState;
 import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
@@ -46,7 +46,7 @@ public final class ScheduledTaskDbState implements ScheduledTaskState {
   private final BatchOperationState batchOperationState;
 
   public ScheduledTaskDbState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId,
       final TransientSubscriptionState transientMessageSubscriptionState,

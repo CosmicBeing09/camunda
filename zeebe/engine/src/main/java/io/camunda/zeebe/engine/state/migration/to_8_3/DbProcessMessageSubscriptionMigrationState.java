@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.migration.to_8_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -27,7 +27,7 @@ public class DbProcessMessageSubscriptionMigrationState {
   private final DbProcessMessageSubscriptionState to;
 
   public DbProcessMessageSubscriptionMigrationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacyProcessMessageSubscriptionState(zeebeDb, transactionContext);
     to = new DbProcessMessageSubscriptionState(zeebeDb, transactionContext);
   }
@@ -66,7 +66,7 @@ public class DbProcessMessageSubscriptionMigrationState {
         subscriptionColumnFamily;
 
     public DbProcessMessageSubscriptionState(
-        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       elementInstanceKey = new DbLong();
       tenantIdKey = new DbString();
       messageName = new DbString();

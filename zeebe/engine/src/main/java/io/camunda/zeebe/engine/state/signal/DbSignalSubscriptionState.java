@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.signal;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
@@ -44,7 +44,7 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
       subscriptionKeyAndSignalNameColumnFamily;
 
   public DbSignalSubscriptionState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     signalName = new DbString();
     subscriptionKey = new DbLong();
     tenantIdKey = new DbString();

@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.authorization;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -48,7 +48,7 @@ public class DbAuthorizationState implements MutableAuthorizationState {
       authorizationKeysByOwnerColumnFamily;
 
   public DbAuthorizationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     ownerType = new DbString();
     ownerId = new DbString();
     resourceType = new DbString();

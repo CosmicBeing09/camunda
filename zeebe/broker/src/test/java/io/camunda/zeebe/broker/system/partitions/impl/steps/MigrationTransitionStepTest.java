@@ -19,7 +19,7 @@ import io.camunda.zeebe.broker.system.partitions.TestPartitionTransitionContext;
 import io.camunda.zeebe.db.AccessMetricsConfiguration;
 import io.camunda.zeebe.db.AccessMetricsConfiguration.Kind;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
 import io.camunda.zeebe.engine.state.migration.DbMigrationState;
@@ -42,7 +42,8 @@ public class MigrationTransitionStepTest {
           new AccessMetricsConfiguration(Kind.NONE, 1),
           SimpleMeterRegistry::new);
 
-  @AutoClose ZeebeDb zeebeDb;
+  @AutoClose
+  GenericDb zeebeDb;
   TestPartitionTransitionContext context;
   DbMigrationState migrationState;
 

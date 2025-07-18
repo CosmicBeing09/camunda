@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_4;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.migration.to_8_4.legacy.LegacySignalSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
@@ -36,7 +36,7 @@ public class MultiTenancyMigrationTest {
 
     final MultiTenancySignalSubscriptionStateMigration sut =
         new MultiTenancySignalSubscriptionStateMigration();
-    private ZeebeDb<ColumnFamilies> zeebeDb;
+    private GenericDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
 

@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.instance;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.metrics.IncidentMetrics;
@@ -47,7 +47,7 @@ public final class DbIncidentState implements MutableIncidentState {
   private final IncidentMetrics metrics;
 
   public DbIncidentState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId) {
     incidentKey = new DbLong();

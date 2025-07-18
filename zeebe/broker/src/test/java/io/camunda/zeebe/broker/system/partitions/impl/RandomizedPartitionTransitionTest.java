@@ -25,7 +25,7 @@ import io.camunda.zeebe.broker.system.partitions.StateController;
 import io.camunda.zeebe.broker.system.partitions.TestPartitionTransitionContext;
 import io.camunda.zeebe.broker.system.partitions.impl.steps.StreamProcessorTransitionStep;
 import io.camunda.zeebe.broker.system.partitions.impl.steps.ZeebeDbPartitionTransitionStep;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.scheduler.Actor;
 import io.camunda.zeebe.scheduler.ActorScheduler;
 import io.camunda.zeebe.scheduler.future.ActorFuture;
@@ -139,7 +139,7 @@ public class RandomizedPartitionTransitionTest {
         format("Testing property 'atMostOneZeebeDbIsOpenAtAnyTime' on sequence %s", operations));
 
     final var instanceTracker =
-        new PropertyAssertingInstanceTracker<ZeebeDb>() {
+        new PropertyAssertingInstanceTracker<GenericDb>() {
           @Override
           void assertProperties() {
             if (opened.size() > 1) {
@@ -437,10 +437,10 @@ public class RandomizedPartitionTransitionTest {
 
   private static final class TestStateController implements StateController {
 
-    private final PropertyAssertingInstanceTracker<ZeebeDb> instanceTracker;
-    private ZeebeDb zeebeDb;
+    private final PropertyAssertingInstanceTracker<GenericDb> instanceTracker;
+    private GenericDb zeebeDb;
 
-    private TestStateController(final PropertyAssertingInstanceTracker<ZeebeDb> instanceTracker) {
+    private TestStateController(final PropertyAssertingInstanceTracker<GenericDb> instanceTracker) {
       this.instanceTracker = instanceTracker;
     }
 
@@ -451,8 +451,8 @@ public class RandomizedPartitionTransitionTest {
     }
 
     @Override
-    public ActorFuture<ZeebeDb> recover() {
-      zeebeDb = mock(ZeebeDb.class);
+    public ActorFuture<GenericDb> recover() {
+      zeebeDb = mock(GenericDb.class);
       instanceTracker.registerCreation(zeebeDb);
       instanceTracker.registerOpen(zeebeDb);
       return CompletableActorFuture.completed(zeebeDb);

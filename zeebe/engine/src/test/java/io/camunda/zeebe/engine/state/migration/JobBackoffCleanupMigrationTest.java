@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.migration;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -33,7 +33,7 @@ public class JobBackoffCleanupMigrationTest {
 
   final JobBackoffCleanupMigration jobBackoffCleanupMigration = new JobBackoffCleanupMigration();
 
-  private ZeebeDb<ColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
   private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
 

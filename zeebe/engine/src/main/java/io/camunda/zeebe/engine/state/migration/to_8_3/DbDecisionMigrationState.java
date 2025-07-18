@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -32,7 +32,7 @@ public class DbDecisionMigrationState {
   private final DbDecisionState to;
 
   public DbDecisionMigrationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     final var config = new EngineConfiguration();
     from = new LegacyDecisionState(zeebeDb, transactionContext, config);
     to = new DbDecisionState(zeebeDb, transactionContext);
@@ -193,7 +193,7 @@ public class DbDecisionMigrationState {
         decisionRequirementsKeyByIdAndVersion;
 
     public DbDecisionState(
-        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       tenantIdKey = new DbString();
       dbDecisionKey = new DbLong();
       tenantAwareDecisionKey =

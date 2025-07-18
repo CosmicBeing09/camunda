@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.stream.api;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
 import io.camunda.zeebe.stream.api.scheduling.ProcessingScheduleService;
 import io.camunda.zeebe.stream.api.state.IdGenerator;
@@ -21,7 +21,7 @@ public interface RecordProcessorContext {
 
   ProcessingScheduleService getScheduleService();
 
-  ZeebeDb getZeebeDb();
+  GenericDb getZeebeDb();
 
   TransactionContext getTransactionContext();
 

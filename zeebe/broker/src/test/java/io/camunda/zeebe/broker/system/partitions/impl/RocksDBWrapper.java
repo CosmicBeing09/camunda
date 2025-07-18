@@ -8,7 +8,7 @@
 package io.camunda.zeebe.broker.system.partitions.impl;
 
 import io.camunda.zeebe.db.ColumnFamily;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DefaultColumnFamily;
@@ -19,7 +19,7 @@ public final class RocksDBWrapper {
   private DbLong value;
   private ColumnFamily<DbString, DbLong> defaultColumnFamily;
 
-  public void wrap(final ZeebeDb<DefaultColumnFamily> db) {
+  public void wrap(final GenericDb<DefaultColumnFamily> db) {
     key = new DbString();
     value = new DbLong();
     defaultColumnFamily =

@@ -7,8 +7,8 @@
  */
 package io.camunda.zeebe.engine.state.migration.to_8_5;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily48Corrector;
 import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily49Corrector;
 import io.camunda.zeebe.engine.state.migration.to_8_5.corrections.ColumnFamily50Corrector;
@@ -21,7 +21,7 @@ public final class DbColumnFamilyCorrectionMigrationState {
   private final ColumnFamily50Corrector columnFamily50Corrector;
 
   public DbColumnFamilyCorrectionMigrationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     columnFamily48Corrector = new ColumnFamily48Corrector(zeebeDb, transactionContext);
     columnFamily49Corrector = new ColumnFamily49Corrector(zeebeDb, transactionContext);
     columnFamily50Corrector = new ColumnFamily50Corrector(zeebeDb, transactionContext);

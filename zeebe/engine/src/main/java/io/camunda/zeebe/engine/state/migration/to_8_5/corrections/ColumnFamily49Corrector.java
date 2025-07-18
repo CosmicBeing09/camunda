@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_5.corrections;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbBytes;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -54,7 +54,7 @@ public class ColumnFamily49Corrector {
   private final DbCompositeKey<DbString, DbInt> decisionRequirementsIdAndVersion;
 
   public ColumnFamily49Corrector(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     recoverColumnFamily =
         zeebeDb.createColumnFamily(
             CF_UNDER_RECOVERY, transactionContext, new DbBytes(), new DbBytes());

@@ -15,7 +15,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.instance.DbElementInstanceState;
 import io.camunda.zeebe.engine.state.instance.EventTrigger;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
@@ -99,7 +99,7 @@ public class TemporaryVariableMigrationTest {
   @ExtendWith(ProcessingStateExtension.class)
   public class BlackboxTest {
 
-    private ZeebeDb<ColumnFamilies> zeebeDb;
+    private GenericDb<ColumnFamilies> zeebeDb;
     private MutableAsyncProcessingContext processingState;
     private TransactionContext transactionContext;
     private LegacyDbTemporaryVariablesState legacyTemporaryVariablesState;

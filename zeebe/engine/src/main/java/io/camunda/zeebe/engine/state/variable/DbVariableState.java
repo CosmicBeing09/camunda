@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.variable;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -68,7 +68,7 @@ public class DbVariableState implements MutableVariableState {
   private final ObjectHashSet<DirectBuffer> variablesToCollect = new ObjectHashSet<>();
 
   public DbVariableState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     childKey = new DbLong();
     childParentColumnFamily =
         zeebeDb.createColumnFamily(

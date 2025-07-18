@@ -14,8 +14,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import io.camunda.security.configuration.SecurityConfiguration;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.engine.Engine;
 import io.camunda.zeebe.engine.EngineConfiguration;
@@ -272,7 +272,7 @@ public final class TestStreams {
           return factory.createProcessors(ctx).withListener(recoveredAwaiter);
         };
 
-    final ZeebeDb<?> zeebeDb;
+    final GenericDb<?> zeebeDb;
     if (snapshotWasTaken) {
       zeebeDb = zeebeDbFactory.createDb(snapshot.toFile());
     } else {
@@ -342,7 +342,7 @@ public final class TestStreams {
   }
 
   public void banInstanceInNewTransaction(final String streamName, final long processInstanceKey) {
-    final ZeebeDb zeebeDbLocal = streamContextMap.get(streamName).zeebeDb;
+    final GenericDb zeebeDbLocal = streamContextMap.get(streamName).zeebeDb;
     final TransactionContext context = zeebeDbLocal.createContext();
     new DbBannedInstanceState(zeebeDbLocal, context).banProcessInstance(processInstanceKey);
   }
@@ -516,7 +516,7 @@ public final class TestStreams {
   }
 
   private static final class ProcessorContext implements AutoCloseable {
-    private final ZeebeDb zeebeDb;
+    private final GenericDb zeebeDb;
     private final StreamProcessor streamProcessor;
     private final Path runtimePath;
     private final Path snapshotPath;
@@ -527,7 +527,7 @@ public final class TestStreams {
 
     private ProcessorContext(
         final StreamProcessor streamProcessor,
-        final ZeebeDb zeebeDb,
+        final GenericDb zeebeDb,
         final Path runtimePath,
         final Path snapshotPath,
         final StreamClock streamClock,
@@ -544,7 +544,7 @@ public final class TestStreams {
 
     public static ProcessorContext createStreamContext(
         final StreamProcessor streamProcessor,
-        final ZeebeDb zeebeDb,
+        final GenericDb zeebeDb,
         final Path runtimePath,
         final Path snapshotPath,
         final StreamClock streamClock,

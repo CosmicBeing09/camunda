@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.QueryService.ClosedServiceException;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
@@ -35,7 +35,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 final class StateQueryServiceTest {
 
   private StateQueryService sut;
-  private ZeebeDb<ColumnFamilies> db;
+  private GenericDb<ColumnFamilies> db;
   private MutableAsyncProcessingContext state;
   private TransactionContext transactionContext;
 

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.distribution;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -63,7 +63,7 @@ public class DbDistributionState implements MutableDistributionState {
   private final DbCompositeKey<DbString, DbLong> continuationByQueueKey;
 
   public DbDistributionState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     distributionKey = new DbLong();
     final DbForeignKey<DbLong> fkDistribution =
         new DbForeignKey<>(distributionKey, ColumnFamilies.COMMAND_DISTRIBUTION_RECORD);

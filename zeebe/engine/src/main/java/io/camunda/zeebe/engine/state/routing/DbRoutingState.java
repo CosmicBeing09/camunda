@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.routing;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbInt;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -35,7 +35,7 @@ public final class DbRoutingState implements MutableRoutingState {
   private final PersistedRoutingInfo desiredRoutingInfo = new PersistedRoutingInfo();
 
   public DbRoutingState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     columnFamily =
         zeebeDb.createColumnFamily(
             ColumnFamilies.ROUTING, transactionContext, key, new PersistedRoutingInfo());

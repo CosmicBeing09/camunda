@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.migration.to_8_3.legacy;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -115,7 +115,7 @@ public final class LegacyMessageState {
   private Long localMessageDeadlineCount = 0L;
 
   public LegacyMessageState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final int partitionId) {
     messageKey = new DbLong();

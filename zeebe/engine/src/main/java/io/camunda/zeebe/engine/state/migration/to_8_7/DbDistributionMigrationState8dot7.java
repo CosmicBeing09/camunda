@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.migration.to_8_7;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbInt;
@@ -61,7 +61,7 @@ public class DbDistributionMigrationState8dot7 {
   private final DbCompositeKey<DbString, DbLong> continuationByQueueKey;
 
   public DbDistributionMigrationState8dot7(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     distributionKey = new DbLong();
     final DbForeignKey<DbLong> fkDistribution =
         new DbForeignKey<>(distributionKey, ColumnFamilies.COMMAND_DISTRIBUTION_RECORD);

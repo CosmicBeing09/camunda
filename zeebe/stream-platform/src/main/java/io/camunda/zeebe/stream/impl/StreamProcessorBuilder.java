@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.stream.impl;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.logstreams.log.LogStream;
 import io.camunda.zeebe.scheduler.ActorSchedulingService;
 import io.camunda.zeebe.stream.api.CommandResponseWriter;
@@ -29,7 +29,7 @@ public final class StreamProcessorBuilder {
   private final StreamProcessorContext streamProcessorContext;
   private final List<StreamProcessorLifecycleAware> lifecycleListeners = new ArrayList<>();
   private ActorSchedulingService actorSchedulingService;
-  private ZeebeDb zeebeDb;
+  private GenericDb zeebeDb;
   private int nodeId;
 
   private List<RecordProcessor> recordProcessors;
@@ -71,7 +71,7 @@ public final class StreamProcessorBuilder {
     return this;
   }
 
-  public StreamProcessorBuilder zeebeDb(final ZeebeDb zeebeDb) {
+  public StreamProcessorBuilder zeebeDb(final GenericDb zeebeDb) {
     this.zeebeDb = zeebeDb;
     return this;
   }
@@ -105,7 +105,7 @@ public final class StreamProcessorBuilder {
     return this;
   }
 
-  public ZeebeDb getZeebeDb() {
+  public GenericDb getZeebeDb() {
     return zeebeDb;
   }
 

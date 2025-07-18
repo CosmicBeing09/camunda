@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.deployment;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -73,7 +73,7 @@ public class DbFormState implements MutableFormState {
   private final Cache<TenantIdAndFormId, PersistedForm> formsByTenantIdAndIdCache;
 
   public DbFormState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final EngineConfiguration config) {
     tenantIdKey = new DbString();

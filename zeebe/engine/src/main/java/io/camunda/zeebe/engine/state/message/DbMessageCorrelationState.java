@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.message;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageCorrelationState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -23,7 +23,7 @@ public class DbMessageCorrelationState implements MutableMessageCorrelationState
   private final ColumnFamily<DbLong, RequestData> messageCorrelationColumnFamily;
 
   public DbMessageCorrelationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     messageKey = new DbLong();
     requestData = new RequestData();
     messageCorrelationColumnFamily =

@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.clock;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableClockState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -23,7 +23,7 @@ public class DbClockState implements MutableClockState {
   private final DbClockModification value = new DbClockModification();
 
   public DbClockState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     columnFamily =
         zeebeDb.createColumnFamily(ColumnFamilies.CLOCK, transactionContext, key, value);
   }

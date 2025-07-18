@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.tenant;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableTenantState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -24,7 +24,7 @@ public class DbTenantState implements MutableTenantState {
   private final ColumnFamily<DbString, PersistedTenant> tenantsColumnFamily;
 
   public DbTenantState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     tenantsColumnFamily =
         zeebeDb.createColumnFamily(
             ColumnFamilies.TENANTS, transactionContext, tenantId, new PersistedTenant());

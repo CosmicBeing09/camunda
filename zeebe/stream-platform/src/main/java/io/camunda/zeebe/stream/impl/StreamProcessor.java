@@ -8,7 +8,7 @@
 package io.camunda.zeebe.stream.impl;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.logstreams.impl.Loggers;
 import io.camunda.zeebe.logstreams.log.LogRecordAwaiter;
 import io.camunda.zeebe.logstreams.log.LogStream;
@@ -95,7 +95,7 @@ public class StreamProcessor extends Actor implements HealthMonitorable, LogReco
   private final LogStream logStream;
   private final int partitionId;
   // snapshotting
-  private final ZeebeDb zeebeDb;
+  private final GenericDb zeebeDb;
   // processing
   private final StreamProcessorContext streamProcessorContext;
   private final String actorName;

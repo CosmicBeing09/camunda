@@ -8,8 +8,8 @@
 package io.camunda.zeebe.backup.processing.state;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 
@@ -21,7 +21,7 @@ public final class DbCheckpointState implements CheckpointState {
   private final DbString checkpointInfoKey;
 
   public DbCheckpointState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     checkpointInfoKey = new DbString();
     checkpointInfoKey.wrapString(CHECKPOINT_KEY);
     checkpointColumnFamily =

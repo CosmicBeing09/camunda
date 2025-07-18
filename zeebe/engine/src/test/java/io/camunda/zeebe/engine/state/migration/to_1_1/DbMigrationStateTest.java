@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.state.migration.to_1_1.TestUtilities.creat
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.message.MessageSubscription;
 import io.camunda.zeebe.engine.state.message.ProcessMessageSubscription;
 import io.camunda.zeebe.engine.state.mutable.MutableMessageSubscriptionState;
@@ -33,7 +33,7 @@ public class DbMigrationStateTest {
 
   private static final long TEST_SENT_TIME = 1000L;
 
-  private ZeebeDb<ColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
 
   private MutableAsyncProcessingContext processingState;
 

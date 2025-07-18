@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.migration.to_1_3;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.engine.state.migration.TemporaryVariables;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -22,7 +22,7 @@ public class LegacyDbTemporaryVariablesState {
   private final ColumnFamily<DbLong, TemporaryVariables> temporaryVariableColumnFamily;
 
   public LegacyDbTemporaryVariablesState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     temporaryVariablesKeyInstance = new DbLong();
     temporaryVariables = new TemporaryVariables();
     temporaryVariableColumnFamily =

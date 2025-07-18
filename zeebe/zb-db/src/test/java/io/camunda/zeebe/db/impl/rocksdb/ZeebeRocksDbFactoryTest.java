@@ -16,7 +16,7 @@ import io.camunda.zeebe.db.AccessMetricsConfiguration.Kind;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
 import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.TransactionOperation;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.ZeebeDbTransaction;
 import io.camunda.zeebe.db.impl.DbByte;
@@ -46,7 +46,7 @@ final class ZeebeRocksDbFactoryTest {
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory = DefaultZeebeDbFactory.getDefaultFactory();
 
     // when
-    final ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
+    final GenericDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
 
     // then
     assertThat(pathName).isNotEmptyDirectory();
@@ -60,8 +60,8 @@ final class ZeebeRocksDbFactoryTest {
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory = DefaultZeebeDbFactory.getDefaultFactory();
 
     // when
-    final ZeebeDb<DefaultColumnFamily> firstDb = dbFactory.createDb(firstPath);
-    final ZeebeDb<DefaultColumnFamily> secondDb = dbFactory.createDb(secondPath);
+    final GenericDb<DefaultColumnFamily> firstDb = dbFactory.createDb(firstPath);
+    final GenericDb<DefaultColumnFamily> secondDb = dbFactory.createDb(secondPath);
 
     // then
     assertThat(firstDb).isNotEqualTo(secondDb);
@@ -183,7 +183,7 @@ final class ZeebeRocksDbFactoryTest {
   @ParameterizedTest
   @MethodSource("provideSnapshotOnlyOperation")
   void shouldFailToWriteOnSnapshotOnlyDb(
-      final ThrowingConsumer<ZeebeDb<DefaultColumnFamily>> assertions, final @TempDir File dbPath)
+      final ThrowingConsumer<GenericDb<DefaultColumnFamily>> assertions, final @TempDir File dbPath)
       throws Exception {
     // given
     final var factory = DefaultZeebeDbFactory.<DefaultColumnFamily>getDefaultFactory();
@@ -205,10 +205,10 @@ final class ZeebeRocksDbFactoryTest {
     }
   }
 
-  private static Stream<Named<ThrowingConsumer<ZeebeDb<DefaultColumnFamily>>>>
+  private static Stream<Named<ThrowingConsumer<GenericDb<DefaultColumnFamily>>>>
       provideSnapshotOnlyOperation() {
     return Stream.of(
-        Named.of("createContext", ZeebeDb::createContext),
+        Named.of("createContext", GenericDb::createContext),
         Named.of(
             "createColumnFamily",
             db ->

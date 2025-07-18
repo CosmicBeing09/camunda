@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
@@ -56,7 +56,7 @@ public final class KeyGeneratorTest {
   @Test
   public void shouldGetUniqueValuesOverPartitions() throws Exception {
     // given
-    final ZeebeDb<ColumnFamilies> newDb = stateRule.createNewDb();
+    final GenericDb<ColumnFamilies> newDb = stateRule.createNewDb();
     final int secondPartitionId = Protocol.DEPLOYMENT_PARTITION + 1;
     final IdGenerator keyGenerator2 =
         new DbKeyGenerator(secondPartitionId, newDb, newDb.createContext());

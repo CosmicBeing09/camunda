@@ -9,8 +9,8 @@ package io.camunda.zeebe.engine.state;
 
 import io.camunda.zeebe.db.DbKey;
 import io.camunda.zeebe.db.DbValue;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.authorization.DbAuthorizationState;
 import io.camunda.zeebe.engine.state.authorization.DbMappingState;
@@ -90,7 +90,7 @@ import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class ProcessingDbState implements MutableAsyncProcessingContext {
-  private final ZeebeDb<ColumnFamilies> zeebeDb;
+  private final GenericDb<ColumnFamilies> zeebeDb;
   private final IdGenerator keyGenerator;
   private final MutableProcessState processState;
   private final MutableTimerInstanceState timerInstanceState;
@@ -130,7 +130,7 @@ public class ProcessingDbState implements MutableAsyncProcessingContext {
 
   public ProcessingDbState(
       final int partitionId,
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final IdGenerator keyGenerator,
       final TransientSubscriptionState transientMessageSubscriptionState,

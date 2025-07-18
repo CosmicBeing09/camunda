@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.message;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -51,7 +51,7 @@ public final class DbProcessMessageSubscriptionState
   private final InstantSource clock;
 
   public DbProcessMessageSubscriptionState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final TransientSubscriptionState transientProcessMessageSubscriptionState,
       final InstantSource clock) {

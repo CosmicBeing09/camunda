@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.authorization;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbEnumValue;
 import io.camunda.zeebe.db.impl.DbNil;
@@ -29,7 +29,7 @@ public final class DbMembershipState implements MutableMembershipState {
   private final ColumnFamily<RelationKeyAndEntityKey, DbNil> entitiesByRelation;
 
   public DbMembershipState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     relationsByEntity =
         zeebeDb.createColumnFamily(
             ColumnFamilies.RELATIONS_BY_ENTITY,

@@ -11,7 +11,7 @@ import io.camunda.zeebe.broker.Loggers;
 import io.camunda.zeebe.broker.exporter.repo.ExporterDescriptor;
 import io.camunda.zeebe.broker.exporter.stream.ExporterDirectorContext.ExporterMode;
 import io.camunda.zeebe.broker.system.partitions.PartitionMessagingService;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.exporter.api.context.Context;
 import io.camunda.zeebe.logstreams.log.LogRecordAwaiter;
 import io.camunda.zeebe.logstreams.log.LogStream;
@@ -68,7 +68,7 @@ public final class ExporterDirector extends Actor implements HealthMonitorable, 
   private final ArrayList<ExporterContainer> containers;
   private final LogStream logStream;
   private final RecordExporter recordExporter;
-  private final ZeebeDb zeebeDb;
+  private final GenericDb zeebeDb;
   private final ExporterMetrics metrics;
   private final String name;
   private final RetryStrategy exportingRetryStrategy;

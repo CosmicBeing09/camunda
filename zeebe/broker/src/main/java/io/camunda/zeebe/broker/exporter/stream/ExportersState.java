@@ -9,7 +9,7 @@ package io.camunda.zeebe.broker.exporter.stream;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import java.util.Optional;
@@ -28,7 +28,7 @@ public final class ExportersState {
   private final ColumnFamily<DbString, ExporterStateEntry> exporterPositionColumnFamily;
 
   public ExportersState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     exporterId = new DbString();
     exporterPositionColumnFamily =
         zeebeDb.createColumnFamily(

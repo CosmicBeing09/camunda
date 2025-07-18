@@ -9,7 +9,7 @@ package io.camunda.zeebe.db.impl.rocksdb;
 
 import io.camunda.zeebe.db.AccessMetricsConfiguration;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.RocksDbOptions;
 import io.camunda.zeebe.db.impl.rocksdb.transaction.ZeebeTransactionDb;
@@ -87,7 +87,7 @@ public final class ZeebeRocksDbFactory<
   }
 
   @Override
-  public ZeebeDb<ColumnFamilyType> openSnapshotOnlyDb(final File pathName) {
+  public GenericDb<ColumnFamilyType> openSnapshotOnlyDb(final File pathName) {
     final List<AutoCloseable> managedResources = Collections.synchronizedList(new ArrayList<>());
     final var options = prepareOptions(managedResources);
     final var snapshotOnlyOptions =

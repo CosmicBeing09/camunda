@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.migration.to_8_4;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
@@ -27,7 +27,7 @@ public class DbSignalSubscriptionMigrationState {
   private final DbSignalSubscriptionState to;
 
   public DbSignalSubscriptionMigrationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     from = new LegacySignalSubscriptionState(zeebeDb, transactionContext);
     to = new DbSignalSubscriptionState(zeebeDb, transactionContext);
   }
@@ -95,7 +95,7 @@ public class DbSignalSubscriptionMigrationState {
         subscriptionKeyAndSignalNameColumnFamily;
 
     public DbSignalSubscriptionState(
-        final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+        final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
       signalName = new DbString();
       subscriptionKey = new DbLong();
       tenantIdKey = new DbString();

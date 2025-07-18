@@ -14,8 +14,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
 import io.camunda.zeebe.engine.state.migration.ProcessMessageSubscriptionSentTimeMigration;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
@@ -91,7 +91,7 @@ public class ProcessMessageSubscriptionSentTimeMigrationTest {
 
     private static final long TEST_SENT_TIME = 1000L;
 
-    private ZeebeDb<ColumnFamilies> zeebeDb;
+    private GenericDb<ColumnFamilies> zeebeDb;
 
     private MutableAsyncProcessingContext processingState;
 

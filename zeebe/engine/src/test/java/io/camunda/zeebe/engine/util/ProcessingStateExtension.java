@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.util;
 import static java.nio.file.FileVisitResult.CONTINUE;
 import static java.util.stream.Collectors.joining;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
@@ -96,7 +96,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
 
     ReflectionUtils.findFields(
             testClass,
-            field -> ReflectionUtils.isNotStatic(field) && field.getType() == ZeebeDb.class,
+            field -> ReflectionUtils.isNotStatic(field) && field.getType() == GenericDb.class,
             HierarchyTraversalMode.TOP_DOWN)
         .forEach(
             field -> {
@@ -147,7 +147,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
   private static final class ProcessingStateExtensionState implements CloseableResource {
 
     private Path tempFolder;
-    private ZeebeDb<ColumnFamilies> zeebeDb;
+    private GenericDb<ColumnFamilies> zeebeDb;
     private TransactionContext transactionContext;
     private MutableAsyncProcessingContext processingState;
 
@@ -236,7 +236,7 @@ public class ProcessingStateExtension implements BeforeEachCallback {
       return failures;
     }
 
-    private ZeebeDb<ColumnFamilies> getZeebeDb() {
+    private GenericDb<ColumnFamilies> getZeebeDb() {
       return zeebeDb;
     }
 

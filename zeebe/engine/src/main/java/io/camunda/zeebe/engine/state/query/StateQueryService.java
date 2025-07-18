@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.query;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
 import io.camunda.zeebe.engine.state.QueryService;
@@ -28,10 +28,10 @@ public final class StateQueryService implements QueryService {
 
   private volatile boolean isClosed;
   private ProcessingState state;
-  private final ZeebeDb<ColumnFamilies> zeebeDb;
+  private final GenericDb<ColumnFamilies> zeebeDb;
   private final InstantSource clock;
 
-  public StateQueryService(final ZeebeDb<ColumnFamilies> zeebeDb, final InstantSource clock) {
+  public StateQueryService(final GenericDb<ColumnFamilies> zeebeDb, final InstantSource clock) {
     this.zeebeDb = zeebeDb;
     this.clock = clock;
   }

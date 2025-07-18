@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.processing;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.engine.Loggers;
@@ -40,7 +40,7 @@ public final class DbBannedInstanceState implements MutableBannedInstanceState {
   private final BannedInstanceMetrics bannedInstanceMetrics;
 
   public DbBannedInstanceState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     processInstanceKey = new DbLong();
     bannedInstanceColumnFamily =
         zeebeDb.createColumnFamily(

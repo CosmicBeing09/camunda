@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.batchoperation;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -42,7 +42,7 @@ public class DbBatchOperationState implements MutableBatchOperationState {
   private final ColumnFamily<DbLong, DbNil> pendingBatchOperationColumnFamily;
 
   public DbBatchOperationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     fkBatchKey = new DbForeignKey<>(batchKey, ColumnFamilies.BATCH_OPERATION);
     chunkKey = new DbLong();
     fkBatchKeyAndChunkKey = new DbCompositeKey<>(fkBatchKey, chunkKey);

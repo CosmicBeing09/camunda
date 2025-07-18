@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import io.camunda.zeebe.db.AccessMetricsConfiguration;
 import io.camunda.zeebe.db.AccessMetricsConfiguration.Kind;
 import io.camunda.zeebe.db.ConsistencyChecksSettings;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.rocksdb.RocksDbConfiguration;
 import io.camunda.zeebe.db.impl.rocksdb.ZeebeRocksDbFactory;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
@@ -27,7 +27,7 @@ final class DbCheckpointStateTest {
 
   @TempDir Path database;
   private DbCheckpointState state;
-  private ZeebeDb zeebedb;
+  private GenericDb zeebedb;
 
   @AfterEach
   void closeDb() throws Exception {

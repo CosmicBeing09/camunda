@@ -11,7 +11,7 @@ import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbForeignKey.MatchType;
@@ -80,7 +80,7 @@ public final class LegacyProcessState {
   private final LegacyProcessVersionManager versionManager;
 
   public LegacyProcessState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final InstantSource clock) {
     transformer = BpmnFactory.createTransformer(clock);
@@ -377,7 +377,7 @@ public final class LegacyProcessState {
 
     public LegacyProcessVersionManager(
         final long initialValue,
-        final ZeebeDb<ColumnFamilies> zeebeDb,
+        final GenericDb<ColumnFamilies> zeebeDb,
         final TransactionContext transactionContext) {
       this.initialValue = initialValue;
 

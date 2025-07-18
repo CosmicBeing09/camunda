@@ -17,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.metrics.DistributionMetrics;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
@@ -48,7 +48,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @ExtendWith(ProcessingStateExtension.class)
 public class CommandDistributionScalingTest {
   /* Injected from {@link ProcessingStateExtension} */
-  private ZeebeDb<ColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
   private MutableRoutingState routingState;
   private MutableAsyncProcessingContext state;
   private TransactionContext transactionContext;

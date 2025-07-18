@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.ConsistencyChecksSettings;
 import io.camunda.zeebe.db.DbKey;
 import io.camunda.zeebe.db.DbValue;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbException;
 import io.camunda.zeebe.db.impl.DbNil;
 import io.camunda.zeebe.db.impl.FineGrainedColumnFamilyMetrics;
@@ -46,7 +46,7 @@ import org.slf4j.Logger;
 
 public class ZeebeTransactionDb<
         ColumnFamilyNames extends Enum<? extends EnumValue> & EnumValue & ScopedColumnFamily>
-    implements ZeebeDb<ColumnFamilyNames>, TransactionRenovator {
+    implements GenericDb<ColumnFamilyNames>, TransactionRenovator {
 
   private static final Logger LOG = Loggers.DB_LOGGER;
   private static final String ERROR_MESSAGE_CLOSE_RESOURCE =

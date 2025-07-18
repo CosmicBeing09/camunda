@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.streamprocessor;
 
 import io.camunda.security.configuration.SecurityConfiguration;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
@@ -29,7 +29,7 @@ public class TypedRecordProcessorContextImpl implements TypedRecordProcessorCont
   private final int partitionId;
   private final ProcessingScheduleService scheduleService;
   private final ProcessingDbState processingState;
-  private final ZeebeDb zeebeDb;
+  private final GenericDb zeebeDb;
   private final Writers writers;
   private final InterPartitionCommandSender partitionCommandSender;
   private final EngineConfiguration config;

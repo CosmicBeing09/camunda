@@ -11,8 +11,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.appliers.EventAppliers;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
@@ -44,7 +44,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 @SuppressWarnings({"unchecked", "unused"})
 @ExtendWith(ProcessingStateExtension.class)
 final class DeploymentReconstructProcessorTest {
-  private ZeebeDb<?> zeebeDb;
+  private GenericDb<?> zeebeDb;
   private TransactionContext transactionContext;
   private MutableAsyncProcessingContext state;
   private DeploymentReconstructProcessor processor;

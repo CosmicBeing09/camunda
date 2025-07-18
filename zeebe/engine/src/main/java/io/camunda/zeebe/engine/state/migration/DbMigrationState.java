@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.migration;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbForeignKey.MatchType;
@@ -133,7 +133,7 @@ public class DbMigrationState implements MutableMigrationState {
   private final DbDistributionMigrationState8dot7 distributionState8dot7;
 
   public DbMigrationState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     messageSubscriptionElementInstanceKey = new DbLong();
     messageSubscriptionMessageName = new DbString();

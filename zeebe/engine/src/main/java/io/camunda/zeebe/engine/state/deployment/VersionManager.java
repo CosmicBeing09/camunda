@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.deployment;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey;
 import io.camunda.zeebe.db.impl.DbTenantAwareKey.PlacementType;
@@ -31,7 +31,7 @@ public final class VersionManager {
 
   public VersionManager(
       final long initialValue,
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final ColumnFamilies columnFamily,
       final TransactionContext transactionContext) {
     this.initialValue = initialValue;

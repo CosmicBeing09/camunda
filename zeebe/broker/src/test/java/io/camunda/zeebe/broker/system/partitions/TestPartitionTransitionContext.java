@@ -31,7 +31,7 @@ import io.camunda.zeebe.broker.transport.backupapi.BackupApiRequestHandler;
 import io.camunda.zeebe.broker.transport.commandapi.CommandApiService;
 import io.camunda.zeebe.broker.transport.partitionapi.InterPartitionCommandReceiverActor;
 import io.camunda.zeebe.broker.transport.partitionapi.InterPartitionCommandSenderService;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.dynamic.config.state.DynamicPartitionConfig;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessorFactory;
 import io.camunda.zeebe.engine.state.QueryService;
@@ -66,7 +66,7 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   private LogStream logStream;
   private StreamProcessor streamProcessor;
   private ActorSchedulingService actorSchedulingService;
-  private ZeebeDb zeebeDB;
+  private GenericDb zeebeDB;
   private StateController stateController;
   private ExporterRepository exporterRepository;
   private AtomixLogStorage logStorage;
@@ -414,12 +414,12 @@ public class TestPartitionTransitionContext implements PartitionTransitionContex
   }
 
   @Override
-  public ZeebeDb getZeebeDb() {
+  public GenericDb getZeebeDb() {
     return zeebeDB;
   }
 
   @Override
-  public void setZeebeDb(final ZeebeDb zeebeDb) {
+  public void setZeebeDb(final GenericDb zeebeDb) {
     zeebeDB = zeebeDb;
   }
 

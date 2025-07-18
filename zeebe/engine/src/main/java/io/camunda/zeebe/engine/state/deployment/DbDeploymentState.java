@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.deployment;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbInt;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -43,7 +43,7 @@ public final class DbDeploymentState implements MutableDeploymentState {
   private final ColumnFamily<DbString, DbNil> deploymentsRecreatedColumnFamily;
 
   public DbDeploymentState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     deploymentKey = new DbLong();
     partitionKey = new DbInt();

@@ -10,7 +10,7 @@ package io.camunda.zeebe.db.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.ZeebeDbInconsistentException;
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public class ColumnFamilyRandomizedPropertyTest {
 
   private Map<Long, Long> map;
   private ColumnFamily<DbLong, DbLong> columnFamily;
-  private ZeebeDb<DefaultColumnFamily> zeebeDb;
+  private GenericDb<DefaultColumnFamily> zeebeDb;
 
   @BeforeProperty
   private void setup() {

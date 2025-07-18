@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.instance;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
 import io.camunda.zeebe.db.impl.DbString;
@@ -60,7 +60,7 @@ public class DbTaskState implements MutableTaskState {
   private final ColumnFamily<DbLong, DbString> userTasksInitialAssigneeColumnFamily;
 
   public DbTaskState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     userTaskKey = new DbLong();
     fkUserTask = new DbForeignKey<>(userTaskKey, ColumnFamilies.USER_TASKS);
     userTaskIntermediateStateKey = new DbLong();

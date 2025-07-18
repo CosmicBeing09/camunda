@@ -15,7 +15,7 @@ import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.logstreams.impl.log.LoggedEventImpl;
 import io.camunda.zeebe.logstreams.log.LogStreamReader;
@@ -283,7 +283,7 @@ public final class StreamPlatform {
     final var snapshot = storage.getParent().resolve(SNAPSHOT_FOLDER);
     scheduledCommandCache = new TestCommandCache();
 
-    final ZeebeDb<?> zeebeDb;
+    final GenericDb<?> zeebeDb;
     if (snapshotWasTaken) {
       zeebeDb = zeebeDbFactory.createDb(snapshot.toFile());
     } else {
@@ -366,7 +366,7 @@ public final class StreamPlatform {
     processorContext.close();
   }
 
-  public ZeebeDb getZeebeDb() {
+  public GenericDb getZeebeDb() {
     return processorContext.zeebeDb;
   }
 
@@ -385,7 +385,7 @@ public final class StreamPlatform {
   }
 
   private record ProcessorContext(
-      StreamProcessor streamProcessor, ZeebeDb zeebeDb, Path runtimePath, Path snapshotPath)
+      StreamProcessor streamProcessor, GenericDb zeebeDb, Path runtimePath, Path snapshotPath)
       implements AutoCloseable {
 
     public void snapshot() {

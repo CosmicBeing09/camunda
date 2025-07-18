@@ -12,7 +12,7 @@ import io.camunda.zeebe.broker.exporter.repo.ExporterLoadException;
 import io.camunda.zeebe.broker.exporter.repo.ExporterRepository;
 import io.camunda.zeebe.broker.exporter.stream.ExporterDirector.ExporterInitializationInfo;
 import io.camunda.zeebe.broker.system.configuration.ExporterCfg;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.scheduler.Actor;
@@ -34,7 +34,7 @@ import org.agrona.CloseHelper;
 public final class ExporterContainerRuntime implements CloseableSilently {
   private final ActorScheduler scheduler;
   private final ExporterRepository repository;
-  private final ZeebeDb<ColumnFamilies> zeebeDb;
+  private final GenericDb<ColumnFamilies> zeebeDb;
   private final RuntimeActor actor;
   private final ExportersState state;
   private final ExporterMetrics metrics;
@@ -112,7 +112,7 @@ public final class ExporterContainerRuntime implements CloseableSilently {
     return actor;
   }
 
-  private ZeebeDb<ColumnFamilies> createZeebeDb(final Path path) {
+  private GenericDb<ColumnFamilies> createZeebeDb(final Path path) {
     return DefaultZeebeDbFactory.defaultFactory().createDb(path.toFile());
   }
 

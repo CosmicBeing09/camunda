@@ -9,7 +9,7 @@ package io.camunda.zeebe.stream.impl.state;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.stream.api.state.MutableLastProcessedPositionState;
@@ -24,7 +24,7 @@ public final class DbLastProcessedPositionState implements MutableLastProcessedP
   private final ColumnFamily<DbString, LastProcessedPosition> positionColumnFamily;
 
   public DbLastProcessedPositionState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     positionKey = new DbString();
     positionKey.wrapString(LAST_PROCESSED_EVENT_KEY);
     positionColumnFamily =

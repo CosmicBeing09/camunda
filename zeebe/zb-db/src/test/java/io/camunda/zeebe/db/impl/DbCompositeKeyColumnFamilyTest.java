@@ -10,7 +10,7 @@ package io.camunda.zeebe.db.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import java.io.File;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ public final class DbCompositeKeyColumnFamilyTest {
   @Rule public final TemporaryFolder temporaryFolder = new TemporaryFolder();
   private final ZeebeDbFactory<DefaultColumnFamily> dbFactory =
       DefaultZeebeDbFactory.getDefaultFactory();
-  private ZeebeDb<DefaultColumnFamily> zeebeDb;
+  private GenericDb<DefaultColumnFamily> zeebeDb;
   private ColumnFamily<DbCompositeKey<DbString, DbLong>, DbString> columnFamily;
   private DbString firstKey;
   private DbLong secondKey;

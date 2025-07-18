@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.instance;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbForeignKey.MatchType;
@@ -75,7 +75,7 @@ public final class DbElementInstanceState implements MutableElementInstanceState
       processInstanceKeyByProcessDefinitionKeyColumnFamily;
 
   public DbElementInstanceState(
-      final ZeebeDb<ColumnFamilies> zeebeDb,
+      final GenericDb<ColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
       final MutableVariableState variableState) {
 

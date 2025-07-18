@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.util;
 
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.ProcessingDbState;
@@ -24,7 +24,7 @@ public final class ProcessingStateRule extends ExternalResource {
 
   private final TemporaryFolder tempFolder = new TemporaryFolder();
   private final int partition;
-  private ZeebeDb<ColumnFamilies> db;
+  private GenericDb<ColumnFamilies> db;
   private MutableAsyncProcessingContext processingState;
 
   public ProcessingStateRule() {
@@ -68,7 +68,7 @@ public final class ProcessingStateRule extends ExternalResource {
     return processingState;
   }
 
-  public ZeebeDb<ColumnFamilies> createNewDb() {
+  public GenericDb<ColumnFamilies> createNewDb() {
     try {
 
       return DefaultZeebeDbFactory.defaultFactory().createDb(tempFolder.newFolder());

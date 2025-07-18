@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.impl.DbCompositeKey;
 import io.camunda.zeebe.db.impl.DbForeignKey;
 import io.camunda.zeebe.db.impl.DbLong;
@@ -33,7 +33,7 @@ public class JobBackoffRestoreMigrationTest {
 
   final JobBackoffRestoreMigration jobBackoffRestoreMigration = new JobBackoffRestoreMigration();
 
-  private ZeebeDb<ColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
   private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
   private final JobRecordValue jobRecordToRead = new JobRecordValue();

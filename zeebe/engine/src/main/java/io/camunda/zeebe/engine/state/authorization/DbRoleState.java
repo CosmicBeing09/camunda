@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.authorization;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableRoleState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -23,7 +23,7 @@ public class DbRoleState implements MutableRoleState {
   private final ColumnFamily<DbString, PersistedRole> roleColumnFamily;
 
   public DbRoleState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
     roleId = new DbString();
     roleColumnFamily =
         zeebeDb.createColumnFamily(

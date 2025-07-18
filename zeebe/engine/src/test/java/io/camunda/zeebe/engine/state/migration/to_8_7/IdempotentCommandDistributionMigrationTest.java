@@ -10,8 +10,8 @@ package io.camunda.zeebe.engine.state.migration.to_8_7;
 import static io.camunda.zeebe.util.buffer.BufferUtil.wrapString;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.state.distribution.DbDistributionState;
 import io.camunda.zeebe.engine.state.distribution.DistributionQueue;
 import io.camunda.zeebe.engine.state.migration.MigrationTaskContextImpl;
@@ -36,7 +36,7 @@ public class IdempotentCommandDistributionMigrationTest {
 
   final IdempotentCommandDistributionMigration sut = new IdempotentCommandDistributionMigration();
 
-  private ZeebeDb<ColumnFamilies> zeebeDb;
+  private GenericDb<ColumnFamilies> zeebeDb;
   private MutableAsyncProcessingContext processingState;
   private TransactionContext transactionContext;
 

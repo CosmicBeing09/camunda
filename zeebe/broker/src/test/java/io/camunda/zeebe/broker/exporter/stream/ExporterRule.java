@@ -13,7 +13,7 @@ import io.camunda.zeebe.broker.exporter.repo.ExporterDescriptor;
 import io.camunda.zeebe.broker.exporter.stream.ExporterDirector.ExporterInitializationInfo;
 import io.camunda.zeebe.broker.exporter.stream.ExporterDirectorContext.ExporterMode;
 import io.camunda.zeebe.broker.system.partitions.PartitionMessagingService;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.util.TestStreams;
@@ -56,7 +56,7 @@ public final class ExporterRule implements TestRule {
 
   private final ZeebeDbFactory zeebeDbFactory;
   private final ExporterMode exporterMode;
-  private ZeebeDb<ColumnFamilies> capturedZeebeDb;
+  private GenericDb<ColumnFamilies> capturedZeebeDb;
 
   private TestStreams streams;
   private PartitionMessagingService partitionMessagingService = new SimplePartitionMessageService();

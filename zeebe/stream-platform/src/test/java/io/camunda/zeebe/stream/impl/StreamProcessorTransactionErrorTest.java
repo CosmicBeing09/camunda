@@ -14,9 +14,9 @@ import static org.mockito.Mockito.spy;
 import io.camunda.zeebe.db.ColumnFamily;
 import io.camunda.zeebe.db.DbKey;
 import io.camunda.zeebe.db.DbValue;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.TransactionOperation;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.ZeebeDbTransaction;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -99,23 +99,23 @@ final class StreamProcessorTransactionErrorTest {
     }
 
     @Override
-    public ZeebeDb<ColumnFamilies> createDb(final File pathName) {
+    public GenericDb<ColumnFamilies> createDb(final File pathName) {
       return new ErrorProneZeebeDb(delegate.createDb(pathName), commitException);
     }
 
     @Override
-    public ZeebeDb<ColumnFamilies> openSnapshotOnlyDb(final File path) {
+    public GenericDb<ColumnFamilies> openSnapshotOnlyDb(final File path) {
       return delegate.openSnapshotOnlyDb(path);
     }
   }
 
-  private static final class ErrorProneZeebeDb implements ZeebeDb<ColumnFamilies> {
+  private static final class ErrorProneZeebeDb implements GenericDb<ColumnFamilies> {
 
-    private final ZeebeDb<ColumnFamilies> delegate;
+    private final GenericDb<ColumnFamilies> delegate;
     private final Exception commitException;
 
     private ErrorProneZeebeDb(
-        final ZeebeDb<ColumnFamilies> delegate, final Exception commitException) {
+        final GenericDb<ColumnFamilies> delegate, final Exception commitException) {
       this.delegate = delegate;
       this.commitException = commitException;
     }

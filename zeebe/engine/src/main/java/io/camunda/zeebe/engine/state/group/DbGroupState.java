@@ -8,8 +8,8 @@
 package io.camunda.zeebe.engine.state.group;
 
 import io.camunda.zeebe.db.ColumnFamily;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.TransactionContext;
-import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.engine.state.mutable.MutableGroupState;
 import io.camunda.zeebe.protocol.ColumnFamilies;
@@ -23,7 +23,7 @@ public class DbGroupState implements MutableGroupState {
   private final ColumnFamily<DbString, PersistedGroup> groupColumnFamily;
 
   public DbGroupState(
-      final ZeebeDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
+      final GenericDb<ColumnFamilies> zeebeDb, final TransactionContext transactionContext) {
 
     groupId = new DbString();
     groupColumnFamily =

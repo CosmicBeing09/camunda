@@ -10,7 +10,7 @@ package io.camunda.zeebe.db.impl.rocksdb;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.zeebe.db.ColumnFamily;
-import io.camunda.zeebe.db.ZeebeDb;
+import io.camunda.zeebe.db.GenericDb;
 import io.camunda.zeebe.db.ZeebeDbFactory;
 import io.camunda.zeebe.db.impl.DbString;
 import io.camunda.zeebe.db.impl.DefaultColumnFamily;
@@ -33,7 +33,7 @@ final class ZeebeRocksDbTest {
   void shouldCreateSnapshot(final @TempDir Path tempDir) throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory = DefaultZeebeDbFactory.getDefaultFactory();
-    final ZeebeDb<DefaultColumnFamily> db =
+    final GenericDb<DefaultColumnFamily> db =
         dbFactory.createDb(Files.createDirectory(tempDir.resolve("db")).toFile());
 
     final DbString key = new DbString();
@@ -57,7 +57,7 @@ final class ZeebeRocksDbTest {
   void shouldReopenDb(final @TempDir File pathName) throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory = DefaultZeebeDbFactory.getDefaultFactory();
-    ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
+    GenericDb<DefaultColumnFamily> db = dbFactory.createDb(pathName);
 
     final DbString key = new DbString();
     key.wrapString("foo");
@@ -83,7 +83,7 @@ final class ZeebeRocksDbTest {
   void shouldRecoverFromSnapshot(final @TempDir Path tempDir) throws Exception {
     // given
     final ZeebeDbFactory<DefaultColumnFamily> dbFactory = DefaultZeebeDbFactory.getDefaultFactory();
-    ZeebeDb<DefaultColumnFamily> db =
+    GenericDb<DefaultColumnFamily> db =
         dbFactory.createDb(Files.createDirectory(tempDir.resolve("db")).toFile());
 
     final DbString key = new DbString();
@@ -120,7 +120,7 @@ final class ZeebeRocksDbTest {
     final Counter counter;
 
     // when
-    try (final ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(tempDir.toFile())) {
+    try (final GenericDb<DefaultColumnFamily> db = dbFactory.createDb(tempDir.toFile())) {
       counter = Counter.builder(TestDoc.FOO.getName()).register(db.getMeterRegistry());
       counter.increment();
     }
@@ -141,7 +141,7 @@ final class ZeebeRocksDbTest {
     final MeterRegistry dbRegistry;
 
     // when
-    try (final ZeebeDb<DefaultColumnFamily> db = dbFactory.createDb(tempDir.toFile())) {
+    try (final GenericDb<DefaultColumnFamily> db = dbFactory.createDb(tempDir.toFile())) {
       dbRegistry = db.getMeterRegistry();
     }
 
