@@ -128,7 +128,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationActivateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationTerminateInstruction;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceModificationVariableInstruction;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
@@ -660,9 +660,9 @@ public class RequestMapper {
         .orElseGet(() -> Either.right(resultSupplier.get()));
   }
 
-  private static UserTaskRecord getRecordWithChangedAttributes(
+  private static UserTaskEntity getRecordWithChangedAttributes(
       final UserTaskUpdateRequest updateRequest) {
-    final var record = new UserTaskRecord();
+    final var record = new UserTaskEntity();
     if (updateRequest == null || updateRequest.getChangeset() == null) {
       return record;
     }
@@ -1015,27 +1015,27 @@ public class RequestMapper {
 
     if (jobResultCorrections.getAssignee() != null) {
       corrections.setAssignee(jobResultCorrections.getAssignee());
-      correctedAttributes.add(UserTaskRecord.ASSIGNEE);
+      correctedAttributes.add(UserTaskEntity.ASSIGNEE);
     }
     if (jobResultCorrections.getDueDate() != null) {
       corrections.setDueDate(jobResultCorrections.getDueDate());
-      correctedAttributes.add(UserTaskRecord.DUE_DATE);
+      correctedAttributes.add(UserTaskEntity.DUE_DATE);
     }
     if (jobResultCorrections.getFollowUpDate() != null) {
       corrections.setFollowUpDate(jobResultCorrections.getFollowUpDate());
-      correctedAttributes.add(UserTaskRecord.FOLLOW_UP_DATE);
+      correctedAttributes.add(UserTaskEntity.FOLLOW_UP_DATE);
     }
     if (jobResultCorrections.getCandidateUsers() != null) {
       corrections.setCandidateUsersList(jobResultCorrections.getCandidateUsers());
-      correctedAttributes.add(UserTaskRecord.CANDIDATE_USERS);
+      correctedAttributes.add(UserTaskEntity.CANDIDATE_USERS);
     }
     if (jobResultCorrections.getCandidateGroups() != null) {
       corrections.setCandidateGroupsList(jobResultCorrections.getCandidateGroups());
-      correctedAttributes.add(UserTaskRecord.CANDIDATE_GROUPS);
+      correctedAttributes.add(UserTaskEntity.CANDIDATE_GROUPS);
     }
     if (jobResultCorrections.getPriority() != null) {
       corrections.setPriority(jobResultCorrections.getPriority());
-      correctedAttributes.add(UserTaskRecord.PRIORITY);
+      correctedAttributes.add(UserTaskEntity.PRIORITY);
     }
 
     jobResult.setCorrections(corrections);
@@ -1090,7 +1090,7 @@ public class RequestMapper {
   public record CompleteUserTaskRequest(
       long userTaskKey, Map<String, Object> variables, String action) {}
 
-  public record UpdateUserTaskRequest(long userTaskKey, UserTaskRecord changeset, String action) {}
+  public record UpdateUserTaskRequest(long userTaskKey, UserTaskEntity changeset, String action) {}
 
   public record AssignUserTaskRequest(
       long userTaskKey, String assignee, String action, boolean allowOverride) {}

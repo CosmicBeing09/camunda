@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
@@ -33,7 +33,7 @@ public class UserTaskCommandPreconditionChecker {
   private final String intent;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final BiFunction<
-          TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
+          TypedRecord<UserTaskEntity>, UserTaskEntity, Either<Rejection, UserTaskEntity>>
       additionalChecks;
   private final UserTaskState userTaskState;
 
@@ -49,7 +49,7 @@ public class UserTaskCommandPreconditionChecker {
       final List<LifecycleState> validLifecycleStates,
       final String intent,
       final BiFunction<
-              TypedRecord<UserTaskRecord>, UserTaskRecord, Either<Rejection, UserTaskRecord>>
+              TypedRecord<UserTaskEntity>, UserTaskEntity, Either<Rejection, UserTaskEntity>>
           additionalChecks,
       final UserTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -60,7 +60,7 @@ public class UserTaskCommandPreconditionChecker {
     this.userTaskState = userTaskState;
   }
 
-  protected Either<Rejection, UserTaskRecord> check(final TypedRecord<UserTaskRecord> command) {
+  protected Either<Rejection, UserTaskEntity> check(final TypedRecord<UserTaskEntity> command) {
     final long userTaskKey = command.getKey();
     final var persistedRecord =
         userTaskState.getUserTask(userTaskKey, authCheckBehavior.getAuthorizedTenantIds(command));

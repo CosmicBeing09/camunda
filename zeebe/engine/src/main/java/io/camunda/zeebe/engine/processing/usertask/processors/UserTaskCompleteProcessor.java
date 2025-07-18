@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -59,33 +59,33 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, UserTaskEntity> validateCommand(
+      final TypedRecord<UserTaskEntity> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
-    userTaskRecord.setVariables(command.getValue().getVariablesBuffer());
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskEntity.setVariables(command.getValue().getVariablesBuffer());
+    userTaskEntity.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETING, userTaskEntity);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
     if (command.hasRequest()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
-      completeElementInstance(userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskEntity);
+      completeElementInstance(userTaskEntity);
 
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord, command);
+          userTaskKey, UserTaskIntent.COMPLETED, userTaskEntity, command);
     } else {
       /*
        * If the request metadata is not present in the received command, it indicates that
@@ -98,23 +98,23 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
        * Note: It's important to retrieve this metadata from the user task state before appending
        * the "COMPLETED" event, as it will be cleared by the "COMPLETED" event applier.
        */
-      final var recordRequestMetadata = userTaskState.findRecordRequest(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskRecord);
-      completeElementInstance(userTaskRecord);
+      final var recordRequestMetadata = userTaskState.findTriggerRequest(userTaskKey);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETED, userTaskEntity);
+      completeElementInstance(userTaskEntity);
 
       recordRequestMetadata.ifPresent(
           metadata ->
               responseWriter.writeResponse(
                   userTaskKey,
                   UserTaskIntent.COMPLETED,
-                  userTaskRecord,
+                  userTaskEntity,
                   ValueType.USER_TASK,
                   metadata.getRequestId(),
                   metadata.getRequestStreamId()));
     }
   }
 
-  private void completeElementInstance(final UserTaskRecord userTaskRecord) {
+  private void completeElementInstance(final UserTaskEntity userTaskRecord) {
     final var userTaskElementInstanceKey = userTaskRecord.getElementInstanceKey();
 
     final ElementInstance userTaskElementInstance =

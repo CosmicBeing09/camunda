@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.Optional;
 import java.util.Random;
@@ -49,7 +49,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     final var initialAssignee = "initial";
     final var newAssignee = "changed";
 
-    final var given = new UserTaskRecord().setUserTaskKey(userTaskKey);
+    final var given = new UserTaskEntity().setUserTaskKey(userTaskKey);
 
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, given);
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, given);
@@ -74,7 +74,7 @@ public class UserTaskAssignmentDeniedApplierTest {
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey))
         .describedAs("Expect that intermediate state is not present anymore")
         .isNull();
-    Assertions.assertThat(userTaskState.findRecordRequest(userTaskKey))
+    Assertions.assertThat(userTaskState.findTriggerRequest(userTaskKey))
         .describedAs("Expect that record request metadata is not present anymore")
         .isEmpty();
     Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())
@@ -91,12 +91,12 @@ public class UserTaskAssignmentDeniedApplierTest {
     final long userTaskKey = new Random().nextLong();
     final var initialAssignee = "initial";
 
-    final var given = new UserTaskRecord().setAssignee(initialAssignee).setUserTaskKey(userTaskKey);
+    final var given = new UserTaskEntity().setAssignee(initialAssignee).setUserTaskKey(userTaskKey);
 
     // assignee is present in the creating event
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, given);
     // but we clear the assignee for created event
-    final UserTaskRecord recordWithoutAssignee = given.unsetAssignee();
+    final UserTaskEntity recordWithoutAssignee = given.unsetAssignee();
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.ASSIGNING, given);
 

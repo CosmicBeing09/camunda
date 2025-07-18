@@ -15,7 +15,7 @@ import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -550,7 +550,7 @@ public class TaskListenerDenialsTest {
   private String getDeniedReason(final UserTaskRecordValue record) {
     // This is to be removed when denied reason is exposed in the UserTaskRecordValue interface.
     // Currently added in order to separate processing implementation.
-    return ((UserTaskRecord) record).getDeniedReason();
+    return ((UserTaskEntity) record).getDeniedReason();
   }
 
   @Test
@@ -796,7 +796,7 @@ public class TaskListenerDenialsTest {
     // given: a process instance with a task listener that doesn't support denying
     final long processInstanceKey =
         helper.createProcessInstance(
-            helper.createUserTaskWithTaskListeners(listenerEventType, this.listenerType));
+            helper.createUserTaskWithTaskListeners(listenerEventType, listenerType));
 
     // trigger transition
     triggerTransition.accept(processInstanceKey);
@@ -806,7 +806,7 @@ public class TaskListenerDenialsTest {
         ENGINE
             .job()
             .ofInstance(processInstanceKey)
-            .withType(this.listenerType)
+            .withType(listenerType)
             .withResult(new JobResult().setDenied(true))
             .expectRejection()
             .complete();

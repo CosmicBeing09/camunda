@@ -10,20 +10,20 @@ package io.camunda.zeebe.engine.state.immutable;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
 import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequest;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import java.util.Optional;
 
 public interface UserTaskState {
 
   LifecycleState getLifecycleState(final long userTaskKey);
 
-  UserTaskRecord getUserTask(final long userTaskKey);
+  UserTaskEntity getUserTask(final long userTaskKey);
 
-  UserTaskRecord getUserTask(final long userTaskKey, final AuthorizedTenants authorizations);
+  UserTaskEntity getUserTask(final long userTaskKey, final AuthorizedTenants authorizations);
 
   UserTaskIntermediateStateValue getIntermediateState(final long userTaskKey);
 
-  Optional<UserTaskTransitionTriggerRequest> findRecordRequest(
+  Optional<UserTaskTransitionTriggerRequest> findTriggerRequest(
       final long userTaskKey);
 
   Optional<String> findInitialAssignee(long key);

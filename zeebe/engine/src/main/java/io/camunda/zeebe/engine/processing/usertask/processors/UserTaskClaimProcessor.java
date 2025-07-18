@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
@@ -54,56 +54,56 @@ public final class UserTaskClaimProcessor implements UserTaskCommandProcessor {
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, UserTaskEntity> validateCommand(
+      final TypedRecord<UserTaskEntity> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
     final var newAssignee = command.getValue().getAssignee();
-    if (!userTaskRecord.getAssignee().equals(newAssignee)) {
-      userTaskRecord.setAssignee(newAssignee);
-      userTaskRecord.setAssigneeChanged();
+    if (!userTaskEntity.getAssignee().equals(newAssignee)) {
+      userTaskEntity.setAssignee(newAssignee);
+      userTaskEntity.setAssigneeChanged();
     }
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskEntity.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.CLAIMING, userTaskEntity);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
-    userTaskRecord.setAssignee(command.getValue().getAssignee());
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskEntity.setAssignee(command.getValue().getAssignee());
+    userTaskEntity.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
     if (command.hasRequest()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskEntity);
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
+          userTaskKey, UserTaskIntent.ASSIGNED, userTaskEntity, command);
     } else {
-      final var recordRequestMetadata = userTaskState.findRecordRequest(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      final var triggerRequestDetails = userTaskState.findTriggerRequest(userTaskKey);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskEntity);
 
-      recordRequestMetadata.ifPresent(
-          metadata ->
+      triggerRequestDetails.ifPresent(
+          triggerRequestDetails ->
               responseWriter.writeResponse(
                   userTaskKey,
                   UserTaskIntent.ASSIGNED,
-                  userTaskRecord,
+                  userTaskEntity,
                   ValueType.USER_TASK,
-                  metadata.getRequestId(),
-                  metadata.getRequestStreamId()));
+                  triggerRequestDetails.getRequestId(),
+                  triggerRequestDetails.getRequestStreamId()));
     }
   }
 
-  private static Either<Rejection, UserTaskRecord> checkClaim(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+  private static Either<Rejection, UserTaskEntity> checkClaim(
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskRecord) {
 
     final long userTaskKey = command.getKey();
     final String newAssignee = command.getValue().getAssignee();

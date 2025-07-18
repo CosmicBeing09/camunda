@@ -44,7 +44,7 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalRecord;
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.record.ExecuteCommandRequestDecoder;
 import io.camunda.zeebe.protocol.record.MessageHeaderDecoder;
@@ -75,7 +75,7 @@ public class CommandApiRequestReader implements RequestReader<ExecuteCommandRequ
     RECORDS_BY_TYPE.put(ValueType.COMMAND_DISTRIBUTION, CommandDistributionRecord::new);
     RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE_BATCH, ProcessInstanceBatchRecord::new);
     RECORDS_BY_TYPE.put(ValueType.RESOURCE_DELETION, ResourceDeletionRecord::new);
-    RECORDS_BY_TYPE.put(ValueType.USER_TASK, UserTaskRecord::new);
+    RECORDS_BY_TYPE.put(ValueType.USER_TASK, UserTaskEntity::new);
     RECORDS_BY_TYPE.put(ValueType.PROCESS_INSTANCE_MIGRATION, ProcessInstanceMigrationRecord::new);
     RECORDS_BY_TYPE.put(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,

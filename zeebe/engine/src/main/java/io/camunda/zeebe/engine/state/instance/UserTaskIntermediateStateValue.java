@@ -12,14 +12,14 @@ import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.msgpack.property.EnumProperty;
 import io.camunda.zeebe.msgpack.property.ObjectProperty;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import java.util.Objects;
 
 /**
  * This class holds the necessary user task data (including variables) to finalize commands such as
  * `COMPLETE`, `UPDATE`, `ASSIGN` etc. mainly when task listeners are defined for these operations.
  *
- * <p>The intermediate state includes a {@link UserTaskRecord} that captures the state of the user
+ * <p>The intermediate state includes a {@link UserTaskEntity} that captures the state of the user
  * task as it was when the command (e.g., COMPLETE, ASSIGN) was invoked. It also tracks the {@link
  * LifecycleState} of the task, representing the current state in its lifecycle (e.g., COMPLETING,
  * ASSIGNING).
@@ -38,8 +38,8 @@ import java.util.Objects;
  */
 public class UserTaskIntermediateStateValue extends UnpackedObject implements DbValue {
 
-  private final ObjectProperty<UserTaskRecord> recordProp =
-      new ObjectProperty<>("userTaskRecord", new UserTaskRecord());
+  private final ObjectProperty<UserTaskEntity> recordProp =
+      new ObjectProperty<>("userTaskRecord", new UserTaskEntity());
 
   private final EnumProperty<LifecycleState> lifecycleStateProp =
       new EnumProperty<>("lifecycleState", LifecycleState.class);
@@ -49,11 +49,11 @@ public class UserTaskIntermediateStateValue extends UnpackedObject implements Db
     declareProperty(recordProp).declareProperty(lifecycleStateProp);
   }
 
-  public UserTaskRecord getRecord() {
+  public UserTaskEntity getRecord() {
     return recordProp.getValue();
   }
 
-  public void setRecord(final UserTaskRecord record) {
+  public void setRecord(final UserTaskEntity record) {
     recordProp.getValue().wrap(record);
   }
 

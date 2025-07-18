@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.usertask.processors;
 
 import io.camunda.zeebe.engine.processing.Rejection;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 
@@ -34,8 +34,8 @@ public interface UserTaskCommandProcessor {
    * @param command the user task command to be validated
    * @return Either a rejection if validation fails, or the user task record if validation succeeds
    */
-  default Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  default Either<Rejection, UserTaskEntity> validateCommand(
+      final TypedRecord<UserTaskEntity> command) {
     return Either.right(command.getValue());
   }
 
@@ -47,10 +47,10 @@ public interface UserTaskCommandProcessor {
    * passes' validation.
    *
    * @param command the original command record to be processed
-   * @param userTaskRecord the validated user task record that the command acts upon
+   * @param userTaskEntity the validated user task record that the command acts upon
    */
   default void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {}
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {}
 
   /**
    * Finalizes the processing of the command.
@@ -59,8 +59,8 @@ public interface UserTaskCommandProcessor {
    * finalizing state transitions by triggering follow-up commands or events.
    *
    * @param command the original command record to be processed
-   * @param userTaskRecord the validated user task record that the command acts upon
+   * @param userTaskEntity the validated user task record that the command acts upon
    */
   default void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {}
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {}
 }

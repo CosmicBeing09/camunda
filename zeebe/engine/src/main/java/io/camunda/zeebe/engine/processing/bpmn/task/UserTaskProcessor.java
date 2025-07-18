@@ -23,7 +23,7 @@ import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.util.Either;
 import java.util.Collections;
 import java.util.Optional;
@@ -128,7 +128,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
     incidentBehavior.resolveIncidents(context);
 
     final var elementInstance = stateBehavior.getElementInstance(context);
-    final Optional<UserTaskRecord> cancelingUserTask =
+    final Optional<UserTaskEntity> cancelingUserTask =
         userTaskBehavior.userTaskCanceling(elementInstance);
     if (cancelingUserTask.isPresent()) {
       final var cancelingListeners = element.getTaskListeners(ZeebeTaskListenerEventType.canceling);
@@ -199,7 +199,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
   private void assignUserTask(
       final ExecutableUserTask element,
       final BpmnElementContext context,
-      final UserTaskRecord userTaskRecord,
+      final UserTaskEntity userTaskRecord,
       final String assignee) {
     userTaskBehavior.userTaskAssigning(userTaskRecord, assignee);
     element.getTaskListeners(ZeebeTaskListenerEventType.assigning).stream()
@@ -212,7 +212,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
   }
 
   private record UserTaskCreationResult(
-      UserTaskProperties props, UserTaskRecord task, LifecycleState lifecycleState) {
+      UserTaskProperties props, UserTaskEntity task, LifecycleState lifecycleState) {
 
     public String getAssigneeProp() {
       return props.getAssignee();

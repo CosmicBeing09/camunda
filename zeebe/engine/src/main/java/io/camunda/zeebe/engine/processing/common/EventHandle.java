@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
@@ -158,7 +158,7 @@ public final class EventHandle {
         jobRecord.getVariablesBuffer());
   }
 
-  public void triggeringProcessEvent(final UserTaskRecord userTaskRecord) {
+  public void triggeringProcessEvent(final UserTaskEntity userTaskRecord) {
     triggeringProcessEvent(
         userTaskRecord.getProcessDefinitionKey(),
         userTaskRecord.getProcessInstanceKey(),

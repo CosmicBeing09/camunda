@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
 import java.util.stream.Stream;
@@ -73,7 +73,7 @@ public class UserTaskCorrectedApplierTest {
       final long userTaskKey, final List<UserTaskIntent> setup, final LifecycleState state) {
     // given
     final var given =
-        new UserTaskRecord()
+        new UserTaskEntity()
             .setUserTaskKey(userTaskKey)
             .setAssignee("initial")
             .setCandidateGroupsList(List.of("initial"))
@@ -109,7 +109,7 @@ public class UserTaskCorrectedApplierTest {
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey).getRecord())
         .describedAs("Expect that intermediate state is updated")
         .isEqualTo(
-            new UserTaskRecord()
+            new UserTaskEntity()
                 .setUserTaskKey(userTaskKey)
                 .setAssignee("overwritten")
                 .setCandidateGroupsList(List.of("overwritten"))

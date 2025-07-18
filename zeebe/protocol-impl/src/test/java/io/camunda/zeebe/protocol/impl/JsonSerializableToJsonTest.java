@@ -73,7 +73,7 @@ import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionReco
 import io.camunda.zeebe.protocol.impl.record.value.tenant.TenantRecord;
 import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.impl.record.value.user.UserRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableRecord;
 import io.camunda.zeebe.protocol.record.JsonSerializable;
@@ -2394,7 +2394,7 @@ final class JsonSerializableToJsonTest {
         "UserTaskRecord",
         (Supplier<UnifiedRecordValue>)
             () ->
-                new UserTaskRecord()
+                new UserTaskEntity()
                     .setUserTaskKey(123)
                     .setAssignee("myAssignee")
                     .setCandidateGroupsList(List.of("myCandidateGroups"))
@@ -2454,7 +2454,7 @@ final class JsonSerializableToJsonTest {
       /////////////////////////////////////////////////////////////////////////////////////////////
       {
         "Empty UserTaskRecord",
-        (Supplier<UnifiedRecordValue>) UserTaskRecord::new,
+        (Supplier<UnifiedRecordValue>) UserTaskEntity::new,
         """
       {
         "bpmnProcessId": "",
@@ -2489,7 +2489,7 @@ final class JsonSerializableToJsonTest {
         "UserTaskRecord WithNullableVariable",
         (Supplier<UnifiedRecordValue>)
             () ->
-                new UserTaskRecord()
+                new UserTaskEntity()
                     .setVariables(
                         new UnsafeBuffer(MsgPackConverter.convertToMsgPack("{'foo':null}"))),
         """

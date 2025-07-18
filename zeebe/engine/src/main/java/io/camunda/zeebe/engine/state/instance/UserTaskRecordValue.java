@@ -10,27 +10,27 @@ package io.camunda.zeebe.engine.state.instance;
 import io.camunda.zeebe.db.DbValue;
 import io.camunda.zeebe.msgpack.UnpackedObject;
 import io.camunda.zeebe.msgpack.property.ObjectProperty;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 
 public class UserTaskRecordValue extends UnpackedObject implements DbValue {
 
-  private final ObjectProperty<UserTaskRecord> recordProp =
-      new ObjectProperty<>("userTaskRecord", new UserTaskRecord());
+  private final ObjectProperty<UserTaskEntity> recordProp =
+      new ObjectProperty<>("userTaskRecord", new UserTaskEntity());
 
   public UserTaskRecordValue() {
     super(1);
     declareProperty(recordProp);
   }
 
-  public UserTaskRecord getRecord() {
+  public UserTaskEntity getRecord() {
     return recordProp.getValue();
   }
 
-  public void setRecordWithoutVariables(final UserTaskRecord record) {
-    recordProp.getValue().wrapWithoutVariables(record);
+  public void setRecord(final UserTaskEntity record) {
+    recordProp.getValue().wrap(record);
   }
 
-  public void setRecord(final UserTaskRecord record) {
-    recordProp.getValue().wrap(record);
+  public void setRecordWithoutVariables(final UserTaskEntity record) {
+    recordProp.getValue().wrapWithoutVariables(record);
   }
 }

@@ -63,7 +63,7 @@ import io.camunda.zeebe.engine.state.message.TransientPendingSubscriptionState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.CommandDistributionIntent;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
@@ -326,7 +326,7 @@ public final class EngineProcessors {
     return typedRecordProcessors;
   }
 
-  private static TypedRecordProcessor<UserTaskRecord> createUserTaskProcessor(
+  private static TypedRecordProcessor<UserTaskEntity> createUserTaskProcessor(
       final MutableProcessingState processingState,
       final BpmnBehaviorsImpl bpmnBehaviors,
       final Writers writers,
@@ -466,7 +466,7 @@ public final class EngineProcessors {
   private static void addIncidentProcessors(
       final ProcessingState processingState,
       final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor,
+      final TypedRecordProcessor<UserTaskEntity> userTaskProcessor,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final BpmnJobActivationBehavior jobActivationBehavior,
@@ -575,7 +575,7 @@ public final class EngineProcessors {
 
   private static void addUserTaskProcessors(
       final TypedRecordProcessors typedRecordProcessors,
-      final TypedRecordProcessor<UserTaskRecord> userTaskProcessor) {
+      final TypedRecordProcessor<UserTaskEntity> userTaskProcessor) {
 
     UserTaskIntent.commands()
         .forEach(

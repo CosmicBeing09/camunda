@@ -11,10 +11,10 @@ import io.camunda.zeebe.engine.state.TypedEventApplier;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
-public class UserTaskCreatedV2Applier implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+public class UserTaskCreatedV2Applier implements TypedEventApplier<UserTaskIntent, UserTaskEntity> {
   private final MutableUserTaskState userTaskState;
 
   public UserTaskCreatedV2Applier(final MutableProcessingState processingState) {
@@ -22,9 +22,9 @@ public class UserTaskCreatedV2Applier implements TypedEventApplier<UserTaskInten
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final UserTaskEntity value) {
     // Ensure we store any corrections
-    final UserTaskRecord userTask = userTaskState.getUserTask(key);
+    final UserTaskEntity userTask = userTaskState.getUserTask(key);
     userTask.wrapChangedAttributes(value, false);
     userTaskState.update(userTask);
 

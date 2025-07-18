@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import java.util.List;
@@ -52,7 +52,7 @@ public class UserTaskCreatedV2ApplierTest {
     final long elementInstanceKey = new Random().nextLong();
 
     final var userTaskRecord =
-        new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
+        new UserTaskEntity().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate a user task creation
     testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
@@ -78,7 +78,7 @@ public class UserTaskCreatedV2ApplierTest {
     final String initialAssignee = "initial_assignee";
 
     final var userTaskRecord =
-        new UserTaskRecord()
+        new UserTaskEntity()
             .setUserTaskKey(userTaskKey)
             .setAssignee(initialAssignee)
             .setElementInstanceKey(elementInstanceKey);
@@ -106,7 +106,7 @@ public class UserTaskCreatedV2ApplierTest {
 
     // user task record with assignee set
     final var userTaskRecord =
-        new UserTaskRecord()
+        new UserTaskEntity()
             .setUserTaskKey(userTaskKey)
             .setAssignee("initial_assignee")
             .setElementInstanceKey(elementInstanceKey);

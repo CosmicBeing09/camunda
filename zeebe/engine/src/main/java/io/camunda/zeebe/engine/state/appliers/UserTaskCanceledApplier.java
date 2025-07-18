@@ -12,11 +12,11 @@ import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 
 public final class UserTaskCanceledApplier
-    implements TypedEventApplier<UserTaskIntent, UserTaskRecord> {
+    implements TypedEventApplier<UserTaskIntent, UserTaskEntity> {
 
   private final MutableUserTaskState userTaskState;
   private final MutableElementInstanceState elementInstanceState;
@@ -27,14 +27,14 @@ public final class UserTaskCanceledApplier
   }
 
   @Override
-  public void applyState(final long key, final UserTaskRecord value) {
+  public void applyState(final long key, final UserTaskEntity value) {
     userTaskState.deleteIntermediateStateIfExists(key);
     userTaskState.deleteRecordRequestMetadata(key);
     userTaskState.delete(key);
     resetCancelingTaskListenerIndex(value);
   }
 
-  private void resetCancelingTaskListenerIndex(final UserTaskRecord record) {
+  private void resetCancelingTaskListenerIndex(final UserTaskEntity record) {
     final long userTaskInstanceKey = record.getElementInstanceKey();
     final var userTaskInstance = elementInstanceState.getInstance(userTaskInstanceKey);
 

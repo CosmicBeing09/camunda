@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.test.util.BufferAssert;
 import io.camunda.zeebe.test.util.MsgPackUtil;
@@ -45,33 +45,33 @@ public class UserTaskStateTest {
   @Test
   public void shouldCreateUserTask() {
     // given
-    final UserTaskRecord expectedRecord = createUserTask(5_000);
+    final UserTaskEntity expectedRecord = createUserTask(5_000);
 
     // when
     userTaskState.create(expectedRecord);
 
     // then
-    final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
+    final UserTaskEntity storedRecord = userTaskState.getUserTask(5_000);
     assertUserTask(expectedRecord, storedRecord, LifecycleState.CREATING);
   }
 
   @Test
   public void shouldCreateUserTaskWithCustomTenantId() {
     // given
-    final UserTaskRecord expectedRecord = createUserTask(5_000).setTenantId("customTenantId");
+    final UserTaskEntity expectedRecord = createUserTask(5_000).setTenantId("customTenantId");
 
     // when
     userTaskState.create(expectedRecord);
 
     // then
-    final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
+    final UserTaskEntity storedRecord = userTaskState.getUserTask(5_000);
     assertUserTask(expectedRecord, "customTenantId", storedRecord, LifecycleState.CREATING);
   }
 
   @Test
   public void shouldUpdateUserTask() {
     // given
-    final UserTaskRecord expectedRecord = createUserTask(5_000);
+    final UserTaskEntity expectedRecord = createUserTask(5_000);
     userTaskState.create(expectedRecord);
     expectedRecord.setAssignee("myNewAssignee");
 
@@ -79,14 +79,14 @@ public class UserTaskStateTest {
     userTaskState.update(expectedRecord);
 
     // then
-    final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
+    final UserTaskEntity storedRecord = userTaskState.getUserTask(5_000);
     assertThat(storedRecord).hasAssignee("myNewAssignee");
   }
 
   @Test
   public void shouldUpdateUserTaskState() {
     // given
-    final UserTaskRecord expectedRecord = createUserTask(5_000);
+    final UserTaskEntity expectedRecord = createUserTask(5_000);
     userTaskState.create(expectedRecord);
 
     // when
@@ -99,7 +99,7 @@ public class UserTaskStateTest {
   @Test
   public void shouldFailOnUpdatingNonExistingUserTask() {
     // given
-    final UserTaskRecord expectedRecord = new UserTaskRecord();
+    final UserTaskEntity expectedRecord = new UserTaskEntity();
 
     // when
     assertThatThrownBy(() -> userTaskState.update(expectedRecord))
@@ -111,7 +111,7 @@ public class UserTaskStateTest {
   @Test
   public void shouldDeleteUserTask() {
     // given
-    final UserTaskRecord expectedRecord = createUserTask(5_000);
+    final UserTaskEntity expectedRecord = createUserTask(5_000);
     userTaskState.create(expectedRecord);
 
     // when
@@ -125,13 +125,13 @@ public class UserTaskStateTest {
   public void shouldNeverPersistUserTaskVariables() {
     // given
     final long key = 1L;
-    final UserTaskRecord userTask = createUserTask(key);
+    final UserTaskEntity userTask = createUserTask(key);
 
-    final List<Consumer<UserTaskRecord>> stateUpdates =
+    final List<Consumer<UserTaskEntity>> stateUpdates =
         Arrays.asList(userTaskState::create, userTaskState::update);
 
     // when user task state is updated then the variables are not persisted
-    for (final Consumer<UserTaskRecord> stateUpdate : stateUpdates) {
+    for (final Consumer<UserTaskEntity> stateUpdate : stateUpdates) {
       userTask.setVariables(MsgPackUtil.asMsgPack("foo", "bar"));
       stateUpdate.accept(userTask);
       final DirectBuffer variables = userTaskState.getUserTask(key).getVariablesBuffer();
@@ -143,20 +143,20 @@ public class UserTaskStateTest {
   public void shouldNotOverwritePersistedRecord() {
     // given
     final long key = 1L;
-    final UserTaskRecord writtenRecord = createUserTask(key).setAssignee("test");
+    final UserTaskEntity writtenRecord = createUserTask(key).setAssignee("test");
 
     // when
     userTaskState.create(writtenRecord);
     writtenRecord.setAssignee("foo");
 
     // then
-    final UserTaskRecord readRecord = userTaskState.getUserTask(key);
+    final UserTaskEntity readRecord = userTaskState.getUserTask(key);
     assertThat(readRecord).hasAssignee("test");
     assertThat(writtenRecord).hasAssignee("foo");
   }
 
-  private UserTaskRecord createUserTask(final long userTaskKey) {
-    return new UserTaskRecord()
+  private UserTaskEntity createUserTask(final long userTaskKey) {
+    return new UserTaskEntity()
         .setElementInstanceKey(1234)
         .setBpmnProcessId("process")
         .setElementId("process")
@@ -174,8 +174,8 @@ public class UserTaskStateTest {
   }
 
   private void assertUserTask(
-      final UserTaskRecord expectedRecord,
-      final UserTaskRecord storedRecord,
+      final UserTaskEntity expectedRecord,
+      final UserTaskEntity storedRecord,
       final LifecycleState expectedLifecycleState) {
     assertUserTask(
         expectedRecord,
@@ -185,9 +185,9 @@ public class UserTaskStateTest {
   }
 
   private void assertUserTask(
-      final UserTaskRecord expectedRecord,
+      final UserTaskEntity expectedRecord,
       final String expectedTenantId,
-      final UserTaskRecord storedRecord,
+      final UserTaskEntity storedRecord,
       final LifecycleState expectedLifecycleState) {
     assertThat(storedRecord)
         .hasElementInstanceKey(expectedRecord.getElementInstanceKey())

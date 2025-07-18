@@ -24,7 +24,7 @@ import java.util.Map;
 public final class TypedRecordImpl implements TypedRecord {
   private final int partitionId;
   private LoggedEvent rawEvent;
-  private RecordRequest metadata;
+  private RecordRequest request;
   private UnifiedRecordValue value;
 
   public TypedRecordImpl(final int partitionId) {
@@ -32,15 +32,15 @@ public final class TypedRecordImpl implements TypedRecord {
   }
 
   public void wrap(
-      final LoggedEvent rawEvent, final RecordRequest metadata, final UnifiedRecordValue value) {
+      final LoggedEvent rawEvent, final RecordRequest request, final UnifiedRecordValue value) {
     this.rawEvent = rawEvent;
-    this.metadata = metadata;
+    this.request = request;
     this.value = value;
   }
 
   @JsonIgnore
   public RecordRequest getMetadata() {
-    return metadata;
+    return request;
   }
 
   @Override
@@ -60,7 +60,7 @@ public final class TypedRecordImpl implements TypedRecord {
 
   @Override
   public Intent getIntent() {
-    return metadata.getIntent();
+    return request.getIntent();
   }
 
   @Override
@@ -70,42 +70,42 @@ public final class TypedRecordImpl implements TypedRecord {
 
   @Override
   public RecordType getRecordType() {
-    return metadata.getRecordType();
+    return request.getRecordType();
   }
 
   @Override
   public RejectionType getRejectionType() {
-    return metadata.getRejectionType();
+    return request.getRejectionType();
   }
 
   @Override
   public String getRejectionReason() {
-    return metadata.getRejectionReason();
+    return request.getRejectionReason();
   }
 
   @Override
   public String getBrokerVersion() {
-    return metadata.getBrokerVersion().toString();
+    return request.getBrokerVersion().toString();
   }
 
   @Override
   public Map<String, Object> getAuthorizations() {
-    return metadata.getAuthorization().toDecodedMap();
+    return request.getAuthorization().toDecodedMap();
   }
 
   @Override
   public int getRecordVersion() {
-    return metadata.getRecordVersion();
+    return request.getRecordVersion();
   }
 
   @Override
   public ValueType getValueType() {
-    return metadata.getValueType();
+    return request.getValueType();
   }
 
   @Override
   public long getOperationReference() {
-    return metadata.getOperationReference();
+    return request.getOperationReference();
   }
 
   @Override
@@ -126,19 +126,19 @@ public final class TypedRecordImpl implements TypedRecord {
   @Override
   @JsonIgnore
   public int getRequestStreamId() {
-    return metadata.getRequestStreamId();
+    return request.getRequestStreamId();
   }
 
   @Override
   @JsonIgnore
   public long getRequestId() {
-    return metadata.getRequestId();
+    return request.getRequestId();
   }
 
   @Override
   @JsonIgnore
   public int getLength() {
-    return metadata.getLength() + value.getLength();
+    return request.getLength() + value.getLength();
   }
 
   @Override
@@ -150,7 +150,7 @@ public final class TypedRecordImpl implements TypedRecord {
   public String toString() {
     return "TypedRecordImpl{"
         + "metadata="
-        + metadata
+        + request
         + ", value="
         + StringUtil.limitString(value.toString(), 1024)
         + '}';

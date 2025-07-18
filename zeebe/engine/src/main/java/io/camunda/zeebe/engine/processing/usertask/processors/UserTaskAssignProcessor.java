@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState;
 import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.UserTaskIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -44,45 +44,45 @@ public final class UserTaskAssignProcessor implements UserTaskCommandProcessor {
   }
 
   @Override
-  public Either<Rejection, UserTaskRecord> validateCommand(
-      final TypedRecord<UserTaskRecord> command) {
+  public Either<Rejection, UserTaskEntity> validateCommand(
+      final TypedRecord<UserTaskEntity> command) {
     return preconditionChecker.check(command);
   }
 
   @Override
   public void onCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
     final var newAssignee = command.getValue().getAssignee();
-    if (!userTaskRecord.getAssignee().equals(newAssignee)) {
-      userTaskRecord.setAssignee(newAssignee);
-      userTaskRecord.setAssigneeChanged();
+    if (!userTaskEntity.getAssignee().equals(newAssignee)) {
+      userTaskEntity.setAssignee(newAssignee);
+      userTaskEntity.setAssigneeChanged();
     }
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskEntity.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNING, userTaskRecord);
+    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNING, userTaskEntity);
   }
 
   @Override
   public void onFinalizeCommand(
-      final TypedRecord<UserTaskRecord> command, final UserTaskRecord userTaskRecord) {
+      final TypedRecord<UserTaskEntity> command, final UserTaskEntity userTaskEntity) {
     final long userTaskKey = command.getKey();
 
     if (command.hasRequest()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskEntity);
       responseWriter.writeEventOnCommand(
-          userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord, command);
+          userTaskKey, UserTaskIntent.ASSIGNED, userTaskEntity, command);
     } else {
-      final var requestDetails = userTaskState.findRecordRequest(userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskRecord);
+      final var requestDetails = userTaskState.findTriggerRequest(userTaskKey);
+      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.ASSIGNED, userTaskEntity);
 
       requestDetails.ifPresent(
           requestDetails ->
               responseWriter.writeResponse(
                   userTaskKey,
                   UserTaskIntent.ASSIGNED,
-                  userTaskRecord,
+                  userTaskEntity,
                   ValueType.USER_TASK,
                   requestDetails.getRequestId(),
                   requestDetails.getRequestStreamId()));

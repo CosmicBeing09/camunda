@@ -17,7 +17,7 @@ import io.camunda.zeebe.model.bpmn.instance.zeebe.ZeebeTaskListenerEventType;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResult;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobResultCorrections;
-import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
+import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskEntity;
 import io.camunda.zeebe.protocol.record.Assertions;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -43,12 +43,12 @@ public class TaskListenerCorrectionsTest {
 
   private static final List<String> ALL_CORRECTABLE_ATTRIBUTES =
       List.of(
-          UserTaskRecord.ASSIGNEE,
-          UserTaskRecord.CANDIDATE_GROUPS,
-          UserTaskRecord.CANDIDATE_USERS,
-          UserTaskRecord.DUE_DATE,
-          UserTaskRecord.FOLLOW_UP_DATE,
-          UserTaskRecord.PRIORITY);
+          UserTaskEntity.ASSIGNEE,
+          UserTaskEntity.CANDIDATE_GROUPS,
+          UserTaskEntity.CANDIDATE_USERS,
+          UserTaskEntity.DUE_DATE,
+          UserTaskEntity.FOLLOW_UP_DATE,
+          UserTaskEntity.PRIORITY);
 
   @Rule public final TestWatcher watcher = new RecordingExporterTestWatcher();
   private final TaskListenerTestHelper helper = new TaskListenerTestHelper(ENGINE);
@@ -1080,7 +1080,7 @@ public class TaskListenerCorrectionsTest {
             new JobResult()
                 .setCorrections(
                     new JobResultCorrections().setDueDate("corrected_due").setPriority(80))
-                .setCorrectedAttributes(List.of(UserTaskRecord.DUE_DATE, UserTaskRecord.PRIORITY)))
+                .setCorrectedAttributes(List.of(UserTaskEntity.DUE_DATE, UserTaskEntity.PRIORITY)))
         .complete();
 
     // then: second listener sees cumulative changes
@@ -1101,7 +1101,7 @@ public class TaskListenerCorrectionsTest {
         .withResult(
             new JobResult()
                 .setCorrections(new JobResultCorrections().setPriority(50))
-                .setCorrectedAttributes(List.of(UserTaskRecord.PRIORITY)))
+                .setCorrectedAttributes(List.of(UserTaskEntity.PRIORITY)))
         .complete();
 
     // then: verify final task record contains only changed attributes that differ from initial
@@ -1113,7 +1113,7 @@ public class TaskListenerCorrectionsTest {
             Assertions.assertThat(userTask)
                 .hasVariables(Map.of("status", "APPROVED"))
                 .hasDueDate("corrected_due")
-                .hasOnlyChangedAttributes(UserTaskRecord.DUE_DATE, UserTaskRecord.VARIABLES)
+                .hasOnlyChangedAttributes(UserTaskEntity.DUE_DATE, UserTaskEntity.VARIABLES)
                 .hasAction(""));
   }
 
@@ -1497,7 +1497,7 @@ public class TaskListenerCorrectionsTest {
             .withResult(
                 new JobResult()
                     .setCorrections(new JobResultCorrections().setAssignee("new_assignee"))
-                    .setCorrectedAttributes(List.of(UserTaskRecord.ASSIGNEE)))
+                    .setCorrectedAttributes(List.of(UserTaskEntity.ASSIGNEE)))
             .expectRejection()
             .complete();
 
