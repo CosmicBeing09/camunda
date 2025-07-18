@@ -21,7 +21,7 @@ import java.util.Map;
 
 public interface UserTask {
 
-  Long getUserTaskKey();
+  Long getKey();
 
   /** Name of the task */
   String getName();
@@ -51,7 +51,7 @@ public interface UserTask {
   String getBpmnProcessId();
 
   /** Key of the process definition */
-  Long getProcessDefinitionKey();
+  Long getDefinitionKey();
 
   /** Key of the process instance */
   Long getProcessInstanceKey();

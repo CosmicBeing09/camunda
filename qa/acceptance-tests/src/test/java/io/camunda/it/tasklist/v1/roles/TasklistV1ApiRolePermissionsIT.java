@@ -136,7 +136,7 @@ public class TasklistV1ApiRolePermissionsIT {
                       .join()
                       .items();
               assertThat(tasks).describedAs("Wait until the task exists").hasSize(1);
-              taskKey = tasks.getFirst().getUserTaskKey();
+              taskKey = tasks.getFirst().getKey();
             });
   }
 

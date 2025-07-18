@@ -186,7 +186,7 @@ public class CamundaProcessTestExtensionIT {
         .returns(60, UserTask::getPriority);
 
     // when: complete the user task
-    client.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    client.newUserTaskCompleteCommand(userTask.getKey()).send().join();
 
     // then: verify that the user task and the process instance are completed
     CamundaAssert.assertThat(processInstance).hasCompletedElements(byName("task")).isCompleted();

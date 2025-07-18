@@ -62,9 +62,9 @@ public class UserTaskIT {
     // then
     assertThat(userTasks).hasSize(1);
     assertThat(userTasks.getFirst().getPriority()).isEqualTo(50);
-    assertThat(userTasks.getFirst().getUserTaskKey()).isGreaterThan(0);
+    assertThat(userTasks.getFirst().getKey()).isGreaterThan(0);
     assertThat(userTasks.getFirst().getProcessInstanceKey()).isEqualTo(processInstanceId);
-    assertThat(userTasks.getFirst().getProcessDefinitionKey())
+    assertThat(userTasks.getFirst().getDefinitionKey())
         .isEqualTo(Long.valueOf(processDefinitionId));
     assertThat(userTasks.getFirst().getCreationDate()).isNotNull();
     assertThat(userTasks.getFirst().getDueDate()).isNotNull();
@@ -88,7 +88,7 @@ public class UserTaskIT {
 
     var userTasks = fetchTasks(client, processInstanceId);
 
-    client.newUserTaskCompleteCommand(userTasks.getFirst().getUserTaskKey()).send().join();
+    client.newUserTaskCompleteCommand(userTasks.getFirst().getKey()).send().join();
     // then
     waitForTask(
         client,
@@ -114,7 +114,7 @@ public class UserTaskIT {
     var userTasks = fetchTasks(client, processInstanceId);
 
     client
-        .newUserTaskUpdateCommand(userTasks.getFirst().getUserTaskKey())
+        .newUserTaskUpdateCommand(userTasks.getFirst().getKey())
         .priority(99)
         .candidateUsers("demoUsers")
         .candidateGroups("demoGroup")
@@ -151,7 +151,7 @@ public class UserTaskIT {
     var userTasks = fetchTasks(client, processInstanceId);
 
     client
-        .newUserTaskAssignCommand(userTasks.getFirst().getUserTaskKey())
+        .newUserTaskAssignCommand(userTasks.getFirst().getKey())
         .assignee("demo")
         .send()
         .join();
@@ -178,7 +178,7 @@ public class UserTaskIT {
 
     final var userTasks = fetchTasks(client, processInstanceId);
 
-    client.newUserTaskUnassignCommand(userTasks.getFirst().getUserTaskKey()).send().join();
+    client.newUserTaskUnassignCommand(userTasks.getFirst().getKey()).send().join();
 
     // then
     Awaitility.await()

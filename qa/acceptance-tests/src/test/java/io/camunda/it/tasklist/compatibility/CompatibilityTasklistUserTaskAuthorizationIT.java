@@ -312,7 +312,7 @@ public class CompatibilityTasklistUserTaskAuthorizationIT {
                       .send()
                       .join();
               assertThat(result.items()).hasSize(1);
-              userTaskKey.set(result.items().getFirst().getUserTaskKey());
+              userTaskKey.set(result.items().getFirst().getKey());
             });
     return userTaskKey.get();
   }

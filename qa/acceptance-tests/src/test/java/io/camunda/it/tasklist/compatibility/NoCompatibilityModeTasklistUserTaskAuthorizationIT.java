@@ -582,7 +582,7 @@ public class NoCompatibilityModeTasklistUserTaskAuthorizationIT {
               if (shouldBePreAssigned) {
                 assertThat(result.items().getFirst().getAssignee()).isNotNull();
               }
-              userTaskKey.set(result.items().getFirst().getUserTaskKey());
+              userTaskKey.set(result.items().getFirst().getKey());
             });
     return userTaskKey.get();
   }

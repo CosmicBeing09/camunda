@@ -54,7 +54,7 @@ public class HistoryCleanupIT {
             .until(
                 () -> camundaClient.newUserTaskSearchRequest().send().join().items().getFirst(),
                 Objects::nonNull);
-    camundaClient.newUserTaskCompleteCommand(userTask.getUserTaskKey()).send().join();
+    camundaClient.newUserTaskCompleteCommand(userTask.getKey()).send().join();
 
     // then one of the process instance should be ended, but still exist to query
     final Long processInstanceKey = userTask.getProcessInstanceKey();
@@ -77,7 +77,7 @@ public class HistoryCleanupIT {
               final var taskAmount =
                   camundaClient
                       .newUserTaskSearchRequest()
-                      .filter(b -> b.key(userTask.getUserTaskKey()))
+                      .filter(b -> b.key(userTask.getKey()))
                       .send()
                       .join()
                       .page()

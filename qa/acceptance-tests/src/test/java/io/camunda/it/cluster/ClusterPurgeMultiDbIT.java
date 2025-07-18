@@ -158,7 +158,7 @@ public class ClusterPurgeMultiDbIT {
                   .satisfies(
                       items -> {
                         Assertions.assertThat(items).hasSize(1);
-                        userTaskKey.set(items.getFirst().getUserTaskKey());
+                        userTaskKey.set(items.getFirst().getKey());
                       });
             });
 
