@@ -19,8 +19,8 @@ public final class FilterBuilders {
   }
 
   public static UsageMetricsFilter usageMetrics(
-      final Function<UsageMetricsFilter.Builder, ObjectBuilder<UsageMetricsFilter>> fn) {
-    return fn.apply(usageMetrics()).build();
+      final Function<UsageMetricsFilter.Builder, ObjectBuilder<UsageMetricsFilter>> builderFunction) {
+    return builderFunction.apply(usageMetrics()).build();
   }
 
   public static ProcessDefinitionFilter.Builder processDefinition() {
