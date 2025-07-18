@@ -50,25 +50,25 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> deleteTenantCommand) {
-    final var scaleUp = deleteTenantCommand.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> updateUserCommand) {
+    final var scaleUp = updateUserCommand.getValue();
 
-    final var optionalRejection = validateCommand(deleteTenantCommand);
+    final var optionalRejection = validateCommand(updateUserCommand);
     if (optionalRejection.isPresent()) {
       final var rejection = optionalRejection.get();
-      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
     final var scalingKey = keyGenerator.nextKey();
-    scaleUp.setBootstrappedAt(deleteTenantCommand.getKey());
+    scaleUp.setBootstrappedAt(updateUserCommand.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
     responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp,
-        deleteTenantCommand);
+        updateUserCommand);
     commandDistributionBehavior
         .withKey(scalingKey)
         .inQueue(DistributionQueue.SCALING)
-        .distribute(deleteTenantCommand);
+        .distribute(updateUserCommand);
   }
 
   @Override

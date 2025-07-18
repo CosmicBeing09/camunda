@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> deleteTenantCommand) {
+  public void processNewCommand(final TypedRecord<SignalRecord> updateUserCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = deleteTenantCommand.getValue();
+    final var signalRecord = updateUserCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(deleteTenantCommand, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(updateUserCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(deleteTenantCommand, isStartEvent, subscriptionRecord);
+          checkAuthorization(updateUserCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,13 +110,13 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (deleteTenantCommand.hasRequestMetadata()) {
+    if (updateUserCommand.hasRequestMetadata()) {
       responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
-          deleteTenantCommand);
+          updateUserCommand);
     }
 
     commandDistributionBehavior.withKey(eventKey).unordered().distribute(
-        deleteTenantCommand);
+        updateUserCommand);
   }
 
   @Override

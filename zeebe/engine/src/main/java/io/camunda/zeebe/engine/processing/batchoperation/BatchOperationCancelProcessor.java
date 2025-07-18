@@ -71,19 +71,19 @@ public final class BatchOperationCancelProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> deleteTenantCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> updateUserCommand) {
     final var request =
         new AuthorizationRequest(
-            deleteTenantCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            updateUserCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var lifecycleManagementRecord = deleteTenantCommand.getValue();
+    final var lifecycleManagementRecord = updateUserCommand.getValue();
     final var batchOperationKey = lifecycleManagementRecord.getBatchOperationKey();
     final var cancelKey = keyGenerator.nextKey();
     LOGGER.debug(
@@ -95,21 +95,21 @@ public final class BatchOperationCancelProcessor
     if (batchOperation.isPresent() && batchOperation.get().canCancel()) {
       cancelBatchOperationEvent(cancelKey, lifecycleManagementRecord);
       responseWriter.writeEventOnCommand(
-          cancelKey, BatchOperationIntent.CANCELED, deleteTenantCommand.getValue(),
-          deleteTenantCommand);
+          cancelKey, BatchOperationIntent.CANCELED, updateUserCommand.getValue(),
+          updateUserCommand);
       commandDistributionBehavior
           .withKey(cancelKey)
           .inQueue(DistributionQueue.BATCH_OPERATION)
-          .distribute(deleteTenantCommand);
+          .distribute(updateUserCommand);
 
       metrics.recordCancelled(batchOperation.get().getBatchOperationType());
     } else {
       rejectionWriter.appendRejection(
-          deleteTenantCommand,
+          updateUserCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
       responseWriter.writeRejectionOnCommand(
-          deleteTenantCommand,
+          updateUserCommand,
           RejectionType.NOT_FOUND,
           String.format(BATCH_OPERATION_NOT_FOUND_MESSAGE, batchOperationKey));
     }

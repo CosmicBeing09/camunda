@@ -52,9 +52,9 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> deleteTenantCommand) {
-    final var record = deleteTenantCommand.getValue();
-    final String username = record.getUsername();
+  public void processNewCommand(final TypedRecord<UserRecord> updateUserCommand) {
+    final var updateUserRecord = updateUserCommand.getValue();
+    final String username = updateUserRecord.getUsername();
     final var persistedUserOptional = userState.getUser(username);
 
     if (persistedUserOptional.isEmpty()) {
@@ -62,35 +62,35 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
           "Expected to update user with username %s, but a user with this username does not exist"
               .formatted(username);
 
-      rejectionWriter.appendRejection(deleteTenantCommand, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var persistedUser = persistedUserOptional.get();
 
     final var authRequest =
-        new AuthorizationRequest(deleteTenantCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
             .addResourceId(persistedUser.getUsername());
     final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var updatedUser = overlayUser(persistedUser.getUser(), record);
+    final var updatedUser = overlayUser(persistedUser.getUser(), updateUserRecord);
 
     stateWriter.appendFollowUpEvent(persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser);
     responseWriter.writeEventOnCommand(
-        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, deleteTenantCommand);
+        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(deleteTenantCommand);
+        .distribute(updateUserCommand);
   }
 
   @Override

@@ -52,11 +52,11 @@ public final class BatchOperationPartitionFailProcessor
   /**
    * Processes a non-distributed command to mark a partition of a batch operation as failed.
    *
-   * @param deleteTenantCommand the not yet distributed command to process
+   * @param updateUserCommand the not yet distributed command to process
    */
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> deleteTenantCommand) {
-    doProcessRecord(deleteTenantCommand);
+  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> updateUserCommand) {
+    doProcessRecord(updateUserCommand);
   }
 
   @Override

@@ -82,45 +82,45 @@ public final class BatchOperationResumeProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> deleteTenantCommand) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> updateUserCommand) {
     final var request =
         new AuthorizationRequest(
-            deleteTenantCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+            updateUserCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
     final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = deleteTenantCommand.getValue();
-    final var batchOperationKey = deleteTenantCommand.getValue().getBatchOperationKey();
+    final var recordValue = updateUserCommand.getValue();
+    final var batchOperationKey = updateUserCommand.getValue().getBatchOperationKey();
     final var resumeKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to resume a batch operation with key '{}': {}",
-        deleteTenantCommand.getKey(),
+        updateUserCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(deleteTenantCommand, batchOperationKey, recordValue);
+      rejectNotFound(updateUserCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be resumed
     if (!batchOperation.get().canResume()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(deleteTenantCommand, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(updateUserCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
-    resumeBatchOperation(resumeKey, batchOperation.get(), deleteTenantCommand.getValue());
+    resumeBatchOperation(resumeKey, batchOperation.get(), updateUserCommand.getValue());
     commandDistributionBehavior
         .withKey(resumeKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(deleteTenantCommand);
+        .distribute(updateUserCommand);
 
     metrics.recordResumed(batchOperation.get().getBatchOperationType());
   }

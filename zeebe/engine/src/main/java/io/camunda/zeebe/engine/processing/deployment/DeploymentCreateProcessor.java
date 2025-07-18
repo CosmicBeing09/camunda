@@ -128,26 +128,26 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> deleteTenantCommand) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> updateUserCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            deleteTenantCommand,
+            updateUserCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            deleteTenantCommand.getValue().getTenantId(),
+            updateUserCommand.getValue().getTenantId(),
             newResourceAuthorization);
     final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(deleteTenantCommand, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(deleteTenantCommand, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(deleteTenantCommand);
+    transformAndDistributeDeployment(updateUserCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(deleteTenantCommand.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(updateUserCommand.getValue());
   }
 
   @Override

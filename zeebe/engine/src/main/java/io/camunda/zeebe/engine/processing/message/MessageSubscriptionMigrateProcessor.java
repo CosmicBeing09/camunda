@@ -42,8 +42,8 @@ public class MessageSubscriptionMigrateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> deleteTenantCommand) {
-    migrateMessageSubscription(deleteTenantCommand);
+  public void processNewCommand(final TypedRecord<MessageSubscriptionRecord> updateUserCommand) {
+    migrateMessageSubscription(updateUserCommand);
   }
 
   @Override
