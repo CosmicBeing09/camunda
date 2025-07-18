@@ -10,7 +10,7 @@ package io.camunda.zeebe.it.client;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.client.CredentialsProvider;
-import io.camunda.client.CredentialsProvider.CredentialsApplier;
+import io.camunda.client.CredentialsProvider.CredentialsHeaderApplier;
 import io.camunda.identity.sdk.Identity;
 import io.camunda.identity.sdk.IdentityConfiguration;
 import io.camunda.identity.sdk.IdentityConfiguration.Type;
@@ -68,7 +68,7 @@ final class OAuthCredentialsProviderTest {
   void shouldFetchValidOAuthToken(@TempDir final Path cacheDir) throws IOException {
     // given
     final var credentialsProvider =
-        CredentialsProvider.newCredentialsProviderBuilder()
+        CredentialsProvider.builder()
             .audience("zeebe")
             .clientId("zeebe")
             .clientSecret("secret")
@@ -125,7 +125,7 @@ final class OAuthCredentialsProviderTest {
     return URI.create(endpoint);
   }
 
-  private static final class TestCredentialsApplier implements CredentialsApplier {
+  private static final class TestCredentialsApplier implements CredentialsHeaderApplier {
     private String key;
     private String value;
 

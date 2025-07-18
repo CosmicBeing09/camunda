@@ -76,7 +76,7 @@ public final class CredentialsTest {
         .credentialsProvider(
             new CredentialsProvider() {
               @Override
-              public void applyCredentials(final CredentialsApplier applier) {
+              public void applyCredentials(final CredentialsHeaderApplier applier) {
                 applier.put("Authorization", bearerToken);
               }
 
@@ -111,7 +111,7 @@ public final class CredentialsTest {
               int attempt = 0;
 
               @Override
-              public void applyCredentials(final CredentialsApplier applier) {
+              public void applyCredentials(final CredentialsHeaderApplier applier) {
                 applier.put("Authorization", String.format("Bearer token-%d", attempt++));
               }
 
@@ -145,7 +145,7 @@ public final class CredentialsTest {
               int retryCounter = retries;
 
               @Override
-              public void applyCredentials(final CredentialsApplier applier) {
+              public void applyCredentials(final CredentialsHeaderApplier applier) {
                 applier.put("Authorization", String.format("Bearer token-%d", retryCounter));
               }
 
@@ -191,7 +191,7 @@ public final class CredentialsTest {
         .credentialsProvider(
             new CredentialsProvider() {
               @Override
-              public void applyCredentials(final CredentialsApplier ignored) {
+              public void applyCredentials(final CredentialsHeaderApplier ignored) {
                 credentialsProviderThreadReference.set(Thread.currentThread().getName());
               }
 

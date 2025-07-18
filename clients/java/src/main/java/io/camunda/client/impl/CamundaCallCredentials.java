@@ -16,7 +16,7 @@
 package io.camunda.client.impl;
 
 import io.camunda.client.CredentialsProvider;
-import io.camunda.client.CredentialsProvider.CredentialsApplier;
+import io.camunda.client.CredentialsProvider.CredentialsHeaderApplier;
 import io.grpc.Metadata;
 import io.grpc.SecurityLevel;
 import io.grpc.Status;
@@ -46,7 +46,7 @@ public final class CamundaCallCredentials extends io.grpc.CallCredentials {
         () -> {
           try {
             final Metadata headers = new Metadata();
-            credentialsProvider.applyCredentials(CredentialsApplier.ofMetadata(headers));
+            credentialsProvider.applyCredentials(CredentialsHeaderApplier.ofMetadata(headers));
             applier.apply(headers);
           } catch (final IOException e) {
             applier.fail(Status.CANCELLED.withCause(e));

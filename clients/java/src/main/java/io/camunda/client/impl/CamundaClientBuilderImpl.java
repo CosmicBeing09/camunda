@@ -694,7 +694,7 @@ public final class CamundaClientBuilderImpl
 
   private CredentialsProvider createDefaultCredentialsProvider() {
     final OAuthCredentialsProviderBuilder builder =
-        CredentialsProvider.newCredentialsProviderBuilder();
+        CredentialsProvider.builder();
     final int separatorIndex = gatewayAddress.lastIndexOf(':');
     if (separatorIndex > 0) {
       builder.audience(gatewayAddress.substring(0, separatorIndex));
