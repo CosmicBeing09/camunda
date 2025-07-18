@@ -310,38 +310,38 @@ public final class EventAppliers implements EventApplier {
   private void registerMessageSubscriptionAppliers(final MutableProcessingState state) {
     register(
         MessageSubscriptionIntent.CREATED,
-        new MessageSubscriptionCreatedApplier(state.getMessageSubscriptionState()));
+        new MessageSubscriptionCreatedApplier(state.getSubscriptionState()));
     register(
         MessageSubscriptionIntent.CORRELATING,
         new MessageSubscriptionCorrelatingApplier(
-            state.getMessageSubscriptionState(), state.getMessageState()));
+            state.getSubscriptionState(), state.getMessageState()));
     register(
         MessageSubscriptionIntent.CORRELATED,
-        new MessageSubscriptionCorrelatedApplier(state.getMessageSubscriptionState()));
+        new MessageSubscriptionCorrelatedApplier(state.getSubscriptionState()));
     register(
         MessageSubscriptionIntent.REJECTED,
         new MessageSubscriptionRejectedApplier(
-            state.getMessageState(), state.getMessageSubscriptionState()));
+            state.getMessageState(), state.getSubscriptionState()));
     register(
         MessageSubscriptionIntent.DELETED,
-        new MessageSubscriptionDeletedApplier(state.getMessageSubscriptionState()));
+        new MessageSubscriptionDeletedApplier(state.getSubscriptionState()));
     register(
         MessageSubscriptionIntent.MIGRATED,
-        new MessageSubscriptionMigratedApplier(state.getMessageSubscriptionState()));
+        new MessageSubscriptionMigratedApplier(state.getSubscriptionState()));
   }
 
   private void registerMessageStartEventSubscriptionAppliers(final MutableProcessingState state) {
     register(
         MessageStartEventSubscriptionIntent.CREATED,
         new MessageStartEventSubscriptionCreatedApplier(
-            state.getMessageStartEventSubscriptionState()));
+            state.getStartEventSubscriptionState()));
     register(
         MessageStartEventSubscriptionIntent.CORRELATED,
         new MessageStartEventSubscriptionCorrelatedApplier(state.getMessageState()));
     register(
         MessageStartEventSubscriptionIntent.DELETED,
         new MessageStartEventSubscriptionDeletedApplier(
-            state.getMessageStartEventSubscriptionState()));
+            state.getStartEventSubscriptionState()));
   }
 
   private void registerIncidentEventAppliers(final MutableProcessingState state) {

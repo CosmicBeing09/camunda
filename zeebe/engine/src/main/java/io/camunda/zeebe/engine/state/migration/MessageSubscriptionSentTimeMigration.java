@@ -31,7 +31,7 @@ public class MessageSubscriptionSentTimeMigration implements MigrationTask {
         .processingState()
         .getMigrationState()
         .migrateMessageSubscriptionSentTime(
-            context.processingState().getMessageSubscriptionState(),
+            context.processingState().getSubscriptionState(),
             context.processingState().getPendingMessageSubscriptionState());
   }
 }

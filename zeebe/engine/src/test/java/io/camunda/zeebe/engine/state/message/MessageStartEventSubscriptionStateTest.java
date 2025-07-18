@@ -35,7 +35,7 @@ public final class MessageStartEventSubscriptionStateTest {
 
   @Before
   public void setUp() {
-    state = stateRule.getProcessingState().getMessageStartEventSubscriptionState();
+    state = stateRule.getProcessingState().getStartEventSubscriptionState();
   }
 
   @Test

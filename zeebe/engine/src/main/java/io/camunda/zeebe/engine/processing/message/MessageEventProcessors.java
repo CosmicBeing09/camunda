@@ -50,9 +50,9 @@ public final class MessageEventProcessors {
     final MutableMessageCorrelationState messageCorrelationState =
         processingState.getMessageCorrelationState();
     final MutableMessageSubscriptionState subscriptionState =
-        processingState.getMessageSubscriptionState();
+        processingState.getSubscriptionState();
     final MutableMessageStartEventSubscriptionState startEventSubscriptionState =
-        processingState.getMessageStartEventSubscriptionState();
+        processingState.getStartEventSubscriptionState();
     final MutableEventScopeInstanceState eventScopeInstanceState =
         processingState.getEventScopeInstanceState();
     final KeyGenerator keyGenerator = processingState.getKeyGenerator();

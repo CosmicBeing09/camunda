@@ -25,10 +25,10 @@ public interface MutableProcessingState extends ProcessingState {
   MutableMessageState getMessageState();
 
   @Override
-  MutableMessageSubscriptionState getMessageSubscriptionState();
+  MutableMessageSubscriptionState getSubscriptionState();
 
   @Override
-  MutableMessageStartEventSubscriptionState getMessageStartEventSubscriptionState();
+  MutableMessageStartEventSubscriptionState getStartEventSubscriptionState();
 
   @Override
   MutableProcessMessageSubscriptionState getProcessMessageSubscriptionState();

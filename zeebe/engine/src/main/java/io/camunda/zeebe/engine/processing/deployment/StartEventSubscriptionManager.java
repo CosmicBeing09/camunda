@@ -46,7 +46,7 @@ public class StartEventSubscriptionManager {
       final KeyGenerator keyGenerator,
       final StateWriter stateWriter) {
     processState = processingState.getProcessState();
-    messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
+    messageStartEventSubscriptionState = processingState.getStartEventSubscriptionState();
     signalSubscriptionState = processingState.getSignalSubscriptionState();
     this.keyGenerator = keyGenerator;
     this.stateWriter = stateWriter;

@@ -213,12 +213,12 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableMessageSubscriptionState getMessageSubscriptionState() {
+  public MutableMessageSubscriptionState getSubscriptionState() {
     return messageSubscriptionState;
   }
 
   @Override
-  public MutableMessageStartEventSubscriptionState getMessageStartEventSubscriptionState() {
+  public MutableMessageStartEventSubscriptionState getStartEventSubscriptionState() {
     return messageStartEventSubscriptionState;
   }
 

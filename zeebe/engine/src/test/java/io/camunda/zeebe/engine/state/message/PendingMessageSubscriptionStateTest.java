@@ -36,7 +36,7 @@ public final class PendingMessageSubscriptionStateTest {
   public void setUp() {
 
     final MutableProcessingState processingState = stateRule.getProcessingState();
-    persistentState = processingState.getMessageSubscriptionState();
+    persistentState = processingState.getSubscriptionState();
     transientState = processingState.getPendingMessageSubscriptionState();
   }
 

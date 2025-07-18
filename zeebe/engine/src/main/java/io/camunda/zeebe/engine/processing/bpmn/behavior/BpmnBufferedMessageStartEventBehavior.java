@@ -40,7 +40,7 @@ public final class BpmnBufferedMessageStartEventBehavior {
       final InstantSource clock) {
     messageState = processingState.getMessageState();
     processState = processingState.getProcessState();
-    messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
+    messageStartEventSubscriptionState = processingState.getStartEventSubscriptionState();
     this.clock = clock;
 
     eventHandle =
