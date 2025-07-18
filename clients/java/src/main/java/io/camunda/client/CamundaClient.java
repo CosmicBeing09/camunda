@@ -261,10 +261,10 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *    .send();
    * </pre>
    *
-   * @param processInstanceKey the key which identifies the corresponding process instance
+   * @param processInstanceId the key which identifies the corresponding process instance
    * @return a builder for the command
    */
-  ModifyProcessInstanceCommandStep1 newModifyProcessInstanceCommand(long processInstanceKey);
+  ModifyProcessInstanceCommandStep1 newModifyProcessInstanceCommand(long processInstanceId);
 
   /**
    * Command to migrate a process instance to a different process definition.
@@ -999,12 +999,12 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *    .send();
    * </pre>
    *
-   * @param adHocSubProcessInstanceKey the key which identifies the corresponding ad-hoc sub-process
+   * @param adHocSubProcessInstanceId the key which identifies the corresponding ad-hoc sub-process
    *     instance
    * @return a builder for the command
    */
   ActivateAdHocSubProcessActivitiesCommandStep1 newActivateAdHocSubProcessActivitiesCommand(
-      String adHocSubProcessInstanceKey);
+      String adHocSubProcessInstanceId);
 
   /**
    * Executes a search request to query user tasks.

@@ -20,9 +20,9 @@ import java.time.Duration;
 import org.springframework.boot.context.properties.DeprecatedConfigurationProperty;
 
 public class CamundaClientAuthProperties {
-  private AuthMethod method;
+  private AuthMethod authMethod;
   // basic auth
-  private String username;
+  private String basicAuthUsername;
   private String password;
 
   // self-managed and saas
@@ -45,11 +45,11 @@ public class CamundaClientAuthProperties {
   private Duration readTimeout;
 
   public AuthMethod getMethod() {
-    return method;
+    return authMethod;
   }
 
   public void setMethod(final AuthMethod method) {
-    this.method = method;
+    authMethod = method;
   }
 
   public URI getTokenUrl() {
@@ -98,11 +98,11 @@ public class CamundaClientAuthProperties {
   }
 
   public String getUsername() {
-    return username;
+    return basicAuthUsername;
   }
 
   public void setUsername(final String username) {
-    this.username = username;
+    basicAuthUsername = username;
   }
 
   public String getPassword() {
@@ -189,10 +189,10 @@ public class CamundaClientAuthProperties {
   public String toString() {
     return "CamundaClientAuthProperties{"
         + "method='"
-        + method
+        + authMethod
         + '\''
         + ", username='"
-        + username
+        + basicAuthUsername
         + '\''
         + ", password='"
         + (password != null ? "***" : null)

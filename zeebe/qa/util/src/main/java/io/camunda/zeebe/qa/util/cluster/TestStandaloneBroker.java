@@ -41,29 +41,29 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
     implements TestGateway<TestStandaloneBroker>, TestStandaloneApplication<TestStandaloneBroker> {
 
   private static final String RECORDING_EXPORTER_ID = "recordingExporter";
-  private final BrokerBasedProperties config;
+  private final BrokerBasedProperties brokerProperties;
   private final CamundaSecurityProperties securityConfig;
 
   public TestStandaloneBroker() {
     super(BrokerModuleConfiguration.class, CommonsModuleConfiguration.class);
 
-    config = new BrokerBasedProperties();
+    brokerProperties = new BrokerBasedProperties();
 
-    config.getNetwork().getCommandApi().setPort(SocketUtil.getNextAddress().getPort());
-    config.getNetwork().getInternalApi().setPort(SocketUtil.getNextAddress().getPort());
-    config.getGateway().getNetwork().setPort(SocketUtil.getNextAddress().getPort());
+    brokerProperties.getNetwork().getCommandApi().setPort(SocketUtil.getNextAddress().getPort());
+    brokerProperties.getNetwork().getInternalApi().setPort(SocketUtil.getNextAddress().getPort());
+    brokerProperties.getGateway().getNetwork().setPort(SocketUtil.getNextAddress().getPort());
 
     // set a smaller default log segment size since we pre-allocate, which might be a lot in tests
     // for local development; also lower the watermarks for local testing
-    config.getData().setLogSegmentSize(DataSize.ofMegabytes(16));
-    config.getData().getDisk().getFreeSpace().setProcessing(DataSize.ofMegabytes(128));
-    config.getData().getDisk().getFreeSpace().setReplication(DataSize.ofMegabytes(64));
+    brokerProperties.getData().setLogSegmentSize(DataSize.ofMegabytes(16));
+    brokerProperties.getData().getDisk().getFreeSpace().setProcessing(DataSize.ofMegabytes(128));
+    brokerProperties.getData().getDisk().getFreeSpace().setReplication(DataSize.ofMegabytes(64));
 
-    config.getExperimental().getConsistencyChecks().setEnableForeignKeyChecks(true);
-    config.getExperimental().getConsistencyChecks().setEnablePreconditions(true);
+    brokerProperties.getExperimental().getConsistencyChecks().setEnableForeignKeyChecks(true);
+    brokerProperties.getExperimental().getConsistencyChecks().setEnablePreconditions(true);
 
     //noinspection resource
-    withBean("config", config, BrokerBasedProperties.class).withAdditionalProfile(Profile.BROKER);
+    withBean("config", brokerProperties, BrokerBasedProperties.class).withAdditionalProfile(Profile.BROKER);
 
     securityConfig = new CamundaSecurityProperties();
     securityConfig
@@ -88,9 +88,9 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
   @Override
   public int mappedPort(final TestZeebePort port) {
     return switch (port) {
-      case COMMAND -> config.getNetwork().getCommandApi().getPort();
-      case GATEWAY -> config.getGateway().getNetwork().getPort();
-      case CLUSTER -> config.getNetwork().getInternalApi().getPort();
+      case COMMAND -> brokerProperties.getNetwork().getCommandApi().getPort();
+      case GATEWAY -> brokerProperties.getGateway().getNetwork().getPort();
+      case CLUSTER -> brokerProperties.getNetwork().getInternalApi().getPort();
       default -> super.mappedPort(port);
     };
   }
@@ -108,7 +108,7 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
     // because @ConditionalOnRestGatewayEnabled relies on the zeebe.broker.gateway.enable property,
     // we need to hook in at the last minute and set the property as it won't resolve from the
     // config bean
-    withProperty("zeebe.broker.gateway.enable", config.getGateway().isEnable());
+    withProperty("zeebe.broker.gateway.enable", brokerProperties.getGateway().isEnable());
     return super.createSpringBuilder();
   }
 
@@ -125,12 +125,12 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
 
   @Override
   public MemberId nodeId() {
-    return MemberId.from(String.valueOf(config.getCluster().getNodeId()));
+    return MemberId.from(String.valueOf(brokerProperties.getCluster().getNodeId()));
   }
 
   @Override
   public String host() {
-    return config.getNetwork().getHost();
+    return brokerProperties.getNetwork().getHost();
   }
 
   @Override
@@ -140,7 +140,7 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
 
   @Override
   public boolean isGateway() {
-    return config.getGateway().isEnable();
+    return brokerProperties.getGateway().isEnable();
   }
 
   @Override
@@ -160,13 +160,13 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
 
   @Override
   public TestStandaloneBroker withGatewayConfig(final Consumer<GatewayCfg> modifier) {
-    modifier.accept(config.getGateway());
+    modifier.accept(brokerProperties.getGateway());
     return this;
   }
 
   @Override
   public GatewayCfg gatewayConfig() {
-    return config.getGateway();
+    return brokerProperties.getGateway();
   }
 
   /**
@@ -202,7 +202,7 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
    */
   public TestStandaloneBroker withRecordingExporter(final boolean useRecordingExporter) {
     if (!useRecordingExporter) {
-      config.getExporters().remove(RECORDING_EXPORTER_ID);
+      brokerProperties.getExporters().remove(RECORDING_EXPORTER_ID);
       return this;
     }
 
@@ -221,7 +221,7 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
   @Override
   public TestStandaloneBroker withExporter(final String id, final Consumer<ExporterCfg> modifier) {
     final var exporterConfig =
-        config.getExporters().computeIfAbsent(id, ignored -> new ExporterCfg());
+        brokerProperties.getExporters().computeIfAbsent(id, ignored -> new ExporterCfg());
     modifier.accept(exporterConfig);
 
     return this;
@@ -233,14 +233,14 @@ public final class TestStandaloneBroker extends TestSpringApplication<TestStanda
    */
   @Override
   public TestStandaloneBroker withBrokerConfig(final Consumer<BrokerBasedProperties> modifier) {
-    modifier.accept(config);
+    modifier.accept(brokerProperties);
     return this;
   }
 
   /** Returns the broker configuration */
   @Override
   public BrokerBasedProperties brokerConfig() {
-    return config;
+    return brokerProperties;
   }
 
   @Override

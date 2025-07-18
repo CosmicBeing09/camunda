@@ -45,7 +45,7 @@ import static io.camunda.client.impl.CamundaClientEnvironmentVariables.USE_DEFAU
 import static io.camunda.client.impl.util.DataSizeUtil.ONE_KB;
 import static io.camunda.client.impl.util.DataSizeUtil.ONE_MB;
 import static io.camunda.zeebe.client.impl.ZeebeClientBuilderImpl.DEFAULT_MESSAGE_TTL;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.ZEEBE_CLIENT_WORKER_STREAM_ENABLED;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.CLIENT_WORKER_STREAM_ENABLED_VAR;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -228,7 +228,7 @@ public final class CamundaClientTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {CAMUNDA_CLIENT_WORKER_STREAM_ENABLED, ZEEBE_CLIENT_WORKER_STREAM_ENABLED})
+  @ValueSource(strings = {CAMUNDA_CLIENT_WORKER_STREAM_ENABLED, CLIENT_WORKER_STREAM_ENABLED_VAR})
   public void shouldEnableStreamingWithEnvironmentVariableWhenApplied(final String envName) {
     // given
     Environment.system().put(envName, "true");
@@ -248,11 +248,11 @@ public final class CamundaClientTest {
   @ParameterizedTest
   @CsvSource({
     CAMUNDA_CLIENT_WORKER_STREAM_ENABLED + "," + STREAM_ENABLED,
-    ZEEBE_CLIENT_WORKER_STREAM_ENABLED + "," + STREAM_ENABLED,
+    CLIENT_WORKER_STREAM_ENABLED_VAR + "," + STREAM_ENABLED,
     CAMUNDA_CLIENT_WORKER_STREAM_ENABLED
         + ","
         + io.camunda.zeebe.client.ClientProperties.STREAM_ENABLED,
-    ZEEBE_CLIENT_WORKER_STREAM_ENABLED
+    CLIENT_WORKER_STREAM_ENABLED_VAR
         + ","
         + io.camunda.zeebe.client.ClientProperties.STREAM_ENABLED
   })

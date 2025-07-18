@@ -84,8 +84,8 @@ public final class OAuthCredentialsCache {
     final Map<String, OAuthCachedCredentials> values = credentialsByClientId.get();
 
     final Map<String, Map<String, OAuthCachedCredentials>> cache = new HashMap<>(values.size());
-    for (final Entry<String, OAuthCachedCredentials> clients : values.entrySet()) {
-      cache.put(clients.getKey(), Collections.singletonMap(KEY_AUTH, clients.getValue()));
+    for (final Entry<String, OAuthCachedCredentials> clientEntry : values.entrySet()) {
+      cache.put(clientEntry.getKey(), Collections.singletonMap(KEY_AUTH, clientEntry.getValue()));
     }
 
     WRITE_LOCK.lock();
@@ -104,7 +104,7 @@ public final class OAuthCredentialsCache {
 
   public synchronized CamundaClientCredentials computeIfMissingOrInvalid(
       final String clientId,
-      final SupplierWithIO<CamundaClientCredentials> zeebeClientCredentialsConsumer)
+      final SupplierWithIO<CamundaClientCredentials> credentialsSupplier)
       throws IOException {
     final Optional<CamundaClientCredentials> optionalCredentials =
         readCache()
@@ -120,7 +120,7 @@ public final class OAuthCredentialsCache {
     if (optionalCredentials.isPresent()) {
       return optionalCredentials.get();
     } else {
-      final CamundaClientCredentials credentials = zeebeClientCredentialsConsumer.get();
+      final CamundaClientCredentials credentials = credentialsSupplier.get();
       put(clientId, credentials).writeCache();
       return credentials;
     }

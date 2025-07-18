@@ -17,7 +17,7 @@ package io.camunda.zeebe.client.impl.oauth;
 
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_AUTHORIZATION_SERVER;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CACHE_PATH;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_CLIENT_ID_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_CONNECT_TIMEOUT;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.OAUTH_ENV_READ_TIMEOUT;
@@ -175,7 +175,7 @@ public final class OAuthCredentialsProviderBuilder {
   }
 
   private void checkEnvironmentOverrides() {
-    final String envClientId = Environment.system().get(OAUTH_ENV_CLIENT_ID);
+    final String envClientId = Environment.system().get(OAUTH_CLIENT_ID_VAR);
     final String envClientSecret = Environment.system().get(OAUTH_ENV_CLIENT_SECRET);
     final String envAudience = Environment.system().get(OAUTH_ENV_TOKEN_AUDIENCE);
     final String envScope = Environment.system().get(OAUTH_ENV_TOKEN_SCOPE);

@@ -81,7 +81,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
       JSON_MAPPER.readerFor(CamundaClientCredentials.class);
   private static final Logger LOG = LoggerFactory.getLogger(OAuthCredentialsProvider.class);
   private final URL authorizationServerUrl;
-  private final String payload;
+  private final String formEncodedRequestBody;
   private final String clientId;
   private final Path keystorePath;
   private final String keystorePassword;
@@ -100,7 +100,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     truststorePath = builder.getTruststorePath();
     truststorePassword = builder.getTruststorePassword();
     clientId = builder.getClientId();
-    payload = createParams(builder);
+    formEncodedRequestBody = createParams(builder);
     credentialsCache = new OAuthCredentialsCache(builder.getCredentialsCache());
     connectionTimeout = builder.getConnectTimeout();
     readTimeout = builder.getReadTimeout();
@@ -112,15 +112,15 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     final CamundaClientCredentials camundaClientCredentials =
         credentialsCache.computeIfMissingOrInvalid(clientId, this::fetchCredentials);
 
-    String type = camundaClientCredentials.getTokenType();
-    if (type == null || type.isEmpty()) {
+    String tokenType = camundaClientCredentials.getTokenType();
+    if (tokenType == null || tokenType.isEmpty()) {
       throw new IOException(
-          String.format("Expected valid token type but was absent or invalid '%s'", type));
+          String.format("Expected valid token type but was absent or invalid '%s'", tokenType));
     }
 
-    type = Character.toUpperCase(type.charAt(0)) + type.substring(1);
+    tokenType = Character.toUpperCase(tokenType.charAt(0)) + tokenType.substring(1);
     applier.put(
-        HEADER_AUTH_KEY, String.format("%s %s", type, camundaClientCredentials.getAccessToken()));
+        HEADER_AUTH_KEY, String.format("%s %s", tokenType, camundaClientCredentials.getAccessToken()));
   }
 
   /**
@@ -153,8 +153,8 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
       payload.put(
           "client_assertion",
           getClientAssertion(
-              builder.getEntraCertificatePath().toAbsolutePath().toString(),
-              builder.getEntraCertificatePassword(),
+              builder.getSslClientCertificatePath().toAbsolutePath().toString(),
+              builder.getSslClientCertificatePassword(),
               builder.getClientId(),
               builder.getAudience()));
       payload.put("client_assertion_type", JWT_ASSERTION_TYPE);
@@ -196,7 +196,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
     connection.setRequestProperty("User-Agent", "camunda-client-java/" + VersionUtil.getVersion());
 
     try (final OutputStream os = connection.getOutputStream()) {
-      final byte[] input = payload.getBytes(StandardCharsets.UTF_8);
+      final byte[] input = formEncodedRequestBody.getBytes(StandardCharsets.UTF_8);
       os.write(input, 0, input.length);
     }
 
@@ -254,10 +254,10 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
   }
 
   private static String getClientAssertion(
-      String certPath, String certStorePassword, String clientId, String audience) {
+      final String certPath, final String certStorePassword, final String clientId, final String audience) {
     final X509Certificate certificate;
     final Algorithm algorithm;
-    try (FileInputStream stream = new FileInputStream(certPath)) {
+    try (final FileInputStream stream = new FileInputStream(certPath)) {
       final KeyStore keyStore = KeyStore.getInstance("PKCS12");
       final char[] password = certStorePassword.toCharArray();
       keyStore.load(stream, password);
@@ -269,7 +269,7 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
 
       certificate = (X509Certificate) keyStore.getCertificate(alias);
       algorithm = Algorithm.RSA256(publicKey, privateKey);
-    } catch (IOException | GeneralSecurityException e) {
+    } catch (final IOException | GeneralSecurityException e) {
       throw new RuntimeException("Failed to create client assertion", e);
     }
 
@@ -293,12 +293,12 @@ public final class OAuthCredentialsProvider implements CredentialsProvider {
         .sign(algorithm);
   }
 
-  private static String generateX5tThumbprint(X509Certificate certificate) {
+  private static String generateX5tThumbprint(final X509Certificate certificate) {
     try {
       final MessageDigest digest = MessageDigest.getInstance("SHA-1");
       final byte[] encoded = digest.digest(certificate.getEncoded());
       return Base64.getUrlEncoder().withoutPadding().encodeToString(encoded);
-    } catch (Exception e) {
+    } catch (final Exception e) {
       throw new RuntimeException("Failed to generate x5t thumbprint", e);
     }
   }

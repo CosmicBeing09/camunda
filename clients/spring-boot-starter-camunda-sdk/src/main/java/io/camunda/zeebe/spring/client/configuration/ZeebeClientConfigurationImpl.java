@@ -202,8 +202,8 @@ public class ZeebeClientConfigurationImpl implements ZeebeClientConfiguration {
       }
 
       @Override
-      public void put(final String key, final String value) {
-        credentialsApplier.put(key, value);
+      public void put(final String credentialKey, final String value) {
+        credentialsApplier.put(credentialKey, value);
       }
     }
 

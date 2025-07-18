@@ -40,11 +40,11 @@ public class CredentialsProviderConfiguration {
   @ConditionalOnMissingBean
   public CredentialsProvider camundaClientCredentialsProvider(
       final CamundaClientProperties camundaClientProperties) {
-    final var authMethod = camundaClientProperties.getAuth().getMethod();
+    final var authenticationMethod = camundaClientProperties.getAuth().getMethod();
 
-    return authMethod == null
+    return authenticationMethod == null
         ? new NoopCredentialsProvider()
-        : switch (authMethod) {
+        : switch (authenticationMethod) {
           case basic -> buildBasicAuthCredentialsProvider(camundaClientProperties);
           case oidc -> buildOAuthCredentialsProvider(camundaClientProperties);
           case none -> new NoopCredentialsProvider();
@@ -56,14 +56,14 @@ public class CredentialsProviderConfiguration {
     final var username = camundaClientProperties.getAuth().getUsername();
     final var password = camundaClientProperties.getAuth().getPassword();
 
-    final var builder =
+    final var basicAuthBuilder =
         new BasicAuthCredentialsProviderBuilder()
             .applyEnvironmentOverrides(false)
             .username(username)
             .password(password);
 
     try {
-      return builder.build();
+      return basicAuthBuilder.build();
     } catch (final Exception e) {
       LOG.warn(
           "Failed to configure basic credential provider, falling back to use no authentication, cause: {}",
@@ -88,7 +88,7 @@ public class CredentialsProviderConfiguration {
                 ofNullable(camundaClientProperties.getAuth().getTokenUrl())
                     .map(URI::toString)
                     .orElse(null))
-            .credentialsCachePath(camundaClientProperties.getAuth().getCredentialsCachePath())
+            .credentialsCacheFilePath(camundaClientProperties.getAuth().getCredentialsCachePath())
             .connectTimeout(camundaClientProperties.getAuth().getConnectTimeout())
             .readTimeout(camundaClientProperties.getAuth().getReadTimeout());
 

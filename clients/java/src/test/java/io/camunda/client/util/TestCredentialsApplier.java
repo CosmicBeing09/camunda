@@ -21,15 +21,15 @@ import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public final class TestCredentialsApplier implements CredentialsApplier {
-  private final List<Credential> credentials = new CopyOnWriteArrayList<>();
+  private final List<Credential> appliedCredentials = new CopyOnWriteArrayList<>();
 
   @Override
-  public void put(final String key, final String value) {
-    credentials.add(new Credential(key, value));
+  public void put(final String credentialKey, final String value) {
+    appliedCredentials.add(new Credential(credentialKey, value));
   }
 
   public List<Credential> getCredentials() {
-    return credentials;
+    return appliedCredentials;
   }
 
   public static final class Credential {

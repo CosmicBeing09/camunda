@@ -20,7 +20,7 @@ public final class ZeebeClientEnvironmentVariables {
   public static final String CA_CERTIFICATE_VAR = "ZEEBE_CA_CERTIFICATE_PATH";
   public static final String KEEP_ALIVE_VAR = "ZEEBE_KEEP_ALIVE";
   public static final String OVERRIDE_AUTHORITY_VAR = "ZEEBE_OVERRIDE_AUTHORITY";
-  public static final String ZEEBE_CLIENT_WORKER_STREAM_ENABLED =
+  public static final String CLIENT_WORKER_STREAM_ENABLED_VAR =
       "ZEEBE_CLIENT_WORKER_STREAM_ENABLED";
   public static final String REST_ADDRESS_VAR = "ZEEBE_REST_ADDRESS";
   public static final String GRPC_ADDRESS_VAR = "ZEEBE_GRPC_ADDRESS";
@@ -31,7 +31,7 @@ public final class ZeebeClientEnvironmentVariables {
   public static final String USE_DEFAULT_RETRY_POLICY_VAR = "ZEEBE_CLIENT_USE_DEFAULT_RETRY_POLICY";
 
   /** OAuth Environment Variables */
-  public static final String OAUTH_ENV_CLIENT_ID = "ZEEBE_CLIENT_ID";
+  public static final String OAUTH_CLIENT_ID_VAR = "ZEEBE_CLIENT_ID";
 
   public static final String OAUTH_ENV_CLIENT_SECRET = "ZEEBE_CLIENT_SECRET";
   public static final String OAUTH_ENV_TOKEN_AUDIENCE = "ZEEBE_TOKEN_AUDIENCE";

@@ -41,7 +41,7 @@ import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.PLAIN
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.PREFER_REST_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.REST_ADDRESS_VAR;
 import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.USE_DEFAULT_RETRY_POLICY_VAR;
-import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.ZEEBE_CLIENT_WORKER_STREAM_ENABLED;
+import static io.camunda.zeebe.client.impl.ZeebeClientEnvironmentVariables.CLIENT_WORKER_STREAM_ENABLED_VAR;
 import static io.camunda.zeebe.client.impl.util.DataSizeUtil.ONE_KB;
 import static io.camunda.zeebe.client.impl.util.DataSizeUtil.ONE_MB;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -197,7 +197,7 @@ public final class ZeebeClientTest extends ClientTest {
   @Test
   public void shouldEnableStreamingWithEnvironmentVariableWhenApplied() {
     // given
-    Environment.system().put(ZEEBE_CLIENT_WORKER_STREAM_ENABLED, "true");
+    Environment.system().put(CLIENT_WORKER_STREAM_ENABLED_VAR, "true");
 
     final ZeebeClientBuilderImpl builder1 = new ZeebeClientBuilderImpl();
     final ZeebeClientBuilderImpl builder2 = new ZeebeClientBuilderImpl();
@@ -214,7 +214,7 @@ public final class ZeebeClientTest extends ClientTest {
   @Test
   public void environmentVariableShouldOverrideProperty() {
     // given
-    Environment.system().put(ZEEBE_CLIENT_WORKER_STREAM_ENABLED, "true");
+    Environment.system().put(CLIENT_WORKER_STREAM_ENABLED_VAR, "true");
     final Properties properties = new Properties();
     properties.putIfAbsent(STREAM_ENABLED, "false");
 
