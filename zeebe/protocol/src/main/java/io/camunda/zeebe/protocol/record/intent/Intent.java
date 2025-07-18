@@ -86,110 +86,110 @@ public interface Intent {
   boolean isEvent();
 
   @SuppressWarnings("checkstyle:MissingSwitchDefault")
-  static Intent fromProtocolValue(final ValueType valueType, final short intent) {
+  static Intent fromProtocolValue(final ValueType valueType, final short intentValue) {
     switch (valueType) {
       case DEPLOYMENT:
-        return DeploymentIntent.from(intent);
+        return DeploymentIntent.from(intentValue);
       case INCIDENT:
-        return IncidentIntent.from(intent);
+        return IncidentIntent.from(intentValue);
       case JOB:
-        return JobIntent.from(intent);
+        return JobIntent.from(intentValue);
       case PROCESS_INSTANCE:
-        return ProcessInstanceIntent.from(intent);
+        return ProcessInstanceIntent.from(intentValue);
       case MESSAGE:
-        return MessageIntent.from(intent);
+        return MessageIntent.from(intentValue);
       case MESSAGE_BATCH:
-        return MessageBatchIntent.from(intent);
+        return MessageBatchIntent.from(intentValue);
       case MESSAGE_SUBSCRIPTION:
-        return MessageSubscriptionIntent.from(intent);
+        return MessageSubscriptionIntent.from(intentValue);
       case MESSAGE_START_EVENT_SUBSCRIPTION:
-        return MessageStartEventSubscriptionIntent.from(intent);
+        return MessageStartEventSubscriptionIntent.from(intentValue);
       case PROCESS_MESSAGE_SUBSCRIPTION:
-        return ProcessMessageSubscriptionIntent.from(intent);
+        return ProcessMessageSubscriptionIntent.from(intentValue);
       case JOB_BATCH:
-        return JobBatchIntent.from(intent);
+        return JobBatchIntent.from(intentValue);
       case TIMER:
-        return TimerIntent.from(intent);
+        return TimerIntent.from(intentValue);
       case VARIABLE:
-        return VariableIntent.from(intent);
+        return VariableIntent.from(intentValue);
       case VARIABLE_DOCUMENT:
-        return VariableDocumentIntent.from(intent);
+        return VariableDocumentIntent.from(intentValue);
       case PROCESS_INSTANCE_CREATION:
-        return ProcessInstanceCreationIntent.from(intent);
+        return ProcessInstanceCreationIntent.from(intentValue);
       case ERROR:
-        return ErrorIntent.from(intent);
+        return ErrorIntent.from(intentValue);
       case PROCESS_INSTANCE_RESULT:
-        return ProcessInstanceResultIntent.from(intent);
+        return ProcessInstanceResultIntent.from(intentValue);
       case PROCESS:
-        return ProcessIntent.from(intent);
+        return ProcessIntent.from(intentValue);
       case DEPLOYMENT_DISTRIBUTION:
-        return DeploymentDistributionIntent.from(intent);
+        return DeploymentDistributionIntent.from(intentValue);
       case PROCESS_EVENT:
-        return ProcessEventIntent.from(intent);
+        return ProcessEventIntent.from(intentValue);
       case DECISION:
-        return DecisionIntent.from(intent);
+        return DecisionIntent.from(intentValue);
       case DECISION_REQUIREMENTS:
-        return DecisionRequirementsIntent.from(intent);
+        return DecisionRequirementsIntent.from(intentValue);
       case DECISION_EVALUATION:
-        return DecisionEvaluationIntent.from(intent);
+        return DecisionEvaluationIntent.from(intentValue);
       case CHECKPOINT:
-        return CheckpointIntent.from(intent);
+        return CheckpointIntent.from(intentValue);
       case ESCALATION:
-        return EscalationIntent.from(intent);
+        return EscalationIntent.from(intentValue);
       case PROCESS_INSTANCE_MODIFICATION:
-        return ProcessInstanceModificationIntent.from(intent);
+        return ProcessInstanceModificationIntent.from(intentValue);
       case SIGNAL:
-        return SignalIntent.from(intent);
+        return SignalIntent.from(intentValue);
       case SIGNAL_SUBSCRIPTION:
-        return SignalSubscriptionIntent.from(intent);
+        return SignalSubscriptionIntent.from(intentValue);
       case RESOURCE_DELETION:
-        return ResourceDeletionIntent.from(intent);
+        return ResourceDeletionIntent.from(intentValue);
       case COMMAND_DISTRIBUTION:
-        return CommandDistributionIntent.from(intent);
+        return CommandDistributionIntent.from(intentValue);
       case PROCESS_INSTANCE_BATCH:
-        return ProcessInstanceBatchIntent.from(intent);
+        return ProcessInstanceBatchIntent.from(intentValue);
       case AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION:
-        return AdHocSubProcessActivityActivationIntent.from(intent);
+        return AdHocSubProcessActivityActivationIntent.from(intentValue);
       case FORM:
-        return FormIntent.from(intent);
+        return FormIntent.from(intentValue);
       case RESOURCE:
-        return ResourceIntent.from(intent);
+        return ResourceIntent.from(intentValue);
       case USER_TASK:
-        return UserTaskIntent.from(intent);
+        return UserTaskIntent.from(intentValue);
       case PROCESS_INSTANCE_MIGRATION:
-        return ProcessInstanceMigrationIntent.from(intent);
+        return ProcessInstanceMigrationIntent.from(intentValue);
       case COMPENSATION_SUBSCRIPTION:
-        return CompensationSubscriptionIntent.from(intent);
+        return CompensationSubscriptionIntent.from(intentValue);
       case MESSAGE_CORRELATION:
-        return MessageCorrelationIntent.from(intent);
+        return MessageCorrelationIntent.from(intentValue);
       case USER:
-        return UserIntent.from(intent);
+        return UserIntent.from(intentValue);
       case CLOCK:
-        return ClockIntent.from(intent);
+        return ClockIntent.from(intentValue);
       case AUTHORIZATION:
-        return AuthorizationIntent.from(intent);
+        return AuthorizationIntent.from(intentValue);
       case ROLE:
-        return RoleIntent.from(intent);
+        return RoleIntent.from(intentValue);
       case TENANT:
-        return TenantIntent.from(intent);
+        return TenantIntent.from(intentValue);
       case SCALE:
-        return ScaleIntent.from(intent);
+        return ScaleIntent.from(intentValue);
       case GROUP:
-        return GroupIntent.from(intent);
+        return GroupIntent.from(intentValue);
       case MAPPING:
-        return MappingIntent.from(intent);
+        return MappingIntent.from(intentValue);
       case IDENTITY_SETUP:
-        return IdentitySetupIntent.from(intent);
+        return IdentitySetupIntent.from(intentValue);
       case BATCH_OPERATION_CREATION:
-        return BatchOperationIntent.from(intent);
+        return BatchOperationIntent.from(intentValue);
       case BATCH_OPERATION_EXECUTION:
-        return BatchOperationExecutionIntent.from(intent);
+        return BatchOperationExecutionIntent.from(intentValue);
       case BATCH_OPERATION_CHUNK:
-        return BatchOperationChunkIntent.from(intent);
+        return BatchOperationChunkIntent.from(intentValue);
       case BATCH_OPERATION_LIFECYCLE_MANAGEMENT:
-        return BatchOperationIntent.from(intent);
+        return BatchOperationIntent.from(intentValue);
       case BATCH_OPERATION_PARTITION_LIFECYCLE:
-        return BatchOperationIntent.from(intent);
+        return BatchOperationIntent.from(intentValue);
       case NULL_VAL:
       case SBE_UNKNOWN:
         return Intent.UNKNOWN;
@@ -201,104 +201,104 @@ public interface Intent {
             valueType.name()));
   }
 
-  static Intent fromProtocolValue(final ValueType valueType, final String intent) {
+  static Intent fromProtocolValue(final ValueType valueType, final String intentName) {
     switch (valueType) {
       case DEPLOYMENT:
-        return DeploymentIntent.valueOf(intent);
+        return DeploymentIntent.valueOf(intentName);
       case INCIDENT:
-        return IncidentIntent.valueOf(intent);
+        return IncidentIntent.valueOf(intentName);
       case JOB:
-        return JobIntent.valueOf(intent);
+        return JobIntent.valueOf(intentName);
       case PROCESS_INSTANCE:
-        return ProcessInstanceIntent.valueOf(intent);
+        return ProcessInstanceIntent.valueOf(intentName);
       case MESSAGE:
-        return MessageIntent.valueOf(intent);
+        return MessageIntent.valueOf(intentName);
       case MESSAGE_BATCH:
-        return MessageBatchIntent.valueOf(intent);
+        return MessageBatchIntent.valueOf(intentName);
       case MESSAGE_SUBSCRIPTION:
-        return MessageSubscriptionIntent.valueOf(intent);
+        return MessageSubscriptionIntent.valueOf(intentName);
       case MESSAGE_START_EVENT_SUBSCRIPTION:
-        return MessageStartEventSubscriptionIntent.valueOf(intent);
+        return MessageStartEventSubscriptionIntent.valueOf(intentName);
       case PROCESS_MESSAGE_SUBSCRIPTION:
-        return ProcessMessageSubscriptionIntent.valueOf(intent);
+        return ProcessMessageSubscriptionIntent.valueOf(intentName);
       case JOB_BATCH:
-        return JobBatchIntent.valueOf(intent);
+        return JobBatchIntent.valueOf(intentName);
       case TIMER:
-        return TimerIntent.valueOf(intent);
+        return TimerIntent.valueOf(intentName);
       case VARIABLE:
-        return VariableIntent.valueOf(intent);
+        return VariableIntent.valueOf(intentName);
       case VARIABLE_DOCUMENT:
-        return VariableDocumentIntent.valueOf(intent);
+        return VariableDocumentIntent.valueOf(intentName);
       case PROCESS_INSTANCE_CREATION:
-        return ProcessInstanceCreationIntent.valueOf(intent);
+        return ProcessInstanceCreationIntent.valueOf(intentName);
       case ERROR:
-        return ErrorIntent.valueOf(intent);
+        return ErrorIntent.valueOf(intentName);
       case PROCESS_INSTANCE_RESULT:
-        return ProcessInstanceResultIntent.valueOf(intent);
+        return ProcessInstanceResultIntent.valueOf(intentName);
       case PROCESS:
-        return ProcessIntent.valueOf(intent);
+        return ProcessIntent.valueOf(intentName);
       case DEPLOYMENT_DISTRIBUTION:
-        return DeploymentDistributionIntent.valueOf(intent);
+        return DeploymentDistributionIntent.valueOf(intentName);
       case PROCESS_EVENT:
-        return ProcessEventIntent.valueOf(intent);
+        return ProcessEventIntent.valueOf(intentName);
       case AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION:
-        return AdHocSubProcessActivityActivationIntent.valueOf(intent);
+        return AdHocSubProcessActivityActivationIntent.valueOf(intentName);
       case DECISION:
-        return DecisionIntent.valueOf(intent);
+        return DecisionIntent.valueOf(intentName);
       case DECISION_REQUIREMENTS:
-        return DecisionRequirementsIntent.valueOf(intent);
+        return DecisionRequirementsIntent.valueOf(intentName);
       case DECISION_EVALUATION:
-        return DecisionEvaluationIntent.valueOf(intent);
+        return DecisionEvaluationIntent.valueOf(intentName);
       case CHECKPOINT:
-        return CheckpointIntent.valueOf(intent);
+        return CheckpointIntent.valueOf(intentName);
       case ESCALATION:
-        return EscalationIntent.valueOf(intent);
+        return EscalationIntent.valueOf(intentName);
       case SIGNAL:
-        return SignalIntent.valueOf(intent);
+        return SignalIntent.valueOf(intentName);
       case SIGNAL_SUBSCRIPTION:
-        return SignalSubscriptionIntent.valueOf(intent);
+        return SignalSubscriptionIntent.valueOf(intentName);
       case RESOURCE_DELETION:
-        return ResourceDeletionIntent.valueOf(intent);
+        return ResourceDeletionIntent.valueOf(intentName);
       case FORM:
-        return FormIntent.valueOf(intent);
+        return FormIntent.valueOf(intentName);
       case RESOURCE:
-        return ResourceIntent.valueOf(intent);
+        return ResourceIntent.valueOf(intentName);
       case USER_TASK:
-        return UserTaskIntent.valueOf(intent);
+        return UserTaskIntent.valueOf(intentName);
       case PROCESS_INSTANCE_MIGRATION:
-        return ProcessInstanceMigrationIntent.valueOf(intent);
+        return ProcessInstanceMigrationIntent.valueOf(intentName);
       case COMPENSATION_SUBSCRIPTION:
-        return CompensationSubscriptionIntent.valueOf(intent);
+        return CompensationSubscriptionIntent.valueOf(intentName);
       case MESSAGE_CORRELATION:
-        return MessageCorrelationIntent.valueOf(intent);
+        return MessageCorrelationIntent.valueOf(intentName);
       case USER:
-        return UserIntent.valueOf(intent);
+        return UserIntent.valueOf(intentName);
       case CLOCK:
-        return ClockIntent.valueOf(intent);
+        return ClockIntent.valueOf(intentName);
       case AUTHORIZATION:
-        return AuthorizationIntent.valueOf(intent);
+        return AuthorizationIntent.valueOf(intentName);
       case ROLE:
-        return RoleIntent.valueOf(intent);
+        return RoleIntent.valueOf(intentName);
       case TENANT:
-        return TenantIntent.valueOf(intent);
+        return TenantIntent.valueOf(intentName);
       case SCALE:
-        return ScaleIntent.valueOf(intent);
+        return ScaleIntent.valueOf(intentName);
       case GROUP:
-        return GroupIntent.valueOf(intent);
+        return GroupIntent.valueOf(intentName);
       case MAPPING:
-        return MappingIntent.valueOf(intent);
+        return MappingIntent.valueOf(intentName);
       case IDENTITY_SETUP:
-        return IdentitySetupIntent.valueOf(intent);
+        return IdentitySetupIntent.valueOf(intentName);
       case BATCH_OPERATION_CREATION:
-        return BatchOperationIntent.valueOf(intent);
+        return BatchOperationIntent.valueOf(intentName);
       case BATCH_OPERATION_EXECUTION:
-        return BatchOperationExecutionIntent.valueOf(intent);
+        return BatchOperationExecutionIntent.valueOf(intentName);
       case BATCH_OPERATION_CHUNK:
-        return BatchOperationChunkIntent.valueOf(intent);
+        return BatchOperationChunkIntent.valueOf(intentName);
       case BATCH_OPERATION_LIFECYCLE_MANAGEMENT:
-        return BatchOperationIntent.valueOf(intent);
+        return BatchOperationIntent.valueOf(intentName);
       case BATCH_OPERATION_PARTITION_LIFECYCLE:
-        return BatchOperationIntent.valueOf(intent);
+        return BatchOperationIntent.valueOf(intentName);
       case NULL_VAL:
       case SBE_UNKNOWN:
         return Intent.UNKNOWN;
