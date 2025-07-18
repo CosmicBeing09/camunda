@@ -838,7 +838,7 @@ public final class SearchQueryRequestMapper {
 
   public static Either<List<String>, ProcessInstanceFilter.Builder> toProcessInstanceFilterFields(
       final io.camunda.zeebe.gateway.protocol.rest.ProcessInstanceFilterFields filter) {
-    final var builder = FilterBuilders.processInstance();
+    final var builder = FilterBuilders.processInstanceFilterBuilder();
     final List<String> validationErrors = new ArrayList<>();
     if (filter != null) {
       ofNullable(filter.getProcessInstanceKey())
@@ -998,10 +998,10 @@ public final class SearchQueryRequestMapper {
                   .ifPresent(builder::flowNodeInstanceKeys);
               Optional.ofNullable(f.getProcessInstanceKey())
                   .map(KeyUtil::keyToLong)
-                  .ifPresent(builder::processInstanceKeys);
+                  .ifPresent(builder::processInstanceKeyOperations);
               Optional.ofNullable(f.getProcessDefinitionKey())
                   .map(KeyUtil::keyToLong)
-                  .ifPresent(builder::processDefinitionKeys);
+                  .ifPresent(builder::processDefinitionKeyOperations);
               Optional.ofNullable(f.getProcessDefinitionId())
                   .ifPresent(builder::processDefinitionIds);
               Optional.ofNullable(f.getState())

@@ -171,7 +171,7 @@ public class ElementInstanceSortIT {
             .search(
                 new FlowNodeInstanceQuery(
                     new FlowNodeInstanceFilter.Builder()
-                        .processDefinitionKeys(processDefinitionKey)
+                        .processDefinitionKeyOperations(processDefinitionKey)
                         .build(),
                     FlowNodeInstanceSort.of(sortBuilder),
                     SearchQueryPage.of(b -> b)))

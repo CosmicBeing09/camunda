@@ -73,7 +73,7 @@ public class BatchOperationExecutionSchedulerTest {
   public void setUp() {
     setUpBasicSchedulerBehaviour();
 
-    final var filter = FilterBuilders.processInstance().build();
+    final var filter = FilterBuilders.processInstanceFilterBuilder().build();
 
     when(batchOperation.getBatchOperationType()).thenReturn(CANCEL_PROCESS_INSTANCE);
     lenient()

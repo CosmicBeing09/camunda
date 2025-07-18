@@ -46,11 +46,11 @@ public final class FilterBuilders {
     return fn.apply(processDefinitionStatisticsFilter(processDefinitionKey)).build();
   }
 
-  public static ProcessInstanceFilter.Builder processInstance() {
+  public static ProcessInstanceFilter.Builder processInstanceFilterBuilder() {
     return new ProcessInstanceFilter.Builder();
   }
 
-  public static SequenceFlowFilter.Builder sequenceFlow() {
+  public static SequenceFlowFilter.Builder sequenceFlowFilterBuilder() {
     return new SequenceFlowFilter.Builder();
   }
 
@@ -105,12 +105,12 @@ public final class FilterBuilders {
 
   public static ProcessInstanceFilter processInstance(
       final Function<ProcessInstanceFilter.Builder, ObjectBuilder<ProcessInstanceFilter>> fn) {
-    return fn.apply(processInstance()).build();
+    return fn.apply(processInstanceFilterBuilder()).build();
   }
 
   public static SequenceFlowFilter sequenceFlow(
       final Function<SequenceFlowFilter.Builder, ObjectBuilder<SequenceFlowFilter>> fn) {
-    return fn.apply(sequenceFlow()).build();
+    return fn.apply(sequenceFlowFilterBuilder()).build();
   }
 
   public static UserTaskFilter userTask(

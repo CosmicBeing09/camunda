@@ -68,7 +68,7 @@ public record FlowNodeInstanceFilter(
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder processInstanceKeys(final Long... values) {
+    public FlowNodeInstanceFilter.Builder processInstanceKeyOperations(final Long... values) {
       return processInstanceKeys(collectValuesAsList(values));
     }
 
@@ -77,7 +77,7 @@ public record FlowNodeInstanceFilter(
       return this;
     }
 
-    public FlowNodeInstanceFilter.Builder processDefinitionKeys(final Long... values) {
+    public FlowNodeInstanceFilter.Builder processDefinitionKeyOperations(final Long... values) {
       return processDefinitionKeys(collectValuesAsList(values));
     }
 
