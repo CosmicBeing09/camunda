@@ -323,7 +323,7 @@ public class RolesByTenantIntegrationTest {
                 new URI(
                     "%s%s"
                         .formatted(
-                            camundaClient.getConfiguration().getRestAddress().toString(),
+                            camundaClient.getConfiguration().restAddress().toString(),
                             "v2/tenants/%s".formatted(tenantId))))
             .GET()
             .header("Authorization", "Basic %s".formatted(encodedCredentials))

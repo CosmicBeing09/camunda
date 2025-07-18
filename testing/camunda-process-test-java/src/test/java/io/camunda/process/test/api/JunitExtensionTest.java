@@ -106,7 +106,7 @@ public class JunitExtensionTest {
 
     final CamundaClientConfiguration configuration = client.getConfiguration();
     assertThat(configuration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(configuration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(configuration.restAddress()).isEqualTo(REST_API_ADDRESS);
     final ZeebeClientConfiguration zeebeClientConfiguration = zeebeClient.getConfiguration();
     assertThat(zeebeClientConfiguration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
     assertThat(zeebeClientConfiguration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
@@ -150,7 +150,7 @@ public class JunitExtensionTest {
 
     final CamundaClientConfiguration configuration = newCamundaClient.getConfiguration();
     assertThat(configuration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(configuration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(configuration.restAddress()).isEqualTo(REST_API_ADDRESS);
   }
 
   @Test
@@ -189,7 +189,7 @@ public class JunitExtensionTest {
 
     final CamundaClientConfiguration configuration = newCamundaClient.getConfiguration();
     assertThat(configuration.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(configuration.getRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(configuration.restAddress()).isEqualTo(REST_API_ADDRESS);
     assertThat(configuration.getDefaultJobWorkerName()).isEqualTo("test");
   }
 

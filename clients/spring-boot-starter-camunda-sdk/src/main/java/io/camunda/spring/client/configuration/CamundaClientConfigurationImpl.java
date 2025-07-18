@@ -73,13 +73,13 @@ public class CamundaClientConfigurationImpl implements CamundaClientConfiguratio
   }
 
   @Override
-  public String getGatewayAddress() {
+  public String gatewayAddress() {
     return gatewayAddress;
   }
 
   @Override
-  public URI getRestAddress() {
-    return propertyOrDefault(camundaClientProperties.getRestAddress(), DEFAULT.getRestAddress());
+  public URI restAddress() {
+    return propertyOrDefault(camundaClientProperties.getRestAddress(), DEFAULT.restAddress());
   }
 
   @Override

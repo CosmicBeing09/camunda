@@ -208,7 +208,7 @@ class ApplicationAuthorizationIT {
 
   private static URI createUri(final CamundaClient client, final String path)
       throws URISyntaxException {
-    return new URI("%s%s".formatted(client.getConfiguration().getRestAddress(), path));
+    return new URI("%s%s".formatted(client.getConfiguration().restAddress(), path));
   }
 
   private static void assertAccessAllowed(final HttpResponse<String> response) {

@@ -97,7 +97,7 @@ public class HttpClientFactory {
   }
 
   private URI buildGatewayAddress() {
-    String basePath = config.getRestAddress().toString();
+    String basePath = config.restAddress().toString();
 
     // we need to strip the last / otherwise we'll have an empty path segment which Spring
     // interprets as a different route

@@ -151,7 +151,7 @@ public class CamundaSpringProcessTestRuntimeBuilderTest {
     final CamundaClientConfiguration configuration =
         getCamundaClientConfiguration(remoteClientBuilder);
 
-    assertThat(configuration.getRestAddress())
+    assertThat(configuration.restAddress())
         .hasHost("0.0.0.0")
         .hasPort(ContainerRuntimePorts.CAMUNDA_REST_API);
 
@@ -200,7 +200,7 @@ public class CamundaSpringProcessTestRuntimeBuilderTest {
     final CamundaClientConfiguration configuration =
         getCamundaClientConfiguration(remoteClientBuilder);
 
-    assertThat(configuration.getRestAddress()).isEqualTo(remoteCamundaRestApiAddress);
+    assertThat(configuration.restAddress()).isEqualTo(remoteCamundaRestApiAddress);
     assertThat(configuration.getGrpcAddress()).isEqualTo(remoteCamundaGrpcApiAddress);
     assertThat(configuration.isPlaintextConnectionEnabled()).isTrue();
   }
@@ -237,7 +237,7 @@ public class CamundaSpringProcessTestRuntimeBuilderTest {
     final CamundaClientConfiguration configuration =
         getCamundaClientConfiguration(remoteClientBuilder);
 
-    assertThat(configuration.getRestAddress())
+    assertThat(configuration.restAddress())
         .isEqualTo(URI.create("https://my-region.zeebe.zeebe.camunda.io:443/my-cluster"));
     assertThat(configuration.getGrpcAddress())
         .isEqualTo(URI.create("https://my-cluster.my-region.zeebe.camunda.io:443"));

@@ -85,7 +85,7 @@ class MappingAuthorizationIT {
   void searchShouldReturnAuthorizedMappings(
       @Authenticated(RESTRICTED) final CamundaClient userClient) throws Exception {
     final var mappingSearchResponse =
-        searchMappings(userClient.getConfiguration().getRestAddress().toString(), RESTRICTED);
+        searchMappings(userClient.getConfiguration().restAddress().toString(), RESTRICTED);
 
     assertThat(mappingSearchResponse.items())
         .hasSizeGreaterThanOrEqualTo(2)
@@ -97,7 +97,7 @@ class MappingAuthorizationIT {
   void searchShouldReturnEmptyListWhenUnauthorized(
       @Authenticated(UNAUTHORIZED) final CamundaClient userClient) throws Exception {
     final var mappingSearchResponse =
-        searchMappings(userClient.getConfiguration().getRestAddress().toString(), UNAUTHORIZED);
+        searchMappings(userClient.getConfiguration().restAddress().toString(), UNAUTHORIZED);
 
     assertThat(mappingSearchResponse.items()).isEmpty();
   }

@@ -318,8 +318,8 @@ public class CamundaClientCloudBuilderImpl
       Loggers.LOGGER.debug(
           "Expected to use 'cluster id' to set REST API address in the client cloud builder, "
               + "but overwriting with explicitly defined REST API address: {}.",
-          innerBuilder.getRestAddress());
-      return innerBuilder.getRestAddress();
+          innerBuilder.restAddress());
+      return innerBuilder.restAddress();
     }
   }
 
@@ -341,8 +341,8 @@ public class CamundaClientCloudBuilderImpl
       Loggers.LOGGER.debug(
           "Expected to use 'cluster id' to set gateway address in the client cloud builder, "
               + "but overwriting with explicitly defined gateway address: {}.",
-          innerBuilder.getGatewayAddress());
-      return getURIFromString("https://" + innerBuilder.getGatewayAddress());
+          innerBuilder.gatewayAddress());
+      return getURIFromString("https://" + innerBuilder.gatewayAddress());
     }
   }
 
@@ -378,15 +378,15 @@ public class CamundaClientCloudBuilderImpl
   }
 
   private boolean isNeedToSetCloudGatewayAddress() {
-    return innerBuilder.getGatewayAddress() == null
+    return innerBuilder.gatewayAddress() == null
         || Objects.equals(
-            innerBuilder.getGatewayAddress(), CamundaClientBuilderImpl.DEFAULT_GATEWAY_ADDRESS);
+            innerBuilder.gatewayAddress(), CamundaClientBuilderImpl.DEFAULT_GATEWAY_ADDRESS);
   }
 
   private boolean isNeedToSetCloudRestAddress() {
-    return innerBuilder.getRestAddress() == null
+    return innerBuilder.restAddress() == null
         || Objects.equals(
-            innerBuilder.getRestAddress(), CamundaClientBuilderImpl.DEFAULT_REST_ADDRESS);
+            innerBuilder.restAddress(), CamundaClientBuilderImpl.DEFAULT_REST_ADDRESS);
   }
 
   private URI getURIFromString(final String uri) {

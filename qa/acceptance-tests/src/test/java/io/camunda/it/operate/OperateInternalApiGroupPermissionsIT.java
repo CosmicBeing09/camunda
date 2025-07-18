@@ -202,7 +202,7 @@ public class OperateInternalApiGroupPermissionsIT {
   private ResponseCount searchRunningProcessInstances(
       final CamundaClient client, final String username)
       throws URISyntaxException, IOException, InterruptedException {
-    final String url = client.getConfiguration().getRestAddress() + BASE_PATH;
+    final String url = client.getConfiguration().restAddress() + BASE_PATH;
 
     final var encodedCredentials =
         Base64.getEncoder().encodeToString("%s:%s".formatted(username, username).getBytes());
@@ -233,7 +233,7 @@ public class OperateInternalApiGroupPermissionsIT {
       final CamundaClient client, final String username, final long processInstanceKey)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
-        client.getConfiguration().getRestAddress() + BASE_PATH + "/" + processInstanceKey;
+        client.getConfiguration().restAddress() + BASE_PATH + "/" + processInstanceKey;
 
     final var encodedCredentials =
         Base64.getEncoder().encodeToString("%s:%s".formatted(username, username).getBytes());
@@ -252,7 +252,7 @@ public class OperateInternalApiGroupPermissionsIT {
       final CamundaClient client, final String username, final long processInstanceKey)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
-        client.getConfiguration().getRestAddress()
+        client.getConfiguration().restAddress()
             + BASE_PATH
             + "/"
             + processInstanceKey

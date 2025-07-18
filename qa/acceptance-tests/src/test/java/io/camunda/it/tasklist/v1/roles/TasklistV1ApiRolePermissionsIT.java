@@ -100,7 +100,7 @@ public class TasklistV1ApiRolePermissionsIT {
         .permissionTypes(PermissionType.READ_PROCESS_DEFINITION, PermissionType.UPDATE_USER_TASK)
         .send()
         .join();
-    addUserToRole(adminClient.getConfiguration().getRestAddress(), roleId, AUTHORIZED_USERNAME);
+    addUserToRole(adminClient.getConfiguration().restAddress(), roleId, AUTHORIZED_USERNAME);
 
     adminClient
         .deployResource()
@@ -222,7 +222,7 @@ public class TasklistV1ApiRolePermissionsIT {
       final CamundaClient client, final String username, final long processDefinitionKey)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
-        client.getConfiguration().getRestAddress()
+        client.getConfiguration().restAddress()
             + "v1/internal/processes/"
             + processDefinitionKey;
 
@@ -242,7 +242,7 @@ public class TasklistV1ApiRolePermissionsIT {
   private int assign(final CamundaClient client, final String username, final long taskId)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
-        client.getConfiguration().getRestAddress() + "v1/tasks/" + taskId + "/assign";
+        client.getConfiguration().restAddress() + "v1/tasks/" + taskId + "/assign";
 
     final var encodedCredentials =
         Base64.getEncoder().encodeToString("%s:%s".formatted(username, username).getBytes());

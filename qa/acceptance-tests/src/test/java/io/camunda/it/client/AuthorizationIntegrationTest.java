@@ -70,7 +70,7 @@ public class AuthorizationIntegrationTest {
             () ->
                 assertThat(
                         getAuthorization(
-                            camundaClient.getConfiguration().getRestAddress().toString(),
+                            camundaClient.getConfiguration().restAddress().toString(),
                             authorizationKey))
                     .matches(
                         r ->

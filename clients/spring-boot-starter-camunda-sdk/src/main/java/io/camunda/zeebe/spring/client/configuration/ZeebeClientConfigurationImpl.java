@@ -39,12 +39,12 @@ public class ZeebeClientConfigurationImpl implements ZeebeClientConfiguration {
 
   @Override
   public String getGatewayAddress() {
-    return camundaClientConfiguration.getGatewayAddress();
+    return camundaClientConfiguration.gatewayAddress();
   }
 
   @Override
   public URI getRestAddress() {
-    return camundaClientConfiguration.getRestAddress();
+    return camundaClientConfiguration.restAddress();
   }
 
   @Override
