@@ -33,7 +33,7 @@ import io.camunda.db.rdbms.write.RdbmsWriterFactory;
 /** A holder for all rdbms services */
 public class RdbmsService {
 
-  private final RdbmsWriterFactory rdbmsWriterFactory;
+  private final RdbmsWriterFactory writerFactory;
   private final AuthorizationReader authorizationReader;
   private final DecisionDefinitionReader decisionDefinitionReader;
   private final DecisionInstanceReader decisionInstanceReader;
@@ -55,7 +55,7 @@ public class RdbmsService {
   private final BatchOperationItemReader batchOperationItemReader;
 
   public RdbmsService(
-      final RdbmsWriterFactory rdbmsWriterFactory,
+      final RdbmsWriterFactory writerFactory,
       final AuthorizationReader authorizationReader,
       final DecisionDefinitionReader decisionDefinitionReader,
       final DecisionInstanceReader decisionInstanceReader,
@@ -75,7 +75,7 @@ public class RdbmsService {
       final BatchOperationReader batchOperationReader,
       final SequenceFlowReader sequenceFlowReader,
       final BatchOperationItemReader batchOperationItemReader) {
-    this.rdbmsWriterFactory = rdbmsWriterFactory;
+    this.writerFactory = writerFactory;
     this.authorizationReader = authorizationReader;
     this.decisionRequirementsReader = decisionRequirementsReader;
     this.decisionDefinitionReader = decisionDefinitionReader;
@@ -178,6 +178,6 @@ public class RdbmsService {
   }
 
   public RdbmsWriter createWriter(final RdbmsWriterConfig config) {
-    return rdbmsWriterFactory.createWriter(config);
+    return writerFactory.createWriter(config);
   }
 }
