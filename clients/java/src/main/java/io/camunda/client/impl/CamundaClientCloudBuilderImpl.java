@@ -49,8 +49,8 @@ public class CamundaClientCloudBuilderImpl
         CamundaClientCloudBuilderStep3,
         CamundaClientCloudBuilderStep4 {
 
-  private static final String BASE_ADDRESS = "zeebe.camunda.io";
-  private static final String BASE_AUTH_URL = "https://login.cloud.camunda.io/oauth/token";
+  private static final String ZEEBE_CLOUD_HOSTNAME = "zeebe.camunda.io";
+  private static final String OAUTH_TOKEN_ENDPOINT = "https://login.cloud.camunda.io/oauth/token";
 
   private static final String DEFAULT_REGION = "bru-2";
 
@@ -312,7 +312,7 @@ public class CamundaClientCloudBuilderImpl
     if (isNeedToSetCloudRestAddress()) {
       ensureNotNull("cluster id", clusterId);
       final String cloudRestAddress =
-          String.format("https://%s.zeebe.%s:443/%s", region, BASE_ADDRESS, clusterId);
+          String.format("https://%s.zeebe.%s:443/%s", region, ZEEBE_CLOUD_HOSTNAME, clusterId);
       return getURIFromString(cloudRestAddress);
     } else {
       Loggers.LOGGER.debug(
@@ -327,7 +327,7 @@ public class CamundaClientCloudBuilderImpl
     if (isNeedToSetCloudGrpcAddress() && isNeedToSetCloudGatewayAddress()) {
       ensureNotNull("cluster id", clusterId);
       final String cloudGrpcAddress =
-          String.format("https://%s.%s.%s:443", clusterId, region, BASE_ADDRESS);
+          String.format("https://%s.%s.%s:443", clusterId, region, ZEEBE_CLOUD_HOSTNAME);
       return getURIFromString(cloudGrpcAddress);
     } else {
       if (!isNeedToSetCloudGrpcAddress()) {
@@ -358,10 +358,10 @@ public class CamundaClientCloudBuilderImpl
         Loggers.LOGGER.debug("Expected setting 'usePlaintext' to be 'false', but found 'true'.");
       }
       return builder
-          .audience(String.format("%s.%s.%s", clusterId, region, BASE_ADDRESS))
+          .audience(String.format("%s.%s.%s", clusterId, region, ZEEBE_CLOUD_HOSTNAME))
           .clientId(clientId)
           .clientSecret(clientSecret)
-          .authorizationServerUrl(BASE_AUTH_URL)
+          .authorizationServerUrl(OAUTH_TOKEN_ENDPOINT)
           .build();
     } else {
       Loggers.LOGGER.debug(
