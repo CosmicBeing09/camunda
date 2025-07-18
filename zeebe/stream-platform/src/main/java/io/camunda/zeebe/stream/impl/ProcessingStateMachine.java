@@ -115,7 +115,7 @@ public final class ProcessingStateMachine {
   private static final String ERROR_MESSAGE_HANDLING_PROCESSING_ERROR_FAILED =
       "Expected to process command '{} {}' successfully on stream processor, but caught unexpected exception. Failed to handle the exception gracefully.";
   private final EventFilter processingFilter;
-  private final EventFilter isEventOrRejection =
+  private final EventFilter eventOrRejectionFilter =
       new MetadataEventFilter(
           recordMetadata -> {
             final var recordType = recordMetadata.getRecordType();
@@ -129,7 +129,7 @@ public final class ProcessingStateMachine {
   private final RetryStrategy writeRetryStrategy;
   private final RetryStrategy sideEffectsRetryStrategy;
   private final RetryStrategy updateStateRetryStrategy;
-  private final BooleanSupplier shouldProcessNext;
+  private final BooleanSupplier canProcessNext;
   private final BooleanSupplier abortCondition;
   private final RecordValues recordValues;
   private final TypedRecordImpl typedCommand;
@@ -179,7 +179,7 @@ public final class ProcessingStateMachine {
     writeRetryStrategy = new AbortableRetryStrategy(actor);
     sideEffectsRetryStrategy = new AbortableRetryStrategy(actor);
     updateStateRetryStrategy = new RecoverableRetryStrategy(actor);
-    this.shouldProcessNext = shouldProcessNext;
+    canProcessNext = shouldProcessNext;
 
     final int partitionId = context.getLogStream().getPartitionId();
     typedCommand = new TypedRecordImpl(partitionId);
@@ -221,12 +221,12 @@ public final class ProcessingStateMachine {
       //  * and this was the last record written (records that have been written to the dispatcher
       //    might not be written to the log yet, which means they will appear shortly after this)
       reachedEnd =
-          isEventOrRejection.applies(previousRecord)
+          eventOrRejectionFilter.applies(previousRecord)
               && !hasNext
               && lastWrittenPosition <= previousRecord.getPosition();
     }
 
-    if (shouldProcessNext.getAsBoolean() && hasNext && !inProcessing) {
+    if (canProcessNext.getAsBoolean() && hasNext && !inProcessing) {
       currentRecord = logStreamReader.next();
 
       if (processingFilter.applies(currentRecord)) {
