@@ -187,11 +187,13 @@ public class DecisionBehavior {
   }
 
   private Either<Failure, DeployedDrg> findDrgByDecision(final PersistedDecision decision) {
-    final var key = decision.getDecisionRequirementsKey();
-    final var id = decision.getDecisionRequirementsId();
+    final var decisionRequirementsKey = decision.getDecisionRequirementsKey();
+    final var decisionRequirementsId = decision.getDecisionRequirementsId();
     return Either.ofOptional(
-            decisionState.findDecisionRequirementsByTenantAndKey(decision.getTenantId(), key))
-        .orElse(new Failure("no drg found for id '%s'".formatted(bufferAsString(id))));
+            decisionState.findDecisionRequirementsByTenantAndKey(decision.getTenantId(),
+                decisionRequirementsKey))
+        .orElse(new Failure("no drg found for id '%s'".formatted(bufferAsString(
+            decisionRequirementsId))));
   }
 
   private void addDecisionToEvaluationEvent(
