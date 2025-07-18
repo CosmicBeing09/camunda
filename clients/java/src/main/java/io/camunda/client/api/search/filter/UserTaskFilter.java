@@ -19,14 +19,14 @@ import io.camunda.client.api.search.enums.UserTaskState;
 import io.camunda.client.api.search.filter.builder.DateTimeProperty;
 import io.camunda.client.api.search.filter.builder.IntegerProperty;
 import io.camunda.client.api.search.filter.builder.StringProperty;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
 /** Interface for defining user task filters in search queries. */
-public interface UserTaskFilter extends SearchRequestFilter {
+public interface UserTaskFilter extends Filter {
 
   /**
    * Filters user tasks by the specified key.

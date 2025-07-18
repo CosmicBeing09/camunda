@@ -17,13 +17,13 @@ package io.camunda.client.api.search.filter;
 
 import io.camunda.client.api.search.filter.builder.BasicLongProperty;
 import io.camunda.client.api.search.filter.builder.DateTimeProperty;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import io.camunda.client.api.search.response.DecisionDefinitionType;
 import io.camunda.client.api.search.response.DecisionInstanceState;
 import java.time.OffsetDateTime;
 import java.util.function.Consumer;
 
-public interface DecisionInstanceFilter extends SearchRequestFilter {
+public interface DecisionInstanceFilter extends Filter {
 
   /** Filter by decisionInstanceKey */
   DecisionInstanceFilter decisionInstanceKey(long decisionInstanceKey);

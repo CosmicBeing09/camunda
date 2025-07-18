@@ -15,6 +15,6 @@
  */
 package io.camunda.client.api.search.filter;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
-public interface ClientFilter extends SearchRequestFilter {}
+public interface ClientFilter extends Filter {}

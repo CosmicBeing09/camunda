@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.sort;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestSort;
+import io.camunda.client.api.search.request.TypedSearchRequest.Sort;
 
-public interface UserSort extends SearchRequestSort<UserSort> {
+public interface UserSort extends Sort<UserSort> {
 
   UserSort username();
 
