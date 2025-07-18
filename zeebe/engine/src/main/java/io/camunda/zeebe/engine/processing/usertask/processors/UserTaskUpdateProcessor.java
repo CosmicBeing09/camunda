@@ -33,10 +33,10 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserTaskUpdateProcessor.class);
   private static final String DEFAULT_ACTION = "update";
 
-  private final StateWriter stateWriter;
+  private final StateWriter followUpEventWriter;
   private final UserTaskState userTaskState;
   private final VariableState variableState;
-  private final TypedResponseWriter responseWriter;
+  private final TypedResponseWriter commandResponseWriter;
   private final VariableBehavior variableBehavior;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
@@ -45,11 +45,11 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
       final Writers writers,
       final VariableBehavior variableBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    stateWriter = writers.state();
+    followUpEventWriter = writers.state();
     userTaskState = state.getUserTaskState();
     variableState = state.getVariableState();
     this.variableBehavior = variableBehavior;
-    responseWriter = writers.response();
+    commandResponseWriter = writers.response();
     preconditionChecker =
         new UserTaskCommandPreconditionChecker(
             List.of(LifecycleState.CREATED), "update", state.getUserTaskState(), authCheckBehavior);
@@ -69,7 +69,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     userTaskRecord.wrapChangedAttributesIfValueChanged(command.getValue());
     userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
 
-    stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskRecord);
+    followUpEventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATING, userTaskRecord);
   }
 
   @Override
@@ -78,8 +78,8 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
     final long userTaskKey = command.getKey();
 
     if (command.hasRequestMetadata()) {
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
-      responseWriter.writeEventOnCommand(
+      followUpEventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+      commandResponseWriter.writeEventOnCommand(
           userTaskKey, UserTaskIntent.UPDATED, userTaskRecord, command);
       return;
     }
@@ -92,15 +92,15 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
               + "If the update was triggered by a user task variables update, variables will not be merged. "
               + "Please report this as a bug.",
           userTaskKey);
-      stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+      followUpEventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
       return;
     }
 
     final var metadata = recordRequestMetadata.get();
     switch (metadata.getTriggerType()) {
       case USER_TASK -> {
-        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
-        responseWriter.writeResponse(
+        followUpEventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+        commandResponseWriter.writeResponse(
             userTaskKey,
             UserTaskIntent.UPDATED,
             userTaskRecord,
@@ -121,7 +121,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
                   + "This may be caused by a corrupted or incomplete variable update request. "
                   + "Please report this as a bug.",
               userTaskRecord.getElementInstanceKey());
-          stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+          followUpEventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
           return;
         }
 
@@ -130,12 +130,12 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
         mergeVariables(userTaskRecord, variableDocumentRecord);
 
         // Write follow-up events
-        stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
+        followUpEventWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.UPDATED, userTaskRecord);
         final long variableDocumentKey = variableDocumentState.getKey();
-        stateWriter.appendFollowUpEvent(
+        followUpEventWriter.appendFollowUpEvent(
             variableDocumentKey, VariableDocumentIntent.UPDATED, variableDocumentRecord);
 
-        responseWriter.writeResponse(
+        commandResponseWriter.writeResponse(
             variableDocumentKey,
             VariableDocumentIntent.UPDATED,
             variableDocumentRecord,
