@@ -19,7 +19,7 @@ public interface PartitionAdminAccess {
 
   ActorFuture<Void> pauseExporting();
 
-  ActorFuture<Void> softPauseExporting();
+  ActorFuture<Void> temporarilySuspendExporting();
 
   ActorFuture<Void> resumeExporting();
 
@@ -27,7 +27,7 @@ public interface PartitionAdminAccess {
 
   ActorFuture<Void> resumeProcessing();
 
-  ActorFuture<Void> banInstance(final long processInstanceKey);
+  ActorFuture<Void> banProcessInstance(final long processInstanceKey);
 
   ActorFuture<Void> configureFlowControl(final FlowControlCfg flowControlCfg);
 

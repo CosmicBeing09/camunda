@@ -140,7 +140,7 @@ public class AdminApiRequestHandler
 
     final ActorFuture<Either<ErrorResponseWriter, ApiResponseWriter>> result = actor.createFuture();
     adminAccess
-        .banInstance(requestReader.key())
+        .banProcessInstance(requestReader.key())
         .onComplete(
             (r, t) -> {
               if (t == null) {
@@ -212,7 +212,7 @@ public class AdminApiRequestHandler
     final ActorFuture<Either<ErrorResponseWriter, ApiResponseWriter>> result = actor.createFuture();
     partitionAdminAccess
         .orElseThrow()
-        .softPauseExporting()
+        .temporarilySuspendExporting()
         .onComplete(
             (r, t) -> {
               if (t == null) {

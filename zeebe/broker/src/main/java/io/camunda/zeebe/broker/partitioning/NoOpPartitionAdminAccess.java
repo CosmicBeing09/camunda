@@ -37,7 +37,7 @@ public final class NoOpPartitionAdminAccess implements PartitionAdminAccess {
   }
 
   @Override
-  public ActorFuture<Void> softPauseExporting() {
+  public ActorFuture<Void> temporarilySuspendExporting() {
     logCall();
     return CompletableActorFuture.completed(null);
   }
@@ -61,7 +61,7 @@ public final class NoOpPartitionAdminAccess implements PartitionAdminAccess {
   }
 
   @Override
-  public ActorFuture<Void> banInstance(final long processInstanceKey) {
+  public ActorFuture<Void> banProcessInstance(final long processInstanceKey) {
     logCall();
     return CompletableActorFuture.completed(null);
   }
