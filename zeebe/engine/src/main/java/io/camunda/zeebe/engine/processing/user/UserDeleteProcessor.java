@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -50,7 +50,7 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
   private final UserState userState;
   private final AuthorizationState authorizationState;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior distributionBehavior;
@@ -81,55 +81,56 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<UserRecord> updateUserCommand) {
+    final var record = updateUserCommand.getValue();
     final String username = record.getUsername();
     final var persistedUser = userState.getUser(username);
 
     if (persistedUser.isEmpty()) {
       final var rejectionMessage = USER_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(username);
 
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var user = persistedUser.get();
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.DELETE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.USER, PermissionType.DELETE)
             .addResourceId(user.getUsername());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
     deleteUser(user);
     responseWriter.writeEventOnCommand(
-        user.getUserKey(), UserIntent.DELETED, command.getValue(), command);
+        user.getUserKey(), UserIntent.DELETED, updateUserCommand.getValue(),
+        updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> command) {
-    final var username = command.getValue().getUsername();
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteTenantCommand) {
+    final var username = distributedDeleteTenantCommand.getValue().getUsername();
     userState
         .getUser(username)
         .ifPresentOrElse(
             this::deleteUser,
             () -> {
               final var message = USER_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(username);
-              rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, message);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.NOT_FOUND, message);
             });
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void deleteUser(final PersistedUser user) {

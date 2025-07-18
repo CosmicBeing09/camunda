@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.identity;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -38,7 +38,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -61,81 +61,82 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> updateUserCommand) {
+    final var groupRecord = updateUserCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
-            .addResourceId(record.getGroupId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.GROUP, PermissionType.UPDATE)
+            .addResourceId(groupRecord.getGroupId());
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var groupId = record.getGroupId();
+    final var groupId = groupRecord.getGroupId();
     final var persistedRecord = groupState.get(groupId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage =
           "Expected to update group with ID '%s', but a group with this ID does not exist."
               .formatted(groupId);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var groupKey = persistedRecord.get().getGroupKey();
-    final var entityId = record.getEntityId();
-    final var entityType = record.getEntityType();
+    final var entityId = groupRecord.getEntityId();
+    final var entityType = groupRecord.getEntityType();
     if (!isEntityPresent(entityId, entityType)) {
       final var errorMessage =
           "Expected to add an entity with ID '%s' and type '%s' to group with ID '%s', but the entity does not exist."
               .formatted(entityId, entityType, groupId);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
-    if (isEntityAssigned(record)) {
+    if (isEntityAssigned(groupRecord)) {
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(
-              record.getEntityId(), record.getGroupId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+              groupRecord.getEntityId(), groupRecord.getGroupId());
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
-    stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_ADDED, record);
-    responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, record, command);
+    stateWriter.appendFollowUpEvent(groupKey, GroupIntent.ENTITY_ADDED, groupRecord);
+    responseWriter.writeEventOnCommand(groupKey, GroupIntent.ENTITY_ADDED, groupRecord,
+        updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<GroupRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     if (isEntityAssigned(record)) {
       final var errorMessage =
           ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(
               record.getEntityId(), record.getGroupId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
     } else {
-      stateWriter.appendFollowUpEvent(command.getKey(), GroupIntent.ENTITY_ADDED, record);
+      stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), GroupIntent.ENTITY_ADDED, record);
     }
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean isEntityPresent(final String entityId, final EntityType entityType) {
     return switch (entityType) {
       case EntityType.USER, CLIENT ->
           true; // With simple mappings, any username or client id can be assigned
-      case EntityType.MAPPING -> mappingState.get(entityId).isPresent();
+      case EntityType.MAPPING -> mappingState.getMappingById(entityId).isPresent();
       default -> false;
     };
   }

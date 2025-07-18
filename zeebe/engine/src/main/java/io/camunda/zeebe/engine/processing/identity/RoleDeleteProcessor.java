@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.identity;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -40,7 +40,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -63,26 +63,26 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> updateUserCommand) {
+    final var record = updateUserCommand.getValue();
     final String roleId = record.getRoleId();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.DELETE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.ROLE, PermissionType.DELETE)
             .addResourceId(roleId);
 
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = roleState.getRole(roleId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleId);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -94,33 +94,34 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
     deleteAuthorizations(record);
 
     stateWriter.appendFollowUpEvent(roleKey, RoleIntent.DELETED, record);
-    responseWriter.writeEventOnCommand(roleKey, RoleIntent.DELETED, record, command);
+    responseWriter.writeEventOnCommand(roleKey, RoleIntent.DELETED, record,
+        updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     roleState
         .getRole(record.getRoleId())
         .ifPresentOrElse(
             role -> {
-              removeMembers(command.getValue());
-              deleteAuthorizations(command.getValue());
+              removeMembers(distributedDeleteTenantCommand.getValue());
+              deleteAuthorizations(distributedDeleteTenantCommand.getValue());
               stateWriter.appendFollowUpEvent(
-                  command.getKey(), RoleIntent.DELETED, command.getValue());
+                  distributedDeleteTenantCommand.getKey(), RoleIntent.DELETED, distributedDeleteTenantCommand.getValue());
             },
             () -> {
               final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-              rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void removeMembers(final RoleRecord record) {

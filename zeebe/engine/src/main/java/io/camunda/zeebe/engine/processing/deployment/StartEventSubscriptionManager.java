@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMes
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableProcess;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSignal;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableStartEvent;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.MessageStartEventSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
@@ -31,20 +31,20 @@ import java.util.function.Predicate;
 
 public class StartEventSubscriptionManager {
 
-  private final MessageStartEventSubscriptionRecord messageSubscriptionRecord =
+  private final MessageStartEventSubscriptionRecord messageStartEventSubscriptionRecord =
       new MessageStartEventSubscriptionRecord();
-  private final SignalSubscriptionRecord signalSubscriptionRecord = new SignalSubscriptionRecord();
+  private final SignalSubscriptionRecord signalStartEventSubscriptionRecord = new SignalSubscriptionRecord();
 
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
   private final SignalSubscriptionState signalSubscriptionState;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public StartEventSubscriptionManager(
       final ProcessingState processingState,
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter) {
+      final EventStateWriter stateWriter) {
     processState = processingState.getProcessState();
     messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
     signalSubscriptionState = processingState.getSignalSubscriptionState();
@@ -178,8 +178,8 @@ public class StartEventSubscriptionManager {
         .map(BufferUtil::wrapString)
         .ifPresent(
             messageNameBuffer -> {
-              messageSubscriptionRecord.reset();
-              messageSubscriptionRecord
+              messageStartEventSubscriptionRecord.reset();
+              messageStartEventSubscriptionRecord
                   .setMessageName(messageNameBuffer)
                   .setProcessDefinitionKey(processDefinition.getKey())
                   .setBpmnProcessId(processDefinition.getBpmnProcessId())
@@ -190,7 +190,7 @@ public class StartEventSubscriptionManager {
               stateWriter.appendFollowUpEvent(
                   subscriptionKey,
                   MessageStartEventSubscriptionIntent.CREATED,
-                  messageSubscriptionRecord);
+                  messageStartEventSubscriptionRecord);
             });
   }
 
@@ -203,8 +203,8 @@ public class StartEventSubscriptionManager {
         .map(BufferUtil::wrapString)
         .ifPresent(
             signalNameBuffer -> {
-              signalSubscriptionRecord.reset();
-              signalSubscriptionRecord
+              signalStartEventSubscriptionRecord.reset();
+              signalStartEventSubscriptionRecord
                   .setSignalName(signalNameBuffer)
                   .setProcessDefinitionKey(processDefinition.getKey())
                   .setBpmnProcessId(processDefinition.getBpmnProcessId())
@@ -213,7 +213,8 @@ public class StartEventSubscriptionManager {
 
               final var subscriptionKey = keyGenerator.nextKey();
               stateWriter.appendFollowUpEvent(
-                  subscriptionKey, SignalSubscriptionIntent.CREATED, signalSubscriptionRecord);
+                  subscriptionKey, SignalSubscriptionIntent.CREATED,
+                  signalStartEventSubscriptionRecord);
             });
   }
 }

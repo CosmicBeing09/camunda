@@ -72,65 +72,65 @@ public final class AuthorizationCheckBehavior {
    * <p>The caller of this method should provide an {@link AuthorizationRequest}. This object
    * contains the data required to do the check.
    *
-   * @param request the authorization request to check authorization for. This contains the command,
+   * @param authorizationRequest the authorization request to check authorization for. This contains the command,
    *     the resource type, the permission type, a set of resource identifiers and the tenant id
    * @return a {@link Either} containing a {@link RejectionType} if the user is not authorized or
    *     {@link Void} if the user is authorized
    */
-  public Either<Rejection, Void> isAuthorized(final AuthorizationRequest request) {
+  public Either<Rejection, Void> authorizationResult(final AuthorizationRequest authorizationRequest) {
     if (!authorizationsEnabled && !multiTenancyEnabled) {
       return Either.right(null);
     }
 
-    if (!request.getCommand().hasRequestMetadata()
+    if (!authorizationRequest.getCommand().hasRequestMetadata()
         // Internal commands for batchOperations still need authChecks
-        && request.getCommand().getBatchOperationReference()
+        && authorizationRequest.getCommand().getBatchOperationReference()
             == batchOperationReferenceNullValue()) {
       // The command is written by Zeebe internally and not part of a batch operation.
       // These commands are always authorized
       return Either.right(null);
     }
 
-    if (isAuthorizedAnonymousUser(request.getCommand())) {
+    if (isAuthorizedAnonymousUser(authorizationRequest.getCommand())) {
       return Either.right(null);
     }
 
-    final var username = getUsername(request);
-    final var clientId = getClientId(request);
+    final var username = getUsername(authorizationRequest);
+    final var clientId = getClientId(authorizationRequest);
 
-    final List<AuthorizationRejection> aggregatedRejections = new ArrayList<>();
+    final List<AuthorizationRejection> authorizationRejections = new ArrayList<>();
     if (username.isPresent()) {
       final var userAuthorized =
-          isEntityAuthorized(request, EntityType.USER, Set.of(username.get()));
+          isEntityAuthorized(authorizationRequest, EntityType.USER, Set.of(username.get()));
       if (userAuthorized.isRight()) {
         return Either.right(null);
       } else {
-        aggregatedRejections.add(userAuthorized.getLeft());
+        authorizationRejections.add(userAuthorized.getLeft());
       }
     } else if (clientId.isPresent()) {
       final var clientAuthorized =
-          isEntityAuthorized(request, EntityType.CLIENT, Set.of(clientId.get()));
+          isEntityAuthorized(authorizationRequest, EntityType.CLIENT, Set.of(clientId.get()));
       if (clientAuthorized.isRight()) {
         return Either.right(null);
       } else {
-        aggregatedRejections.add(clientAuthorized.getLeft());
+        authorizationRejections.add(clientAuthorized.getLeft());
       }
     }
 
     final var mappingAuthorized =
         isEntityAuthorized(
-            request,
+            authorizationRequest,
             EntityType.MAPPING,
-            getPersistedMappings(request)
+            getPersistedMappings(authorizationRequest)
                 .map(PersistedMapping::getMappingId)
                 .collect(Collectors.toSet()));
     if (mappingAuthorized.isRight()) {
       return Either.right(null);
     } else {
-      aggregatedRejections.add(mappingAuthorized.getLeft());
+      authorizationRejections.add(mappingAuthorized.getLeft());
     }
 
-    return getRejection(aggregatedRejections);
+    return getRejection(authorizationRejections);
   }
 
   /**

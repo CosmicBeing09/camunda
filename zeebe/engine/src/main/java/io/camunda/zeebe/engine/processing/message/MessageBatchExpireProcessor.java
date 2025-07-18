@@ -11,7 +11,7 @@ import static io.camunda.zeebe.protocol.record.intent.MessageIntent.*;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.message.StoredMessage;
@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public final class MessageBatchExpireProcessor implements TypedRecordProcessor<MessageBatchRecord> {
 
   private static final Logger LOG = LoggerFactory.getLogger(MessageBatchExpireProcessor.class);
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final MessageState messageState;
   private final boolean appendMessageBodyOnExpired;
@@ -36,7 +36,7 @@ public final class MessageBatchExpireProcessor implements TypedRecordProcessor<M
       new MessageRecord().setName("").setCorrelationKey("").setTimeToLive(-1L);
 
   public MessageBatchExpireProcessor(
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final TypedRejectionWriter rejectionWriter,
       final MessageState messageState,
       final boolean appendMessageBodyOnExpired) {

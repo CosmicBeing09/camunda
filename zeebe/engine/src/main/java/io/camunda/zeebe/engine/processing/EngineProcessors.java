@@ -34,7 +34,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionContinueProcessor;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionFinishProcessor;
 import io.camunda.zeebe.engine.processing.distribution.CommandRedistributor;
-import io.camunda.zeebe.engine.processing.dmn.DecisionEvaluationEvaluteProcessor;
+import io.camunda.zeebe.engine.processing.dmn.DecisionEvaluationEvaluateProcessor;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationProcessors;
 import io.camunda.zeebe.engine.processing.identity.GroupProcessors;
@@ -531,8 +531,8 @@ public final class EngineProcessors {
       final MutableProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
-    final DecisionEvaluationEvaluteProcessor decisionEvaluationEvaluteProcessor =
-        new DecisionEvaluationEvaluteProcessor(
+    final DecisionEvaluationEvaluateProcessor decisionEvaluationEvaluteProcessor =
+        new DecisionEvaluationEvaluateProcessor(
             decisionBehavior, processingState.getKeyGenerator(), writers, authCheckBehavior);
     typedRecordProcessors.onCommand(
         ValueType.DECISION_EVALUATION,

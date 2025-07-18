@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.identity;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -40,7 +40,7 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -63,25 +63,25 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<GroupRecord> updateUserCommand) {
+    final var record = updateUserCommand.getValue();
     final var groupId = record.getGroupId();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.DELETE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.GROUP, PermissionType.DELETE)
             .addResourceId(groupId);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final var persistedRecord = groupState.get(groupId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = GROUP_NOT_FOUND_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
@@ -93,32 +93,33 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
     deleteAuthorizations(record);
 
     stateWriter.appendFollowUpEvent(groupKey, GroupIntent.DELETED, record);
-    responseWriter.writeEventOnCommand(groupKey, GroupIntent.DELETED, record, command);
+    responseWriter.writeEventOnCommand(groupKey, GroupIntent.DELETED, record,
+        updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<GroupRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     groupState
         .get(record.getGroupId())
         .ifPresentOrElse(
             group -> {
-              removeAssignedEntities(command.getValue());
-              deleteAuthorizations(command.getValue());
-              stateWriter.appendFollowUpEvent(command.getKey(), GroupIntent.DELETED, record);
+              removeAssignedEntities(distributedDeleteTenantCommand.getValue());
+              deleteAuthorizations(distributedDeleteTenantCommand.getValue());
+              stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), GroupIntent.DELETED, record);
             },
             () -> {
               final var errorMessage = GROUP_NOT_FOUND_ERROR_MESSAGE.formatted(record.getGroupId());
-              rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.NOT_FOUND, errorMessage);
             });
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void removeAssignedEntities(final GroupRecord record) {

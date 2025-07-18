@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -41,7 +41,7 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -65,16 +65,16 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> updateUserCommand) {
+    final var record = updateUserCommand.getValue();
     final var tenantId = record.getTenantId();
 
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(command, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(updateUserCommand, isAuthorized.getLeft());
       return;
     }
 
@@ -82,31 +82,33 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
 
     if (persistedTenant.isEmpty()) {
       rejectCommand(
-          command,
+          updateUserCommand,
           RejectionType.NOT_FOUND,
           "Expected to remove entity from tenant '%s', but no tenant with this ID exists."
               .formatted(tenantId));
       return;
     }
 
-    if (!validateEntityAssignment(command, tenantId)) {
+    if (!validateEntityAssignment(updateUserCommand, tenantId)) {
       return;
     }
 
     final var tenantKey = persistedTenant.get().getTenantKey();
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_REMOVED, record);
-    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_REMOVED, record, command);
-    distributeCommand(command);
+    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_REMOVED, record,
+        updateUserCommand);
+    distributeCommand(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> command) {
-    if (validateEntityAssignment(command, command.getValue().getTenantId())) {
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteTenantCommand) {
+    if (validateEntityAssignment(
+        distributedDeleteTenantCommand, distributedDeleteTenantCommand.getValue().getTenantId())) {
       stateWriter.appendFollowUpEvent(
-          command.getKey(), TenantIntent.ENTITY_REMOVED, command.getValue());
+          distributedDeleteTenantCommand.getKey(), TenantIntent.ENTITY_REMOVED, distributedDeleteTenantCommand.getValue());
     }
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean validateEntityAssignment(
@@ -128,7 +130,7 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
       final EntityType entityType, final String entityId, final boolean internalGroupsEnabled) {
     return switch (entityType) {
       case GROUP -> !internalGroupsEnabled || groupState.get(entityId).isPresent();
-      case MAPPING -> mappingState.get(entityId).isPresent();
+      case MAPPING -> mappingState.getMappingById(entityId).isPresent();
       default -> true;
     };
   }

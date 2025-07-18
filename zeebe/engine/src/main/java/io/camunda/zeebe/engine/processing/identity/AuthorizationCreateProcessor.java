@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -27,7 +27,7 @@ public class AuthorizationCreateProcessor
 
   private final KeyGenerator keyGenerator;
   private final CommandDistributionBehavior distributionBehavior;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final PermissionsBehavior permissionsBehavior;
@@ -49,9 +49,9 @@ public class AuthorizationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> command) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> updateUserCommand) {
     permissionsBehavior
-        .isAuthorized(command, PermissionType.CREATE)
+        .isAuthorized(updateUserCommand, PermissionType.CREATE)
         .flatMap(
             record ->
                 permissionsBehavior.hasValidPermissionTypes(
@@ -62,26 +62,26 @@ public class AuthorizationCreateProcessor
         .flatMap(permissionsBehavior::mappingExists)
         .flatMap(permissionsBehavior::permissionsAlreadyExist)
         .ifRightOrLeft(
-            authorizationRecord -> writeEventAndDistribute(command, command.getValue()),
+            authorizationRecord -> writeEventAndDistribute(updateUserCommand, updateUserCommand.getValue()),
             (rejection) -> {
-              rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
             });
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> command) {
+  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> distributedDeleteTenantCommand) {
     permissionsBehavior
-        .mappingExists(command.getValue())
+        .mappingExists(distributedDeleteTenantCommand.getValue())
         .flatMap(permissionsBehavior::permissionsAlreadyExist)
         .ifRightOrLeft(
             ignored ->
                 stateWriter.appendFollowUpEvent(
-                    command.getKey(), AuthorizationIntent.CREATED, command.getValue()),
+                    distributedDeleteTenantCommand.getKey(), AuthorizationIntent.CREATED, distributedDeleteTenantCommand.getValue()),
             rejection ->
-                rejectionWriter.appendRejection(command, rejection.type(), rejection.reason()));
+                rejectionWriter.appendRejection(distributedDeleteTenantCommand, rejection.type(), rejection.reason()));
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void writeEventAndDistribute(

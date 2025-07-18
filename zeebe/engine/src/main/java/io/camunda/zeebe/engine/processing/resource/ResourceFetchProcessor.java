@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ForbiddenException;
 import io.camunda.zeebe.engine.processing.identity.AuthorizedTenants;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -35,7 +35,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
 
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final ResourceState resourceState;
   private final TenantState tenantState;
   private final AuthorizationCheckBehavior authorizationCheckBehavior;
@@ -53,16 +53,16 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
   }
 
   @Override
-  public void processRecord(final TypedRecord<ResourceRecord> command) {
-    final var resourceKey = command.getValue().getResourceKey();
-    findResource(command, resourceKey)
+  public void processRecord(final TypedRecord<ResourceRecord> commandRecord) {
+    final var resourceKey = commandRecord.getValue().getResourceKey();
+    findResource(commandRecord, resourceKey)
         .ifPresentOrElse(
             resource -> {
-              checkAuthorization(command, resource);
+              checkAuthorization(commandRecord, resource);
               final var record = asResourceRecord(resource);
               stateWriter.appendFollowUpEvent(resourceKey, ResourceIntent.FETCHED, record);
               responseWriter.writeEventOnCommand(
-                  resourceKey, ResourceIntent.FETCHED, record, command);
+                  resourceKey, ResourceIntent.FETCHED, record, commandRecord);
             },
             () -> {
               throw new NoSuchResourceException(resourceKey);
@@ -143,7 +143,7 @@ public class ResourceFetchProcessor implements TypedRecordProcessor<ResourceReco
                 PermissionType.READ,
                 resource.getTenantId())
             .addResourceId(BufferUtil.bufferAsString(resource.getResourceId()));
-    if (authorizationCheckBehavior.isAuthorized(authRequest).isLeft()) {
+    if (authorizationCheckBehavior.authorizationResult(authRequest).isLeft()) {
       throw new ForbiddenException(authRequest);
     }
   }

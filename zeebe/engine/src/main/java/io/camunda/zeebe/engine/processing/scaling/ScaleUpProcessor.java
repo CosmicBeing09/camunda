@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.scaling;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -30,7 +30,7 @@ import java.util.Optional;
 @ExcludeAuthorizationCheck
 public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRecord> {
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final RoutingState routingState;
@@ -50,32 +50,33 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> updateUserCommand) {
+    final var scaleUp = updateUserCommand.getValue();
 
-    final var optionalRejection = validateCommand(command);
+    final var optionalRejection = validateCommand(updateUserCommand);
     if (optionalRejection.isPresent()) {
       final var rejection = optionalRejection.get();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
     final var scalingKey = keyGenerator.nextKey();
-    scaleUp.setBootstrappedAt(command.getKey());
+    scaleUp.setBootstrappedAt(updateUserCommand.getKey());
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
-    responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp, command);
+    responseWriter.writeEventOnCommand(scalingKey, ScaleIntent.SCALING_UP, scaleUp,
+        updateUserCommand);
     commandDistributionBehavior
         .withKey(scalingKey)
         .inQueue(DistributionQueue.SCALING)
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
-    final var scalingKey = command.getKey();
+  public void processDistributedCommand(final TypedRecord<ScaleRecord> distributedDeleteTenantCommand) {
+    final var scaleUp = distributedDeleteTenantCommand.getValue();
+    final var scalingKey = distributedDeleteTenantCommand.getKey();
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALING_UP, scaleUp);
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private Optional<Rejection> validateCommand(final TypedRecord<ScaleRecord> command) {

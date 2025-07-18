@@ -25,7 +25,7 @@ import org.agrona.DirectBuffer;
 
 public final class ElementInstance extends UnpackedObject implements DbValue {
 
-  private final LongProperty parentKeyProp = new LongProperty("parentKey", -1L);
+  private final LongProperty parentElementKeyProp = new LongProperty("parentKey", -1L);
   private final IntegerProperty childCountProp = new IntegerProperty("childCount", 0);
   private final IntegerProperty childActivatedCountProp =
       new IntegerProperty("childActivatedCount", 0);
@@ -36,7 +36,7 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   private final LongProperty jobKeyProp = new LongProperty("jobKey", 0L);
   private final IntegerProperty multiInstanceLoopCounterProp =
       new IntegerProperty("multiInstanceLoopCounter", 0);
-  private final StringProperty interruptingEventKeyProp =
+  private final StringProperty interruptingElementIdProp =
       new StringProperty("interruptingElementId", "");
   private final LongProperty calledChildInstanceKeyProp =
       new LongProperty("calledChildInstanceKey", -1L);
@@ -70,14 +70,14 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
 
   public ElementInstance() {
     super(16);
-    declareProperty(parentKeyProp)
+    declareProperty(parentElementKeyProp)
         .declareProperty(childCountProp)
         .declareProperty(childActivatedCountProp)
         .declareProperty(childCompletedCountProp)
         .declareProperty(childTerminatedCountProp)
         .declareProperty(jobKeyProp)
         .declareProperty(multiInstanceLoopCounterProp)
-        .declareProperty(interruptingEventKeyProp)
+        .declareProperty(interruptingElementIdProp)
         .declareProperty(calledChildInstanceKeyProp)
         .declareProperty(recordProp)
         .declareProperty(activeSequenceFlowsProp)
@@ -99,7 +99,7 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
     recordProp.getValue().setState(state);
     recordProp.getValue().setValue(value);
     if (parent != null) {
-      parentKeyProp.setValue(parent.getKey());
+      parentElementKeyProp.setValue(parent.getKey());
       parent.childCountProp.increment();
     }
   }
@@ -211,11 +211,11 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public DirectBuffer getInterruptingElementId() {
-    return interruptingEventKeyProp.getValue();
+    return interruptingElementIdProp.getValue();
   }
 
   public void setInterruptingElementId(final DirectBuffer elementId) {
-    interruptingEventKeyProp.setValue(elementId);
+    interruptingElementIdProp.setValue(elementId);
   }
 
   public boolean isInterrupted() {
@@ -223,11 +223,11 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public void clearInterruptedState() {
-    interruptingEventKeyProp.setValue("");
+    interruptingElementIdProp.setValue("");
   }
 
   public long getParentKey() {
-    return parentKeyProp.getValue();
+    return parentElementKeyProp.getValue();
   }
 
   public long getActiveSequenceFlows() {

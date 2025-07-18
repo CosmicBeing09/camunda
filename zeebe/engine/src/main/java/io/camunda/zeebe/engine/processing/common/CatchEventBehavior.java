@@ -17,8 +17,8 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlo
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMessage;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSignal;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.timer.DueDateTimerChecker;
 import io.camunda.zeebe.engine.state.immutable.ProcessMessageSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
@@ -52,7 +52,7 @@ public final class CatchEventBehavior {
   private final ExpressionProcessor expressionProcessor;
   private final SubscriptionCommandSender subscriptionCommandSender;
   private final RoutingInfo routingInfo;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
 
   private final ProcessMessageSubscriptionState processMessageSubscriptionState;
@@ -74,7 +74,7 @@ public final class CatchEventBehavior {
       final KeyGenerator keyGenerator,
       final ExpressionProcessor expressionProcessor,
       final SubscriptionCommandSender subscriptionCommandSender,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final SideEffectWriter sideEffectWriter,
       final DueDateTimerChecker timerChecker,
       final RoutingInfo routingInfo,

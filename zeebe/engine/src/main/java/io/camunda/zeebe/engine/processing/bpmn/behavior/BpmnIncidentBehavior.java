@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.common.Failure;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.IncidentState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
@@ -25,7 +25,7 @@ public final class BpmnIncidentBehavior {
   private final IncidentRecord incidentRecord = new IncidentRecord();
 
   private final IncidentState incidentState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final KeyGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
@@ -33,7 +33,7 @@ public final class BpmnIncidentBehavior {
   public BpmnIncidentBehavior(
       final ProcessingState processingState,
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter) {
+      final EventStateWriter stateWriter) {
     incidentState = processingState.getIncidentState();
     elementInstanceState = processingState.getElementInstanceState();
     processState = processingState.getProcessState();

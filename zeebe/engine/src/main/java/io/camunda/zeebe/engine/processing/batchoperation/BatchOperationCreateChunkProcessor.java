@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationChunkRecord;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationChunkIntent;
@@ -24,18 +24,18 @@ public final class BatchOperationCreateChunkProcessor
   private static final Logger LOGGER =
       LoggerFactory.getLogger(BatchOperationCreateChunkProcessor.class);
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public BatchOperationCreateChunkProcessor(final Writers writers) {
     stateWriter = writers.state();
   }
 
   @Override
-  public void processRecord(final TypedRecord<BatchOperationChunkRecord> command) {
-    final var recordValue = command.getValue();
-    LOGGER.debug("Processing new command with key '{}': {}", command.getKey(), recordValue);
+  public void processRecord(final TypedRecord<BatchOperationChunkRecord> commandRecord) {
+    final var recordValue = commandRecord.getValue();
+    LOGGER.debug("Processing new command with key '{}': {}", commandRecord.getKey(), recordValue);
 
     stateWriter.appendFollowUpEvent(
-        command.getKey(), BatchOperationChunkIntent.CREATED, recordValue);
+        commandRecord.getKey(), BatchOperationChunkIntent.CREATED, recordValue);
   }
 }

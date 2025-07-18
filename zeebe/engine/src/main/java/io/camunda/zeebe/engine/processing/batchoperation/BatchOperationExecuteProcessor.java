@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.batchoperation.handlers.BatchOperation
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.FollowUpEventMetadata;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.batchoperation.PersistedBatchOperation;
@@ -46,7 +46,7 @@ public final class BatchOperationExecuteProcessor
   private static final int BATCH_SIZE = 10;
 
   private final TypedCommandWriter commandWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final int partitionId;
   private final BatchOperationState batchOperationState;
@@ -75,11 +75,11 @@ public final class BatchOperationExecuteProcessor
 
   @Override
   @SuppressWarnings("checkstyle:MissingSwitchDefault")
-  public void processRecord(final TypedRecord<BatchOperationExecutionRecord> command) {
-    final var executionRecord = command.getValue();
+  public void processRecord(final TypedRecord<BatchOperationExecutionRecord> commandRecord) {
+    final var executionRecord = commandRecord.getValue();
     LOGGER.debug(
         "Processing new command with key '{}' on partition{} : {}",
-        command.getKey(),
+        commandRecord.getKey(),
         partitionId,
         executionRecord);
     final long batchKey = executionRecord.getBatchOperationKey();
@@ -104,8 +104,8 @@ public final class BatchOperationExecuteProcessor
       LOGGER.debug(
           "No items to process for BatchOperation {} on partition {}", batchKey, partitionId);
 
-      appendBatchOperationExecutionExecutedEvent(command.getValue(), Collections.emptySet());
-      appendBatchOperationExecutionCompletedEvent(command.getValue());
+      appendBatchOperationExecutionExecutedEvent(commandRecord.getValue(), Collections.emptySet());
+      appendBatchOperationExecutionCompletedEvent(commandRecord.getValue());
 
       metrics.stopTotalExecutionLatencyMeasure(batchKey);
       return;
@@ -114,24 +114,24 @@ public final class BatchOperationExecuteProcessor
     // This is only done for the first batch operation execution iteration
     metrics.stopStartExecuteLatencyMeasure(batchKey);
 
-    appendBatchOperationExecutionExecutingEvent(command.getValue(), Set.copyOf(entityKeys));
+    appendBatchOperationExecutionExecutingEvent(commandRecord.getValue(), Set.copyOf(entityKeys));
 
     final var handler = handlers.get(batchOperation.getBatchOperationType());
     entityKeys.forEach(entityKey -> handler.execute(entityKey, batchOperation));
 
-    appendBatchOperationExecutionExecutedEvent(command.getValue(), Set.copyOf(entityKeys));
-    appendBatchOperationExecuteCommand(command, batchKey, batchOperation);
+    appendBatchOperationExecutionExecutedEvent(commandRecord.getValue(), Set.copyOf(entityKeys));
+    appendBatchOperationExecuteCommand(commandRecord, batchKey, batchOperation);
 
     metrics.startExecuteCycleLatencyMeasure(batchKey, batchOperation.getBatchOperationType());
-  }
-
-  private PersistedBatchOperation getBatchOperation(final long batchOperationKey) {
-    return batchOperationState.get(batchOperationKey).orElse(null);
   }
 
   @Override
   public boolean shouldProcessResultsInSeparateBatches() {
     return true;
+  }
+
+  private PersistedBatchOperation getBatchOperation(final long batchOperationKey) {
+    return batchOperationState.get(batchOperationKey).orElse(null);
   }
 
   private void appendBatchOperationExecuteCommand(

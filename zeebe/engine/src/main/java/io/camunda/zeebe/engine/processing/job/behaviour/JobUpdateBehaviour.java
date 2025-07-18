@@ -43,7 +43,7 @@ public class JobUpdateBehaviour {
     this.authCheckBehavior = authCheckBehavior;
   }
 
-  public Either<Rejection, JobRecord> getJob(
+  public Either<Rejection, JobRecord> fetchJobOrReject(
       final long jobKey, final TypedRecord<JobRecord> command) {
     final var authorizedTenantIds = authCheckBehavior.getAuthorizedTenantIds(command);
     final var job = jobState.getJob(jobKey, authorizedTenantIds);
@@ -55,7 +55,7 @@ public class JobUpdateBehaviour {
         new Rejection(RejectionType.NOT_FOUND, NO_JOB_FOUND_MESSAGE.formatted(jobKey)));
   }
 
-  public Either<Rejection, JobRecord> isAuthorized(
+  public Either<Rejection, JobRecord> authorizeJobUpdate(
       final TypedRecord<JobRecord> command, final JobRecord job) {
     final var authRequest =
         new AuthorizationRequest(
@@ -64,7 +64,7 @@ public class JobUpdateBehaviour {
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 job.getTenantId())
             .addResourceId(job.getBpmnProcessId());
-    return authCheckBehavior.isAuthorized(authRequest).map(unused -> job);
+    return authCheckBehavior.authorizationResult(authRequest).map(unused -> job);
   }
 
   public Optional<String> updateJobRetries(

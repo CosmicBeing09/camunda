@@ -26,7 +26,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlo
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -138,7 +138,7 @@ public final class ProcessInstanceModificationModifyProcessor
 
   private static final Either<Rejection, Object> VALID = Either.right(null);
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
@@ -172,9 +172,9 @@ public final class ProcessInstanceModificationModifyProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceModificationRecord> command) {
-    final long commandKey = command.getKey();
-    final var value = command.getValue();
+  public void processRecord(final TypedRecord<ProcessInstanceModificationRecord> commandRecord) {
+    final long commandKey = commandRecord.getKey();
+    final var value = commandRecord.getValue();
 
     // if set, the command's key should take precedence over the processInstanceKey
     final long eventKey = commandKey > -1 ? commandKey : value.getProcessInstanceKey();
@@ -184,19 +184,19 @@ public final class ProcessInstanceModificationModifyProcessor
 
     if (processInstance == null) {
       final String reason = String.format(ERROR_MESSAGE_PROCESS_INSTANCE_NOT_FOUND, eventKey);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, reason);
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, reason);
+      responseWriter.writeRejectionOnCommand(commandRecord, RejectionType.NOT_FOUND, reason);
+      rejectionWriter.appendRejection(commandRecord, RejectionType.NOT_FOUND, reason);
       return;
     }
 
     final var authRequest =
         new AuthorizationRequest(
-                command,
+            commandRecord,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 processInstance.getValue().getTenantId())
             .addResourceId(processInstance.getValue().getBpmnProcessId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =
@@ -206,8 +206,8 @@ public final class ProcessInstanceModificationModifyProcessor
                   processInstance.getValue().getProcessInstanceKey(),
                   "such process instance")
               : rejection.reason();
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), errorMessage);
-      rejectionWriter.appendRejection(command, rejection.type(), errorMessage);
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), errorMessage);
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), errorMessage);
       return;
     }
 
@@ -216,11 +216,11 @@ public final class ProcessInstanceModificationModifyProcessor
         processState.getProcessByKeyAndTenant(
             processInstanceRecord.getProcessDefinitionKey(), processInstanceRecord.getTenantId());
 
-    final var validationResult = validateCommand(command, process);
+    final var validationResult = validateCommand(processInstanceRecord, process);
     if (validationResult.isLeft()) {
       final var rejection = validationResult.getLeft();
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(processInstanceRecord, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(processInstanceRecord, rejection.type(), rejection.reason());
       return;
     }
 
@@ -279,7 +279,7 @@ public final class ProcessInstanceModificationModifyProcessor
         eventKey, ProcessInstanceModificationIntent.MODIFIED, extendedRecord);
 
     responseWriter.writeEventOnCommand(
-        eventKey, ProcessInstanceModificationIntent.MODIFIED, extendedRecord, command);
+        eventKey, ProcessInstanceModificationIntent.MODIFIED, extendedRecord, processInstanceRecord);
   }
 
   @Override

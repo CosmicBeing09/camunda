@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -29,7 +29,7 @@ import java.time.Instant;
 
 public final class ClockProcessor implements DistributedTypedRecordProcessor<ClockRecord> {
   private final SideEffectWriter sideEffectWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final KeyGenerator keyGenerator;
   private final ControllableStreamClock clock;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -55,27 +55,27 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ClockRecord> command) {
+  public void processNewCommand(final TypedRecord<ClockRecord> updateUserCommand) {
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.SYSTEM, PermissionType.UPDATE);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var intent = (ClockIntent) command.getIntent();
-    final var clockRecord = command.getValue();
+    final var intent = (ClockIntent) updateUserCommand.getIntent();
+    final var clockRecord = updateUserCommand.getValue();
 
     if (intent == ClockIntent.PIN && clockRecord.getTime() < 0) {
       final var rejectionMessage =
           "Expected pin time to be not negative but it was %d".formatted(clockRecord.getTime());
 
-      rejectionWriter.appendRejection(command, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       responseWriter.writeRejectionOnCommand(
-          command, RejectionType.INVALID_ARGUMENT, rejectionMessage);
+          updateUserCommand, RejectionType.INVALID_ARGUMENT, rejectionMessage);
       return;
     }
 
@@ -83,20 +83,22 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
     final var resultIntent = followUpIntent(intent);
 
     applyClockModification(eventKey, intent, resultIntent, clockRecord);
-    if (command.hasRequestMetadata()) {
-      responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord, command);
+    if (updateUserCommand.hasRequestMetadata()) {
+      responseWriter.writeEventOnCommand(eventKey, resultIntent, clockRecord,
+          updateUserCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(command);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(
+        updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ClockRecord> command) {
-    final var commandIntent = (ClockIntent) command.getIntent();
+  public void processDistributedCommand(final TypedRecord<ClockRecord> distributedDeleteTenantCommand) {
+    final var commandIntent = (ClockIntent) distributedDeleteTenantCommand.getIntent();
     final var resultIntent = followUpIntent(commandIntent);
 
-    applyClockModification(command.getKey(), commandIntent, resultIntent, command.getValue());
-    commandDistributionBehavior.acknowledgeCommand(command);
+    applyClockModification(distributedDeleteTenantCommand.getKey(), commandIntent, resultIntent, distributedDeleteTenantCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void applyClockModification(

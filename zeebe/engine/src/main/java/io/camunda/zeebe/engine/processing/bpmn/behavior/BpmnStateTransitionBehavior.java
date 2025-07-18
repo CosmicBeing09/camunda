@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlo
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowNode;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableIntermediateThrowEvent;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSequenceFlow;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -51,7 +51,7 @@ public final class BpmnStateTransitionBehavior {
       processorLookUp;
 
   private final ProcessEngineMetrics metrics;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
 
   public BpmnStateTransitionBehavior(

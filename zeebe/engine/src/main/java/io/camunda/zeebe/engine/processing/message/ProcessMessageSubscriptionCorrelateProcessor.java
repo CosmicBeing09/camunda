@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlo
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
@@ -52,7 +52,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   private final SubscriptionCommandSender subscriptionCommandSender;
   private final ProcessState processState;
   private final ElementInstanceState elementInstanceState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final SideEffectWriter sideEffectWriter;
 
@@ -84,9 +84,9 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> command) {
+  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> commandRecord) {
 
-    final var record = command.getValue();
+    final var record = commandRecord.getValue();
     final var elementInstanceKey = record.getElementInstanceKey();
     final String messageName = record.getMessageName();
     final String tenantId = record.getTenantId();
@@ -95,16 +95,16 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
             elementInstanceKey, record.getMessageNameBuffer(), tenantId);
 
     if (subscription == null) {
-      rejectCommand(command, RejectionType.NOT_FOUND, NO_SUBSCRIPTION_FOUND_MESSAGE);
+      rejectCommand(commandRecord, RejectionType.NOT_FOUND, NO_SUBSCRIPTION_FOUND_MESSAGE);
       return;
 
     } else if (subscription.isClosing()) {
-      rejectCommand(command, RejectionType.INVALID_STATE, ALREADY_CLOSING_MESSAGE);
+      rejectCommand(commandRecord, RejectionType.INVALID_STATE, ALREADY_CLOSING_MESSAGE);
       return;
 
     } else if (hasAlreadyBeenCorrelated(record, subscription)) {
       rejectionWriter.appendRejection(
-          command, RejectionType.INVALID_STATE, "Already correlated this message");
+          commandRecord, RejectionType.INVALID_STATE, "Already correlated this message");
       // while we don't accept the command on this partition, we still need to acknowledge it to
       // attempt recovering from a previous acknowledgment that didn't make it to the other
       // partition.
@@ -118,7 +118,7 @@ public final class ProcessMessageSubscriptionCorrelateProcessor
             elementInstance, subscription.getRecord().getElementIdBuffer());
 
     if (!canTriggerElement) {
-      rejectCommand(command, RejectionType.INVALID_STATE, NO_EVENT_OCCURRED_MESSAGE);
+      rejectCommand(commandRecord, RejectionType.INVALID_STATE, NO_EVENT_OCCURRED_MESSAGE);
       return;
     }
 

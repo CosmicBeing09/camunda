@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.FollowUpEventMetadata;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -41,7 +41,7 @@ public final class BatchOperationCreateProcessor
 
   private final KeyGenerator keyGenerator;
   private final CommandDistributionBehavior commandDistributionBehavior;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
@@ -66,25 +66,25 @@ public final class BatchOperationCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> command) {
-    if (isEmptyOrNullFilter(command)) {
+  public void processNewCommand(final TypedRecord<BatchOperationCreationRecord> updateUserCommand) {
+    if (isEmptyOrNullFilter(updateUserCommand)) {
       rejectionWriter.appendRejection(
-          command, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          updateUserCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       responseWriter.writeRejectionOnCommand(
-          command, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
+          updateUserCommand, RejectionType.INVALID_ARGUMENT, MESSAGE_GIVEN_FILTER_IS_EMPTY);
       return;
     }
 
-    final var authorizationResult = isAuthorized(command);
+    final var authorizationResult = isAuthorized(updateUserCommand);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    final var recordValue = command.getValue();
+    final var recordValue = updateUserCommand.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
     metrics.startTotalLatencyMeasure(key, recordValue.getBatchOperationType());
 
@@ -98,26 +98,27 @@ public final class BatchOperationCreateProcessor
         BatchOperationIntent.CREATED,
         recordWithKey,
         FollowUpEventMetadata.of(b -> b.batchOperationReference(key)));
-    responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey, command);
+    responseWriter.writeEventOnCommand(key, BatchOperationIntent.CREATED, recordWithKey,
+        updateUserCommand);
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(command.getValueType(), command.getIntent(), recordWithKey);
+        .distribute(updateUserCommand.getValueType(), updateUserCommand.getIntent(), recordWithKey);
 
     metrics.recordCreated(recordWithKey.getBatchOperationType());
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<BatchOperationCreationRecord> command) {
-    final var recordValue = command.getValue();
+  public void processDistributedCommand(final TypedRecord<BatchOperationCreationRecord> distributedDeleteTenantCommand) {
+    final var recordValue = distributedDeleteTenantCommand.getValue();
 
-    LOGGER.debug("Processing distributed command with key '{}': {}", command.getKey(), recordValue);
+    LOGGER.debug("Processing distributed command with key '{}': {}", distributedDeleteTenantCommand.getKey(), recordValue);
     stateWriter.appendFollowUpEvent(
-        command.getKey(),
+        distributedDeleteTenantCommand.getKey(),
         BatchOperationIntent.CREATED,
-        command.getValue(),
-        FollowUpEventMetadata.of(b -> b.batchOperationReference(command.getKey())));
-    commandDistributionBehavior.acknowledgeCommand(command);
+        distributedDeleteTenantCommand.getValue(),
+        FollowUpEventMetadata.of(b -> b.batchOperationReference(distributedDeleteTenantCommand.getKey())));
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private Either<Rejection, Void> isAuthorized(
@@ -125,7 +126,7 @@ public final class BatchOperationCreateProcessor
 
     // first check for general CREATE_BATCH_OPERATION permission
     final var isAuthorized =
-        authCheckBehavior.isAuthorized(
+        authCheckBehavior.authorizationResult(
             new AuthorizationRequest(
                 command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.CREATE));
     if (isAuthorized.isLeft()) {
@@ -140,7 +141,7 @@ public final class BatchOperationCreateProcessor
                 PermissionType.CREATE_BATCH_OPERATION_MODIFY_PROCESS_INSTANCE;
             case RESOLVE_INCIDENT -> PermissionType.CREATE_BATCH_OPERATION_RESOLVE_INCIDENT;
           };
-      return authCheckBehavior.isAuthorized(
+      return authCheckBehavior.authorizationResult(
           new AuthorizationRequest(command, AuthorizationResourceType.BATCH_OPERATION, permission));
     }
 

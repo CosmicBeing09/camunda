@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -28,7 +28,7 @@ public class JobUpdateProcessor implements TypedRecordProcessor<JobRecord> {
   private final JobUpdateBehaviour jobUpdateBehaviour;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public JobUpdateProcessor(final JobUpdateBehaviour jobUpdateBehaviour, final Writers writers) {
     this.jobUpdateBehaviour = jobUpdateBehaviour;
@@ -38,38 +38,39 @@ public class JobUpdateProcessor implements TypedRecordProcessor<JobRecord> {
   }
 
   @Override
-  public void processRecord(final TypedRecord<JobRecord> command) {
-    final long jobKey = command.getKey();
+  public void processRecord(final TypedRecord<JobRecord> commandRecord) {
+    final long jobKey = commandRecord.getKey();
     jobUpdateBehaviour
-        .getJob(jobKey, command)
-        .flatMap(job -> jobUpdateBehaviour.isAuthorized(command, job))
+        .fetchJobOrReject(jobKey, commandRecord)
+        .flatMap(job -> jobUpdateBehaviour.authorizeJobUpdate(commandRecord, job))
         .ifRightOrLeft(
             job -> {
               final List<String> errors = new ArrayList<>();
-              final Set<String> changeset = command.getValue().getChangedAttributes();
+              final Set<String> changeset = commandRecord.getValue().getChangedAttributes();
               job.setChangedAttributes(changeset);
               jobChange(
                   changeset,
                   JobRecord.RETRIES,
-                  command.getValue().getRetries(),
+                  commandRecord.getValue().getRetries(),
                   (retries) -> jobUpdateBehaviour.updateJobRetries(jobKey, retries, job),
                   errors);
               jobChange(
                   changeset,
                   JobRecord.TIMEOUT,
-                  command.getValue().getTimeout(),
+                  commandRecord.getValue().getTimeout(),
                   (timeout) -> jobUpdateBehaviour.updateJobTimeout(jobKey, timeout, job),
                   errors);
               if (errors.isEmpty()) {
                 stateWriter.appendFollowUpEvent(jobKey, JobIntent.UPDATED, job);
-                responseWriter.writeEventOnCommand(jobKey, JobIntent.UPDATED, job, command);
+                responseWriter.writeEventOnCommand(jobKey, JobIntent.UPDATED, job,
+                    commandRecord);
               } else {
-                handleRejection(errors, command);
+                handleRejection(errors, commandRecord);
               }
             },
             rejection -> {
-              rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
             });
   }
 

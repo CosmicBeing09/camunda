@@ -53,35 +53,36 @@ public class PermissionsBehavior {
       final TypedRecord<AuthorizationRecord> command, final PermissionType permissionType) {
     final var authorizationRequest =
         new AuthorizationRequest(command, AuthorizationResourceType.AUTHORIZATION, permissionType);
-    return authCheckBehavior.isAuthorized(authorizationRequest).map(unused -> command.getValue());
+    return authCheckBehavior.authorizationResult(authorizationRequest).map(unused -> command.getValue());
   }
 
   public Either<Rejection, PersistedAuthorization> authorizationExists(
       final AuthorizationRecord authorizationRecord, final String rejectionMessage) {
-    final var key = authorizationRecord.getAuthorizationKey();
+    final var authorizationKey = authorizationRecord.getAuthorizationKey();
     return authorizationState
-        .get(key)
+        .get(authorizationKey)
         .map(Either::<Rejection, PersistedAuthorization>right)
         .orElseGet(
             () ->
                 Either.left(
-                    new Rejection(RejectionType.NOT_FOUND, rejectionMessage.formatted(key))));
+                    new Rejection(RejectionType.NOT_FOUND, rejectionMessage.formatted(
+                        authorizationKey))));
   }
 
   public Either<Rejection, AuthorizationRecord> permissionsAlreadyExist(
       final AuthorizationRecord record) {
     for (final PermissionType permission : record.getPermissionTypes()) {
-      final var addedResourceId = record.getResourceId();
+      final var requestedResourceId = record.getResourceId();
       final var currentResourceIds =
           authCheckBehavior.getDirectAuthorizedResourceIdentifiers(
               record.getOwnerType(), record.getOwnerId(), record.getResourceType(), permission);
 
-      if (currentResourceIds.contains(addedResourceId)) {
+      if (currentResourceIds.contains(requestedResourceId)) {
         return Either.left(
             new Rejection(
                 RejectionType.ALREADY_EXISTS,
                 PERMISSIONS_ALREADY_EXISTS_MESSAGE.formatted(
-                    record.getOwnerId(), addedResourceId)));
+                    record.getOwnerId(), requestedResourceId)));
       }
     }
     return Either.right(record);
@@ -110,7 +111,7 @@ public class PermissionsBehavior {
       return Either.right(record);
     }
 
-    if (mappingState.get(record.getOwnerId()).isEmpty()) {
+    if (mappingState.getMappingById(record.getOwnerId()).isEmpty()) {
       return Either.left(
           new Rejection(
               RejectionType.NOT_FOUND,

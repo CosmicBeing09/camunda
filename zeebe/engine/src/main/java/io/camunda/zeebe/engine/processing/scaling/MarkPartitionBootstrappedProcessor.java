@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.deployment.StartEventSubscriptionManag
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.resource.StartEventSubscriptions;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -36,7 +36,7 @@ public class MarkPartitionBootstrappedProcessor
     implements DistributedTypedRecordProcessor<ScaleRecord> {
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final RoutingState routingState;
@@ -67,19 +67,19 @@ public class MarkPartitionBootstrappedProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
+  public void processNewCommand(final TypedRecord<ScaleRecord> updateUserCommand) {
+    final var scaleUp = updateUserCommand.getValue();
 
-    switch (validate(command)) {
+    switch (validate(updateUserCommand)) {
       case Left(final var tuple) -> {
-        rejectWith(command, tuple.getLeft(), tuple.getRight());
+        rejectWith(updateUserCommand, tuple.getLeft(), tuple.getRight());
       }
       case Right(final var bootstrappedPartition) -> {
         final var scalingKey = keyGenerator.nextKey();
         final var wasAlreadyBootstrapped = areAllPartitionsBootstrapped();
         stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
         responseWriter.writeEventOnCommand(
-            scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp, command);
+            scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp, updateUserCommand);
 
         // now the PARTITION_BOOTSTRAPPED event has been applied to the state, let's check if
         // it was the last partition missing.
@@ -89,27 +89,27 @@ public class MarkPartitionBootstrappedProcessor
         distributionBehavior
             .withKey(scalingKey)
             .inQueue(DistributionQueue.SCALING)
-            .distribute(command);
+            .distribute(updateUserCommand);
       }
     }
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<ScaleRecord> command) {
-    final var scaleUp = command.getValue();
-    final var scalingKey = command.getKey();
+  public void processDistributedCommand(final TypedRecord<ScaleRecord> distributedDeleteTenantCommand) {
+    final var scaleUp = distributedDeleteTenantCommand.getValue();
+    final var scalingKey = distributedDeleteTenantCommand.getKey();
     final var wasAlreadyBootstrapped = areAllPartitionsBootstrapped();
     stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.PARTITION_BOOTSTRAPPED, scaleUp);
     // if the partition that has completed bootstrapping is the current one and the command was
     // not already processed, resubscribe to all message start events and signals
-    if (scaleUp.getRedistributedPartitions().contains(command.getPartitionId())
-        && !routingState.currentPartitions().contains(command.getPartitionId())) {
+    if (scaleUp.getRedistributedPartitions().contains(distributedDeleteTenantCommand.getPartitionId())
+        && !routingState.currentPartitions().contains(distributedDeleteTenantCommand.getPartitionId())) {
       subscribeToStartEventsAndSignals();
     }
     if (!wasAlreadyBootstrapped && areAllPartitionsBootstrapped()) {
       stateWriter.appendFollowUpEvent(scalingKey, ScaleIntent.SCALED_UP, scaleUp);
     }
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void subscribeToStartEventsAndSignals() {

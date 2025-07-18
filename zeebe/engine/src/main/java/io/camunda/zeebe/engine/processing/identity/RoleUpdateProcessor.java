@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.identity;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -31,7 +31,7 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   private final RoleState roleState;
   private final KeyGenerator keyGenerator;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -52,43 +52,44 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> updateUserCommand) {
+    final var roleRecord = updateUserCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
-            .addResourceId(record.getRoleId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+            .addResourceId(roleRecord.getRoleId());
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var persistedRecord = roleState.getRole(record.getRoleId());
+    final var persistedRecord = roleState.getRole(roleRecord.getRoleId());
     if (persistedRecord.isEmpty()) {
-      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
     final var persistedRole = persistedRecord.get();
-    record.setRoleKey(persistedRole.getRoleKey());
-    stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.UPDATED, record);
-    responseWriter.writeEventOnCommand(record.getRoleKey(), RoleIntent.UPDATED, record, command);
+    roleRecord.setRoleKey(persistedRole.getRoleKey());
+    stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.UPDATED, roleRecord);
+    responseWriter.writeEventOnCommand(roleRecord.getRoleKey(), RoleIntent.UPDATED, roleRecord,
+        updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> command) {
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
     stateWriter.appendFollowUpEvent(
-        command.getValue().getRoleKey(), RoleIntent.UPDATED, command.getValue());
-    commandDistributionBehavior.acknowledgeCommand(command);
+        distributedDeleteTenantCommand.getValue().getRoleKey(), RoleIntent.UPDATED, distributedDeleteTenantCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 }

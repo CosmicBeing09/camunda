@@ -26,25 +26,25 @@ public interface DistributedTypedRecordProcessor<T extends UnifiedRecordValue>
     extends TypedRecordProcessor<T> {
 
   @Override
-  default void processRecord(final TypedRecord<T> command) {
-    if (command.isCommandDistributed()) {
-      processDistributedCommand(command);
+  default void processRecord(final TypedRecord<T> commandRecord) {
+    if (commandRecord.isCommandDistributed()) {
+      processDistributedCommand(commandRecord);
     } else {
-      processNewCommand(command);
+      processNewCommand(commandRecord);
     }
   }
 
   /**
    * Process a command that is not distributed yet
    *
-   * @param command the not yet distributed command to process
+   * @param updateUserCommand the not yet distributed command to process
    */
-  void processNewCommand(final TypedRecord<T> command);
+  void processNewCommand(final TypedRecord<T> updateUserCommand);
 
   /**
    * Process a command that has been distributed. Be aware to not distribute it again!
    *
-   * @param command the already distributed command to process
+   * @param distributedDeleteTenantCommand the already distributed command to process
    */
-  void processDistributedCommand(final TypedRecord<T> command);
+  void processDistributedCommand(final TypedRecord<T> distributedDeleteTenantCommand);
 }

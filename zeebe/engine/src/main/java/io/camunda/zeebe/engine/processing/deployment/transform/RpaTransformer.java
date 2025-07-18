@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.ResourceState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
@@ -31,13 +31,13 @@ public class RpaTransformer implements DeploymentResourceTransformer {
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final ResourceState resourceState;
 
   public RpaTransformer(
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ResourceState resourceState) {
     this.keyGenerator = keyGenerator;

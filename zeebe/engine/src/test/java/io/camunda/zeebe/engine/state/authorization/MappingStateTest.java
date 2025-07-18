@@ -48,7 +48,7 @@ public class MappingStateTest {
     mappingState.create(mapping);
 
     // then
-    final var persistedMapping = mappingState.get(mappingId).get();
+    final var persistedMapping = mappingState.getMappingById(mappingId).get();
     assertThat(persistedMapping.getMappingId()).isEqualTo(mappingId);
     assertThat(persistedMapping.getMappingKey()).isEqualTo(key);
     assertThat(persistedMapping.getName()).isEqualTo(name);
@@ -59,7 +59,7 @@ public class MappingStateTest {
   @Test
   void shouldReturnEmptyIfMappingDoesNotExist() {
     // when
-    final var mapping = mappingState.get("someMappingId");
+    final var mapping = mappingState.getMappingById("someMappingId");
 
     // then
     assertThat(mapping).isEmpty();
@@ -83,7 +83,7 @@ public class MappingStateTest {
     mappingState.create(mapping);
 
     // when
-    final var retrievedMapping = mappingState.get(claimName, claimValue);
+    final var retrievedMapping = mappingState.getMappingByClaim(claimName, claimValue);
 
     // then
     assertThat(retrievedMapping).isPresent();
@@ -95,7 +95,7 @@ public class MappingStateTest {
   @Test
   void shouldReturnEmptyIfMappingDoesNotExistByClaim() {
     // when
-    final var mapping = mappingState.get("claimName", "claimValue");
+    final var mapping = mappingState.getMappingByClaim("claimName", "claimValue");
 
     // then
     assertThat(mapping).isEmpty();
@@ -119,7 +119,7 @@ public class MappingStateTest {
     mappingState.create(mapping);
 
     // when
-    final var retrievedMapping = mappingState.get(mappingId);
+    final var retrievedMapping = mappingState.getMappingById(mappingId);
 
     // then
     assertThat(retrievedMapping).isPresent();
@@ -148,8 +148,8 @@ public class MappingStateTest {
     mappingState.delete(mappingId);
 
     // then
-    assertThat(mappingState.get(mappingId)).isEmpty();
-    assertThat(mappingState.get(claimName, claimValue)).isEmpty();
+    assertThat(mappingState.getMappingById(mappingId)).isEmpty();
+    assertThat(mappingState.getMappingByClaim(claimName, claimValue)).isEmpty();
   }
 
   @Test
@@ -183,15 +183,15 @@ public class MappingStateTest {
     mappingState.update(updateMapping);
 
     // then
-    assertThat(mappingState.get(mappingId)).isNotEmpty();
-    final var mappingById = mappingState.get(mappingId).get();
+    assertThat(mappingState.getMappingById(mappingId)).isNotEmpty();
+    final var mappingById = mappingState.getMappingById(mappingId).get();
     assertThat(mappingById.getName()).isEqualTo(newName);
     assertThat(mappingById.getClaimValue()).isEqualTo(newClaimValue);
     assertThat(mappingById.getClaimName()).isEqualTo(newClaimName);
 
-    assertThat(mappingState.get(claimName, claimValue)).isEmpty();
-    assertThat(mappingState.get(newClaimName, newClaimValue)).isNotEmpty();
-    final var mappingByClaim = mappingState.get(newClaimName, newClaimValue).get();
+    assertThat(mappingState.getMappingByClaim(claimName, claimValue)).isEmpty();
+    assertThat(mappingState.getMappingByClaim(newClaimName, newClaimValue)).isNotEmpty();
+    final var mappingByClaim = mappingState.getMappingByClaim(newClaimName, newClaimValue).get();
     assertThat(mappingByClaim.getName()).isEqualTo(newName);
     assertThat(mappingByClaim.getMappingId()).isEqualTo(mappingId);
   }

@@ -23,8 +23,8 @@ import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public final class DbMembershipState implements MutableMembershipState {
-  private final EntityKeyAndRelationKey entityKeyAndRelationKey = new EntityKeyAndRelationKey();
-  private final RelationKeyAndEntityKey relationKeyAndEntityKey = new RelationKeyAndEntityKey();
+  private final EntityKeyAndRelationKey entityToRelationKey = new EntityKeyAndRelationKey();
+  private final RelationKeyAndEntityKey relationToEntityKey = new RelationKeyAndEntityKey();
 
   private final ColumnFamily<EntityKeyAndRelationKey, DbNil> relationsByEntity;
   private final ColumnFamily<RelationKeyAndEntityKey, DbNil> entitiesByRelation;
@@ -35,14 +35,14 @@ public final class DbMembershipState implements MutableMembershipState {
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.RELATIONS_BY_ENTITY,
             transactionContext,
-            entityKeyAndRelationKey,
+            entityToRelationKey,
             DbNil.INSTANCE);
 
     entitiesByRelation =
         zeebeDb.createColumnFamily(
             ZbColumnFamilies.ENTITIES_BY_RELATION,
             transactionContext,
-            relationKeyAndEntityKey,
+            relationToEntityKey,
             DbNil.INSTANCE);
   }
 
@@ -52,11 +52,11 @@ public final class DbMembershipState implements MutableMembershipState {
       final String entityId,
       final RelationType relationType,
       final String relationId) {
-    entityKeyAndRelationKey.setAll(entityType, entityId, relationType, relationId);
-    relationsByEntity.insert(entityKeyAndRelationKey, DbNil.INSTANCE);
+    entityToRelationKey.setAll(entityType, entityId, relationType, relationId);
+    relationsByEntity.insert(entityToRelationKey, DbNil.INSTANCE);
 
-    relationKeyAndEntityKey.setAll(entityType, entityId, relationType, relationId);
-    entitiesByRelation.insert(relationKeyAndEntityKey, DbNil.INSTANCE);
+    relationToEntityKey.setAll(entityType, entityId, relationType, relationId);
+    entitiesByRelation.insert(relationToEntityKey, DbNil.INSTANCE);
   }
 
   @Override
@@ -65,11 +65,11 @@ public final class DbMembershipState implements MutableMembershipState {
       final String entityId,
       final RelationType relationType,
       final String relationId) {
-    entityKeyAndRelationKey.setAll(entityType, entityId, relationType, relationId);
-    relationsByEntity.deleteExisting(entityKeyAndRelationKey);
+    entityToRelationKey.setAll(entityType, entityId, relationType, relationId);
+    relationsByEntity.deleteExisting(entityToRelationKey);
 
-    relationKeyAndEntityKey.setAll(entityType, entityId, relationType, relationId);
-    entitiesByRelation.deleteExisting(relationKeyAndEntityKey);
+    relationToEntityKey.setAll(entityType, entityId, relationType, relationId);
+    entitiesByRelation.deleteExisting(relationToEntityKey);
   }
 
   @Override
@@ -118,8 +118,8 @@ public final class DbMembershipState implements MutableMembershipState {
       final String entityId,
       final RelationType relationType,
       final String relationId) {
-    entityKeyAndRelationKey.setAll(entityType, entityId, relationType, relationId);
-    return relationsByEntity.exists(entityKeyAndRelationKey);
+    entityToRelationKey.setAll(entityType, entityId, relationType, relationId);
+    return relationsByEntity.exists(entityToRelationKey);
   }
 
   private static final class EntityKey extends DbCompositeKey<DbEnumValue<EntityType>, DbString> {

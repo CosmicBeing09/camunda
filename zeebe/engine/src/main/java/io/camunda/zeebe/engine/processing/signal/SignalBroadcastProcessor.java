@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.ForbiddenException;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -36,7 +36,7 @@ import org.agrona.DirectBuffer;
 
 public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor<SignalRecord> {
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final KeyGenerator keyGenerator;
   private final EventHandle eventHandle;
   private final TypedResponseWriter responseWriter;
@@ -75,16 +75,16 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<SignalRecord> command) {
+  public void processNewCommand(final TypedRecord<SignalRecord> updateUserCommand) {
     final long eventKey = keyGenerator.nextKey();
-    final var signalRecord = command.getValue();
+    final var signalRecord = updateUserCommand.getValue();
 
-    if (!authCheckBehavior.isAssignedToTenant(command, signalRecord.getTenantId())) {
+    if (!authCheckBehavior.isAssignedToTenant(updateUserCommand, signalRecord.getTenantId())) {
       final var message =
           "Expected to broadcast signal for tenant '%s', but user is not assigned to this tenant."
               .formatted(signalRecord.getTenantId());
-      rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.FORBIDDEN, message);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.FORBIDDEN, message);
       return;
     }
 
@@ -96,7 +96,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
         subscription -> {
           final var subscriptionRecord = subscription.getRecord();
           final var isStartEvent = subscriptionRecord.getCatchEventInstanceKey() == -1;
-          checkAuthorization(command, isStartEvent, subscriptionRecord);
+          checkAuthorization(updateUserCommand, isStartEvent, subscriptionRecord);
 
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
@@ -110,23 +110,25 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           }
         });
 
-    if (command.hasRequestMetadata()) {
-      responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord, command);
+    if (updateUserCommand.hasRequestMetadata()) {
+      responseWriter.writeEventOnCommand(eventKey, SignalIntent.BROADCASTED, signalRecord,
+          updateUserCommand);
     }
 
-    commandDistributionBehavior.withKey(eventKey).unordered().distribute(command);
+    commandDistributionBehavior.withKey(eventKey).unordered().distribute(
+        updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<SignalRecord> command) {
-    final var value = command.getValue();
+  public void processDistributedCommand(final TypedRecord<SignalRecord> distributedDeleteTenantCommand) {
+    final var signalRecord = distributedDeleteTenantCommand.getValue();
     signalSubscriptionState.visitBySignalName(
-        value.getSignalNameBuffer(),
-        value.getTenantId(),
-        subscription -> activateElement(subscription.getRecord(), value.getVariablesBuffer()));
+        signalRecord.getSignalNameBuffer(),
+        signalRecord.getTenantId(),
+        subscription -> activateElement(subscription.getRecord(), signalRecord.getVariablesBuffer()));
 
-    stateWriter.appendFollowUpEvent(command.getKey(), SignalIntent.BROADCASTED, command.getValue());
-    commandDistributionBehavior.acknowledgeCommand(command);
+    stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), SignalIntent.BROADCASTED, distributedDeleteTenantCommand.getValue());
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void checkAuthorization(
@@ -145,7 +147,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
                 command.getValue().getTenantId())
             .addResourceId(subscriptionRecord.getBpmnProcessId());
 
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       throw new ForbiddenException(authRequest);
     }

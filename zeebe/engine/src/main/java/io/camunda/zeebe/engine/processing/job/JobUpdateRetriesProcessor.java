@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.job;
 
 import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -23,7 +23,7 @@ public final class JobUpdateRetriesProcessor implements TypedRecordProcessor<Job
   private final JobUpdateBehaviour jobUpdateBehaviour;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public JobUpdateRetriesProcessor(
       final JobUpdateBehaviour jobUpdateBehaviour, final Writers writers) {
@@ -34,30 +34,30 @@ public final class JobUpdateRetriesProcessor implements TypedRecordProcessor<Job
   }
 
   @Override
-  public void processRecord(final TypedRecord<JobRecord> command) {
-    final long jobKey = command.getKey();
+  public void processRecord(final TypedRecord<JobRecord> commandRecord) {
+    final long jobKey = commandRecord.getKey();
     jobUpdateBehaviour
-        .getJob(jobKey, command)
-        .flatMap(job -> jobUpdateBehaviour.isAuthorized(command, job))
+        .fetchJobOrReject(jobKey, commandRecord)
+        .flatMap(job -> jobUpdateBehaviour.authorizeJobUpdate(commandRecord, job))
         .ifRightOrLeft(
             job ->
                 jobUpdateBehaviour
-                    .updateJobRetries(jobKey, command.getValue().getRetries(), job)
+                    .updateJobRetries(jobKey, commandRecord.getValue().getRetries(), job)
                     .ifPresentOrElse(
                         errorMessage -> {
                           rejectionWriter.appendRejection(
-                              command, RejectionType.INVALID_ARGUMENT, errorMessage);
+                              commandRecord, RejectionType.INVALID_ARGUMENT, errorMessage);
                           responseWriter.writeRejectionOnCommand(
-                              command, RejectionType.INVALID_ARGUMENT, errorMessage);
+                              commandRecord, RejectionType.INVALID_ARGUMENT, errorMessage);
                         },
                         () -> {
                           stateWriter.appendFollowUpEvent(jobKey, JobIntent.RETRIES_UPDATED, job);
                           responseWriter.writeEventOnCommand(
-                              jobKey, JobIntent.RETRIES_UPDATED, job, command);
+                              jobKey, JobIntent.RETRIES_UPDATED, job, commandRecord);
                         }),
             rejection -> {
-              rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
             });
   }
 }

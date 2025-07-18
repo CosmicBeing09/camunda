@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobActivationBehavio
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -51,7 +51,7 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
 
   private final TypedRecordProcessor<ProcessInstanceRecord> bpmnStreamProcessor;
   private final TypedRecordProcessor<UserTaskRecord> userTaskProcessor;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
   private final IncidentState incidentState;
@@ -83,45 +83,46 @@ public final class IncidentResolveProcessor implements TypedRecordProcessor<Inci
   }
 
   @Override
-  public void processRecord(final TypedRecord<IncidentRecord> command) {
-    final long key = command.getKey();
-    final var authorizedTenantIds = authCheckBehavior.getAuthorizedTenantIds(command);
+  public void processRecord(final TypedRecord<IncidentRecord> commandRecord) {
+    final long key = commandRecord.getKey();
+    final var authorizedTenantIds = authCheckBehavior.getAuthorizedTenantIds(commandRecord);
     final var incident = incidentState.getIncidentRecord(key, authorizedTenantIds);
     if (incident == null) {
       final var errorMessage = String.format(NO_INCIDENT_FOUND_MSG, key);
-      rejectResolveCommand(command, errorMessage, RejectionType.NOT_FOUND);
+      rejectResolveCommand(commandRecord, errorMessage, RejectionType.NOT_FOUND);
       return;
     }
 
     final var authRequest =
         new AuthorizationRequest(
-                command,
+            commandRecord,
                 AuthorizationResourceType.PROCESS_DEFINITION,
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 incident.getTenantId())
             .addResourceId(incident.getBpmnProcessId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
       return;
     }
 
     final long jobKey = incident.getJobKey();
     if (isJobRelatedIncident(jobKey) && jobState.getJob(jobKey).getRetries() <= 0) {
       final var errorMessage = String.format(NO_RETRIES_LEFT_MSG, key, jobKey);
-      rejectResolveCommand(command, errorMessage, RejectionType.INVALID_STATE);
+      rejectResolveCommand(commandRecord, errorMessage, RejectionType.INVALID_STATE);
       return;
     }
 
     stateWriter.appendFollowUpEvent(key, IncidentIntent.RESOLVED, incident);
-    responseWriter.writeEventOnCommand(key, IncidentIntent.RESOLVED, incident, command);
+    responseWriter.writeEventOnCommand(key, IncidentIntent.RESOLVED, incident,
+        commandRecord);
 
     publishIncidentRelatedJob(jobKey);
 
     // if it fails, a new incident is raised
-    attemptToContinueProcessProcessing(command, incident);
+    attemptToContinueProcessProcessing(commandRecord, incident);
   }
 
   private void rejectResolveCommand(

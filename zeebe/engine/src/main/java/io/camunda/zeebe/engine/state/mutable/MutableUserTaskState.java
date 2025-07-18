@@ -14,9 +14,9 @@ import java.util.function.Consumer;
 
 public interface MutableUserTaskState extends UserTaskState {
 
-  void create(final UserTaskRecord userTask);
+  void create(final UserTaskRecord userTaskRecord);
 
-  void update(final UserTaskRecord userTask);
+  void update(final UserTaskRecord userTaskRecord);
 
   void updateUserTaskLifecycleState(final long userTaskKey, final LifecycleState newLifecycleState);
 

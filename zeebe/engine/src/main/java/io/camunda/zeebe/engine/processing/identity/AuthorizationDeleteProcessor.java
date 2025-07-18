@@ -11,7 +11,7 @@ import static io.camunda.zeebe.engine.processing.identity.PermissionsBehavior.AU
 
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -29,7 +29,7 @@ public class AuthorizationDeleteProcessor
 
   private final KeyGenerator keyGenerator;
   private final CommandDistributionBehavior distributionBehavior;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final PermissionsBehavior permissionsBehavior;
@@ -49,37 +49,37 @@ public class AuthorizationDeleteProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<AuthorizationRecord> command) {
+  public void processNewCommand(final TypedRecord<AuthorizationRecord> updateUserCommand) {
     permissionsBehavior
-        .isAuthorized(command, PermissionType.DELETE)
+        .isAuthorized(updateUserCommand, PermissionType.DELETE)
         .flatMap(
             authorizationRecord ->
                 permissionsBehavior.authorizationExists(
                     authorizationRecord, AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION))
         .map(PersistedAuthorization::getAuthorizationKey)
         .ifRightOrLeft(
-            authorizationKey -> writeEventAndDistribute(command, authorizationKey),
+            authorizationKey -> writeEventAndDistribute(updateUserCommand, authorizationKey),
             (rejection) -> {
-              rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-              responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+              rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+              responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
             });
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> command) {
+  public void processDistributedCommand(final TypedRecord<AuthorizationRecord> distributedDeleteTenantCommand) {
     permissionsBehavior
         .authorizationExists(
-            command.getValue(), AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION)
+            distributedDeleteTenantCommand.getValue(), AUTHORIZATION_DOES_NOT_EXIST_ERROR_MESSAGE_DELETION)
         .ifRightOrLeft(
             ignored ->
                 stateWriter.appendFollowUpEvent(
-                    command.getValue().getAuthorizationKey(),
+                    distributedDeleteTenantCommand.getValue().getAuthorizationKey(),
                     AuthorizationIntent.DELETED,
-                    command.getValue()),
+                    distributedDeleteTenantCommand.getValue()),
             rejection ->
-                rejectionWriter.appendRejection(command, rejection.type(), rejection.reason()));
+                rejectionWriter.appendRejection(distributedDeleteTenantCommand, rejection.type(), rejection.reason()));
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void writeEventAndDistribute(

@@ -70,7 +70,7 @@ public class MappingAppliersTest {
     mappingDeletedApplier.applyState(mappingRecord.getMappingKey(), mappingRecord);
 
     // then
-    assertThat(mappingState.get(mappingRecord.getMappingId())).isEmpty();
+    assertThat(mappingState.getMappingById(mappingRecord.getMappingId())).isEmpty();
   }
 
   @Test
@@ -101,8 +101,8 @@ public class MappingAppliersTest {
     mappingUpdatedApplier.applyState(mappingRecord.getMappingKey(), mappingRecord);
 
     // then
-    assertThat(mappingState.get(mappingRecord.getMappingId())).isNotEmpty();
-    final var updatedMapping = mappingState.get(mappingRecord.getMappingId()).get();
+    assertThat(mappingState.getMappingById(mappingRecord.getMappingId())).isNotEmpty();
+    final var updatedMapping = mappingState.getMappingById(mappingRecord.getMappingId()).get();
     assertThat(updatedMapping.getClaimName()).isEqualTo(newClaimName);
     assertThat(updatedMapping.getClaimValue()).isEqualTo(newClaimValue);
     assertThat(updatedMapping.getName()).isEqualTo(newName);

@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.processing.AsyncRequestBehavior;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -36,7 +36,7 @@ public final class UserTaskCompleteProcessor implements UserTaskCommandProcessor
   private final ElementInstanceState elementInstanceState;
   private final AsyncRequestState asyncRequestState;
   private final EventHandle eventHandle;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
   private final TypedResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;

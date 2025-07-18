@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.processinstance;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
@@ -26,7 +26,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class ProcessInstanceBatchTerminateProcessor
     implements TypedRecordProcessor<ProcessInstanceBatchRecord> {
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
   private final KeyGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;

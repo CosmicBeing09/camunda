@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlo
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMultiInstanceBody;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.ProcessInstanceMigrationPreconditionFailedException;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.compensation.CompensationSubscription;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
@@ -74,7 +74,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
   private final TypedCommandWriter commandWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final DistributionState distributionState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final int currentPartitionId;
   private final RoutingInfo routingInfo;
 
@@ -85,7 +85,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
       final TypedCommandWriter commandWriter,
       final CommandDistributionBehavior commandDistributionBehavior,
       final DistributionState distributionState,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final int currentPartitionId,
       final RoutingInfo routingInfo) {
     this.processMessageSubscriptionState = processMessageSubscriptionState;

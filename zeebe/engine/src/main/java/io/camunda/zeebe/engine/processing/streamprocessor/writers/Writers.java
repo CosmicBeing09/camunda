@@ -16,7 +16,7 @@ public final class Writers {
 
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   private final TypedResponseWriter responseWriter;
   private final SideEffectWriter sideEffectWriter;
@@ -55,7 +55,7 @@ public final class Writers {
   /**
    * @return the writer of events that also changes state for each event it writes
    */
-  public StateWriter state() {
+  public EventStateWriter state() {
     return stateWriter;
   }
 

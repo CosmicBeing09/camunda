@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.identity;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -31,7 +31,7 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
   private final GroupState groupState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -52,25 +52,25 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<GroupRecord> command) {
+  public void processNewCommand(final TypedRecord<GroupRecord> updateUserCommand) {
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.GROUP, PermissionType.CREATE);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.GROUP, PermissionType.CREATE);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
 
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var record = command.getValue();
+    final var record = updateUserCommand.getValue();
     final var groupId = record.getGroupId();
     final var persistedGroup = groupState.get(groupId);
     if (persistedGroup.isPresent()) {
       final var errorMessage = GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(groupId);
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
@@ -78,27 +78,28 @@ public class GroupCreateProcessor implements DistributedTypedRecordProcessor<Gro
     record.setGroupKey(key);
 
     stateWriter.appendFollowUpEvent(key, GroupIntent.CREATED, record);
-    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record, command);
+    responseWriter.writeEventOnCommand(key, GroupIntent.CREATED, record,
+        updateUserCommand);
 
     commandDistributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<GroupRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<GroupRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     groupState
         .get(record.getGroupId())
         .ifPresentOrElse(
             persistedGroup -> {
               final var errorMessage =
                   GROUP_ALREADY_EXISTS_ERROR_MESSAGE.formatted(persistedGroup.getGroupId());
-              rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(command.getKey(), GroupIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), GroupIntent.CREATED, record));
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 }

@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -30,7 +30,7 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
 
   private final UserState userState;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior distributionBehavior;
@@ -52,9 +52,9 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
-    final String username = record.getUsername();
+  public void processNewCommand(final TypedRecord<UserRecord> updateUserCommand) {
+    final var updateUserRecord = updateUserCommand.getValue();
+    final String username = updateUserRecord.getUsername();
     final var persistedUserOptional = userState.getUser(username);
 
     if (persistedUserOptional.isEmpty()) {
@@ -62,43 +62,43 @@ public class UserUpdateProcessor implements DistributedTypedRecordProcessor<User
           "Expected to update user with username %s, but a user with this username does not exist"
               .formatted(username);
 
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, rejectionMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, rejectionMessage);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, rejectionMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, rejectionMessage);
       return;
     }
 
     final var persistedUser = persistedUserOptional.get();
 
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.UPDATE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.USER, PermissionType.UPDATE)
             .addResourceId(persistedUser.getUsername());
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var updatedUser = overlayUser(persistedUser.getUser(), record);
+    final var updatedUser = overlayUser(persistedUser.getUser(), updateUserRecord);
 
     stateWriter.appendFollowUpEvent(persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser);
     responseWriter.writeEventOnCommand(
-        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, command);
+        persistedUser.getUserKey(), UserIntent.UPDATED, updatedUser, updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     distributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> command) {
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteTenantCommand) {
     stateWriter.appendFollowUpEvent(
-        command.getValue().getUserKey(), UserIntent.UPDATED, command.getValue());
+        distributedDeleteTenantCommand.getValue().getUserKey(), UserIntent.UPDATED, distributedDeleteTenantCommand.getValue());
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private UserRecord overlayUser(final UserRecord persistedUser, final UserRecord updatedUser) {

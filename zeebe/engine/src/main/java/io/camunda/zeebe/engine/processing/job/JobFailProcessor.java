@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -51,7 +51,7 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   private final IncidentRecord incidentEvent = new IncidentRecord();
 
   private final JobState jobState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final KeyGenerator keyGenerator;
@@ -94,10 +94,10 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
   @Override
   public void processRecord(final TypedRecord<JobRecord> record) {
     final long jobKey = record.getKey();
-    final JobState.State state = jobState.getState(jobKey);
+    final JobState.State currentJobState = jobState.getState(jobKey);
 
     preconditionChecker
-        .check(state, record)
+        .check(currentJobState, record)
         .flatMap(job -> checkAuthorization(record, job))
         .ifRightOrLeft(
             failedJob -> failJob(record, failedJob),
@@ -109,15 +109,15 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
 
   private void failJob(final TypedRecord<JobRecord> record, final JobRecord failedJob) {
     final long jobKey = record.getKey();
-    final JobRecord failJobCommandRecord = record.getValue();
-    final var retries = failJobCommandRecord.getRetries();
-    final var retryBackOff = failJobCommandRecord.getRetryBackoff();
+    final JobRecord failCommand = record.getValue();
+    final var retries = failCommand.getRetries();
+    final var retryBackOff = failCommand.getRetryBackoff();
 
     failedJob.setRetries(retries);
     failedJob.setErrorMessage(
-        limitString(failJobCommandRecord.getErrorMessage(), DEFAULT_MAX_ERROR_MESSAGE_SIZE));
+        limitString(failCommand.getErrorMessage(), DEFAULT_MAX_ERROR_MESSAGE_SIZE));
     failedJob.setRetryBackoff(retryBackOff);
-    failedJob.setVariables(failJobCommandRecord.getVariablesBuffer());
+    failedJob.setVariables(failCommand.getVariablesBuffer());
 
     if (retries > 0 && retryBackOff > 0) {
       final long receivedTime = record.getTimestamp();
@@ -208,6 +208,6 @@ public final class JobFailProcessor implements TypedRecordProcessor<JobRecord> {
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 job.getTenantId())
             .addResourceId(job.getBpmnProcessId());
-    return authCheckBehavior.isAuthorized(request).map(unused -> job);
+    return authCheckBehavior.authorizationResult(request).map(unused -> job);
   }
 }

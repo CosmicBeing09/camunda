@@ -21,15 +21,15 @@ import org.agrona.concurrent.UnsafeBuffer;
 
 public final class Subscriptions {
 
-  private final ReusableObjectList<Subscription> subscriptions =
+  private final ReusableObjectList<Subscription> subscriptionList =
       new ReusableObjectList<>(Subscription::new);
 
   public void clear() {
-    subscriptions.clear();
+    subscriptionList.clear();
   }
 
   public boolean contains(final DirectBuffer bpmnProcessId) {
-    for (final Subscription subscription : subscriptions) {
+    for (final Subscription subscription : subscriptionList) {
       if (subscription.getBpmnProcessId().equals(bpmnProcessId)) {
         return true;
       }
@@ -38,29 +38,29 @@ public final class Subscriptions {
   }
 
   public void add(final MessageSubscriptionRecord subscription) {
-    final var newSubscription = subscriptions.add();
+    final var newSubscription = subscriptionList.add();
     newSubscription.setBpmnProcessId(cloneBuffer(subscription.getBpmnProcessIdBuffer()));
     newSubscription.processInstanceKey = subscription.getProcessInstanceKey();
     newSubscription.elementInstanceKey = subscription.getElementInstanceKey();
   }
 
   public void add(final MessageStartEventSubscriptionRecord subscription) {
-    final var newSubscription = subscriptions.add();
+    final var newSubscription = subscriptionList.add();
     newSubscription.setBpmnProcessId(cloneBuffer(subscription.getBpmnProcessIdBuffer()));
     newSubscription.isStartEventSubscription = true;
     newSubscription.processInstanceKey = subscription.getProcessInstanceKey();
   }
 
   private void add(final Subscription subscription) {
-    final var newSubscription = subscriptions.add();
+    final var newSubscription = subscriptionList.add();
     newSubscription.setBpmnProcessId(subscription.getBpmnProcessId());
     newSubscription.processInstanceKey = subscription.processInstanceKey;
     newSubscription.elementInstanceKey = subscription.elementInstanceKey;
     newSubscription.isStartEventSubscription = subscription.isStartEventSubscription;
   }
 
-  public void addAll(final Subscriptions subscriptions) {
-    subscriptions.visitSubscriptions(
+  public void addAll(final Subscriptions otherSubscriptionList) {
+    otherSubscriptionList.visitSubscriptions(
         (subscription) -> {
           add(subscription);
           return true;
@@ -69,11 +69,11 @@ public final class Subscriptions {
   }
 
   public boolean isEmpty() {
-    return subscriptions.size() <= 0;
+    return subscriptionList.size() <= 0;
   }
 
   public Optional<Subscription> getFirstMessageStartEventSubscription() {
-    for (final Subscription subscription : subscriptions) {
+    for (final Subscription subscription : subscriptionList) {
       if (subscription.isStartEventSubscription) {
         return Optional.of(subscription);
       }
@@ -87,7 +87,7 @@ public final class Subscriptions {
 
   public boolean visitSubscriptions(
       final SubscriptionVisitor subscriptionConsumer, final boolean visitStartEvents) {
-    for (final Subscription subscription : subscriptions) {
+    for (final Subscription subscription : subscriptionList) {
       if (visitStartEvents || !subscription.isStartEventSubscription) {
 
         final var applied = subscriptionConsumer.apply(subscription);

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.streamprocessor;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor.CommandControl;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
@@ -38,7 +38,7 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
   private final CommandProcessor<T> wrappedProcessor;
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedCommandWriter commandWriter;
 
@@ -65,24 +65,24 @@ public final class CommandProcessorImpl<T extends UnifiedRecordValue>
   }
 
   @Override
-  public void processRecord(final TypedRecord<T> command) {
+  public void processRecord(final TypedRecord<T> commandRecord) {
 
-    entityKey = command.getKey();
+    entityKey = commandRecord.getKey();
 
-    final boolean shouldRespond = wrappedProcessor.onCommand(command, this);
+    final boolean shouldRespond = wrappedProcessor.onCommand(commandRecord, this);
 
-    final boolean respond = shouldRespond && command.hasRequestMetadata();
+    final boolean respond = shouldRespond && commandRecord.hasRequestMetadata();
 
     if (isAccepted) {
       stateWriter.appendFollowUpEvent(entityKey, newState, updatedValue);
       wrappedProcessor.afterAccept(commandWriter, stateWriter, entityKey, newState, updatedValue);
       if (respond) {
-        responseWriter.writeEventOnCommand(entityKey, newState, updatedValue, command);
+        responseWriter.writeEventOnCommand(entityKey, newState, updatedValue, commandRecord);
       }
     } else {
-      rejectionWriter.appendRejection(command, rejectionType, rejectionReason);
+      rejectionWriter.appendRejection(commandRecord, rejectionType, rejectionReason);
       if (respond) {
-        responseWriter.writeRejectionOnCommand(command, rejectionType, rejectionReason);
+        responseWriter.writeRejectionOnCommand(commandRecord, rejectionType, rejectionReason);
       }
     }
   }

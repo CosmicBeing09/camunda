@@ -24,7 +24,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -83,7 +83,7 @@ public final class DeploymentCreateProcessor
   private final CatchEventBehavior catchEventBehavior;
   private final KeyGenerator keyGenerator;
   private final ExpressionProcessor expressionProcessor;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final StartEventSubscriptionManager startEventSubscriptionManager;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -128,41 +128,41 @@ public final class DeploymentCreateProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<DeploymentRecord> command) {
+  public void processNewCommand(final TypedRecord<DeploymentRecord> updateUserCommand) {
     final var newResourceAuthorization = true;
     final var authorizationRequest =
         new AuthorizationRequest(
-            command,
+            updateUserCommand,
             AuthorizationResourceType.RESOURCE,
             PermissionType.CREATE,
-            command.getValue().getTenantId(),
+            updateUserCommand.getValue().getTenantId(),
             newResourceAuthorization);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    transformAndDistributeDeployment(command);
+    transformAndDistributeDeployment(updateUserCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(command.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(updateUserCommand.getValue());
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<DeploymentRecord> command) {
-    if (deploymentState.hasStoredDeploymentRecord(command.getKey())) {
+  public void processDistributedCommand(final TypedRecord<DeploymentRecord> distributedDeleteTenantCommand) {
+    if (deploymentState.hasStoredDeploymentRecord(distributedDeleteTenantCommand.getKey())) {
       // we already processed this deployment, so we can ignore it
-      distributionBehavior.acknowledgeCommand(command);
+      distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
       rejectionWriter.appendRejection(
-          command, RejectionType.ALREADY_EXISTS, "Deployment already exists");
+          distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, "Deployment already exists");
       return;
     }
 
-    processDistributedRecord(command);
+    processDistributedRecord(distributedDeleteTenantCommand);
     // manage the top-level start event subscriptions except for timers
-    startEventSubscriptionManager.tryReOpenStartEventSubscription(command.getValue());
+    startEventSubscriptionManager.tryReOpenStartEventSubscription(distributedDeleteTenantCommand.getValue());
   }
 
   @Override

@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.message;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessMessageSubscriptionState;
@@ -36,7 +36,7 @@ public final class ProcessMessageSubscriptionCreateProcessor
 
   private final ProcessMessageSubscriptionState subscriptionState;
   private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final SideEffectWriter sideEffectWriter;
 
@@ -52,9 +52,9 @@ public final class ProcessMessageSubscriptionCreateProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> command) {
+  public void processRecord(final TypedRecord<ProcessMessageSubscriptionRecord> commandRecord) {
 
-    final ProcessMessageSubscriptionRecord subscriptionRecord = command.getValue();
+    final ProcessMessageSubscriptionRecord subscriptionRecord = commandRecord.getValue();
     final long elementInstanceKey = subscriptionRecord.getElementInstanceKey();
     final String tenantId = subscriptionRecord.getTenantId();
     final String messageName = subscriptionRecord.getMessageName();
@@ -77,7 +77,7 @@ public final class ProcessMessageSubscriptionCreateProcessor
             return true;
           });
     } else {
-      rejectCommand(command, subscription);
+      rejectCommand(commandRecord, subscription);
     }
   }
 

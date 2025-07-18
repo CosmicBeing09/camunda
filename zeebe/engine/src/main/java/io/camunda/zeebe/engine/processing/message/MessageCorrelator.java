@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.message;
 
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.message.StoredMessage;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageSubscriptionRecord;
@@ -21,7 +21,7 @@ public final class MessageCorrelator {
 
   private final MessageState messageState;
   private final SubscriptionCommandSender commandSender;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
   private final int currentPartitionId;
   private final InstantSource clock;
@@ -30,7 +30,7 @@ public final class MessageCorrelator {
       final int currentPartitionId,
       final MessageState messageState,
       final SubscriptionCommandSender commandSender,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final SideEffectWriter sideEffectWriter,
       final InstantSource clock) {
     this.currentPartitionId = currentPartitionId;

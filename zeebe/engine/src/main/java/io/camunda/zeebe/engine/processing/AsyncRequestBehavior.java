@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing;
 
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.AsyncRequestState.AsyncRequest;
 import io.camunda.zeebe.protocol.impl.record.value.AsyncRequestRecord;
 import io.camunda.zeebe.protocol.record.intent.AsyncRequestIntent;
@@ -17,9 +17,9 @@ import io.camunda.zeebe.stream.api.state.KeyGenerator;
 public class AsyncRequestBehavior {
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
-  public AsyncRequestBehavior(final KeyGenerator keyGenerator, final StateWriter stateWriter) {
+  public AsyncRequestBehavior(final KeyGenerator keyGenerator, final EventStateWriter stateWriter) {
     this.keyGenerator = keyGenerator;
     this.stateWriter = stateWriter;
   }

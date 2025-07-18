@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
@@ -27,7 +27,7 @@ import java.util.List;
 @ExcludeAuthorizationCheck
 public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
   private final UserTaskState userTaskState;

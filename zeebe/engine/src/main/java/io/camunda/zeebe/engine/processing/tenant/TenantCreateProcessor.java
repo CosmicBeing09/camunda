@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -33,7 +33,7 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   private final TenantState tenantState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -54,43 +54,43 @@ public class TenantCreateProcessor implements DistributedTypedRecordProcessor<Te
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> command) {
-    if (!isAuthorizedToCreate(command)) {
+  public void processNewCommand(final TypedRecord<TenantRecord> updateUserCommand) {
+    if (!isAuthorizedToCreate(updateUserCommand)) {
       return;
     }
 
-    final var record = command.getValue();
+    final var record = updateUserCommand.getValue();
     if (tenantAlreadyExists(record.getTenantId())) {
       rejectCommand(
-          command,
+          updateUserCommand,
           RejectionType.ALREADY_EXISTS,
           TENANT_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getTenantId()));
     } else {
-      createTenant(command, record);
-      distributeCommand(command, record);
+      createTenant(updateUserCommand, record);
+      distributeCommand(updateUserCommand, record);
     }
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     tenantState
         .getTenantById(record.getTenantId())
         .ifPresentOrElse(
             tenant -> {
               final var errorMessage =
                   TENANT_ALREADY_EXISTS_ERROR_MESSAGE.formatted(tenant.getTenantId());
-              rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
             },
-            () -> stateWriter.appendFollowUpEvent(command.getKey(), TenantIntent.CREATED, record));
+            () -> stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), TenantIntent.CREATED, record));
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean isAuthorizedToCreate(final TypedRecord<TenantRecord> command) {
     final var authorizationRequest =
         new AuthorizationRequest(command, AuthorizationResourceType.TENANT, PermissionType.CREATE);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
       rejectCommandWithUnauthorizedError(command, isAuthorized.getLeft());
       return false;

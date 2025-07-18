@@ -67,20 +67,22 @@ public final class ProcessInstanceCancelProcessor
   }
 
   @Override
-  public void processRecord(final TypedRecord<ProcessInstanceRecord> command) {
-    final var elementInstance = elementInstanceState.getInstance(command.getKey());
+  public void processRecord(final TypedRecord<ProcessInstanceRecord> commandRecord) {
+    final var targetElementInstance = elementInstanceState.getInstance(commandRecord.getKey());
 
-    if (!validateCommand(command, elementInstance)) {
+    if (!validateCommand(commandRecord, targetElementInstance)) {
       return;
     }
 
-    asyncRequestBehavior.writeAsyncRequestReceived(command.getKey(), command);
+    asyncRequestBehavior.writeAsyncRequestReceived(commandRecord.getKey(),
+        commandRecord);
 
-    final ProcessInstanceRecord value = elementInstance.getValue();
+    final ProcessInstanceRecord value = targetElementInstance.getValue();
     commandWriter.appendFollowUpCommand(
-        command.getKey(), ProcessInstanceIntent.TERMINATE_ELEMENT, value);
+        commandRecord.getKey(), ProcessInstanceIntent.TERMINATE_ELEMENT, value);
     responseWriter.writeEventOnCommand(
-        command.getKey(), ProcessInstanceIntent.ELEMENT_TERMINATING, value, command);
+        commandRecord.getKey(), ProcessInstanceIntent.ELEMENT_TERMINATING, value,
+        commandRecord);
   }
 
   private boolean validateCommand(
@@ -107,7 +109,7 @@ public final class ProcessInstanceCancelProcessor
                 PermissionType.UPDATE_PROCESS_INSTANCE,
                 elementInstance.getValue().getTenantId())
             .addResourceId(elementInstance.getValue().getBpmnProcessId());
-    final var isAuthorized = authCheckBehavior.isAuthorized(request);
+    final var isAuthorized = authCheckBehavior.authorizationResult(request);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
       final String errorMessage =

@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -46,7 +46,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   private final RoleState roleState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -72,21 +72,21 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<TenantRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<TenantRecord> updateUserCommand) {
+    final var record = updateUserCommand.getValue();
     final var tenantId = record.getTenantId();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.TENANT, PermissionType.UPDATE)
             .addResourceId(tenantId);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authorizationRequest);
     if (isAuthorized.isLeft()) {
-      rejectCommandWithUnauthorizedError(command, isAuthorized.getLeft());
+      rejectCommandWithUnauthorizedError(updateUserCommand, isAuthorized.getLeft());
       return;
     }
 
     final var tenantLookup = getPersistedTenant(record);
     if (tenantLookup.isLeft()) {
-      rejectCommand(command, RejectionType.NOT_FOUND, tenantLookup.getLeft());
+      rejectCommand(updateUserCommand, RejectionType.NOT_FOUND, tenantLookup.getLeft());
       return;
     }
 
@@ -96,33 +96,34 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
 
     final var entityId = record.getEntityId();
     final var entityType = record.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(command))) {
-      createEntityNotExistRejectCommand(command, entityId, entityType, tenantId);
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(updateUserCommand))) {
+      createEntityNotExistRejectCommand(updateUserCommand, entityId, entityType, tenantId);
       return;
     }
 
     if (isEntityAssigned(record)) {
-      createAlreadyAssignedRejectCommand(command, entityId, entityType, tenantId);
+      createAlreadyAssignedRejectCommand(updateUserCommand, entityId, entityType, tenantId);
       return;
     }
 
     stateWriter.appendFollowUpEvent(tenantKey, TenantIntent.ENTITY_ADDED, record);
-    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_ADDED, record, command);
+    responseWriter.writeEventOnCommand(tenantKey, TenantIntent.ENTITY_ADDED, record,
+        updateUserCommand);
 
-    distributeCommand(command);
+    distributeCommand(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<TenantRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<TenantRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
     if (isEntityAssigned(record)) {
       createAlreadyAssignedRejectCommand(
-          command, record.getEntityId(), record.getEntityType(), record.getTenantId());
+          distributedDeleteTenantCommand, record.getEntityId(), record.getEntityType(), record.getTenantId());
     } else {
-      stateWriter.appendFollowUpEvent(command.getKey(), TenantIntent.ENTITY_ADDED, record);
+      stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), TenantIntent.ENTITY_ADDED, record);
     }
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   /** Loads the persisted tenant by the tenant id. */
@@ -139,7 +140,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
     return switch (entityType) {
       case USER -> true; // With simple mappings, any username can be assigned
       case CLIENT -> true; // With simple mappings, any client id can be assigned
-      case MAPPING -> mappingState.get(entityId).isPresent();
+      case MAPPING -> mappingState.getMappingById(entityId).isPresent();
       case GROUP -> !internalGroupsEnabled || groupState.get(entityId).isPresent();
       case ROLE -> roleState.getRole(entityId).isPresent();
       default -> false;

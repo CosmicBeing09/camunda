@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.JobWorkerProp
 import io.camunda.zeebe.engine.processing.deployment.model.element.LinkedResource;
 import io.camunda.zeebe.engine.processing.deployment.model.element.TaskListener;
 import io.camunda.zeebe.engine.processing.deployment.model.transformer.ExpressionTransformer;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.deployment.PersistedResource;
 import io.camunda.zeebe.engine.state.immutable.JobState;
@@ -84,7 +84,7 @@ public final class BpmnJobBehavior {
   private final JobRecord jobRecord = new JobRecord().setVariables(DocumentValue.EMPTY_DOCUMENT);
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final JobState jobState;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
@@ -121,8 +121,9 @@ public final class BpmnJobBehavior {
       final JobWorkerProperties jobWorkerProps, final BpmnElementContext context) {
     final var scopeKey = context.getElementInstanceKey();
     return Either.<Failure, JobProperties>right(new JobProperties())
-        .flatMap(p -> evalTypeExp(jobWorkerProps.getType(), scopeKey).map(p::type))
-        .flatMap(p -> evalRetriesExp(jobWorkerProps.getRetries(), scopeKey).map(p::retries))
+        .flatMap(jobProperty -> evalTypeExp(jobWorkerProps.getType(), scopeKey).map(jobProperty::type))
+        .flatMap(
+            jobProperty -> evalRetriesExp(jobWorkerProps.getRetries(), scopeKey).map(jobProperty::retries))
         .flatMap(
             p -> evalLinkedResourceProps(jobWorkerProps, context, scopeKey).map(p::linkedResources))
         .flatMap(

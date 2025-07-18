@@ -16,7 +16,7 @@ import io.camunda.zeebe.dmn.ParsedDecisionRequirementsGraph;
 import io.camunda.zeebe.dmn.impl.ParsedDmnScalaDrg;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.deployment.DeployedDrg;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.engine.state.immutable.DecisionState;
@@ -51,13 +51,13 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
   private final DecisionEngine decisionEngine = DecisionEngineFactory.createDecisionEngine();
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final DecisionState decisionState;
 
   public DmnResourceTransformer(
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final DecisionState decisionState) {
     this.keyGenerator = keyGenerator;

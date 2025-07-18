@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
@@ -51,7 +51,7 @@ public class UserCreateInitialAdminProcessor implements TypedRecordProcessor<Use
   private final TypedResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final MembershipState membershipState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public UserCreateInitialAdminProcessor(
       final KeyGenerator keyGenerator,
@@ -70,47 +70,48 @@ public class UserCreateInitialAdminProcessor implements TypedRecordProcessor<Use
   }
 
   @Override
-  public void processRecord(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
+  public void processRecord(final TypedRecord<UserRecord> commandRecord) {
+    final var userRecord = commandRecord.getValue();
     final var adminRoleId = DefaultRole.ADMIN.getId();
 
-    checkUserCreateAuthorization(command)
-        .flatMap(ignored -> checkRoleUpdateAuthorization(command))
-        .flatMap(ignored -> checkUserDoesNotExist(record.getUsername()))
+    checkUserCreateAuthorization(commandRecord)
+        .flatMap(ignored -> checkRoleUpdateAuthorization(commandRecord))
+        .flatMap(ignored -> checkUserDoesNotExist(userRecord.getUsername()))
         .flatMap(ignored -> checkAdminRoleExists(adminRoleId))
         .flatMap(ignored -> checkAdminRoleHasNoUsers(adminRoleId))
         .ifRightOrLeft(
             ignored -> {
-              final var key = keyGenerator.nextKey();
-              commandWriter.appendFollowUpCommand(key, UserIntent.CREATE, record);
+              final var generatedUserKey = keyGenerator.nextKey();
+              commandWriter.appendFollowUpCommand(generatedUserKey, UserIntent.CREATE, userRecord);
               commandWriter.appendFollowUpCommand(
-                  key,
+                  generatedUserKey,
                   RoleIntent.ADD_ENTITY,
                   new RoleRecord()
                       .setRoleId(adminRoleId)
-                      .setEntityId(record.getUsername())
+                      .setEntityId(userRecord.getUsername())
                       .setEntityType(EntityType.USER));
-              stateWriter.appendFollowUpEvent(key, UserIntent.INITIAL_ADMIN_CREATED, record);
+              stateWriter.appendFollowUpEvent(generatedUserKey, UserIntent.INITIAL_ADMIN_CREATED, userRecord);
               responseWriter.writeEventOnCommand(
-                  key, UserIntent.INITIAL_ADMIN_CREATED, record, command);
+                  generatedUserKey, UserIntent.INITIAL_ADMIN_CREATED, userRecord,
+                  commandRecord);
             },
             message -> {
               // For this command we always want to reject with FORBIDDEN
-              rejectionWriter.appendRejection(command, RejectionType.FORBIDDEN, message);
-              responseWriter.writeRejectionOnCommand(command, RejectionType.FORBIDDEN, message);
+              rejectionWriter.appendRejection(commandRecord, RejectionType.FORBIDDEN, message);
+              responseWriter.writeRejectionOnCommand(commandRecord, RejectionType.FORBIDDEN, message);
             });
   }
 
   private Either<String, Void> checkUserCreateAuthorization(final TypedRecord<UserRecord> command) {
     final var authRequest =
         new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.CREATE);
-    return authCheckBehavior.isAuthorized(authRequest).mapLeft(Rejection::reason);
+    return authCheckBehavior.authorizationResult(authRequest).mapLeft(Rejection::reason);
   }
 
   private Either<String, Void> checkRoleUpdateAuthorization(final TypedRecord<UserRecord> command) {
     final var authRequest =
         new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE);
-    return authCheckBehavior.isAuthorized(authRequest).mapLeft(Rejection::reason);
+    return authCheckBehavior.authorizationResult(authRequest).mapLeft(Rejection::reason);
   }
 
   private Either<String, Void> checkUserDoesNotExist(final String username) {

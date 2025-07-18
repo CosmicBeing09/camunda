@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.FollowUpEventMetadata;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
@@ -52,7 +52,7 @@ public final class BatchOperationResumeProcessor
       MESSAGE_PREFIX + "it has an invalid state '%s'.";
 
   private final CommandDistributionBehavior commandDistributionBehavior;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -82,53 +82,53 @@ public final class BatchOperationResumeProcessor
 
   @Override
   public void processNewCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
+      final TypedRecord<BatchOperationLifecycleManagementRecord> updateUserCommand) {
     final var request =
         new AuthorizationRequest(
-            command, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
-    final var authorizationResult = authCheckBehavior.isAuthorized(request);
+            updateUserCommand, AuthorizationResourceType.BATCH_OPERATION, PermissionType.UPDATE);
+    final var authorizationResult = authCheckBehavior.authorizationResult(request);
     if (authorizationResult.isLeft()) {
       final Rejection rejection = authorizationResult.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var recordValue = command.getValue();
-    final var batchOperationKey = command.getValue().getBatchOperationKey();
+    final var recordValue = updateUserCommand.getValue();
+    final var batchOperationKey = updateUserCommand.getValue().getBatchOperationKey();
     final var resumeKey = keyGenerator.nextKey();
     LOGGER.debug(
         "Processing new command to resume a batch operation with key '{}': {}",
-        command.getKey(),
+        updateUserCommand.getKey(),
         recordValue);
 
     // validation
     final var batchOperation = batchOperationState.get(batchOperationKey);
     if (batchOperation.isEmpty()) {
-      rejectNotFound(command, batchOperationKey, recordValue);
+      rejectNotFound(updateUserCommand, batchOperationKey, recordValue);
       return;
     }
 
     // check if the batch operation can be resumed
     if (!batchOperation.get().canResume()) {
       final var batchOperationStatus = batchOperation.get().getStatus().name();
-      rejectInvalidState(command, batchOperationKey, batchOperationStatus, recordValue);
+      rejectInvalidState(updateUserCommand, batchOperationKey, batchOperationStatus, recordValue);
       return;
     }
 
-    resumeBatchOperation(resumeKey, batchOperation.get(), command.getValue());
+    resumeBatchOperation(resumeKey, batchOperation.get(), updateUserCommand.getValue());
     commandDistributionBehavior
         .withKey(resumeKey)
         .inQueue(DistributionQueue.BATCH_OPERATION)
-        .distribute(command);
+        .distribute(updateUserCommand);
 
     metrics.recordResumed(batchOperation.get().getBatchOperationType());
   }
 
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationLifecycleManagementRecord> command) {
-    final var recordValue = command.getValue();
+      final TypedRecord<BatchOperationLifecycleManagementRecord> distributedDeleteTenantCommand) {
+    final var recordValue = distributedDeleteTenantCommand.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
 
     // Validation
@@ -138,14 +138,14 @@ public final class BatchOperationResumeProcessor
           "Processing distributed command to resume with key '{}': {}",
           batchOperationKey,
           recordValue);
-      resumeBatchOperation(command.getKey(), batchOperation.get(), recordValue);
+      resumeBatchOperation(distributedDeleteTenantCommand.getKey(), batchOperation.get(), recordValue);
     } else {
       LOGGER.debug(
           "Distributed command to resume a batch operation with key '{}' will be ignored: {}",
           batchOperationKey,
           recordValue);
     }
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   @VisibleForTesting

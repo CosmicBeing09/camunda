@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.FollowUpEventMetadata;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.BatchOperationState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -35,7 +35,7 @@ public final class BatchOperationPartitionCompleteProcessor
   private static final Logger LOGGER =
       LoggerFactory.getLogger(BatchOperationPartitionCompleteProcessor.class);
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final BatchOperationState batchOperationState;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final BatchOperationMetrics metrics;
@@ -58,25 +58,25 @@ public final class BatchOperationPartitionCompleteProcessor
    * Processes a non-distributed command to mark a partition of a batch operation as completed. This
    * occurs, when the leader marks itself as completed.
    *
-   * @param command the command to process
+   * @param updateUserCommand the command to process
    */
   @Override
-  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> command) {
-    doProcessRecord(command);
+  public void processNewCommand(final TypedRecord<BatchOperationPartitionLifecycleRecord> updateUserCommand) {
+    doProcessRecord(updateUserCommand);
   }
 
   /**
    * Processes a command from a follower partition to mark that partition of a batch operation as
    * completed.
    *
-   * @param command the command to process
+   * @param distributedDeleteTenantCommand the command to process
    */
   @Override
   public void processDistributedCommand(
-      final TypedRecord<BatchOperationPartitionLifecycleRecord> command) {
-    doProcessRecord(command);
+      final TypedRecord<BatchOperationPartitionLifecycleRecord> distributedDeleteTenantCommand) {
+    doProcessRecord(distributedDeleteTenantCommand);
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void doProcessRecord(final TypedRecord<BatchOperationPartitionLifecycleRecord> command) {

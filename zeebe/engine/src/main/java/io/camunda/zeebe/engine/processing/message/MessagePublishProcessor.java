@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.Au
 import io.camunda.zeebe.engine.processing.message.MessageCorrelateBehavior.MessageData;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -41,7 +41,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
 
   private final MessageState messageState;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final MessageCorrelateBehavior correlateBehavior;
 
   private MessageRecord messageRecord;
@@ -87,23 +87,23 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
   }
 
   @Override
-  public void processRecord(final TypedRecord<MessageRecord> command) {
+  public void processRecord(final TypedRecord<MessageRecord> commandRecord) {
     final var authRequest =
         new AuthorizationRequest(
-            command,
+            commandRecord,
             AuthorizationResourceType.MESSAGE,
             PermissionType.CREATE,
-            command.getValue().getTenantId(),
+            commandRecord.getValue().getTenantId(),
             true);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(commandRecord, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(commandRecord, rejection.type(), rejection.reason());
       return;
     }
 
-    messageRecord = command.getValue();
+    messageRecord = commandRecord.getValue();
 
     if (messageRecord.hasMessageId()
         && messageState.exist(
@@ -115,11 +115,11 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
           String.format(
               ALREADY_PUBLISHED_MESSAGE, bufferAsString(messageRecord.getMessageIdBuffer()));
 
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, rejectionReason);
+      rejectionWriter.appendRejection(commandRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
       responseWriter.writeRejectionOnCommand(
-          command, RejectionType.ALREADY_EXISTS, rejectionReason);
+          commandRecord, RejectionType.ALREADY_EXISTS, rejectionReason);
     } else {
-      handleNewMessage(command);
+      handleNewMessage(commandRecord);
     }
   }
 

@@ -11,7 +11,7 @@ import io.camunda.zeebe.auth.Authorization;
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -45,7 +45,7 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   private final GroupState groupState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
@@ -69,76 +69,76 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
+  public void processNewCommand(final TypedRecord<RoleRecord> updateUserCommand) {
+    final var roleRecord = updateUserCommand.getValue();
     final var authorizationRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
-            .addResourceId(record.getRoleId());
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.ROLE, PermissionType.UPDATE)
+            .addResourceId(roleRecord.getRoleId());
 
-    final var isAuthorized = authCheckBehavior.isAuthorized(authorizationRequest);
-    if (isAuthorized.isLeft()) {
-      final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+    final var authorizationResult = authCheckBehavior.authorizationResult(authorizationRequest);
+    if (authorizationResult.isLeft()) {
+      final var rejection = authorizationResult.getLeft();
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var persistedRecord = roleState.getRole(record.getRoleId());
-    if (persistedRecord.isEmpty()) {
-      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+    final var existingRole = roleState.getRole(roleRecord.getRoleId());
+    if (existingRole.isEmpty()) {
+      final var errorMessage = ROLE_NOT_FOUND_ERROR_MESSAGE.formatted(roleRecord.getRoleId());
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
-    final var entityId = record.getEntityId();
-    final var entityType = record.getEntityType();
-    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(command))) {
+    final var entityId = roleRecord.getEntityId();
+    final var entityType = roleRecord.getEntityType();
+    if (!isEntityPresent(entityId, entityType, isInternalGroupsEnabled(updateUserCommand))) {
       final var errorMessage =
-          ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.NOT_FOUND, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.NOT_FOUND, errorMessage);
+          ENTITY_NOT_FOUND_ERROR_MESSAGE.formatted(entityId, entityType, roleRecord.getRoleId());
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.NOT_FOUND, errorMessage);
       return;
     }
 
-    if (isEntityAssigned(record)) {
+    if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
-          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(record.getEntityId(), record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
+          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.ALREADY_EXISTS, errorMessage);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
 
-    stateWriter.appendFollowUpEvent(record.getRoleKey(), RoleIntent.ENTITY_ADDED, record);
+    stateWriter.appendFollowUpEvent(roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     responseWriter.writeEventOnCommand(
-        record.getRoleKey(), RoleIntent.ENTITY_ADDED, record, command);
+        roleRecord.getRoleKey(), RoleIntent.ENTITY_ADDED, roleRecord, updateUserCommand);
 
     final long distributionKey = keyGenerator.nextKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<RoleRecord> command) {
-    final var record = command.getValue();
-    if (isEntityAssigned(record)) {
+  public void processDistributedCommand(final TypedRecord<RoleRecord> distributedDeleteTenantCommand) {
+    final var roleRecord = distributedDeleteTenantCommand.getValue();
+    if (isEntityAlreadyAssigned(roleRecord)) {
       final var errorMessage =
-          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(record.getEntityId(), record.getRoleId());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, errorMessage);
+          ENTITY_ALREADY_ASSIGNED_ERROR_MESSAGE.formatted(roleRecord.getEntityId(), roleRecord.getRoleId());
+      rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, errorMessage);
     } else {
-      stateWriter.appendFollowUpEvent(command.getKey(), RoleIntent.ENTITY_ADDED, record);
+      stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), RoleIntent.ENTITY_ADDED, roleRecord);
     }
 
-    commandDistributionBehavior.acknowledgeCommand(command);
+    commandDistributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private boolean isEntityPresent(
       final String entityId, final EntityType entityType, final boolean internalGroupsEnabled) {
     return switch (entityType) {
       case USER, CLIENT -> true; // With simple mappings, any username and client id can be assigned
-      case MAPPING -> mappingState.get(entityId).isPresent();
+      case MAPPING -> mappingState.getMappingById(entityId).isPresent();
       case GROUP -> !internalGroupsEnabled || groupState.get(entityId).isPresent();
       default -> false;
     };
@@ -149,8 +149,8 @@ public class RoleAddEntityProcessor implements DistributedTypedRecordProcessor<R
         (String) command.getAuthorizations().get(Authorization.INTERNAL_GROUPS_ENABLED));
   }
 
-  private boolean isEntityAssigned(final RoleRecord record) {
+  private boolean isEntityAlreadyAssigned(final RoleRecord roleRecord) {
     return membershipState.hasRelation(
-        record.getEntityType(), record.getEntityId(), RelationType.ROLE, record.getRoleId());
+        roleRecord.getEntityType(), roleRecord.getEntityId(), RelationType.ROLE, roleRecord.getRoleId());
   }
 }

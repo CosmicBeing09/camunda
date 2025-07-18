@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.message;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
@@ -36,7 +36,7 @@ public final class MessageSubscriptionRejectProcessor
   private final MessageSubscriptionState subscriptionState;
   private final MutableMessageCorrelationState messageCorrelationState;
   private final SubscriptionCommandSender commandSender;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
 
   public MessageSubscriptionRejectProcessor(

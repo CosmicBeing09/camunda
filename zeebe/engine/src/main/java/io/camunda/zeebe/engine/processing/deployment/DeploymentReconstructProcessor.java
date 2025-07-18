@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.deployment.DeploymentReconstructProces
 import io.camunda.zeebe.engine.processing.deployment.DeploymentReconstructProcessor.Resource.FormResource;
 import io.camunda.zeebe.engine.processing.deployment.DeploymentReconstructProcessor.Resource.ProcessResource;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -58,7 +58,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
   private final ProcessState processState;
   private final FormState formState;
   private final DecisionState decisionState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedCommandWriter commandWriter;
   private final DeploymentRecord cachedDeploymentRecordCommand = new DeploymentRecord();

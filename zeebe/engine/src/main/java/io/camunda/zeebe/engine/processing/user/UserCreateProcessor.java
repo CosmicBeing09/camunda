@@ -11,7 +11,7 @@ import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavi
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior.AuthorizationRequest;
 import io.camunda.zeebe.engine.processing.streamprocessor.DistributedTypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
@@ -37,7 +37,7 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
       "Expected to create user with username '%s', but a user with this username already exists";
   private final UserState userState;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final CommandDistributionBehavior distributionBehavior;
@@ -61,56 +61,57 @@ public class UserCreateProcessor implements DistributedTypedRecordProcessor<User
   }
 
   @Override
-  public void processNewCommand(final TypedRecord<UserRecord> command) {
+  public void processNewCommand(final TypedRecord<UserRecord> updateUserCommand) {
     final var authRequest =
-        new AuthorizationRequest(command, AuthorizationResourceType.USER, PermissionType.CREATE);
-    final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
+        new AuthorizationRequest(updateUserCommand, AuthorizationResourceType.USER, PermissionType.CREATE);
+    final var isAuthorized = authCheckBehavior.authorizationResult(authRequest);
     if (isAuthorized.isLeft()) {
       final var rejection = isAuthorized.getLeft();
-      rejectionWriter.appendRejection(command, rejection.type(), rejection.reason());
-      responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
+      rejectionWriter.appendRejection(updateUserCommand, rejection.type(), rejection.reason());
+      responseWriter.writeRejectionOnCommand(updateUserCommand, rejection.type(), rejection.reason());
       return;
     }
 
-    final var username = command.getValue().getUsername();
+    final var username = updateUserCommand.getValue().getUsername();
     final var user = userState.getUser(username);
 
     if (user.isPresent()) {
       final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.get().getUsername());
-      rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, message);
-      responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, message);
+      rejectionWriter.appendRejection(updateUserCommand, RejectionType.ALREADY_EXISTS, message);
+      responseWriter.writeRejectionOnCommand(updateUserCommand, RejectionType.ALREADY_EXISTS, message);
       return;
     }
 
     final long key = keyGenerator.nextKey();
-    command.getValue().setUserKey(key);
+    updateUserCommand.getValue().setUserKey(key);
 
-    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, command.getValue());
+    stateWriter.appendFollowUpEvent(key, UserIntent.CREATED, updateUserCommand.getValue());
     addUserPermissions(key, username);
-    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, command.getValue(), command);
+    responseWriter.writeEventOnCommand(key, UserIntent.CREATED, updateUserCommand.getValue(),
+        updateUserCommand);
 
     distributionBehavior
         .withKey(key)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
-        .distribute(command);
+        .distribute(updateUserCommand);
   }
 
   @Override
-  public void processDistributedCommand(final TypedRecord<UserRecord> command) {
-    final var record = command.getValue();
+  public void processDistributedCommand(final TypedRecord<UserRecord> distributedDeleteTenantCommand) {
+    final var record = distributedDeleteTenantCommand.getValue();
 
     userState
         .getUser(record.getUserKey())
         .ifPresentOrElse(
             user -> {
               final var message = USER_ALREADY_EXISTS_ERROR_MESSAGE.formatted(user.getUsername());
-              rejectionWriter.appendRejection(command, RejectionType.ALREADY_EXISTS, message);
+              rejectionWriter.appendRejection(distributedDeleteTenantCommand, RejectionType.ALREADY_EXISTS, message);
             },
             () -> {
-              stateWriter.appendFollowUpEvent(command.getKey(), UserIntent.CREATED, record);
+              stateWriter.appendFollowUpEvent(distributedDeleteTenantCommand.getKey(), UserIntent.CREATED, record);
             });
 
-    distributionBehavior.acknowledgeCommand(command);
+    distributionBehavior.acknowledgeCommand(distributedDeleteTenantCommand);
   }
 
   private void addUserPermissions(final long key, final String username) {

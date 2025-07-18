@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.streamprocessor;
 
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor.ProcessingError;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.RejectionType;
@@ -29,7 +29,7 @@ public interface CommandProcessor<T extends UnifiedRecordValue> {
   // additional commands/events
   default void afterAccept(
       final TypedCommandWriter commandWriter,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final long key,
       final Intent intent,
       final T value) {}

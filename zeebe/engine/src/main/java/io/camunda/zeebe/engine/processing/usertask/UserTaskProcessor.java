@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.TaskListener;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.incident.RetryTypedRecord;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -70,7 +70,7 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
 
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public UserTaskProcessor(
       final ProcessingState state,
@@ -97,13 +97,13 @@ public class UserTaskProcessor implements TypedRecordProcessor<UserTaskRecord> {
   }
 
   @Override
-  public void processRecord(final TypedRecord<UserTaskRecord> command) {
-    final UserTaskIntent intent = (UserTaskIntent) command.getIntent();
+  public void processRecord(final TypedRecord<UserTaskRecord> commandRecord) {
+    final UserTaskIntent intent = (UserTaskIntent) commandRecord.getIntent();
     switch (intent) {
       case CREATE, ASSIGN, CLAIM, UPDATE, COMPLETE, CANCEL ->
-          processOperationCommand(command, intent);
-      case COMPLETE_TASK_LISTENER -> processCompleteTaskListener(command);
-      case DENY_TASK_LISTENER -> processDenyTaskListener(command);
+          processOperationCommand(commandRecord, intent);
+      case COMPLETE_TASK_LISTENER -> processCompleteTaskListener(commandRecord);
+      case DENY_TASK_LISTENER -> processDenyTaskListener(commandRecord);
       default -> throw new UnsupportedOperationException("Unexpected user task intent: " + intent);
     }
   }

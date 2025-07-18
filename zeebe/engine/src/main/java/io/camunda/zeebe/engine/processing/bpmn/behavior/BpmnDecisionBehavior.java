@@ -15,7 +15,7 @@ import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableCalledDecision;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.deployment.PersistedDecision;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
@@ -37,7 +37,7 @@ public final class BpmnDecisionBehavior {
   private final DecisionBehavior decisionBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableState variableState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final KeyGenerator keyGenerator;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
@@ -46,7 +46,7 @@ public final class BpmnDecisionBehavior {
       final DecisionBehavior decisionBehavior,
       final ProcessingState processingState,
       final EventTriggerBehavior eventTriggerBehavior,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final KeyGenerator keyGenerator,
       final ExpressionProcessor expressionBehavior,
       final BpmnStateBehavior stateBehavior) {
