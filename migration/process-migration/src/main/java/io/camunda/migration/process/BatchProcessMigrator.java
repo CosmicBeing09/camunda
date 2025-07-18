@@ -10,12 +10,12 @@ package io.camunda.migration.process;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import io.camunda.migration.api.MigrationException;
 import io.camunda.migration.api.Migrator;
-import io.camunda.migration.process.adapter.Adapter;
+import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.es.ElasticsearchAdapter;
 import io.camunda.migration.process.adapter.os.OpensearchAdapter;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
 import io.camunda.migration.process.util.MetricRegistry;
-import io.camunda.migration.process.util.MigrationUtil;
+import io.camunda.migration.process.util.ProcessMigrationUtil;
 import io.camunda.search.connect.configuration.ConnectConfiguration;
 import io.camunda.webapps.schema.entities.ImportPositionEntity;
 import io.camunda.webapps.schema.entities.ProcessEntity;
@@ -36,22 +36,22 @@ import org.springframework.stereotype.Component;
 
 @Component("process-migrator")
 @EnableConfigurationProperties(ProcessMigrationProperties.class)
-public class MigrationRunner implements Migrator {
+public class BatchProcessMigrator implements Migrator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(MigrationRunner.class);
+  private static final Logger LOG = LoggerFactory.getLogger(BatchProcessMigrator.class);
 
-  private final Adapter adapter;
+  private final ProcessMigrationAdapter processMigrationAdapter;
   private final ProcessMigrationProperties properties;
   private ScheduledFuture<?> countdownTask;
   private final ScheduledExecutorService scheduler;
   private final MetricRegistry metricRegistry;
 
-  public MigrationRunner(
+  public BatchProcessMigrator(
       final ProcessMigrationProperties properties,
       final ConnectConfiguration connect,
       final MeterRegistry meterRegistry) {
     this.properties = properties;
-    adapter =
+    processMigrationAdapter =
         connect.getTypeEnum().isElasticSearch()
             ? new ElasticsearchAdapter(properties, connect)
             : new OpensearchAdapter(properties, connect);
@@ -63,8 +63,8 @@ public class MigrationRunner implements Migrator {
   public Void call() {
     LOG.info("Process Migration started");
     try {
-      String lastMigratedProcessDefinitionKey = adapter.readLastMigratedEntity();
-      List<ProcessEntity> items = adapter.nextBatch(lastMigratedProcessDefinitionKey);
+      String lastMigratedProcessDefinitionKey = processMigrationAdapter.readLastMigratedEntity();
+      List<ProcessEntity> items = processMigrationAdapter.nextBatch(lastMigratedProcessDefinitionKey);
       while (shouldContinue(items)) {
         if (!items.isEmpty()) {
           final List<ProcessEntity> finalItems = items;
@@ -81,7 +81,7 @@ public class MigrationRunner implements Migrator {
           startCountdown();
         }
         delayNextRound();
-        items = adapter.nextBatch(lastMigratedProcessDefinitionKey);
+        items = processMigrationAdapter.nextBatch(lastMigratedProcessDefinitionKey);
       }
     } catch (final Exception e) {
       terminate(scheduler);
@@ -109,16 +109,16 @@ public class MigrationRunner implements Migrator {
                 p -> {
                   try {
                     return metricRegistry.measureMigrationParseDuration(
-                        () -> MigrationUtil.migrate(p));
+                        () -> ProcessMigrationUtil.migrate(p));
                   } catch (final Exception e) {
                     LOG.warn("Failed to register processing duration for process {}", p.getId(), e);
-                    return MigrationUtil.migrate(p);
+                    return ProcessMigrationUtil.migrate(p);
                   }
                 })
             .toList();
-    final String lastMigratedProcessDefinitionKey = adapter.migrate(updatedProcesses);
+    final String lastMigratedProcessDefinitionKey = processMigrationAdapter.migrate(updatedProcesses);
     if (lastMigratedProcessDefinitionKey != null) {
-      adapter.writeLastMigratedEntity(lastMigratedProcessDefinitionKey);
+      processMigrationAdapter.writeLastMigratedEntity(lastMigratedProcessDefinitionKey);
     }
     return lastMigratedProcessDefinitionKey;
   }
@@ -138,20 +138,20 @@ public class MigrationRunner implements Migrator {
   private void startCountdown() {
     LOG.info(
         "Importer finished, migration will keep running for {}",
-        properties.getImporterFinishedTimeout());
+        properties.getImporterCompletionTimeout());
     countdownTask =
         scheduler.schedule(
             () ->
                 LOG.info(
                     "Importer countdown finished. If more records are present the migration will keep running."),
-            properties.getImporterFinishedTimeout().getSeconds(),
+            properties.getImporterCompletionTimeout().getSeconds(),
             TimeUnit.SECONDS);
   }
 
   private boolean isImporterFinished() {
     final Set<ImportPositionEntity> importPositions;
     try {
-      importPositions = adapter.readImportPosition();
+      importPositions = processMigrationAdapter.readImportPosition();
       return !importPositions.isEmpty()
           && importPositions.stream().allMatch(ImportPositionEntity::getCompleted);
     } catch (final MigrationException e) {
@@ -171,7 +171,7 @@ public class MigrationRunner implements Migrator {
   private void terminate(final ScheduledExecutorService scheduler) {
     scheduler.shutdown();
     try {
-      adapter.close();
+      processMigrationAdapter.close();
     } catch (final IOException e) {
       LOG.error("Failed to close adapter", e);
     }
@@ -188,10 +188,10 @@ public class MigrationRunner implements Migrator {
   private boolean shouldThrowException(final Exception exception) {
     if (exception.getCause() instanceof final ElasticsearchException ex) {
       return ex.error().reason() != null
-          && !MigrationUtil.MIGRATION_REPOSITORY_NOT_EXISTS.matcher(ex.error().reason()).find();
+          && !ProcessMigrationUtil.MIGRATION_INDEX_NOT_FOUND_PATTERN.matcher(ex.error().reason()).find();
     } else if (exception.getCause() instanceof final OpenSearchException ex) {
       return ex.error().reason() != null
-          && !MigrationUtil.MIGRATION_REPOSITORY_NOT_EXISTS.matcher(ex.error().reason()).find();
+          && !ProcessMigrationUtil.MIGRATION_INDEX_NOT_FOUND_PATTERN.matcher(ex.error().reason()).find();
     }
     return true;
   }

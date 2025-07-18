@@ -8,9 +8,9 @@
 package io.camunda.migration.process.adapter.os;
 
 import io.camunda.migration.api.MigrationException;
-import io.camunda.migration.process.adapter.Adapter;
+import io.camunda.migration.process.adapter.MigrationProcessorStep;
+import io.camunda.migration.process.adapter.ProcessMigrationAdapter;
 import io.camunda.migration.process.adapter.MigrationRepositoryIndex;
-import io.camunda.migration.process.adapter.ProcessorStep;
 import io.camunda.migration.process.config.ProcessMigrationProperties;
 import io.camunda.search.connect.configuration.ConnectConfiguration;
 import io.camunda.search.connect.os.OpensearchConnector;
@@ -40,7 +40,7 @@ import org.opensearch.client.opensearch.core.bulk.BulkResponseItem;
 import org.opensearch.client.opensearch.core.search.Hit;
 import org.opensearch.client.opensearch.generic.OpenSearchClientException;
 
-public class OpensearchAdapter implements Adapter {
+public class OpensearchAdapter implements ProcessMigrationAdapter {
 
   private final ProcessMigrationProperties properties;
   private final OpenSearchClient client;
@@ -141,16 +141,17 @@ public class OpensearchAdapter implements Adapter {
                                         m.term(
                                             t ->
                                                 t.field(MigrationRepositoryIndex.ID)
-                                                    .value(FieldValue.of(PROCESSOR_STEP_ID))))))
+                                                    .value(FieldValue.of(
+                                                        MIGRATION_PROCESSOR_STEP_ID))))))
             .build();
 
-    final SearchResponse<ProcessorStep> searchResponse;
+    final SearchResponse<MigrationProcessorStep> searchResponse;
 
     try {
       searchResponse =
           retryDecorator.decorate(
               "Fetching last migrated process",
-              () -> client.search(request, ProcessorStep.class),
+              () -> client.search(request, MigrationProcessorStep.class),
               res -> res.timedOut() || Boolean.TRUE.equals(res.terminatedEarly()));
     } catch (final Exception e) {
       throw new MigrationException("Failed to fetch last migrated process", e);
@@ -159,18 +160,18 @@ public class OpensearchAdapter implements Adapter {
     return searchResponse.hits().hits().stream()
         .map(Hit::source)
         .filter(Objects::nonNull)
-        .map(ProcessorStep::getContent)
+        .map(MigrationProcessorStep::getContent)
         .findFirst()
         .orElse(null);
   }
 
   @Override
   public void writeLastMigratedEntity(final String processDefinitionKey) throws MigrationException {
-    final ProcessorStep currentStep = processorStepForKey(processDefinitionKey);
-    final UpdateRequest<ProcessorStep, ProcessorStep> updateRequest =
-        new UpdateRequest.Builder<ProcessorStep, ProcessorStep>()
+    final MigrationProcessorStep currentStep = processorStepForKey(processDefinitionKey);
+    final UpdateRequest<MigrationProcessorStep, MigrationProcessorStep> updateRequest =
+        new UpdateRequest.Builder<MigrationProcessorStep, MigrationProcessorStep>()
             .index(migrationRepositoryIndex.getFullQualifiedName())
-            .id(PROCESSOR_STEP_ID)
+            .id(MIGRATION_PROCESSOR_STEP_ID)
             .docAsUpsert(true)
             .doc(currentStep)
             .build();
@@ -178,7 +179,7 @@ public class OpensearchAdapter implements Adapter {
     try {
       retryDecorator.decorate(
           "Update last migrated process",
-          () -> client.update(updateRequest, ProcessorStep.class),
+          () -> client.update(updateRequest, MigrationProcessorStep.class),
           res -> res.result() != Result.Created && res.result() != Result.Updated);
     } catch (final Exception e) {
       throw new MigrationException("Failed to update migrated process", e);

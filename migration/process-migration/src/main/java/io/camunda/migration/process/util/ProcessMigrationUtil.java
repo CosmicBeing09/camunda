@@ -12,9 +12,9 @@ import io.camunda.zeebe.util.modelreader.ProcessModelReader;
 import io.camunda.zeebe.util.modelreader.ProcessModelReader.StartFormLink;
 import java.util.regex.Pattern;
 
-public class MigrationUtil {
+public class ProcessMigrationUtil {
 
-  public static final Pattern MIGRATION_REPOSITORY_NOT_EXISTS =
+  public static final Pattern MIGRATION_INDEX_NOT_FOUND_PATTERN =
       Pattern.compile(
           "no such index \\[[a-zA-Z0-9\\-]+-migration-steps-repository-[0-9]+\\.[0-9]+\\.[0-9]+_]");
 
