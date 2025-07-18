@@ -89,13 +89,13 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public ElementInstance(
-      final long key,
+      final long elementInstanceKey,
       final ElementInstance parent,
       final ProcessInstanceIntent state,
       final ProcessInstanceRecord value) {
     this();
 
-    recordProp.getValue().setKey(key);
+    recordProp.getValue().setKey(elementInstanceKey);
     recordProp.getValue().setState(state);
     recordProp.getValue().setValue(value);
     if (parent != null) {
@@ -105,8 +105,8 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public ElementInstance(
-      final long key, final ProcessInstanceIntent state, final ProcessInstanceRecord value) {
-    this(key, null, state, value);
+      final long elementInstanceKey, final ProcessInstanceIntent state, final ProcessInstanceRecord value) {
+    this(elementInstanceKey, null, state, value);
   }
 
   public long getKey() {
