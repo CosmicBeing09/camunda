@@ -254,7 +254,7 @@ public final class EngineProcessors {
         commandDistributionBehavior,
         authCheckBehavior);
 
-    ClockProcessors.addClockProcessors(
+    ClockProcessors.addControllableStreamClockProcessors(
         typedRecordProcessors,
         writers,
         keyGenerator,

@@ -19,16 +19,16 @@ import io.camunda.zeebe.stream.api.state.KeyGenerator;
 public final class ClockProcessors {
   private ClockProcessors() {}
 
-  public static void addClockProcessors(
+  public static void addControllableStreamClockProcessors(
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final KeyGenerator keyGenerator,
-      final ControllableStreamClock clock,
+      final ControllableStreamClock controllableStreamClock,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {
     final var clockProcessor =
         new ClockProcessor(
-            writers, keyGenerator, clock, commandDistributionBehavior, authCheckBehavior);
+            writers, keyGenerator, controllableStreamClock, commandDistributionBehavior, authCheckBehavior);
     typedRecordProcessors.onCommand(ValueType.CLOCK, ClockIntent.PIN, clockProcessor);
     typedRecordProcessors.onCommand(ValueType.CLOCK, ClockIntent.RESET, clockProcessor);
   }
