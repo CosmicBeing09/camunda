@@ -14,15 +14,16 @@ public final class FilterUtil {
 
   private FilterUtil() {}
 
-  public static <T> Operation<T> mapDefaultToOperation(final List<T> values) {
-    if (values.isEmpty()) {
+  public static <T> Operation<T> mapDefaultToOperation(final List<T> valuesOperations) {
+    if (valuesOperations.isEmpty()) {
       return null;
     }
-    return values.size() == 1 ? Operation.eq(values.getFirst()) : Operation.in(values);
+    return valuesOperations.size() == 1 ? Operation.eq(valuesOperations.getFirst()) : Operation.in(
+        valuesOperations);
   }
 
   @SafeVarargs
-  public static <T> Operation<T> mapDefaultToOperation(final T value, final T... values) {
-    return mapDefaultToOperation(CollectionUtil.collectValues(value, values));
+  public static <T> Operation<T> mapDefaultToOperation(final T value, final T... valuesOperations) {
+    return mapDefaultToOperation(CollectionUtil.collectValues(value, valuesOperations));
   }
 }
