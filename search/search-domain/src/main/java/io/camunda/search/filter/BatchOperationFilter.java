@@ -23,7 +23,7 @@ FilterBase {
 
     private List<Operation<String>> batchOperationIdOperations;
     private List<String> operationTypes;
-    private List<String> state;
+    private List<String> states;
 
     public Builder batchOperationIdOperations(final List<Operation<String>> batchOperationIdOperations) {
       this.batchOperationIdOperations = addValuesToList(this.batchOperationIdOperations,
@@ -60,7 +60,7 @@ FilterBase {
     }
 
     public Builder state(final List<String> states) {
-      state = addValuesToList(state, states);
+      this.states = addValuesToList(this.states, states);
       return this;
     }
 
@@ -69,7 +69,7 @@ FilterBase {
       return new BatchOperationFilter(
           Objects.requireNonNullElse(batchOperationIdOperations, Collections.emptyList()),
           Objects.requireNonNullElse(operationTypes, Collections.emptyList()),
-          Objects.requireNonNullElse(state, Collections.emptyList()));
+          Objects.requireNonNullElse(states, Collections.emptyList()));
     }
   }
 }
@@ -77,4 +77,4 @@ FilterBase {
 public record BatchOperationFilter(
     List<Operation<String>> batchOperationIdOperations,
     List<String> operationTypes,
-    List<String> state)
+    List<String> states)
