@@ -84,13 +84,13 @@ public interface CamundaClientBuilder {
    *     tenant identifiers are set. The default value contains only {@link
    *     CommandWithTenantStep#DEFAULT_TENANT_IDENTIFIER}.
    */
-  CamundaClientBuilder defaultJobWorkerTenantIds(List<String> tenantIds);
+  CamundaClientBuilder defaultTenantIds(List<String> tenantIds);
 
   /**
    * @param maxJobsActive Default value for {@link JobWorkerBuilderStep3#maxJobsActive(int)}.
    *     Default value is 32.
    */
-  CamundaClientBuilder defaultJobWorkerMaxJobsActive(int maxJobsActive);
+  CamundaClientBuilder defaultMaxJobsActive(int maxJobsActive);
 
   /**
    * @param numThreads The number of threads for invocation of job workers. Setting this value to 0

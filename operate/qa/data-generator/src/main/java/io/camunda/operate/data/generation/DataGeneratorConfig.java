@@ -31,7 +31,7 @@ public class DataGeneratorConfig {
     final CamundaClientBuilder builder =
         CamundaClient.newClientBuilder()
             .gatewayAddress(gatewayAddress)
-            .defaultJobWorkerMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE)
+            .defaultMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE)
             .usePlaintext();
     return builder.build();
   }

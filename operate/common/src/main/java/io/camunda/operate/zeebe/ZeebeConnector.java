@@ -39,7 +39,7 @@ public class ZeebeConnector {
     final CamundaClientBuilder builder =
         CamundaClient.newClientBuilder()
             .gatewayAddress(gatewayAddress)
-            .defaultJobWorkerMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE);
+            .defaultMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE);
     if (zeebeProperties.isSecure()) {
       builder.caCertificatePath(zeebeProperties.getCertificatePath());
       LOGGER.info("Use TLS connection to zeebe");

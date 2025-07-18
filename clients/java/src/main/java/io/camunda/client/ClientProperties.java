@@ -53,7 +53,7 @@ public final class ClientProperties {
   public static final String DEFAULT_TENANT_ID = "camunda.client.tenantId";
 
   /**
-   * @see CamundaClientBuilder#defaultJobWorkerTenantIds(List)
+   * @see CamundaClientBuilder#defaultTenantIds(List)
    */
   public static final String DEFAULT_JOB_WORKER_TENANT_IDS = "camunda.client.worker.tenantIds";
 
@@ -63,7 +63,7 @@ public final class ClientProperties {
   public static final String JOB_WORKER_EXECUTION_THREADS = "camunda.client.worker.threads";
 
   /**
-   * @see CamundaClientBuilder#defaultJobWorkerMaxJobsActive(int)
+   * @see CamundaClientBuilder#defaultMaxJobsActive(int)
    */
   public static final String JOB_WORKER_MAX_JOBS_ACTIVE = "camunda.client.worker.maxJobsActive";
 

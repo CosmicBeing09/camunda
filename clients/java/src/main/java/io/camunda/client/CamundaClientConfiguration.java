@@ -50,7 +50,7 @@ public interface CamundaClientConfiguration {
   String getDefaultTenantId();
 
   /**
-   * @see CamundaClientBuilder#defaultJobWorkerTenantIds(List)
+   * @see CamundaClientBuilder#defaultTenantIds(List)
    */
   List<String> getDefaultJobWorkerTenantIds();
 
@@ -60,7 +60,7 @@ public interface CamundaClientConfiguration {
   int getNumJobWorkerExecutionThreads();
 
   /**
-   * @see CamundaClientBuilder#defaultJobWorkerMaxJobsActive(int)
+   * @see CamundaClientBuilder#defaultMaxJobsActive(int)
    */
   int getDefaultJobWorkerMaxJobsActive();
 

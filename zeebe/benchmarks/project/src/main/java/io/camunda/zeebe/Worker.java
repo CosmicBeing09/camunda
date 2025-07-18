@@ -177,7 +177,7 @@ public class Worker extends App {
             .numJobWorkerExecutionThreads(workerCfg.getThreads())
             .defaultJobWorkerName(workerCfg.getWorkerName())
             .defaultJobTimeout(timeout)
-            .defaultJobWorkerMaxJobsActive(workerCfg.getCapacity())
+            .defaultMaxJobsActive(workerCfg.getCapacity())
             .defaultJobPollInterval(workerCfg.getPollingDelay())
             .withProperties(System.getProperties())
             .withInterceptors(monitoringInterceptor);

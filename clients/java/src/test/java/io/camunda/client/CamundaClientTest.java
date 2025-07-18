@@ -980,7 +980,7 @@ public final class CamundaClientTest {
     // given
     final String overrideTenant = "override-tenant";
     final CamundaClientBuilderImpl builder = new CamundaClientBuilderImpl();
-    builder.defaultJobWorkerTenantIds(Arrays.asList(overrideTenant));
+    builder.defaultTenantIds(Arrays.asList(overrideTenant));
 
     // when
     builder.build();
@@ -1053,7 +1053,7 @@ public final class CamundaClientTest {
     Environment.system().put(envName, String.join(",", tenantIdList));
     final String setterTenantId = "setter-tenant";
     final CamundaClientBuilderImpl builder = new CamundaClientBuilderImpl();
-    builder.defaultJobWorkerTenantIds(Arrays.asList(setterTenantId));
+    builder.defaultTenantIds(Arrays.asList(setterTenantId));
 
     // when
     builder.build();
@@ -1098,7 +1098,7 @@ public final class CamundaClientTest {
 
     // when
     final CamundaClientCloudBuilderImpl builderWithTenantId =
-        (CamundaClientCloudBuilderImpl) builder.defaultJobWorkerTenantIds(tenantIdList);
+        (CamundaClientCloudBuilderImpl) builder.defaultTenantIds(tenantIdList);
 
     // then
     // todo(#14106): verify that tenant id is set in the builder

@@ -121,7 +121,7 @@ public class CamundaClientCloudBuilderImpl
 
     // todo(#14106): allow default tenant id setting for cloud client
     innerBuilder.defaultTenantId("");
-    innerBuilder.defaultJobWorkerTenantIds(Collections.emptyList());
+    innerBuilder.defaultTenantIds(Collections.emptyList());
 
     return this;
   }
@@ -161,15 +161,15 @@ public class CamundaClientCloudBuilderImpl
 
   @Override
   @ExperimentalApi("https://github.com/camunda/camunda/issues/14106")
-  public CamundaClientBuilder defaultJobWorkerTenantIds(final List<String> tenantIds) {
+  public CamundaClientBuilder defaultTenantIds(final List<String> tenantIds) {
     Loggers.LOGGER.debug(
         "Multi-tenancy in Camunda 8 SaaS will be supported with https://github.com/camunda/camunda/issues/14106.");
     return this;
   }
 
   @Override
-  public CamundaClientBuilder defaultJobWorkerMaxJobsActive(final int maxJobsActive) {
-    innerBuilder.defaultJobWorkerMaxJobsActive(maxJobsActive);
+  public CamundaClientBuilder defaultMaxJobsActive(final int maxJobsActive) {
+    innerBuilder.defaultMaxJobsActive(maxJobsActive);
     return this;
   }
 

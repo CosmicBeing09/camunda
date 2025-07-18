@@ -46,7 +46,7 @@ public class ZeebeConnector {
             .gatewayAddress(zeebeProperties.getGatewayAddress())
             // .restAddress(getURIFromString(zeebeProperties.getRestAddress()))
             .restAddress(getURIFromSaaSOrProperties(zeebeProperties.getRestAddress()))
-            .defaultJobWorkerMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE);
+            .defaultMaxJobsActive(JOB_WORKER_MAX_JOBS_ACTIVE);
     if (zeebeProperties.isSecure()) {
       builder.caCertificatePath(zeebeProperties.getCertificatePath());
       LOGGER.info("Use TLS connection to zeebe");
