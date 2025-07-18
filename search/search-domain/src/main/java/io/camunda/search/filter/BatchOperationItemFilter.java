@@ -15,19 +15,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public record BatchOperationItemFilter(
-    List<String> batchOperationIds,
-    List<Long> itemKeys,
-    List<Long> processInstanceKeys,
-    List<String> state)
-    implements FilterBase {
+FilterBase {
 
   public static final class Builder implements ObjectBuilder<BatchOperationItemFilter> {
 
     private List<String> batchOperationIds;
-    private List<Long> itemKeys;
+    private List<Long> itemRecordKeys;
     private List<Long> processInstanceKeys;
-    private List<String> state;
+    private List<String> states;
 
     public Builder batchOperationIds(final String value, final String... values) {
       return batchOperationIds(collectValues(value, values));
@@ -38,12 +33,12 @@ public record BatchOperationItemFilter(
       return this;
     }
 
-    public Builder itemKeys(final Long value, final Long... values) {
+    public Builder itemRecordKeys(final Long value, final Long... values) {
       return itemKeys(collectValues(value, values));
     }
 
     public Builder itemKeys(final List<Long> values) {
-      itemKeys = addValuesToList(itemKeys, values);
+      itemRecordKeys = addValuesToList(itemRecordKeys, values);
       return this;
     }
 
@@ -56,12 +51,12 @@ public record BatchOperationItemFilter(
       return this;
     }
 
-    public Builder state(final String value, final String... values) {
-      return state(collectValues(value, values));
+    public Builder states(final String value, final String... values) {
+      return states(collectValues(value, values));
     }
 
-    public Builder state(final List<String> values) {
-      state = addValuesToList(state, values);
+    public Builder states(final List<String> values) {
+      states = addValuesToList(states, values);
       return this;
     }
 
@@ -69,9 +64,15 @@ public record BatchOperationItemFilter(
     public BatchOperationItemFilter build() {
       return new BatchOperationItemFilter(
           Objects.requireNonNullElse(batchOperationIds, Collections.emptyList()),
-          Objects.requireNonNullElse(itemKeys, Collections.emptyList()),
+          Objects.requireNonNullElse(itemRecordKeys, Collections.emptyList()),
           Objects.requireNonNullElse(processInstanceKeys, Collections.emptyList()),
-          Objects.requireNonNullElse(state, Collections.emptyList()));
+          Objects.requireNonNullElse(states, Collections.emptyList()));
     }
   }
 }
+    implements
+public record BatchOperationItemFilter(
+    List<String> batchOperationIds,
+    List<Long> itemKeys,
+    List<Long> processInstanceKeys,
+    List<String> states)
