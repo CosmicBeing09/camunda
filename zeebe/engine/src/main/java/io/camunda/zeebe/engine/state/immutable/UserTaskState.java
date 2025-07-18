@@ -23,10 +23,10 @@ public interface UserTaskState {
 
   UserTaskIntermediateStateValue getIntermediateState(final long userTaskKey);
 
-  Optional<UserTaskTransitionTriggerRequestMetadata> findRecordRequestMetadata(
+  Optional<UserTaskTransitionTriggerRequestMetadata> findTransitionTriggerMetadata(
       final long userTaskKey);
 
-  Optional<String> findInitialAssignee(long key);
+  Optional<String> findInitialAssignee(long userTaskKey);
 
   enum LifecycleState {
     NOT_FOUND((byte) 0),
