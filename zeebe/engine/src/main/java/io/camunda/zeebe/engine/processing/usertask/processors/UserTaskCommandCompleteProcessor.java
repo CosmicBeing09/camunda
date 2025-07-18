@@ -27,9 +27,9 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 import io.camunda.zeebe.util.Either;
 import java.util.List;
 
-public final class TaskCompleteProcessor implements UserTaskCommandProcessor {
+public final class UserTaskCommandCompleteProcessor implements UserTaskCommandProcessor {
 
-  private static final String DEFAULT_ACTION = "complete";
+  private static final String DEFAULT_USER_TASK_ACTION = "complete";
 
   private final ElementInstanceState elementInstanceState;
   private final UserTaskState asyncRequestState;
@@ -39,7 +39,7 @@ public final class TaskCompleteProcessor implements UserTaskCommandProcessor {
   private final TypedResponseWriter responseWriter;
   private final UserTaskCommandPreconditionChecker preconditionChecker;
 
-  public TaskCompleteProcessor(
+  public UserTaskCommandCompleteProcessor(
       final ProcessingState state,
       final EventHandle eventHandle,
       final Writers writers,
@@ -70,7 +70,7 @@ public final class TaskCompleteProcessor implements UserTaskCommandProcessor {
     final long userTaskKey = command.getKey();
 
     userTaskRecord.setVariables(command.getValue().getVariablesBuffer());
-    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_ACTION));
+    userTaskRecord.setAction(command.getValue().getActionOrDefault(DEFAULT_USER_TASK_ACTION));
 
     stateWriter.appendFollowUpEvent(userTaskKey, UserTaskIntent.COMPLETING, userTaskRecord);
   }
