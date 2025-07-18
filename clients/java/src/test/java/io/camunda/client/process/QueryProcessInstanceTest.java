@@ -77,8 +77,8 @@ public class QueryProcessInstanceTest extends ClientRestTest {
     client
         .newProcessInstanceSearchRequest()
         .filter(
-            f ->
-                f.processInstanceKey(123L)
+            filterBuilder ->
+                filterBuilder.processInstanceKey(123L)
                     .processDefinitionId("bpmnProcessId")
                     .processDefinitionName("Demo process")
                     .processDefinitionVersion(7)
@@ -155,7 +155,7 @@ public class QueryProcessInstanceTest extends ClientRestTest {
     // when
     client
         .newProcessInstanceSearchRequest()
-        .filter(f -> f.processInstanceKey(b -> b.notIn(1L, 10L)))
+        .filter(filterBuilder -> filterBuilder.processInstanceKey(b -> b.notIn(1L, 10L)))
         .send()
         .join();
 
