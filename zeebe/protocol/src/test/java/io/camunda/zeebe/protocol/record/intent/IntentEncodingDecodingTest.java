@@ -30,7 +30,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 final class IntentEncodingDecodingTest {
 
   @ParameterizedTest
-  @MethodSource("parameters")
+  @MethodSource("intentParameterSets")
   void shouldEncodeAndDecodeTimerIntent(final ParameterSet parameterSet) {
     final short value = parameterSet.intent.value();
 
@@ -39,7 +39,7 @@ final class IntentEncodingDecodingTest {
     assertThat(decoded).isSameAs(parameterSet.intent);
   }
 
-  private static Stream<ParameterSet> parameters() {
+  private static Stream<ParameterSet> intentParameterSets() {
     final List<ParameterSet> result = new ArrayList<>();
     result.addAll(
         buildParameterSets(DecisionEvaluationIntent.class, DecisionEvaluationIntent::from));
