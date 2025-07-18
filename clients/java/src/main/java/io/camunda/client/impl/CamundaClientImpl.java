@@ -31,7 +31,7 @@ import io.camunda.client.api.command.AssignRoleToGroupCommandStep1;
 import io.camunda.client.api.command.AssignRoleToMappingCommandStep1;
 import io.camunda.client.api.command.AssignRoleToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToUserCommandStep1;
-import io.camunda.client.api.command.AssignUserTaskCommandStep1;
+import io.camunda.client.api.command.AssignUserTaskStep1;
 import io.camunda.client.api.command.AssignUserToGroupCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
 import io.camunda.client.api.command.AuthorizationBuilderStep1;
@@ -677,7 +677,7 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public AssignUserTaskCommandStep1 newUserTaskAssignCommand(final long userTaskKey) {
+  public AssignUserTaskStep1 newUserTaskAssignCommand(final long userTaskKey) {
     return new AssignUserTaskCommandImpl(httpClient, jsonMapper, userTaskKey);
   }
 

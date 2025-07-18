@@ -25,7 +25,7 @@ import io.camunda.client.api.command.AssignRoleToGroupCommandStep1;
 import io.camunda.client.api.command.AssignRoleToMappingCommandStep1;
 import io.camunda.client.api.command.AssignRoleToTenantCommandStep1;
 import io.camunda.client.api.command.AssignRoleToUserCommandStep1;
-import io.camunda.client.api.command.AssignUserTaskCommandStep1;
+import io.camunda.client.api.command.AssignUserTaskStep1;
 import io.camunda.client.api.command.AssignUserToGroupCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
 import io.camunda.client.api.command.AuthorizationBuilderStep1;
@@ -612,7 +612,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    * @param userTaskKey the key of the user task
    * @return a builder for the command
    */
-  AssignUserTaskCommandStep1 newUserTaskAssignCommand(long userTaskKey);
+  AssignUserTaskStep1 newUserTaskAssignCommand(long userTaskKey);
 
   /**
    * Command to update a user task.

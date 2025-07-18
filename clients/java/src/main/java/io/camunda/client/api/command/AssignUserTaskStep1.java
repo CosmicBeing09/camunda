@@ -17,7 +17,7 @@ package io.camunda.client.api.command;
 
 import io.camunda.client.api.response.AssignUserTaskResponse;
 
-public interface AssignUserTaskCommandStep1 extends FinalCommandStep<AssignUserTaskResponse> {
+public interface AssignUserTaskStep1 extends FinalCommandStep<AssignUserTaskResponse> {
 
   /**
    * Set the custom action to assign the user task with.
@@ -26,7 +26,7 @@ public interface AssignUserTaskCommandStep1 extends FinalCommandStep<AssignUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  AssignUserTaskCommandStep1 action(String action);
+  AssignUserTaskStep1 action(String action);
 
   /**
    * Set the assignee to set for the user task.
@@ -35,7 +35,7 @@ public interface AssignUserTaskCommandStep1 extends FinalCommandStep<AssignUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  AssignUserTaskCommandStep1 assignee(String assignee);
+  AssignUserTaskStep1 assignee(String assignee);
 
   /**
    * Flag to allow overriding an existing assignee for the user task without unassigning it first.
@@ -44,5 +44,5 @@ public interface AssignUserTaskCommandStep1 extends FinalCommandStep<AssignUserT
    * @return the builder for this command. Call {@link #send()} to complete the command and send it
    *     to the broker.
    */
-  AssignUserTaskCommandStep1 allowOverride(boolean allowOverride);
+  AssignUserTaskStep1 allowOverride(boolean allowOverride);
 }

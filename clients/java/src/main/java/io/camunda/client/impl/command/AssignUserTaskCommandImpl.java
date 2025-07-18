@@ -17,7 +17,7 @@ package io.camunda.client.impl.command;
 
 import io.camunda.client.api.CamundaFuture;
 import io.camunda.client.api.JsonMapper;
-import io.camunda.client.api.command.AssignUserTaskCommandStep1;
+import io.camunda.client.api.command.AssignUserTaskStep1;
 import io.camunda.client.api.command.FinalCommandStep;
 import io.camunda.client.api.response.AssignUserTaskResponse;
 import io.camunda.client.impl.http.HttpCamundaFuture;
@@ -27,7 +27,7 @@ import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import org.apache.hc.client5.http.config.RequestConfig;
 
-public final class AssignUserTaskCommandImpl implements AssignUserTaskCommandStep1 {
+public final class AssignUserTaskCommandImpl implements AssignUserTaskStep1 {
 
   private final long userTaskKey;
   private final UserTaskAssignmentRequest request;
@@ -62,20 +62,20 @@ public final class AssignUserTaskCommandImpl implements AssignUserTaskCommandSte
   }
 
   @Override
-  public AssignUserTaskCommandStep1 action(final String action) {
+  public AssignUserTaskStep1 action(final String action) {
     request.setAction(action);
     return this;
   }
 
   @Override
-  public AssignUserTaskCommandStep1 assignee(final String assignee) {
+  public AssignUserTaskStep1 assignee(final String assignee) {
     ArgumentUtil.ensureNotNull("assignee", assignee);
     request.setAssignee(assignee);
     return this;
   }
 
   @Override
-  public AssignUserTaskCommandStep1 allowOverride(final boolean allowOverride) {
+  public AssignUserTaskStep1 allowOverride(final boolean allowOverride) {
     request.setAllowOverride(allowOverride);
     return this;
   }
