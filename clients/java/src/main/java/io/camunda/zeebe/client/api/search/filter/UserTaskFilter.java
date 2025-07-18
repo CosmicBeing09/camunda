@@ -29,10 +29,10 @@ public interface UserTaskFilter extends SearchRequestFilter {
   /**
    * Filters user tasks by the specified key.
    *
-   * @param value the key of the user task
+   * @param taskKey the key of the user task
    * @return the updated filter
    */
-  UserTaskFilter key(final Long value);
+  UserTaskFilter key(final Long taskKey);
 
   /**
    * Filters user tasks by the specified state.
@@ -56,7 +56,7 @@ public interface UserTaskFilter extends SearchRequestFilter {
    * @param taskDefinitionId the task definition ID of the user task
    * @return the updated filter
    */
-  UserTaskFilter elementId(final String taskDefinitionId);
+  UserTaskFilter taskDefinitionId(final String taskDefinitionId);
 
   /**
    * Filters user tasks by the specified candidate group.
