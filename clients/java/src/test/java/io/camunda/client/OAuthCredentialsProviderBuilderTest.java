@@ -29,18 +29,18 @@ import org.junit.jupiter.api.io.TempDir;
 
 public final class OAuthCredentialsProviderBuilderTest {
 
-  private final OAuthCredentialsProviderBuilder builder = new OAuthCredentialsProviderBuilder();
+  private final OAuthCredentialsProviderBuilder defaultCredentialsProviderBuilder = new OAuthCredentialsProviderBuilder();
 
   @Test
   void shouldFailWithNoClientId() {
     // given
-    final OAuthCredentialsProviderBuilder builder = new OAuthCredentialsProviderBuilder();
+    final OAuthCredentialsProviderBuilder credentialsProviderBuilder = new OAuthCredentialsProviderBuilder();
 
     // when
-    builder.audience("a").clientSecret("b").authorizationServerUrl("http://some.url");
+    credentialsProviderBuilder.audience("a").clientSecret("b").authorizationServerUrl("http://some.url");
 
     // then
-    assertThatCode(builder::build)
+    assertThatCode(credentialsProviderBuilder::build)
         .isInstanceOf(IllegalArgumentException.class)
         .hasMessageEndingWith(
             String.format(OAuthCredentialsProviderBuilder.INVALID_ARGUMENT_MSG, "client id"));
