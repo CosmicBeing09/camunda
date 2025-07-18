@@ -36,10 +36,10 @@ public class ProcessDefinitionIT {
   @TestTemplate
   public void shouldSaveAndFindProcessDefinitionByKey(
       final CamundaRdbmsTestApplication testApplication) {
-    final RdbmsService rdbmsService = testApplication.getRdbmsService();
-    final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
+    final RdbmsService service = testApplication.getRdbmsService();
+    final RdbmsWriter rdbmsWriter = service.createWriter(PARTITION_ID);
     final ProcessDefinitionReader processDefinitionReader =
-        rdbmsService.getProcessDefinitionReader();
+        service.getProcessDefinitionReader();
 
     final var processDefinition = ProcessDefinitionFixtures.createRandomized(b -> b);
     createAndSaveProcessDefinition(rdbmsWriter, processDefinition);
@@ -57,10 +57,10 @@ public class ProcessDefinitionIT {
   @TestTemplate
   public void shouldFindProcessInstanceByBpmnProcessId(
       final CamundaRdbmsTestApplication testApplication) {
-    final RdbmsService rdbmsService = testApplication.getRdbmsService();
-    final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
+    final RdbmsService service = testApplication.getRdbmsService();
+    final RdbmsWriter rdbmsWriter = service.createWriter(PARTITION_ID);
     final ProcessDefinitionReader processDefinitionReader =
-        rdbmsService.getProcessDefinitionReader();
+        service.getProcessDefinitionReader();
 
     final var processDefinition =
         ProcessDefinitionFixtures.createRandomized(
