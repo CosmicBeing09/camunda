@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.processinstance;
 import static io.camunda.zeebe.engine.processing.processinstance.ProcessInstanceMigrationPreconditions.requireNoPendingMsgSubMigrationDistribution;
 
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContextImpl;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
 import io.camunda.zeebe.engine.processing.deployment.model.element.AbstractFlowElement;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableActivity;
@@ -70,7 +70,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
 
   private final ProcessMessageSubscriptionState processMessageSubscriptionState;
   private final CatchEventBehavior catchEventBehavior;
-  private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
+  private final BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour;
   private final TypedCommandWriter commandWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final DistributionState distributionState;
@@ -81,7 +81,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
   public ProcessInstanceMigrationCatchEventBehaviour(
       final ProcessMessageSubscriptionState processMessageSubscriptionState,
       final CatchEventBehavior catchEventBehavior,
-      final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour,
+      final BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour,
       final TypedCommandWriter commandWriter,
       final CommandDistributionBehavior commandDistributionBehavior,
       final DistributionState distributionState,

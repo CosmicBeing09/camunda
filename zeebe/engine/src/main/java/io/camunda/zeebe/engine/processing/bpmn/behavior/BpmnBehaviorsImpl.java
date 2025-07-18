@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
+import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehavior;
 import io.camunda.zeebe.engine.processing.message.command.SubscriptionCommandSender;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
@@ -50,8 +50,8 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   private final BpmnJobActivationBehavior jobActivationBehavior;
   private final BpmnSignalBehavior signalBehavior;
   private final BpmnUserTaskBehavior userTaskBehavior;
-  private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
-  private final JobUpdateBehaviour jobUpdateBehaviour;
+  private final BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour;
+  private final JobUpdateBehavior jobUpdateBehaviour;
 
   public BpmnBehaviorsImpl(
       final MutableProcessingState processingState,
@@ -192,11 +192,11 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
             userTaskBehavior);
 
     compensationSubscriptionBehaviour =
-        new BpmnCompensationSubscriptionBehaviour(
+        new BpmnCompensationSubscriptionBehavior(
             processingState.getKeyGenerator(), processingState, writers, stateBehavior);
 
     jobUpdateBehaviour =
-        new JobUpdateBehaviour(processingState.getJobState(), clock, authCheckBehavior);
+        new JobUpdateBehavior(processingState.getJobState(), clock, authCheckBehavior);
   }
 
   @Override
@@ -295,12 +295,12 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   }
 
   @Override
-  public BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour() {
+  public BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour() {
     return compensationSubscriptionBehaviour;
   }
 
   @Override
-  public JobUpdateBehaviour jobUpdateBehaviour() {
+  public JobUpdateBehavior jobUpdateBehaviour() {
     return jobUpdateBehaviour;
   }
 }

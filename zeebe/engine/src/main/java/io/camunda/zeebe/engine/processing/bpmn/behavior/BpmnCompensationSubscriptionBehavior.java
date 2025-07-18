@@ -37,7 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class BpmnCompensationSubscriptionBehaviour {
+public class BpmnCompensationSubscriptionBehavior {
 
   /** Default instance key if no compensation handler was activated. */
   private static final long NONE_COMPENSATION_HANDLER_INSTANCE_KEY = -1L;
@@ -52,7 +52,7 @@ public class BpmnCompensationSubscriptionBehaviour {
   private final TypedCommandWriter commandWriter;
   private final BpmnStateBehavior stateBehavior;
 
-  public BpmnCompensationSubscriptionBehaviour(
+  public BpmnCompensationSubscriptionBehavior(
       final KeyGenerator keyGenerator,
       final ProcessingState processingState,
       final Writers writers,
@@ -155,7 +155,7 @@ public class BpmnCompensationSubscriptionBehaviour {
             .findSubscriptionsByProcessInstanceKey(
                 context.getTenantId(), context.getProcessInstanceKey())
             .stream()
-            .filter(not(BpmnCompensationSubscriptionBehaviour::isCompensationTriggered))
+            .filter(not(BpmnCompensationSubscriptionBehavior::isCompensationTriggered))
             .toList();
 
     // filter subscriptions by their scope
@@ -349,7 +349,7 @@ public class BpmnCompensationSubscriptionBehaviour {
         .findSubscriptionsByProcessInstanceKey(
             context.getTenantId(), context.getProcessInstanceKey())
         .stream()
-        .filter(BpmnCompensationSubscriptionBehaviour::isCompensationTriggered)
+        .filter(BpmnCompensationSubscriptionBehavior::isCompensationTriggered)
         .filter(
             subscription ->
                 subscription.getRecord().getCompensationHandlerInstanceKey()
@@ -391,7 +391,7 @@ public class BpmnCompensationSubscriptionBehaviour {
         .filter(
             subscription ->
                 scopeKey == subscription.getRecord().getCompensableActivityInstanceKey())
-        .filter(not(BpmnCompensationSubscriptionBehaviour::hasCompensationHandler))
+        .filter(not(BpmnCompensationSubscriptionBehavior::hasCompensationHandler))
         .findFirst()
         .ifPresent(
             flowScopeSubscription -> {

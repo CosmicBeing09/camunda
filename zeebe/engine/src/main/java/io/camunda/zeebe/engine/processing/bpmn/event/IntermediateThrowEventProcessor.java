@@ -12,7 +12,7 @@ import static io.camunda.zeebe.util.EnsureUtil.ensureNotNull;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventPublicationBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
@@ -45,7 +45,7 @@ public class IntermediateThrowEventProcessor
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final ExpressionProcessor expressionProcessor;
   private final BpmnSignalBehavior signalBehavior;
-  private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
+  private final BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour;
 
   public IntermediateThrowEventProcessor(
       final BpmnBehaviors bpmnBehaviors,
