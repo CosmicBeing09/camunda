@@ -41,8 +41,8 @@ public interface TestGateway<T extends TestGateway<T>> extends TestApplication<T
    * @return the address for the gRPC gateway
    */
   default URI grpcAddress() {
-    final var scheme = gatewayConfig().getSecurity().isEnabled() ? "https" : "http";
-    return uri(scheme, TestZeebePort.GATEWAY);
+    final var protocol = gatewayConfig().getSecurity().isEnabled() ? "https" : "http";
+    return uri(protocol, TestZeebePort.GATEWAY);
   }
 
   /**
@@ -60,9 +60,9 @@ public interface TestGateway<T extends TestGateway<T>> extends TestApplication<T
    * @return the REST gateway address
    */
   default URI restAddress() {
-    final var basePath = property("server.servlet.context-path", String.class, "");
+    final var contextPath = property("server.servlet.context-path", String.class, "");
     final var sslEnabled = property("server.ssl.enabled", Boolean.class, false);
-    return uri(sslEnabled ? "https" : "http", TestZeebePort.REST, basePath);
+    return uri(sslEnabled ? "https" : "http", TestZeebePort.REST, contextPath);
   }
 
   default URI actuatorAddress(final String path) {
@@ -151,7 +151,7 @@ public interface TestGateway<T extends TestGateway<T>> extends TestApplication<T
    *
    * @return itself for chaining
    */
-  default T awaitCompleteTopology(BrokerBasedProperties brokerBasedProperties) {
+  default T awaitCompleteTopology(final BrokerBasedProperties brokerBasedProperties) {
     final var clusterCfg = brokerBasedProperties.getCluster();
     return awaitCompleteTopology(
         clusterCfg.getClusterSize(),
