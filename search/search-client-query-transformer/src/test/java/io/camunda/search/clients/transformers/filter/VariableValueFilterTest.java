@@ -7,11 +7,11 @@
  */
 package io.camunda.search.clients.transformers.filter;
 
-import static io.camunda.search.filter.Operation.eq;
-import static io.camunda.search.filter.Operation.gt;
-import static io.camunda.search.filter.Operation.gte;
-import static io.camunda.search.filter.Operation.lt;
-import static io.camunda.search.filter.Operation.lte;
+import static io.camunda.search.filter.FilterOperation.eq;
+import static io.camunda.search.filter.FilterOperation.gt;
+import static io.camunda.search.filter.FilterOperation.gte;
+import static io.camunda.search.filter.FilterOperation.lt;
+import static io.camunda.search.filter.FilterOperation.lte;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import io.camunda.search.filter.UntypedOperation;

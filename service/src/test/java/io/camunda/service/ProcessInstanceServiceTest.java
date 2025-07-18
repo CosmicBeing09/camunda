@@ -24,7 +24,7 @@ import io.camunda.search.entities.ProcessInstanceEntity.ProcessInstanceState;
 import io.camunda.search.entities.SequenceFlowEntity;
 import io.camunda.search.exception.CamundaSearchException;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.search.query.IncidentQuery;
 import io.camunda.search.query.ProcessInstanceQuery;
@@ -401,7 +401,7 @@ public final class ProcessInstanceServiceTest {
     final var enhancedFilter =
         MsgPackConverter.convertToObject(filterBuffer, ProcessInstanceFilter.class);
     assertThat(enhancedFilter.stateOperations())
-        .containsExactly(Operation.eq(ProcessInstanceState.ACTIVE.name()));
+        .containsExactly(FilterOperation.eq(ProcessInstanceState.ACTIVE.name()));
 
     final var modificationPlan = captor.getValue().getRequestWriter().getModificationPlan();
     assertThat(modificationPlan.getMoveInstructions()).hasSize(1);
@@ -451,7 +451,7 @@ public final class ProcessInstanceServiceTest {
     verify(incidentSearchClient).searchIncidents(incidentQueryCaptor.capture());
     final var incidentQuery = incidentQueryCaptor.getValue();
     assertThat(incidentQuery.filter().treePathOperations())
-        .containsExactly(Operation.like("*" + processInstance.treePath() + "*"));
+        .containsExactly(FilterOperation.like("*" + processInstance.treePath() + "*"));
     assertThat(incidentQuery.page()).isEqualTo(query.page());
     assertThat(incidentQuery.sort()).isEqualTo(query.sort());
   }

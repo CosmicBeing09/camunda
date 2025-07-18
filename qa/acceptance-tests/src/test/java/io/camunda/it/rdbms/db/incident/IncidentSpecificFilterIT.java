@@ -21,8 +21,8 @@ import io.camunda.it.rdbms.db.fixtures.IncidentFixtures;
 import io.camunda.it.rdbms.db.util.RdbmsTestConfiguration;
 import io.camunda.search.entities.IncidentEntity.ErrorType;
 import io.camunda.search.entities.IncidentEntity.IncidentState;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.IncidentFilter;
-import io.camunda.search.filter.Operation;
 import io.camunda.search.page.SearchQueryPage;
 import io.camunda.search.query.IncidentQuery;
 import io.camunda.search.sort.IncidentSort;
@@ -102,8 +102,8 @@ public class IncidentSpecificFilterIT {
         new IncidentFilter.Builder().jobKeys(6000L).build(),
         new IncidentFilter.Builder()
             .creationTimeOperations(
-                Operation.gt(NOW.minus(1, ChronoUnit.MILLIS)),
-                Operation.lt(NOW.plus(1, ChronoUnit.MILLIS)))
+                FilterOperation.gt(NOW.minus(1, ChronoUnit.MILLIS)),
+                FilterOperation.lt(NOW.plus(1, ChronoUnit.MILLIS)))
             .build(),
         new IncidentFilter.Builder().tenantIds("sorting-tenant1").build());
   }

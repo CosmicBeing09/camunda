@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.batchoperation;
 
 import io.camunda.search.entities.ProcessInstanceEntity.ProcessInstanceState;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.zeebe.engine.EngineConfiguration;
 import io.camunda.zeebe.engine.metrics.BatchOperationMetrics;
@@ -227,7 +227,7 @@ public class BatchOperationExecutionScheduler implements StreamProcessorLifecycl
                 partitionId,
                 batchOperation.getEntityFilter(ProcessInstanceFilter.class).toBuilder()
                     .states(ProcessInstanceState.ACTIVE.name())
-                    .parentProcessInstanceKeyOperations(Operation.exists(false))
+                    .parentProcessInstanceKeyOperations(FilterOperation.exists(false))
                     .build(),
                 batchOperation.getAuthentication(),
                 abortCondition);

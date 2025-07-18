@@ -17,7 +17,7 @@ import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.clients.query.SearchTermsQuery;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessInstanceFilter;
 import io.camunda.search.query.SearchQueryBuilders;
 import java.time.OffsetDateTime;
@@ -239,7 +239,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     // given
     final var dateAfter = OffsetDateTime.of(2024, 3, 12, 10, 30, 15, 0, ZoneOffset.UTC);
     final var dateBefore = OffsetDateTime.of(2024, 7, 15, 10, 30, 15, 0, ZoneOffset.UTC);
-    final var dateFilter = List.of(Operation.gte(dateAfter), Operation.lt(dateBefore));
+    final var dateFilter = List.of(FilterOperation.gte(dateAfter), FilterOperation.lt(dateBefore));
     final var processInstanceFilter =
         FilterBuilders.processInstance(
             f -> f.startDateOperations(dateFilter).endDateOperations(dateFilter));
@@ -374,7 +374,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final String expectedError = "expected error";
     final ProcessInstanceFilter filter =
         FilterBuilders.processInstance(
-            f -> f.errorMessageOperations(List.of(Operation.eq(expectedError))));
+            f -> f.errorMessageOperations(List.of(FilterOperation.eq(expectedError))));
 
     // when: transform the filter into a SearchQuery
     final var searchRequest = transformQuery(filter);

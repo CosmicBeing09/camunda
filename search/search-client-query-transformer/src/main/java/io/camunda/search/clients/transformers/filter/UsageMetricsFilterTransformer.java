@@ -12,7 +12,7 @@ import static io.camunda.search.clients.query.SearchQueryBuilders.dateTimeOperat
 import static io.camunda.search.clients.query.SearchQueryBuilders.stringTerms;
 
 import io.camunda.search.clients.query.SearchQuery;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.UsageMetricsFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.descriptors.index.MetricIndex;
@@ -40,7 +40,7 @@ public class UsageMetricsFilterTransformer implements FilterTransformer<UsageMet
     queries.addAll(
         dateTimeOperations(
             "eventTime",
-            List.of(Operation.gte(filter.startTime()), Operation.lte(filter.endTime()))));
+            List.of(FilterOperation.gte(filter.startTime()), FilterOperation.lte(filter.endTime()))));
     return and(queries);
   }
 

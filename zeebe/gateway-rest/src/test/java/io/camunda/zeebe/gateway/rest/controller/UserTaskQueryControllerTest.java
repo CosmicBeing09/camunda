@@ -20,7 +20,7 @@ import io.camunda.search.entities.UserTaskEntity;
 import io.camunda.search.entities.UserTaskEntity.UserTaskState;
 import io.camunda.search.entities.VariableEntity;
 import io.camunda.search.exception.CamundaSearchException;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.query.SearchQueryResult;
 import io.camunda.search.query.SearchQueryResult.Builder;
@@ -811,7 +811,7 @@ public class UserTaskQueryControllerTest extends RestControllerTest {
 
     when(userTaskServices.searchUserTaskVariables(
             VALID_USER_TASK_KEY,
-            variableSearchQuery().filter(f -> f.nameOperations(Operation.eq("varName"))).build()))
+            variableSearchQuery().filter(f -> f.nameOperations(FilterOperation.eq("varName"))).build()))
         .thenReturn(SEARCH_VAR_QUERY_RESULT);
     // when and then
     webClient
@@ -829,7 +829,7 @@ public class UserTaskQueryControllerTest extends RestControllerTest {
     verify(userTaskServices)
         .searchUserTaskVariables(
             VALID_USER_TASK_KEY,
-            variableSearchQuery().filter(f -> f.nameOperations(Operation.eq("varName"))).build());
+            variableSearchQuery().filter(f -> f.nameOperations(FilterOperation.eq("varName"))).build());
   }
 
   private static Stream<Arguments> provideAdvancedSearchParameters() {

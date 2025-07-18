@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.gateway.rest.util;
 
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.Operator;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,11 +24,11 @@ public class AdvancedSearchFilterUtil {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdvancedSearchFilterUtil.class);
 
-  public static <T> Function<Object, List<Operation<T>>> mapToOperations(final Class<T> tClass) {
+  public static <T> Function<Object, List<FilterOperation<T>>> mapToOperations(final Class<T> tClass) {
     return (final Object filter) -> mapToOperations(filter, tClass);
   }
 
-  public static <T> Function<Object, List<Operation<T>>> mapToOperations(
+  public static <T> Function<Object, List<FilterOperation<T>>> mapToOperations(
       final Class<T> tClass, final CustomConverter<T> customConverter) {
     return (final Object filter) -> mapToOperations(filter, tClass, customConverter);
   }
@@ -62,15 +62,15 @@ public class AdvancedSearchFilterUtil {
         "Could not convert request value [%s] to [%s]".formatted(value, tClass.getName()));
   }
 
-  protected static <T> List<Operation<T>> mapToOperations(
+  protected static <T> List<FilterOperation<T>> mapToOperations(
       final Object filter, final Class<T> tClass) {
     return mapToOperations(filter, tClass, null);
   }
 
-  protected static <T> List<Operation<T>> mapToOperations(
+  protected static <T> List<FilterOperation<T>> mapToOperations(
       final Object filter, final Class<T> tClass, final CustomConverter<T> customConverter) {
     final var fClass = filter.getClass();
-    final var operations = new ArrayList<Operation<T>>();
+    final var operations = new ArrayList<FilterOperation<T>>();
     for (final Operator operator : Operator.values()) {
       final Method method;
       try {
@@ -85,15 +85,15 @@ public class AdvancedSearchFilterUtil {
         final var value = method.invoke(filter);
         if (value != null) {
           if (value instanceof final Boolean booleanValue) {
-            operations.add(Operation.exists(booleanValue));
+            operations.add(FilterOperation.exists(booleanValue));
           } else if (value instanceof final List<?> values) {
             if (!values.isEmpty()) {
               final var tValues =
                   values.stream().map(v -> convertValue(tClass, v, customConverter)).toList();
-              operations.add(new Operation<>(operator, tValues));
+              operations.add(new FilterOperation<>(operator, tValues));
             }
           } else {
-            operations.add(new Operation<>(operator, convertValue(tClass, value, customConverter)));
+            operations.add(new FilterOperation<>(operator, convertValue(tClass, value, customConverter)));
           }
         }
       } catch (final InvocationTargetException | IllegalAccessException e) {

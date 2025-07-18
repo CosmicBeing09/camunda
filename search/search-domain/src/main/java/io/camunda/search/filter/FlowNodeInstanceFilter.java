@@ -32,7 +32,7 @@ FilterBase {
     private List<Long> processInstanceKeys;
     private List<Long> processDefinitionKeys;
     private List<String> processDefinitionIds;
-    private List<Operation<String>> stateFilters;
+    private List<FilterOperation<String>> stateFilters;
     private List<FlowNodeType> types;
     private List<String> flowNodeIds;
     private List<String> flowNodeNames;
@@ -80,7 +80,7 @@ FilterBase {
     }
 
     public FlowNodeInstanceFilter.Builder stateFilters(
-        final List<Operation<String>> operations) {
+        final List<FilterOperation<String>> operations) {
       stateFilters = addValuesToList(stateFilters, operations);
       return this;
     }
@@ -91,7 +91,7 @@ FilterBase {
 
     @SafeVarargs
     public final FlowNodeInstanceFilter.Builder stateFilters(
-        final Operation<String> operation, final Operation<String>... operations) {
+        final FilterOperation<String> operation, final FilterOperation<String>... operations) {
       return stateFilters(collectValues(operation, operations));
     }
 
@@ -198,7 +198,7 @@ public record FlowNodeInstanceFilter(
     List<Long> processInstanceKeys,
     List<Long> processDefinitionKeys,
     List<String> processDefinitionIds,
-    List<Operation<String>> stateFilters,
+    List<FilterOperation<String>> stateFilters,
     List<FlowNodeType> types,
     List<String> flowNodeIds,
     List<String> flowNodeNames,

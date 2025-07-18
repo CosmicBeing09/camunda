@@ -15,7 +15,7 @@ import io.camunda.search.clients.query.SearchQueryOption;
 import io.camunda.search.clients.query.SearchRangeQuery;
 import io.camunda.search.clients.query.SearchTermQuery;
 import io.camunda.search.filter.FilterBuilders;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.ProcessDefinitionStatisticsFilter;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -80,7 +80,7 @@ public final class ProcessDefinitionStatisticsFilterTransformerTest
     // given
     final var dateAfter = OffsetDateTime.of(2024, 3, 12, 10, 30, 15, 0, ZoneOffset.UTC);
     final var dateBefore = OffsetDateTime.of(2024, 7, 15, 10, 30, 15, 0, ZoneOffset.UTC);
-    final var dateFilter = List.of(Operation.gte(dateAfter), Operation.lt(dateBefore));
+    final var dateFilter = List.of(FilterOperation.gte(dateAfter), FilterOperation.lt(dateBefore));
     final var processInstanceFilter =
         FilterBuilders.processDefinitionStatisticsFilter(
             PROCESS_DEFINITION_KEY,

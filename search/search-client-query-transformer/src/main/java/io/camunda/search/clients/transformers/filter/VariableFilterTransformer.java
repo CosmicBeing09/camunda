@@ -23,7 +23,7 @@ import static io.camunda.webapps.schema.descriptors.template.VariableTemplate.VA
 import static java.util.Optional.ofNullable;
 
 import io.camunda.search.clients.query.SearchQuery;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.UntypedOperation;
 import io.camunda.search.filter.VariableFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
@@ -53,16 +53,16 @@ public class VariableFilterTransformer extends IndexFilterTransformer<VariableFi
     return variableOperations(VALUE, variableFilters);
   }
 
-  private List<SearchQuery> getScopeKeyQuery(final List<Operation<Long>> scopeKey) {
+  private List<SearchQuery> getScopeKeyQuery(final List<FilterOperation<Long>> scopeKey) {
     return longOperations(SCOPE_KEY, scopeKey);
   }
 
   private List<SearchQuery> getProcessInstanceKeyQuery(
-      final List<Operation<Long>> processInstanceKey) {
+      final List<FilterOperation<Long>> processInstanceKey) {
     return longOperations(PROCESS_INSTANCE_KEY, processInstanceKey);
   }
 
-  private List<SearchQuery> getVariableKeyQuery(final List<Operation<Long>> variableKeys) {
+  private List<SearchQuery> getVariableKeyQuery(final List<FilterOperation<Long>> variableKeys) {
     return longOperations(KEY, variableKeys);
   }
 

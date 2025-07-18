@@ -10,7 +10,7 @@ package io.camunda.zeebe.gateway.rest.util;
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.filter.Operator;
 import io.camunda.zeebe.gateway.protocol.rest.AdvancedDateTimeFilter;
 import io.camunda.zeebe.gateway.protocol.rest.AdvancedIntegerFilter;
@@ -29,10 +29,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 class AdvancedSearchFilterUtilTest {
 
   private <F, T> F constructFilter(
-      final Class<F> fClass, final Class<T> pClass, final List<Operation<T>> operations)
+      final Class<F> fClass, final Class<T> pClass, final List<FilterOperation<T>> operations)
       throws Exception {
     final var filter = fClass.getDeclaredConstructor().newInstance();
-    for (final Operation<T> op : operations) {
+    for (final FilterOperation<T> op : operations) {
       final var operator = op.operator();
       final var methodName = "set$%s".formatted(StringUtils.capitalize(operator.getValue()));
       final var existsName = "set$%s".formatted(StringUtils.capitalize(Operator.EXISTS.getValue()));
@@ -98,7 +98,7 @@ class AdvancedSearchFilterUtilTest {
       final Class<?> filterClass,
       final Class<T> filterValueClass,
       final Class<T> mappedClass,
-      final List<Operation<T>> operations)
+      final List<FilterOperation<T>> operations)
       throws Exception {
     // given
     final var filter = constructFilter(filterClass, filterValueClass, operations);
@@ -118,7 +118,7 @@ class AdvancedSearchFilterUtilTest {
     final var actual = AdvancedSearchFilterUtil.mapToOperations(filter, String.class);
     // then
     assertThat(actual).hasSize(1);
-    assertThat(actual.getFirst()).isEqualTo(Operation.eq("10"));
+    assertThat(actual.getFirst()).isEqualTo(FilterOperation.eq("10"));
   }
 
   @Test
@@ -130,7 +130,7 @@ class AdvancedSearchFilterUtilTest {
     final var actual = AdvancedSearchFilterUtil.mapToOperations(filter, Long.class);
     // then
     assertThat(actual).hasSize(1);
-    assertThat(actual.getFirst()).isEqualTo(Operation.eq(10L));
+    assertThat(actual.getFirst()).isEqualTo(FilterOperation.eq(10L));
   }
 
   @Test

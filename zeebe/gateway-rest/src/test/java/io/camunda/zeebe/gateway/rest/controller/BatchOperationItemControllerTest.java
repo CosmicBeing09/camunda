@@ -14,7 +14,7 @@ import static org.mockito.Mockito.when;
 import io.camunda.search.entities.BatchOperationEntity;
 import io.camunda.search.entities.BatchOperationEntity.BatchOperationItemEntity;
 import io.camunda.search.entities.BatchOperationEntity.BatchOperationItemState;
-import io.camunda.search.filter.Operation;
+import io.camunda.search.filter.FilterOperation;
 import io.camunda.search.query.BatchOperationItemQuery;
 import io.camunda.search.query.SearchQueryResult;
 import io.camunda.security.auth.Authentication;
@@ -75,13 +75,13 @@ class BatchOperationItemControllerTest extends RestControllerTest {
                 .stateOperations(ops)
                 .build(),
         List.of(
-            List.of(Operation.eq(String.valueOf(BatchOperationItemStateEnum.ACTIVE))),
-            List.of(Operation.neq(String.valueOf(BatchOperationItemStateEnum.COMPLETED))),
+            List.of(FilterOperation.eq(String.valueOf(BatchOperationItemStateEnum.ACTIVE))),
+            List.of(FilterOperation.neq(String.valueOf(BatchOperationItemStateEnum.COMPLETED))),
             List.of(
-                Operation.in(
+                FilterOperation.in(
                     String.valueOf(BatchOperationItemStateEnum.COMPLETED),
                     String.valueOf(BatchOperationItemStateEnum.ACTIVE)),
-                Operation.like("act"))),
+                FilterOperation.like("act"))),
         true);
 
     return streamBuilder.build();

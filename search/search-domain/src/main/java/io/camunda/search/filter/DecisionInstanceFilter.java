@@ -25,11 +25,11 @@ public record DecisionInstanceFilter(
     List<Long> decisionInstanceKeys,
     List<String> decisionInstanceIds,
     List<DecisionInstanceState> states,
-    List<Operation<OffsetDateTime>> evaluationDateOperations,
+    List<FilterOperation<OffsetDateTime>> evaluationDateOperations,
     List<String> evaluationFailures,
     List<Long> processDefinitionKeys,
     List<Long> processInstanceKeys,
-    List<Operation<Long>> decisionDefinitionKeyOperations,
+    List<FilterOperation<Long>> decisionDefinitionKeyOperations,
     List<String> decisionDefinitionIds,
     List<String> decisionDefinitionNames,
     List<Integer> decisionDefinitionVersions,
@@ -47,11 +47,11 @@ public record DecisionInstanceFilter(
     private List<Long> decisionInstanceKeys;
     private List<String> decisionInstanceIds;
     private List<DecisionInstanceState> states;
-    private List<Operation<OffsetDateTime>> evaluationDateOperations;
+    private List<FilterOperation<OffsetDateTime>> evaluationDateOperations;
     private List<String> evaluationFailures;
     private List<Long> processDefinitionKeys;
     private List<Long> processInstanceKeys;
-    private List<Operation<Long>> decisionDefinitionKeyOperations;
+    private List<FilterOperation<Long>> decisionDefinitionKeyOperations;
     private List<String> decisionDefinitionIds;
     private List<String> decisionDefinitionNames;
     private List<Integer> decisionDefinitionVersions;
@@ -85,14 +85,14 @@ public record DecisionInstanceFilter(
       return states(collectValuesAsList(values));
     }
 
-    public Builder evaluationDateOperations(final List<Operation<OffsetDateTime>> operations) {
+    public Builder evaluationDateOperations(final List<FilterOperation<OffsetDateTime>> operations) {
       evaluationDateOperations = addValuesToList(evaluationDateOperations, operations);
       return this;
     }
 
     @SafeVarargs
     public final Builder evaluationDateOperations(
-        final Operation<OffsetDateTime> operation, final Operation<OffsetDateTime>... operations) {
+        final FilterOperation<OffsetDateTime> operation, final FilterOperation<OffsetDateTime>... operations) {
       return evaluationDateOperations(collectValues(operation, operations));
     }
 
@@ -123,7 +123,7 @@ public record DecisionInstanceFilter(
       return processInstanceKeys(collectValuesAsList(values));
     }
 
-    public Builder decisionDefinitionKeyOperations(final List<Operation<Long>> operations) {
+    public Builder decisionDefinitionKeyOperations(final List<FilterOperation<Long>> operations) {
       decisionDefinitionKeyOperations =
           addValuesToList(decisionDefinitionKeyOperations, operations);
       return this;
@@ -135,7 +135,7 @@ public record DecisionInstanceFilter(
 
     @SafeVarargs
     public final Builder decisionDefinitionKeyOperations(
-        final Operation<Long> operation, final Operation<Long>... operations) {
+        final FilterOperation<Long> operation, final FilterOperation<Long>... operations) {
       return decisionDefinitionKeyOperations(collectValues(operation, operations));
     }
 
