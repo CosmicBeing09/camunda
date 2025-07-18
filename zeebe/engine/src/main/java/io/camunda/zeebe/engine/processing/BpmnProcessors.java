@@ -61,7 +61,7 @@ public final class BpmnProcessors {
 
   public static TypedRecordProcessor<ProcessInstanceRecord> addBpmnStreamProcessor(
       final MutableProcessingState processingState,
-      final Supplier<ScheduledTaskState> scheduledTaskState,
+      final Supplier<ScheduledTaskState> scheduledTaskStateSupplier,
       final BpmnBehaviors bpmnBehaviors,
       final TypedRecordProcessors typedRecordProcessors,
       final SubscriptionCommandSender subscriptionCommandSender,
@@ -75,7 +75,7 @@ public final class BpmnProcessors {
       final AuthorizationCheckBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
       final ProcessEngineMetrics processEngineMetrics) {
-    final MutableProcessMessageSubscriptionState subscriptionState =
+    final MutableProcessMessageSubscriptionState processMessageSubscriptionState =
         processingState.getProcessMessageSubscriptionState();
     final var keyGenerator = processingState.getKeyGenerator();
 
@@ -89,11 +89,11 @@ public final class BpmnProcessors {
 
     addMessageStreamProcessors(
         typedRecordProcessors,
-        subscriptionState,
+        processMessageSubscriptionState,
         subscriptionCommandSender,
         bpmnBehaviors,
         processingState,
-        scheduledTaskState,
+        scheduledTaskStateSupplier,
         writers,
         clock,
         transientProcessMessageSubscriptionState);
