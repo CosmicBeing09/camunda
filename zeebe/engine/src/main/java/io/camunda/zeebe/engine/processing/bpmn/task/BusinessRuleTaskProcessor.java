@@ -11,13 +11,13 @@ import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnProcessingException;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnDecisionBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.VariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableBusinessRuleTask;
 import io.camunda.zeebe.util.Either;
@@ -25,11 +25,11 @@ import io.camunda.zeebe.util.Either;
 public final class BusinessRuleTaskProcessor
     extends JobWorkerTaskSupportingProcessor<ExecutableBusinessRuleTask> {
 
-  private final BpmnDecisionBehavior decisionBehavior;
+  private final DecisionBehavior decisionBehavior;
   private final BpmnEventSubscriptionBehavior eventSubscriptionBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
-  private final BpmnVariableMappingBehavior variableMappingBehavior;
+  private final VariableMappingBehavior variableMappingBehavior;
   private final BpmnStateBehavior stateBehavior;
   private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
   private final BpmnJobBehavior jobBehavior;

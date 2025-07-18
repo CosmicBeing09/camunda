@@ -18,7 +18,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnUserTaskBehavior.UserTaskProperties;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.VariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableUserTask;
 import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
@@ -33,7 +33,7 @@ public final class UserTaskProcessor extends JobWorkerTaskSupportingProcessor<Ex
 
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
-  private final BpmnVariableMappingBehavior variableMappingBehavior;
+  private final VariableMappingBehavior variableMappingBehavior;
   private final BpmnEventSubscriptionBehavior eventSubscriptionBehavior;
   private final BpmnUserTaskBehavior userTaskBehavior;
   private final BpmnStateBehavior stateBehavior;

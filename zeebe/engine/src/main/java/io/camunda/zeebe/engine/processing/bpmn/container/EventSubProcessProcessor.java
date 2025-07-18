@@ -14,7 +14,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.VariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableFlowElementContainer;
 import io.camunda.zeebe.util.Either;
@@ -24,7 +24,7 @@ public final class EventSubProcessProcessor
 
   private final BpmnStateBehavior stateBehavior;
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
-  private final BpmnVariableMappingBehavior variableMappingBehavior;
+  private final VariableMappingBehavior variableMappingBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnJobBehavior jobBehavior;
 

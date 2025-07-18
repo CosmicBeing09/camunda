@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnSignalBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.VariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableEndEvent;
@@ -42,7 +42,7 @@ public final class EndEventProcessor implements BpmnElementProcessor<ExecutableE
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
-  private final BpmnVariableMappingBehavior variableMappingBehavior;
+  private final VariableMappingBehavior variableMappingBehavior;
   private final BpmnJobBehavior jobBehavior;
   private final BpmnSignalBehavior signalBehavior;
   private final BpmnStateBehavior stateBehavior;

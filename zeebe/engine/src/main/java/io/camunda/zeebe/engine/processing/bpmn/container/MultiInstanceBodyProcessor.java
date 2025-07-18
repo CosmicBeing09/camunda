@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBeh
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnVariableMappingBehavior;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.VariableMappingBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.MultiInstanceOutputCollectionBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -66,7 +66,7 @@ public final class MultiInstanceBodyProcessor
   private final BpmnIncidentBehavior incidentBehavior;
   private final MultiInstanceOutputCollectionBehavior multiInstanceOutputCollectionBehavior;
   private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
-  private final BpmnVariableMappingBehavior variableMappingBehavior;
+  private final VariableMappingBehavior variableMappingBehavior;
 
   public MultiInstanceBodyProcessor(
       final BpmnBehaviors bpmnBehaviors,

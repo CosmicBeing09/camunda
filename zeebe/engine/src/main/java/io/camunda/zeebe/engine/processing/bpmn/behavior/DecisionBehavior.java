@@ -10,7 +10,6 @@ package io.camunda.zeebe.engine.processing.bpmn.behavior;
 import io.camunda.zeebe.dmn.DecisionEvaluationResult;
 import io.camunda.zeebe.dmn.ParsedDecisionRequirementsGraph;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
-import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
@@ -32,9 +31,9 @@ import org.agrona.DirectBuffer;
 import org.agrona.ExpandableArrayBuffer;
 
 /** Provides decision behavior to the BPMN processors */
-public final class BpmnDecisionBehavior {
+public final class DecisionBehavior {
 
-  private final DecisionBehavior decisionBehavior;
+  private final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior;
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableState variableState;
   private final StateWriter stateWriter;
@@ -42,8 +41,8 @@ public final class BpmnDecisionBehavior {
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
 
-  public BpmnDecisionBehavior(
-      final DecisionBehavior decisionBehavior,
+  public DecisionBehavior(
+      final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior,
       final ProcessingState processingState,
       final EventTriggerBehavior eventTriggerBehavior,
       final StateWriter stateWriter,

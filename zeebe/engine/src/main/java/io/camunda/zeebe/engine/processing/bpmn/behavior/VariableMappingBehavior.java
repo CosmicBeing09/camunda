@@ -26,7 +26,7 @@ import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
 
-public final class BpmnVariableMappingBehavior {
+public final class VariableMappingBehavior {
   private final ExpressionProcessor expressionProcessor;
   private final VariableState variablesState;
   private final ElementInstanceState elementInstanceState;
@@ -35,7 +35,7 @@ public final class BpmnVariableMappingBehavior {
 
   private final EventTriggerBehavior eventTriggerBehavior;
 
-  public BpmnVariableMappingBehavior(
+  public VariableMappingBehavior(
       final ExpressionProcessor expressionProcessor,
       final ProcessingState processingState,
       final VariableBehavior variableBehavior,

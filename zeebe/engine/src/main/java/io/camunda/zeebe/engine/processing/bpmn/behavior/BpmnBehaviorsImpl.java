@@ -12,7 +12,6 @@ import io.camunda.zeebe.engine.metrics.JobProcessingMetrics;
 import io.camunda.zeebe.engine.processing.bpmn.ProcessInstanceStateTransitionGuard;
 import io.camunda.zeebe.engine.processing.bpmn.clock.ZeebeFeelEngineClock;
 import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
-import io.camunda.zeebe.engine.processing.common.DecisionBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
@@ -32,8 +31,8 @@ import java.time.InstantSource;
 public final class BpmnBehaviorsImpl implements BpmnBehaviors {
 
   private final ExpressionProcessor expressionBehavior;
-  private final BpmnDecisionBehavior bpmnDecisionBehavior;
-  private final BpmnVariableMappingBehavior variableMappingBehavior;
+  private final DecisionBehavior bpmnDecisionBehavior;
+  private final VariableMappingBehavior variableMappingBehavior;
   private final BpmnEventPublicationBehavior eventPublicationBehavior;
   private final BpmnEventSubscriptionBehavior eventSubscriptionBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
@@ -57,7 +56,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
       final MutableProcessingState processingState,
       final Writers writers,
       final JobProcessingMetrics jobMetrics,
-      final DecisionBehavior decisionBehavior,
+      final io.camunda.zeebe.engine.processing.common.DecisionBehavior decisionBehavior,
       final SubscriptionCommandSender subscriptionCommandSender,
       final RoutingInfo routingInfo,
       final DueDateTimerChecker timerChecker,
@@ -98,7 +97,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
             stateBehavior);
 
     bpmnDecisionBehavior =
-        new BpmnDecisionBehavior(
+        new DecisionBehavior(
             decisionBehavior,
             processingState,
             eventTriggerBehavior,
@@ -110,7 +109,7 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
     stateTransitionGuard = new ProcessInstanceStateTransitionGuard(stateBehavior);
 
     variableMappingBehavior =
-        new BpmnVariableMappingBehavior(
+        new VariableMappingBehavior(
             expressionBehavior, processingState, variableBehavior, eventTriggerBehavior);
 
     eventSubscriptionBehavior =
@@ -205,12 +204,12 @@ public final class BpmnBehaviorsImpl implements BpmnBehaviors {
   }
 
   @Override
-  public BpmnDecisionBehavior bpmnDecisionBehavior() {
+  public DecisionBehavior bpmnDecisionBehavior() {
     return bpmnDecisionBehavior;
   }
 
   @Override
-  public BpmnVariableMappingBehavior variableMappingBehavior() {
+  public VariableMappingBehavior variableMappingBehavior() {
     return variableMappingBehavior;
   }
 
