@@ -49,7 +49,7 @@ public final class DeployResourceStub
   public BrokerResponse<DeploymentRecord> handle(final BrokerDeployResourceRequest request)
       throws Exception {
     final DeploymentRecord deploymentRecord = request.getRequestWriter();
-    final String tenantId = deploymentRecord.getTenantId();
+    final String tenantId = deploymentRecord.getTenantIdentifier();
     deploymentRecord
         .resources()
         .iterator()

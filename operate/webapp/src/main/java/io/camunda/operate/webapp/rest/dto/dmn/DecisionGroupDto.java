@@ -43,7 +43,7 @@ public class DecisionGroupDto {
               final DecisionGroupDto groupDto = new DecisionGroupDto();
               final DecisionDefinitionEntity decision0 = group.get(0);
               groupDto.setDecisionId(decision0.getDecisionId());
-              groupDto.setTenantId(decision0.getTenantId());
+              groupDto.setTenantId(decision0.getTenantIdentifier());
               groupDto.setName(decision0.getName());
               groupDto.setPermissions(
                   (!permissionsService.permissionsEnabled())

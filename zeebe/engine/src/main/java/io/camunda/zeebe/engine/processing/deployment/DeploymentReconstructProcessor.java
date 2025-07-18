@@ -113,7 +113,7 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
     // trigger reconstruction of another deployment reconstruction
     cachedDeploymentRecordCommand.reset();
     cachedDeploymentRecordCommand
-        .setTenantId(deploymentRecord.getTenantId())
+        .setTenantId(deploymentRecord.getTenantIdentifier())
         .setReconstructionKey(deploymentRecord.getDeploymentKey())
         .setReconstructionProgress(Resource.progress(resource));
     commandWriter.appendNewCommand(DeploymentIntent.RECONSTRUCT, cachedDeploymentRecordCommand);
@@ -347,10 +347,10 @@ public class DeploymentReconstructProcessor implements TypedRecordProcessor<Depl
 
   static ResourceIdentifier fromDeploymentRecord(final DeploymentRecord record) {
     return switch (record.getReconstructionProgress()) {
-      case PROCESS -> new ProcessIdentifier(record.getTenantId(), record.getReconstructionKey());
-      case FORM -> new FormIdentifier(record.getTenantId(), record.getReconstructionKey());
+      case PROCESS -> new ProcessIdentifier(record.getTenantIdentifier(), record.getReconstructionKey());
+      case FORM -> new FormIdentifier(record.getTenantIdentifier(), record.getReconstructionKey());
       case DECISION_REQUIREMENTS ->
-          new DecisionRequirementsIdentifier(record.getTenantId(), record.getReconstructionKey());
+          new DecisionRequirementsIdentifier(record.getTenantIdentifier(), record.getReconstructionKey());
       case DONE -> null;
     };
   }

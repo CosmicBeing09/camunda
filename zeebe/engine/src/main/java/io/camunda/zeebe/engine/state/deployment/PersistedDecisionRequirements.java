@@ -57,7 +57,7 @@ public final class PersistedDecisionRequirements extends UnpackedObject implemen
     resourceNameProp.setValue(record.getResourceNameBuffer());
     checksumProp.setValue(record.getChecksumBuffer());
     resourceProp.setValue(record.getResourceBuffer());
-    tenantIdProp.setValue(record.getTenantId());
+    tenantIdProp.setValue(record.getTenantIdentifier());
   }
 
   public PersistedDecisionRequirements copy() {

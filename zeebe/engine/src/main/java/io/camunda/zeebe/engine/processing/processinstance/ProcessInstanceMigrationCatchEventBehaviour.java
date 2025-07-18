@@ -277,7 +277,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
           timerRecord.setTargetElementId(BufferUtil.wrapString(targetCatchEventId));
           timerRecord.setRepetitions(timerInstance.getRepetitions());
           timerRecord.setProcessDefinitionKey(targetProcessDefinition.getKey());
-          timerRecord.setTenantId(timerInstance.getTenantId());
+          timerRecord.setTenantId(timerInstance.getTenantIdentifier());
 
           stateWriter.appendFollowUpEvent(
               timerInstance.getKey(), TimerIntent.MIGRATED, timerRecord);
@@ -339,7 +339,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
                 requireNoSubscriptionForMessage(
                     elementInstance,
                     catchEvent.messageName(),
-                    elementInstanceRecord.getTenantId(),
+                    elementInstanceRecord.getTenantIdentifier(),
                     targetCatchEventId);
               }
               return true;
@@ -456,7 +456,7 @@ public class ProcessInstanceMigrationCatchEventBehaviour {
             .setProcessInstanceKey(processMessageSubscriptionRecord.getProcessInstanceKey())
             .setMessageName(processMessageSubscriptionRecord.getMessageNameBuffer())
             .setCorrelationKey(processMessageSubscriptionRecord.getCorrelationKeyBuffer())
-            .setTenantId(processMessageSubscriptionRecord.getTenantId());
+            .setTenantId(processMessageSubscriptionRecord.getTenantIdentifier());
 
     if (interrupting != null) {
       processMessageSubscriptionRecord.setInterrupting(interrupting);

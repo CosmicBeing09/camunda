@@ -95,7 +95,7 @@ public class ListViewProcessInstanceDto {
         .setProcessVersion(processInstanceEntity.getProcessVersion())
         .setProcessVersionTag(processInstance.getProcessVersionTag())
         .setOperations(DtoCreator.create(operations, OperationDto.class))
-        .setTenantId(processInstanceEntity.getTenantId());
+        .setTenantId(processInstanceEntity.getTenantIdentifier());
     if (operations != null) {
       processInstance.setHasActiveOperation(
           operations.stream()

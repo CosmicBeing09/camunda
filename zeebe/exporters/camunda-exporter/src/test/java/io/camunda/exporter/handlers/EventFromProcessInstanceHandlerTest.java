@@ -138,7 +138,7 @@ final class EventFromProcessInstanceHandlerTest {
     assertThat(entity.getFlowNodeInstanceKey()).isEqualTo(recordKey);
     assertThat(entity.getFlowNodeId()).isEqualTo(elementId);
     assertThat(entity.getBpmnProcessId()).isEqualTo(bpmnProcessId);
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
     assertThat(entity.getPosition()).isEqualTo(position);
   }
 

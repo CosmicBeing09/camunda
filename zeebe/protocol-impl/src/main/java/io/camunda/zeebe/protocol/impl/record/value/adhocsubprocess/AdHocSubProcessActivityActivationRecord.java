@@ -64,7 +64,7 @@ public final class AdHocSubProcessActivityActivationRecord extends UnifiedRecord
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return BufferUtil.bufferAsString(tenantId.getValue());
   }
 

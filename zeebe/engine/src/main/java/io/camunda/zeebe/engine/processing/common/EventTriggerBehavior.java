@@ -228,7 +228,7 @@ public class EventTriggerBehavior {
         processEventKey,
         elementRecord.getProcessDefinitionKey(),
         elementRecord.getProcessInstanceKey(),
-        elementRecord.getTenantId(),
+        elementRecord.getTenantIdentifier(),
         eventScopeKey,
         triggeredEvent.getId());
 
@@ -260,7 +260,7 @@ public class EventTriggerBehavior {
           elementRecord.getProcessDefinitionKey(),
           elementRecord.getProcessInstanceKey(),
           elementRecord.getBpmnProcessIdBuffer(),
-          elementRecord.getTenantId(),
+          elementRecord.getTenantIdentifier(),
           variables);
     }
 

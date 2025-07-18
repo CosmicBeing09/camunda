@@ -63,7 +63,7 @@ public class FlowNodeInstanceEntityTransformer
         value.isIncident(),
         value.getIncidentKey(),
         value.getBpmnProcessId(),
-        value.getTenantId());
+        value.getTenantIdentifier());
   }
 
   private FlowNodeType toType(

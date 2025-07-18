@@ -74,7 +74,7 @@ public final class DbMessageStartEventSubscriptionState
   public void put(final long key, final MessageStartEventSubscriptionRecord subscription) {
     messageStartEventSubscription.setKey(key).setRecord(subscription);
 
-    tenantIdKey.recordStringContent(subscription.getTenantId());
+    tenantIdKey.recordStringContent(subscription.getTenantIdentifier());
     messageName.recordBufferContent(subscription.getMessageNameBuffer());
     processDefinitionKey.recordValue(subscription.getProcessDefinitionKey());
     subscriptionsColumnFamily.upsert(
@@ -97,7 +97,7 @@ public final class DbMessageStartEventSubscriptionState
 
   @Override
   public boolean exists(final MessageStartEventSubscriptionRecord subscription) {
-    tenantIdKey.recordStringContent(subscription.getTenantId());
+    tenantIdKey.recordStringContent(subscription.getTenantIdentifier());
     messageName.recordBufferContent(subscription.getMessageNameBuffer());
     processDefinitionKey.recordValue(subscription.getProcessDefinitionKey());
 

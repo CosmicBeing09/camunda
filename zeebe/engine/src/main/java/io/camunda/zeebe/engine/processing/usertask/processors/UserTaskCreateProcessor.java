@@ -82,7 +82,7 @@ public class UserTaskCreateProcessor implements UserTaskCommandProcessor {
     final var element =
         processState.getFlowElement(
             userTaskRecord.getProcessDefinitionKey(),
-            userTaskRecord.getTenantId(),
+            userTaskRecord.getTenantIdentifier(),
             userTaskRecord.getElementIdBuffer(),
             ExecutableUserTask.class);
 

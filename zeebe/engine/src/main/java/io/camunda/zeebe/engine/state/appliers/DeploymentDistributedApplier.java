@@ -79,7 +79,7 @@ public class DeploymentDistributedApplier
         .setResourceName(drg.getResourceName())
         .setChecksum(wrapArray(drg.getChecksum()))
         .setResource(resource)
-        .setTenantId(drg.getTenantId());
+        .setTenantId(drg.getTenantIdentifier());
   }
 
   private static final class NoSuchResourceException extends IllegalStateException {

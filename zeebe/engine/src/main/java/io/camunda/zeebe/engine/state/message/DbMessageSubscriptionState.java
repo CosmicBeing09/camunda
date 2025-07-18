@@ -141,7 +141,7 @@ public final class DbMessageSubscriptionState
   @Override
   public void put(final long key, final MessageSubscriptionRecord record) {
     wrapSubscriptionKeys(
-        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantId());
+        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantIdentifier());
 
     messageSubscription.setKey(key).setRecord(record).setCorrelating(false);
 
@@ -178,7 +178,7 @@ public final class DbMessageSubscriptionState
         new PendingSubscription(
             subscription.getRecord().getElementInstanceKey(),
             subscription.getRecord().getMessageName(),
-            subscription.getRecord().getTenantId()),
+            subscription.getRecord().getTenantIdentifier()),
         clock.millis());
   }
 
@@ -188,7 +188,7 @@ public final class DbMessageSubscriptionState
     final var record = subscription.getRecord();
     transientState.remove(
         new PendingSubscription(
-            record.getElementInstanceKey(), record.getMessageName(), record.getTenantId()));
+            record.getElementInstanceKey(), record.getMessageName(), record.getTenantIdentifier()));
   }
 
   @Override
@@ -211,7 +211,7 @@ public final class DbMessageSubscriptionState
     subscriptionColumnFamily.deleteExisting(elementKeyAndMessageName);
 
     final var record = subscription.getRecord();
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     messageName.recordBufferContent(record.getMessageNameBuffer());
     correlationKey.recordBufferContent(record.getCorrelationKeyBuffer());
     messageNameAndCorrelationKeyColumnFamily.deleteExisting(
@@ -235,7 +235,7 @@ public final class DbMessageSubscriptionState
     }
 
     wrapSubscriptionKeys(
-        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantId());
+        record.getElementInstanceKey(), record.getMessageNameBuffer(), record.getTenantIdentifier());
     messageSubscription.setKey(key).setRecord(record).setCorrelating(subscription.isCorrelating());
 
     subscriptionColumnFamily.update(elementKeyAndMessageName, messageSubscription);

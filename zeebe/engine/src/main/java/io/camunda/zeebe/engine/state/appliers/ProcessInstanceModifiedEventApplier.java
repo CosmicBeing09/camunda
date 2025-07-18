@@ -60,7 +60,7 @@ final class ProcessInstanceModifiedEventApplier
         processState
             .getProcessByKeyAndTenant(
                 processInstance.getValue().getProcessDefinitionKey(),
-                processInstance.getValue().getTenantId())
+                processInstance.getValue().getTenantIdentifier())
             .getProcess();
     value
         .getActivateInstructions()

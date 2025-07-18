@@ -91,7 +91,7 @@ public class ZeebeUserTaskImportService
             firstRecordValue.getBpmnProcessId(),
             firstRecordValue.getProcessInstanceKey(),
             firstRecordValue.getProcessDefinitionKey(),
-            firstRecordValue.getTenantId());
+            firstRecordValue.getTenantIdentifier());
     updateUserTaskData(instanceToAdd, userTaskRecordsForInstance);
     return instanceToAdd;
   }
@@ -140,7 +140,7 @@ public class ZeebeUserTaskImportService
     flowNodeInstanceDto.setDefinitionKey(userTaskData.getBpmnProcessId());
     flowNodeInstanceDto.setDefinitionVersion(
         String.valueOf(userTaskData.getProcessDefinitionVersion()));
-    flowNodeInstanceDto.setTenantId(userTaskData.getTenantId());
+    flowNodeInstanceDto.setTenantId(userTaskData.getTenantIdentifier());
     flowNodeInstanceDto.setUserTaskInstanceId(String.valueOf(userTaskData.getUserTaskKey()));
     return flowNodeInstanceDto;
   }

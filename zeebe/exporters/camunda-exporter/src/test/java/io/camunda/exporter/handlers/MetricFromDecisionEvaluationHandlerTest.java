@@ -147,7 +147,7 @@ public class MetricFromDecisionEvaluationHandlerTest {
     assertThat(entity.getValue()).isEqualTo(recordKey + "-1");
     assertThat(entity.getEventTime())
         .isEqualTo(OffsetDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneOffset.UTC));
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
   }
 
   @Test

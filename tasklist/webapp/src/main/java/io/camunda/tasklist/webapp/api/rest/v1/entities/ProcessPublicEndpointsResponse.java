@@ -70,7 +70,7 @@ public class ProcessPublicEndpointsResponse {
         .setEndpoint(
             String.format(
                 TasklistURIs.START_PUBLIC_PROCESS.concat("%s"), process.getBpmnProcessId()))
-        .setTenantId(process.getTenantId());
+        .setTenantId(process.getTenantIdentifier());
   }
 
   public String getTenantId() {

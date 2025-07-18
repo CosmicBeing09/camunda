@@ -203,7 +203,7 @@ public final class DbProcessState implements MutableProcessState {
 
   @Override
   public void putLatestVersionDigest(final ProcessRecord processRecord) {
-    tenantIdKey.recordStringContent(processRecord.getTenantId());
+    tenantIdKey.recordStringContent(processRecord.getTenantIdentifier());
     processId.recordBufferContent(processRecord.getBpmnProcessIdBuffer());
     digest.set(processRecord.getChecksumBuffer());
 
@@ -220,7 +220,7 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public void storeProcessDefinitionKeyByProcessIdAndDeploymentKey(
       final ProcessRecord processRecord) {
-    tenantIdKey.recordStringContent(processRecord.getTenantId());
+    tenantIdKey.recordStringContent(processRecord.getTenantIdentifier());
     processDefinitionKey.recordValue(processRecord.getProcessDefinitionKey());
     processId.recordBufferContent(processRecord.getBpmnProcessIdBuffer());
     deploymentKey.recordValue(processRecord.getDeploymentKey());
@@ -232,7 +232,7 @@ public final class DbProcessState implements MutableProcessState {
   public void storeProcessDefinitionKeyByProcessIdAndVersionTag(final ProcessRecord processRecord) {
     final var versionTag = processRecord.getVersionTag();
     if (!versionTag.isBlank()) {
-      tenantIdKey.recordStringContent(processRecord.getTenantId());
+      tenantIdKey.recordStringContent(processRecord.getTenantIdentifier());
       processDefinitionKey.recordValue(processRecord.getProcessDefinitionKey());
       processId.recordBufferContent(processRecord.getBpmnProcessIdBuffer());
       this.versionTag.recordStringContent(versionTag);
@@ -244,7 +244,7 @@ public final class DbProcessState implements MutableProcessState {
   @Override
   public void updateProcessState(
       final ProcessRecord processRecord, final PersistedProcessState state) {
-    tenantIdKey.recordStringContent(processRecord.getTenantId());
+    tenantIdKey.recordStringContent(processRecord.getTenantIdentifier());
     processDefinitionKey.recordValue(processRecord.getProcessDefinitionKey());
 
     final var process = processColumnFamily.get(tenantAwareProcessDefinitionKey);
@@ -289,7 +289,7 @@ public final class DbProcessState implements MutableProcessState {
 
   @Override
   public void deleteProcess(final ProcessRecord processRecord) {
-    tenantIdKey.recordStringContent(processRecord.getTenantId());
+    tenantIdKey.recordStringContent(processRecord.getTenantIdentifier());
     processDefinitionKey.recordValue(processRecord.getProcessDefinitionKey());
     processId.recordStringContent(processRecord.getBpmnProcessId());
     processVersion.recordValue(processRecord.getVersion());
@@ -308,7 +308,7 @@ public final class DbProcessState implements MutableProcessState {
         tenantAwareProcessIdAndVersionTagKey);
 
     invalidateCaches(
-        processRecord.getTenantId(),
+        processRecord.getTenantIdentifier(),
         processRecord.getBpmnProcessIdBuffer(),
         processRecord.getProcessDefinitionKey(),
         processRecord.getDeploymentKey(),
@@ -316,7 +316,7 @@ public final class DbProcessState implements MutableProcessState {
 
     final long latestVersion =
         versionManager.getLatestResourceVersion(
-            processRecord.getBpmnProcessId(), processRecord.getTenantId());
+            processRecord.getBpmnProcessId(), processRecord.getTenantIdentifier());
     if (latestVersion == processRecord.getVersion()) {
       // As we don't set the digest to the digest of the previous there is a chance it does not
       // exist. This happens when deleting the latest version two times in a row. To be safe we must
@@ -325,7 +325,7 @@ public final class DbProcessState implements MutableProcessState {
     }
 
     versionManager.deleteResourceVersion(
-        processRecord.getBpmnProcessId(), processRecord.getVersion(), processRecord.getTenantId());
+        processRecord.getBpmnProcessId(), processRecord.getVersion(), processRecord.getTenantIdentifier());
   }
 
   private void invalidateCaches(
@@ -350,7 +350,7 @@ public final class DbProcessState implements MutableProcessState {
   }
 
   private void persistProcess(final long processDefinitionKey, final ProcessRecord processRecord) {
-    tenantIdKey.recordStringContent(processRecord.getTenantId());
+    tenantIdKey.recordStringContent(processRecord.getTenantIdentifier());
     persistedProcess.wrap(processRecord, processDefinitionKey);
     this.processDefinitionKey.recordValue(processDefinitionKey);
 
@@ -366,7 +366,7 @@ public final class DbProcessState implements MutableProcessState {
     processId.recordBufferContent(processRecord.getBpmnProcessIdBuffer());
     final var bpmnProcessId = processRecord.getBpmnProcessId();
     final var version = processRecord.getVersion();
-    versionManager.addResourceVersion(bpmnProcessId, version, processRecord.getTenantId());
+    versionManager.addResourceVersion(bpmnProcessId, version, processRecord.getTenantIdentifier());
   }
 
   // is called on getters, if process is not in memory

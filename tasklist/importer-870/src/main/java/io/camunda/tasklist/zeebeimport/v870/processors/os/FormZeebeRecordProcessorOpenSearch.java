@@ -43,7 +43,7 @@ public class FormZeebeRecordProcessorOpenSearch {
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
           (long) recordValue.getVersion(),
-          recordValue.getTenantId(),
+          recordValue.getTenantIdentifier(),
           recordValue.getFormId(),
           false,
           operations);
@@ -52,7 +52,7 @@ public class FormZeebeRecordProcessorOpenSearch {
           recordValue.getFormKey(),
           bytesToXml(recordValue.getResource()),
           (long) recordValue.getVersion(),
-          recordValue.getTenantId(),
+          recordValue.getTenantIdentifier(),
           recordValue.getFormId(),
           true,
           operations);

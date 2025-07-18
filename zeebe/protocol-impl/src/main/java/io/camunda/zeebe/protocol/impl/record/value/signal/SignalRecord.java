@@ -34,7 +34,7 @@ public final class SignalRecord extends UnifiedRecordValue implements SignalReco
   public void wrap(final SignalRecord record) {
     setSignalName(record.getSignalNameBuffer())
         .setVariables(record.getVariablesBuffer())
-        .setTenantId(record.getTenantId());
+        .setTenantId(record.getTenantIdentifier());
   }
 
   @Override
@@ -73,7 +73,7 @@ public final class SignalRecord extends UnifiedRecordValue implements SignalReco
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

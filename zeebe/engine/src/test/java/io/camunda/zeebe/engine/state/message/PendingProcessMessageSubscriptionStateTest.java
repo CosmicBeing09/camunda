@@ -208,7 +208,7 @@ public final class PendingProcessMessageSubscriptionStateTest {
     persistentState.updateToClosingState(record);
     transientSubscriptionState.update(
         new PendingSubscription(
-            record.getElementInstanceKey(), record.getMessageName(), record.getTenantId()),
+            record.getElementInstanceKey(), record.getMessageName(), record.getTenantIdentifier()),
         InstantSource.system().millis());
     pendingSubscriptionState.onSent(record, 1_000L);
 
@@ -237,14 +237,14 @@ public final class PendingProcessMessageSubscriptionStateTest {
   private void addToTransientSubscriptionState(final ProcessMessageSubscriptionRecord record1) {
     transientSubscriptionState.add(
         new PendingSubscription(
-            record1.getElementInstanceKey(), record1.getMessageName(), record1.getTenantId()),
+            record1.getElementInstanceKey(), record1.getMessageName(), record1.getTenantIdentifier()),
         InstantSource.system().millis());
   }
 
   private void removeFromTransientSubscriptionState(final ProcessMessageSubscriptionRecord record) {
     transientSubscriptionState.remove(
         new PendingSubscription(
-            record.getElementInstanceKey(), record.getMessageName(), record.getTenantId()));
+            record.getElementInstanceKey(), record.getMessageName(), record.getTenantIdentifier()));
   }
 
   private ProcessMessageSubscriptionRecord subscriptionRecordWithElementInstanceKey(

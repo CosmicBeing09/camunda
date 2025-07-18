@@ -53,7 +53,7 @@ public class BroadcastSignalTest extends GatewayTest {
     final SignalRecord brokerRequestValue = brokerRequest.getRequestWriter();
     assertThat(brokerRequestValue.getSignalName()).isEqualTo(request.getSignalName());
     MsgPackUtil.assertEqualityExcluding(brokerRequestValue.getVariablesBuffer(), variables);
-    assertThat(brokerRequestValue.getTenantId())
+    assertThat(brokerRequestValue.getTenantIdentifier())
         .isEqualTo(request.getTenantId())
         .isEqualTo(tenantId);
   }

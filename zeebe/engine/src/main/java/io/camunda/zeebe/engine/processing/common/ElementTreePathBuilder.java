@@ -113,7 +113,7 @@ public class ElementTreePathBuilder {
 
     return callActivityIndexProvider.getLexicographicIndex(
         callActivityInstanceRecord.getProcessDefinitionKey(),
-        callActivityInstanceRecord.getTenantId(),
+        callActivityInstanceRecord.getTenantIdentifier(),
         callActivityInstanceRecord.getElementIdBuffer());
   }
 

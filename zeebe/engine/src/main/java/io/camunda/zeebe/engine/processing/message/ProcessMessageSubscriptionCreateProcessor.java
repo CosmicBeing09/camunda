@@ -56,7 +56,7 @@ public final class ProcessMessageSubscriptionCreateProcessor
 
     final ProcessMessageSubscriptionRecord subscriptionRecord = command.getValue();
     final long elementInstanceKey = subscriptionRecord.getElementInstanceKey();
-    final String tenantId = subscriptionRecord.getTenantId();
+    final String tenantId = subscriptionRecord.getTenantIdentifier();
     final String messageName = subscriptionRecord.getMessageName();
     final ProcessMessageSubscription subscription =
         subscriptionState.getSubscription(

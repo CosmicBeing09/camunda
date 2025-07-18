@@ -53,7 +53,7 @@ public class SequenceFlowZeebeRecordProcessor {
             .setProcessDefinitionKey(recordValue.getProcessDefinitionKey())
             .setBpmnProcessId(recordValue.getBpmnProcessId())
             .setActivityId(recordValue.getElementId())
-            .setTenantId(tenantOrDefault(recordValue.getTenantId()));
+            .setTenantId(tenantOrDefault(recordValue.getTenantIdentifier()));
 
     LOGGER.debug("Index sequence flow: id {}", entity.getId());
     batchRequest.add(sequenceFlowTemplate.getFullQualifiedName(), entity);

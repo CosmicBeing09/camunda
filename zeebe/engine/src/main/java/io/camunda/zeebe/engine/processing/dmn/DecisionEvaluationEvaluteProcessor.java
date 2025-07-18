@@ -71,7 +71,7 @@ public class DecisionEvaluationEvaluteProcessor
                   command,
                   AuthorizationResourceType.DECISION_DEFINITION,
                   PermissionType.CREATE_DECISION_INSTANCE,
-                  record.getTenantId())
+                  record.getTenantIdentifier())
               .addResourceId(decisionId);
 
       final var isAuthorized = authCheckBehavior.isAuthorized(authRequest);
@@ -132,12 +132,12 @@ public class DecisionEvaluationEvaluteProcessor
 
     if (!decisionId.isEmpty()) {
       return decisionBehavior
-          .findLatestDecisionByIdAndTenant(decisionId, record.getTenantId())
+          .findLatestDecisionByIdAndTenant(decisionId, record.getTenantIdentifier())
           .mapLeft(failure -> new Rejection(RejectionType.NOT_FOUND, failure.getMessage()));
       // TODO: expand DecisionState API to find decisions by ID AND VERSION (#11230)
     } else if (decisionKey > -1L) {
       return decisionBehavior
-          .findDecisionByKeyAndTenant(decisionKey, record.getTenantId())
+          .findDecisionByKeyAndTenant(decisionKey, record.getTenantIdentifier())
           .mapLeft(failure -> new Rejection(RejectionType.NOT_FOUND, failure.getMessage()));
     } else {
       // if both ID and KEY are missing

@@ -53,7 +53,7 @@ public final class ProcessMessageSubscriptionDeleteProcessor
     final ProcessMessageSubscriptionRecord subscriptionRecord = command.getValue();
     final long elementInstanceKey = subscriptionRecord.getElementInstanceKey();
     final String messageName = subscriptionRecord.getMessageName();
-    final String tenantId = subscriptionRecord.getTenantId();
+    final String tenantId = subscriptionRecord.getTenantIdentifier();
     final var subscription =
         subscriptionState.getSubscription(
             elementInstanceKey, subscriptionRecord.getMessageNameBuffer(), tenantId);

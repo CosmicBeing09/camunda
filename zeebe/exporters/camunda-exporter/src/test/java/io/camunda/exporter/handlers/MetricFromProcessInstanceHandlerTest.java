@@ -130,7 +130,7 @@ final class MetricFromProcessInstanceHandlerTest {
     assertThat(entity.getValue()).isEqualTo(String.valueOf(processInstanceKey));
     assertThat(entity.getEventTime())
         .isEqualTo(OffsetDateTime.ofInstant(Instant.ofEpochMilli(timestamp), ZoneOffset.UTC));
-    assertThat(entity.getTenantId()).isEqualTo(tenantId);
+    assertThat(entity.getTenantIdentifier()).isEqualTo(tenantId);
   }
 
   @Test

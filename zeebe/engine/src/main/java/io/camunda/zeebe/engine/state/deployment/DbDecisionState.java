@@ -439,7 +439,7 @@ public final class DbDecisionState implements MutableDecisionState {
 
   @Override
   public void storeDecisionRecord(final DecisionRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionKey.recordValue(record.getDecisionKey());
     dbPersistedDecision.wrap(record);
     decisionsByKey.upsert(tenantAwareDecisionKey, dbPersistedDecision);
@@ -457,7 +457,7 @@ public final class DbDecisionState implements MutableDecisionState {
 
   @Override
   public void storeDecisionRequirements(final DecisionRequirementsRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionRequirementsKey.recordValue(record.getDecisionRequirementsKey());
     dbPersistedDecisionRequirements.wrap(record);
     decisionRequirementsByKey.upsert(
@@ -473,7 +473,7 @@ public final class DbDecisionState implements MutableDecisionState {
 
   @Override
   public void storeDecisionKeyByDecisionIdAndDeploymentKey(final DecisionRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionKey.recordValue(record.getDecisionKey());
     dbDecisionId.recordStringContent(record.getDecisionId());
     dbDeploymentKey.recordValue(record.getDeploymentKey());
@@ -485,7 +485,7 @@ public final class DbDecisionState implements MutableDecisionState {
   public void storeDecisionKeyByDecisionIdAndVersionTag(final DecisionRecord record) {
     final var versionTag = record.getVersionTag();
     if (!versionTag.isBlank()) {
-      tenantIdKey.recordStringContent(record.getTenantId());
+      tenantIdKey.recordStringContent(record.getTenantIdentifier());
       dbDecisionKey.recordValue(record.getDecisionKey());
       dbDecisionId.recordStringContent(record.getDecisionId());
       dbVersionTag.recordStringContent(versionTag);
@@ -495,16 +495,16 @@ public final class DbDecisionState implements MutableDecisionState {
 
   @Override
   public void deleteDecision(final DecisionRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
 
-    findLatestDecisionByIdAndTenant(record.getDecisionIdBuffer(), record.getTenantId())
+    findLatestDecisionByIdAndTenant(record.getDecisionIdBuffer(), record.getTenantIdentifier())
         .map(PersistedDecision::getVersion)
         .ifPresent(
             latestVersion -> {
               if (latestVersion == record.getVersion()) {
                 dbDecisionId.recordBufferContent(record.getDecisionIdBuffer());
                 findPreviousVersionDecisionKey(
-                        record.getDecisionIdBuffer(), record.getVersion(), record.getTenantId())
+                        record.getDecisionIdBuffer(), record.getVersion(), record.getTenantIdentifier())
                     .ifPresentOrElse(
                         previousDecisionKey -> {
                           // Update the latest decision version
@@ -538,10 +538,10 @@ public final class DbDecisionState implements MutableDecisionState {
 
   @Override
   public void deleteDecisionRequirements(final DecisionRequirementsRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
 
     findLatestDecisionRequirementsByTenantAndId(
-            record.getTenantId(), record.getDecisionRequirementsIdBuffer())
+            record.getTenantIdentifier(), record.getDecisionRequirementsIdBuffer())
         .map(DeployedDrg::getDecisionRequirementsVersion)
         .ifPresent(
             latestVersion -> {
@@ -550,7 +550,7 @@ public final class DbDecisionState implements MutableDecisionState {
                 findPreviousVersionDecisionRequirementsKey(
                         record.getDecisionRequirementsIdBuffer(),
                         record.getDecisionRequirementsVersion(),
-                        record.getTenantId())
+                        record.getTenantIdentifier())
                     .ifPresentOrElse(
                         previousDrgKey -> {
                           // Update the latest decision version
@@ -574,7 +574,7 @@ public final class DbDecisionState implements MutableDecisionState {
     decisionRequirementsKeyByIdAndVersion.deleteExisting(
         tenantAwareDecisionRequirementsIdAndVersion);
     drgCache.invalidate(
-        new TenantIdAndDrgKey(record.getTenantId(), record.getDecisionRequirementsKey()));
+        new TenantIdAndDrgKey(record.getTenantIdentifier(), record.getDecisionRequirementsKey()));
   }
 
   @Override
@@ -605,7 +605,7 @@ public final class DbDecisionState implements MutableDecisionState {
   }
 
   private void updateLatestDecisionVersion(final DecisionRecord record) {
-    findLatestDecisionByIdAndTenant(record.getDecisionIdBuffer(), record.getTenantId())
+    findLatestDecisionByIdAndTenant(record.getDecisionIdBuffer(), record.getTenantIdentifier())
         .ifPresentOrElse(
             previousVersion -> {
               if (record.getVersion() > previousVersion.getVersion()) {
@@ -616,14 +616,14 @@ public final class DbDecisionState implements MutableDecisionState {
   }
 
   private void updateDecisionAsLatestVersion(final DecisionRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionId.recordBufferContent(record.getDecisionIdBuffer());
     dbDecisionKey.recordValue(record.getDecisionKey());
     latestDecisionKeysByDecisionId.update(tenantAwareDecisionId, fkDecision);
   }
 
   private void insertDecisionAsLatestVersion(final DecisionRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionId.recordBufferContent(record.getDecisionIdBuffer());
     dbDecisionKey.recordValue(record.getDecisionKey());
     latestDecisionKeysByDecisionId.upsert(tenantAwareDecisionId, fkDecision);
@@ -631,7 +631,7 @@ public final class DbDecisionState implements MutableDecisionState {
 
   private void updateLatestDecisionRequirementsVersion(final DecisionRequirementsRecord record) {
     findLatestDecisionRequirementsByTenantAndId(
-            record.getTenantId(), record.getDecisionRequirementsIdBuffer())
+            record.getTenantIdentifier(), record.getDecisionRequirementsIdBuffer())
         .ifPresentOrElse(
             previousVersion -> {
               if (record.getDecisionRequirementsVersion()
@@ -643,7 +643,7 @@ public final class DbDecisionState implements MutableDecisionState {
   }
 
   private void updateDecisionRequirementsAsLatestVersion(final DecisionRequirementsRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionRequirementsId.recordBufferContent(record.getDecisionRequirementsIdBuffer());
     dbDecisionRequirementsKey.recordValue(record.getDecisionRequirementsKey());
     latestDecisionRequirementsKeysById.update(
@@ -651,7 +651,7 @@ public final class DbDecisionState implements MutableDecisionState {
   }
 
   private void insertDecisionRequirementsAsLatestVersion(final DecisionRequirementsRecord record) {
-    tenantIdKey.recordStringContent(record.getTenantId());
+    tenantIdKey.recordStringContent(record.getTenantIdentifier());
     dbDecisionRequirementsId.recordBufferContent(record.getDecisionRequirementsIdBuffer());
     dbDecisionRequirementsKey.recordValue(record.getDecisionRequirementsKey());
     latestDecisionRequirementsKeysById.upsert(

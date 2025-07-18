@@ -313,7 +313,7 @@ final class JobBatchCollectorTest {
             batch -> {
               final List<JobRecordValue> activatedJobs = batch.getJobs();
               assertThat(activatedJobs).hasSize(2);
-              assertThat(activatedJobs.stream().map(job -> job.getTenantId()).toList())
+              assertThat(activatedJobs.stream().map(job -> job.getTenantIdentifier()).toList())
                   .containsExactlyInAnyOrder(tenantA, tenantB);
             });
   }

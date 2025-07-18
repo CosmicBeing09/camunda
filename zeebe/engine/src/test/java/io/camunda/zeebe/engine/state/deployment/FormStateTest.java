@@ -115,7 +115,7 @@ public class FormStateTest {
     // when -- iterating through all forms
     final var visitor = Mockito.mock(PersistedFormVisitor.class);
     when(visitor.visit(any())).thenReturn(true);
-    formState.forEachForm(new FormIdentifier(form1.getTenantId(), form1.getFormKey()), visitor);
+    formState.forEachForm(new FormIdentifier(form1.getTenantIdentifier(), form1.getFormKey()), visitor);
 
     // then -- visited only the last form
     verify(visitor, times(2)).visit(any());

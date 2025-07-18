@@ -69,7 +69,7 @@ public class DecisionEvaluationZeebeRecordProcessor {
     for (final DecisionInstanceEntity entity : decisionEntities) {
       batchRequest.add(decisionInstanceTemplate.getFullQualifiedName(), entity);
       metricsStore.registerDecisionInstanceCompleteEvent(
-          entity.getId(), decisionEvaluation.getTenantId(), timestamp, batchRequest);
+          entity.getId(), decisionEvaluation.getTenantIdentifier(), timestamp, batchRequest);
     }
   }
 
@@ -109,7 +109,7 @@ public class DecisionEvaluationZeebeRecordProcessor {
               .setResult(decision.getDecisionOutput())
               .setEvaluatedOutputs(createEvaluationOutputs(decision.getMatchedRules()))
               .setEvaluatedInputs(createEvaluationInputs(decision.getEvaluatedInputs()))
-              .setTenantId(tenantOrDefault(decisionEvaluation.getTenantId()));
+              .setTenantId(tenantOrDefault(decisionEvaluation.getTenantIdentifier()));
       if (state.equals(DecisionInstanceState.FAILED)) {
         entity.setEvaluationFailureMessage(decisionEvaluation.getEvaluationFailureMessage());
       }

@@ -102,7 +102,7 @@ public class CompensationIncidentTest {
         .hasProcessInstanceKey(processInstanceKey)
         .hasProcessDefinitionKey(compensationHandlerActivated.getValue().getProcessDefinitionKey())
         .hasBpmnProcessId(PROCESS_ID)
-        .hasTenantId(compensationHandlerActivated.getValue().getTenantId());
+        .hasTenantId(compensationHandlerActivated.getValue().getTenantIdentifier());
   }
 
   @Test

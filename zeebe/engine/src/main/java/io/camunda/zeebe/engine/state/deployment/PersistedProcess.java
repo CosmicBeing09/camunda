@@ -55,7 +55,7 @@ public final class PersistedProcess extends UnpackedObject implements DbValue {
 
     versionProp.setValue(processRecord.getVersion());
     keyProp.setValue(processDefinitionKey);
-    tenantIdProp.setValue(processRecord.getTenantId());
+    tenantIdProp.setValue(processRecord.getTenantIdentifier());
     deploymentKeyProp.setValue(processRecord.getDeploymentKey());
     versionTagProp.setValue(processRecord.getVersionTag());
   }

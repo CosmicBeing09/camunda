@@ -79,7 +79,7 @@ public class IncidentExportHandler implements RdbmsExportHandler<IncidentRecordV
         .treePath(
             buildTreePath(
                 record.getKey(), value.getProcessInstanceKey(), value.getElementInstancePath()))
-        .tenantId(value.getTenantId())
+        .tenantId(value.getTenantIdentifier())
         .build();
   }
 

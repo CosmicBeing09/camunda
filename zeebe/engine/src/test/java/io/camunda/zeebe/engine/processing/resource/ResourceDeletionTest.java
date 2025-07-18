@@ -1093,7 +1093,7 @@ public class ResourceDeletionTest {
             Form::getVersion,
             Form::getVersionTag,
             Form::getResourceName,
-            Form::getTenantId,
+            Form::getTenantIdentifier,
             Form::getDeploymentKey)
         .containsOnly(
             formCreatedRecord.getFormId(),
@@ -1101,7 +1101,7 @@ public class ResourceDeletionTest {
             formCreatedRecord.getVersion(),
             formCreatedRecord.getVersionTag(),
             formCreatedRecord.getResourceName(),
-            formCreatedRecord.getTenantId(),
+            formCreatedRecord.getTenantIdentifier(),
             formCreatedRecord.getDeploymentKey());
   }
 
@@ -1125,7 +1125,7 @@ public class ResourceDeletionTest {
         .extracting(
             Resource::getResourceId,
             Resource::getResourceKey,
-            Resource::getTenantId,
+            Resource::getTenantIdentifier,
             Resource::getResourceName,
             Resource::getResourceProp,
             Resource::getChecksum,
@@ -1135,7 +1135,7 @@ public class ResourceDeletionTest {
         .containsOnly(
             resourceCreatedRecord.getResourceId(),
             resourceCreatedRecord.getResourceKey(),
-            resourceCreatedRecord.getTenantId(),
+            resourceCreatedRecord.getTenantIdentifier(),
             resourceCreatedRecord.getResourceName(),
             resourceCreatedRecord.getResourceProp(),
             resourceCreatedRecord.getChecksum(),

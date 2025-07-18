@@ -97,11 +97,6 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
     return this;
   }
 
-  @JsonIgnore
-  public DirectBuffer getResourceNameBuffer() {
-    return resourceNameProp.getValue();
-  }
-
   @Override
   public boolean isDuplicate() {
     return isDuplicateProp.getValue();
@@ -122,14 +117,19 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
     return this;
   }
 
+  public ResourceMetadataRecord setResourceKey(final long resourceKey) {
+    resourceKeyProp.setValue(resourceKey);
+    return this;
+  }
+
   public ResourceMetadataRecord setResourceId(final String resourceId) {
     resourceIdProp.setValue(resourceId);
     return this;
   }
 
-  public ResourceMetadataRecord setResourceKey(final long resourceKey) {
-    resourceKeyProp.setValue(resourceKey);
-    return this;
+  @JsonIgnore
+  public DirectBuffer getResourceNameBuffer() {
+    return resourceNameProp.getValue();
   }
 
   @JsonIgnore
@@ -143,7 +143,7 @@ public class ResourceMetadataRecord extends UnifiedRecordValue implements Resour
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return bufferAsString(tenantIdProp.getValue());
   }
 

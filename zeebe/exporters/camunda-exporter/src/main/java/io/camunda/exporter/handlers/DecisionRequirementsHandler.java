@@ -69,7 +69,7 @@ public class DecisionRequirementsHandler
         .setVersion(decisionRequirements.getDecisionRequirementsVersion())
         .setResourceName(decisionRequirements.getResourceName())
         .setXml(dmn)
-        .setTenantId(tenantOrDefault(decisionRequirements.getTenantId()));
+        .setTenantId(tenantOrDefault(decisionRequirements.getTenantIdentifier()));
   }
 
   @Override

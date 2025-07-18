@@ -279,7 +279,7 @@ public class MessageMultiTenancyTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withMessageName(messageName)
                 .limit(1))
-        .extracting(Record::getIntent, r -> r.getValue().getTenantId())
+        .extracting(Record::getIntent, r -> r.getValue().getTenantIdentifier())
         .containsExactly(tuple(MessageSubscriptionIntent.CREATED, tenantId));
   }
 
@@ -292,7 +292,7 @@ public class MessageMultiTenancyTest {
                 .withProcessInstanceKey(processInstanceKey)
                 .withMessageName(messageName)
                 .limit(2))
-        .extracting(Record::getIntent, r -> r.getValue().getTenantId())
+        .extracting(Record::getIntent, r -> r.getValue().getTenantIdentifier())
         .containsExactly(
             tuple(MessageSubscriptionIntent.CORRELATING, tenantId),
             tuple(MessageSubscriptionIntent.CORRELATED, tenantId));
@@ -325,7 +325,7 @@ public class MessageMultiTenancyTest {
                 .withMessageName(messageName)
                 .withTenantId(tenantId)
                 .limit(2))
-        .extracting(Record::getIntent, r -> r.getValue().getTenantId())
+        .extracting(Record::getIntent, r -> r.getValue().getTenantIdentifier())
         .containsExactly(
             tuple(ProcessMessageSubscriptionIntent.CREATING, tenantId),
             tuple(ProcessMessageSubscriptionIntent.CREATED, tenantId));
@@ -340,7 +340,7 @@ public class MessageMultiTenancyTest {
                 .withMessageName(messageName)
                 .withTenantId(tenantId)
                 .limit(1))
-        .extracting(Record::getIntent, r -> r.getValue().getTenantId())
+        .extracting(Record::getIntent, r -> r.getValue().getTenantIdentifier())
         .containsExactly(tuple(ProcessMessageSubscriptionIntent.CORRELATED, tenantId));
   }
 
@@ -367,7 +367,7 @@ public class MessageMultiTenancyTest {
                 .findFirst())
         .isPresent()
         .get()
-        .extracting(r -> r.getValue().getTenantId())
+        .extracting(r -> r.getValue().getTenantIdentifier())
         .isEqualTo(tenantId);
   }
 
@@ -380,7 +380,7 @@ public class MessageMultiTenancyTest {
                 .withMessageName(messageName)
                 .withTenantId(tenantId)
                 .limit(1))
-        .extracting(Record::getIntent, r -> r.getValue().getTenantId())
+        .extracting(Record::getIntent, r -> r.getValue().getTenantIdentifier())
         .containsExactly(tuple(MessageStartEventSubscriptionIntent.CREATED, tenantId));
   }
 
@@ -393,7 +393,7 @@ public class MessageMultiTenancyTest {
                 .withMessageName(messageName)
                 .withTenantId(tenantId)
                 .limit(1))
-        .extracting(Record::getIntent, r -> r.getValue().getTenantId())
+        .extracting(Record::getIntent, r -> r.getValue().getTenantIdentifier())
         .containsExactly(tuple(MessageStartEventSubscriptionIntent.CORRELATED, tenantId));
   }
 

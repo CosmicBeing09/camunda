@@ -77,7 +77,7 @@ public class ProcessZeebeRecordProcessorOpenSearch {
           (formKey, schema) -> {
             try {
               persistForm(
-                  processDefinitionKey, formKey, schema, recordValue.getTenantId(), operations);
+                  processDefinitionKey, formKey, schema, recordValue.getTenantIdentifier(), operations);
             } catch (final PersistenceException e) {
               exceptions.add(e);
             }
@@ -123,7 +123,7 @@ public class ProcessZeebeRecordProcessorOpenSearch {
             .setKey(process.getProcessDefinitionKey())
             .setBpmnProcessId(process.getBpmnProcessId())
             .setVersion(process.getVersion())
-            .setTenantId(process.getTenantId())
+            .setTenantId(process.getTenantIdentifier())
             .setBpmnXml(new String(process.getResource()));
 
     final byte[] byteArray = process.getResource();

@@ -325,7 +325,7 @@ public class DecisionInstanceEntity
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

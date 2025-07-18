@@ -151,6 +151,6 @@ public class ListViewVariableFromVariableHandlerTest {
     assertThat(entity.getPosition()).isEqualTo(variableRecord.getPosition());
     assertThat(entity.getVarName()).isEqualTo(variableRecord.getValue().getName());
     assertThat(entity.getVarValue()).isEqualTo(variableRecord.getValue().getValue());
-    assertThat(entity.getTenantId()).isEqualTo(variableRecord.getValue().getTenantId());
+    assertThat(entity.getTenantIdentifier()).isEqualTo(variableRecord.getValue().getTenantIdentifier());
   }
 }

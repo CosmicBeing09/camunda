@@ -142,7 +142,7 @@ public final class DbSignalSubscriptionState implements MutableSignalSubscriptio
 
   private void wrapSubscriptionKeys(final SignalSubscriptionRecord subscription) {
     final var key = subscription.getSubscriptionKey();
-    wrapSubscriptionKeys(key, subscription.getSignalNameBuffer(), subscription.getTenantId());
+    wrapSubscriptionKeys(key, subscription.getSignalNameBuffer(), subscription.getTenantIdentifier());
   }
 
   private void wrapSubscriptionKeys(

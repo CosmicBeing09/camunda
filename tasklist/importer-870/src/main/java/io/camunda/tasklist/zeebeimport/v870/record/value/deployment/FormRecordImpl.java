@@ -108,7 +108,7 @@ public class FormRecordImpl implements Form {
   }
 
   @Override
-  public String getTenantId() {
+  public String getTenantIdentifier() {
     return tenantId;
   }
 

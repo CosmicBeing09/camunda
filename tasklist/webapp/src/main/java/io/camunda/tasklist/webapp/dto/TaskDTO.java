@@ -313,7 +313,7 @@ public final class TaskDTO {
             .setFormId(taskEntity.getFormId())
             .setFormVersion(taskEntity.getFormVersion())
             .setIsFormEmbedded(taskEntity.getIsFormEmbedded())
-            .setTenantId(taskEntity.getTenantId())
+            .setTenantId(taskEntity.getTenantIdentifier())
             .setFollowUpDate(taskEntity.getFollowUpDate())
             .setDueDate(taskEntity.getDueDate())
             .setCandidateGroups(taskEntity.getCandidateGroups())

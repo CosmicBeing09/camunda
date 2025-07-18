@@ -29,7 +29,7 @@ public final class BroadcastSignalStub
         new SignalRecord()
             .setSignalName(requestRecord.getSignalName())
             .setVariables(requestRecord.getVariablesBuffer())
-            .setTenantId(requestRecord.getTenantId());
+            .setTenantId(requestRecord.getTenantIdentifier());
 
     return new BrokerResponse<>(responseRecord, 0, 123L);
   }

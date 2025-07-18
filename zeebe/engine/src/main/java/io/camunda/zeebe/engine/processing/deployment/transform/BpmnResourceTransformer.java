@@ -91,7 +91,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
                     .flatMap(
                         ok ->
                             UnsupportedMultiTenantFeaturesValidator.validate(
-                                resource, executableProcesses, deployment.getTenantId()))
+                                resource, executableProcesses, deployment.getTenantIdentifier()))
                     .flatMap(
                         ok -> {
                           if (enableStraightThroughProcessingLoopDetector) {
@@ -133,7 +133,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
                     .setKey(key)
                     .setVersion(
                         processState.getNextProcessVersion(
-                            metadata.getBpmnProcessId(), deployment.getTenantId()))
+                            metadata.getBpmnProcessId(), deployment.getTenantIdentifier()))
                     .setDuplicate(false)
                     .setDeploymentKey(deployment.getDeploymentKey());
               }
@@ -189,7 +189,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
       final DeploymentResourceContext context) {
     for (final Process process : getExecutableProcesses(definition)) {
       final String bpmnProcessId = process.getId();
-      final String tenantId = deploymentEvent.getTenantId();
+      final String tenantId = deploymentEvent.getTenantIdentifier();
       final DeployedProcess lastProcess =
           processState.getLatestProcessVersionByProcessId(
               BufferUtil.wrapString(bpmnProcessId), tenantId);

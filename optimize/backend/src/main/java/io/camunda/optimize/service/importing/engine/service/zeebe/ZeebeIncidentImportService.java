@@ -83,7 +83,7 @@ public class ZeebeIncidentImportService
             firstRecordValue.getBpmnProcessId(),
             firstRecordValue.getProcessInstanceKey(),
             firstRecordValue.getProcessDefinitionKey(),
-            firstRecordValue.getTenantId());
+            firstRecordValue.getTenantIdentifier());
     return updateIncidents(instanceToAdd, recordsForInstance);
   }
 
@@ -128,7 +128,7 @@ public class ZeebeIncidentImportService
     incidentDto.setIncidentType(IncidentType.valueOfId(incidentDataDto.getErrorType().toString()));
     incidentDto.setActivityId(String.valueOf(incidentDataDto.getElementInstanceKey()));
     incidentDto.setIncidentMessage(incidentDataDto.getErrorMessage());
-    incidentDto.setTenantId(incidentDataDto.getTenantId());
+    incidentDto.setTenantId(incidentDataDto.getTenantIdentifier());
     return incidentDto;
   }
 

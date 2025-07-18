@@ -74,7 +74,7 @@ public class UserTaskRecordToTaskEntityMapper {
             .setProcessInstanceId(String.valueOf(recordValue.getProcessInstanceKey()))
             .setBpmnProcessId(recordValue.getBpmnProcessId())
             .setProcessDefinitionId(processDefinitionId)
-            .setTenantId(recordValue.getTenantId())
+            .setTenantId(recordValue.getTenantIdentifier())
             .setExternalFormReference(
                 (recordValue.getExternalFormReference() == null
                         || recordValue.getExternalFormReference().isBlank())

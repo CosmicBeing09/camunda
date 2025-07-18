@@ -33,7 +33,7 @@ public interface PendingMessageSubscriptionState {
     onSent(
         subscription.getElementInstanceKey(),
         subscription.getMessageName(),
-        subscription.getTenantId(),
+        subscription.getTenantIdentifier(),
         timestampMs);
   }
 }
