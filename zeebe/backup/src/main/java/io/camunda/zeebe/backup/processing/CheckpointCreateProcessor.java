@@ -103,7 +103,7 @@ public final class CheckpointCreateProcessor {
           RejectionType.NULL_VAL,
           "",
           command.getRequestId(),
-          command.getRequestStreamId());
+          command.getRequestPartitionId());
     }
     return resultBuilder.build();
   }

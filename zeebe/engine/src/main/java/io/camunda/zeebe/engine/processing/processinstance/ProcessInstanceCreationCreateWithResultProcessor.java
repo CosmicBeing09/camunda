@@ -84,7 +84,7 @@ public final class ProcessInstanceCreationCreateWithResultProcessor
       final ArrayProperty<StringValue> fetchVariables = command.getValue().fetchVariables();
       awaitResultMetadata
           .setRequestId(command.getRequestId())
-          .setRequestStreamId(command.getRequestStreamId())
+          .setRequestStreamId(command.getRequestPartitionId())
           .setFetchVariables(fetchVariables);
 
       elementInstanceState.setAwaitResultRequestMetadata(

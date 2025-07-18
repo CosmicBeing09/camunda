@@ -125,7 +125,7 @@ public final class TypedRecordImpl implements TypedRecord {
 
   @Override
   @JsonIgnore
-  public int getRequestStreamId() {
+  public int getRequestPartitionId() {
     return metadata.getRequestStreamId();
   }
 

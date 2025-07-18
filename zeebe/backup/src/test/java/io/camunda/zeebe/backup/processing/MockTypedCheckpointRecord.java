@@ -99,7 +99,7 @@ record MockTypedCheckpointRecord(
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getRequestPartitionId() {
     return -1;
   }
 

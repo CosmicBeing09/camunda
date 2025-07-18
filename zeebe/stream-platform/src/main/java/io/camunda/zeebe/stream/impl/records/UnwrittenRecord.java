@@ -109,7 +109,7 @@ public class UnwrittenRecord implements TypedRecord {
   }
 
   @Override
-  public int getRequestStreamId() {
+  public int getRequestPartitionId() {
     return metadata.getRequestStreamId();
   }
 

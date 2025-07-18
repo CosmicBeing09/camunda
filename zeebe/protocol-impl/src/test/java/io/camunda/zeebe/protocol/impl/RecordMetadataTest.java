@@ -33,7 +33,7 @@ final class RecordMetadataTest {
     assertThat(metadata.getRecordType()).isEqualTo(RecordType.NULL_VAL);
     assertThat(metadata.getRequestId()).isEqualTo(RecordMetadataEncoder.requestIdNullValue());
     assertThat(metadata.getRequestStreamId())
-        .isEqualTo(RecordMetadataEncoder.requestStreamIdNullValue());
+        .isEqualTo(RecordMetadataEncoder.requestPartitionIdNullValue());
     assertThat(metadata.getValueType()).isEqualTo(ValueType.NULL_VAL);
     assertThat(metadata.getIntent()).isEqualTo(Intent.UNKNOWN);
     assertThat(metadata.getRejectionType()).isEqualTo(RejectionType.NULL_VAL);

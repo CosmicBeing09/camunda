@@ -67,12 +67,12 @@ public final class VariableDocumentUpdateProcessor
       final Writers writers,
       final MutableUserTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
-    this.elementInstanceState = processingState.getElementInstanceState();
+    elementInstanceState = processingState.getElementInstanceState();
     this.userTaskState = userTaskState;
-    this.processState = processingState.getProcessState();
+    processState = processingState.getProcessState();
     this.keyGenerator = keyGenerator;
-    this.variableBehavior = bpmnBehaviors.variableBehavior();
-    this.jobBehavior = bpmnBehaviors.jobBehavior();
+    variableBehavior = bpmnBehaviors.variableBehavior();
+    jobBehavior = bpmnBehaviors.jobBehavior();
     this.writers = writers;
     this.authCheckBehavior = authCheckBehavior;
   }
@@ -216,7 +216,7 @@ public final class VariableDocumentUpdateProcessor
     return !DocumentValue.EMPTY_DOCUMENT.equals(record.getVariablesBuffer());
   }
 
-  private static boolean isCamundaUserTask(ElementInstance elementInstance) {
+  private static boolean isCamundaUserTask(final ElementInstance elementInstance) {
     return elementInstance.getValue().getBpmnElementType() == BpmnElementType.USER_TASK
         && elementInstance.getUserTaskKey() > -1L;
   }
@@ -238,7 +238,7 @@ public final class VariableDocumentUpdateProcessor
             .setIntent(command.getIntent())
             .setTriggerType(ValueType.VARIABLE_DOCUMENT)
             .setRequestId(command.getRequestId())
-            .setRequestStreamId(command.getRequestStreamId());
+            .setRequestStreamId(command.getRequestPartitionId());
     userTaskState.storeRecordRequestMetadata(userTaskKey, metadata);
   }
 }

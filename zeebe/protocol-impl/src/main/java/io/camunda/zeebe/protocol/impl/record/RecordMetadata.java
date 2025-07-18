@@ -285,7 +285,7 @@ public final class RecordMetadata implements BufferWriter, BufferReader {
   public RecordMetadata reset() {
     recordType = RecordType.NULL_VAL;
     requestId = RecordMetadataEncoder.requestIdNullValue();
-    requestStreamId = RecordMetadataEncoder.requestStreamIdNullValue();
+    requestStreamId = RecordMetadataEncoder.requestPartitionIdNullValue();
     protocolVersion = Protocol.PROTOCOL_VERSION;
     valueType = ValueType.NULL_VAL;
     intentValue = Intent.NULL_VAL;
