@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class RoleCreateProcessor implements DistributedTypedRecordProcessor<RoleRecord> {
 
@@ -30,7 +30,7 @@ public class RoleCreateProcessor implements DistributedTypedRecordProcessor<Role
       "Expected to create role with ID '%s', but a role with this ID already exists";
   private final RoleState roleState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -39,7 +39,7 @@ public class RoleCreateProcessor implements DistributedTypedRecordProcessor<Role
   public RoleCreateProcessor(
       final RoleState roleState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.roleState = roleState;
@@ -71,7 +71,7 @@ public class RoleCreateProcessor implements DistributedTypedRecordProcessor<Role
       responseWriter.writeRejectionOnCommand(command, RejectionType.ALREADY_EXISTS, errorMessage);
       return;
     }
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextRecordKey();
     record.setRoleKey(key);
 
     stateWriter.appendFollowUpEvent(key, RoleIntent.CREATED, record);

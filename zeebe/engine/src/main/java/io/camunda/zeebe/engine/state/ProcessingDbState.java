@@ -84,14 +84,14 @@ import io.camunda.zeebe.engine.state.user.DbUserState;
 import io.camunda.zeebe.engine.state.variable.DbVariableState;
 import io.camunda.zeebe.protocol.ZbColumnFamilies;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import java.time.InstantSource;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 
 public class ProcessingDbState implements MutableProcessingState {
   private final ZeebeDb<ZbColumnFamilies> zeebeDb;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final MutableProcessState processState;
   private final MutableTimerInstanceState timerInstanceState;
   private final MutableElementInstanceState elementInstanceState;
@@ -132,7 +132,7 @@ public class ProcessingDbState implements MutableProcessingState {
       final int partitionId,
       final ZeebeDb<ZbColumnFamilies> zeebeDb,
       final TransactionContext transactionContext,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final TransientPendingSubscriptionState transientMessageSubscriptionState,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
       final EngineConfiguration config,
@@ -248,7 +248,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public MutableTimerInstanceState getTimerState() {
+  public MutableTimerInstanceState getTimerInstanceState() {
     return timerInstanceState;
   }
 
@@ -358,7 +358,7 @@ public class ProcessingDbState implements MutableProcessingState {
   }
 
   @Override
-  public KeyGenerator getKeyGenerator() {
+  public RecordKeyGenerator getKeyGenerator() {
     return keyGenerator;
   }
 

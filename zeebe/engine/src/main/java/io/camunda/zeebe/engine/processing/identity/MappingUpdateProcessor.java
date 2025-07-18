@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.record.intent.MappingIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<MappingRecord> {
   private static final String MAPPING_NULL_VALUE_ERROR_MESSAGE =
@@ -34,7 +34,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
 
   private final MappingState mappingState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -43,7 +43,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
   public MappingUpdateProcessor(
       final MappingState mappingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.mappingState = mappingState;
@@ -116,7 +116,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
         record.getMappingKey(), MappingIntent.UPDATED, record, command);
 
     commandDistributionBehavior
-        .withKey(keyGenerator.nextKey())
+        .withKey(keyGenerator.nextRecordKey())
         .inQueue(DistributionQueue.IDENTITY.getQueueId())
         .distribute(command);
   }

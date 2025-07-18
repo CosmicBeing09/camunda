@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.incident.IncidentRecord;
 import io.camunda.zeebe.protocol.record.intent.IncidentIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.collection.Tuple;
 
 public final class BpmnIncidentBehavior {
@@ -26,13 +26,13 @@ public final class BpmnIncidentBehavior {
 
   private final IncidentState incidentState;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
 
   public BpmnIncidentBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final StateWriter stateWriter) {
     incidentState = processingState.getIncidentState();
     elementInstanceState = processingState.getElementInstanceState();
@@ -83,7 +83,7 @@ public final class BpmnIncidentBehavior {
         .setProcessDefinitionPath(treePathProperties.processDefinitionPath())
         .setCallingElementPath(treePathProperties.callingElementPath());
 
-    final var key = keyGenerator.nextKey();
+    final var key = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(key, IncidentIntent.CREATED, incidentRecord);
   }
 

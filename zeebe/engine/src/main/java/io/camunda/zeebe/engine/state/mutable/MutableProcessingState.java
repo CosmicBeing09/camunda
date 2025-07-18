@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.state.mutable;
 
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public interface MutableProcessingState extends ProcessingState {
 
@@ -46,7 +46,7 @@ public interface MutableProcessingState extends ProcessingState {
   MutableVariableState getVariableState();
 
   @Override
-  MutableTimerInstanceState getTimerState();
+  MutableTimerInstanceState getTimerInstanceState();
 
   @Override
   MutableElementInstanceState getElementInstanceState();
@@ -111,5 +111,5 @@ public interface MutableProcessingState extends ProcessingState {
   @Override
   MutableUsageMetricState getUsageMetricState();
 
-  KeyGenerator getKeyGenerator();
+  RecordKeyGenerator getKeyGenerator();
 }

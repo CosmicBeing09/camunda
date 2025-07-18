@@ -30,9 +30,9 @@ import org.agrona.DirectBuffer;
 public final class ProcessInstanceRecord extends UnifiedRecordValue
     implements ProcessInstanceRecordValue {
 
-  public static final String PROP_PROCESS_BPMN_PROCESS_ID = "bpmnProcessId";
+  public static final String PROP_BPMN_PROCESS_ID = "bpmnProcessId";
   public static final String PROP_PROCESS_INSTANCE_KEY = "processInstanceKey";
-  public static final String PROP_PROCESS_ELEMENT_ID = "elementId";
+  public static final String PROP_BPMN_ELEMENT_ID = "elementId";
   public static final String PROP_PROCESS_VERSION = "version";
   public static final String PROP_PROCESS_KEY = "processDefinitionKey";
   public static final String PROP_PROCESS_BPMN_TYPE = "bpmnElementType";
@@ -41,7 +41,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
   public static final String PROP_TENANT_ID = "tenantId";
 
   private final StringProperty bpmnProcessIdProp =
-      new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID, "");
+      new StringProperty(PROP_BPMN_PROCESS_ID, "");
   private final IntegerProperty versionProp = new IntegerProperty(PROP_PROCESS_VERSION, -1);
   private final StringProperty tenantIdProp =
       new StringProperty(PROP_TENANT_ID, TenantOwned.DEFAULT_TENANT_IDENTIFIER);
@@ -49,7 +49,7 @@ public final class ProcessInstanceRecord extends UnifiedRecordValue
 
   private final LongProperty processInstanceKeyProp =
       new LongProperty(PROP_PROCESS_INSTANCE_KEY, -1L);
-  private final StringProperty elementIdProp = new StringProperty(PROP_PROCESS_ELEMENT_ID, "");
+  private final StringProperty elementIdProp = new StringProperty(PROP_BPMN_ELEMENT_ID, "");
 
   private final LongProperty flowScopeKeyProp = new LongProperty(PROP_PROCESS_SCOPE_KEY, -1L);
 

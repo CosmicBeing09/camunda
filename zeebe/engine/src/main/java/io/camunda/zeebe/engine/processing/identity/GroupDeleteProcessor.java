@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<GroupRecord> {
 
@@ -39,7 +39,7 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -48,7 +48,7 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
   public GroupDeleteProcessor(
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     groupState = processingState.getGroupState();
@@ -95,7 +95,7 @@ public class GroupDeleteProcessor implements DistributedTypedRecordProcessor<Gro
     stateWriter.appendFollowUpEvent(groupKey, GroupIntent.DELETED, record);
     responseWriter.writeEventOnCommand(groupKey, GroupIntent.DELETED, record, command);
 
-    final long distributionKey = keyGenerator.nextKey();
+    final long distributionKey = keyGenerator.nextRecordKey();
     commandDistributionBehavior
         .withKey(distributionKey)
         .inQueue(DistributionQueue.IDENTITY.getQueueId())

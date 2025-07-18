@@ -30,7 +30,7 @@ public class UserTaskCreatingV2Applier
   @Override
   public void applyState(final long key, final UserTaskRecord value) {
     final var valueWithoutAssignee = value.copy().unsetAssignee();
-    userTaskState.create(valueWithoutAssignee);
+    userTaskState.createUserTask(valueWithoutAssignee);
     userTaskState.storeIntermediateState(value, LifecycleState.CREATING);
     userTaskState.storeInitialAssignee(key, value.getAssignee());
 

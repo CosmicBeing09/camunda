@@ -28,7 +28,7 @@ import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.test.util.Strings;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.function.LongConsumer;
@@ -1208,8 +1208,8 @@ public final class ProcessStateTest {
         .setResourceName(wrapString(resourceName))
         .setResource(resource);
 
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
-    final long key = keyGenerator.nextKey();
+    final RecordKeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final long key = keyGenerator.nextRecordKey();
 
     deploymentRecord
         .processesMetadata()
@@ -1260,8 +1260,8 @@ public final class ProcessStateTest {
     final var resource = wrapString(Bpmn.convertToString(modelInstance));
     final var checksum = wrapString("checksum");
 
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
-    final long key = keyGenerator.nextKey();
+    final RecordKeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final long key = keyGenerator.nextRecordKey();
 
     processRecord
         .setResourceName(wrapString(resourceName))
@@ -1272,7 +1272,7 @@ public final class ProcessStateTest {
         .setResourceName(resourceName)
         .setChecksum(checksum)
         .setTenantId(TENANT_ID)
-        .setDeploymentKey(keyGenerator.nextKey());
+        .setDeploymentKey(keyGenerator.nextRecordKey());
     if (versionTag != null) {
       processRecord.setVersionTag(versionTag);
     }

@@ -59,7 +59,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -81,7 +81,7 @@ public final class DeploymentCreateProcessor
   private final ResourceState resourceState;
   private final TimerInstanceState timerInstanceState;
   private final CatchEventBehavior catchEventBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final ExpressionProcessor expressionProcessor;
   private final StateWriter stateWriter;
   private final StartEventSubscriptionManager startEventSubscriptionManager;
@@ -94,7 +94,7 @@ public final class DeploymentCreateProcessor
       final ProcessingState processingState,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior distributionBehavior,
       final EngineConfiguration config,
@@ -105,7 +105,7 @@ public final class DeploymentCreateProcessor
     decisionState = processingState.getDecisionState();
     formState = processingState.getFormState();
     resourceState = processingState.getResourceState();
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     this.keyGenerator = keyGenerator;
     stateWriter = writers.state();
     rejectionWriter = writers.rejection();
@@ -201,7 +201,7 @@ public final class DeploymentCreateProcessor
 
   private void transformAndDistributeDeployment(final TypedRecord<DeploymentRecord> command) {
     final DeploymentRecord deploymentEvent = command.getValue();
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextRecordKey();
     deploymentEvent.setDeploymentKey(key);
 
     // Note: transforming a resource will also write the CREATE events for said resource

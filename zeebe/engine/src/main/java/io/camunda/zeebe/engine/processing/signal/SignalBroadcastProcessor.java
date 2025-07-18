@@ -31,13 +31,13 @@ import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import org.agrona.DirectBuffer;
 
 public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor<SignalRecord> {
 
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final EventHandle eventHandle;
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -49,7 +49,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
 
   public SignalBroadcastProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final ProcessingState processingState,
       final BpmnStateBehavior stateBehavior,
       final EventTriggerBehavior eventTriggerBehavior,
@@ -76,7 +76,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
 
   @Override
   public void processNewCommand(final TypedRecord<SignalRecord> command) {
-    final long eventKey = keyGenerator.nextKey();
+    final long eventKey = keyGenerator.nextRecordKey();
     final var signalRecord = command.getValue();
 
     if (!authCheckBehavior.isAssignedToTenant(command, signalRecord.getTenantId())) {
@@ -101,7 +101,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
           if (isStartEvent) {
             eventHandle.activateProcessInstanceForStartEvent(
                 subscriptionRecord.getProcessDefinitionKey(),
-                keyGenerator.nextKey(),
+                keyGenerator.nextRecordKey(),
                 subscriptionRecord.getCatchEventIdBuffer(),
                 signalRecord.getVariablesBuffer(),
                 signalRecord.getTenantId());

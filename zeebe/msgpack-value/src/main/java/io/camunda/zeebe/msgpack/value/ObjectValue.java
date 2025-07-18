@@ -17,7 +17,7 @@ import java.util.Objects;
 
 public class ObjectValue extends BaseValue {
   private final List<BaseProperty<? extends BaseValue>> declaredProperties;
-  private final List<UndeclaredProperty> undeclaredProperties = new ArrayList<>(0);
+  private final List<UndeclaredProperty> unregisteredProperties = new ArrayList<>(0);
   private final List<UndeclaredProperty> recycledProperties = new ArrayList<>(0);
 
   private final StringValue decodedKey = new StringValue();
@@ -44,14 +44,14 @@ public class ObjectValue extends BaseValue {
       prop.reset();
     }
 
-    for (int i = undeclaredProperties.size() - 1; i >= 0; --i) {
-      final UndeclaredProperty undeclaredProperty = undeclaredProperties.remove(i);
+    for (int i = unregisteredProperties.size() - 1; i >= 0; --i) {
+      final UndeclaredProperty undeclaredProperty = unregisteredProperties.remove(i);
       undeclaredProperty.reset();
       recycledProperties.add(undeclaredProperty);
     }
   }
 
-  private UndeclaredProperty newUndeclaredProperty(final StringValue key) {
+  private UndeclaredProperty newUnregisteredProperty(final StringValue key) {
     final int recycledSize = recycledProperties.size();
 
     UndeclaredProperty prop = null;
@@ -63,7 +63,7 @@ public class ObjectValue extends BaseValue {
     }
 
     prop.getKey().wrap(key);
-    undeclaredProperties.add(prop);
+    unregisteredProperties.add(prop);
 
     return prop;
   }
@@ -73,7 +73,7 @@ public class ObjectValue extends BaseValue {
     builder.append("{");
 
     writeJson(builder, declaredProperties);
-    writeJson(builder, undeclaredProperties);
+    writeJson(builder, unregisteredProperties);
 
     builder.append("}");
   }
@@ -86,11 +86,11 @@ public class ObjectValue extends BaseValue {
    */
   @Override
   public void write(final MsgPackWriter writer) {
-    final int size = declaredProperties.size() + undeclaredProperties.size();
+    final int size = declaredProperties.size() + unregisteredProperties.size();
 
     writer.writeMapHeader(size);
     write(writer, declaredProperties);
-    write(writer, undeclaredProperties);
+    write(writer, unregisteredProperties);
   }
 
   @Override
@@ -113,7 +113,7 @@ public class ObjectValue extends BaseValue {
       }
 
       if (prop == null) {
-        prop = newUndeclaredProperty(decodedKey);
+        prop = newUnregisteredProperty(decodedKey);
       }
 
       try {
@@ -135,11 +135,11 @@ public class ObjectValue extends BaseValue {
 
   @Override
   public int getEncodedLength() {
-    final int size = declaredProperties.size() + undeclaredProperties.size();
+    final int size = declaredProperties.size() + unregisteredProperties.size();
 
     int length = MsgPackWriter.getEncodedMapHeaderLenght(size);
     length += getEncodedLength(declaredProperties);
-    length += getEncodedLength(undeclaredProperties);
+    length += getEncodedLength(unregisteredProperties);
 
     return length;
   }
@@ -173,7 +173,7 @@ public class ObjectValue extends BaseValue {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(declaredProperties, undeclaredProperties, recycledProperties);
+    return Objects.hash(declaredProperties, unregisteredProperties, recycledProperties);
   }
 
   /**
@@ -192,7 +192,7 @@ public class ObjectValue extends BaseValue {
 
     final ObjectValue that = (ObjectValue) o;
     return Objects.equals(declaredProperties, that.declaredProperties)
-        && Objects.equals(undeclaredProperties, that.undeclaredProperties)
+        && Objects.equals(unregisteredProperties, that.unregisteredProperties)
         && Objects.equals(recycledProperties, that.recycledProperties);
   }
 
@@ -206,6 +206,6 @@ public class ObjectValue extends BaseValue {
   }
 
   public boolean isEmpty() {
-    return declaredProperties.isEmpty() && undeclaredProperties.isEmpty();
+    return declaredProperties.isEmpty() && unregisteredProperties.isEmpty();
   }
 }

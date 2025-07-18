@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.protocol.impl.record.value.usertask;
 
-import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_BPMN_PROCESS_ID;
+import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_BPMN_PROCESS_ID;
 import static io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord.PROP_PROCESS_INSTANCE_KEY;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bufferAsString;
 
@@ -97,7 +97,7 @@ public final class UserTaskRecord extends UnifiedRecordValue implements UserTask
   private final LongProperty processInstanceKeyProp =
       new LongProperty(PROP_PROCESS_INSTANCE_KEY, -1L);
   private final StringProperty bpmnProcessIdProp =
-      new StringProperty(PROP_PROCESS_BPMN_PROCESS_ID, EMPTY_STRING);
+      new StringProperty(PROP_BPMN_PROCESS_ID, EMPTY_STRING);
   private final IntegerProperty processDefinitionVersionProp =
       new IntegerProperty("processDefinitionVersion", -1);
   private final LongProperty processDefinitionKeyProp =

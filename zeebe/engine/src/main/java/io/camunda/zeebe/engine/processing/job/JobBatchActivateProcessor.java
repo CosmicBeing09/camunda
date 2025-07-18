@@ -33,7 +33,7 @@ import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.ByteValue;
 import io.camunda.zeebe.util.Either;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final JobBatchCollector jobBatchCollector;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final JobProcessingMetrics jobMetrics;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
@@ -56,7 +56,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
   public JobBatchActivateProcessor(
       final Writers writers,
       final ProcessingState state,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final JobProcessingMetrics jobMetrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
@@ -120,7 +120,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
 
   private void activateJobs(final TypedRecord<JobBatchRecord> record) {
     final JobBatchRecord value = record.getValue();
-    final long jobBatchKey = keyGenerator.nextKey();
+    final long jobBatchKey = keyGenerator.nextRecordKey();
 
     final Either<TooLargeJob, Map<JobKind, Integer>> result = jobBatchCollector.collectJobs(record);
     final var activatedJobCountPerJobKind = result.getOrElse(Collections.emptyMap());
@@ -182,6 +182,6 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
             .setProcessDefinitionPath(treePathProperties.processDefinitionPath())
             .setCallingElementPath(treePathProperties.callingElementPath());
 
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), IncidentIntent.CREATED, incidentEvent);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), IncidentIntent.CREATED, incidentEvent);
   }
 }

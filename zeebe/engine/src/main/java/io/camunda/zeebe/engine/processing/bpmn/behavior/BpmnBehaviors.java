@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.common.CatchEventBehavior;
 import io.camunda.zeebe.engine.processing.common.ElementActivationBehavior;
 import io.camunda.zeebe.engine.processing.common.EventTriggerBehavior;
 import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
-import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
+import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehavior;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 
 public interface BpmnBehaviors {
@@ -55,7 +55,7 @@ public interface BpmnBehaviors {
 
   BpmnUserTaskBehavior userTaskBehavior();
 
-  BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour();
+  BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour();
 
-  JobUpdateBehaviour jobUpdateBehaviour();
+  JobUpdateBehavior jobUpdateBehaviour();
 }

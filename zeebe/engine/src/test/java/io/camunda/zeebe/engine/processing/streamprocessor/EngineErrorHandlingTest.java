@@ -49,7 +49,7 @@ import io.camunda.zeebe.stream.api.CommandResponseWriter;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.test.util.AutoCloseableRule;
 import io.camunda.zeebe.test.util.TestUtil;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -81,7 +81,7 @@ public final class EngineErrorHandlingTest {
       RuleChain.outerRule(tempFolder).around(actorSchedulerRule).around(closeables);
 
   private TestStreams streams;
-  private KeyGenerator keyGenerator;
+  private RecordKeyGenerator keyGenerator;
   private CommandResponseWriter mockCommandResponseWriter;
   private MutableProcessingState processingState;
 
@@ -121,7 +121,7 @@ public final class EngineErrorHandlingTest {
                       }
                     }));
 
-    final long failingKey = keyGenerator.nextKey();
+    final long failingKey = keyGenerator.nextRecordKey();
     streams
         .newRecord(STREAM_NAME)
         .event(deployment("foo"))
@@ -137,7 +137,7 @@ public final class EngineErrorHandlingTest {
             .event(deployment("foo2"))
             .recordType(RecordType.COMMAND)
             .intent(DeploymentIntent.CREATE)
-            .key(keyGenerator.nextKey())
+            .key(keyGenerator.nextRecordKey())
             .write();
 
     // when
@@ -200,7 +200,7 @@ public final class EngineErrorHandlingTest {
             .event(Records.processInstance(1))
             .recordType(RecordType.COMMAND)
             .intent(ProcessInstanceIntent.ACTIVATE_ELEMENT)
-            .key(keyGenerator.nextKey())
+            .key(keyGenerator.nextRecordKey())
             .write();
 
     // when
@@ -245,7 +245,7 @@ public final class EngineErrorHandlingTest {
             .event(Records.processInstance(1))
             .recordType(RecordType.COMMAND)
             .intent(ProcessInstanceIntent.ACTIVATE_ELEMENT)
-            .key(keyGenerator.nextKey())
+            .key(keyGenerator.nextRecordKey())
             .write();
 
     // when
@@ -288,14 +288,14 @@ public final class EngineErrorHandlingTest {
         .event(Records.processInstance(1))
         .recordType(RecordType.COMMAND)
         .intent(ProcessInstanceIntent.ACTIVATE_ELEMENT)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
     streams
         .newRecord(STREAM_NAME)
         .event(Records.processInstance(1))
         .recordType(RecordType.COMMAND)
         .intent(ProcessInstanceIntent.COMPLETE_ELEMENT)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
 
     // other instance
@@ -304,7 +304,7 @@ public final class EngineErrorHandlingTest {
         .event(Records.processInstance(2))
         .recordType(RecordType.COMMAND)
         .intent(ProcessInstanceIntent.COMPLETE_ELEMENT)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
 
     // when
@@ -336,7 +336,7 @@ public final class EngineErrorHandlingTest {
             .event(Records.processInstance(1))
             .recordType(RecordType.COMMAND)
             .intent(ProcessInstanceIntent.ACTIVATE_ELEMENT)
-            .key(keyGenerator.nextKey())
+            .key(keyGenerator.nextRecordKey())
             .write();
     streams
         .newRecord(STREAM_NAME)
@@ -344,7 +344,7 @@ public final class EngineErrorHandlingTest {
         .recordType(RecordType.EVENT)
         .sourceRecordPosition(failedPos)
         .intent(ErrorIntent.CREATED)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
 
     final CountDownLatch latch = new CountDownLatch(1);
@@ -426,14 +426,14 @@ public final class EngineErrorHandlingTest {
         .event(Records.job(1))
         .recordType(RecordType.COMMAND)
         .intent(JobIntent.COMPLETE)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
     streams
         .newRecord(STREAM_NAME)
         .event(Records.job(1))
         .recordType(RecordType.COMMAND)
         .intent(JobIntent.THROW_ERROR)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
 
     // other instance
@@ -442,7 +442,7 @@ public final class EngineErrorHandlingTest {
         .event(Records.job(2))
         .recordType(RecordType.COMMAND)
         .intent(JobIntent.THROW_ERROR)
-        .key(keyGenerator.nextKey())
+        .key(keyGenerator.nextRecordKey())
         .write();
 
     // when

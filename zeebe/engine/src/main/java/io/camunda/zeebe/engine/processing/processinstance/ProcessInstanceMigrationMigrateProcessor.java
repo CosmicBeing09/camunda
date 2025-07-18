@@ -52,7 +52,7 @@ import io.camunda.zeebe.protocol.record.value.BpmnEventType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.ProcessInstanceMigrationRecordValue.ProcessInstanceMigrationMappingInstructionValue;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class ProcessInstanceMigrationMigrateProcessor
   private final MessageState messageState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final ProcessInstanceMigrationCatchEventBehaviour migrationCatchEventBehaviour;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
 
   public ProcessInstanceMigrationMigrateProcessor(
       final Writers writers,
@@ -94,7 +94,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       final int partitionId,
       final RoutingInfo routingInfo,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final RecordKeyGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -337,7 +337,7 @@ public class ProcessInstanceMigrationMigrateProcessor
               .resetProcessDefinitionPath();
 
           stateWriter.appendFollowUpEvent(
-              keyGenerator.nextKey(), ProcessInstanceIntent.ELEMENT_MIGRATED, sequenceFlowRecord);
+              keyGenerator.nextRecordKey(), ProcessInstanceIntent.ELEMENT_MIGRATED, sequenceFlowRecord);
         });
 
     if (elementInstance.getJobKey() > 0) {

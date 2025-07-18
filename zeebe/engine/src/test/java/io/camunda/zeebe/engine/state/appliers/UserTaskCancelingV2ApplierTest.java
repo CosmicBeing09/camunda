@@ -37,19 +37,19 @@ public class UserTaskCancelingV2ApplierTest {
   private MutableProcessingState processingState;
 
   /** The class under test. */
-  private UserTaskCancelingV2Applier userTaskCancelingApplier;
+  private UserTaskCancelingV2Applier userTaskCancelingV2Applier;
 
   /** Used for state assertions. */
   private MutableUserTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
-  private AppliersTestSetupHelper testSetup;
+  private AppliersTestSetupHelper appliersTestSetupHelper;
 
   @BeforeEach
   public void setup() {
-    userTaskCancelingApplier = new UserTaskCancelingV2Applier(processingState);
+    userTaskCancelingV2Applier = new UserTaskCancelingV2Applier(processingState);
     userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    appliersTestSetupHelper = new AppliersTestSetupHelper(processingState);
   }
 
   @Test
@@ -62,8 +62,8 @@ public class UserTaskCancelingV2ApplierTest {
         new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
 
     // preconditions: no dirty state should exist
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -74,7 +74,7 @@ public class UserTaskCancelingV2ApplierTest {
         .isEmpty();
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    userTaskCancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -105,13 +105,13 @@ public class UserTaskCancelingV2ApplierTest {
             .setUpdateSemantics(VariableDocumentUpdateSemantic.LOCAL);
 
     // simulate user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
 
     // simulate a `VariableDocument.UPDATE` triggering a user task update
-    testSetup.applyEventToState(
+    appliersTestSetupHelper.applyEventToState(
         variableDocumentKey, VariableDocumentIntent.UPDATING, variableDocumentRecord);
-    testSetup.applyEventToState(
+    appliersTestSetupHelper.applyEventToState(
         userTaskKey,
         UserTaskIntent.UPDATING,
         userTaskRecord.copy().setVariables(variablesBuffer).setVariablesChanged());
@@ -133,7 +133,7 @@ public class UserTaskCancelingV2ApplierTest {
                     .isEqualTo(LifecycleState.UPDATING));
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    userTaskCancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -158,11 +158,11 @@ public class UserTaskCancelingV2ApplierTest {
         new UserTaskRecord().setUserTaskKey(userTaskKey).setElementInstanceKey(elementInstanceKey);
 
     // simulate user task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATED, userTaskRecord);
 
     // simulate user task assignment and persisting request metadata
-    testSetup.applyEventToState(
+    appliersTestSetupHelper.applyEventToState(
         userTaskKey, UserTaskIntent.CLAIMING, userTaskRecord.copy().setAssignee("john"));
     // persist request metadata
     userTaskState.storeRecordRequestMetadata(
@@ -192,7 +192,7 @@ public class UserTaskCancelingV2ApplierTest {
             metadata -> assertThat(metadata.getIntent()).isEqualTo(UserTaskIntent.CLAIMING));
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    userTaskCancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.getLifecycleState(userTaskKey))
@@ -222,17 +222,17 @@ public class UserTaskCancelingV2ApplierTest {
 
     // simulate user task creation
     // assignee is present in the creating event
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATING, userTaskRecord);
     // but we clear the assignee for created event
     final UserTaskRecord recordWithoutAssignee = userTaskRecord.unsetAssignee();
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
+    appliersTestSetupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATED, recordWithoutAssignee);
 
     assertThat(userTaskState.findInitialAssignee(userTaskKey))
         .describedAs("Expect initial assignee to be present")
         .isEqualTo(Optional.of(initialAssignee));
 
     // when
-    userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);
+    userTaskCancelingV2Applier.applyState(userTaskKey, userTaskRecord);
 
     // then
     assertThat(userTaskState.findInitialAssignee(userTaskKey))

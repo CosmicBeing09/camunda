@@ -58,22 +58,22 @@ public enum BpmnElementType {
   SCRIPT_TASK("scriptTask"),
   SEND_TASK("sendTask");
 
-  private final String elementTypeName;
+  private final String elementName;
 
   BpmnElementType(final String elementTypeName) {
-    this.elementTypeName = elementTypeName;
+    elementName = elementTypeName;
   }
 
-  public Optional<String> getElementTypeName() {
-    return Optional.ofNullable(elementTypeName);
+  public Optional<String> getName() {
+    return Optional.ofNullable(elementName);
   }
 
   public static BpmnElementType bpmnElementTypeFor(final String elementTypeName) {
     return Arrays.stream(values())
         .filter(
             bpmnElementType ->
-                bpmnElementType.elementTypeName != null
-                    && bpmnElementType.elementTypeName.equals(elementTypeName))
+                bpmnElementType.elementName != null
+                    && bpmnElementType.elementName.equals(elementTypeName))
         .findFirst()
         .orElseThrow(
             () -> new RuntimeException("Unsupported BPMN element of type " + elementTypeName));

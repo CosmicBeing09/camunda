@@ -27,9 +27,9 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
 
   private final LongProperty parentKeyProp = new LongProperty("parentKey", -1L);
   private final IntegerProperty childCountProp = new IntegerProperty("childCount", 0);
-  private final IntegerProperty childActivatedCountProp =
+  private final IntegerProperty activatedChildInstancesCountProp =
       new IntegerProperty("childActivatedCount", 0);
-  private final IntegerProperty childCompletedCountProp =
+  private final IntegerProperty completedChildInstancesCountProp =
       new IntegerProperty("childCompletedCount", 0);
   private final IntegerProperty childTerminatedCountProp =
       new IntegerProperty("childTerminatedCount", 0);
@@ -72,8 +72,8 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
     super(16);
     declareProperty(parentKeyProp)
         .declareProperty(childCountProp)
-        .declareProperty(childActivatedCountProp)
-        .declareProperty(childCompletedCountProp)
+        .declareProperty(activatedChildInstancesCountProp)
+        .declareProperty(completedChildInstancesCountProp)
         .declareProperty(childTerminatedCountProp)
         .declareProperty(jobKeyProp)
         .declareProperty(multiInstanceLoopCounterProp)
@@ -167,11 +167,11 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public int getNumberOfCompletedElementInstances() {
-    return childCompletedCountProp.getValue();
+    return completedChildInstancesCountProp.getValue();
   }
 
   public int getNumberOfElementInstances() {
-    return childActivatedCountProp.getValue();
+    return activatedChildInstancesCountProp.getValue();
   }
 
   public int getNumberOfTerminatedElementInstances() {
@@ -179,11 +179,11 @@ public final class ElementInstance extends UnpackedObject implements DbValue {
   }
 
   public void incrementNumberOfCompletedElementInstances() {
-    childCompletedCountProp.increment();
+    completedChildInstancesCountProp.increment();
   }
 
   public void incrementNumberOfElementInstances() {
-    childActivatedCountProp.increment();
+    activatedChildInstancesCountProp.increment();
   }
 
   public void incrementNumberOfTerminatedElementInstances() {

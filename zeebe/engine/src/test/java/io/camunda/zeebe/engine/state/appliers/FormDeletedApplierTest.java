@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.test.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +34,7 @@ public class FormDeletedApplierTest {
     MutableFormState formState;
     TypedEventApplier<FormIntent, FormRecord> formCreatedApplier;
     FormDeletedApplier formDeletedApplier;
-    KeyGenerator keyGenerator;
+    RecordKeyGenerator keyGenerator;
 
     private MutableProcessingState processingState;
 
@@ -147,8 +147,8 @@ public class FormDeletedApplierTest {
     @Test
     void shouldDeleteFormForSpecificTenant() {
       // given
-      final var formKey = keyGenerator.nextKey();
-      final var deploymentKey = keyGenerator.nextKey();
+      final var formKey = keyGenerator.nextRecordKey();
+      final var deploymentKey = keyGenerator.nextRecordKey();
       final var formId = Strings.newRandomValidBpmnId();
       final var version = 1;
       final var tenant1Form = sampleFormRecord(formKey, formId, version, deploymentKey, TENANT_1);
@@ -177,8 +177,8 @@ public class FormDeletedApplierTest {
     @Test
     void shouldDeleteFormForSpecificTenant() {
       // given
-      final var formKey = keyGenerator.nextKey();
-      final var deploymentKey = keyGenerator.nextKey();
+      final var formKey = keyGenerator.nextRecordKey();
+      final var deploymentKey = keyGenerator.nextRecordKey();
       final var formId = Strings.newRandomValidBpmnId();
       final var version = 1;
       final var versionTag = "v1.0";

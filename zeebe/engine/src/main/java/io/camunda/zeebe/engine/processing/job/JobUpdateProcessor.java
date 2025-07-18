@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.job;
 
-import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehaviour;
+import io.camunda.zeebe.engine.processing.job.behaviour.JobUpdateBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
@@ -25,12 +25,12 @@ import java.util.function.Function;
 
 public class JobUpdateProcessor implements TypedRecordProcessor<JobRecord> {
 
-  private final JobUpdateBehaviour jobUpdateBehaviour;
+  private final JobUpdateBehavior jobUpdateBehaviour;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
   private final StateWriter stateWriter;
 
-  public JobUpdateProcessor(final JobUpdateBehaviour jobUpdateBehaviour, final Writers writers) {
+  public JobUpdateProcessor(final JobUpdateBehavior jobUpdateBehaviour, final Writers writers) {
     this.jobUpdateBehaviour = jobUpdateBehaviour;
     rejectionWriter = writers.rejection();
     responseWriter = writers.response();

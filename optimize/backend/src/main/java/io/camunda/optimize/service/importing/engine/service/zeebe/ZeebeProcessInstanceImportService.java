@@ -152,7 +152,7 @@ public class ZeebeProcessInstanceImportService
     recordsForInstance.stream()
         .filter(
             zeebeRecord ->
-                zeebeRecord.getValue().getBpmnElementType().getElementTypeName().isPresent())
+                zeebeRecord.getValue().getBpmnElementType().getName().isPresent())
         .filter(
             zeebeRecord ->
                 !BpmnElementType.PROCESS.equals(zeebeRecord.getValue().getBpmnElementType()))
@@ -190,7 +190,7 @@ public class ZeebeProcessInstanceImportService
             zeebeInstanceRecord.getElementId(),
             zeebeInstanceRecord
                 .getBpmnElementType()
-                .getElementTypeName()
+                .getName()
                 .orElseThrow(
                     () ->
                         new OptimizeRuntimeException(

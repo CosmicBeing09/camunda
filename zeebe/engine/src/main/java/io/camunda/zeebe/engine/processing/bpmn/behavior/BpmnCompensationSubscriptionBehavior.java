@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.intent.CompensationSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Collection;
 import java.util.List;
@@ -37,7 +37,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class BpmnCompensationSubscriptionBehaviour {
+public class BpmnCompensationSubscriptionBehavior {
 
   /** Default instance key if no compensation handler was activated. */
   private static final long NONE_COMPENSATION_HANDLER_INSTANCE_KEY = -1L;
@@ -45,15 +45,15 @@ public class BpmnCompensationSubscriptionBehaviour {
   private static final Predicate<CompensationSubscription> TRIGGER_ALL_SUBSCRIPTIONS =
       subscription -> true;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final CompensationSubscriptionState compensationSubscriptionState;
   private final ProcessState processState;
   private final TypedCommandWriter commandWriter;
   private final BpmnStateBehavior stateBehavior;
 
-  public BpmnCompensationSubscriptionBehaviour(
-      final KeyGenerator keyGenerator,
+  public BpmnCompensationSubscriptionBehavior(
+      final RecordKeyGenerator keyGenerator,
       final ProcessingState processingState,
       final Writers writers,
       final BpmnStateBehavior stateBehavior) {
@@ -70,7 +70,7 @@ public class BpmnCompensationSubscriptionBehaviour {
 
     if (hasCompensationBoundaryEvent(element) || isFlowScopeWithSubscriptions(context)) {
 
-      final var key = keyGenerator.nextKey();
+      final var key = keyGenerator.nextRecordKey();
       final var elementId = BufferUtil.bufferAsString(element.getId());
 
       final var compensation =
@@ -155,7 +155,7 @@ public class BpmnCompensationSubscriptionBehaviour {
             .findSubscriptionsByProcessInstanceKey(
                 context.getTenantId(), context.getProcessInstanceKey())
             .stream()
-            .filter(not(BpmnCompensationSubscriptionBehaviour::isCompensationTriggered))
+            .filter(not(BpmnCompensationSubscriptionBehavior::isCompensationTriggered))
             .toList();
 
     // filter subscriptions by their scope
@@ -245,7 +245,7 @@ public class BpmnCompensationSubscriptionBehaviour {
         .setBpmnElementType(compensationHandler.getElementType())
         .setBpmnEventType(BpmnEventType.COMPENSATION);
 
-    final long compensationHandlerInstanceKey = keyGenerator.nextKey();
+    final long compensationHandlerInstanceKey = keyGenerator.nextRecordKey();
     commandWriter.appendFollowUpCommand(
         compensationHandlerInstanceKey,
         ProcessInstanceIntent.ACTIVATE_ELEMENT,
@@ -282,7 +282,7 @@ public class BpmnCompensationSubscriptionBehaviour {
   private void activateAndCompleteCompensationBoundaryEvent(
       final BpmnElementContext context, final ExecutableBoundaryEvent boundaryEvent) {
 
-    final long boundaryEventKey = keyGenerator.nextKey();
+    final long boundaryEventKey = keyGenerator.nextRecordKey();
 
     final ProcessInstanceRecord boundaryEventRecord = new ProcessInstanceRecord();
     boundaryEventRecord.wrap(context.getRecordValue());
@@ -349,7 +349,7 @@ public class BpmnCompensationSubscriptionBehaviour {
         .findSubscriptionsByProcessInstanceKey(
             context.getTenantId(), context.getProcessInstanceKey())
         .stream()
-        .filter(BpmnCompensationSubscriptionBehaviour::isCompensationTriggered)
+        .filter(BpmnCompensationSubscriptionBehavior::isCompensationTriggered)
         .filter(
             subscription ->
                 subscription.getRecord().getCompensationHandlerInstanceKey()
@@ -391,7 +391,7 @@ public class BpmnCompensationSubscriptionBehaviour {
         .filter(
             subscription ->
                 scopeKey == subscription.getRecord().getCompensableActivityInstanceKey())
-        .filter(not(BpmnCompensationSubscriptionBehaviour::hasCompensationHandler))
+        .filter(not(BpmnCompensationSubscriptionBehavior::hasCompensationHandler))
         .findFirst()
         .ifPresent(
             flowScopeSubscription -> {

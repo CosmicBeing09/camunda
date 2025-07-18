@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.Instant;
@@ -52,7 +52,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
   private final ElementInstanceState elementInstanceState;
   private final MutableTimerInstanceState timerInstanceState;
   private final ExpressionProcessor expressionProcessor;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
@@ -69,7 +69,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
 
     processState = processingState.getProcessState();
     elementInstanceState = processingState.getElementInstanceState();
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     keyGenerator = processingState.getKeyGenerator();
     eventHandle =
         new EventHandle(
@@ -113,7 +113,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
             timer.getTargetElementIdBuffer(),
             ExecutableCatchEvent.class);
     if (isStartEvent(elementInstanceKey)) {
-      final long processInstanceKey = keyGenerator.nextKey();
+      final long processInstanceKey = keyGenerator.nextRecordKey();
       timer.setProcessInstanceKey(processInstanceKey);
       stateWriter.appendFollowUpEvent(record.getKey(), TimerIntent.TRIGGERED, timer);
       eventHandle.activateProcessInstanceForStartEvent(

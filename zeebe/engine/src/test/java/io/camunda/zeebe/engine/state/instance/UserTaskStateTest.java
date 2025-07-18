@@ -48,7 +48,7 @@ public class UserTaskStateTest {
     final UserTaskRecord expectedRecord = createUserTask(5_000);
 
     // when
-    userTaskState.create(expectedRecord);
+    userTaskState.createUserTask(expectedRecord);
 
     // then
     final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
@@ -61,7 +61,7 @@ public class UserTaskStateTest {
     final UserTaskRecord expectedRecord = createUserTask(5_000).setTenantId("customTenantId");
 
     // when
-    userTaskState.create(expectedRecord);
+    userTaskState.createUserTask(expectedRecord);
 
     // then
     final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
@@ -72,11 +72,11 @@ public class UserTaskStateTest {
   public void shouldUpdateUserTask() {
     // given
     final UserTaskRecord expectedRecord = createUserTask(5_000);
-    userTaskState.create(expectedRecord);
+    userTaskState.createUserTask(expectedRecord);
     expectedRecord.setAssignee("myNewAssignee");
 
     // when
-    userTaskState.update(expectedRecord);
+    userTaskState.updateUserTask(expectedRecord);
 
     // then
     final UserTaskRecord storedRecord = userTaskState.getUserTask(5_000);
@@ -87,7 +87,7 @@ public class UserTaskStateTest {
   public void shouldUpdateUserTaskState() {
     // given
     final UserTaskRecord expectedRecord = createUserTask(5_000);
-    userTaskState.create(expectedRecord);
+    userTaskState.createUserTask(expectedRecord);
 
     // when
     userTaskState.updateUserTaskLifecycleState(5_000, LifecycleState.CREATED);
@@ -102,7 +102,7 @@ public class UserTaskStateTest {
     final UserTaskRecord expectedRecord = new UserTaskRecord();
 
     // when
-    assertThatThrownBy(() -> userTaskState.update(expectedRecord))
+    assertThatThrownBy(() -> userTaskState.updateUserTask(expectedRecord))
         // then
         .isInstanceOf(ZeebeDbInconsistentException.class)
         .hasMessageContaining("does not exist");
@@ -112,7 +112,7 @@ public class UserTaskStateTest {
   public void shouldDeleteUserTask() {
     // given
     final UserTaskRecord expectedRecord = createUserTask(5_000);
-    userTaskState.create(expectedRecord);
+    userTaskState.createUserTask(expectedRecord);
 
     // when
     userTaskState.delete(5_000);
@@ -128,7 +128,7 @@ public class UserTaskStateTest {
     final UserTaskRecord userTask = createUserTask(key);
 
     final List<Consumer<UserTaskRecord>> stateUpdates =
-        Arrays.asList(userTaskState::create, userTaskState::update);
+        Arrays.asList(userTaskState::createUserTask, userTaskState::updateUserTask);
 
     // when user task state is updated then the variables are not persisted
     for (final Consumer<UserTaskRecord> stateUpdate : stateUpdates) {
@@ -146,7 +146,7 @@ public class UserTaskStateTest {
     final UserTaskRecord writtenRecord = createUserTask(key).setAssignee("test");
 
     // when
-    userTaskState.create(writtenRecord);
+    userTaskState.createUserTask(writtenRecord);
     writtenRecord.setAssignee("foo");
 
     // then

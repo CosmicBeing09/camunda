@@ -20,7 +20,7 @@ import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstanceRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
@@ -37,7 +37,7 @@ public final class ElementActivationBehavior {
 
   public static final long NO_ANCESTOR_SCOPE_KEY = -1L;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final StateWriter stateWriter;
   private final BpmnStateBehavior stateBehavior;
@@ -46,7 +46,7 @@ public final class ElementActivationBehavior {
   private final ElementInstanceState elementInstanceState;
 
   public ElementActivationBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CatchEventBehavior catchEventBehavior,
       final ElementInstanceState elementInstanceState,
@@ -356,7 +356,7 @@ public final class ElementActivationBehavior {
       elementInstanceFlowScopeKey = -1L;
 
     } else {
-      elementInstanceKey = keyGenerator.nextKey();
+      elementInstanceKey = keyGenerator.nextRecordKey();
       elementInstanceFlowScopeKey = flowScopeKey;
     }
 
@@ -401,7 +401,7 @@ public final class ElementActivationBehavior {
       final AbstractFlowElement elementToActivate,
       final long flowScopeKey) {
 
-    final var elementInstanceKey = keyGenerator.nextKey();
+    final var elementInstanceKey = keyGenerator.nextRecordKey();
     final var elementRecord =
         createElementRecord(processInstanceRecord, elementToActivate, flowScopeKey);
     commandWriter.appendFollowUpCommand(

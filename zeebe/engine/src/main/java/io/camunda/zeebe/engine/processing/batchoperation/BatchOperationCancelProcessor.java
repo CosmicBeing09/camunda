@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,14 +47,14 @@ public final class BatchOperationCancelProcessor
   private final TypedRejectionWriter rejectionWriter;
   private final BatchOperationState batchOperationState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
 
   public BatchOperationCancelProcessor(
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final RecordKeyGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();
@@ -80,7 +80,7 @@ public final class BatchOperationCancelProcessor
 
     final var recordValue = command.getValue();
     final var batchOperationKey = recordValue.getBatchOperationKey();
-    final var cancelKey = keyGenerator.nextKey();
+    final var cancelKey = keyGenerator.nextRecordKey();
     LOGGER.debug(
         "Processing new command to cancel a batch operation with key '{}': {}",
         batchOperationKey,

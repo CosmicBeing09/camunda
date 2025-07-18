@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.bpmn.task;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnElementProcessor;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnStateTransitionBehavior;
@@ -22,7 +22,7 @@ public class UndefinedTaskProcessor implements BpmnElementProcessor<ExecutableAc
 
   private final BpmnStateTransitionBehavior stateTransitionBehavior;
   private final BpmnIncidentBehavior incidentBehavior;
-  private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
+  private final BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour;
   private final BpmnJobBehavior jobBehavior;
 
   public UndefinedTaskProcessor(

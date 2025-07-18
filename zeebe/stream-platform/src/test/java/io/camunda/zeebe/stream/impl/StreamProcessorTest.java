@@ -721,9 +721,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
         };
     // in order to not mark the processing as skipped we need to return a result
     testProcessor.processingResult =
@@ -738,7 +738,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextRecordKey();
 
     // when
     streamPlatform.writeBatch(
@@ -748,7 +748,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextRecordKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 4);
   }
 
@@ -760,9 +760,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
 
           throw new RuntimeException("expected");
         };
@@ -776,7 +776,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextRecordKey();
 
     // when
     streamPlatform.writeBatch(
@@ -786,7 +786,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextRecordKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 1);
   }
 
@@ -802,9 +802,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
         };
     doCallRealMethod()
         .doReturn(EmptyProcessingResult.INSTANCE)
@@ -814,7 +814,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextRecordKey();
 
     // when
     streamPlatform.writeBatch(
@@ -824,7 +824,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextRecordKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 4);
   }
 
@@ -840,9 +840,9 @@ public final class StreamProcessorTest {
         (ctx) -> {
           final var zeebeDb = ctx.getZeebeDb();
           final var keyGenerator = new DbKeyGenerator(1, zeebeDb, ctx.getTransactionContext());
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
-          keyGenerator.nextKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
+          keyGenerator.nextRecordKey();
 
           throw new RuntimeException("expected");
         };
@@ -858,7 +858,7 @@ public final class StreamProcessorTest {
 
     final var zeebeDb = testProcessor.recordProcessorContext.getZeebeDb();
     final var keyGenerator = new DbKeyGenerator(1, zeebeDb, zeebeDb.createContext());
-    final var firstKey = keyGenerator.nextKey();
+    final var firstKey = keyGenerator.nextRecordKey();
 
     // when
     streamPlatform.writeBatch(
@@ -868,7 +868,7 @@ public final class StreamProcessorTest {
     // then
     verify(testProcessor, TIMEOUT.times(2)).process(any(), any());
 
-    final var nextKey = keyGenerator.nextKey();
+    final var nextKey = keyGenerator.nextRecordKey();
     AssertionsForClassTypes.assertThat(nextKey).isEqualTo(firstKey + 1);
   }
 

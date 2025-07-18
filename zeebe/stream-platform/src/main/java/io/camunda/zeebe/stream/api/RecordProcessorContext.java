@@ -11,7 +11,7 @@ import io.camunda.zeebe.db.TransactionContext;
 import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
 import io.camunda.zeebe.stream.api.scheduling.ProcessingScheduleService;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.util.List;
 
@@ -31,7 +31,7 @@ public interface RecordProcessorContext {
 
   InterPartitionCommandSender getPartitionCommandSender();
 
-  KeyGenerator getKeyGenerator();
+  RecordKeyGenerator getKeyGenerator();
 
   ControllableStreamClock getClock();
 

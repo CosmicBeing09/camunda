@@ -27,7 +27,7 @@ public final class UserTaskUpdatedV1Applier
   public void applyState(final long key, final UserTaskRecord value) {
     final UserTaskRecord userTask = userTaskState.getUserTask(key);
     userTask.wrapChangedAttributes(value, false);
-    userTaskState.update(userTask);
+    userTaskState.updateUserTask(userTask);
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
   }
 }

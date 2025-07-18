@@ -20,20 +20,20 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 @ExcludeAuthorizationCheck
 public final class ProcessInstanceBatchActivateProcessor
     implements TypedRecordProcessor<ProcessInstanceBatchRecord> {
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
 
   public ProcessInstanceBatchActivateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final ElementInstanceState elementInstanceState,
       final ProcessState processState) {
     commandWriter = writers.command();
@@ -59,7 +59,7 @@ public final class ProcessInstanceBatchActivateProcessor
     final ProcessInstanceRecord childInstanceRecord = createChildInstanceRecord(record);
 
     commandWriter.appendFollowUpCommand(
-        keyGenerator.nextKey(), ProcessInstanceIntent.ACTIVATE_ELEMENT, childInstanceRecord);
+        keyGenerator.nextRecordKey(), ProcessInstanceIntent.ACTIVATE_ELEMENT, childInstanceRecord);
   }
 
   private void writeNextBatchCommand(
@@ -85,7 +85,7 @@ public final class ProcessInstanceBatchActivateProcessor
             .setIndex(remainingChildrenToActivate);
 
     commandWriter.appendFollowUpCommand(
-        keyGenerator.nextKey(), ProcessInstanceBatchIntent.ACTIVATE, nextBatchRecord);
+        keyGenerator.nextRecordKey(), ProcessInstanceBatchIntent.ACTIVATE, nextBatchRecord);
   }
 
   private ProcessInstanceRecord createChildInstanceRecord(

@@ -39,7 +39,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
@@ -64,14 +64,14 @@ public final class CatchEventBehavior {
       new ProcessMessageSubscriptionRecord();
   private final TimerRecord timerRecord = new TimerRecord();
   private final DueDateTimerChecker timerChecker;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final SignalSubscriptionRecord signalSubscription = new SignalSubscriptionRecord();
   private final InstantSource clock;
   private final TransientPendingSubscriptionState transientProcessMessageSubscriptionState;
 
   public CatchEventBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final ExpressionProcessor expressionProcessor,
       final SubscriptionCommandSender subscriptionCommandSender,
       final StateWriter stateWriter,
@@ -86,7 +86,7 @@ public final class CatchEventBehavior {
     this.sideEffectWriter = sideEffectWriter;
     this.routingInfo = routingInfo;
 
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     processMessageSubscriptionState = processingState.getProcessMessageSubscriptionState();
     processState = processingState.getProcessState();
     signalSubscriptionState = processingState.getSignalSubscriptionState();
@@ -312,7 +312,7 @@ public final class CatchEventBehavior {
     subscription.setInterrupting(event.isInterrupting());
     subscription.setTenantId(context.getTenantId());
 
-    final var subscriptionKey = keyGenerator.nextKey();
+    final var subscriptionKey = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(
         subscriptionKey, ProcessMessageSubscriptionIntent.CREATING, subscription);
 
@@ -385,7 +385,7 @@ public final class CatchEventBehavior {
           return true;
         });
 
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), TimerIntent.CREATED, timerRecord);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), TimerIntent.CREATED, timerRecord);
   }
 
   private void subscribeToSignalEvents(
@@ -408,7 +408,7 @@ public final class CatchEventBehavior {
         .setCatchEventId(event.getId())
         .setTenantId(context.getTenantId());
 
-    final var subscriptionKey = keyGenerator.nextKey();
+    final var subscriptionKey = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(
         subscriptionKey, SignalSubscriptionIntent.CREATED, signalSubscription);
   }

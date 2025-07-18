@@ -52,7 +52,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import java.time.InstantSource;
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -61,7 +61,7 @@ public final class BpmnProcessors {
 
   public static TypedRecordProcessor<ProcessInstanceRecord> addBpmnStreamProcessor(
       final MutableProcessingState processingState,
-      final Supplier<ScheduledTaskState> scheduledTaskState,
+      final Supplier<ScheduledTaskState> scheduledTaskStateSupplier,
       final BpmnBehaviors bpmnBehaviors,
       final TypedRecordProcessors typedRecordProcessors,
       final SubscriptionCommandSender subscriptionCommandSender,
@@ -75,7 +75,7 @@ public final class BpmnProcessors {
       final AuthorizationCheckBehavior authCheckBehavior,
       final TransientPendingSubscriptionState transientProcessMessageSubscriptionState,
       final ProcessEngineMetrics processEngineMetrics) {
-    final MutableProcessMessageSubscriptionState subscriptionState =
+    final MutableProcessMessageSubscriptionState processMessageSubscriptionState =
         processingState.getProcessMessageSubscriptionState();
     final var keyGenerator = processingState.getKeyGenerator();
 
@@ -89,11 +89,11 @@ public final class BpmnProcessors {
 
     addMessageStreamProcessors(
         typedRecordProcessors,
-        subscriptionState,
+        processMessageSubscriptionState,
         subscriptionCommandSender,
         bpmnBehaviors,
         processingState,
-        scheduledTaskState,
+        scheduledTaskStateSupplier,
         writers,
         clock,
         transientProcessMessageSubscriptionState);
@@ -212,7 +212,7 @@ public final class BpmnProcessors {
             ValueType.TIMER,
             TimerIntent.CANCEL,
             new TimerCancelProcessor(
-                processingState.getTimerState(), writers.state(), writers.rejection()))
+                processingState.getTimerInstanceState(), writers.state(), writers.rejection()))
         .withListener(timerChecker);
   }
 
@@ -220,7 +220,7 @@ public final class BpmnProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final BpmnBehaviors bpmnBehaviors,
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final MutableUserTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -246,7 +246,7 @@ public final class BpmnProcessors {
       final AuthorizationCheckBehavior authCheckBehavior) {
     final MutableElementInstanceState elementInstanceState =
         processingState.getElementInstanceState();
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final RecordKeyGenerator keyGenerator = processingState.getKeyGenerator();
 
     final ProcessInstanceCreationCreateProcessor createProcessor =
         new ProcessInstanceCreationCreateProcessor(
@@ -294,7 +294,7 @@ public final class BpmnProcessors {
       final int partitionId,
       final RoutingInfo routingInfo,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final RecordKeyGenerator keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.PROCESS_INSTANCE_MIGRATION,
         ProcessInstanceMigrationIntent.MIGRATE,
@@ -336,7 +336,7 @@ public final class BpmnProcessors {
       final MutableProcessingState processingState,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final RecordKeyGenerator keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,
         AdHocSubProcessActivityActivationIntent.ACTIVATE,

@@ -40,7 +40,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 
 public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<MappingRecord> {
 
@@ -53,7 +53,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final TypedResponseWriter responseWriter;
@@ -62,7 +62,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   public MappingDeleteProcessor(
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     mappingState = processingState.getMappingState();
@@ -101,7 +101,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
       responseWriter.writeRejectionOnCommand(command, rejection.type(), rejection.reason());
       return;
     }
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextRecordKey();
     deleteMapping(persistedMappingOptional.get(), key);
     responseWriter.writeEventOnCommand(key, MappingIntent.DELETED, record, command);
 

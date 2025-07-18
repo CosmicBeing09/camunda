@@ -20,7 +20,7 @@ import io.camunda.zeebe.util.Either;
 import java.time.InstantSource;
 import java.util.Optional;
 
-public class JobUpdateBehaviour {
+public class JobUpdateBehavior {
 
   public static final String NO_JOB_FOUND_MESSAGE =
       "Expected to update job with key '%d', but no such job was found";
@@ -34,7 +34,7 @@ public class JobUpdateBehaviour {
   private final InstantSource clock;
   private final AuthorizationCheckBehavior authCheckBehavior;
 
-  public JobUpdateBehaviour(
+  public JobUpdateBehavior(
       final JobState jobState,
       final InstantSource clock,
       final AuthorizationCheckBehavior authCheckBehavior) {

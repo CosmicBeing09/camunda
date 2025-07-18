@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.bpmn.BpmnElementContext;
 import io.camunda.zeebe.engine.processing.bpmn.BpmnProcessingException;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBehaviors;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnBufferedMessageStartEventBehavior;
-import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehaviour;
+import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnCompensationSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnEventSubscriptionBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnIncidentBehavior;
 import io.camunda.zeebe.engine.processing.bpmn.behavior.BpmnJobBehavior;
@@ -37,7 +37,7 @@ public final class ProcessProcessor
   private final BpmnIncidentBehavior incidentBehavior;
   private final BpmnProcessResultSenderBehavior processResultSenderBehavior;
   private final BpmnBufferedMessageStartEventBehavior bufferedMessageStartEventBehavior;
-  private final BpmnCompensationSubscriptionBehaviour compensationSubscriptionBehaviour;
+  private final BpmnCompensationSubscriptionBehavior compensationSubscriptionBehaviour;
   private final BpmnJobBehavior jobBehavior;
 
   public ProcessProcessor(

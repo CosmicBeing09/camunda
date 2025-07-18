@@ -32,7 +32,7 @@ public final class UserTaskAssignedV2Applier
   public void applyState(final long key, final UserTaskRecord value) {
     final var userTaskRecord = new UserTaskRecord();
     userTaskRecord.wrapWithoutVariables(value);
-    userTaskState.update(userTaskRecord.setChangedAttributes(List.of()).setAction(""));
+    userTaskState.updateUserTask(userTaskRecord.setChangedAttributes(List.of()).setAction(""));
     userTaskState.updateUserTaskLifecycleState(key, LifecycleState.CREATED);
 
     // Clear operational data related to the current assign(claim) transition

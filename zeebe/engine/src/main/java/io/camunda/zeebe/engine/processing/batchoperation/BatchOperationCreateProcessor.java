@@ -24,7 +24,7 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public final class BatchOperationCreateProcessor
   private static final String EMPTY_JSON_OBJECT = "{}";
   private static final String MESSAGE_GIVEN_FILTER_IS_EMPTY = "Given filter is empty";
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -47,7 +47,7 @@ public final class BatchOperationCreateProcessor
 
   public BatchOperationCreateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior,
       final RoutingInfo routingInfo) {
@@ -78,7 +78,7 @@ public final class BatchOperationCreateProcessor
       return;
     }
 
-    final long key = keyGenerator.nextKey();
+    final long key = keyGenerator.nextRecordKey();
     final var recordValue = command.getValue();
     LOGGER.debug("Processing new command with key '{}': {}", key, recordValue);
 

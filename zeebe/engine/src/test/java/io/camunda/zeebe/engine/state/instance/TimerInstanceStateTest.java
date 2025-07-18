@@ -30,7 +30,7 @@ public final class TimerInstanceStateTest {
   @Before
   public void setUp() {
     final MutableProcessingState processingState = stateRule.getProcessingState();
-    state = processingState.getTimerState();
+    state = processingState.getTimerInstanceState();
   }
 
   @Test

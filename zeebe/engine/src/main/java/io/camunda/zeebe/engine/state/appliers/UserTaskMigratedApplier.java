@@ -29,6 +29,6 @@ public final class UserTaskMigratedApplier
         .setProcessDefinitionVersion(value.getProcessDefinitionVersion())
         .setBpmnProcessId(value.getBpmnProcessId())
         .setElementId(value.getElementId());
-    userTaskState.update(task);
+    userTaskState.updateUserTask(task);
   }
 }

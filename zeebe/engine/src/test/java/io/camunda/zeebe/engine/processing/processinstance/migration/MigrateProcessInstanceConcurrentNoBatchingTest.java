@@ -978,7 +978,7 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
         ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
-    final var intermediateCatchEventKey = keyGenerator.nextKey();
+    final var intermediateCatchEventKey = keyGenerator.nextRecordKey();
 
     // we need to stop the engine to ensure events are applied after writing the records directly
     ENGINE.stop();
@@ -1330,8 +1330,8 @@ public class MigrateProcessInstanceConcurrentNoBatchingTest {
     ENGINE.pauseProcessing(1);
     final var keyGenerator =
         ((MutableProcessingState) ENGINE.getProcessingState()).getKeyGenerator();
-    final var sequenceFlowKey = keyGenerator.nextKey();
-    final var multiInstanceBodyKey = keyGenerator.nextKey();
+    final var sequenceFlowKey = keyGenerator.nextRecordKey();
+    final var multiInstanceBodyKey = keyGenerator.nextRecordKey();
 
     // we need to stop the engine to ensure events are applied after writing the records directly
     ENGINE.stop();

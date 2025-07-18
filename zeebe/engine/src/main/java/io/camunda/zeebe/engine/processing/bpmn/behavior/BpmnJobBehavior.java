@@ -40,7 +40,7 @@ import io.camunda.zeebe.protocol.record.intent.JobIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.protocol.record.value.JobListenerEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +83,7 @@ public final class BpmnJobBehavior {
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
   private final JobRecord jobRecord = new JobRecord().setVariables(DocumentValue.EMPTY_DOCUMENT);
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final JobState jobState;
   private final ExpressionProcessor expressionBehavior;
@@ -95,7 +95,7 @@ public final class BpmnJobBehavior {
   private final BpmnUserTaskBehavior userTaskBehavior;
 
   public BpmnJobBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final JobState jobState,
       final Writers writers,
       final ExpressionProcessor expressionBehavior,
@@ -430,7 +430,7 @@ public final class BpmnJobBehavior {
         .setElementInstanceKey(context.getElementInstanceKey())
         .setTenantId(context.getTenantId());
 
-    final var jobKey = keyGenerator.nextKey();
+    final var jobKey = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(jobKey, JobIntent.CREATED, jobRecord);
     jobActivationBehavior.publishWork(jobKey, jobRecord);
     jobMetrics.countJobEvent(JobAction.CREATED, jobKind, props.getType());

@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
 import io.camunda.zeebe.protocol.record.intent.ProcessIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.InstantSource;
@@ -43,7 +43,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
 
   private final BpmnTransformer bpmnTransformer;
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
 
@@ -52,7 +52,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
   private final boolean enableStraightThroughProcessingLoopDetector;
 
   public BpmnResourceTransformer(
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ProcessState processState,
@@ -128,7 +128,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
               if (metadata.isDuplicate()) {
                 // create new version as the deployment contains at least one other non-duplicate
                 // resource and all resources in a deployment should be versioned together
-                key = keyGenerator.nextKey();
+                key = keyGenerator.nextRecordKey();
                 metadata
                     .setKey(key)
                     .setVersion(
@@ -218,7 +218,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
             .setDuplicate(true);
       } else {
         processMetadata
-            .setKey(keyGenerator.nextKey())
+            .setKey(keyGenerator.nextRecordKey())
             .setVersion(processState.getNextProcessVersion(bpmnProcessId, tenantId))
             .setDeploymentKey(deploymentEvent.getDeploymentKey());
       }

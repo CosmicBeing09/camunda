@@ -546,8 +546,8 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(instance.getFlowNodeInstances())
                   .extracting(FlowNodeInstanceDto::getFlowNodeType)
                   .containsExactlyInAnyOrder(
-                      BpmnElementType.END_EVENT.getElementTypeName().get(),
-                      BpmnElementType.END_EVENT.getElementTypeName().get());
+                      BpmnElementType.END_EVENT.getName().get(),
+                      BpmnElementType.END_EVENT.getName().get());
             });
   }
 
@@ -569,8 +569,8 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
                 assertThat(instance.getFlowNodeInstances())
                     .extracting(FlowNodeInstanceDto::getFlowNodeType)
                     .containsExactlyInAnyOrder(
-                        BpmnElementType.START_EVENT.getElementTypeName().get(),
-                        BpmnElementType.END_EVENT.getElementTypeName().get()));
+                        BpmnElementType.START_EVENT.getName().get(),
+                        BpmnElementType.END_EVENT.getName().get()));
   }
 
   @Test
@@ -594,10 +594,10 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
                 assertThat(instance.getFlowNodeInstances())
                     .extracting(FlowNodeInstanceDto::getFlowNodeType)
                     .containsExactlyInAnyOrder(
-                        BpmnElementType.START_EVENT.getElementTypeName().get(),
-                        BpmnElementType.INCLUSIVE_GATEWAY.getElementTypeName().get(),
-                        BpmnElementType.END_EVENT.getElementTypeName().get(),
-                        BpmnElementType.END_EVENT.getElementTypeName().get()));
+                        BpmnElementType.START_EVENT.getName().get(),
+                        BpmnElementType.INCLUSIVE_GATEWAY.getName().get(),
+                        BpmnElementType.END_EVENT.getName().get(),
+                        BpmnElementType.END_EVENT.getName().get()));
   }
 
   @DisabledIf("isZeebeVersionPre86")
@@ -755,11 +755,11 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
               assertThat(instance.getFlowNodeInstances())
                   .extracting(FlowNodeInstanceDto::getFlowNodeType)
                   .containsExactlyInAnyOrder(
-                      BpmnElementType.END_EVENT.getElementTypeName().get(),
-                      BpmnElementType.BOUNDARY_EVENT.getElementTypeName().get(),
-                      BpmnElementType.SERVICE_TASK.getElementTypeName().get(),
-                      BpmnElementType.START_EVENT.getElementTypeName().get(),
-                      BpmnElementType.SERVICE_TASK.getElementTypeName().get());
+                      BpmnElementType.END_EVENT.getName().get(),
+                      BpmnElementType.BOUNDARY_EVENT.getName().get(),
+                      BpmnElementType.SERVICE_TASK.getName().get(),
+                      BpmnElementType.START_EVENT.getName().get(),
+                      BpmnElementType.SERVICE_TASK.getName().get());
               assertThat(instance.getFlowNodeInstances())
                   .extracting(FlowNodeInstanceDto::getFlowNodeId)
                   .contains(SERVICE_TASK_WITH_COMPENSATION_EVENT, COMPENSATION_EVENT_TASK);
@@ -970,7 +970,7 @@ public class ZeebeProcessInstanceImportIT extends AbstractCCSMIT {
   }
 
   private String getBpmnElementTypeNameForType(final BpmnElementType type) {
-    return type.getElementTypeName()
+    return type.getName()
         .orElseThrow(() -> new OptimizeRuntimeException("Cannot find name for type: " + type));
   }
 

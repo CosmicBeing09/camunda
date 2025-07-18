@@ -18,7 +18,7 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -28,12 +28,12 @@ public final class ProcessInstanceBatchTerminateProcessor
 
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;
 
   public ProcessInstanceBatchTerminateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final ElementInstanceState elementInstanceState) {
     commandWriter = writers.command();
     stateWriter = writers.state();
@@ -86,6 +86,6 @@ public final class ProcessInstanceBatchTerminateProcessor
             .setIndex(childInstance.getKey());
 
     commandWriter.appendFollowUpCommand(
-        keyGenerator.nextKey(), ProcessInstanceBatchIntent.TERMINATE, nextBatchRecord);
+        keyGenerator.nextRecordKey(), ProcessInstanceBatchIntent.TERMINATE, nextBatchRecord);
   }
 }

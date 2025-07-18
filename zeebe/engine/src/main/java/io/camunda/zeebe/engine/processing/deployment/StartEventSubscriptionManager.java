@@ -24,7 +24,7 @@ import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubs
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.List;
 import java.util.function.Predicate;
@@ -38,12 +38,12 @@ public class StartEventSubscriptionManager {
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
   private final SignalSubscriptionState signalSubscriptionState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final StateWriter stateWriter;
 
   public StartEventSubscriptionManager(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final StateWriter stateWriter) {
     processState = processingState.getProcessState();
     messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
@@ -186,7 +186,7 @@ public class StartEventSubscriptionManager {
                   .setStartEventId(startEvent.getId())
                   .setTenantId(processDefinition.getTenantId());
 
-              final var subscriptionKey = keyGenerator.nextKey();
+              final var subscriptionKey = keyGenerator.nextRecordKey();
               stateWriter.appendFollowUpEvent(
                   subscriptionKey,
                   MessageStartEventSubscriptionIntent.CREATED,
@@ -211,7 +211,7 @@ public class StartEventSubscriptionManager {
                   .setCatchEventId(startEvent.getId())
                   .setTenantId(processDefinition.getTenantId());
 
-              final var subscriptionKey = keyGenerator.nextKey();
+              final var subscriptionKey = keyGenerator.nextRecordKey();
               stateWriter.appendFollowUpEvent(
                   subscriptionKey, SignalSubscriptionIntent.CREATED, signalSubscriptionRecord);
             });

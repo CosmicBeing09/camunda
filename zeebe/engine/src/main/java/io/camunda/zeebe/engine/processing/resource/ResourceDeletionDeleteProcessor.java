@@ -61,7 +61,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Optional;
@@ -74,7 +74,7 @@ public class ResourceDeletionDeleteProcessor
   private final StateWriter stateWriter;
   private final TypedResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
   private final DecisionState decisionState;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final ProcessState processState;
@@ -91,7 +91,7 @@ public class ResourceDeletionDeleteProcessor
 
   public ResourceDeletionDeleteProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final ProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
       final BpmnBehaviors bpmnBehaviors,
@@ -104,7 +104,7 @@ public class ResourceDeletionDeleteProcessor
     this.commandDistributionBehavior = commandDistributionBehavior;
     processState = processingState.getProcessState();
     elementInstanceState = processingState.getElementInstanceState();
-    timerInstanceState = processingState.getTimerState();
+    timerInstanceState = processingState.getTimerInstanceState();
     bannedInstanceState = processingState.getBannedInstanceState();
     catchEventBehavior = bpmnBehaviors.catchEventBehavior();
     expressionProcessor = bpmnBehaviors.expressionBehavior();
@@ -119,7 +119,7 @@ public class ResourceDeletionDeleteProcessor
   @Override
   public void processNewCommand(final TypedRecord<ResourceDeletionRecord> command) {
     final var value = command.getValue();
-    final long eventKey = keyGenerator.nextKey();
+    final long eventKey = keyGenerator.nextRecordKey();
     stateWriter.appendFollowUpEvent(eventKey, ResourceDeletionIntent.DELETING, value);
 
     tryDeleteResources(command);
@@ -268,7 +268,7 @@ public class ResourceDeletionDeleteProcessor
             .setTenantId(drg.getTenantId());
 
     stateWriter.appendFollowUpEvent(
-        keyGenerator.nextKey(), DecisionRequirementsIntent.DELETED, drgRecord);
+        keyGenerator.nextRecordKey(), DecisionRequirementsIntent.DELETED, drgRecord);
   }
 
   private void deleteDecision(final PersistedDecision persistedDecision) {
@@ -284,7 +284,7 @@ public class ResourceDeletionDeleteProcessor
             .setDecisionRequirementsKey(persistedDecision.getDecisionRequirementsKey())
             .setTenantId(persistedDecision.getTenantId())
             .setDeploymentKey(persistedDecision.getDeploymentKey());
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), DecisionIntent.DELETED, decisionRecord);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), DecisionIntent.DELETED, decisionRecord);
   }
 
   private void deleteProcess(final DeployedProcess process) {
@@ -300,7 +300,7 @@ public class ResourceDeletionDeleteProcessor
             .setResourceName(process.getResourceName())
             .setTenantId(process.getTenantId())
             .setDeploymentKey(process.getDeploymentKey());
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), ProcessIntent.DELETING, processRecord);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), ProcessIntent.DELETING, processRecord);
 
     final String processId = processRecord.getBpmnProcessId();
     final var latestVersion =
@@ -327,7 +327,7 @@ public class ResourceDeletionDeleteProcessor
         elementInstanceState.hasActiveProcessInstances(process.getKey(), bannedInstances);
 
     if (!hasRunningInstances) {
-      stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), ProcessIntent.DELETED, processRecord);
+      stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), ProcessIntent.DELETED, processRecord);
     } else {
       throw new ActiveProcessInstancesException(process.getKey());
     }
@@ -390,7 +390,7 @@ public class ResourceDeletionDeleteProcessor
             .setVersionTag(persistedForm.getVersionTag())
             .setDeploymentKey(persistedForm.getDeploymentKey());
 
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), FormIntent.DELETED, form);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), FormIntent.DELETED, form);
   }
 
   private void deleteResource(final PersistedResource persistedResource) {
@@ -405,7 +405,7 @@ public class ResourceDeletionDeleteProcessor
             .setVersion(persistedResource.getVersion())
             .setVersionTag(persistedResource.getVersionTag())
             .setDeploymentKey(persistedResource.getDeploymentKey());
-    stateWriter.appendFollowUpEvent(keyGenerator.nextKey(), ResourceIntent.DELETED, resource);
+    stateWriter.appendFollowUpEvent(keyGenerator.nextRecordKey(), ResourceIntent.DELETED, resource);
   }
 
   private AuthorizedTenants getAuthorizedTenants(

@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
@@ -41,11 +41,11 @@ public class DecisionEvaluationEvaluteProcessor
   private final TypedResponseWriter responseWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyGenerator keyGenerator;
 
   public DecisionEvaluationEvaluteProcessor(
       final DecisionBehavior decisionBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyGenerator keyGenerator,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior) {
 
@@ -107,7 +107,7 @@ public class DecisionEvaluationEvaluteProcessor
                   evaluationRecordTuple =
                       decisionBehavior.createDecisionEvaluationEvent(decision, evaluationResult);
 
-              final var evaluationRecordKey = keyGenerator.nextKey();
+              final var evaluationRecordKey = keyGenerator.nextRecordKey();
               stateWriter.appendFollowUpEvent(
                   evaluationRecordKey,
                   evaluationRecordTuple.getLeft(),
