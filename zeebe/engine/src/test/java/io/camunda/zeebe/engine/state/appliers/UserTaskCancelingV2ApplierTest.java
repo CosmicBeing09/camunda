@@ -189,7 +189,7 @@ public class UserTaskCancelingV2ApplierTest {
                     .hasAssignee("john"));
     assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
         .hasValueSatisfying(
-            metadata -> assertThat(metadata.getIntent()).isEqualTo(UserTaskIntent.CLAIMING));
+            metadata -> assertThat(metadata.getUserTaskIntent()).isEqualTo(UserTaskIntent.CLAIMING));
 
     // when
     userTaskCancelingApplier.applyState(userTaskKey, userTaskRecord);

@@ -27,7 +27,7 @@ public interface TypedResponseWriter {
 
   void writeRejection(
       final long key,
-      final Intent intent,
+      final Intent intentToWrite,
       final UnifiedRecordValue value,
       final ValueType valueType,
       final RejectionType type,

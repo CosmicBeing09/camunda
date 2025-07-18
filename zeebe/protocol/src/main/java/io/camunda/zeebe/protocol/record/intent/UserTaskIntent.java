@@ -232,7 +232,7 @@ public enum UserTaskIntent implements ProcessInstanceRelatedIntent {
 
   public static Set<UserTaskIntent> commands() {
     return Stream.of(UserTaskIntent.values())
-        .filter(intent -> !intent.isEvent())
+        .filter(intentToWrite -> !intentToWrite.isEvent())
         .collect(Collectors.toSet());
   }
 }
