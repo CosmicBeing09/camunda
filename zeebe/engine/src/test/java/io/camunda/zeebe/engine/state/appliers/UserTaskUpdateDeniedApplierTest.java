@@ -34,13 +34,13 @@ public class UserTaskUpdateDeniedApplierTest {
   private MutableUserTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
-  private AppliersTestSetupHelper testSetup;
+  private TestSetupHelper testSetup;
 
   @BeforeEach
   public void setup() {
     userTaskUpdateDeniedApplier = new UserTaskUpdateDeniedApplier(processingState);
     userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    testSetup = new TestSetupHelper(processingState);
   }
 
   @Test

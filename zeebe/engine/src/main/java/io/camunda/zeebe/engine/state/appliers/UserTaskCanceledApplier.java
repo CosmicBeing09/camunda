@@ -31,11 +31,11 @@ public final class UserTaskCanceledApplier
     userTaskState.deleteIntermediateStateIfExists(key);
     userTaskState.deleteRecordRequestMetadata(key);
     userTaskState.delete(key);
-    resetCancelingTaskListenerIndex(value);
+    resetCancelingListenerIndex(value);
   }
 
-  private void resetCancelingTaskListenerIndex(final UserTaskRecord record) {
-    final long userTaskInstanceKey = record.getElementInstanceKey();
+  private void resetCancelingListenerIndex(final UserTaskRecord taskRecord) {
+    final long userTaskInstanceKey = taskRecord.getElementInstanceKey();
     final var userTaskInstance = elementInstanceState.getInstance(userTaskInstanceKey);
 
     if (userTaskInstance != null) {

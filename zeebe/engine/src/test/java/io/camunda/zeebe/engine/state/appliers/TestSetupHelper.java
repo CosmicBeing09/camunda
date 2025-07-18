@@ -11,11 +11,11 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.protocol.impl.record.UnifiedRecordValue;
 import io.camunda.zeebe.protocol.record.intent.Intent;
 
-class AppliersTestSetupHelper {
+class TestSetupHelper {
 
   private final EventAppliers eventAppliers;
 
-  AppliersTestSetupHelper(final MutableProcessingState processingState) {
+  TestSetupHelper(final MutableProcessingState processingState) {
     eventAppliers = new EventAppliers();
     eventAppliers.registerEventAppliers(processingState);
   }

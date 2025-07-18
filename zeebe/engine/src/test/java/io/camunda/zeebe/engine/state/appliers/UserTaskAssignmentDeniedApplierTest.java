@@ -27,19 +27,19 @@ public class UserTaskAssignmentDeniedApplierTest {
   private MutableProcessingState processingState;
 
   /** The class under test. */
-  private UserTaskAssignmentDeniedApplier userTaskAssignmentDeniedApplierApplier;
+  private UserTaskAssignmentDeniedApplier assignmentDeniedApplier;
 
   /** Used for state assertions. */
   private MutableUserTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
-  private AppliersTestSetupHelper testSetup;
+  private TestSetupHelper testSetup;
 
   @BeforeEach
   public void setup() {
-    userTaskAssignmentDeniedApplierApplier = new UserTaskAssignmentDeniedApplier(processingState);
+    assignmentDeniedApplier = new UserTaskAssignmentDeniedApplier(processingState);
     userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    testSetup = new TestSetupHelper(processingState);
   }
 
   @Test
@@ -68,13 +68,13 @@ public class UserTaskAssignmentDeniedApplierTest {
         .isEqualTo(LifecycleState.ASSIGNING);
 
     // when
-    userTaskAssignmentDeniedApplierApplier.applyState(userTaskKey, given.setAssignee(newAssignee));
+    assignmentDeniedApplier.applyState(userTaskKey, given.setAssignee(newAssignee));
 
     // then
     Assertions.assertThat(userTaskState.getIntermediateState(userTaskKey))
         .describedAs("Expect that intermediate state is not present anymore")
         .isNull();
-    Assertions.assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    Assertions.assertThat(userTaskState.findTransitionTriggerMetadata(userTaskKey))
         .describedAs("Expect that record request metadata is not present anymore")
         .isEmpty();
     Assertions.assertThat(userTaskState.getUserTask(userTaskKey).getAssignee())
@@ -105,7 +105,7 @@ public class UserTaskAssignmentDeniedApplierTest {
         .isEqualTo(Optional.of(initialAssignee));
 
     // when
-    userTaskAssignmentDeniedApplierApplier.applyState(userTaskKey, given);
+    assignmentDeniedApplier.applyState(userTaskKey, given);
 
     // then
     Assertions.assertThat(userTaskState.findInitialAssignee(userTaskKey))

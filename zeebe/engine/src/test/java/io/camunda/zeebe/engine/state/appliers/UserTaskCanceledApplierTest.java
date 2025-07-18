@@ -27,19 +27,19 @@ public class UserTaskCanceledApplierTest {
   private MutableProcessingState processingState;
 
   /** The class under test. */
-  private UserTaskCanceledApplier userTaskCanceledApplier;
+  private UserTaskCanceledApplier canceledApplier;
 
   /** Used for state assertions. */
   private MutableUserTaskState userTaskState;
 
   /** For setting up the state before testing the applier. */
-  private AppliersTestSetupHelper testSetup;
+  private TestSetupHelper setupHelper;
 
   @BeforeEach
   public void setup() {
-    userTaskCanceledApplier = new UserTaskCanceledApplier(processingState);
+    canceledApplier = new UserTaskCanceledApplier(processingState);
     userTaskState = processingState.getUserTaskState();
-    testSetup = new AppliersTestSetupHelper(processingState);
+    setupHelper = new TestSetupHelper(processingState);
   }
 
   @Test
@@ -54,8 +54,8 @@ public class UserTaskCanceledApplierTest {
             .setCandidateUsersList(List.of("initial_user"));
 
     // Apply initial task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
+    setupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
+    setupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
 
     // Simulate an update event with a change
     final var updateAttempt =
@@ -63,7 +63,7 @@ public class UserTaskCanceledApplierTest {
             .setUserTaskKey(userTaskKey)
             .setCandidateUsersList(List.of("update_user"))
             .setCandidateUsersChanged();
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.UPDATING, updateAttempt);
+    setupHelper.applyEventToState(userTaskKey, UserTaskIntent.UPDATING, updateAttempt);
 
     // Ensure the intermediate state is present has the new change
     assertThat(userTaskState.getIntermediateState(userTaskKey).getRecord())
@@ -75,7 +75,7 @@ public class UserTaskCanceledApplierTest {
         .hasPriority(50);
 
     // when
-    userTaskCanceledApplier.applyState(userTaskKey, initialState);
+    canceledApplier.applyState(userTaskKey, initialState);
 
     // then
     assertThat(userTaskState.getIntermediateState(userTaskKey))
@@ -83,7 +83,7 @@ public class UserTaskCanceledApplierTest {
             "Expect that intermediate state is cleared after cancellation of the User Task")
         .isNull();
 
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findTransitionTriggerMetadata(userTaskKey))
         .describedAs("Expect that request metadata is cleared after cancellation of the User Task")
         .isEmpty();
 
@@ -93,7 +93,7 @@ public class UserTaskCanceledApplierTest {
   }
 
   @Test
-  public void shouldCancelUserTaskWhenNoIntermediateStateAndRequestMetadataPresent() {
+  public void shouldCancelUserTaskWhenNoIntermediateStatePresent() {
     // given
     final var userTaskKey = 1;
 
@@ -101,18 +101,18 @@ public class UserTaskCanceledApplierTest {
     final var initialState = new UserTaskRecord().setUserTaskKey(userTaskKey);
 
     // Apply initial task creation
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
-    testSetup.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
+    setupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATING, initialState);
+    setupHelper.applyEventToState(userTaskKey, UserTaskIntent.CREATED, initialState);
 
     // when
-    userTaskCanceledApplier.applyState(userTaskKey, initialState);
+    canceledApplier.applyState(userTaskKey, initialState);
 
     // then
     assertThat(userTaskState.getIntermediateState(userTaskKey))
         .describedAs("Expect there is no intermediate state for the User Task")
         .isNull();
 
-    assertThat(userTaskState.findRecordRequestMetadata(userTaskKey))
+    assertThat(userTaskState.findTransitionTriggerMetadata(userTaskKey))
         .describedAs("Expect there is no request metadata for the User Task")
         .isEmpty();
 
