@@ -127,8 +127,8 @@ public class JunitExtensionTest {
 
     // then
     assertThat(camundaProcessTestContext).isNotNull();
-    assertThat(camundaProcessTestContext.getCamundaGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
-    assertThat(camundaProcessTestContext.getCamundaRestAddress()).isEqualTo(REST_API_ADDRESS);
+    assertThat(camundaProcessTestContext.getGrpcAddress()).isEqualTo(GRPC_API_ADDRESS);
+    assertThat(camundaProcessTestContext.getRestAddress()).isEqualTo(REST_API_ADDRESS);
     assertThat(camundaProcessTestContext.getConnectorsAddress())
         .isEqualTo(connectorsRestApiAddress);
   }
