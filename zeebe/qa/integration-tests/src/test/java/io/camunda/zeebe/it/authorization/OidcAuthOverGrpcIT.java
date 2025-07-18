@@ -47,8 +47,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @ZeebeIntegration
 public class OidcAuthOverGrpcIT {
 
-  private static final String DEFAULT_USER_ID = UUID.randomUUID().toString();
-  private static final String RESTRICTED_USER_ID = UUID.randomUUID().toString();
+  private static final String DEFAULT_OIDC_USER_ID = UUID.randomUUID().toString();
+  private static final String RESTRICTED_OIDC_USER_ID = UUID.randomUUID().toString();
   private static final String KEYCLOAK_REALM = "camunda";
   private static final String DEFAULT_CLIENT_ID = "zeebe";
   private static final String DEFAULT_CLIENT_SECRET = "secret";
@@ -87,10 +87,10 @@ public class OidcAuthOverGrpcIT {
                     .setMappings(
                         List.of(
                             new ConfiguredMapping(
-                                DEFAULT_USER_ID, USER_ID_CLAIM_NAME, DEFAULT_USER_ID)));
+                                DEFAULT_OIDC_USER_ID, USER_ID_CLAIM_NAME, DEFAULT_OIDC_USER_ID)));
                 c.getInitialization()
                     .getDefaultRoles()
-                    .put("admin", Map.of("mappings", List.of(DEFAULT_USER_ID)));
+                    .put("admin", Map.of("mappings", List.of(DEFAULT_OIDC_USER_ID)));
               });
 
   @BeforeAll
@@ -103,7 +103,7 @@ public class OidcAuthOverGrpcIT {
     defaultClient.setServiceAccountsEnabled(true);
 
     final var defaultUser = new UserRepresentation();
-    defaultUser.setId(DEFAULT_USER_ID);
+    defaultUser.setId(DEFAULT_OIDC_USER_ID);
     defaultUser.setUsername("zeebe-service-account");
     defaultUser.setServiceAccountClientId(DEFAULT_CLIENT_ID);
     defaultUser.setEnabled(true);
@@ -116,7 +116,7 @@ public class OidcAuthOverGrpcIT {
     restrictedClient.setServiceAccountsEnabled(true);
 
     final var restrictedUser = new UserRepresentation();
-    restrictedUser.setId(RESTRICTED_USER_ID);
+    restrictedUser.setId(RESTRICTED_OIDC_USER_ID);
     restrictedUser.setUsername("restricted-service-account");
     restrictedUser.setServiceAccountClientId(RESTRICTED_CLIENT_ID);
     restrictedUser.setEnabled(true);
@@ -234,15 +234,15 @@ public class OidcAuthOverGrpcIT {
     final var processId = Strings.newRandomValidBpmnId();
     defaultMappingClient
         .newCreateMappingCommand()
-        .mappingId(RESTRICTED_USER_ID)
+        .mappingId(RESTRICTED_OIDC_USER_ID)
         .claimName(USER_ID_CLAIM_NAME)
-        .claimValue(RESTRICTED_USER_ID)
-        .name(RESTRICTED_USER_ID)
+        .claimValue(RESTRICTED_OIDC_USER_ID)
+        .name(RESTRICTED_OIDC_USER_ID)
         .send()
         .join();
     defaultMappingClient
         .newCreateAuthorizationCommand()
-        .ownerId(RESTRICTED_USER_ID)
+        .ownerId(RESTRICTED_OIDC_USER_ID)
         .ownerType(OwnerType.MAPPING)
         .resourceId("*")
         .resourceType(ResourceType.RESOURCE)
