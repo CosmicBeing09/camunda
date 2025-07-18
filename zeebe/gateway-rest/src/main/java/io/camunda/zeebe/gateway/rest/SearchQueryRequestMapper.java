@@ -125,7 +125,7 @@ public final class SearchQueryRequestMapper {
     if (request == null) {
       return Either.right(SearchQueryBuilders.processDefinitionSearchQuery().build());
     }
-    final var page = toSearchQueryPage(request.getPage());
+    final var processDefinitionPage = toSearchQueryPage(request.getPage());
     final var sort =
         toSearchQuerySort(
             SearchQuerySortRequestMapper.fromProcessDefinitionSearchQuerySortRequest(
@@ -133,7 +133,7 @@ public final class SearchQueryRequestMapper {
             SortOptionBuilders::processDefinition,
             SearchQueryRequestMapper::applyProcessDefinitionSortField);
     final var filter = toProcessDefinitionFilter(request.getFilter());
-    return buildSearchQuery(filter, sort, page, SearchQueryBuilders::processDefinitionSearchQuery);
+    return buildSearchQuery(filter, sort, processDefinitionPage, SearchQueryBuilders::processDefinitionSearchQuery);
   }
 
   public static Either<ProblemDetail, ProcessDefinitionStatisticsFilter>
@@ -247,7 +247,7 @@ public final class SearchQueryRequestMapper {
     if (request == null) {
       return Either.right(SearchQueryBuilders.processInstanceSearchQuery().build());
     }
-    final var page = toSearchQueryPage(request.getPage());
+    final var processInstancePage = toSearchQueryPage(request.getPage());
     final var sort =
         toSearchQuerySort(
             SearchQuerySortRequestMapper.fromProcessInstanceSearchQuerySortRequest(
@@ -255,7 +255,7 @@ public final class SearchQueryRequestMapper {
             SortOptionBuilders::processInstance,
             SearchQueryRequestMapper::applyProcessInstanceSortField);
     final var filter = toProcessInstanceFilter(request.getFilter());
-    return buildSearchQuery(filter, sort, page, SearchQueryBuilders::processInstanceSearchQuery);
+    return buildSearchQuery(filter, sort, processInstancePage, SearchQueryBuilders::processInstanceSearchQuery);
   }
 
   public static Either<ProblemDetail, RoleQuery> toRoleQuery(final RoleSearchQueryRequest request) {
@@ -1131,7 +1131,7 @@ public final class SearchQueryRequestMapper {
           .map(KeyUtil::keyToLong)
           .ifPresent(builder::flowNodeInstanceKeys);
       ofNullable(filter.getCreationTime())
-          .ifPresent(t -> builder.creationTime(toDateValueFilter(t)));
+          .ifPresent(t -> builder.creationTimeFilter(toDateValueFilter(t)));
       ofNullable(filter.getState())
           .ifPresent(s -> builder.states(IncidentState.valueOf(s.getValue())));
       ofNullable(filter.getJobKey()).map(KeyUtil::keyToLong).ifPresent(builder::jobKeys);

@@ -23,7 +23,7 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     final var filter = FilterBuilders.role((f) -> f.roleId("role1"));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).searchOption();
 
     // then
     assertThat(query.filter()).isEmpty();
@@ -40,7 +40,7 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     final var filter = FilterBuilders.role((f) -> f.name("roleName"));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).searchOption();
 
     // then
     assertThat(query.filter()).isEmpty();
@@ -57,7 +57,7 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     final var filter = FilterBuilders.role((f) -> f.description("roleDescription"));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).searchOption();
 
     // then
     assertThat(query.filter()).isEmpty();
@@ -75,7 +75,7 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
         FilterBuilders.role((f) -> f.joinParentId("test-parent-id").memberType(USER));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).searchOption();
 
     // then
     final var expectedMemberTypeQuery =
@@ -98,7 +98,7 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
         FilterBuilders.role((f) -> f.memberId("test-member-id").childMemberType(USER));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).searchOption();
 
     // then
     final var memberTypeQuery =
@@ -124,7 +124,7 @@ public class RoleQueryTransformerTest extends AbstractTransformerTest {
     final var filter = FilterBuilders.role((f) -> f.roleId("role1").name("TestRole"));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).searchOption();
 
     // then
     assertThat(query.filter()).isEmpty();

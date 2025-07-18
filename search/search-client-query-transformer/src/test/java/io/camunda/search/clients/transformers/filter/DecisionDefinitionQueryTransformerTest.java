@@ -25,7 +25,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -44,7 +44,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -63,7 +63,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -83,7 +83,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -103,7 +103,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -123,7 +123,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -142,7 +142,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -162,11 +162,11 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
     final var searchRequest = transformQuery(decisionDefinitionFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(0).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(0).searchOption())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             (t) -> {
@@ -174,7 +174,7 @@ public final class DecisionDefinitionQueryTransformerTest extends AbstractTransf
               assertThat(t.value().stringValue()).isEqualTo("foo");
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(1).searchOption())
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
             (t) -> {

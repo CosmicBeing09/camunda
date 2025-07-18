@@ -27,7 +27,7 @@ public record IncidentFilter(
     List<Integer> errorMessageHashes,
     List<String> flowNodeIds,
     List<Long> flowNodeInstanceKeys,
-    DateValueFilter creationTime,
+    DateValueFilter creationTimeFilter,
     List<IncidentState> states,
     String treePath,
     List<Long> jobKeys,
@@ -114,7 +114,7 @@ public record IncidentFilter(
       return this;
     }
 
-    public Builder creationTime(final DateValueFilter value) {
+    public Builder creationTimeFilter(final DateValueFilter value) {
       creationTimeFilter = value;
       return this;
     }

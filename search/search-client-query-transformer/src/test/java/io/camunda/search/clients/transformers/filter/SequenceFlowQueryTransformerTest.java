@@ -23,7 +23,7 @@ public class SequenceFlowQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,

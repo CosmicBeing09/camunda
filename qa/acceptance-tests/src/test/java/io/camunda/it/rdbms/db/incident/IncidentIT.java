@@ -42,12 +42,12 @@ public class IncidentIT {
   public void shouldSaveAndFindIncidentByKey(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final IncidentReader processInstanceReader = rdbmsService.getIncidentReader();
+    final IncidentReader incidentReader = rdbmsService.getIncidentReader();
 
     final var original = IncidentFixtures.createRandomized(b -> b);
     createAndSaveIncident(rdbmsWriter, original);
 
-    final var instance = processInstanceReader.findOne(original.incidentKey()).orElse(null);
+    final var instance = incidentReader.findOne(original.incidentKey()).orElse(null);
 
     compareIncident(instance, original);
   }
@@ -56,14 +56,14 @@ public class IncidentIT {
   public void shouldSaveAndResolveIncident(final CamundaRdbmsTestApplication testApplication) {
     final RdbmsService rdbmsService = testApplication.getRdbmsService();
     final RdbmsWriter rdbmsWriter = rdbmsService.createWriter(PARTITION_ID);
-    final IncidentReader processInstanceReader = rdbmsService.getIncidentReader();
+    final IncidentReader incidentReader = rdbmsService.getIncidentReader();
 
     final var original = IncidentFixtures.createRandomized(b -> b);
     createAndSaveIncident(rdbmsWriter, original);
     rdbmsWriter.getIncidentWriter().resolve(original.incidentKey());
     rdbmsWriter.flush();
 
-    final var instance = processInstanceReader.findOne(original.incidentKey()).orElse(null);
+    final var instance = incidentReader.findOne(original.incidentKey()).orElse(null);
 
     assertThat(instance).isNotNull();
     assertThat(instance.state()).isEqualTo(IncidentEntity.IncidentState.RESOLVED);
@@ -158,10 +158,10 @@ public class IncidentIT {
                                     .flowNodeIds(original.flowNodeId())
                                     .jobKeys(original.jobKey())
                                     .tenantIds(original.tenantId())
-                                    .creationTime(
+                                    .creationTimeFilter(
                                         new DateValueFilter(
-                                            original.creationDate().minusSeconds(1),
-                                            original.creationDate().plusSeconds(1))))
+                                            original.timestamp().minusSeconds(1),
+                                            original.timestamp().plusSeconds(1))))
                         .sort(s -> s)
                         .page(p -> p.from(0).size(5))));
 
@@ -219,7 +219,7 @@ public class IncidentIT {
     assertThat(instance.incidentKey()).isEqualTo(original.incidentKey());
     assertThat(instance.processDefinitionId()).isEqualTo(original.processDefinitionId());
     assertThat(instance.creationTime())
-        .isCloseTo(original.creationDate(), new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
+        .isCloseTo(original.timestamp(), new TemporalUnitWithinOffset(1, ChronoUnit.MILLIS));
   }
 
   @TestTemplate

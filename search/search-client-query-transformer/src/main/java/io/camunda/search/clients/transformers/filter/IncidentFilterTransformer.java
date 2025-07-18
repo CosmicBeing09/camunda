@@ -47,8 +47,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
 
   @Override
   public SearchQuery toSearchQuery(final IncidentFilter filter) {
-    final var keyQuery = getKeyQuery(filter.incidentKeys());
-    final var processDefinitionKeyQuery =
+    final var incidentKeysQuery = getKeyQuery(filter.incidentKeys());
+    final var processDefinitionKeysQuery =
         getProcessDefinitionKeyQuery(filter.processDefinitionKeys());
     final var processDefinitionIdQuery = getProcessDefinitionIds(filter.processDefinitionIds());
     final var processInstanceKeyQuery = getProcessInstanceKeyQuery(filter.processInstanceKeys());
@@ -56,7 +56,7 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var errorMessageQuery = getErrorMessageQuery(filter.errorMessages());
     final var flowNodeIdQuery = getFlowNodeIdQuery(filter.flowNodeIds());
     final var flowNodeInstanceKeyQuery = getFlowNodeInstanceKeyQuery(filter.flowNodeInstanceKeys());
-    final var creationTimeQuery = getCreationTimeQuery(filter.creationTime());
+    final var creationTimeQuery = getCreationTimeQuery(filter.creationTimeFilter());
     final var stateQuery = getStateQuery(filter.states());
     final var treePathQuery = getTreePathQuery(filter.treePath());
     final var jobKeyQuery = getJobKeyQuery(filter.jobKeys());
@@ -64,8 +64,8 @@ public class IncidentFilterTransformer extends IndexFilterTransformer<IncidentFi
     final var errorMessageHashesQuery = getErrorMessageHashesQuery(filter.errorMessageHashes());
 
     return and(
-        keyQuery,
-        processDefinitionKeyQuery,
+        incidentKeysQuery,
+        processDefinitionKeysQuery,
         processDefinitionIdQuery,
         processInstanceKeyQuery,
         errorTypeQuery,
