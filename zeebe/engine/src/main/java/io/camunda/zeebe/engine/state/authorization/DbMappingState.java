@@ -76,7 +76,7 @@ public class DbMappingState implements MutableMappingState {
   @Override
   public void update(final MappingRecord mappingRecord) {
     mappingId.wrapString(mappingRecord.getMappingId());
-    get(mappingRecord.getMappingId())
+    getMappingById(mappingRecord.getMappingId())
         .ifPresentOrElse(
             persistedMapping -> {
               // remove old record from mapping by claim
@@ -103,7 +103,7 @@ public class DbMappingState implements MutableMappingState {
 
   @Override
   public void delete(final String id) {
-    get(id)
+    getMappingById(id)
         .ifPresentOrElse(
             persistedMapping -> {
               mappingId.wrapString(persistedMapping.getMappingId());
@@ -121,7 +121,7 @@ public class DbMappingState implements MutableMappingState {
   }
 
   @Override
-  public Optional<PersistedMapping> get(final String id) {
+  public Optional<PersistedMapping> getMappingById(final String id) {
     mappingId.wrapString(id);
     final var fk = claimByIdColumnFamily.get(mappingId);
     if (fk != null) {
@@ -131,7 +131,7 @@ public class DbMappingState implements MutableMappingState {
   }
 
   @Override
-  public Optional<PersistedMapping> get(final String claimName, final String claimValue) {
+  public Optional<PersistedMapping> getMappingByClaim(final String claimName, final String claimValue) {
     this.claimName.wrapString(claimName);
     this.claimValue.wrapString(claimValue);
     final var persistedMapping = mappingColumnFamily.get(claim);

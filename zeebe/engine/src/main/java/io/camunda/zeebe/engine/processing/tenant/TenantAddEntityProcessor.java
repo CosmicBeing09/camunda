@@ -140,7 +140,7 @@ public class TenantAddEntityProcessor implements DistributedTypedRecordProcessor
     return switch (entityType) {
       case USER -> true; // With simple mappings, any username can be assigned
       case CLIENT -> true; // With simple mappings, any client id can be assigned
-      case MAPPING -> mappingState.get(entityId).isPresent();
+      case MAPPING -> mappingState.getMappingById(entityId).isPresent();
       case GROUP -> !internalGroupsEnabled || groupState.get(entityId).isPresent();
       case ROLE -> roleState.getRole(entityId).isPresent();
       default -> false;

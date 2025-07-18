@@ -129,7 +129,7 @@ public class TenantRemoveEntityProcessor implements DistributedTypedRecordProces
       final EntityType entityType, final String entityId, final boolean internalGroupsEnabled) {
     return switch (entityType) {
       case GROUP -> !internalGroupsEnabled || groupState.get(entityId).isPresent();
-      case MAPPING -> mappingState.get(entityId).isPresent();
+      case MAPPING -> mappingState.getMappingById(entityId).isPresent();
       default -> true;
     };
   }

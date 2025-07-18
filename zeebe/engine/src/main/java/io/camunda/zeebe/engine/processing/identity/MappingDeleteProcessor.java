@@ -83,7 +83,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   public void processNewCommand(final TypedRecord<MappingRecord> tenantCreateCommand) {
     final var record = tenantCreateCommand.getValue();
     final String id = record.getMappingId();
-    final var persistedMappingOptional = mappingState.get(id);
+    final var persistedMappingOptional = mappingState.getMappingById(id);
     if (persistedMappingOptional.isEmpty()) {
       final var errorMessage = MAPPING_NOT_FOUND_ERROR_MESSAGE.formatted(id);
       rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
@@ -116,7 +116,7 @@ public class MappingDeleteProcessor implements DistributedTypedRecordProcessor<M
   public void processDistributedCommand(final TypedRecord<MappingRecord> distributedCreateCommand) {
     final var record = distributedCreateCommand.getValue();
     mappingState
-        .get(record.getMappingId())
+        .getMappingById(record.getMappingId())
         .ifPresentOrElse(
             persistedMapping -> deleteMapping(persistedMapping, distributedCreateCommand.getKey()),
             () -> {

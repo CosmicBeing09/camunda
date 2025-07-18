@@ -111,7 +111,7 @@ public class PermissionsBehavior {
       return Either.right(record);
     }
 
-    if (mappingState.get(record.getOwnerId()).isEmpty()) {
+    if (mappingState.getMappingById(record.getOwnerId()).isEmpty()) {
       return Either.left(
           new Rejection(
               RejectionType.NOT_FOUND,

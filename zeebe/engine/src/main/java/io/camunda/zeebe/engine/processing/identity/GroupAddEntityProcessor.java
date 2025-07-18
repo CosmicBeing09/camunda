@@ -136,7 +136,7 @@ public class GroupAddEntityProcessor implements DistributedTypedRecordProcessor<
     return switch (entityType) {
       case EntityType.USER, CLIENT ->
           true; // With simple mappings, any username or client id can be assigned
-      case EntityType.MAPPING -> mappingState.get(entityId).isPresent();
+      case EntityType.MAPPING -> mappingState.getMappingById(entityId).isPresent();
       default -> false;
     };
   }

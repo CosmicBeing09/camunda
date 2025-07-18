@@ -13,9 +13,9 @@ import java.util.Optional;
 
 public interface MappingState {
 
-  Optional<PersistedMapping> get(final String mappingId);
+  Optional<PersistedMapping> getMappingById(final String mappingId);
 
-  Optional<PersistedMapping> get(final String claimName, final String claimValue);
+  Optional<PersistedMapping> getMappingByClaim(final String claimName, final String claimValue);
 
   Collection<PersistedMapping> getAll();
 }

@@ -79,7 +79,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
       return;
     }
 
-    final var persistedRecord = mappingState.get(mappingId);
+    final var persistedRecord = mappingState.getMappingById(mappingId);
     if (persistedRecord.isEmpty()) {
       final var errorMessage = MAPPING_ID_DOES_NOT_EXIST_ERROR_MESSAGE.formatted(mappingId);
       rejectionWriter.appendRejection(tenantCreateCommand, RejectionType.NOT_FOUND, errorMessage);
@@ -100,7 +100,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
     }
 
     final var persistedMappingWithSameClaim =
-        mappingState.get(record.getClaimName(), record.getClaimValue());
+        mappingState.getMappingByClaim(record.getClaimName(), record.getClaimValue());
     if (persistedMappingWithSameClaim.isPresent()
         && !persistedMappingWithSameClaim.get().getMappingId().equals(mappingId)) {
       final var errorMessage =

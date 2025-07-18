@@ -90,7 +90,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
     }
 
     final var persistedMappingWithSameClaim =
-        mappingState.get(record.getClaimName(), record.getClaimValue());
+        mappingState.getMappingByClaim(record.getClaimName(), record.getClaimValue());
     if (persistedMappingWithSameClaim.isPresent()) {
       final var errorMessage =
           MAPPING_SAME_CLAIM_ALREADY_EXISTS_ERROR_MESSAGE.formatted(
@@ -100,7 +100,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
       return;
     }
 
-    final var persistedMappingWithSameId = mappingState.get(record.getMappingId());
+    final var persistedMappingWithSameId = mappingState.getMappingById(record.getMappingId());
     if (persistedMappingWithSameId.isPresent()) {
       final var errorMessage =
           MAPPING_SAME_ID_ALREADY_EXISTS_ERROR_MESSAGE.formatted(record.getMappingId());
@@ -126,7 +126,7 @@ public class MappingCreateProcessor implements DistributedTypedRecordProcessor<M
   public void processDistributedCommand(final TypedRecord<MappingRecord> distributedCreateCommand) {
     final var record = distributedCreateCommand.getValue();
     mappingState
-        .get(record.getMappingId())
+        .getMappingById(record.getMappingId())
         .ifPresentOrElse(
             existingMapping -> {
               final var errorMessage =
