@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.state.appliers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.UserTaskIntermediateStateValue;
 import io.camunda.zeebe.engine.state.instance.UserTaskTransitionTriggerRequestMetadata;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;

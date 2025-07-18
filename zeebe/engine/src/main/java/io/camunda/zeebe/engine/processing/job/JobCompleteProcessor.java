@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobRecord;
@@ -95,7 +95,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
           JobListenerEventType.UPDATING,
           JobListenerEventType.COMPLETING);
 
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final ElementInstanceState elementInstanceState;
   private final DefaultJobCommandPreconditionGuard defaultProcessor;
   private final JobProcessingMetrics jobMetrics;

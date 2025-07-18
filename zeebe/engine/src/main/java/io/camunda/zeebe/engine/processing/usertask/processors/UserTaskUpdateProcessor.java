@@ -14,8 +14,8 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseW
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.impl.record.value.variable.VariableDocumentRecord;
@@ -34,7 +34,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
   private static final String DEFAULT_ACTION = "update";
 
   private final StateWriter stateWriter;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final VariableState variableState;
   private final TypedResponseWriter responseWriter;
   private final VariableBehavior variableBehavior;

@@ -59,7 +59,7 @@ public interface ProcessingState extends StreamProcessorLifecycleAware {
 
   MigrationState getMigrationState();
 
-  UserTaskState getUserTaskState();
+  TaskState getUserTaskState();
 
   CompensationSubscriptionState getCompensationSubscriptionState();
 

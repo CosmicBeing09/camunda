@@ -31,7 +31,7 @@ import io.camunda.zeebe.engine.state.immutable.JobState;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.engine.state.routing.RoutingInfo;
@@ -77,7 +77,7 @@ public class ProcessInstanceMigrationMigrateProcessor
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
   private final JobState jobState;
-  private final UserTaskState userTaskState;
+  private final TaskState userTaskState;
   private final VariableState variableState;
   private final IncidentState incidentState;
   private final EventScopeInstanceState eventScopeInstanceState;

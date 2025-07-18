@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.state.appliers;
 
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.state.mutable.MutableUserTaskState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;

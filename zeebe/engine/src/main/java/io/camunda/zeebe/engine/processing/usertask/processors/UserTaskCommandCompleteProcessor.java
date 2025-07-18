@@ -16,8 +16,8 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseW
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState;
-import io.camunda.zeebe.engine.state.immutable.UserTaskState.LifecycleState;
+import io.camunda.zeebe.engine.state.immutable.TaskState;
+import io.camunda.zeebe.engine.state.immutable.TaskState.LifecycleState;
 import io.camunda.zeebe.engine.state.instance.ElementInstance;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -32,7 +32,7 @@ public final class UserTaskCommandCompleteProcessor implements UserTaskCommandPr
   private static final String DEFAULT_USER_TASK_ACTION = "complete";
 
   private final ElementInstanceState elementInstanceState;
-  private final UserTaskState asyncRequestState;
+  private final TaskState asyncRequestState;
   private final EventHandle eventHandle;
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
