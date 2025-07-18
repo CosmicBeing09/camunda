@@ -149,7 +149,7 @@ public class TasklistV1ApiGroupPermissionsIT {
         .untilAsserted(
             () -> {
               final var statusCode =
-                  getRunningProcessInstance(client, AUTHORIZED_USERNAME, processDefinitionKey);
+                  getProcessStatus(client, AUTHORIZED_USERNAME, processDefinitionKey);
               assertThat(statusCode)
                   .describedAs("Is authorized to get the process")
                   .isEqualTo(HttpStatus.OK.value());
@@ -165,7 +165,7 @@ public class TasklistV1ApiGroupPermissionsIT {
         .untilAsserted(
             () -> {
               final var statusCode =
-                  getRunningProcessInstance(client, UNAUTHORIZED_USERNAME, processDefinitionKey);
+                  getProcessStatus(client, UNAUTHORIZED_USERNAME, processDefinitionKey);
               assertThat(statusCode)
                   .describedAs("Is unauthorized to get the process")
                   .isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -180,7 +180,7 @@ public class TasklistV1ApiGroupPermissionsIT {
         .ignoreExceptions()
         .untilAsserted(
             () -> {
-              final var statusCode = assignTask(client, AUTHORIZED_USERNAME, taskKey);
+              final var statusCode = assign(client, AUTHORIZED_USERNAME, taskKey);
               assertThat(statusCode)
                   .describedAs("Is authorized to assign the task")
                   .isEqualTo(HttpStatus.OK.value());
@@ -195,7 +195,7 @@ public class TasklistV1ApiGroupPermissionsIT {
         .ignoreExceptions()
         .untilAsserted(
             () -> {
-              final var statusCode = assignTask(client, UNAUTHORIZED_USERNAME, taskKey);
+              final var statusCode = assign(client, UNAUTHORIZED_USERNAME, taskKey);
               assertThat(statusCode)
                   .describedAs("Is unauthorized to assign the task")
                   .isEqualTo(HttpStatus.FORBIDDEN.value());
@@ -207,7 +207,7 @@ public class TasklistV1ApiGroupPermissionsIT {
     client.newAssignUserToGroupCommand().username(userId).groupId(groupId).send().join();
   }
 
-  private int getRunningProcessInstance(
+  private int getProcessStatus(
       final CamundaClient client, final String username, final long processDefinitionKey)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
@@ -228,7 +228,7 @@ public class TasklistV1ApiGroupPermissionsIT {
     return HTTP_CLIENT.send(request, BodyHandlers.ofString()).statusCode();
   }
 
-  private int assignTask(final CamundaClient client, final String username, final long taskId)
+  private int assign(final CamundaClient client, final String username, final long taskId)
       throws URISyntaxException, IOException, InterruptedException {
     final String url =
         client.getConfiguration().getRestAddress() + "v1/tasks/" + taskId + "/assign";
