@@ -146,8 +146,8 @@ public class DecisionInstanceSortIT {
         rdbmsWriter,
         b ->
             b.processDefinitionKey(processDefinitionKey)
-                .decisionDefinitionId(decisionDefinition.decisionDefinitionId())
-                .decisionDefinitionKey(decisionDefinition.decisionDefinitionKey()));
+                .decisionDefinitionId(decisionDefinition.id())
+                .decisionDefinitionKey(decisionDefinition.key()));
 
     final var searchResult =
         reader

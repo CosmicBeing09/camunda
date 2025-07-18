@@ -47,14 +47,14 @@ public record ProcessDefinitionQuery(
     }
 
     @Override
-    public ProcessDefinitionQuery.Builder filter(final ProcessDefinitionFilter value) {
-      filter = value;
+    public ProcessDefinitionQuery.Builder filter(final ProcessDefinitionFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public ProcessDefinitionQuery.Builder sort(final ProcessDefinitionSort value) {
-      sort = value;
+    public ProcessDefinitionQuery.Builder sort(final ProcessDefinitionSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

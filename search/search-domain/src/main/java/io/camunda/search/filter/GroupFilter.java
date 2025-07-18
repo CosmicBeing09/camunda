@@ -16,7 +16,7 @@ public record GroupFilter(
     String groupId,
     String name,
     String description,
-    String joinParentId,
+    String parentId,
     Set<String> memberIds,
     EntityType memberType,
     String tenantId,
@@ -31,7 +31,7 @@ public record GroupFilter(
         .groupId(groupId)
         .name(name)
         .description(description)
-        .joinParentId(joinParentId)
+        .joinParentId(parentId)
         .memberIds(memberIds)
         .memberType(memberType)
         .tenantId(tenantId)
@@ -45,7 +45,7 @@ public record GroupFilter(
     private String groupId;
     private String name;
     private String description;
-    private String joinParentId;
+    private String parentId;
     private Set<String> memberIds;
     private EntityType memberType;
     private String tenantId;
@@ -74,7 +74,7 @@ public record GroupFilter(
     }
 
     public Builder joinParentId(final String value) {
-      joinParentId = value;
+      parentId = value;
       return this;
     }
 
@@ -119,7 +119,7 @@ public record GroupFilter(
           groupId,
           name,
           description,
-          joinParentId,
+          parentId,
           memberIds,
           memberType,
           tenantId,

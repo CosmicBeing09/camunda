@@ -35,14 +35,14 @@ public record UserQuery(UserFilter filter, UserSort sort, SearchQueryPage page)
     private UserSort sort;
 
     @Override
-    public Builder filter(final UserFilter value) {
-      filter = value;
+    public Builder filter(final UserFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final UserSort value) {
-      sort = value;
+    public Builder sort(final UserSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

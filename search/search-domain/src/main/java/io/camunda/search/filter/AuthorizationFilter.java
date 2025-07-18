@@ -15,8 +15,8 @@ import io.camunda.zeebe.protocol.record.value.PermissionType;
 import java.util.List;
 
 public record AuthorizationFilter(
-    Long authorizationKey,
-    List<String> ownerIds,
+    Long key,
+    List<String> owners,
     String ownerType,
     List<String> resourceIds,
     String resourceType,

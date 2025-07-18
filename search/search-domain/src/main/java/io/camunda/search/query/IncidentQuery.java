@@ -39,14 +39,14 @@ public record IncidentQuery(IncidentFilter filter, IncidentSort sort, SearchQuer
     }
 
     @Override
-    public Builder filter(final IncidentFilter value) {
-      filter = value;
+    public Builder filter(final IncidentFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final IncidentSort value) {
-      sort = value;
+    public Builder sort(final IncidentSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

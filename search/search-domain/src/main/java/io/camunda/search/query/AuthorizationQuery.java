@@ -42,14 +42,14 @@ public record AuthorizationQuery(
     private AuthorizationSort sort;
 
     @Override
-    public Builder filter(final AuthorizationFilter value) {
-      filter = value;
+    public Builder filter(final AuthorizationFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final AuthorizationSort value) {
-      sort = value;
+    public Builder sort(final AuthorizationSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

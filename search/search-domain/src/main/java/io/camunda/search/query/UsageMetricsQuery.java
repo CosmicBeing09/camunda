@@ -39,14 +39,14 @@ public record UsageMetricsQuery(
     }
 
     @Override
-    public Builder filter(final UsageMetricsFilter value) {
-      filter = value;
+    public Builder filter(final UsageMetricsFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final UsageMetricsSort value) {
-      sort = value;
+    public Builder sort(final UsageMetricsSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

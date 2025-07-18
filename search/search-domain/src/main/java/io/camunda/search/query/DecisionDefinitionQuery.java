@@ -37,8 +37,15 @@ public record DecisionDefinitionQuery(
     private DecisionDefinitionFilter filter;
     private DecisionDefinitionSort sort;
 
-    public Builder filter(final DecisionDefinitionFilter value) {
-      filter = value;
+    @Override
+    public Builder filter(final DecisionDefinitionFilter filterValue) {
+      filter = filterValue;
+      return this;
+    }
+
+    @Override
+    public Builder sort(final DecisionDefinitionSort sortValue) {
+      sort = sortValue;
       return this;
     }
 
@@ -46,11 +53,6 @@ public record DecisionDefinitionQuery(
         final Function<DecisionDefinitionFilter.Builder, ObjectBuilder<DecisionDefinitionFilter>>
             fn) {
       return filter(FilterBuilders.decisionDefinition(fn));
-    }
-
-    public Builder sort(final DecisionDefinitionSort value) {
-      sort = value;
-      return this;
     }
 
     public Builder sort(

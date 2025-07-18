@@ -38,7 +38,7 @@ public class ProcessInstanceWriter {
         new QueueItem(
             ContextType.PROCESS_INSTANCE,
             WriteStatementType.INSERT,
-            processInstance.processInstanceKey(),
+            processInstance.key(),
             "io.camunda.db.rdbms.sql.ProcessInstanceMapper.insert",
             processInstance));
   }
@@ -48,7 +48,7 @@ public class ProcessInstanceWriter {
         new QueueItem(
             ContextType.PROCESS_INSTANCE,
             WriteStatementType.UPDATE,
-            processInstance.processInstanceKey(),
+            processInstance.key(),
             "io.camunda.db.rdbms.sql.ProcessInstanceMapper.update",
             processInstance));
   }

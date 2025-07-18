@@ -40,14 +40,14 @@ public record FormQuery(FormFilter filter, FormSort sort, SearchQueryPage page)
     private FormSort sort;
 
     @Override
-    public Builder filter(final FormFilter value) {
-      filter = value;
+    public Builder filter(final FormFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final FormSort value) {
-      sort = value;
+    public Builder sort(final FormSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

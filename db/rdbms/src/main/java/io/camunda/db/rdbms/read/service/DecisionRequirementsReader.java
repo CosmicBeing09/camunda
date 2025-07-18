@@ -28,12 +28,12 @@ public class DecisionRequirementsReader extends AbstractEntityReader<DecisionReq
     this.decisionRequirementsMapper = decisionRequirementsMapper;
   }
 
-  public Optional<DecisionRequirementsEntity> findOne(final long decisionRequirementsKey) {
+  public Optional<DecisionRequirementsEntity> findOne(final long key) {
     final var result =
         search(
             DecisionRequirementsQuery.of(
                 b ->
-                    b.filter(f -> f.decisionRequirementsKeys(decisionRequirementsKey))
+                    b.filter(f -> f.decisionRequirementsKeys(key))
                         .resultConfig(c -> c.includeXml(true))));
     return Optional.ofNullable(result.items()).flatMap(it -> it.stream().findFirst());
   }

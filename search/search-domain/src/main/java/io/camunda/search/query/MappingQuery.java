@@ -10,7 +10,6 @@ package io.camunda.search.query;
 import io.camunda.search.filter.FilterBuilders;
 import io.camunda.search.filter.MappingFilter;
 import io.camunda.search.page.SearchQueryPage;
-import io.camunda.search.query.UserQuery.Builder;
 import io.camunda.search.sort.MappingSort;
 import io.camunda.search.sort.SortOptionBuilders;
 import io.camunda.util.ObjectBuilder;
@@ -37,14 +36,14 @@ public record MappingQuery(MappingFilter filter, MappingSort sort, SearchQueryPa
     private MappingSort sort;
 
     @Override
-    public Builder filter(final MappingFilter value) {
-      filter = value;
+    public Builder filter(final MappingFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final MappingSort value) {
-      sort = value;
+    public Builder sort(final MappingSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

@@ -83,19 +83,19 @@ public class ProcessInstanceIT {
 
     final ProcessInstanceDbModel original = ProcessInstanceFixtures.createRandomized(b -> b);
     createAndSaveProcessInstance(rdbmsWriter, original);
-    rdbmsWriter.getProcessInstanceWriter().createIncident(original.processInstanceKey());
+    rdbmsWriter.getProcessInstanceWriter().createIncident(original.key());
     rdbmsWriter.flush();
 
-    final var instance = processInstanceReader.findOne(original.processInstanceKey()).orElse(null);
+    final var instance = processInstanceReader.findOne(original.key()).orElse(null);
 
     assertThat(instance).isNotNull();
     assertThat(instance.hasIncident()).isTrue();
 
-    rdbmsWriter.getProcessInstanceWriter().resolveIncident(original.processInstanceKey());
+    rdbmsWriter.getProcessInstanceWriter().resolveIncident(original.key());
     rdbmsWriter.flush();
 
     final var resolvedInstance =
-        processInstanceReader.findOne(original.processInstanceKey()).orElse(null);
+        processInstanceReader.findOne(original.key()).orElse(null);
 
     assertThat(resolvedInstance).isNotNull();
     assertThat(resolvedInstance.hasIncident()).isFalse();
@@ -178,7 +178,7 @@ public class ProcessInstanceIT {
 
     assertThat(searchResult.items().stream().map(ProcessInstanceEntity::processInstanceKey))
         .containsExactlyInAnyOrder(
-            incidentPI1.processInstanceKey(), incidentPI2.processInstanceKey());
+            incidentPI1.key(), incidentPI2.key());
   }
 
   @TestTemplate
@@ -294,7 +294,7 @@ public class ProcessInstanceIT {
                 b ->
                     b.filter(f -> f.processDefinitionIds(processDefinition.processDefinitionId()))
                         .sort(sort)
-                        .page(p -> p.size(10).searchAfter(firstPage.searchAfterCursor()))));
+                        .page(p -> p.size(10).after(firstPage.after()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(10);
@@ -331,10 +331,10 @@ public class ProcessInstanceIT {
                     .partitionId(PARTITION_ID));
 
     // set cleanup dates
-    rdbmsWriter.getProcessInstanceWriter().scheduleForHistoryCleanup(pi1.processInstanceKey(), NOW);
+    rdbmsWriter.getProcessInstanceWriter().scheduleForHistoryCleanup(pi1.key(), NOW);
     rdbmsWriter
         .getProcessInstanceWriter()
-        .scheduleForHistoryCleanup(pi2.processInstanceKey(), NOW.minusDays(2));
+        .scheduleForHistoryCleanup(pi2.key(), NOW.minusDays(2));
     rdbmsWriter.flush();
 
     // cleanup
@@ -351,6 +351,6 @@ public class ProcessInstanceIT {
     assertThat(searchResult.total()).isEqualTo(2);
     assertThat(searchResult.items()).hasSize(2);
     assertThat(searchResult.items().stream().map(ProcessInstanceEntity::processInstanceKey))
-        .containsExactlyInAnyOrder(pi1.processInstanceKey(), pi3.processInstanceKey());
+        .containsExactlyInAnyOrder(pi1.key(), pi3.key());
   }
 }

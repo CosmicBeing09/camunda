@@ -37,15 +37,15 @@ public class UserTaskReader extends AbstractEntityReader<UserTaskEntity> {
   }
 
   public SearchQueryResult<UserTaskEntity> search(final UserTaskQuery query) {
-    final var dbSort = convertSort(query.sort(), UserTaskSearchColumn.USER_TASK_KEY);
-    final var dbQuery =
+    final var sort = convertSort(query.sort(), UserTaskSearchColumn.USER_TASK_KEY);
+    final var query =
         UserTaskDbQuery.of(
-            b -> b.filter(query.filter()).sort(dbSort).page(convertPaging(dbSort, query.page())));
+            b -> b.filter(query.filter()).sort(sort).page(convertPaging(sort, query.page())));
 
-    LOG.trace("[RDBMS DB] Search for users with filter {}", dbQuery);
-    final var totalHits = userTaskMapper.count(dbQuery);
+    LOG.trace("[RDBMS DB] Search for users with filter {}", query);
+    final var totalHits = userTaskMapper.count(query);
     final var hits =
-        userTaskMapper.search(dbQuery).stream().map(UserTaskEntityMapper::toEntity).toList();
-    return buildSearchQueryResult(totalHits, hits, dbSort);
+        userTaskMapper.search(query).stream().map(UserTaskEntityMapper::toEntity).toList();
+    return buildSearchQueryResult(totalHits, hits, sort);
   }
 }

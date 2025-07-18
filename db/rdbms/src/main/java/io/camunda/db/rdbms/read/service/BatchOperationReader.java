@@ -29,18 +29,18 @@ public class BatchOperationReader extends AbstractEntityReader<BatchOperationEnt
     this.batchOperationMapper = batchOperationMapper;
   }
 
-  public boolean exists(final String batchOperationId) {
+  public boolean exists(final String id) {
     final var query =
         new BatchOperationDbQuery.Builder()
-            .filter(b -> b.batchOperationIds(batchOperationId))
+            .filter(b -> b.batchOperationIds(id))
             .build();
 
     return batchOperationMapper.count(query) == 1;
   }
 
-  public Optional<BatchOperationEntity> findOne(final String batchOperationId) {
+  public Optional<BatchOperationEntity> findOne(final String id) {
     final var result =
-        search(BatchOperationQuery.of(b -> b.filter(f -> f.batchOperationIds(batchOperationId))));
+        search(BatchOperationQuery.of(b -> b.filter(f -> f.batchOperationIds(id))));
     return Optional.ofNullable(result.items()).flatMap(it -> it.stream().findFirst());
   }
 

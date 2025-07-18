@@ -21,8 +21,8 @@ public record FlowNodeInstanceQuery(
     implements TypedSearchQuery<FlowNodeInstanceFilter, FlowNodeInstanceSort> {
 
   public static FlowNodeInstanceQuery of(
-      final Function<FlowNodeInstanceQuery.Builder, ObjectBuilder<FlowNodeInstanceQuery>> fn) {
-    return fn.apply(new FlowNodeInstanceQuery.Builder()).build();
+      final Function<FlowNodeInstanceQuery.Builder, ObjectBuilder<FlowNodeInstanceQuery>> builderFn) {
+    return builderFn.apply(new FlowNodeInstanceQuery.Builder()).build();
   }
 
   public static final class Builder extends SearchQueryBase.AbstractQueryBuilder<Builder>
@@ -43,20 +43,20 @@ public record FlowNodeInstanceQuery(
     }
 
     @Override
-    public Builder filter(final FlowNodeInstanceFilter value) {
-      filter = value;
+    public Builder filter(final FlowNodeInstanceFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final FlowNodeInstanceSort value) {
-      sort = value;
+    public Builder sort(final FlowNodeInstanceSort sortValue) {
+      sort = sortValue;
       return this;
     }
 
     public FlowNodeInstanceQuery.Builder filter(
-        final Function<FlowNodeInstanceFilter.Builder, ObjectBuilder<FlowNodeInstanceFilter>> fn) {
-      return filter(FilterBuilders.flowNodeInstance(fn));
+        final Function<FlowNodeInstanceFilter.Builder, ObjectBuilder<FlowNodeInstanceFilter>> filterBuilder) {
+      return filter(FilterBuilders.flowNodeInstance(filterBuilder));
     }
 
     public Builder sort(

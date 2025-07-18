@@ -34,14 +34,14 @@ public final record VariableQuery(VariableFilter filter, VariableSort sort, Sear
     private VariableSort sort;
 
     @Override
-    public Builder filter(final VariableFilter value) {
-      filter = value;
+    public Builder filter(final VariableFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public Builder sort(final VariableSort value) {
-      sort = value;
+    public Builder sort(final VariableSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

@@ -13,8 +13,8 @@ import java.time.OffsetDateTime;
 import java.util.function.Function;
 
 public record ProcessInstanceDbModel(
-    Long processInstanceKey,
-    String processDefinitionId,
+    Long key,
+    String definitionId,
     Long processDefinitionKey,
     ProcessInstanceState state,
     OffsetDateTime startDate,
@@ -37,10 +37,10 @@ public record ProcessInstanceDbModel(
     return builderFunction
         .apply(
             new ProcessInstanceDbModelBuilder()
-                .processInstanceKey(processInstanceKey)
-                .processInstanceKey(processInstanceKey())
+                .processInstanceKey(key)
+                .processInstanceKey(key())
                 .processDefinitionKey(processDefinitionKey)
-                .processDefinitionId(processDefinitionId)
+                .processDefinitionId(definitionId)
                 .startDate(startDate)
                 .endDate(endDate)
                 .parentProcessInstanceKey(parentProcessInstanceKey)

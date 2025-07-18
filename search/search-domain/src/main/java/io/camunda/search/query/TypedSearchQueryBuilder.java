@@ -16,9 +16,9 @@ public interface TypedSearchQueryBuilder<
         T, B extends ObjectBuilder<T>, F extends FilterBase, S extends SortOption>
     extends ObjectBuilder<T> {
 
-  B filter(F value);
+  B filter(F filterValue);
 
-  B sort(S value);
+  B sort(S sortValue);
 
   B page(SearchQueryPage value);
 }

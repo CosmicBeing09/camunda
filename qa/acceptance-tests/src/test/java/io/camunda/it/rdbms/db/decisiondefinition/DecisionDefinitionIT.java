@@ -44,14 +44,14 @@ public class DecisionDefinitionIT {
     createAndSaveDecisionDefinition(rdbmsWriter, decisionDefinition);
 
     final var instance =
-        decisionDefinitionReader.findOne(decisionDefinition.decisionDefinitionKey()).orElse(null);
+        decisionDefinitionReader.findOne(decisionDefinition.key()).orElse(null);
     assertThat(instance).isNotNull();
     assertThat(instance.decisionDefinitionKey())
-        .isEqualTo(decisionDefinition.decisionDefinitionKey());
+        .isEqualTo(decisionDefinition.key());
     assertThat(instance.version()).isEqualTo(decisionDefinition.version());
     assertThat(instance.name()).isEqualTo(decisionDefinition.name());
     assertThat(instance.decisionDefinitionId())
-        .isEqualTo(decisionDefinition.decisionDefinitionId());
+        .isEqualTo(decisionDefinition.id());
     assertThat(instance.decisionRequirementsId())
         .isEqualTo(decisionDefinition.decisionRequirementsId());
     assertThat(instance.decisionRequirementsKey())
@@ -86,11 +86,11 @@ public class DecisionDefinitionIT {
     final var instance = searchResult.items().getFirst();
 
     assertThat(instance.decisionDefinitionKey())
-        .isEqualTo(decisionDefinition.decisionDefinitionKey());
+        .isEqualTo(decisionDefinition.key());
     assertThat(instance.version()).isEqualTo(decisionDefinition.version());
     assertThat(instance.name()).isEqualTo(decisionDefinition.name());
     assertThat(instance.decisionDefinitionId())
-        .isEqualTo(decisionDefinition.decisionDefinitionId());
+        .isEqualTo(decisionDefinition.id());
     assertThat(instance.decisionRequirementsId())
         .isEqualTo(decisionDefinition.decisionRequirementsId());
     assertThat(instance.decisionRequirementsKey())
@@ -158,8 +158,8 @@ public class DecisionDefinitionIT {
         decisionDefinitionReader.search(
             new DecisionDefinitionQuery(
                 new DecisionDefinitionFilter.Builder()
-                    .decisionDefinitionKeys(decisionDefinition.decisionDefinitionKey())
-                    .decisionDefinitionIds(decisionDefinition.decisionDefinitionId())
+                    .decisionDefinitionKeys(decisionDefinition.key())
+                    .decisionDefinitionIds(decisionDefinition.id())
                     .names(decisionDefinition.name())
                     .versions(decisionDefinition.version())
                     .tenantIds(decisionDefinition.tenantId())
@@ -172,7 +172,7 @@ public class DecisionDefinitionIT {
     assertThat(searchResult.total()).isEqualTo(1);
     assertThat(searchResult.items()).hasSize(1);
     assertThat(searchResult.items().getFirst().decisionDefinitionKey())
-        .isEqualTo(decisionDefinition.decisionDefinitionKey());
+        .isEqualTo(decisionDefinition.key());
   }
 
   @TestTemplate
@@ -204,7 +204,7 @@ public class DecisionDefinitionIT {
                 b ->
                     b.filter(f -> f.tenantIds("search-after-123456"))
                         .sort(sort)
-                        .page(p -> p.size(5).searchAfter(firstPage.searchAfterCursor()))));
+                        .page(p -> p.size(5).after(firstPage.after()))));
 
     assertThat(nextPage.total()).isEqualTo(20);
     assertThat(nextPage.items()).hasSize(5);

@@ -39,14 +39,14 @@ public record TenantQuery(TenantFilter filter, TenantSort sort, SearchQueryPage 
     private TenantSort sort;
 
     @Override
-    public TenantQuery.Builder filter(final TenantFilter value) {
-      filter = value;
+    public TenantQuery.Builder filter(final TenantFilter filterValue) {
+      filter = filterValue;
       return this;
     }
 
     @Override
-    public TenantQuery.Builder sort(final TenantSort value) {
-      sort = value;
+    public TenantQuery.Builder sort(final TenantSort sortValue) {
+      sort = sortValue;
       return this;
     }
 

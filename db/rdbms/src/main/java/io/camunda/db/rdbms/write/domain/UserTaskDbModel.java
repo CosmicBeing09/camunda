@@ -16,8 +16,8 @@ import java.util.function.Function;
 
 public class UserTaskDbModel implements Copyable<UserTaskDbModel> {
 
-  private Long userTaskKey;
-  private String elementId;
+  private Long key;
+  private String id;
   private String name;
   private String processDefinitionId;
   private OffsetDateTime creationDate;
@@ -42,7 +42,7 @@ public class UserTaskDbModel implements Copyable<UserTaskDbModel> {
   private OffsetDateTime historyCleanupDate;
 
   public UserTaskDbModel(final Long userTaskKey) {
-    this.userTaskKey = userTaskKey;
+    key = userTaskKey;
   }
 
   public UserTaskDbModel(
@@ -67,8 +67,8 @@ public class UserTaskDbModel implements Copyable<UserTaskDbModel> {
       final Integer priority,
       final int partitionId,
       final OffsetDateTime historyCleanupDate) {
-    this.userTaskKey = userTaskKey;
-    this.elementId = elementId;
+    key = userTaskKey;
+    id = elementId;
     this.name = name;
     this.processDefinitionId = processDefinitionId;
     this.creationDate = creationDate;
@@ -100,19 +100,19 @@ public class UserTaskDbModel implements Copyable<UserTaskDbModel> {
   // Methods without get/set prefix
 
   public Long userTaskKey() {
-    return userTaskKey;
+    return key;
   }
 
   public void userTaskKey(final Long userTaskKey) {
-    this.userTaskKey = userTaskKey;
+    key = userTaskKey;
   }
 
   public String elementId() {
-    return elementId;
+    return id;
   }
 
   public void elementId(final String elementId) {
-    this.elementId = elementId;
+    id = elementId;
   }
 
   public String name() {
@@ -290,8 +290,8 @@ public class UserTaskDbModel implements Copyable<UserTaskDbModel> {
 
   public Builder toBuilder() {
     return new Builder()
-        .userTaskKey(userTaskKey)
-        .elementId(elementId)
+        .userTaskKey(key)
+        .elementId(id)
         .name(name)
         .processDefinitionId(processDefinitionId)
         .creationDate(creationDate)
