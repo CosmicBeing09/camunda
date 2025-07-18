@@ -23,7 +23,7 @@ public final class QueryTransformer extends ElasticsearchTransformer<SearchQuery
 
   @Override
   public Query apply(final SearchQuery value) {
-    final var queryOption = value.queryOption();
+    final var queryOption = value.searchOption();
 
     if (queryOption == null) {
       return null;

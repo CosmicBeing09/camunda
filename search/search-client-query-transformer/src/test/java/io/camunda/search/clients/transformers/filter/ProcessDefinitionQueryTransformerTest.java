@@ -23,7 +23,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -41,7 +41,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -60,7 +60,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -78,7 +78,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -96,7 +96,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -114,7 +114,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,
@@ -133,7 +133,7 @@ public final class ProcessDefinitionQueryTransformerTest extends AbstractTransfo
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.searchOption();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,

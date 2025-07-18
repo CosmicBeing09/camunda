@@ -115,7 +115,7 @@ public class ProcessInstanceFlowNodeStatisticsQueryTransformerTest {
                     term(ListViewTemplate.INCIDENT, true),
                     term(ListViewTemplate.ACTIVITY_STATE, FlowNodeState.ACTIVE.toString()))));
 
-    final var queryVariant = searchRequest.query().queryOption();
+    final var queryVariant = searchRequest.query().searchOption();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     final var boolQuery = (SearchBoolQuery) queryVariant;
     assertThat(boolQuery.filter()).isEmpty();
