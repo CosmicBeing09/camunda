@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource
 import io.camunda.zeebe.protocol.record.intent.DecisionIntent;
 import io.camunda.zeebe.protocol.record.intent.DecisionRequirementsIntent;
 import io.camunda.zeebe.protocol.record.value.deployment.DecisionRequirementsMetadataValue;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.io.ByteArrayInputStream;
@@ -50,13 +50,13 @@ public final class DmnResourceTransformer implements DeploymentResourceTransform
 
   private final DecisionEngine decisionEngine = DecisionEngineFactory.createDecisionEngine();
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final DecisionState decisionState;
 
   public DmnResourceTransformer(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final DecisionState decisionState) {

@@ -19,7 +19,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ abstract class AbstractFormCreatedApplierTest {
 
   static final String TENANT_1 = "tenant1";
   static final String TENANT_2 = "tenant2";
-  KeyGenerator keyGenerator;
+  RecordKeyProvider keyGenerator;
   MutableFormState formState;
   TypedEventApplier<FormIntent, FormRecord> formCreatedApplier;
 

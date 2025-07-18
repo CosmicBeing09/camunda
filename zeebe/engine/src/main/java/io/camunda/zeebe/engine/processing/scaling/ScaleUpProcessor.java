@@ -22,14 +22,14 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.PartitionUtil;
 import java.util.HashSet;
 import java.util.Optional;
 
 @ExcludeAuthorizationCheck
 public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRecord> {
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
@@ -37,7 +37,7 @@ public class ScaleUpProcessor implements DistributedTypedRecordProcessor<ScaleRe
   private final CommandDistributionBehavior commandDistributionBehavior;
 
   public ScaleUpProcessor(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final ProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior) {

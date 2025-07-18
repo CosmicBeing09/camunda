@@ -41,7 +41,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.EntityType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public class UserDeleteProcessor implements DistributedTypedRecordProcessor<UserRecord> {
 
@@ -49,7 +49,7 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
       "Expected to delete user with username %s, but a user with this username does not exist";
   private final UserState userState;
   private final AuthorizationState authorizationState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
@@ -61,7 +61,7 @@ public class UserDeleteProcessor implements DistributedTypedRecordProcessor<User
   private final GroupState groupState;
 
   public UserDeleteProcessor(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final ProcessingState state,
       final Writers writers,
       final CommandDistributionBehavior distributionBehavior,

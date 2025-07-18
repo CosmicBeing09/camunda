@@ -23,12 +23,12 @@ import io.camunda.zeebe.protocol.record.intent.GroupIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<GroupRecord> {
 
   private final GroupState groupState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -37,7 +37,7 @@ public class GroupUpdateProcessor implements DistributedTypedRecordProcessor<Gro
 
   public GroupUpdateProcessor(
       final GroupState groupState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final AuthorizationCheckBehavior authCheckBehavior,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {

@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.record.intent.MappingIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<MappingRecord> {
   private static final String MAPPING_NULL_VALUE_ERROR_MESSAGE =
@@ -34,7 +34,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
 
   private final MappingState mappingState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
@@ -43,7 +43,7 @@ public class MappingUpdateProcessor implements DistributedTypedRecordProcessor<M
   public MappingUpdateProcessor(
       final MappingState mappingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     this.mappingState = mappingState;

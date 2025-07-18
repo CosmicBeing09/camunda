@@ -61,7 +61,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.TenantOwned;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Optional;
@@ -74,7 +74,7 @@ public class ResourceDeletionDeleteProcessor
   private final StateWriter stateWriter;
   private final ResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final DecisionState decisionState;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final ProcessState processState;
@@ -91,7 +91,7 @@ public class ResourceDeletionDeleteProcessor
 
   public ResourceDeletionDeleteProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final ProcessingState processingState,
       final CommandDistributionBehavior commandDistributionBehavior,
       final BpmnBehaviors bpmnBehaviors,

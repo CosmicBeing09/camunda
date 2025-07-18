@@ -19,7 +19,7 @@ import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormMetadataRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import java.io.IOException;
 import java.util.Optional;
@@ -31,13 +31,13 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
   private static final int INITIAL_VERSION = 1;
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final FormState formState;
 
   public FormResourceTransformer(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final StateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final FormState formState) {

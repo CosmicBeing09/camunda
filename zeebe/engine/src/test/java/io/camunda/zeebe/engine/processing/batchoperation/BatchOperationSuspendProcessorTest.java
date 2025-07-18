@@ -22,7 +22,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.engine.util.MockTypedRecord;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationLifecycleManagementRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,7 +36,7 @@ class BatchOperationSuspendProcessorTest {
   private TypedRejectionWriter rejectionWriter;
   private ResponseWriter responseWriter;
   private BatchOperationSuspendProcessor processor;
-  private KeyGenerator keyGenerator;
+  private RecordKeyProvider keyGenerator;
   private BatchOperationState batchOperationState;
 
   @BeforeEach
@@ -45,7 +45,7 @@ class BatchOperationSuspendProcessorTest {
     commandWriter = mock(TypedCommandWriter.class);
     rejectionWriter = mock(TypedRejectionWriter.class);
     responseWriter = mock(ResponseWriter.class);
-    keyGenerator = mock(KeyGenerator.class);
+    keyGenerator = mock(RecordKeyProvider.class);
 
     final var writers = mock(Writers.class);
     when(writers.state()).thenReturn(stateWriter);

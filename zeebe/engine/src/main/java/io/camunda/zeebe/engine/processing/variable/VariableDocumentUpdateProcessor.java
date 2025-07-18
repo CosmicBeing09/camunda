@@ -36,7 +36,7 @@ import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.VariableDocumentUpdateSemantic;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import org.agrona.DirectBuffer;
 
 public final class VariableDocumentUpdateProcessor
@@ -51,7 +51,7 @@ public final class VariableDocumentUpdateProcessor
   private final ElementInstanceState elementInstanceState;
   private final MutableUserTaskState userTaskState;
   private final ProcessState processState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final VariableBehavior variableBehavior;
   private final BpmnJobBehavior jobBehavior;
   private final Writers writers;
@@ -59,7 +59,7 @@ public final class VariableDocumentUpdateProcessor
 
   public VariableDocumentUpdateProcessor(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final BpmnBehaviors bpmnBehaviors,
       final Writers writers,
       final MutableUserTaskState userTaskState,

@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.mutable.MutableProcessingState;
 import io.camunda.zeebe.engine.util.ProcessingStateExtension;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.FormRecord;
 import io.camunda.zeebe.protocol.record.intent.FormIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.test.util.Strings;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -34,7 +34,7 @@ public class FormDeletedApplierTest {
     MutableFormState formState;
     TypedEventApplier<FormIntent, FormRecord> formCreatedApplier;
     FormDeletedApplier formDeletedApplier;
-    KeyGenerator keyGenerator;
+    RecordKeyProvider keyGenerator;
 
     private MutableProcessingState processingState;
 

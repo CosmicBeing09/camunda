@@ -18,7 +18,7 @@ import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.test.util.Strings;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class ProcessStateMultiTenantTest {
 
   private MutableProcessState processState;
   private MutableProcessingState processingState;
-  private KeyGenerator keyGenerator;
+  private RecordKeyProvider keyGenerator;
 
   @Before
   public void setUp() {

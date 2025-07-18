@@ -20,12 +20,12 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRecord;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public class AuthorizationUpdateProcessor
     implements DistributedTypedRecordProcessor<AuthorizationRecord> {
 
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final CommandDistributionBehavior distributionBehavior;
   private final StateWriter stateWriter;
   private final ResponseWriter responseWriter;
@@ -34,7 +34,7 @@ public class AuthorizationUpdateProcessor
 
   public AuthorizationUpdateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final ProcessingState processingState,
       final CommandDistributionBehavior distributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {

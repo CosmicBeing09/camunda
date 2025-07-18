@@ -49,7 +49,7 @@ import io.camunda.zeebe.stream.api.CommandResponseWriter;
 import io.camunda.zeebe.stream.api.ReadonlyStreamProcessorContext;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.test.util.AutoCloseableRule;
 import io.camunda.zeebe.test.util.TestUtil;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -81,7 +81,7 @@ public final class EngineErrorHandlingTest {
       RuleChain.outerRule(tempFolder).around(actorSchedulerRule).around(closeables);
 
   private TestStreams streams;
-  private KeyGenerator keyGenerator;
+  private RecordKeyProvider keyGenerator;
   private CommandResponseWriter mockCommandResponseWriter;
   private MutableProcessingState processingState;
 

@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public final class MessagePublishProcessor implements TypedRecordProcessor<MessageRecord> {
 
@@ -40,7 +40,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
       "Expected to publish a new message with id '%s', but a message with that id was already published";
 
   private final MessageState messageState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final MessageCorrelateBehavior correlateBehavior;
 
@@ -56,7 +56,7 @@ public final class MessagePublishProcessor implements TypedRecordProcessor<Messa
       final MessageStartEventSubscriptionState startEventSubscriptionState,
       final EventScopeInstanceState eventScopeInstanceState,
       final SubscriptionCommandSender commandSender,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final ProcessState processState,
       final EventTriggerBehavior eventTriggerBehavior,

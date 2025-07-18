@@ -28,7 +28,7 @@ import io.camunda.zeebe.msgpack.value.DocumentValue;
 import io.camunda.zeebe.protocol.impl.record.value.usertask.UserTaskRecord;
 import io.camunda.zeebe.protocol.record.intent.TaskIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.Either;
 import java.time.InstantSource;
 import java.time.ZonedDateTime;
@@ -48,7 +48,7 @@ public final class BpmnUserTaskBehavior {
       EnumSet.complementOf(EnumSet.of(LifecycleState.NOT_FOUND, LifecycleState.CANCELING));
 
   private final HeaderEncoder headerEncoder = new HeaderEncoder(LOGGER);
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final ExpressionProcessor expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
@@ -57,7 +57,7 @@ public final class BpmnUserTaskBehavior {
   private final InstantSource clock;
 
   public BpmnUserTaskBehavior(
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final ExpressionProcessor expressionBehavior,
       final BpmnStateBehavior stateBehavior,

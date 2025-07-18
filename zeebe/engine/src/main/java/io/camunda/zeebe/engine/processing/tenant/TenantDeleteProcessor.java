@@ -32,7 +32,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<TenantRecord> {
 
@@ -43,7 +43,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   private final UserState userState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final ResponseWriter responseWriter;
@@ -52,7 +52,7 @@ public class TenantDeleteProcessor implements DistributedTypedRecordProcessor<Te
   public TenantDeleteProcessor(
       final ProcessingState state,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     tenantState = state.getTenantState();

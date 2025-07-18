@@ -22,14 +22,14 @@ import io.camunda.zeebe.protocol.record.intent.RoleIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<RoleRecord> {
 
   public static final String ROLE_NOT_FOUND_ERROR_MESSAGE =
       "Expected to update role with ID '%s', but a role with this ID does not exist.";
   private final RoleState roleState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -38,7 +38,7 @@ public class RoleUpdateProcessor implements DistributedTypedRecordProcessor<Role
 
   public RoleUpdateProcessor(
       final RoleState roleState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final AuthorizationCheckBehavior authCheckBehavior,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {

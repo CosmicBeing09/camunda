@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.record.intent.DeploymentIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 
 @ExcludeAuthorizationCheck
 public final class DeploymentDistributeProcessor implements TypedRecordProcessor<DeploymentRecord> {
@@ -30,7 +30,7 @@ public final class DeploymentDistributeProcessor implements TypedRecordProcessor
       final ProcessingState processingState,
       final DeploymentDistributionCommandSender deploymentDistributionCommandSender,
       final Writers writers,
-      final KeyGenerator keyGenerator) {
+      final RecordKeyProvider keyGenerator) {
     this.deploymentDistributionCommandSender = deploymentDistributionCommandSender;
     stateWriter = writers.state();
     startEventSubscriptionManager =

@@ -24,7 +24,7 @@ import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubs
 import io.camunda.zeebe.protocol.impl.record.value.signal.SignalSubscriptionRecord;
 import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.SignalSubscriptionIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.RecordKeyProvider;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.List;
 import java.util.function.Predicate;
@@ -38,12 +38,12 @@ public class StartEventSubscriptionManager {
   private final ProcessState processState;
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
   private final SignalSubscriptionState signalSubscriptionState;
-  private final KeyGenerator keyGenerator;
+  private final RecordKeyProvider keyGenerator;
   private final StateWriter stateWriter;
 
   public StartEventSubscriptionManager(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final RecordKeyProvider keyGenerator,
       final StateWriter stateWriter) {
     processState = processingState.getProcessState();
     messageStartEventSubscriptionState = processingState.getStartEventSubscriptionState();
