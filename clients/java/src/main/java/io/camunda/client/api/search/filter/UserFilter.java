@@ -16,10 +16,10 @@
 package io.camunda.client.api.search.filter;
 
 import io.camunda.client.api.search.filter.builder.StringProperty;
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 import java.util.function.Consumer;
 
-public interface UserFilter extends SearchRequestFilter {
+public interface UserFilter extends Filter {
 
   /**
    * Filter users by the specified username.

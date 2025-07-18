@@ -15,9 +15,9 @@
  */
 package io.camunda.client.api.search.filter;
 
-import io.camunda.client.api.search.request.TypedSearchRequest.SearchRequestFilter;
+import io.camunda.client.api.search.request.TypedSearchRequest.Filter;
 
-public interface MappingFilter extends SearchRequestFilter {
+public interface MappingFilter extends Filter {
 
   /**
    * Filter mappings by the specified mapping id.
