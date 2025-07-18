@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.common.ElementTreePathBuilder;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.analyzers.CatchEventAnalyzer;
 import io.camunda.zeebe.engine.state.analyzers.CatchEventAnalyzer.CatchEventTuple;
@@ -96,7 +96,7 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
   @Override
   public void afterAccept(
       final TypedCommandWriter commandWriter,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final long jobKey,
       final Intent intent,
       final JobRecord job) {
@@ -167,7 +167,7 @@ public class JobThrowErrorProcessor implements CommandProcessor<JobRecord> {
   }
 
   private void raiseIncident(
-      final long key, final JobRecord job, final StateWriter stateWriter, final Failure failure) {
+      final long key, final JobRecord job, final EventStateWriter stateWriter, final Failure failure) {
 
     final var treePathProperties =
         new ElementTreePathBuilder()

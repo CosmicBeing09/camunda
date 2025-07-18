@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.common.EventHandle;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.immutable.ElementInstanceState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
@@ -133,7 +133,7 @@ public final class JobCompleteProcessor implements CommandProcessor<JobRecord> {
   @Override
   public void afterAccept(
       final TypedCommandWriter commandWriter,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final long key,
       final Intent intent,
       final JobRecord value) {

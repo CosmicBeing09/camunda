@@ -16,7 +16,7 @@ import io.camunda.zeebe.engine.processing.common.ExpressionProcessor;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.BpmnDeploymentBindingValidator;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
@@ -44,7 +44,7 @@ public final class DeploymentTransformer {
   private String rejectionReason;
 
   public DeploymentTransformer(
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final ProcessingState processingState,
       final ExpressionProcessor expressionProcessor,
       final KeyGenerator keyGenerator,

@@ -12,7 +12,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableMes
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableProcess;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableSignal;
 import io.camunda.zeebe.engine.processing.deployment.model.element.ExecutableStartEvent;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.MessageStartEventSubscriptionState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
@@ -39,12 +39,12 @@ public class StartEventSubscriptionManager {
   private final MessageStartEventSubscriptionState messageStartEventSubscriptionState;
   private final SignalSubscriptionState signalSubscriptionState;
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public StartEventSubscriptionManager(
       final ProcessingState processingState,
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter) {
+      final EventStateWriter stateWriter) {
     processState = processingState.getProcessState();
     messageStartEventSubscriptionState = processingState.getMessageStartEventSubscriptionState();
     signalSubscriptionState = processingState.getSignalSubscriptionState();

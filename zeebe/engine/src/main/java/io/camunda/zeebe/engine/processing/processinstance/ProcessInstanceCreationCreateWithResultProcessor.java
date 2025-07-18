@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.processinstance;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.CommandProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.state.instance.AwaitProcessInstanceResultMetadata;
 import io.camunda.zeebe.engine.state.mutable.MutableElementInstanceState;
@@ -53,7 +53,7 @@ public final class ProcessInstanceCreationCreateWithResultProcessor
   @Override
   public void afterAccept(
       final TypedCommandWriter commandWriter,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final long key,
       final Intent intent,
       final ProcessInstanceCreationRecord value) {

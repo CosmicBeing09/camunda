@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.deployment.distribute;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.DeploymentState;
@@ -28,7 +28,7 @@ public class DeploymentDistributionCompleteProcessor
       "Expected to find pending deployment with key %d, but deployment distribution already completed.";
 
   private final DeploymentRecord emptyDeploymentRecord = new DeploymentRecord();
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final DeploymentState deploymentState;
   private final TypedRejectionWriter rejectionWriter;
 

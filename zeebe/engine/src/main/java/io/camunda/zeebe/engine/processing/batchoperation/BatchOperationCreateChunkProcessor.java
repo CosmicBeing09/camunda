@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationChunkRecord;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationChunkIntent;
@@ -24,7 +24,7 @@ public final class BatchOperationCreateChunkProcessor
   private static final Logger LOGGER =
       LoggerFactory.getLogger(BatchOperationCreateChunkProcessor.class);
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public BatchOperationCreateChunkProcessor(final Writers writers) {
     stateWriter = writers.state();

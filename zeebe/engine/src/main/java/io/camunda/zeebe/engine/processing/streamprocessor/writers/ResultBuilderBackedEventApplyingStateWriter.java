@@ -26,7 +26,7 @@ import java.util.function.Supplier;
  * <p>Note that it does not change the state itself, but delegates this to the {@link EventApplier}.
  */
 final class ResultBuilderBackedEventApplyingStateWriter extends AbstractResultBuilderBackedWriter
-    implements StateWriter {
+    implements EventStateWriter {
 
   private final EventApplier eventApplier;
 

@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.engine.processing.variable;
 
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.VariableState;
 import io.camunda.zeebe.engine.state.variable.DocumentEntry;
 import io.camunda.zeebe.engine.state.variable.IndexedDocument;
@@ -28,7 +28,7 @@ import org.agrona.DirectBuffer;
 public final class VariableBehavior {
 
   private final VariableState variableState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final KeyGenerator keyGenerator;
 
   private final IndexedDocument documentIndexer = new IndexedDocument();
@@ -36,7 +36,7 @@ public final class VariableBehavior {
 
   public VariableBehavior(
       final VariableState variableState,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final KeyGenerator keyGenerator) {
     this.variableState = variableState;
     this.stateWriter = stateWriter;

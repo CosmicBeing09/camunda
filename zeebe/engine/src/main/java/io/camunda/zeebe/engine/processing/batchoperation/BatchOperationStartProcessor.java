@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.batchoperation;
 import io.camunda.zeebe.engine.metrics.BatchOperationMetrics;
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.value.batchoperation.BatchOperationCreationRecord;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
@@ -24,7 +24,7 @@ public final class BatchOperationStartProcessor
 
   private static final Logger LOGGER = LoggerFactory.getLogger(BatchOperationStartProcessor.class);
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final BatchOperationMetrics metrics;
 
   public BatchOperationStartProcessor(final Writers writers, final BatchOperationMetrics metrics) {

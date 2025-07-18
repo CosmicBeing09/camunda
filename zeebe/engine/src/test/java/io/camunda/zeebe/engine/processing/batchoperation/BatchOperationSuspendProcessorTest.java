@@ -11,7 +11,7 @@ import static org.mockito.Mockito.*;
 
 import io.camunda.zeebe.engine.metrics.BatchOperationMetrics;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 /** This test class only covers cases not covered by the LifecycleBatchOperationTest engine test */
 class BatchOperationSuspendProcessorTest {
 
-  private StateWriter stateWriter;
+  private EventStateWriter stateWriter;
   private TypedCommandWriter commandWriter;
   private TypedRejectionWriter rejectionWriter;
   private TypedResponseWriter responseWriter;
@@ -42,7 +42,7 @@ class BatchOperationSuspendProcessorTest {
 
   @BeforeEach
   void setUp() {
-    stateWriter = mock(StateWriter.class);
+    stateWriter = mock(EventStateWriter.class);
     commandWriter = mock(TypedCommandWriter.class);
     rejectionWriter = mock(TypedRejectionWriter.class);
     responseWriter = mock(TypedResponseWriter.class);

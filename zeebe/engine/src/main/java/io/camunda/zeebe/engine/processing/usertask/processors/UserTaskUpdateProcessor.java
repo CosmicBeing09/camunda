@@ -10,7 +10,7 @@ package io.camunda.zeebe.engine.processing.usertask.processors;
 import io.camunda.zeebe.engine.processing.AsyncRequestBehavior;
 import io.camunda.zeebe.engine.processing.Rejection;
 import io.camunda.zeebe.engine.processing.identity.AuthorizationCheckBehavior;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedResponseWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.processing.variable.VariableBehavior;
@@ -36,7 +36,7 @@ public final class UserTaskUpdateProcessor implements UserTaskCommandProcessor {
   private static final Logger LOGGER = LoggerFactory.getLogger(UserTaskUpdateProcessor.class);
   private static final String DEFAULT_ACTION = "update";
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final VariableState variableState;
   private final AsyncRequestState asyncRequestState;
   private final TypedResponseWriter responseWriter;

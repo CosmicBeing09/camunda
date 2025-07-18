@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.identity;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.protocol.impl.record.value.authorization.IdentitySetupRecord;
@@ -35,7 +35,7 @@ public final class IdentitySetupInitializeProcessor
     implements TypedRecordProcessor<IdentitySetupRecord> {
   private final KeyGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
   public IdentitySetupInitializeProcessor(final Writers writers, final KeyGenerator keyGenerator) {
     this.keyGenerator = keyGenerator;

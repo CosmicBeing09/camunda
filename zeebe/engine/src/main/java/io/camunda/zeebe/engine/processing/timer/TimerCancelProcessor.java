@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.timer;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.state.immutable.TimerInstanceState;
 import io.camunda.zeebe.engine.state.instance.TimerInstance;
@@ -24,12 +24,12 @@ public final class TimerCancelProcessor implements TypedRecordProcessor<TimerRec
       "Expected to cancel timer with key '%d', but no such timer was found";
 
   private final TimerInstanceState timerInstanceState;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 
   public TimerCancelProcessor(
       final TimerInstanceState timerInstanceState,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final TypedRejectionWriter rejectionWriter) {
     this.timerInstanceState = timerInstanceState;
     this.stateWriter = stateWriter;

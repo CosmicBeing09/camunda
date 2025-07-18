@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.processing.deployment.model.BpmnFactory;
 import io.camunda.zeebe.engine.processing.deployment.model.transformation.BpmnTransformer;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.StraightThroughProcessingLoopValidator;
 import io.camunda.zeebe.engine.processing.deployment.model.validation.UnsupportedMultiTenantFeaturesValidator;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.deployment.DeployedProcess;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.model.bpmn.Bpmn;
@@ -44,7 +44,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
   private final BpmnTransformer bpmnTransformer;
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
 
   private final BpmnValidator validator;
@@ -53,7 +53,7 @@ public final class BpmnResourceTransformer implements DeploymentResourceTransfor
 
   public BpmnResourceTransformer(
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final ProcessState processState,
       final ExpressionProcessor expressionProcessor,

@@ -9,7 +9,7 @@ package io.camunda.zeebe.engine.processing.message;
 
 import io.camunda.zeebe.engine.processing.ExcludeAuthorizationCheck;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageRecord;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
@@ -17,9 +17,9 @@ import io.camunda.zeebe.stream.api.records.TypedRecord;
 @ExcludeAuthorizationCheck
 public final class MessageExpireProcessor implements TypedRecordProcessor<MessageRecord> {
 
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
 
-  public MessageExpireProcessor(final StateWriter stateWriter) {
+  public MessageExpireProcessor(final EventStateWriter stateWriter) {
     this.stateWriter = stateWriter;
   }
 

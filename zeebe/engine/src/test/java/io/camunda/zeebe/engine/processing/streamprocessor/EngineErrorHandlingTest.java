@@ -16,7 +16,7 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.DefaultZeebeDbFactory;
 import io.camunda.zeebe.engine.state.instance.TimerInstance;
@@ -568,7 +568,7 @@ public final class EngineErrorHandlingTest {
 
   protected static class DumpProcessor implements TypedRecordProcessor<ProcessInstanceRecord> {
     final List<Long> processedInstances = new ArrayList<>();
-    private final StateWriter stateWriter;
+    private final EventStateWriter stateWriter;
 
     public DumpProcessor(final Writers writers) {
       stateWriter = writers.state();

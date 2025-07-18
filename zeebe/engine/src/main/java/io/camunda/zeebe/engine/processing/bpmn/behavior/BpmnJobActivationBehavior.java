@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.job.JobVariablesCollector;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer;
 import io.camunda.zeebe.engine.processing.streamprocessor.JobStreamer.JobStream;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.SideEffectWriter;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.job.JobBatchRecord;
@@ -41,7 +41,7 @@ import org.agrona.concurrent.UnsafeBuffer;
 public class BpmnJobActivationBehavior {
   private final JobStreamer jobStreamer;
   private final JobVariablesCollector jobVariablesCollector;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
   private final KeyGenerator keyGenerator;
   private final JobProcessingMetrics jobMetrics;

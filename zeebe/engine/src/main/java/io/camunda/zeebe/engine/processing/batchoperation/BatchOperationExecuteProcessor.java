@@ -13,7 +13,7 @@ import io.camunda.zeebe.engine.processing.batchoperation.handlers.BatchOperation
 import io.camunda.zeebe.engine.processing.distribution.CommandDistributionBehavior;
 import io.camunda.zeebe.engine.processing.streamprocessor.FollowUpEventMetadata;
 import io.camunda.zeebe.engine.processing.streamprocessor.TypedRecordProcessor;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedCommandWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.batchoperation.PersistedBatchOperation;
@@ -46,7 +46,7 @@ public final class BatchOperationExecuteProcessor
   private static final int BATCH_SIZE = 10;
 
   private final TypedCommandWriter commandWriter;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final int partitionId;
   private final BatchOperationState batchOperationState;

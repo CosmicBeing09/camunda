@@ -8,7 +8,7 @@
 package io.camunda.zeebe.engine.processing.variable;
 
 import io.camunda.zeebe.engine.processing.streamprocessor.FollowUpEventMetadata;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedEventWriter;
 import io.camunda.zeebe.engine.state.EventApplier;
 import io.camunda.zeebe.protocol.impl.record.RecordMetadata;
@@ -23,7 +23,7 @@ import io.camunda.zeebe.protocol.record.intent.Intent;
  *
  * <p>Note that it does not change the state itself, but delegates this to the {@link EventApplier}.
  */
-public final class EventApplyingStateWriter implements StateWriter {
+public final class EventApplyingStateWriter implements EventStateWriter {
 
   private final TypedEventWriter eventWriter;
   private final EventApplier eventApplier;

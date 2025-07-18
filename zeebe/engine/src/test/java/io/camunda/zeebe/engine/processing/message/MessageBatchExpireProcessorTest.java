@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.processing.streamprocessor.writers.TypedRejectionWriter;
 import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.message.StoredMessage;
@@ -35,7 +35,7 @@ import org.mockito.Mockito;
 
 public final class MessageBatchExpireProcessorTest {
 
-  private final StateWriter stateWriter = Mockito.mock(StateWriter.class);
+  private final EventStateWriter stateWriter = Mockito.mock(EventStateWriter.class);
   private final TypedRejectionWriter rejectionWriter = Mockito.mock(TypedRejectionWriter.class);
   private final MessageState messageState = Mockito.mock(MessageState.class);
 

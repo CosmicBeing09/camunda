@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.camunda.zeebe.engine.processing.common.Failure;
 import io.camunda.zeebe.engine.processing.deployment.ChecksumGenerator;
-import io.camunda.zeebe.engine.processing.streamprocessor.writers.StateWriter;
+import io.camunda.zeebe.engine.processing.streamprocessor.writers.EventStateWriter;
 import io.camunda.zeebe.engine.state.immutable.FormState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
@@ -32,13 +32,13 @@ public final class FormResourceTransformer implements DeploymentResourceTransfor
   private static final ObjectMapper JSON_MAPPER = new ObjectMapper();
 
   private final KeyGenerator keyGenerator;
-  private final StateWriter stateWriter;
+  private final EventStateWriter stateWriter;
   private final ChecksumGenerator checksumGenerator;
   private final FormState formState;
 
   public FormResourceTransformer(
       final KeyGenerator keyGenerator,
-      final StateWriter stateWriter,
+      final EventStateWriter stateWriter,
       final ChecksumGenerator checksumGenerator,
       final FormState formState) {
     this.keyGenerator = keyGenerator;
