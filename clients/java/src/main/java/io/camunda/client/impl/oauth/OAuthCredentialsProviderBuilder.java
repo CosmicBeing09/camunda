@@ -68,8 +68,8 @@ public final class OAuthCredentialsProviderBuilder {
   private Duration connectTimeout;
   private Duration readTimeout;
   private boolean applyEnvironmentOverrides = true;
-  private Path entraCertificatePath;
-  private String entraCertificatePassword;
+  private Path msEntraCertificatePath;
+  private String msEntraCertificatePassword;
 
   /** Client id to be used when requesting access token from OAuth authorization server. */
   public OAuthCredentialsProviderBuilder clientId(final String clientId) {
@@ -280,30 +280,30 @@ public final class OAuthCredentialsProviderBuilder {
 
   public OAuthCredentialsProviderBuilder entraCertificatePath(final String entraCertificatePath) {
     if (entraCertificatePath != null) {
-      this.entraCertificatePath = Paths.get(entraCertificatePath);
+      msEntraCertificatePath = Paths.get(entraCertificatePath);
     }
     return this;
   }
 
   public Path getEntraCertificatePath() {
-    return entraCertificatePath;
+    return msEntraCertificatePath;
   }
 
   public OAuthCredentialsProviderBuilder entraCertificatePassword(
       final String entraCertificatePassword) {
-    this.entraCertificatePassword = entraCertificatePassword;
+    msEntraCertificatePassword = entraCertificatePassword;
     return this;
   }
 
   public String getEntraCertificatePassword() {
-    return entraCertificatePassword;
+    return msEntraCertificatePassword;
   }
 
   public boolean entraConfigurationProvided() {
-    return entraCertificatePassword != null
-        && !entraCertificatePassword.isEmpty()
-        && entraCertificatePath != null
-        && entraCertificatePath.toFile().exists();
+    return msEntraCertificatePassword != null
+        && !msEntraCertificatePassword.isEmpty()
+        && msEntraCertificatePath != null
+        && msEntraCertificatePath.toFile().exists();
   }
 
   public OAuthCredentialsProviderBuilder applyEnvironmentOverrides(
@@ -410,8 +410,8 @@ public final class OAuthCredentialsProviderBuilder {
         // loading the certificate from the provided path to ensure it exists and is valid
         final KeyStore keyStore = KeyStore.getInstance("PKCS12");
         keyStore.load(
-            Files.newInputStream(Paths.get(entraCertificatePath.toAbsolutePath().toString())),
-            entraCertificatePassword.toCharArray());
+            Files.newInputStream(Paths.get(msEntraCertificatePath.toAbsolutePath().toString())),
+            msEntraCertificatePassword.toCharArray());
       } else {
         Objects.requireNonNull(clientSecret, String.format(INVALID_ARGUMENT_MSG, "client secret"));
       }
