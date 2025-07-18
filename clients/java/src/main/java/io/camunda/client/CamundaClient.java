@@ -28,13 +28,13 @@ import io.camunda.client.api.command.AssignRoleToUserCommandStep1;
 import io.camunda.client.api.command.AssignUserTaskCommandStep1;
 import io.camunda.client.api.command.AssignUserToGroupCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
+import io.camunda.client.api.command.AuthorizationBuilderStep1;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1;
 import io.camunda.client.api.command.CancelProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ClockPinCommandStep1;
 import io.camunda.client.api.command.ClockResetCommandStep1;
 import io.camunda.client.api.command.CompleteUserTaskCommandStep1;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1;
 import io.camunda.client.api.command.CreateDocumentBatchCommandStep1;
 import io.camunda.client.api.command.CreateDocumentCommandStep1;
@@ -2135,7 +2135,7 @@ public interface CamundaClient extends AutoCloseable, JobClient {
    *
    * @return a builder to configure and send the create authorization command
    */
-  CreateAuthorizationCommandStep1 newCreateAuthorizationCommand();
+  AuthorizationBuilderStep1 newCreateAuthorizationCommand();
 
   /**
    * Command to delete an authorization

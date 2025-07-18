@@ -20,7 +20,7 @@ import io.camunda.client.api.search.enums.OwnerType;
 import io.camunda.client.api.search.enums.PermissionType;
 import io.camunda.client.api.search.enums.ResourceType;
 
-public interface CreateAuthorizationCommandStep1 {
+public interface AuthorizationBuilderStep1 {
 
   /**
    * Sets the ownerId of the permissions for the authorization.
@@ -28,9 +28,9 @@ public interface CreateAuthorizationCommandStep1 {
    * @param ownerId the ID of the owner of the permissions
    * @return the builder for this command
    */
-  CreateAuthorizationCommandStep2 ownerId(String ownerId);
+  AuthorizationBuilderStep2 ownerId(String ownerId);
 
-  interface CreateAuthorizationCommandStep2 {
+  interface AuthorizationBuilderStep2 {
 
     /**
      * Sets the ownerType of the permissions for the authorization.
@@ -75,7 +75,7 @@ public interface CreateAuthorizationCommandStep1 {
   }
 
   interface CreateAuthorizationCommandStep6
-      extends CreateAuthorizationCommandStep2,
+      extends AuthorizationBuilderStep2,
           CreateAuthorizationCommandStep3,
           CreateAuthorizationCommandStep4,
           CreateAuthorizationCommandStep5,

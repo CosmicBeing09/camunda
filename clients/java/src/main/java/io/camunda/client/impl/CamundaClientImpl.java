@@ -34,6 +34,7 @@ import io.camunda.client.api.command.AssignRoleToUserCommandStep1;
 import io.camunda.client.api.command.AssignUserTaskCommandStep1;
 import io.camunda.client.api.command.AssignUserToGroupCommandStep1;
 import io.camunda.client.api.command.AssignUserToTenantCommandStep1;
+import io.camunda.client.api.command.AuthorizationBuilderStep1;
 import io.camunda.client.api.command.BroadcastSignalCommandStep1;
 import io.camunda.client.api.command.CancelProcessInstanceCommandStep1;
 import io.camunda.client.api.command.ClientException;
@@ -42,7 +43,6 @@ import io.camunda.client.api.command.ClockResetCommandStep1;
 import io.camunda.client.api.command.CompleteJobCommandStep1;
 import io.camunda.client.api.command.CompleteUserTaskCommandStep1;
 import io.camunda.client.api.command.CorrelateMessageCommandStep1;
-import io.camunda.client.api.command.CreateAuthorizationCommandStep1;
 import io.camunda.client.api.command.CreateBatchOperationCommandStep1;
 import io.camunda.client.api.command.CreateDocumentBatchCommandStep1;
 import io.camunda.client.api.command.CreateDocumentCommandStep1;
@@ -1123,7 +1123,7 @@ public final class CamundaClientImpl implements CamundaClient {
   }
 
   @Override
-  public CreateAuthorizationCommandStep1 newCreateAuthorizationCommand() {
+  public AuthorizationBuilderStep1 newCreateAuthorizationCommand() {
     return new CreateAuthorizationCommandImpl(httpClient, jsonMapper);
   }
 
