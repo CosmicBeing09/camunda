@@ -31,8 +31,8 @@ public final class VariableBehavior {
   private final StateWriter stateWriter;
   private final KeyGenerator keyGenerator;
 
-  private final IndexedDocument indexedDocument = new IndexedDocument();
-  private final VariableRecord variableRecord = new VariableRecord();
+  private final IndexedDocument documentIndexer = new IndexedDocument();
+  private final VariableRecord currentVariableRecord = new VariableRecord();
 
   public VariableBehavior(
       final VariableState variableState,
@@ -64,20 +64,20 @@ public final class VariableBehavior {
       final DirectBuffer bpmnProcessId,
       final String tenantId,
       final DirectBuffer document) {
-    indexedDocument.index(document);
-    if (indexedDocument.isEmpty()) {
+    documentIndexer.index(document);
+    if (documentIndexer.isEmpty()) {
       return;
     }
 
-    variableRecord
+    currentVariableRecord
         .setScopeKey(scopeKey)
         .setProcessDefinitionKey(processDefinitionKey)
         .setProcessInstanceKey(processInstanceKey)
         .setBpmnProcessId(bpmnProcessId)
         .setTenantId(tenantId);
-    for (final DocumentEntry entry : indexedDocument) {
+    for (final DocumentEntry entry : documentIndexer) {
       applyEntryToRecord(entry);
-      setLocalVariable(variableRecord);
+      setLocalVariable(currentVariableRecord);
     }
   }
 
@@ -109,23 +109,23 @@ public final class VariableBehavior {
       final DirectBuffer bpmnProcessId,
       final String tenantId,
       final DirectBuffer document) {
-    indexedDocument.index(document);
-    if (indexedDocument.isEmpty()) {
+    documentIndexer.index(document);
+    if (documentIndexer.isEmpty()) {
       return;
     }
 
     long currentScope = scopeKey;
     long parentScope;
 
-    variableRecord
+    currentVariableRecord
         .setProcessDefinitionKey(processDefinitionKey)
         .setProcessInstanceKey(processInstanceKey)
         .setBpmnProcessId(bpmnProcessId)
         .setTenantId(tenantId);
     while ((parentScope = variableState.getParentScopeKey(currentScope)) > 0) {
-      final Iterator<DocumentEntry> entryIterator = indexedDocument.iterator();
+      final Iterator<DocumentEntry> entryIterator = documentIndexer.iterator();
 
-      variableRecord.setScopeKey(currentScope);
+      currentVariableRecord.setScopeKey(currentScope);
       while (entryIterator.hasNext()) {
         final DocumentEntry entry = entryIterator.next();
         final VariableInstance variableInstance =
@@ -134,7 +134,7 @@ public final class VariableBehavior {
         if (variableInstance != null && !variableInstance.getValue().equals(entry.getValue())) {
           applyEntryToRecord(entry);
           stateWriter.appendFollowUpEvent(
-              variableInstance.getKey(), VariableIntent.UPDATED, variableRecord);
+              variableInstance.getKey(), VariableIntent.UPDATED, currentVariableRecord);
           entryIterator.remove();
         }
       }
@@ -142,10 +142,10 @@ public final class VariableBehavior {
       currentScope = parentScope;
     }
 
-    variableRecord.setScopeKey(currentScope);
-    for (final DocumentEntry entry : indexedDocument) {
+    currentVariableRecord.setScopeKey(currentScope);
+    for (final DocumentEntry entry : documentIndexer) {
       applyEntryToRecord(entry);
-      setLocalVariable(variableRecord);
+      setLocalVariable(currentVariableRecord);
     }
   }
 
@@ -176,7 +176,7 @@ public final class VariableBehavior {
       final int valueOffset,
       final int valueLength) {
 
-    variableRecord
+    currentVariableRecord
         .setScopeKey(scopeKey)
         .setProcessDefinitionKey(processDefinitionKey)
         .setProcessInstanceKey(processInstanceKey)
@@ -185,7 +185,7 @@ public final class VariableBehavior {
         .setName(name)
         .setValue(value, valueOffset, valueLength);
 
-    setLocalVariable(variableRecord);
+    setLocalVariable(currentVariableRecord);
   }
 
   private void setLocalVariable(final VariableRecord record) {
@@ -200,6 +200,6 @@ public final class VariableBehavior {
   }
 
   private void applyEntryToRecord(final DocumentEntry entry) {
-    variableRecord.setName(entry.getName()).setValue(entry.getValue());
+    currentVariableRecord.setName(entry.getName()).setValue(entry.getValue());
   }
 }
