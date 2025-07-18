@@ -87,8 +87,8 @@ public final class ProcessInstanceServiceTest {
   @Test
   public void shouldReturnProcessInstance() {
     // given
-    final var result = mock(SearchQueryResult.class);
-    when(processInstanceSearchClient.searchProcessInstances(any())).thenReturn(result);
+    final var searchQueryResult = mock(SearchQueryResult.class);
+    when(processInstanceSearchClient.searchProcessInstances(any())).thenReturn(searchQueryResult);
 
     final ProcessInstanceQuery searchQuery =
         SearchQueryBuilders.processInstanceSearchQuery().build();
@@ -97,17 +97,17 @@ public final class ProcessInstanceServiceTest {
     final SearchQueryResult<ProcessInstanceEntity> searchQueryResult = services.search(searchQuery);
 
     // then
-    assertThat(searchQueryResult).isEqualTo(result);
+    assertThat(searchQueryResult).isEqualTo(searchQueryResult);
   }
 
   @Test
   public void shouldReturnProcessInstanceSequenceFlows() {
     // given
-    final var result =
+    final var sequenceFlowsResult =
         List.of(
             new SequenceFlowEntity("pi1_sequenceFlow1", "node1", 1L, 1L, "pd1", "<default>"),
             new SequenceFlowEntity("pi1_sequenceFlow2", "node1", 1L, 1L, "pd1", "<default>"));
-    when(sequenceFlowSearchClient.findAllSequenceFlows(any())).thenReturn(result);
+    when(sequenceFlowSearchClient.findAllSequenceFlows(any())).thenReturn(sequenceFlowsResult);
 
     // when
     final var actual = services.sequenceFlows(123L);
@@ -115,7 +115,7 @@ public final class ProcessInstanceServiceTest {
     // then
     verify(sequenceFlowSearchClient)
         .findAllSequenceFlows(SequenceFlowQuery.of(q -> q.filter(f -> f.processInstanceKey(123L))));
-    assertThat(actual).isEqualTo(result);
+    assertThat(actual).isEqualTo(sequenceFlowsResult);
   }
 
   @Test
