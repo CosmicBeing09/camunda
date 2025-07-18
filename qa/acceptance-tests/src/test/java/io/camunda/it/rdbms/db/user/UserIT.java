@@ -44,9 +44,9 @@ public class UserIT {
     final var user = UserFixtures.createRandomized(b -> b);
     createAndSaveUser(rdbmsWriter, user);
 
-    final var instance = userReader.findOne(user.userKey()).orElse(null);
+    final var foundUser = userReader.findOne(user.userKey()).orElse(null);
 
-    compareUsers(instance, user);
+    compareUsers(foundUser, user);
   }
 
   @TestTemplate
@@ -63,9 +63,9 @@ public class UserIT {
     rdbmsWriter.getUserWriter().update(userUpdate);
     rdbmsWriter.flush();
 
-    final var instance = userReader.findOne(user.userKey()).orElse(null);
+    final var foundUser = userReader.findOne(user.userKey()).orElse(null);
 
-    compareUsers(instance, userUpdate);
+    compareUsers(foundUser, userUpdate);
   }
 
   @TestTemplate
