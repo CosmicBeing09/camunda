@@ -47,7 +47,7 @@ public interface CamundaClientBuilder {
    * <p>The default value is <code>true</code>.
    */
   CamundaClientBuilder applyEnvironmentVariableOverrides(
-      final boolean applyEnvironmentVariableOverrides);
+      final boolean shouldApplyEnvironmentVariableOverrides);
 
   /**
    * @deprecated since 8.5 for removal with 8.8, replaced by {@link
@@ -165,7 +165,7 @@ public interface CamundaClientBuilder {
    * Path to a root CA certificate to be used instead of the certificate in the default default
    * store.
    */
-  CamundaClientBuilder caCertificatePath(String certificatePath);
+  CamundaClientBuilder caCertificatePath(String rootCaCertificatePath);
 
   /**
    * A custom {@link CredentialsProvider} which will be used to apply authentication credentials to
