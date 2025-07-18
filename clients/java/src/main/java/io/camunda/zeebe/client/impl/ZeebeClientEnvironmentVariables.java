@@ -31,9 +31,9 @@ public final class ZeebeClientEnvironmentVariables {
   public static final String USE_DEFAULT_RETRY_POLICY_VAR = "ZEEBE_CLIENT_USE_DEFAULT_RETRY_POLICY";
 
   /** OAuth Environment Variables */
-  public static final String OAUTH_ENV_CLIENT_ID = "ZEEBE_CLIENT_ID";
+  public static final String OAUTH_ENV_CLIENT_ID_VAR = "ZEEBE_CLIENT_ID";
 
-  public static final String OAUTH_ENV_CLIENT_SECRET = "ZEEBE_CLIENT_SECRET";
+  public static final String OAUTH_ENV_CLIENT_SECRET_VAR = "ZEEBE_CLIENT_SECRET";
   public static final String OAUTH_ENV_TOKEN_AUDIENCE = "ZEEBE_TOKEN_AUDIENCE";
   public static final String OAUTH_ENV_TOKEN_SCOPE = "ZEEBE_TOKEN_SCOPE";
   public static final String OAUTH_ENV_AUTHORIZATION_SERVER = "ZEEBE_AUTHORIZATION_SERVER_URL";

@@ -686,10 +686,10 @@ public final class CamundaClientBuilderImpl
   private boolean shouldUseDefaultCredentialsProvider() {
     return credentialsProvider == null
         && (Environment.system().isDefined(OAUTH_CLIENT_ID_VAR)
-            || Environment.system().isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID))
+            || Environment.system().isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_ID_VAR))
         && (Environment.system().isDefined(OAUTH_CLIENT_SECRET_VAR)
             || Environment.system()
-                .isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET));
+                .isDefined(ZeebeClientEnvironmentVariables.OAUTH_ENV_CLIENT_SECRET_VAR));
   }
 
   private CredentialsProvider createDefaultCredentialsProvider() {
