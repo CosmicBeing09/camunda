@@ -7,7 +7,7 @@
  */
 package io.camunda.zeebe.test.util;
 
-import static io.camunda.zeebe.util.buffer.BufferUtil.NO_WRAP;
+import static io.camunda.zeebe.util.buffer.BufferUtil.HEX_NO_WRAP;
 import static io.camunda.zeebe.util.buffer.BufferUtil.bytesAsHexString;
 
 import io.camunda.zeebe.util.buffer.BufferWriter;
@@ -42,7 +42,7 @@ public final class BufferAssert extends AbstractAssert<BufferAssert, DirectBuffe
     if (!Arrays.equals(expected, actualBytes)) {
       failWithMessage(
           "Expected byte array match bytes <%s> but was <%s>",
-          bytesAsHexString(expected, NO_WRAP), bytesAsHexString(actualBytes, NO_WRAP));
+          bytesAsHexString(expected, HEX_NO_WRAP), bytesAsHexString(actualBytes, HEX_NO_WRAP));
     }
 
     return this;
