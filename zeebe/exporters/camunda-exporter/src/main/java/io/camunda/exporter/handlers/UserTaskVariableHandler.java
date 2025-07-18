@@ -12,7 +12,7 @@ import io.camunda.exporter.store.BatchRequest;
 import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.AbstractExporterEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.webapps.schema.entities.usertask.TaskVariableEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -75,7 +75,7 @@ public class UserTaskVariableHandler
 
     final TaskJoinRelationship joinRelationship = new TaskJoinRelationship();
     joinRelationship.setParent(processVariable.getProcessInstanceId());
-    joinRelationship.setName(TaskJoinRelationshipType.PROCESS_VARIABLE.getType());
+    joinRelationship.setName(RelationshipType.PROCESS_VARIABLE.getType());
     processVariable.setJoin(joinRelationship);
     batchEntity.getVariables().add(processVariable);
 
@@ -87,7 +87,7 @@ public class UserTaskVariableHandler
 
       final TaskJoinRelationship localTaskJoinRelationship = new TaskJoinRelationship();
       localTaskJoinRelationship.setParent(taskVariable.getScopeKey());
-      localTaskJoinRelationship.setName(TaskJoinRelationshipType.LOCAL_VARIABLE.getType());
+      localTaskJoinRelationship.setName(RelationshipType.LOCAL_VARIABLE.getType());
       taskVariable.setJoin(localTaskJoinRelationship);
       batchEntity.getVariables().add(taskVariable);
     }

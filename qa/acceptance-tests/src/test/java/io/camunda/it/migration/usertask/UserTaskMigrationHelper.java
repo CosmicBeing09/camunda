@@ -21,7 +21,7 @@ import io.camunda.tasklist.webapp.api.rest.v1.entities.TaskSearchResponse;
 import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.zeebe.model.bpmn.Bpmn;
 import io.camunda.zeebe.model.bpmn.builder.UserTaskBuilder;
 import java.net.URI;
@@ -142,7 +142,7 @@ public abstract class UserTaskMigrationHelper {
         SearchQueryBuilders.and(
             SearchQueryBuilders.term(TaskTemplate.PROCESS_INSTANCE_ID, piKey),
             SearchQueryBuilders.term(
-                TaskTemplate.JOIN_FIELD_NAME, TaskJoinRelationshipType.TASK.getType()));
+                TaskTemplate.JOIN_FIELD_NAME, RelationshipType.TASK.getType()));
     final var req =
         SearchQueryRequest.of(
             s ->

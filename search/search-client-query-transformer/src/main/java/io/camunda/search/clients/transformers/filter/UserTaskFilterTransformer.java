@@ -26,7 +26,7 @@ import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.filter.VariableValueFilter;
 import io.camunda.webapps.schema.descriptors.IndexDescriptor;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +67,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
     // Process Instance Variable Query: Check if processVariable  with specified varName and
     // varValue exists
     ofNullable(getProcessInstanceVariablesQuery(filter.processInstanceVariableFilter()))
-        .ifPresent(f -> queries.add(hasParentQuery(TaskJoinRelationshipType.PROCESS.getType(), f)));
+        .ifPresent(f -> queries.add(hasParentQuery(RelationshipType.PROCESS.getType(), f)));
 
     // Local Variable Query: Check if localVariable with specified varName and varValue exists
     // No need validate parent as the localVariable is the only children from Task
@@ -157,7 +157,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
       final var queries =
           variableFilters.stream()
               .map(transformer::apply)
-              .map((q) -> hasChildQuery(TaskJoinRelationshipType.PROCESS_VARIABLE.getType(), q))
+              .map((q) -> hasChildQuery(RelationshipType.PROCESS_VARIABLE.getType(), q))
               .collect(Collectors.toList());
       return and(queries);
     }
@@ -171,7 +171,7 @@ public class UserTaskFilterTransformer extends IndexFilterTransformer<UserTaskFi
       final var queries =
           variableFilters.stream()
               .map(transformer::apply)
-              .map((q) -> hasChildQuery(TaskJoinRelationshipType.LOCAL_VARIABLE.getType(), q))
+              .map((q) -> hasChildQuery(RelationshipType.LOCAL_VARIABLE.getType(), q))
               .collect(Collectors.toList());
       return and(queries);
     }

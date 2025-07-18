@@ -23,7 +23,7 @@ import io.camunda.search.filter.UserTaskFilter;
 import io.camunda.search.filter.UserTaskFilter.Builder;
 import io.camunda.search.filter.VariableValueFilter;
 import io.camunda.search.query.SearchQueryBuilders;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -351,13 +351,13 @@ public class UserTaskQueryTransformerTest extends AbstractTransformerTest {
               final SearchHasParentQuery nestedHasParentQuery =
                   (SearchHasParentQuery) outerMustQuery.queryOption();
               assertThat(nestedHasParentQuery.parentType())
-                  .isEqualTo(TaskJoinRelationshipType.PROCESS.getType());
+                  .isEqualTo(RelationshipType.PROCESS.getType());
 
               // Drill down into the nested SearchHasChildQuery of the hasParentQuery
               final SearchHasChildQuery childQuery =
                   (SearchHasChildQuery) nestedHasParentQuery.query().queryOption();
               assertThat(childQuery.type())
-                  .isEqualTo(TaskJoinRelationshipType.PROCESS_VARIABLE.getType());
+                  .isEqualTo(RelationshipType.PROCESS_VARIABLE.getType());
 
               // Drill down into the nested SearchBoolQuery of the hasChildQuery
               final SearchBoolQuery innerBoolQuery =

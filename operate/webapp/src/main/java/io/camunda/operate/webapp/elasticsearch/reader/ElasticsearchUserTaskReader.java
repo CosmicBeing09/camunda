@@ -19,7 +19,7 @@ import io.camunda.webapps.schema.descriptors.template.SnapshotTaskVariableTempla
 import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.usertask.SnapshotTaskVariableEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -40,7 +40,7 @@ public class ElasticsearchUserTaskReader extends AbstractReader implements UserT
 
   private static final Logger LOGGER = LoggerFactory.getLogger(ElasticsearchUserTaskReader.class);
   private static final TermQueryBuilder TASK_QUERY =
-      termQuery(TaskTemplate.JOIN_FIELD_NAME, TaskJoinRelationshipType.TASK.getType());
+      termQuery(TaskTemplate.JOIN_FIELD_NAME, RelationshipType.TASK.getType());
 
   private final TaskTemplate taskTemplate;
   private final SnapshotTaskVariableTemplate snapshotTaskVariableTemplate;

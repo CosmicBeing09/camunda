@@ -15,7 +15,7 @@ import io.camunda.webapps.schema.descriptors.template.TaskTemplate;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity;
 import io.camunda.webapps.schema.entities.usertask.TaskEntity.TaskImplementation;
 import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.webapps.schema.entities.usertask.TaskState;
 import io.camunda.zeebe.exporter.common.cache.ExporterEntityCache;
 import io.camunda.zeebe.exporter.common.cache.process.CachedProcessEntity;
@@ -113,7 +113,7 @@ public class UserTaskHandler implements ExportHandler<TaskEntity, UserTaskRecord
     }
 
     final TaskJoinRelationship joinRelation = new TaskJoinRelationship();
-    joinRelation.setName(TaskJoinRelationshipType.TASK.getType());
+    joinRelation.setName(RelationshipType.TASK.getType());
     joinRelation.setParent(Long.parseLong(entity.getProcessInstanceId()));
     entity.setJoin(joinRelation);
   }

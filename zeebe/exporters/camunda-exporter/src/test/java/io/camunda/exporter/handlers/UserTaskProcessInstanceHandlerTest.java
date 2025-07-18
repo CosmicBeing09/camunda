@@ -13,7 +13,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import io.camunda.exporter.store.BatchRequest;
-import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.TaskJoinRelationshipType;
+import io.camunda.webapps.schema.entities.usertask.TaskJoinRelationship.RelationshipType;
 import io.camunda.webapps.schema.entities.usertask.TaskProcessInstanceEntity;
 import io.camunda.zeebe.protocol.record.Record;
 import io.camunda.zeebe.protocol.record.ValueType;
@@ -157,6 +157,6 @@ public class UserTaskProcessInstanceHandlerTest {
         .isEqualTo(processInstanceRecordValue.getTenantId());
     assertThat(processInstanceEntity.getJoin()).isNotNull();
     assertThat(processInstanceEntity.getJoin().getName())
-        .isEqualTo(TaskJoinRelationshipType.PROCESS.getType());
+        .isEqualTo(RelationshipType.PROCESS.getType());
   }
 }
