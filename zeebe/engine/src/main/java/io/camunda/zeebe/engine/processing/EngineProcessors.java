@@ -551,7 +551,7 @@ public final class EngineProcessors {
     final var resourceFetchProcessor =
         new ResourceFetchProcessor(writers, processingState, authCheckBehavior);
     typedRecordProcessors.onCommand(
-        ValueType.RESOURCE, ResourceIntent.FETCH, resourceFetchProcessor);
+        ValueType.RESOURCE, ResourceIntent.FETCH_REQUEST, resourceFetchProcessor);
   }
 
   private static void addSignalBroadcastProcessors(

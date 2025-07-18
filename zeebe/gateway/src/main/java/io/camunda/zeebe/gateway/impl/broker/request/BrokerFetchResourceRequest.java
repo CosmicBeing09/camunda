@@ -18,7 +18,7 @@ public final class BrokerFetchResourceRequest extends BrokerExecuteCommand<Resou
   private final ResourceRecord requestDto = new ResourceRecord();
 
   public BrokerFetchResourceRequest() {
-    super(ValueType.RESOURCE, ResourceIntent.FETCH);
+    super(ValueType.RESOURCE, ResourceIntent.FETCH_REQUEST);
   }
 
   public BrokerFetchResourceRequest setResourceKey(final long resourceKey) {
