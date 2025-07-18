@@ -37,7 +37,7 @@ public class UserQueryTransformerTest extends AbstractTransformerTest {
     final var searchRequest = transformQuery(userFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchTermQuery.class,

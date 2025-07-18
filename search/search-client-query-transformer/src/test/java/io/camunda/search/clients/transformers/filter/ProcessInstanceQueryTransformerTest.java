@@ -36,7 +36,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertIsSearchTermQuery(queryVariant, "joinRelation", "processInstance");
   }
 
@@ -52,16 +52,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "key", 123L);
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "key", 123L);
   }
 
   @Test
@@ -74,16 +74,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "bpmnProcessId", "bpmn");
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "bpmnProcessId", "bpmn");
   }
 
   @Test
@@ -96,16 +96,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(),
         "processName",
         "Demo Process");
   }
@@ -122,16 +122,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "processVersion", 33);
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "processVersion", 33);
   }
 
   @Test
@@ -146,16 +146,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "processVersionTag", "v1");
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "processVersionTag", "v1");
   }
 
   @Test
@@ -170,16 +170,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "processDefinitionKey", 567L);
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "processDefinitionKey", 567L);
   }
 
   @Test
@@ -194,16 +194,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(),
         "parentProcessInstanceKey",
         567L);
   }
@@ -220,16 +220,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(),
         "parentFlowNodeInstanceKey",
         567L);
   }
@@ -248,16 +248,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(3);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOperation())
         .isInstanceOfSatisfying(
             SearchRangeQuery.class,
             (searchRangeQuery) -> {
@@ -267,7 +267,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
               assertThat(searchRangeQuery.format()).isEqualTo("yyyy-MM-dd'T'HH:mm:ss.SSSZZ");
             });
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOperation())
         .isInstanceOfSatisfying(
             SearchRangeQuery.class,
             (searchRangeQuery) -> {
@@ -289,16 +289,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "state", "ACTIVE");
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "state", "ACTIVE");
   }
 
   @Test
@@ -310,16 +310,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "incident", true);
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "incident", true);
   }
 
   @Test
@@ -331,16 +331,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "tenantId", "tenant");
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "tenantId", "tenant");
   }
 
   @Test
@@ -354,16 +354,16 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(),
         "batchOperationIds",
         "ab1db89e-4822-4330-90b5-b98346f8f83a");
   }
@@ -380,7 +380,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(filter);
 
     // then: the overall query should be a SearchBoolQuery with two must clauses.
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     final SearchBoolQuery boolQuery = (SearchBoolQuery) queryVariant;
 
@@ -389,10 +389,10 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
 
     // First must clause: joinRelation term query.
     assertIsSearchTermQuery(
-        boolQuery.must().get(0).queryOption(), "joinRelation", "processInstance");
+        boolQuery.must().get(0).queryOperation(), "joinRelation", "processInstance");
 
     // Second must clause: should be a has_child query for errorMessage.
-    assertThat(boolQuery.must().get(1).queryOption())
+    assertThat(boolQuery.must().get(1).queryOperation())
         .isInstanceOf(SearchHasChildQuery.class)
         .satisfies(
             queryOption -> {
@@ -401,7 +401,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
               assertThat(hasChildQuery.type()).isEqualTo("activity");
               // Assert that the inner query is a match query on "errorMessage" with our
               // expected value.
-              assertThat(hasChildQuery.query().queryOption())
+              assertThat(hasChildQuery.query().queryOperation())
                   .isInstanceOfSatisfying(
                       SearchMatchQuery.class,
                       (searchMatchQuery) -> {
@@ -420,21 +420,21 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(2);
 
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().getFirst().queryOption(),
+        ((SearchBoolQuery) queryVariant).must().getFirst().queryOperation(),
         "joinRelation",
         "processInstance");
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(1).queryOperation())
         .isInstanceOfSatisfying(
             SearchHasChildQuery.class,
             (searchHasChildQuery) -> {
               assertIsSearchTermQuery(
-                  searchHasChildQuery.query().queryOption(), "jobFailedWithRetriesLeft", true);
+                  searchHasChildQuery.query().queryOperation(), "jobFailedWithRetriesLeft", true);
             });
   }
 
@@ -449,22 +449,22 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(3);
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "processDefinitionKey", 123L);
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "processDefinitionKey", 123L);
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOperation())
         .isInstanceOfSatisfying(
             SearchHasChildQuery.class,
             hasChildQuery -> {
               assertIsSearchTermQuery(
-                  (hasChildQuery.query().queryOption()), "activityId", "activity_123");
+                  (hasChildQuery.query().queryOperation()), "activityId", "activity_123");
               assertThat(hasChildQuery.type()).isEqualTo("activity");
             });
   }
@@ -483,29 +483,29 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(3);
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+        ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
         "joinRelation",
         "processInstance");
     assertIsSearchTermQuery(
-        ((SearchBoolQuery) queryVariant).must().get(1).queryOption(), "processDefinitionKey", 123L);
+        ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(), "processDefinitionKey", 123L);
 
-    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOption())
+    assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOperation())
         .isInstanceOfSatisfying(
             SearchHasChildQuery.class,
             hasChildQuery -> {
-              assertThat(hasChildQuery.query().queryOption())
+              assertThat(hasChildQuery.query().queryOperation())
                   .isInstanceOfSatisfying(
                       SearchBoolQuery.class,
                       boolQuery -> {
                         assertIsSearchTermQuery(
-                            boolQuery.must().getFirst().queryOption(),
+                            boolQuery.must().getFirst().queryOperation(),
                             "activityId",
                             "activity_123");
-                        assertThat(boolQuery.must().get(1).queryOption())
+                        assertThat(boolQuery.must().get(1).queryOperation())
                             .isInstanceOfSatisfying(
                                 SearchTermsQuery.class,
                                 termsQuery -> {
@@ -537,31 +537,31 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
       final var searchRequest = transformQuery(processInstanceFilter);
 
       // then
-      final var queryVariant = searchRequest.queryOption();
+      final var queryVariant = searchRequest.queryOperation();
       assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
       assertThat(((SearchBoolQuery) queryVariant).must()).hasSize(3);
       assertIsSearchTermQuery(
-          ((SearchBoolQuery) queryVariant).must().get(0).queryOption(),
+          ((SearchBoolQuery) queryVariant).must().get(0).queryOperation(),
           "joinRelation",
           "processInstance");
       assertIsSearchTermQuery(
-          ((SearchBoolQuery) queryVariant).must().get(1).queryOption(),
+          ((SearchBoolQuery) queryVariant).must().get(1).queryOperation(),
           "processDefinitionKey",
           123L);
 
-      assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOption())
+      assertThat(((SearchBoolQuery) queryVariant).must().get(2).queryOperation())
           .isInstanceOfSatisfying(
               SearchHasChildQuery.class,
               hasChildQuery -> {
-                assertThat(hasChildQuery.query().queryOption())
+                assertThat(hasChildQuery.query().queryOperation())
                     .isInstanceOfSatisfying(
                         SearchBoolQuery.class,
                         boolQuery -> {
                           assertIsSearchTermQuery(
-                              boolQuery.must().getFirst().queryOption(),
+                              boolQuery.must().getFirst().queryOperation(),
                               "activityId",
                               "activity_123");
-                          assertThat(boolQuery.must().get(1).queryOption())
+                          assertThat(boolQuery.must().get(1).queryOperation())
                               .isInstanceOfSatisfying(
                                   SearchTermsQuery.class,
                                   termsQuery -> {
@@ -572,7 +572,7 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
                                         .containsExactly("ACTIVE", "COMPLETED");
                                   });
                           assertIsSearchTermQuery(
-                              boolQuery.must().get(2).queryOption(), "incident", true);
+                              boolQuery.must().get(2).queryOperation(), "incident", true);
                         });
 
                 assertThat(hasChildQuery.type()).isEqualTo("activity");
@@ -626,38 +626,38 @@ public final class ProcessInstanceQueryTransformerTest extends AbstractTransform
     final var searchRequest = transformQuery(processInstanceFilter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant).isInstanceOf(SearchBoolQuery.class);
     final SearchBoolQuery outerBool = (SearchBoolQuery) queryVariant;
 
     // Validate the must clause contains tenantId and the OR conditions
     assertThat(outerBool.must()).hasSize(3);
     assertIsSearchTermQuery(
-        outerBool.must().get(0).queryOption(), "joinRelation", "processInstance");
-    assertIsSearchTermQuery(outerBool.must().get(1).queryOption(), "tenantId", "tenant-1");
+        outerBool.must().get(0).queryOperation(), "joinRelation", "processInstance");
+    assertIsSearchTermQuery(outerBool.must().get(1).queryOperation(), "tenantId", "tenant-1");
 
-    assertThat(outerBool.must().get(2).queryOption())
+    assertThat(outerBool.must().get(2).queryOperation())
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
             orBool -> {
               assertThat(orBool.should()).hasSize(2);
-              assertThat(orBool.should().get(0).queryOption())
+              assertThat(orBool.should().get(0).queryOperation())
                   .isInstanceOfSatisfying(
                       SearchBoolQuery.class,
                       orBool2 -> {
                         assertIsSearchTermQuery(
-                            orBool2.must().get(0).queryOption(), "state", "ACTIVE");
+                            orBool2.must().get(0).queryOperation(), "state", "ACTIVE");
                         assertIsSearchTermQuery(
-                            orBool2.must().get(1).queryOption(), "incident", true);
+                            orBool2.must().get(1).queryOperation(), "incident", true);
                       });
-              assertThat(orBool.should().get(1).queryOption())
+              assertThat(orBool.should().get(1).queryOperation())
                   .isInstanceOfSatisfying(
                       SearchBoolQuery.class,
                       orBool3 -> {
                         assertIsSearchTermQuery(
-                            orBool3.must().get(0).queryOption(), "state", "COMPLETED");
+                            orBool3.must().get(0).queryOperation(), "state", "COMPLETED");
                         assertIsSearchTermQuery(
-                            orBool3.must().get(1).queryOption(), "incident", false);
+                            orBool3.must().get(1).queryOperation(), "incident", false);
                       });
             });
   }

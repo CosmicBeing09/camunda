@@ -134,7 +134,7 @@ public class GroupQueryTransformerTest extends AbstractTransformerTest {
         FilterBuilders.group((f) -> f.memberId("test-member-id").childMemberType(USER));
 
     // when
-    final var query = (SearchBoolQuery) transformQuery(filter).queryOption();
+    final var query = (SearchBoolQuery) transformQuery(filter).queryOperation();
 
     // then
     final var memberTypeQuery =

@@ -35,7 +35,7 @@ public final class UsageMetricsQueryTransformerTest extends AbstractTransformerT
     final var searchRequest = transformQuery(filter);
 
     // then
-    final var queryVariant = searchRequest.queryOption();
+    final var queryVariant = searchRequest.queryOperation();
     assertThat(queryVariant)
         .isInstanceOfSatisfying(
             SearchBoolQuery.class,
@@ -51,7 +51,7 @@ public final class UsageMetricsQueryTransformerTest extends AbstractTransformerT
               assertThat(musts).contains(eventSearchTermQuery);
               final var rangeQuery =
                   musts.stream()
-                      .map(SearchQuery::queryOption)
+                      .map(SearchQuery::queryOperation)
                       .filter(SearchRangeQuery.class::isInstance)
                       .findFirst();
               assertThat(rangeQuery)
