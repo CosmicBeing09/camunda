@@ -52,7 +52,7 @@ import io.camunda.zeebe.protocol.record.value.BpmnEventType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.ProcessInstanceMigrationRecordValue.ProcessInstanceMigrationMappingInstructionValue;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -84,7 +84,7 @@ public class ProcessInstanceMigrationMigrateProcessor
   private final MessageState messageState;
   private final AuthorizationCheckBehavior authCheckBehavior;
   private final ProcessInstanceMigrationCatchEventBehaviour migrationCatchEventBehaviour;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
 
   public ProcessInstanceMigrationMigrateProcessor(
       final Writers writers,
@@ -94,7 +94,7 @@ public class ProcessInstanceMigrationMigrateProcessor
       final int partitionId,
       final PartitionRouting routingInfo,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();

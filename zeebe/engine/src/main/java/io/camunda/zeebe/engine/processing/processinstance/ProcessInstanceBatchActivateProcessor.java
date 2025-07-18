@@ -20,20 +20,20 @@ import io.camunda.zeebe.protocol.impl.record.value.processinstance.ProcessInstan
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 @ExcludeAuthorizationCheck
 public final class ProcessInstanceBatchActivateProcessor
     implements TypedRecordProcessor<ProcessInstanceBatchRecord> {
   private final StateWriter stateWriter;
   private final TypedCommandWriter commandWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
 
   public ProcessInstanceBatchActivateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ElementInstanceState elementInstanceState,
       final ProcessState processState) {
     commandWriter = writers.command();

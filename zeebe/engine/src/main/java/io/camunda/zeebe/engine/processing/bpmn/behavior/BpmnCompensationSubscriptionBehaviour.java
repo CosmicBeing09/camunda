@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.intent.CompensationSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.BpmnEventType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.Collection;
 import java.util.List;
@@ -45,7 +45,7 @@ public class BpmnCompensationSubscriptionBehaviour {
   private static final Predicate<CompensationSubscription> TRIGGER_ALL_SUBSCRIPTIONS =
       subscription -> true;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final CompensationSubscriptionState compensationSubscriptionState;
   private final ProcessState processState;
@@ -53,7 +53,7 @@ public class BpmnCompensationSubscriptionBehaviour {
   private final BpmnStateBehavior stateBehavior;
 
   public BpmnCompensationSubscriptionBehaviour(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingState processingState,
       final Writers writers,
       final BpmnStateBehavior stateBehavior) {

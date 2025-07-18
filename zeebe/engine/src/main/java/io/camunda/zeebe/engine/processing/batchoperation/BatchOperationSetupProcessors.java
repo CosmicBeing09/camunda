@@ -25,14 +25,14 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationChunkIntent;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationExecutionIntent;
 import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.BatchOperationType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.util.Map;
 import java.util.function.Supplier;
 
 public final class BatchOperationSetupProcessors {
 
   public static void addBatchOperationProcessors(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final TypedRecordProcessors typedRecordProcessors,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior,

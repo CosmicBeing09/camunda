@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageBatchIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageCorrelationIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageIntent;
 import io.camunda.zeebe.protocol.record.intent.MessageSubscriptionIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.InstantSource;
 import java.util.function.Supplier;
@@ -55,7 +55,7 @@ public final class MessageEventProcessors {
         processingState.getMessageStartEventSubscriptionState();
     final MutableEventScopeInstanceState eventScopeInstanceState =
         processingState.getEventScopeInstanceState();
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final IdGenerator keyGenerator = processingState.getKeyGenerator();
     final var processState = processingState.getProcessState();
 
     typedRecordProcessors

@@ -20,12 +20,12 @@ import io.camunda.zeebe.protocol.impl.record.value.authorization.AuthorizationRe
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 public class AuthorizationCreateProcessor
     implements DistributedTypedRecordProcessor<AuthorizationRecord> {
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final CommandDistributionBehavior distributionBehavior;
   private final StateWriter stateWriter;
   private final AsyncResponseWriter responseWriter;
@@ -35,7 +35,7 @@ public class AuthorizationCreateProcessor
 
   public AuthorizationCreateProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingState processingState,
       final CommandDistributionBehavior distributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {

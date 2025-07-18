@@ -24,13 +24,13 @@ import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.SideEffectProducer;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.Instant;
 
 public final class ClockProcessor implements DistributedTypedRecordProcessor<ClockRecord> {
   private final SideEffectWriter sideEffectWriter;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ControllableStreamClock clock;
   private final CommandDistributionBehavior commandDistributionBehavior;
   private final AuthorizationCheckBehavior authCheckBehavior;
@@ -39,7 +39,7 @@ public final class ClockProcessor implements DistributedTypedRecordProcessor<Clo
 
   public ClockProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ControllableStreamClock clock,
       final CommandDistributionBehavior commandDistributionBehavior,
       final AuthorizationCheckBehavior authCheckBehavior) {

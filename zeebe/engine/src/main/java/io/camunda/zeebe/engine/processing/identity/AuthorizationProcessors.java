@@ -13,12 +13,12 @@ import io.camunda.zeebe.engine.processing.streamprocessor.writers.Writers;
 import io.camunda.zeebe.engine.state.mutable.MutableAsyncProcessingContext;
 import io.camunda.zeebe.protocol.record.ValueType;
 import io.camunda.zeebe.protocol.record.intent.AuthorizationIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 public final class AuthorizationProcessors {
 
   public static void addAuthorizationProcessors(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final TypedRecordProcessors typedRecordProcessors,
       final MutableAsyncProcessingContext processingState,
       final Writers writers,

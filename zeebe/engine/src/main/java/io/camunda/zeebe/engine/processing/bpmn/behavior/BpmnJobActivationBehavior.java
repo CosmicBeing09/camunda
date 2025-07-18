@@ -22,7 +22,7 @@ import io.camunda.zeebe.protocol.impl.stream.job.ActivatedJobImpl;
 import io.camunda.zeebe.protocol.impl.stream.job.JobActivationProperties;
 import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.value.JobKind;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.InstantSource;
 import java.util.Optional;
 import org.agrona.concurrent.UnsafeBuffer;
@@ -43,7 +43,7 @@ public class BpmnJobActivationBehavior {
   private final WorkflowVariablesCollector jobVariablesCollector;
   private final StateWriter stateWriter;
   private final SideEffectWriter sideEffectWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ProcessingMetrics jobMetrics;
   private final InstantSource clock;
 
@@ -51,7 +51,7 @@ public class BpmnJobActivationBehavior {
       final JobStreamer jobStreamer,
       final ProcessingState state,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingMetrics jobMetrics,
       final InstantSource clock) {
     this.jobStreamer = jobStreamer;

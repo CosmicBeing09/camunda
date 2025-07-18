@@ -14,16 +14,16 @@ import io.camunda.zeebe.protocol.impl.record.value.scaling.ScaleRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.scaling.ScaleIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 public class ScaleUpStatusProcessor implements TypedRecordProcessor<ScaleRecord> {
 
   private final Writers writers;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final RoutingState routingState;
 
   public ScaleUpStatusProcessor(
-      final KeyGenerator keyGenerator, final Writers writers, final RoutingState routingState) {
+      final IdGenerator keyGenerator, final Writers writers, final RoutingState routingState) {
     this.keyGenerator = keyGenerator;
     this.writers = writers;
     this.routingState = routingState;

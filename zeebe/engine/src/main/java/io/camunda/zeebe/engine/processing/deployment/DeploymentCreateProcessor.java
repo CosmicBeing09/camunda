@@ -59,7 +59,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.protocol.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import io.camunda.zeebe.util.buffer.BufferUtil;
@@ -81,7 +81,7 @@ public final class DeploymentCreateProcessor
   private final ResourceState resourceState;
   private final TimerInstanceState timerInstanceState;
   private final CatchEventBehavior catchEventBehavior;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ExpressionEvaluator expressionProcessor;
   private final StateWriter stateWriter;
   private final StartEventSubscriptionManager startEventSubscriptionManager;
@@ -94,7 +94,7 @@ public final class DeploymentCreateProcessor
       final ProcessingState processingState,
       final ProcessBehaviors bpmnBehaviors,
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final CommandDistributionBehavior distributionBehavior,
       final EngineConfiguration config,

@@ -25,7 +25,7 @@ import io.camunda.zeebe.protocol.record.intent.MessageStartEventSubscriptionInte
 import io.camunda.zeebe.protocol.record.intent.ProcessEventIntent;
 import io.camunda.zeebe.protocol.record.intent.ProcessInstanceIntent;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import org.agrona.DirectBuffer;
 import org.agrona.concurrent.UnsafeBuffer;
 
@@ -37,7 +37,7 @@ public final class EventHandler {
   private final MessageStartEventSubscriptionRecord startEventSubscriptionRecord =
       new MessageStartEventSubscriptionRecord();
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final EventScopeInstanceState eventScopeInstanceState;
   private final ProcessState processState;
 
@@ -47,7 +47,7 @@ public final class EventHandler {
   private final BpmnStateBehavior stateBehavior;
 
   public EventHandler(
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final EventScopeInstanceState eventScopeInstanceState,
       final Writers writers,
       final ProcessState processState,

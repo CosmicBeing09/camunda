@@ -13,7 +13,7 @@ import io.camunda.zeebe.db.ZeebeDb;
 import io.camunda.zeebe.engine.util.ProcessingStateRule;
 import io.camunda.zeebe.protocol.ColumnFamilies;
 import io.camunda.zeebe.protocol.Protocol;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.stream.impl.state.DbKeyGenerator;
 import org.junit.Before;
 import org.junit.Rule;
@@ -23,7 +23,7 @@ public final class KeyGeneratorTest {
 
   @Rule public final ProcessingStateRule stateRule = new ProcessingStateRule();
 
-  private KeyGenerator keyGenerator;
+  private IdGenerator keyGenerator;
 
   @Before
   public void setUp() throws Exception {
@@ -58,7 +58,7 @@ public final class KeyGeneratorTest {
     // given
     final ZeebeDb<ColumnFamilies> newDb = stateRule.createNewDb();
     final int secondPartitionId = Protocol.DEPLOYMENT_PARTITION + 1;
-    final KeyGenerator keyGenerator2 =
+    final IdGenerator keyGenerator2 =
         new DbKeyGenerator(secondPartitionId, newDb, newDb.createContext());
 
     final long keyOfFirstPartition = keyGenerator.nextKey();

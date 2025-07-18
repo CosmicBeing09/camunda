@@ -7,9 +7,9 @@
  */
 package io.camunda.zeebe.stream.api.state;
 
-/** Generate unique keys. Should be used for records only. */
+/** Generate unique IDs for any entity in the stream. */
 @FunctionalInterface
-public interface KeyGenerator {
+public interface IdGenerator {
 
   /**
    * Returns the next key of a record and updates the key generator.

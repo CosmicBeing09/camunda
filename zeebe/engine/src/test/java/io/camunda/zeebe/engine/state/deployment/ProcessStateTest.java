@@ -28,7 +28,7 @@ import io.camunda.zeebe.model.bpmn.BpmnModelInstance;
 import io.camunda.zeebe.protocol.Protocol;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.ProcessRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.test.util.Strings;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.util.function.LongConsumer;
@@ -1208,7 +1208,7 @@ public final class ProcessStateTest {
         .setResourceName(wrapString(resourceName))
         .setResource(resource);
 
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final IdGenerator keyGenerator = processingState.getKeyGenerator();
     final long key = keyGenerator.nextKey();
 
     deploymentRecord
@@ -1260,7 +1260,7 @@ public final class ProcessStateTest {
     final var resource = wrapString(Bpmn.convertToString(modelInstance));
     final var checksum = wrapString("checksum");
 
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final IdGenerator keyGenerator = processingState.getKeyGenerator();
     final long key = keyGenerator.nextKey();
 
     processRecord

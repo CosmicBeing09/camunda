@@ -21,7 +21,7 @@ import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentRecord;
 import io.camunda.zeebe.protocol.impl.record.value.deployment.DeploymentResource;
 import io.camunda.zeebe.protocol.record.RejectionType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.FeatureFlags;
 import java.time.InstantSource;
@@ -47,7 +47,7 @@ public final class DeploymentTransformer {
       final StateWriter stateWriter,
       final ProcessingState processingState,
       final ExpressionEvaluator expressionProcessor,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final FeatureFlags featureFlags,
       final EngineConfiguration config,
       final InstantSource clock) {

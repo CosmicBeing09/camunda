@@ -14,7 +14,7 @@ import io.camunda.zeebe.stream.api.RecordProcessorContext;
 import io.camunda.zeebe.stream.api.StreamClock.ControllableStreamClock;
 import io.camunda.zeebe.stream.api.StreamProcessorLifecycleAware;
 import io.camunda.zeebe.stream.api.scheduling.ProcessingScheduleService;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.stream.api.state.KeyGeneratorControls;
 import io.micrometer.core.instrument.MeterRegistry;
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public final class RecordProcessorContextImpl implements RecordProcessorContext 
   private final TransactionContext transactionContext;
   private final List<StreamProcessorLifecycleAware> lifecycleListeners = new ArrayList<>();
   private final InterPartitionCommandSender partitionCommandSender;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ControllableStreamClock clock;
   private final MeterRegistry meterRegistry;
 
@@ -88,7 +88,7 @@ public final class RecordProcessorContextImpl implements RecordProcessorContext 
   }
 
   @Override
-  public KeyGenerator getKeyGenerator() {
+  public IdGenerator getKeyGenerator() {
     return keyGenerator;
   }
 

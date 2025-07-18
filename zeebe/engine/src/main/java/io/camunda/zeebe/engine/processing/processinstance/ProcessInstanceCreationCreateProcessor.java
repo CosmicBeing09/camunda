@@ -41,7 +41,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.BpmnElementType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import java.util.Arrays;
 import java.util.Set;
@@ -76,7 +76,7 @@ public final class ProcessInstanceCreationCreateProcessor
   private final ProcessState processState;
   private final VariableBehavior variableBehavior;
 
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final TypedCommandWriter commandWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final AsyncResponseWriter responseWriter;
@@ -88,7 +88,7 @@ public final class ProcessInstanceCreationCreateProcessor
 
   public ProcessInstanceCreationCreateProcessor(
       final ProcessState processState,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
       final ProcessBehaviors bpmnBehaviors,
       final ProcessEngineMetrics metrics,

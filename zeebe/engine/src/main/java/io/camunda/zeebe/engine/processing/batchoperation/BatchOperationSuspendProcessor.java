@@ -26,7 +26,7 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public final class BatchOperationSuspendProcessor
   private final StateWriter stateWriter;
   private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final BatchOperationState batchOperationState;
   private final AuthorizationCheckBehavior authCheckBehavior;
 
@@ -57,7 +57,7 @@ public final class BatchOperationSuspendProcessor
       final CommandDistributionBehavior commandDistributionBehavior,
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     stateWriter = writers.state();
     responseWriter = writers.response();
     rejectionWriter = writers.rejection();

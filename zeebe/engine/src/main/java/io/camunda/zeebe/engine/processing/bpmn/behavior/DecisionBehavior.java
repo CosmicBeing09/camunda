@@ -23,7 +23,7 @@ import io.camunda.zeebe.msgpack.spec.MsgPackWriter;
 import io.camunda.zeebe.protocol.impl.record.value.decision.DecisionEvaluationRecord;
 import io.camunda.zeebe.protocol.record.intent.DecisionEvaluationIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import io.camunda.zeebe.util.collection.Tuple;
@@ -37,7 +37,7 @@ public final class DecisionBehavior {
   private final EventTriggerBehavior eventTriggerBehavior;
   private final VariableState variableState;
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ExpressionEvaluator expressionBehavior;
   private final BpmnStateBehavior stateBehavior;
 
@@ -46,7 +46,7 @@ public final class DecisionBehavior {
       final ProcessingState processingState,
       final EventTriggerBehavior eventTriggerBehavior,
       final StateWriter stateWriter,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ExpressionEvaluator expressionBehavior,
       final BpmnStateBehavior stateBehavior) {
 

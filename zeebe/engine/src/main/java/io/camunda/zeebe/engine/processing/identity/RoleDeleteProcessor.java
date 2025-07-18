@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.record.value.AuthorizationOwnerType;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 
 public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<RoleRecord> {
 
@@ -39,7 +39,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   private final AuthorizationState authorizationState;
   private final MembershipState membershipState;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final AsyncResponseWriter responseWriter;
@@ -48,7 +48,7 @@ public class RoleDeleteProcessor implements DistributedTypedRecordProcessor<Role
   public RoleDeleteProcessor(
       final ProcessingState state,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
       final CommandDistributionBehavior commandDistributionBehavior) {
     roleState = state.getRoleState();

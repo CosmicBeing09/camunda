@@ -33,7 +33,7 @@ import io.camunda.zeebe.protocol.record.intent.JobBatchIntent;
 import io.camunda.zeebe.protocol.record.value.ErrorType;
 import io.camunda.zeebe.protocol.record.value.JobKind;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.ByteValue;
 import io.camunda.zeebe.util.Either;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
   private final TypedRejectionWriter rejectionWriter;
   private final AsyncResponseWriter responseWriter;
   private final JobBatchCollector jobBatchCollector;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final ProcessingMetrics jobMetrics;
   private final ElementInstanceState elementInstanceState;
   private final ProcessState processState;
@@ -56,7 +56,7 @@ public final class JobBatchActivateProcessor implements TypedRecordProcessor<Job
   public JobBatchActivateProcessor(
       final Writers writers,
       final ProcessingState state,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingMetrics jobMetrics,
       final AuthorizationCheckBehavior authCheckBehavior) {
 

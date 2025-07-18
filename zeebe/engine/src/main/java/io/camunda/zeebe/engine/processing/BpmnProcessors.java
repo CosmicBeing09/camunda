@@ -52,7 +52,7 @@ import io.camunda.zeebe.protocol.record.intent.ProcessInstanceModificationIntent
 import io.camunda.zeebe.protocol.record.intent.ProcessMessageSubscriptionIntent;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.protocol.record.intent.VariableDocumentIntent;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.InstantSource;
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -220,7 +220,7 @@ public final class BpmnProcessors {
       final TypedRecordProcessors typedRecordProcessors,
       final ProcessBehaviors bpmnBehaviors,
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final Writers writers,
       final MutableTaskState userTaskState,
       final AuthorizationCheckBehavior authCheckBehavior) {
@@ -246,7 +246,7 @@ public final class BpmnProcessors {
       final AuthorizationCheckBehavior authCheckBehavior) {
     final MutableElementInstanceState elementInstanceState =
         processingState.getElementInstanceState();
-    final KeyGenerator keyGenerator = processingState.getKeyGenerator();
+    final IdGenerator keyGenerator = processingState.getKeyGenerator();
 
     final ProcessInstanceCreationCreateProcessor createProcessor =
         new ProcessInstanceCreationCreateProcessor(
@@ -294,7 +294,7 @@ public final class BpmnProcessors {
       final int partitionId,
       final PartitionRouting routingInfo,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.PROCESS_INSTANCE_MIGRATION,
         ProcessInstanceMigrationIntent.MIGRATE,
@@ -336,7 +336,7 @@ public final class BpmnProcessors {
       final MutableAsyncProcessingContext processingState,
       final Writers writers,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     typedRecordProcessors.onCommand(
         ValueType.AD_HOC_SUB_PROCESS_ACTIVITY_ACTIVATION,
         AdHocSubProcessActivityActivationIntent.ACTIVATE,

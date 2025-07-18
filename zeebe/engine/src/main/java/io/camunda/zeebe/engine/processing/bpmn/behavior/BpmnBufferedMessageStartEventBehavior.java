@@ -17,7 +17,7 @@ import io.camunda.zeebe.engine.state.immutable.MessageState;
 import io.camunda.zeebe.engine.state.immutable.ProcessState;
 import io.camunda.zeebe.engine.state.immutable.ProcessingState;
 import io.camunda.zeebe.protocol.impl.record.value.message.MessageStartEventSubscriptionRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import java.time.InstantSource;
 import java.util.Optional;
 import org.agrona.DirectBuffer;
@@ -33,7 +33,7 @@ public final class BpmnBufferedMessageStartEventBehavior {
 
   public BpmnBufferedMessageStartEventBehavior(
       final ProcessingState processingState,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final EventTriggerBehavior eventTriggerBehavior,
       final BpmnStateBehavior stateBehavior,
       final Writers writers,

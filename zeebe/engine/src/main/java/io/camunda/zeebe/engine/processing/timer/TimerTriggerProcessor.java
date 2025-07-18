@@ -29,7 +29,7 @@ import io.camunda.zeebe.protocol.impl.record.value.timer.TimerRecord;
 import io.camunda.zeebe.protocol.record.RejectionType;
 import io.camunda.zeebe.protocol.record.intent.TimerIntent;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.Either;
 import io.camunda.zeebe.util.buffer.BufferUtil;
 import java.time.Instant;
@@ -52,7 +52,7 @@ public final class TimerTriggerProcessor implements TypedRecordProcessor<TimerRe
   private final ElementInstanceState elementInstanceState;
   private final MutableTimerInstanceState timerInstanceState;
   private final ExpressionEvaluator expressionProcessor;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final StateWriter stateWriter;
   private final TypedRejectionWriter rejectionWriter;
 

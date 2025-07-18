@@ -31,13 +31,13 @@ import io.camunda.zeebe.protocol.record.intent.SignalIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import org.agrona.DirectBuffer;
 
 public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor<SignalRecord> {
 
   private final StateWriter stateWriter;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
   private final EventHandler eventHandle;
   private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
@@ -49,7 +49,7 @@ public class SignalBroadcastProcessor implements DistributedTypedRecordProcessor
 
   public SignalBroadcastProcessor(
       final Writers writers,
-      final KeyGenerator keyGenerator,
+      final IdGenerator keyGenerator,
       final ProcessingState processingState,
       final BpmnStateBehavior stateBehavior,
       final EventTriggerBehavior eventTriggerBehavior,

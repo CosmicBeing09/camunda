@@ -30,7 +30,7 @@ import io.camunda.zeebe.protocol.record.intent.BatchOperationIntent;
 import io.camunda.zeebe.protocol.record.value.AuthorizationResourceType;
 import io.camunda.zeebe.protocol.record.value.PermissionType;
 import io.camunda.zeebe.stream.api.records.TypedRecord;
-import io.camunda.zeebe.stream.api.state.KeyGenerator;
+import io.camunda.zeebe.stream.api.state.IdGenerator;
 import io.camunda.zeebe.util.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public final class BatchOperationResumeProcessor
   private final AsyncResponseWriter responseWriter;
   private final TypedRejectionWriter rejectionWriter;
   private final AuthorizationCheckBehavior authCheckBehavior;
-  private final KeyGenerator keyGenerator;
+  private final IdGenerator keyGenerator;
 
   private final BatchOperationState batchOperationState;
 
@@ -63,7 +63,7 @@ public final class BatchOperationResumeProcessor
       final CommandDistributionBehavior commandDistributionBehavior,
       final ProcessingState processingState,
       final AuthorizationCheckBehavior authCheckBehavior,
-      final KeyGenerator keyGenerator) {
+      final IdGenerator keyGenerator) {
     stateWriter = writers.state();
     commandWriter = writers.command();
     responseWriter = writers.response();
